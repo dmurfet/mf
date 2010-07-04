@@ -735,7 +735,19 @@ proc MFreduce(matrix A, list #)
 	b1 = b1 * inverse(tr);
 	f1 = tr * f1;
 	g1 = g1 * inverse(tr);
+	
+	// Try a second time on the transpose
+ 	gau = gauss_row(transpose(b0),1);
+	matrix tr2 = gau[2];
+	b0r = gau[1];
+	if( b0 * tr2 != b0r ){ print("[MFreduce] Error in Gaussian column elimination"); return(1); }
+
+	b0 = b0r;
+	b1 = inverse(tr2) * b1;
+	f0 = inverse(tr2) * f0;
+	g0 = g0 * tr2;
 	/////// END GAUSS ////////
+	
 	
 	// Pack everything into block matrices
 	matrix zb[nrows(b0)][ncols(b0)];
