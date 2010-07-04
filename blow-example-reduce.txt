@@ -1,0 +1,15 @@
+///////////////////////////////////
+// Blow.lib examples for reduction
+///////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=0,(x,y),dp;
+
+matrix e0[4][4] = 1,0,0,-1,0,1,0,0,0,0,0,0,-2,-2y,0,2;
+matrix e1[4][4] = 0,0,0,0,0,2,0,-2,-1,-y,1,0,0,-1,0,1;
+matrix z[4][4];
+
+matrix e = blockmat(z,e1,e0,z);
+
+MFreduce(e);

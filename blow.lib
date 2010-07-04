@@ -622,11 +622,15 @@ proc MFreduce(matrix A)
 {
 	LIB "linalg.lib";
 	
+	int prl = printlevel;
+
+	dbprint(prl, "[MFreduce]");
+	
 	matrix B = A; // B will become the differential of Y
 	matrix F = unitmat(ncols(A));
 	matrix G = unitmat(ncols(A));
 	
-	print("Original matrix A is"); print(string(A));
+	dbprint(prl, " Original matrix A is" + string(A));
 	
 	// A remains fixed, we work steadily on B and F, G until B has the desired form
 	while( isMFreduced(B) != 1 )
@@ -648,17 +652,17 @@ proc MFreduce(matrix A)
 			list l = matrixreduce(b0);
 			
 			// b0r is the reduced matrix, and p * b0 * q = b0r.
-			matrix b0r = l[1]; matrix p = l[2]; matrix q = l[3];
+			b0 = l[1]; matrix p = l[2]; matrix q = l[3];
 			
 			// The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
 			// via the morphism (from the former to the latter) given by the pair
-			// (q,p). We now transform b1 to b1r = q^{-1} * b1 * p^{-1} and call the differential of the
+			// (q,p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1} and call the differential of the
 			// new matrix factorisation B. We remember the transformation by adjusting F and G, so
 			// that at each stage F is an isomorphism between X and Y with inverse G
 			
-			b1r = inverse(q) * b1 * inverse(p);
+			b1 = inverse(q) * b1 * inverse(p);
 			f0 = q * f0; f1 = p * f1;
-			g0 = g0 * q^{-1}; g1 = g1 * p^{-1};
+			g0 = g0 * inverse(q); g1 = g1 * inverse(p);
 			
 			// Now that we guarantee b0 has an identity in the top left and zeros in the rest
 			// of the first column, call a worker routine to "split" off this contractible
@@ -679,8 +683,12 @@ proc MFreduce(matrix A)
 proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
 {
 	// By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
-	// where W is the potential. There is an isomorphism between this matrix factorisation
+	// where W is the potential. There is a homotopy equivalence between this matrix factorisation
 	// and the factorisation (s, e)
+	
+	int p = printlevel;
+
+	dbprint(p, "[MFreduce_work]");
 	
 	// Read off s,e and t from b0 and b1
 	int i,j;
@@ -693,6 +701,10 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 	matrix T[1][ncols(b0)-1];
 	for(i=2;i<=ncols(b0);i++){ T[1,i-1] = b0[1,i]; }
 		
+	dbprint(p, " matrix S: " + string(S));
+	dbprint(p, " matrix E: " + string(E));
+	dbprint(p, " matrix T: " + string(T));
+	
 	// The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
 	// ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
 	// so we need to stick these on the appropriate side of F, G
@@ -701,15 +713,31 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 	matrix zeroone[nrows(S)][ncols(S)+1];
 	for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; }
 	
+	matrix negtone[nrows(S)+1][ncols(S)];
+	for(i=1;i<=nrows(S);i++){ negtone[i+1,i] = 1; }
+	for(i=1;i<=ncols(S);i++){ negtone[1,i] = -T[1,i]; }
 	
+	dbprint(p, " matrix zeroone: " + string(zeroone));
+	dbprint(p, " matrix negtone: " + string(negtone));
+
+	// Modify f and g by the appropriate things
+	f0 = zeroone * f0;
+	f1 = zeroone * f0;
+	g0 = g0 * negtone;
+	g1 = g1 * transpose(zeroone);
 	
 	matrix zb[nrows(S)][ncols(S)];
-	matrix zf[nrows(fo0)][ncols(fo0)];
-	matrix zg[nrows(go0)][ncols(go0)];
+	matrix zf[nrows(f0)][ncols(f0)];
+	matrix zg[nrows(g0)][ncols(g0)];
 	
+	// The new reduced MF Y' and the isomorphism Fo: X -> Y' and Go: Y' -> X
 	matrix Bo = blockmat(zb, E, S, zb);
 	matrix Fo = blockmat_nsq(zf, f1, f0, zf);
 	matrix Go = blockmat_nsq(zg, g1, g0, zg);
+	
+	dbprint(p, " Final results, Bo: " + string(Bo) );
+	dbprint(p, " Final results, Fo: " + string(Fo) );
+	dbprint(p, " Final results, Go: " + string(Go) );
 	
 	list l = Bo, Fo, Go;
 	return (l);
@@ -721,7 +749,7 @@ proc isMFreduced(matrix A)
 	int i,j;
 	for(i=1;i<=ncols(A);i++)
 	{
-		for(j=1;j<=ncols(B);j++)
+		for(j=1;j<=ncols(A);j++)
 		{
 			if( deg(A[i,j]) == 0 )
 			{
