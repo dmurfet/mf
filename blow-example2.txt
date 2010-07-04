@@ -1,0 +1,43 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE 3 (identity defect acting on (x2,x))
+//////////////////////////////////////////////////////////////////////////////////////
+
+// Matrices are written ( 0 g \\ f 0 ).
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=1;
+int ny=1;
+ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
+
+poly W = x(1)^3;
+
+// Define X, Y and D = Y x X:
+
+matrix X[2][2] = 0, x(1), x(1)^2, 0;
+matrix Y[2][2] = 0, y(1) - x(1), x(1)^2 + x(1) * y(1) + y(1)^2, 0;
+matrix D = MFtensor(Y,X);
+
+// This is dQ_X: 
+
+matrix dq = dQ(X, W, nx, 3);
+print(dq);
+
+// "iddQ" is "id x dQ_X"
+
+matrix iddQ = ZZtensor( unitmat(2), dq );
+print(iddQ);
+
+// This is deltaQ_D:
+
+matrix delQ = deltaQ(D, W, nx, 3);
+print(delQ);
+
+// This is e':
+
+matrix e = iddQ * delQ;
+print(e);
+
+// This e agrees (up to permutation of the basis of the Jacobian and the 1/3 factor) with what I write
+// in Example 6.2 of my note.

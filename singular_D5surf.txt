@@ -1,0 +1,57 @@
+Calculations for the note "D5surf" p.13
+=======================================
+
+LIB "homolog.lib";
+LIB "linalg.lib";
+LIB "dualitytrace.lib";
+ring S = 0,(x,y,z),dp;
+
+printlevel = 1;
+
+matrix E[2][2]; E = E + 1;
+matrix zer[2][2];
+
+matrix phis[2][2] = xy,y,y3,-x;
+matrix psis[2][2] = x,y,y3,-xy;
+
+matrix phi[4][4] = blockmat(-z*E, phis, psis, z*E);
+
+// Partial derivatives
+matrix phisdx[2][2] = y,0,0,-1;
+matrix phisdy[2][2] = x,1,3y2,0;
+matrix psisdx[2][2] = 1,0,0,-y;
+matrix psisdy[2][2] = 0,1,3y2,-x;
+
+matrix phidx[4][4] = blockmat(zer,phisdx,psisdx,zer);
+matrix phidy[4][4] = blockmat(zer,phisdy,psisdy,zer);
+matrix phidz[4][4] = blockmat(-E, zer,zer, E);
+
+matrix lambda[4][4] = phidx * phidy * phidz + phidz * phidx * phidy + phidy * phidz * phidx - phidx * phidz * phidy - phidz * phidy * phidx - phidy * phidx * phidz;
+
+matrix lambdas[4][4] = phidx * phidy * phidz + phidz * phidx * phidy + phidy * phidz * phidx - phidx * phidz * phidy - phidz * phidy * phidx - phidy * phidx * phidz;
+
+
+New calculations, using latest derivation of trace formula and code (26/7/09)
+===================================================================
+
+matrix E[2][2]; E = E + 1;
+matrix phis[2][2] = xy,y,y3,-x;
+matrix psis[2][2] = x,y,y3,-xy;
+
+matrix phi[4][4] = blockmat(-z*E, phis, psis, z*E);
+
+matrix zero[4][4];
+matrix Q[8][8] = blockmat(zero, phi, phi, zero);
+
+print(diff(Q,x) * diff(Q,y) * diff(Q,z));
+
+matrix sg_ul[4][4] = 0,-3/16*y,0,0,1/16*y2,-1/4*x,0,0,0,0,1/4*x,3/16,0,0,-1/16*y3+1/4*x2,0;
+matrix sg_lr[4][4] = 0,3/16*y,0,0,-1/16*y2,1/4*x,0,0,0,0,-1/4*x,3/16,0,0,1/16*y3-1/4*x2,0;
+matrix sg_block[8][8] = blockmat(sg_ul,zero,zero,sg_lr);
+
+list basis = compute_basis_endospace_block(phi,phi,sg_block);
+int i;
+for(i=1;i<=4;i++)
+{
+print(string(singtrace(basis[i],sg_block)));
+}

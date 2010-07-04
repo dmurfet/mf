@@ -1,0 +1,915 @@
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+
+//////////////////////////////////////////////////////////////////////////////////
+// "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
+// the matrices that represent the former's action on Jac(W).
+//////////////////////////////////////////////////////////////////////////////////
+
+proc poly2matrix(poly tepo, poly W)
+{
+int i,j,k;
+def RRR = basering;
+
+ring nR = char(RRR), x(1..nx), dp;
+
+// Compute n := dimension of Jac(W):
+
+poly W = imap(RRR,W);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+setring RRR;
+
+// Compute the matrix MAtepo corresponding to the polynomial tepo:
+
+poly yprod = 1; 
+for(i=1; i<=ny; i++)
+{
+yprod = yprod * y(i);
+}
+matrix koffer = coef(tepo, yprod);
+matrix MAtepo[n][n];
+
+for(i=1; i<=ncols(koffer); i++)
+{
+poly bla = koffer[2,i];
+
+
+
+ring nR = char(RRR), x(1..nx), dp;
+
+poly f = imap(RRR,bla);
+
+int j,k;
+
+poly W = imap(RRR,W);
+
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+module BB = reduce(ba,jaci);
+
+list L;
+for(k=1; k<=n; k++)
+{
+module ff = reduce(f*ba[k],jaci);
+matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+L = L + list(MM);
+}
+
+matrix U = L[1];
+for(k=2; k<=n; k++)
+{
+U=concat(U,L[k]);
+}
+
+setring RRR;
+
+matrix fop = imap(nR,U);
+
+MAtepo = MAtepo + koffer[1,i] * fop; 
+}
+
+return(MAtepo);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// "mablow" blows up a matrix by blowing up all its entries using poly2matrix:
+//////////////////////////////////////////////////////////////////////////////////
+
+proc mablow(matrix M, poly W)
+{
+int s = ncols(M);
+
+int i1,j1,i2,j2,i;
+
+// Compute n := dimension of Jac(W):
+
+def RRR = basering;
+
+ring nR = char(RRR), x(1..nx), dp;
+
+//// Define new ring -- exactly the same as RRR, but without the y-variables:
+//
+//if(size(ringlist(RRR)[1]) != 1)
+//{
+//int i,j,k;
+//list L = ringlist(RRR);
+//for(i=1; i<=ny; i++)
+//{
+//L[2] = delete(L[2],nx + 1);
+//}
+//intvec kk = (1..nx);
+//for(i=1; i<=nx; i++)
+//{
+//kk[i] = 1;
+//}
+//L[3][1][2] = kk;
+//def nR = ring(L);
+//}
+//else
+//{
+//ring nR = char(RRR), x(1..nx), dp;
+//}
+
+poly W = imap(RRR,W);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+setring RRR;
+
+// Define L to be an appropriately indexed list of blown-up matrices:
+
+list e,L;
+for(i=1; i<=s; i++)
+{
+L[i] = e;
+}
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=s; j1++)
+{
+L[i1] = insert(L[i1], poly2matrix(M[i1,j1],W),j1-1);
+}}
+
+matrix A[s*n][s*n];
+
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=n; j1++)
+{
+for(i2=1; i2<=s; i2++)
+{
+for(j2=1; j2<=n; j2++)
+{
+A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+}}}}
+
+return(A);
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+// "DRN" computes the matrix representing [g_i, XA], where XA is a monomial in the x-variables.
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+proc DRN(poly W, poly XA, int i, int degw)
+{
+int j,k;
+def RRR = basering;
+
+// Compute n := dimension of Jac(W):
+
+ring nR = char(RRR), x(1..nx), dp;
+int j,k;
+poly W = imap(RRR,W);
+poly XA = imap(RRR,XA);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+module BB = reduce(ba,jaci);
+
+list L;
+for(k=1; k<=n; k++)
+{
+module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^degw)) )/(x(i)^degw) - XA * ( ba[k] - reduce(ba[k],std(x(i)^degw)) )/(x(i)^degw),jaci);
+matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+L = L + list(MM);
+}
+
+matrix U = L[1];
+for(k=2; k<=n; k++)
+{
+U=concat(U,L[k]);
+}
+
+setring RRR;
+matrix NN = imap(nR,U);
+return(NN);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// "deltaImablow" blows up a matrix by blowing up all its entries using DRN. (This
+// is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
+//////////////////////////////////////////////////////////////////////////////////
+
+proc deltaImablow(matrix M, poly W, int II, int degw)
+{
+int s = ncols(M);
+
+int i1,j1,i2,j2,i;
+
+// Compute n := dimension of Jac(W):
+
+def RRR = basering;
+ring nR = char(RRR), x(1..nx), dp;
+poly W = imap(RRR,W);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+setring RRR;
+
+// Define L to be an appropriately indexed list of blown-up matrices:
+
+list e,L;
+for(i=1; i<=s; i++)
+{
+L[i] = e;
+}
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=s; j1++)
+{
+///////////////////////////////////////////////////
+// INTERESTING PART: 
+//
+poly yprod = 1; 
+for(i=1; i<=ny; i++)
+{yprod = yprod * y(i);}
+
+matrix koffer = coef(M[i1,j1], yprod);
+int anzahl = ncols(koffer);
+
+matrix N[n][n];
+
+for(i=1; i<=anzahl; i++)
+{
+N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degw);
+}
+
+L[i1] = insert(L[i1], N, j1-1);
+///////////////////////////////////////////////////
+}}
+
+matrix A[s*n][s*n];
+
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=n; j1++)
+{
+for(i2=1; i2<=s; i2++)
+{
+for(j2=1; j2<=n; j2++)
+{
+A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+}}}}
+
+return(A);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "SGroupintvecs" produces the nx! permutations of (1,...,nx) as a list of intvecs.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc SGroupintvecs(int nx)
+{
+LIB "qmatrix.lib";
+list L;
+int i,j,k;
+intmat M = SymGroup(nx);
+
+for(i=1; i<=nrows(M); i++)
+{
+intvec c;
+for(j=1; j<=ncols(M); j++)
+{
+c[j] = M[i,j];
+}
+L[i] = c;
+}
+
+return(L);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables),
+//  baa=deg(W)-1)
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc deltaQ(matrix F, poly W, int nx, int baa)
+{
+LIB "matrix.lib";
+int i,j,k;
+list S = SGroupintvecs(nx);
+int gg = ncols(deltaImablow(F, W, S[1][1], baa-1));
+matrix Mi[gg][gg];
+
+for(i=1; i<=size(S); i++)
+{
+matrix Ma = unitmat(gg);
+for(j=1; j<=nx; j++)
+{
+Ma = Ma * deltaImablow(F, W, S[i][j], baa-1);
+}
+Mi = Mi + Ma; 
+}
+return(Mi);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
+//  baa=deg(W)-1)
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc dQ(matrix f, poly W, int nx, int baa)
+{
+LIB "matrix.lib";
+int i,j,k;
+list S = SGroupintvecs(nx);
+int gg = ncols(deltaImablow(f, W, S[1][1], baa	-1));
+matrix Mi[gg][gg];
+
+for(i=1; i<=size(S); i++)
+{
+matrix Ma = unitmat(gg);
+for(j=1; j<=nx; j++)
+{
+Ma = Ma * mablow(diff(f, x(S[i][j])), W);
+}
+Mi = Mi + Ma; 
+}
+return(Mi);
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// old stuff to compute cohomologies:
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+proc rdsum(matrix A, int r)
+{
+list B;
+B[1]=A;
+for (int i=2; i<=r; i++)
+{
+B[i]=dsum(B[i-1],A);
+}
+return(B[r]);
+}
+//-----------------------------------------------------------------------------
+proc dminus(matrix f,g,f',g')
+{
+int r=nrows(f);
+int r'=nrows(f');
+matrix P1=concat(tensor(f',unitmat(r)), rdsum(-transpose(f),r'));
+matrix P2=concat(rdsum(transpose(-g),r'),tensor(g',unitmat(r)));
+matrix P[2*r*r'][2*r*r']=P2,P1;
+return(P);
+}
+//-----------------------------------------------------------------------------
+proc dplus(matrix f,g,f',g')
+{ 
+int r=nrows(f);
+int r'=nrows(f');
+matrix P1=concat(rdsum(transpose(f),r'),tensor(g',unitmat(r)));
+matrix P2=concat(tensor(f',unitmat(r)),rdsum(transpose(g),r'));
+matrix P[2*r*r'][2*r*r']=P1,P2;
+return(P);
+}
+//-----------------------------------------------------------------------------
+proc vector2matrix(list V, int r, int r')
+{
+int i,j,k;
+list M;
+matrix ma[2*r'][2*r];
+for(i=1; i<=size(V); i++){M = M + list(ma);}
+for(i=1; i<=size(V); i++)
+ {for(j=1; j<=r; j++)
+  {for(k=1; k<=r'; k++)
+   {M[i][k,j] = V[i][(k-1)*r + j, 1];
+    M[i][k+r',j+r] = V[i][(r'-1+k)*r + j, 1];
+   }
+  }
+ }
+return(M);
+}
+//-----------------------------------------------------------------------------
+proc vector2matrixFerm(list V, int r, int r')
+{
+int i,j,k;
+list M;
+matrix ma[2*r'][2*r];
+for(i=1; i<=size(V); i++){M = M + list(ma);}
+for(i=1; i<=size(V); i++)
+ {for(j=1; j<=r; j++)
+  {for(k=1; k<=r'; k++)
+   {M[i][k,j+r] = V[i][(k-1)*r + j, 1];
+    M[i][k+r',j] = V[i][(r'-1+k)*r + j, 1];
+   }
+  }
+ }
+return(M);
+}
+//-----------------------------------------------------------------------------
+proc matrix2vector(matrix M)
+{
+int r1 = ncols(M)/2;
+int r2 = nrows(M)/2;
+int i,ii,j,k;
+vector v;
+// bosonic part:
+for(ii=1; ii<= r2; ii++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen((ii-1)*r1 + j)*M[ii,j];
+}}
+for(ii=1; ii<= r2; ii++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen(r1*r2 + (ii-1)*r1 + j)*M[ii+r2,j+r1];
+}}
+// fermionic part:
+for(i=1; i<= r2; i++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen(2*r1*r2 + (i-1)*r1 + j)*M[i,j+r1];
+}}
+for(i=1; i<= r2; i++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen(2*r1*r2 + r1*r2 + (i-1)*r1 + j)*M[i+r2,j];
+}}
+
+return(v);
+}
+//-----------------------------------------------------------------------------
+proc MFco(matrix f,g,f',g')
+{
+module M=syz(dminus(f,g,f',g'));
+matrix Mker=M;
+module Q=modulo(M,module(dplus(f,g,f',g')));
+matrix base=kbase(std(Q));
+matrix m = Mker*base;
+
+module Mf=syz(dplus(f,g,f',g'));
+matrix Mkerf=Mf;
+module Qf=modulo(Mf,module(dminus(f,g,f',g')));
+matrix basef=kbase(std(Qf));
+matrix mf = Mkerf*basef;
+
+int i;
+int r = ncols(f);
+int r' = ncols(f');
+matrix ma[2*r'][2*r];
+list L;
+for(i=1; i<=ncols(m); i++){L = L + list(ma);}
+intvec v1 = 1..nrows(m);
+intvec v2;
+
+list Lf;
+for(i=1; i<=ncols(mf); i++){Lf = Lf + list(ma);}
+intvec vf1 = 1..nrows(mf);
+intvec vf2;
+
+for(i=1; i<=ncols(m); i++)
+{
+intvec v2 = i;
+L[i] = submat(m,v1,v2);
+}
+
+for(i=1; i<=ncols(mf); i++)
+{
+intvec vf2 = i;
+Lf[i] = submat(mf,vf1,vf2);
+}
+
+
+list MMb = vector2matrix(L, r, r');
+list MMf = vector2matrixFerm(Lf, r, r');
+
+matrix null[2*r'][2*r];
+list leer;
+if(MMb[1] == null)
+{MMb = leer;}
+if(MMf[1] == null)
+{MMf = leer;}
+
+
+list MM;
+MM[1] = MMb;
+MM[2] = MMf;
+
+return(MM);
+}
+
+
+// MFtensorF(f,g,fs,gs) gives the f-part of the tensor product matrix factorisations of (f,s) and (fs,gs).
+
+proc MFtensorF(matrix f, matrix g, matrix fs, matrix gs)
+{
+LIB "matrix.lib";
+int i,j;
+ int r=ncols(f);
+ int rs=ncols(fs);
+ matrix m[2*r*rs][2*r*rs];
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i,j] = tensor(f,unitmat(rs))[i,j];
+   }
+  }
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i,j + r*rs] = - tensor(unitmat(r),gs)[i,j];
+   }
+  }
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i + r*rs,j] = tensor(unitmat(r),fs)[i,j];
+   }
+  }
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i + r*rs,j + r*rs] = tensor(g,unitmat(rs))[i,j];
+   }
+  }
+return(m);
+}
+
+
+// MFtensorG(f,g,fs,gs) gives the g-part of the tensor product matrix factorisations of (f,s) and (fs,gs).
+
+proc MFtensorG(matrix f, matrix g, matrix fs, matrix gs)
+{
+LIB "matrix.lib";
+int i,j;
+ int r=ncols(f);
+ int rs=ncols(fs);
+ matrix m[2*r*rs][2*r*rs];
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i,j] = tensor(g,unitmat(rs))[i,j];
+   }
+  }
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i,j + r*rs] = tensor(unitmat(r),gs)[i,j];
+   }
+  }
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i + r*rs,j] = - tensor(unitmat(r),fs)[i,j];
+   }
+  }
+ for(i=1; i<=r*rs; i++)
+  {for(j=1; j<=r*rs; j++)
+   {m[i + r*rs,j + r*rs] = tensor(f,unitmat(rs))[i,j];
+   }
+  }
+return(m);
+}
+
+// blockmat(A,B,C,D) gives the block-matrix {{A,B},{C,D}} if the square matrices A,B,C,D all have the same size.
+
+proc blockmat(matrix block1,matrix block2,matrix block3,matrix block4)
+{
+int i,j;
+int r=ncols(block1);
+matrix m[2*r][2*r];
+for(i=1;i<=r;i++){for(j=1;j<=r;j++){m[i,j]=block1[i,j];}}
+for(i=1;i<=r;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block2[i,j-r];}}
+for(i=r+1;i<=2*r;i++){for(j=1;j<=r;j++){m[i,j]=block3[i-r,j];}}
+for(i=r+1;i<=2*r;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block4[i-r,j-r];}}
+return(m);
+}
+
+// Modification of blockmat to accommodate nonsquare entries (consider replacing blockmat with this)
+// We assume the blocks all have the same (possibly nonsquare) size
+proc blockmat_nsq(matrix block1,matrix block2,matrix block3,matrix block4)
+{
+int i,j;
+int r=ncols(block1);
+int s=nrows(block1);
+matrix m[r+s][r+s];
+
+for(i=1;i<=s;i++){for(j=1;j<=r;j++){m[i,j]=block1[i,j];}}
+for(i=1;i<=s;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block2[i,j-r];}}
+for(i=s+1;i<=2*s;i++){for(j=1;j<=r;j++){m[i,j]=block3[i-s,j];}}
+for(i=s+1;i<=2*s;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block4[i-s,j-r];}}
+return(m);
+}
+
+
+/// NEW 1/7/10 Dan.
+
+////////////////////////////////////////////////////////////////////
+// MFreduce
+//
+// Takes as input an odd block matrix interpreted as the differential on a Z/2-graded free module X.
+// The output is the differential of a matrix factorisation Y homotopy equivalent to X which has no
+// constant entries (the "reduced" form of the original matrix factorisation). Note the size of the input
+// and output matrices may differ.
+//
+// The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
+// which are mutually inverse in the homotopy category.
+
+proc MFreduce(matrix A)
+{
+	LIB "linalg.lib";
+	
+	matrix B = A; // B will become the differential of Y
+	matrix F = unitmat(ncols(A));
+	matrix G = unitmat(ncols(A));
+	
+	print("Original matrix A is"); print(string(A));
+	
+	// A remains fixed, we work steadily on B and F, G until B has the desired form
+	while( isMFreduced(B) != 1 )
+	{
+		// Extract the odd and even part of the differential
+		list blocks = extractblockmat(B);
+		matrix b0 = blocks[3]; matrix b1 = blocks[2];
+		
+		// Extract the morphisms
+		list blocks_f = extractblockmat(F);
+		matrix f0 = blocks_f[1]; matrix f1 = blocks_f[4];
+		
+		list blocks_g = extractblockmat(G);
+		matrix g0 = blocks_g[1]; matrix g1 = blocks_g[4];
+		
+		// There is a constant somewhere
+		if( isMFreduced(b0) != 1 )
+		{
+			list l = matrixreduce(b0);
+			
+			// b0r is the reduced matrix, and p * b0 * q = b0r.
+			matrix b0r = l[1]; matrix p = l[2]; matrix q = l[3];
+			
+			// The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
+			// via the morphism (from the former to the latter) given by the pair
+			// (q,p). We now transform b1 to b1r = q^{-1} * b1 * p^{-1} and call the differential of the
+			// new matrix factorisation B. We remember the transformation by adjusting F and G, so
+			// that at each stage F is an isomorphism between X and Y with inverse G
+			
+			b1r = inverse(q) * b1 * inverse(p);
+			f0 = q * f0; f1 = p * f1;
+			g0 = g0 * q^{-1}; g1 = g1 * p^{-1};
+			
+			// Now that we guarantee b0 has an identity in the top left and zeros in the rest
+			// of the first column, call a worker routine to "split" off this contractible
+			// piece and return the modified B, F, G
+			list out = MFreduce_work(b0,b1,f0,f1,g0,g1);
+			B = out[1];
+			F = out[2];
+			G = out[3];
+		}
+		
+		// TODO: Also check b1 for constants
+	}
+	
+	list ret = B, F, G;
+	return(ret);
+}
+
+proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
+{
+	// By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
+	// where W is the potential. There is an isomorphism between this matrix factorisation
+	// and the factorisation (s, e)
+	
+	// Read off s,e and t from b0 and b1
+	int i,j;
+	matrix S[nrows(b0)-1][ncols(b0)-1];
+	for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ S[j-1,i-1] = b0[j,i]; } }
+	
+	matrix E[nrows(b0)-1][ncols(b0)-1];
+	for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ E[j-1,i-1] = b1[j,i]; } }
+	
+	matrix T[1][ncols(b0)-1];
+	for(i=2;i<=ncols(b0);i++){ T[1,i-1] = b0[1,i]; }
+		
+	// The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
+	// ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
+	// so we need to stick these on the appropriate side of F, G
+	
+	// Matrix of (0 1)
+	matrix zeroone[nrows(S)][ncols(S)+1];
+	for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; }
+	
+	
+	
+	matrix zb[nrows(S)][ncols(S)];
+	matrix zf[nrows(fo0)][ncols(fo0)];
+	matrix zg[nrows(go0)][ncols(go0)];
+	
+	matrix Bo = blockmat(zb, E, S, zb);
+	matrix Fo = blockmat_nsq(zf, f1, f0, zf);
+	matrix Go = blockmat_nsq(zg, g1, g0, zg);
+	
+	list l = Bo, Fo, Go;
+	return (l);
+}
+
+// Returns 1 if there are no constant terms in A, zero otherwise
+proc isMFreduced(matrix A)
+{
+	int i,j;
+	for(i=1;i<=ncols(A);i++)
+	{
+		for(j=1;j<=ncols(B);j++)
+		{
+			if( deg(A[i,j]) == 0 )
+			{
+				return(0);
+			}
+		}
+	}
+	
+	return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// matrixreduce
+//
+// After some bad experiences with examples I don't trust Singular's gaussian elimination
+// routines, so here is a primitive version which is good enough for our purposes.
+//
+// The input is a square matrix M. The output is a matrix N and two invertible matrices P, Q
+// formatted as a triple (N, P, Q) such that P M Q = N. If no entry of M is a unit then N = M
+// and P = Q = id. Otherwise the top left entry of N is a 1 and the first column of N contains
+// no other nonzero entries.
+
+proc matrixreduce(matrix M)
+{
+	int mrank = ncols(M);
+	matrix P = unitmat(mrank);
+	matrix Q = unitmat(mrank);
+	matrix N = M;
+	
+	// Let us find a constant entry in M
+	int i,j;
+	
+	for(i=1;i<=mrank;i++)
+	{
+		for(j=1;j<=mrank;j++)
+		{
+			if( deg(M[i,j]) == 0 )
+			{
+				// We found our constant term, permute it to (1,1)
+				P = 1/(M[i,j]) * permrow(P, 1,i);
+				Q = permcol(Q, 1,j);
+				N = P * M * Q;
+				
+				// Go through the first column and transform away everything
+				int k;
+				for(k=2;k<=mrank;k++)
+				{
+					if(N[k,1] != 0)
+					{
+						matrix Pn = unitmat(mrank);
+						Pn[k,1] = - N[k,1];
+						
+						P = Pn * P;
+						N = Pn * N;
+					}
+				}
+				
+				list l = N,P,Q;
+				return(l);
+			}
+		}
+	}
+
+	// We failed to find a constant term, so return M, 1, 1
+	list l = N, P, Q;
+	return(l);
+}
+
+////////////////////////////////////////////////////////////////////
+// MFtensor
+//
+// Takes as input a pair (A,B) of odd block 2x2 matrices which we interpret as a pair of differentials
+// on Z/2-graded free modules X,Y resp. The return is the differential on the tensor product X x Y.
+
+proc MFtensor(matrix A, matrix B)
+{
+	// There are two differentials A x 1 and B x 1 on the tensor product and we return their sum
+	int arank = ncols(A);
+	int brank = ncols(B);
+	
+	return( ZZtensor( unitmat(arank), B ) + ZZtensor( A, unitmat(brank) ) );
+}
+
+////////////////////////////////////////////////////////////////////
+// ZZtensor 
+//
+// Takes as input a pair (A,B) of block 2x2 matrices (square blocks of arbitrary size) which we interpret
+// as a pair of endomaps of Z/2-graded free modules A: X -> X, B: Y -> Y according to the decompositions
+// X = X0 + X1 and Y = Y0 + Y1. We assume that A, B are both homogeneous (i.e. either even or odd).
+//
+// Consider the tensor product Z = X x Y of Z/2-graded modules and the map A x B: Z -> Z which sends
+// a homogeneous tensor f x g to (-1)^{|f||B|} A(f) x B(g). We return the matrix of this map with respect
+// to the decomposition Z0 = (X0 x Y0) + (X1 + Y1) and Z1 = (X0 + Y1) x (X1 + Y0) of Z. The basis of
+// X0 x Y0 is ordered in the usual way for a Kronecker product of matrices.
+
+proc ZZtensor(matrix A, matrix B)
+{
+	int arank = ncols(A)/2; // Size of blocks in A
+	int brank = ncols(B)/2; // Size of blocks in B
+	
+	// The blocks in Z are therefore of size 2 * arank * brank
+	int zrank = 2 * arank * brank;
+	
+	list la = extractblockmat(A);
+	list lb = extractblockmat(B);
+	
+	matrix a11, a12, a21, a22, b11, b12, b21, b22;
+	
+	a11 = la[1]; a12 = la[2]; a21 = la[3]; a22 = la[4];
+	b11 = lb[1]; b12 = lb[2]; b21 = lb[3]; b22 = lb[4];
+	
+	// Define the four corners of Z, then use blockmat
+	matrix z11 = blockmat( tensor(a11,b11), -1 * tensor(a12,b12), tensor(a21,b21), tensor(a22,b22) );
+	matrix z12 = blockmat( tensor(a11,b12), tensor(a12,b11), tensor(a21,b22), -1 * tensor(a22,b21) );
+	matrix z21 = blockmat( tensor(a11,b21), tensor(a12,b22), tensor(a21,b11), -1 * tensor(a22,b12) );
+	matrix z22 = blockmat( tensor(a11, b22), -1 * tensor(a12,b21), tensor(a21,b12), tensor(a22,b11) );
+	
+	matrix Z = blockmat(z11,z12,z21,z22);
+	
+	return(Z);
+}
+
+////////////////////////////////////////////////////////////////////
+// extractblockmat takes a block matrix (A B // C D) and returns a list {A, B, C, D}.
+// We assume that the blocks each have half the width of the matrix, and half the height
+// of the matrix (so we assume both are even).
+
+proc extractblockmat(matrix block)
+{
+	int r = ncols(block)/2;
+	
+	matrix a[r][r];
+	matrix b[r][r];
+	matrix c[r][r];
+	matrix d[r][r];
+	
+	int i,j; // i is the row and j the column
+	for(i=1;i <= r; i++)
+	{
+		for(j=1;j <= r; j++)
+		{
+			a[i,j] = block[i,j];
+			b[i,j] = block[i,j+r];
+			c[i,j] = block[i+r,j];
+			d[i,j] = block[i+r,j+r];
+		}
+	}
+	
+	list l = a,b,c,d;
+	return(l);
+}
+
+///////////// TESTS ///////////////
+
+proc test_matrixreduce()
+{
+	int passed = 1;
+	
+	ring RR = 0,(x,y),dp;
+	
+	// Test 1
+	matrix M[2][2] = x,5,x,1;
+	list l = matrixreduce(M);
+	matrix N[2][2] = 1,1/5*x,0,4/25*x;	
+	if( l[1] != N || l[2] * M * l[3] != l[1] ){ passed = 0; }
+	
+	// Test 2
+	matrix A[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+	list b = matrixreduce(A);
+	matrix B[4][4] = 1,0,0,-y,0,0,0,-y2,0,0,-y2,0,0,-y2,-y,y;
+	
+	if( b[1] != B || b[2] * A * b[3] != b[1] ){ passed = 0; }
+	
+	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
+
+proc test_ZZtensor()
+{
+	int passed = 1;
+	
+	// Test 1
+	matrix A[2][2] = 1,0,0,1;
+	matrix B[2][2] = 0,1,1,0;
+	
+	// The tensor product A x B should be the following matrix
+	matrix AB[4][4] = 0, 0, 1, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, -1, 0, 0;
+	
+	if( AB != ZZtensor(A,B) ){ passed = 0; }
+		
+	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
