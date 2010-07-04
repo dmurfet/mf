@@ -615,6 +615,7 @@ return(m);
 // constant entries (the "reduced" form of the original matrix factorisation). Note the size of the input
 // and output matrices may differ.
 //
+// If a nonzero second parameter is specified then instead of returning just a matrix we return a list.
 // The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
 // which are mutually inverse in the homotopy category.
 //
@@ -623,14 +624,13 @@ return(m);
 // with each intermediate step a differential Bi of a MF together with even maps Fi, Gi representing
 // homotopy equivalences between A and Bi.
 
-proc MFreduce(matrix A)
+proc MFreduce(matrix A, list #)
 {
 	LIB "linalg.lib";
 	
 	int prl = printlevel;
 
 	dbprint(prl, "[MFreduce]");
-	dbprint(prl, " Original matrix A is"); dbprint(prl, A);
 	
 	// Extract the odd and even part of the differential
 	list blocks = extractblockmat(A);
@@ -665,12 +665,10 @@ proc MFreduce(matrix A)
 		f0 = inverse(q) * f0; f1 = p * f1;
 		g0 = g0 * q; g1 = g1 * inverse(p);
 			
-		dbprint(prl, " Result of reduction, b0:"); dbprint(prl,b0);
-		dbprint(prl, " Result of reduction, b1:"); dbprint(prl,b1);
-		dbprint(prl, " Result of reduction, f0:"); dbprint(prl,f0);
-		dbprint(prl, " Result of reduction, f1:"); dbprint(prl,f1);
-		dbprint(prl, " Result of reduction, p:"); dbprint(prl,p);
-		dbprint(prl, " Result of reduction, q:"); dbprint(prl,q);
+		dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
+		dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
+		dbprint(prl, "  Result of reduction, p:"); dbprint(prl,p);
+		dbprint(prl, "  Result of reduction, q:"); dbprint(prl,q);
 			
 		// Now that we guarantee b0 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
@@ -704,12 +702,10 @@ proc MFreduce(matrix A)
 		f0 = p * f0; f1 = inverse(q) * f1;
 		g0 = g0 * inverse(p); g1 = g1 * q;
 			
-		dbprint(prl, " Result of reduction, b0:"); dbprint(prl,b0);
-		dbprint(prl, " Result of reduction, b1:"); dbprint(prl,b1);
-		dbprint(prl, " Result of reduction, f0:"); dbprint(prl,f0);
-		dbprint(prl, " Result of reduction, f1:"); dbprint(prl,f1);
-		dbprint(prl, " Result of reduction, p:"); dbprint(prl,p);
-		dbprint(prl, " Result of reduction, q:"); dbprint(prl,q);
+		dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
+		dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
+		dbprint(prl, "  Result of reduction, p:"); dbprint(prl,p);
+		dbprint(prl, "  Result of reduction, q:"); dbprint(prl,q);
 			
 		// Now that we guarantee b1 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
@@ -725,6 +721,22 @@ proc MFreduce(matrix A)
 		transform_record = transform_record + list(current_stage);
 	}
 	
+	// Our MF (b0,b1) is now guaranteed to be free of constants. At this point
+	// we just apply usual Guassian elimination: TODO it only looks for lower triangular
+	// reduced forms...
+	////// BEGIN GAUSS //////
+	list gau = gauss_row(b0,1);
+
+	matrix tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
+	matrix b0r = transpose(gau[1]); // The reduced form
+	if( tr * b0 != b0r ){ print("[MFreduce] Error in Gaussian elimination"); return(1); }
+	
+	b0 = b0r;
+	b1 = b1 * inverse(tr);
+	f1 = tr * f1;
+	g1 = g1 * inverse(tr);
+	/////// END GAUSS ////////
+	
 	// Pack everything into block matrices
 	matrix zb[nrows(b0)][ncols(b0)];
 	matrix zf[nrows(f0)][ncols(f0)];
@@ -734,8 +746,15 @@ proc MFreduce(matrix A)
 	matrix F = blockmat_nsq(f0, zf, zf, f1);
 	matrix G = blockmat_nsq(g0, zg, zg, g1);
 	
-	list ret = B, F, G, transform_record;
-	return(ret);
+	if( size(#) != 0 )
+	{
+		list ret = B, F, G, transform_record;
+		return(ret);
+	}
+	else
+	{
+		return(B);
+	}
 }
 
 proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
@@ -990,7 +1009,7 @@ proc test_MFreduce()
 	matrix z[4][4];
 
 	matrix d = blockmat(z,d1,d0,z);
-	list l = MFreduce(d);
+	list l = MFreduce(d,1);
 	
 	matrix b = l[1];
 	matrix f = l[2];
