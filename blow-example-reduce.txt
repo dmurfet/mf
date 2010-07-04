@@ -6,10 +6,13 @@ option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
 ring rr=0,(x,y),dp;
 
-matrix e0[4][4] = 1,0,0,-1,0,1,0,0,0,0,0,0,-2,-2y,0,2;
-matrix e1[4][4] = 0,0,0,0,0,2,0,-2,-1,-y,1,0,0,-1,0,1;
+matrix d0[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+matrix d1[4][4] = 0,0,y,0,1,0,-1,y,y2,0,0,0,y,y2,0,0;
 matrix z[4][4];
 
-matrix e = blockmat(z,e1,e0,z);
+matrix d = blockmat(z,d1,d0,z);
 
-MFreduce(e);
+list l = MFreduce(d);
+
+// So l[1] is the reduced MF homotopy equivalent to d, and l[2], l[3] are mutually inverse
+// morphisms in the homotopy category effecting this homotopy equivalence.

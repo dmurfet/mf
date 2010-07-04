@@ -593,14 +593,14 @@ return(m);
 proc blockmat_nsq(matrix block1,matrix block2,matrix block3,matrix block4)
 {
 int i,j;
-int r=ncols(block1);
-int s=nrows(block1);
-matrix m[r+s][r+s];
+int nc=ncols(block1);
+int nr=nrows(block1);
+matrix m[2*nr][2*nc];
 
-for(i=1;i<=s;i++){for(j=1;j<=r;j++){m[i,j]=block1[i,j];}}
-for(i=1;i<=s;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block2[i,j-r];}}
-for(i=s+1;i<=2*s;i++){for(j=1;j<=r;j++){m[i,j]=block3[i-s,j];}}
-for(i=s+1;i<=2*s;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block4[i-s,j-r];}}
+for(i=1;i<=nr;i++){for(j=1;j<=nc;j++){m[i,j]=block1[i,j];}}
+for(i=1;i<=nr;i++){for(j=nc+1;j<=2*nc;j++){m[i,j]=block2[i,j-nc];}}
+for(i=nr+1;i<=2*nr;i++){for(j=1;j<=nc;j++){m[i,j]=block3[i-nr,j];}}
+for(i=nr+1;i<=2*nr;i++){for(j=nc+1;j<=2*nc;j++){m[i,j]=block4[i-nr,j-nc];}}
 return(m);
 }
 
@@ -610,13 +610,18 @@ return(m);
 ////////////////////////////////////////////////////////////////////
 // MFreduce
 //
-// Takes as input an odd block matrix interpreted as the differential on a Z/2-graded free module X.
-// The output is the differential of a matrix factorisation Y homotopy equivalent to X which has no
+// Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X.
+// The output is the differential B of a matrix factorisation Y homotopy equivalent to X which has no
 // constant entries (the "reduced" form of the original matrix factorisation). Note the size of the input
 // and output matrices may differ.
 //
 // The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
 // which are mutually inverse in the homotopy category.
+//
+// The final output is a "record" of each of the reduction steps: that is, a list L = (R1,R2,...) which
+// is a series of triples Ri = (b0i,b1i,f0i,f1i, g0i,g1i) beginning with R1 = (A,1,1) and ending with R? = (B, F, G)
+// with each intermediate step a differential Bi of a MF together with even maps Fi, Gi representing
+// homotopy equivalences between A and Bi.
 
 proc MFreduce(matrix A)
 {
@@ -625,58 +630,111 @@ proc MFreduce(matrix A)
 	int prl = printlevel;
 
 	dbprint(prl, "[MFreduce]");
+	dbprint(prl, " Original matrix A is"); dbprint(prl, A);
 	
-	matrix B = A; // B will become the differential of Y
-	matrix F = unitmat(ncols(A));
-	matrix G = unitmat(ncols(A));
+	// Extract the odd and even part of the differential
+	list blocks = extractblockmat(A);
+	matrix b0 = blocks[3]; matrix b1 = blocks[2];
 	
-	dbprint(prl, " Original matrix A is" + string(A));
+	// F and G begin as identity maps
+	matrix f0 = unitmat(ncols(A)/2); matrix f1 = unitmat(ncols(A)/2);
+	matrix g0 = unitmat(ncols(A)/2); matrix g1 = unitmat(ncols(A)/2);
 	
+	list transform_record;
+	list current_stage = b0,b1,f0,f1,g0,g1;
+	transform_record = transform_record + list(current_stage);
+		
 	// A remains fixed, we work steadily on B and F, G until B has the desired form
-	while( isMFreduced(B) != 1 )
-	{
-		// Extract the odd and even part of the differential
-		list blocks = extractblockmat(B);
-		matrix b0 = blocks[3]; matrix b1 = blocks[2];
+	// Begin by looking inside b0 for nonzero constants
+	while( isMFreduced(b0) != 1 )
+	{	
+		dbprint(prl, " [MFreduce] while loop for b0");
 		
-		// Extract the morphisms
-		list blocks_f = extractblockmat(F);
-		matrix f0 = blocks_f[1]; matrix f1 = blocks_f[4];
+		// There is a constant somewhere, begin looking in b0
+		list l = matrixreduce(b0);
+		matrix p = l[2]; matrix q = l[3];
+			
+		// The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
+		// via the morphism (from the former to the latter) given by the pair
+		// (q^{-1},p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1}.
+		// We remember the transformation by adjusting F and G, so
+		// that at each stage F is an isomorphism between X and Y with inverse G
+
+		b0 = l[1];
+		b1 = inverse(q) * b1 * inverse(p);
+		f0 = inverse(q) * f0; f1 = p * f1;
+		g0 = g0 * q; g1 = g1 * inverse(p);
+			
+		dbprint(prl, " Result of reduction, b0:"); dbprint(prl,b0);
+		dbprint(prl, " Result of reduction, b1:"); dbprint(prl,b1);
+		dbprint(prl, " Result of reduction, f0:"); dbprint(prl,f0);
+		dbprint(prl, " Result of reduction, f1:"); dbprint(prl,f1);
+		dbprint(prl, " Result of reduction, p:"); dbprint(prl,p);
+		dbprint(prl, " Result of reduction, q:"); dbprint(prl,q);
+			
+		// Now that we guarantee b0 has an identity in the top left and zeros in the rest
+		// of the first column, call a worker routine to "split" off this contractible
+		// piece and return the modified B, F, G
+		list out = MFreduce_work(b0,b1,f0,f1,g0,g1);
+		b0 = out[1]; b1 = out[2];
+		f0 = out[3]; f1 = out[4];
+		g0 = out[5]; g1 = out[6];
 		
-		list blocks_g = extractblockmat(G);
-		matrix g0 = blocks_g[1]; matrix g1 = blocks_g[4];
-		
-		// There is a constant somewhere
-		if( isMFreduced(b0) != 1 )
-		{
-			list l = matrixreduce(b0);
-			
-			// b0r is the reduced matrix, and p * b0 * q = b0r.
-			b0 = l[1]; matrix p = l[2]; matrix q = l[3];
-			
-			// The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
-			// via the morphism (from the former to the latter) given by the pair
-			// (q,p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1} and call the differential of the
-			// new matrix factorisation B. We remember the transformation by adjusting F and G, so
-			// that at each stage F is an isomorphism between X and Y with inverse G
-			
-			b1 = inverse(q) * b1 * inverse(p);
-			f0 = q * f0; f1 = p * f1;
-			g0 = g0 * inverse(q); g1 = g1 * inverse(p);
-			
-			// Now that we guarantee b0 has an identity in the top left and zeros in the rest
-			// of the first column, call a worker routine to "split" off this contractible
-			// piece and return the modified B, F, G
-			list out = MFreduce_work(b0,b1,f0,f1,g0,g1);
-			B = out[1];
-			F = out[2];
-			G = out[3];
-		}
-		
-		// TODO: Also check b1 for constants
+		current_stage = b0,b1,f0,f1,g0,g1;
+		transform_record = transform_record + list(current_stage);
 	}
 	
-	list ret = B, F, G;
+	// No do the same process to b1 (TODO: unify these two steps
+	while( isMFreduced(b1) != 1 )
+	{	
+		dbprint(prl, " [MFreduce] while loop for b1");
+		
+		// There is a constant somewhere, begin looking in b1
+		list l = matrixreduce(b1);
+		matrix p = l[2]; matrix q = l[3];
+			
+		// The matrix factorisation (b0,b1) is isomorphic to (q^{-1} * b0 * p^{-1}, p * b1 * q)
+		// via the morphism (from the former to the latter) given by the pair
+		// (p,q^{-1}). We now transform b0 to b0 = q^{-1} * b0 * p^{-1}.
+		// We remember the transformation by adjusting F and G, so
+		// that at each stage F is an isomorphism between X and Y with inverse G
+
+		b1 = l[1];
+		b0 = inverse(q) * b0 * inverse(p);
+		f0 = p * f0; f1 = inverse(q) * f1;
+		g0 = g0 * inverse(p); g1 = g1 * q;
+			
+		dbprint(prl, " Result of reduction, b0:"); dbprint(prl,b0);
+		dbprint(prl, " Result of reduction, b1:"); dbprint(prl,b1);
+		dbprint(prl, " Result of reduction, f0:"); dbprint(prl,f0);
+		dbprint(prl, " Result of reduction, f1:"); dbprint(prl,f1);
+		dbprint(prl, " Result of reduction, p:"); dbprint(prl,p);
+		dbprint(prl, " Result of reduction, q:"); dbprint(prl,q);
+			
+		// Now that we guarantee b1 has an identity in the top left and zeros in the rest
+		// of the first column, call a worker routine to "split" off this contractible
+		// piece and return the modified B, F, G
+		list out = MFreduce_work(b1,b0,f1,f0,g1,g0);
+		
+		// Note the orders are interchanged relative to the b0 case!
+		b0 = out[2]; b1 = out[1];
+		f0 = out[4]; f1 = out[3];
+		g0 = out[6]; g1 = out[5];
+		
+		current_stage = b0,b1,f0,f1,g0,g1;
+		transform_record = transform_record + list(current_stage);
+	}
+	
+	// Pack everything into block matrices
+	matrix zb[nrows(b0)][ncols(b0)];
+	matrix zf[nrows(f0)][ncols(f0)];
+	matrix zg[nrows(g0)][ncols(g0)];
+
+	matrix B = blockmat(zb, b1, b0, zb);
+	matrix F = blockmat_nsq(f0, zf, zf, f1);
+	matrix G = blockmat_nsq(g0, zg, zg, g1);
+	
+	list ret = B, F, G, transform_record;
 	return(ret);
 }
 
@@ -685,10 +743,6 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 	// By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
 	// where W is the potential. There is a homotopy equivalence between this matrix factorisation
 	// and the factorisation (s, e)
-	
-	int p = printlevel;
-
-	dbprint(p, "[MFreduce_work]");
 	
 	// Read off s,e and t from b0 and b1
 	int i,j;
@@ -700,11 +754,7 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 	
 	matrix T[1][ncols(b0)-1];
 	for(i=2;i<=ncols(b0);i++){ T[1,i-1] = b0[1,i]; }
-		
-	dbprint(p, " matrix S: " + string(S));
-	dbprint(p, " matrix E: " + string(E));
-	dbprint(p, " matrix T: " + string(T));
-	
+			
 	// The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
 	// ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
 	// so we need to stick these on the appropriate side of F, G
@@ -717,33 +767,18 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 	for(i=1;i<=nrows(S);i++){ negtone[i+1,i] = 1; }
 	for(i=1;i<=ncols(S);i++){ negtone[1,i] = -T[1,i]; }
 	
-	dbprint(p, " matrix zeroone: " + string(zeroone));
-	dbprint(p, " matrix negtone: " + string(negtone));
-
 	// Modify f and g by the appropriate things
-	f0 = zeroone * f0;
-	f1 = zeroone * f0;
-	g0 = g0 * negtone;
-	g1 = g1 * transpose(zeroone);
-	
-	matrix zb[nrows(S)][ncols(S)];
-	matrix zf[nrows(f0)][ncols(f0)];
-	matrix zg[nrows(g0)][ncols(g0)];
-	
-	// The new reduced MF Y' and the isomorphism Fo: X -> Y' and Go: Y' -> X
-	matrix Bo = blockmat(zb, E, S, zb);
-	matrix Fo = blockmat_nsq(zf, f1, f0, zf);
-	matrix Go = blockmat_nsq(zg, g1, g0, zg);
-	
-	dbprint(p, " Final results, Bo: " + string(Bo) );
-	dbprint(p, " Final results, Fo: " + string(Fo) );
-	dbprint(p, " Final results, Go: " + string(Go) );
-	
-	list l = Bo, Fo, Go;
+	matrix f0r = zeroone * f0;
+	matrix f1r = zeroone * f1;
+	matrix g0r = g0 * negtone;
+	matrix g1r = g1 * transpose(zeroone);
+			
+	// Our return list is b0,b1,f0,f1,g0,g1
+	list l = S, E, f0r, f1r, g0r, g1r;
 	return (l);
 }
 
-// Returns 1 if there are no constant terms in A, zero otherwise
+// Returns 1 if there are no constant terms in A (other than zero), and zero otherwise
 proc isMFreduced(matrix A)
 {
 	int i,j;
@@ -751,7 +786,7 @@ proc isMFreduced(matrix A)
 	{
 		for(j=1;j<=ncols(A);j++)
 		{
-			if( deg(A[i,j]) == 0 )
+			if( deg(A[i,j]) == 0 && A[i,j] != 0 )
 			{
 				return(0);
 			}
@@ -875,26 +910,27 @@ proc ZZtensor(matrix A, matrix B)
 ////////////////////////////////////////////////////////////////////
 // extractblockmat takes a block matrix (A B // C D) and returns a list {A, B, C, D}.
 // We assume that the blocks each have half the width of the matrix, and half the height
-// of the matrix (so we assume both are even).
+// of the matrix (so we assume both are even, but we allow nonsquare blocks)
 
 proc extractblockmat(matrix block)
 {
-	int r = ncols(block)/2;
+	int nr = nrows(block)/2;
+	int nc = ncols(block)/2;
 	
-	matrix a[r][r];
-	matrix b[r][r];
-	matrix c[r][r];
-	matrix d[r][r];
+	matrix a[nr][nc];
+	matrix b[nr][nc];
+	matrix c[nr][nc];
+	matrix d[nr][nc];
 	
 	int i,j; // i is the row and j the column
-	for(i=1;i <= r; i++)
+	for(i=1;i <= nr; i++)
 	{
-		for(j=1;j <= r; j++)
+		for(j=1;j <= nc; j++)
 		{
 			a[i,j] = block[i,j];
-			b[i,j] = block[i,j+r];
-			c[i,j] = block[i+r,j];
-			d[i,j] = block[i+r,j+r];
+			b[i,j] = block[i,j+nc];
+			c[i,j] = block[i+nr,j];
+			d[i,j] = block[i+nr,j+nc];
 		}
 	}
 	
@@ -939,5 +975,30 @@ proc test_ZZtensor()
 	
 	if( AB != ZZtensor(A,B) ){ passed = 0; }
 		
+	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
+
+proc test_MFreduce()
+{
+	int passed = 1;
+	
+	// Test 1
+	ring RR = 0,(x,y),dp;
+	
+	matrix d0[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+	matrix d1[4][4] = 0,0,y,0,1,0,-1,y,y2,0,0,0,y,y2,0,0;
+	matrix z[4][4];
+
+	matrix d = blockmat(z,d1,d0,z);
+	list l = MFreduce(d);
+	
+	matrix b = l[1];
+	matrix f = l[2];
+	matrix g = l[3];
+	
+	// B should be reduced and f: d -> b and g: b -> d should be morphisms
+	if( f * d != b * f ){ passed = 0; }
+	if( g * b != d * g ){ passed = 0; }
+	
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
