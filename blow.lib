@@ -615,9 +615,6 @@ return(m);
 // constant entries (the "reduced" form of the original matrix factorisation). Note the size of the input
 // and output matrices may differ.
 //
-// Note that the original MF may be _contractible_ in which case we return a zero matrix (of some size,
-// which we cannot guarantee in advance).
-//
 // If a nonzero second parameter is specified then instead of returning just a matrix we return a list.
 // The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
 // which are mutually inverse in the homotopy category.
@@ -648,8 +645,9 @@ proc MFreduce(matrix A, list #)
 	transform_record = transform_record + list(current_stage);
 		
 	// A remains fixed, we work steadily on B and F, G until B has the desired form
-	// Begin by looking inside b0 for nonzero constants
-	while( isMFreduced(b0) != 1 )
+	// Begin by looking inside b0 for nonzero constants. If at some point b0 becomes
+	// a 1x1 matrix we bail (it must be contractible).
+	while( isMFreduced(b0) != 1 && ncols(b0) > 1 )
 	{	
 		dbprint(prl, " [MFreduce] while loop for b0");
 		
@@ -687,7 +685,7 @@ proc MFreduce(matrix A, list #)
 	}
 	
 	// No do the same process to b1 (TODO: unify these two steps)
-	while( isMFreduced(b1) != 1 )
+	while( isMFreduced(b1) != 1 && ncols(b1) > 1 )
 	{	
 		dbprint(prl, " [MFreduce] while loop for b1");
 		
@@ -705,7 +703,7 @@ proc MFreduce(matrix A, list #)
 		b0 = inverse(q) * b0 * inverse(p);
 		f0 = p * f0; f1 = inverse(q) * f1;
 		g0 = g0 * inverse(p); g1 = g1 * q;
-			
+
 		// Now that we guarantee b1 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
 		// piece and return the modified B, F, G
@@ -784,9 +782,14 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 	// By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
 	// where W is the potential. There is a homotopy equivalence between this matrix factorisation
 	// and the factorisation (s, e)
+
+	if( ncols(b0) == 1 ){ print("[MFreduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
 	
-	//dbprint(printlevel, "   [MFreduce_work] entry");
-	
+	//dbprint(printlevel, "   [MFreduce_work] ====");
+	//dbprint(printlevel, "      Current b0"); dbprint(printlevel, b0);
+	//dbprint(printlevel, "      Current b1"); dbprint(printlevel, b1);
+	//dbprint(printlevel, "   =====================");
+		
 	// Read off s,e and t from b0 and b1
 	int i,j;
 	matrix S[nrows(b0)-1][ncols(b0)-1];
@@ -909,6 +912,21 @@ proc MFtensor(matrix A, matrix B)
 	int brank = ncols(B);
 	
 	return( ZZtensor( unitmat(arank), B ) + ZZtensor( A, unitmat(brank) ) );
+}
+
+////////////////////////////////////////////////////////////////////
+// MFdual
+//
+// Takes as input an odd block 2x2 matrix A which we interpret as a differential
+// on a Z/2-graded free modules X. Returns the differential of the "dual" MF, namely
+// if A = (0 a1 \\ a0 0) then we return (0 transpose(a0) \\ -transpose(a1) 0)
+
+proc MFdual(matrix A)
+{
+	list blocks = extractblockmat(A);
+	matrix z[nrows(A)/2][ncols(A)/2];
+	matrix dual = blockmat_nsq( z, transpose(blocks[3]), -transpose(blocks[2]), z );
+	return(dual);
 }
 
 ////////////////////////////////////////////////////////////////////
