@@ -24,8 +24,9 @@ matrix RD = l[1]; // Compute the reduced form of Dblow over k
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-// WARNING: RD will probably have zero differential, but this does NOT
-// mean that RD is contractible! It could be a sum of copies of k and k[1].
+// NOTE: RD will either have zero differential, in which case it is
+// a sum of copies of k and k[1], or it will be of the form (1,0) or (0,1)
+// in which case it is contractible.
 
 matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
 matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
@@ -42,17 +43,16 @@ print(ep);
 print(ep * RD - RD * ep); // ep is an endomorphism of RD
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 
-// We know that Hom(Y,X) is homotopy equivalent to D over k, and that ep is an idempotent
-// endomorphism of RD effecting this homotopy equivalence. In particular, if we go to
+// We know that Hom(Y,X) is homotopy equivalent to the splitting of ep. Hence on
 // cohomology (which is automatically the case here, since RD has zero differential) the
-// matrix e^0 is actually an idempotent matrix whose image is precisely H^0 Hom(Y,X).
-// Hence dim H^0 Hom(Y,X) = rank(e^0) and dim H^1 Hom(Y,X) = rank(e^1)
+// matrix ep^0 is actually an idempotent matrix whose image is precisely H^0 Hom(Y,X).
+// Hence dim H^0 Hom(Y,X) = rank(ep^0) and dim H^1 Hom(Y,X) = rank(ep^1)
 
-matrix e0 = extractblockmat(ep)[1];
-matrix e1 = extractblockmat(ep)[4];
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
 
-print(mat_rk(e0)); // Output is dim H^0 Hom(Y,X)
-print(mat_rk(e1)); // Output is dim H^1 Hom(Y,X) 
+print(mat_rk(ep0)); // Output is dim H^0 Hom(Y,X)
+print(mat_rk(ep1)); // Output is dim H^1 Hom(Y,X) 
 
 // Try running the above with Y or X something contractible, you will see that RD is contractible
 // and the output is something like (1,0) as a MF of 0 over k.
