@@ -1,0 +1,82 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE - Computing Homs using idempotents
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=1;
+int ny=1;
+ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
+int baa=10;
+poly W = x(1)^baa;
+
+// We give ourselves matrix factorisations X and Y of W over k[x]
+matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
+matrix Y[2][2] = 0, x(1)^4, x(1)^(baa-4), 0;
+matrix Ydual = MFdual(Y);
+
+matrix D = MFtensor(Ydual,X);
+
+matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
+list l = MFreduce(Dblow,1);
+matrix RD = l[1]; // Compute the reduced form of Dblow over k
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// WARNING: RD will probably have zero differential, but this does NOT
+// mean that RD is contractible! It could be a sum of copies of k and k[1].
+
+matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
+matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
+matrix delQ = deltaQ(D, W, nx, baa); // This is deltaQ_D
+
+// And finally the idempotent e on Dblow
+number frac = baa;
+matrix e = 1/frac * iddQ * delQ;
+
+// The corresponding idempotent on RD is
+matrix ep = F * e * G;
+print(RD); // The final reduced MF homotopy equivalent to Dblow
+print(ep);
+print(ep * RD - RD * ep); // ep is an endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+
+// We know that Hom(Y,X) is homotopy equivalent to D over k, and that ep is an idempotent
+// endomorphism of RD effecting this homotopy equivalence. In particular, if we go to
+// cohomology (which is automatically the case here, since RD has zero differential) the
+// matrix e^0 is actually an idempotent matrix whose image is precisely H^0 Hom(Y,X).
+// Hence dim H^0 Hom(Y,X) = rank(e^0) and dim H^1 Hom(Y,X) = rank(e^1)
+
+matrix e0 = extractblockmat(ep)[1];
+matrix e1 = extractblockmat(ep)[4];
+
+print(mat_rk(e0)); // Output is dim H^0 Hom(Y,X)
+print(mat_rk(e1)); // Output is dim H^1 Hom(Y,X) 
+
+// Try running the above with Y or X something contractible, you will see that RD is contractible
+// and the output is something like (1,0) as a MF of 0 over k.
+
+// TODO: Check on more complicated examples that this computation of dimensions of Hom spaces
+// via ranks is really correct.
+
+///////////// SECOND EXAMPLE //////////
+
+// We compute the endomorphism space of a certain MF over the E6 singularity
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=1;
+ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
+poly W = x(1)^3 + x(2)^4;
+
+matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2,-x(1) * x(2),-x(2)^3;
+matrix psi[3][3] = x(2),0,x(1),x(1),-x(2)^2,0,0,x(1),-x(2);
+matrix z[3][3];
+matrix X = blockmat(z,phi,psi,z);
+matrix Xdual = MFdual(X);
+
+matrix D = MFtensor(Xdual,X);
+
+/////// WAITING ON mablow improvements.
