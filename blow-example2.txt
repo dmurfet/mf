@@ -10,12 +10,13 @@ LIB "matrix.lib";
 int nx=1;
 int ny=1;
 ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
-poly W = x(1)^3;
+int baa = 10;
+poly W = x(1)^baa;
 
 // Define X, Y and D = Y x X:
 
-matrix X[2][2] = 0, x(1), x(1)^2, 0;
-matrix Y[2][2] = 0, y(1) - x(1), x(1)^2 + x(1) * y(1) + y(1)^2, 0;
+matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
+matrix Y[2][2] = 0, y(1) - x(1), (y(1)^baa - x(1)^baa)/(y(1)-x(1)), 0;
 matrix D = MFtensor(Y,X);
 
 matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
@@ -24,13 +25,17 @@ matrix RD = l[1]; // Compute the reduced form over k[y]
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-matrix dq = dQ(X, W, nx, 3); // This is dQ_X: 
+matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
 matrix iddQ = ZZtensor( unitmat(2), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx, 3); // This is deltaQ_D
+matrix delQ = deltaQ(D, W, nx, baa); // This is deltaQ_D
 
 // And finally the idempotent e on Dblow
-matrix e = 1/3 * iddQ * delQ;
+number frac = baa;
+matrix e = 1/frac * iddQ * delQ;
 
 // The corresponding idempotent on RD is
 matrix ep = F * e * G;
+print(RD); // The final reduced MF homotopy equivalent to Dblow
 print(ep);
+print(ep * RD - RD * ep); // ep is an endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
