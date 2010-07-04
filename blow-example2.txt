@@ -10,7 +10,6 @@ LIB "matrix.lib";
 int nx=1;
 int ny=1;
 ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
-
 poly W = x(1)^3;
 
 // Define X, Y and D = Y x X:
@@ -19,25 +18,19 @@ matrix X[2][2] = 0, x(1), x(1)^2, 0;
 matrix Y[2][2] = 0, y(1) - x(1), x(1)^2 + x(1) * y(1) + y(1)^2, 0;
 matrix D = MFtensor(Y,X);
 
-// This is dQ_X: 
+matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
+list l = MFreduce(Dblow,1);
+matrix RD = l[1]; // Compute the reduced form over k[y]
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-matrix dq = dQ(X, W, nx, 3);
-print(dq);
+matrix dq = dQ(X, W, nx, 3); // This is dQ_X: 
+matrix iddQ = ZZtensor( unitmat(2), dq ); // "iddQ" is "id x dQ_X"
+matrix delQ = deltaQ(D, W, nx, 3); // This is deltaQ_D
 
-// "iddQ" is "id x dQ_X"
+// And finally the idempotent e on Dblow
+matrix e = 1/3 * iddQ * delQ;
 
-matrix iddQ = ZZtensor( unitmat(2), dq );
-print(iddQ);
-
-// This is deltaQ_D:
-
-matrix delQ = deltaQ(D, W, nx, 3);
-print(delQ);
-
-// This is e':
-
-matrix e = iddQ * delQ;
-print(e);
-
-// This e agrees (up to permutation of the basis of the Jacobian and the 1/3 factor) with what I write
-// in Example 6.2 of my note.
+// The corresponding idempotent on RD is
+matrix ep = F * e * G;
+print(ep);
