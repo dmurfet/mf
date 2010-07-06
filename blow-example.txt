@@ -7,7 +7,7 @@ LIB "blow.lib";
 LIB "matrix.lib";
 int nx=1;
 int ny=1;
-ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
 minpoly = rootofUnity(5);
 
 int baa=5;
@@ -29,7 +29,7 @@ matrix D = blockmat(n2,gD,fD,n2);
 
 // This is dQ_X: 
 
-matrix dq = dQ(X, W, nx, baa);
+matrix dq = dQ(X, W, nx, baa, 0);
 print(dq);
 
 // "iddQ" is "id x dQ_X":
@@ -39,7 +39,7 @@ print(iddQ);
 
 // This is deltaQ_D:
 
-matrix delQ = deltaQ(D, W, nx, baa);
+matrix delQ = deltaQ(D, W, nx, baa, 0);
 print(delQ);
 
 // This is e':
@@ -58,9 +58,7 @@ option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
 int nx=2;
 int ny=2;
-ring rr=0,(x(1..nx),y(1..ny)),dp;
-//ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//minpoly = r^2 + 1;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
 
 int baa = 3;
 poly W = x(1)^baa + x(2)^baa;
@@ -107,12 +105,10 @@ print(D);
 
 // deltaQ_D:
 
-print(deltaQ(D, W, nx, baa));
+print(deltaQ(D, W, nx, baa, 0));
 
 // dQ_X (not yet tensored with the identity...):
 
-print(dQ(X, W, nx, baa));
-
-// Hence e is the identity in this example. 
+print(dQ(X, W, nx, baa, 0));
 
 
