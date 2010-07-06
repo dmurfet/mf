@@ -256,7 +256,7 @@ return(A);
 // NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-proc DRN(poly W, poly XA, int i, int degw, poly MP)
+proc DRN(poly W, poly XA, int i, int degwminusone, poly MP)
 {
 int j,k;
 def RRR = basering;
@@ -311,7 +311,7 @@ module BB = reduce(ba,jaci);
 list L;
 for(k=1; k<=n; k++)
 {
-module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^degw)) )/(x(i)^degw) - XA * ( ba[k] - reduce(ba[k],std(x(i)^degw)) )/(x(i)^degw),jaci);
+module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^degwminusone)) )/(x(i)^degwminusone) - XA * ( ba[k] - reduce(ba[k],std(x(i)^degwminusone)) )/(x(i)^degwminusone),jaci);
 matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
 L = L + list(MM);
 }
@@ -343,7 +343,7 @@ return(NN);
 // NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaImablow(matrix M, poly W, int II, int degw, poly MP)
+proc deltaImablow(matrix M, poly W, int II, int degwminusone, poly MP)
 {
 int s = ncols(M);
 
@@ -417,7 +417,7 @@ matrix N[n][n];
 
 for(i=1; i<=anzahl; i++)
 {
-N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degw, MP);
+N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degwminusone, MP);
 }
 
 L[i1] = insert(L[i1], N, j1-1);
@@ -517,12 +517,13 @@ return(Mi);
 // NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc dQ(matrix f, poly W, int nx, int baa, poly MP)
+proc dQ(matrix f, poly W, int nx, int degw, poly MP)
 {
 LIB "matrix.lib";
 int i,j,k;
 list S = SGroupintvecs(nx);
-int gg = ncols(deltaImablow(f, W, S[1][1], baa-1, MP));
+int gg = ncols(deltaImablow(f, W, S[1][1], degw	-1, MP));
+
 matrix Mi[gg][gg];
 
 for(i=1; i<=size(S); i++)
