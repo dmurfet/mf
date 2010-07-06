@@ -5,274 +5,439 @@ LIB "ring.lib";
 //////////////////////////////////////////////////////////////////////////////////
 // "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
 // the matrices that represent the former's action on Jac(W).
+// 
+// The third argument MP is the minpoly of the "big" ring (i.e. the one with both
+// x- and y-variables, but given with x(1) as a variable. For example, if the big
+// ring is defined via
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
+// field is the rational numbers. 
+//
+// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc poly2matrix(poly tepo, poly W)
+proc poly2matrix(poly tepo, W, MP)
 {
-	int i,j,k;
-	def RRR = basering;
+int i,j,k,u;
+def RRR = basering;
 
-	ring nR = char(RRR), x(1..nx), dp;
+// Define new ring -- exactly the same as RRR, but without the y-variables:
 
-	// Compute n := dimension of Jac(W):
+if(size(ringlist(RRR)[1]) > 1)
+{
+int i,j,k,u;
+list L = ringlist(RRR);
+for(i=1; i<=ny; i++)
+{
+L[2] = delete(L[2],nx + 1);
+}
+intvec kk = (1..nx);
+for(i=1; i<=nx; i++)
+{
+kk[i] = 1;
+}
+L[3][1][2] = kk;
+L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+def nR = ring(L);
 
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	setring RRR;
+setring nR;
 
-	// Compute the matrix MAtepo corresponding to the polynomial tepo:
+// Now complete the correct definition of nR by specifying the right minpoly: 
 
-	poly yprod = 1; 
-	for(i=1; i<=ny; i++)
-	{
-		yprod = yprod * y(i);
-	}
-	matrix koffer = coef(tepo, yprod);
-	matrix MAtepo[n][n];
+poly P = imap(RRR,MP);
+poly z = subst(P,x(1),r);
+number nu = leadcoef(z);
+minpoly = nu;
+}
+else
+{
+ring nR = char(RRR), x(1..nx), dp;
+}
 
-	for(i=1; i<=ncols(koffer); i++)
-	{
-		poly bla = koffer[2,i];
+// Compute n := dimension of Jac(W):
 
-		ring nR = char(RRR), x(1..nx), dp;
+poly W = imap(RRR,W);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+setring RRR;
 
-		poly f = imap(RRR,bla);
+// Compute the matrix MAtepo corresponding to the polynomial tepo:
 
-		int j,k;
+poly yprod = 1; 
+for(i=1; i<=ny; i++)
+{
+yprod = yprod * y(i);
+}
+matrix koffer = coef(tepo, yprod);
+matrix MAtepo[n][n];
 
-		poly W = imap(RRR,W);
+for(u=1; u<=ncols(koffer); u++)
+{
+poly bla = koffer[2,u];
 
-		ideal jaci = std(jacob(W));
-		ideal ba = kbase(jaci);
-		int n = size(ba);
-		module BB = reduce(ba,jaci);
+// Define new ring -- exactly the same as RRR, but without the y-variables:
 
-		list L;
-		for(k=1; k<=n; k++)
-		{
-			module ff = reduce(f*ba[k],jaci);
-			matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-			L = L + list(MM);
-		}
+if(size(ringlist(RRR)[1]) > 1)
+{
+int i,j,k;
+list L = ringlist(RRR);
+for(i=1; i<=ny; i++)
+{
+L[2] = delete(L[2],nx + 1);
+}
+intvec kk = (1..nx);
+for(i=1; i<=nx; i++)
+{
+kk[i] = 1;
+}
+L[3][1][2] = kk;
+L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+def nR = ring(L);
 
-		matrix U = L[1];
-		for(k=2; k<=n; k++)
-		{
-			U=concat(U,L[k]);
-		}
+setring nR;
 
-		setring RRR;
+// Now complete the correct definition of nR by specifying the right minpoly: 
 
-		matrix fop = imap(nR,U);
+poly P = imap(RRR,MP);
+poly z = subst(P,x(1),r);
+number nu = leadcoef(z);
+minpoly = nu;
+}
+else
+{
+ring nR = char(RRR), x(1..nx), dp;
+}
 
-		MAtepo = MAtepo + koffer[1,i] * fop; 
-	}
+poly f = imap(RRR,bla);
 
-	return(MAtepo);
+int j,k;
+
+poly W = imap(RRR,W);
+
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+module BB = reduce(ba,jaci);
+
+list L;
+for(k=1; k<=n; k++)
+{
+module ff = reduce(f*ba[k],jaci);
+matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+L = L + list(MM);
+}
+
+matrix U = L[1];
+for(k=2; k<=n; k++)
+{
+U=concat(U,L[k]);
+}
+
+setring RRR;
+
+matrix fop = imap(nR,U);
+
+MAtepo = MAtepo + koffer[1,u] * fop; 
+}
+
+return(MAtepo);
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// "mablow" blows up a matrix by blowing up all its entries using poly2matrix:
+// "mablow" blows up a matrix by blowing up all its entries using poly2matrix.
+// 
+// The third argument MP is the minpoly of the "big" ring (i.e. the one with both
+// x- and y-variables, but given with x(1) as a variable. For example, if the big
+// ring is defined via
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
+// field is the rational numbers. 
+//
+// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc mablow(matrix M, poly W)
+proc mablow(matrix M, poly W, poly MP)
 {
-	int s = ncols(M);
+int s = ncols(M);
 
-	int i1,j1,i2,j2,i;
+int i1,j1,i2,j2,i;
 
-	// Compute n := dimension of Jac(W):
+// Compute n := dimension of Jac(W):
 
-	def RRR = basering;
+def RRR = basering;
 
-	ring nR = char(RRR), x(1..nx), dp;
+// Define new ring -- exactly the same as RRR, but without the y-variables:
 
-//// Define new ring -- exactly the same as RRR, but without the y-variables:
-//
-//if(size(ringlist(RRR)[1]) != 1)
-//{
-//int i,j,k;
-//list L = ringlist(RRR);
-//for(i=1; i<=ny; i++)
-//{
-//L[2] = delete(L[2],nx + 1);
-//}
-//intvec kk = (1..nx);
-//for(i=1; i<=nx; i++)
-//{
-//kk[i] = 1;
-//}
-//L[3][1][2] = kk;
-//def nR = ring(L);
-//}
-//else
-//{
-//ring nR = char(RRR), x(1..nx), dp;
-//}
+if(size(ringlist(RRR)[1]) > 1)
+{
+int i,j,k;
+list L = ringlist(RRR);
+for(i=1; i<=ny; i++)
+{
+L[2] = delete(L[2],nx + 1);
+}
+intvec kk = (1..nx);
+for(i=1; i<=nx; i++)
+{
+kk[i] = 1;
+}
+L[3][1][2] = kk;
+L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+def nR = ring(L);
 
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	setring RRR;
+setring nR;
 
-	// Define L to be an appropriately indexed list of blown-up matrices:
+// Now complete the correct definition of nR by specifying the right minpoly: 
 
-	list e,L;
-	for(i=1; i<=s; i++)
-	{
-		L[i] = e;
-	}
+poly P = imap(RRR,MP);
+poly z = subst(P,x(1),r);
+number nu = leadcoef(z);
+minpoly = nu;
+}
+else
+{
+ring nR = char(RRR), x(1..nx), dp;
+}
 
-	for(i1=1; i1<=s; i1++)
-	{
-		for(j1=1; j1<=s; j1++)
-		{
-			L[i1] = insert(L[i1], poly2matrix(M[i1,j1],W),j1-1);
-		}
-	}
+// Compute dimension of Jac(W):
 
-	matrix A[s*n][s*n];
+poly W = imap(RRR,W);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+setring RRR;
 
-	for(i1=1; i1<=s; i1++)
-	{
-		for(j1=1; j1<=n; j1++)
-		{
-			for(i2=1; i2<=s; i2++)
-			{
-				for(j2=1; j2<=n; j2++)
-				{
-					A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
-				}
-			}
-		}
-	}
+// Define L to be an appropriately indexed list of blown-up matrices:
 
-	return(A);
+list e,L;
+for(i=1; i<=s; i++)
+{
+L[i] = e;
+}
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=s; j1++)
+{
+L[i1] = insert(L[i1], poly2matrix(M[i1,j1], W, MP),j1-1);
+}}
+
+matrix A[s*n][s*n];
+
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=n; j1++)
+{
+for(i2=1; i2<=s; i2++)
+{
+for(j2=1; j2<=n; j2++)
+{
+A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+}}}}
+
+return(A);
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // "DRN" computes the matrix representing [g_i, XA], where XA is a monomial in the x-variables.
+//
+// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
+// x- and y-variables, but given with x(1) as a variable. For example, if the big
+// ring is defined via
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
+// field is the rational numbers. 
+//
+// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-proc DRN(poly W, poly XA, int i, int degw)
+proc DRN(poly W, poly XA, int i, int degw, poly MP)
 {
-	int j,k;
-	def RRR = basering;
+int j,k;
+def RRR = basering;
 
-	// Compute n := dimension of Jac(W):
+// Define new ring -- exactly the same as RRR, but without the y-variables:
 
-	ring nR = char(RRR), x(1..nx), dp;
-	int j,k;
-	poly W = imap(RRR,W);
-	poly XA = imap(RRR,XA);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
+if(size(ringlist(RRR)[1]) > 1)
+{
+int u,j,k;
+list L = ringlist(RRR);
+for(u=1; u<=ny; u++)
+{
+L[2] = delete(L[2],nx + 1);
+}
+intvec kk = (1..nx);
+for(u=1; u<=nx; u++)
+{
+kk[u] = 1;
+}
+L[3][1][2] = kk;
+L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+def nR = ring(L);
 
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	module BB = reduce(ba,jaci);
+setring nR;
 
-	list L;
-	for(k=1; k<=n; k++)
-	{
-		module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^degw)) )/(x(i)^degw) - XA * ( ba[k] - reduce(ba[k],std(x(i)^degw)) )/(x(i)^degw),jaci);
-		matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-		L = L + list(MM);
-	}
+// Now complete the correct definition of nR by specifying the right minpoly: 
 
-	matrix U = L[1];
-	for(k=2; k<=n; k++)
-	{
-		U=concat(U,L[k]);
-	}
+poly P = imap(RRR,MP);
+poly z = subst(P,x(1),r);
+number nu = leadcoef(z);
+minpoly = nu;
+}
+else
+{
+ring nR = char(RRR), x(1..nx), dp;
+}
 
-	setring RRR;
-	matrix NN = imap(nR,U);
-	return(NN);
+// Compute n := dimension of Jac(W):
+
+int j,k;
+poly W = imap(RRR,W);
+poly XA = imap(RRR,XA);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+module BB = reduce(ba,jaci);
+
+list L;
+for(k=1; k<=n; k++)
+{
+module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^degw)) )/(x(i)^degw) - XA * ( ba[k] - reduce(ba[k],std(x(i)^degw)) )/(x(i)^degw),jaci);
+matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+L = L + list(MM);
+}
+
+matrix U = L[1];
+for(k=2; k<=n; k++)
+{
+U=concat(U,L[k]);
+}
+
+setring RRR;
+matrix NN = imap(nR,U);
+return(NN);
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // "deltaImablow" blows up a matrix by blowing up all its entries using DRN. (This
 // is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
+//
+// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
+// x- and y-variables, but given with x(1) as a variable. For example, if the big
+// ring is defined via
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
+// field is the rational numbers. 
+//
+// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaImablow(matrix M, poly W, int II, int degw)
+proc deltaImablow(matrix M, poly W, int II, int degw, poly MP)
 {
-	int s = ncols(M);
+int s = ncols(M);
 
-	int i1,j1,i2,j2,i;
+int i1,j1,i2,j2,i;
 
-	// Compute n := dimension of Jac(W):
+def RRR = basering;
 
-	def RRR = basering;
-	ring nR = char(RRR), x(1..nx), dp;
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	setring RRR;
+// Define new ring -- exactly the same as RRR, but without the y-variables:
 
-	// Define L to be an appropriately indexed list of blown-up matrices:
+if(size(ringlist(RRR)[1]) > 1)
+{
+int u,j,k;
+list L = ringlist(RRR);
+for(u=1; u<=ny; u++)
+{
+L[2] = delete(L[2],nx + 1);
+}
+intvec kk = (1..nx);
+for(u=1; u<=nx; u++)
+{
+kk[u] = 1;
+}
+L[3][1][2] = kk;
+L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+def nR = ring(L);
 
-	list e,L;
-	for(i=1; i<=s; i++)
-	{
-		L[i] = e;
-	}
-	
-	for(i1=1; i1<=s; i1++)
-	{
-		for(j1=1; j1<=s; j1++)
-		{
-			///////////////////////////////////////////////////
-			// INTERESTING PART: 
-			//
-			poly yprod = 1; 
-			for(i=1; i<=ny; i++)
-			{
-				yprod = yprod * y(i);
-			}
+setring nR;
 
-			matrix koffer = coef(M[i1,j1], yprod);
-			int anzahl = ncols(koffer);
+// Now complete the correct definition of nR by specifying the right minpoly: 
 
-			matrix N[n][n];
+poly P = imap(RRR,MP);
+poly z = subst(P,x(1),r);
+number nu = leadcoef(z);
+minpoly = nu;
+}
+else
+{
+ring nR = char(RRR), x(1..nx), dp;
+}
 
-			for(i=1; i<=anzahl; i++)
-			{
-				N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degw);
-			}
+// Compute n := dimension of Jac(W):
 
-			L[i1] = insert(L[i1], N, j1-1);
-			///////////////////////////////////////////////////
-		}
-	}
+poly W = imap(RRR,W);
+ideal jaci = std(jacob(W));
+ideal ba = kbase(jaci);
+int n = size(ba);
+setring RRR;
 
-	matrix A[s*n][s*n];
+// Define L to be an appropriately indexed list of blown-up matrices:
 
-	for(i1=1; i1<=s; i1++)
-	{
-		for(j1=1; j1<=n; j1++)
-		{
-			for(i2=1; i2<=s; i2++)
-			{
-				for(j2=1; j2<=n; j2++)
-				{
-					A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
-				}
-			}
-		}
-	}
+list e,L;
+for(i=1; i<=s; i++)
+{
+L[i] = e;
+}
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=s; j1++)
+{
+///////////////////////////////////////////////////
+// INTERESTING PART: 
+//
+poly yprod = 1; 
+for(i=1; i<=ny; i++)
+{yprod = yprod * y(i);}
 
-	return(A);
+matrix koffer = coef(M[i1,j1], yprod);
+int anzahl = ncols(koffer);
+
+matrix N[n][n];
+
+for(i=1; i<=anzahl; i++)
+{
+N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degw, MP);
+}
+
+L[i1] = insert(L[i1], N, j1-1);
+///////////////////////////////////////////////////
+}}
+
+matrix A[s*n][s*n];
+
+for(i1=1; i1<=s; i1++)
+{
+for(j1=1; j1<=n; j1++)
+{
+for(i2=1; i2<=s; i2++)
+{
+for(j2=1; j2<=n; j2++)
+{
+A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+}}}}
+
+return(A);
 }
 
 
@@ -282,77 +447,271 @@ proc deltaImablow(matrix M, poly W, int II, int degw)
 
 proc SGroupintvecs(int nx)
 {
-	LIB "qmatrix.lib";
-	list L;
-	int i,j,k;
-	intmat M = SymGroup(nx);
+LIB "qmatrix.lib";
+list L;
+int i,j,k;
+intmat M = SymGroup(nx);
 
-	for(i=1; i<=nrows(M); i++)
-	{
-		intvec c;
-		for(j=1; j<=ncols(M); j++)
-		{
-			c[j] = M[i,j];
-		}
-		L[i] = c;
-	}
+for(i=1; i<=nrows(M); i++)
+{
+intvec c;
+for(j=1; j<=ncols(M); j++)
+{
+c[j] = M[i,j];
+}
+L[i] = c;
+}
 
-	return(L);
+return(L);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////////////
 // "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables),
-//  baa=deg(W))
+//  baa=deg(W)-1)
+//
+// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
+// x- and y-variables, but given with x(1) as a variable. For example, if the big
+// ring is defined via
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
+// field is the rational numbers. 
+//
+// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc deltaQ(matrix F, poly W, int nx, int baa)
+proc deltaQ(matrix F, poly W, int nx, int baa, poly MP)
 {
-	LIB "matrix.lib";
-	int i,j,k;
-	list S = SGroupintvecs(nx);
-	int gg = ncols(deltaImablow(F, W, S[1][1], baa-1));
-	matrix Mi[gg][gg];
+LIB "matrix.lib";
+int i,j,k;
+list S = SGroupintvecs(nx);
+int gg = ncols(deltaImablow(F, W, S[1][1], baa-1, MP));
+matrix Mi[gg][gg];
 
-	for(i=1; i<=size(S); i++)
-	{
-		matrix Ma = unitmat(gg);
-		for(j=1; j<=nx; j++)
-		{
-			Ma = Ma * deltaImablow(F, W, S[i][j], baa-1);
-		}
-		Mi = Mi + Ma; 
-	}
-	
-	return(Mi);
+for(i=1; i<=size(S); i++)
+{
+matrix Ma = unitmat(gg);
+for(j=1; j<=nx; j++)
+{
+Ma = Ma * deltaImablow(F, W, S[i][j], baa-1, MP);
+}
+Mi = Mi + Ma; 
+}
+return(Mi);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////////////
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
 //  baa=deg(W)-1)
+//
+// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
+// x- and y-variables, but given with x(1) as a variable. For example, if the big
+// ring is defined via
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
+// field is the rational numbers. 
+//
+// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc dQ(matrix f, poly W, int nx, int baa)
+proc dQ(matrix f, poly W, int nx, int baa, poly MP)
 {
-	LIB "matrix.lib";
-	int i,j,k;
-	list S = SGroupintvecs(nx);
-	int gg = ncols(deltaImablow(f, W, S[1][1], baa	-1));
-	matrix Mi[gg][gg];
+LIB "matrix.lib";
+int i,j,k;
+list S = SGroupintvecs(nx);
+int gg = ncols(deltaImablow(f, W, S[1][1], baa	-1, MP));
+matrix Mi[gg][gg];
 
-	for(i=1; i<=size(S); i++)
-	{
-		matrix Ma = unitmat(gg);
-		for(j=1; j<=nx; j++)
-		{
-			Ma = Ma * mablow(diff(f, x(S[i][j])), W);
-		}
-		
-		Mi = Mi + Ma; 
-	}
-	
-	return(Mi);
+for(i=1; i<=size(S); i++)
+{
+matrix Ma = unitmat(gg);
+for(j=1; j<=nx; j++)
+{
+Ma = Ma * mablow(diff(f, x(S[i][j])), W, MP);
+}
+Mi = Mi + Ma; 
+}
+return(Mi);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "constantpart(P)" computes the constant part of a polynomial P.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc constantpart(poly P)
+{
+int i;
+int n = nvars(basering);
+matrix C;
+C[1,1] = P;
+for(i=1; i<=n; i++)
+{
+C = coeffs( C[1,1], var(i) );
+}
+return(C[1,1]);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "permuterows(M, a, b)" permutes the rows a and b of a matrix M.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc permuterows(matrix M, int a,b)
+{
+int i;
+int s = ncols(M);
+for(i=1; i<=s; i++)
+{
+poly pa = M[a,i];
+poly pb = M[b,i];
+M[a,i] = pb;
+M[b,i] = pa;
+}
+return(M);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "permutecols(M, a, b)" permutes the columns a and b of a matrix M.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc permutecols(matrix M, int a,b)
+{
+int i;
+int s = nrows(M);
+for(i=1; i<=s; i++)
+{
+poly pa = M[i,a];
+poly pb = M[i,b];
+M[i,a] = pb;
+M[i,b] = pa;
+}
+return(M);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "addrow(M, P, a, b)" adds P * (b-th row) to the a-th row.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc addrow(matrix M, poly P, int a,b)
+{
+int i;
+int s = ncols(M);
+for(i=1; i<=s; i++)
+{
+M[a,i] = M[a,i] + P * M[b,i];
+}
+return(M);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "addcol(M, P, a, b)" adds P * (b-th column) to the a-th column.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc addcol(matrix M, poly P, int a,b)
+{
+int i;
+int s = nrows(M);
+for(i=1; i<=s; i++)
+{
+M[i,a] = M[i,a] + P * M[i,b];
+}
+return(M);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "rocoreduce(M)" gives a list L with
+// -- L[1] = row & column reduced version M' of M such that M'=diag(A,B), where A is
+//    a diagonal matrix with only constant entries, and B is a block matrix without
+//    nonzero constant entries,
+// -- L[2] = UL (invertible over the polynomial ring),
+// -- L[3] = UR (invertible over the polynomial ring) such that M' = UL * M * UR.
+//
+// NOTE: There must be some typos or other mistakes somewhere, as the similarity
+//       transformations constructed do not reproduce the reduced matrix. Don't try
+//       to fix this for the moment but use Dan's MFreduce instead (but leave don't
+//       delete this code, it might be useful at some later point.)
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc rocoreduce(matrix M)
+{
+int i,j,k,r;
+int s = ncols(M);
+
+// These will become the similarity matrices that describe the isomorphism 
+// between M and its reduced form:
+matrix UL = unitmat(s);
+matrix UR = unitmat(s);
+
+// z is a counter (in the end, z will be the number of trivial MFs that we can split off):
+
+int z;
+for(i=1; i<=s; i++)
+{
+
+for(j=1; j<=s; j++)
+{
+if(constantpart(M[i,j]) == M[i,j] and M[i,j] != 0)
+{
+// Bring the constant to the diagonal entry (z+1,z+1), and implement effect on UL,UR:
+M = permutecols(M, j, z+1);
+matrix U = unitmat(s); U[j,j]=0; U[z+1,z+1]; U[j,z+1]=1; U[z+1,j]=1;
+UR = UR * U;
+M = permuterows(M, i, z+1);
+matrix U = unitmat(s); U[i,i]=0; U[z+1,z+1]; U[i,z+1]=1; U[z+1,i]=1;
+UL = U * UL;
+
+z = z+1;
+
+// Use column manipulations to kill all (k,z)-entries of M for k>z:
+for(k=z+1; k<=s; k++)
+{
+int s = nrows(M);
+poly P = M[z,k]/M[z,z];
+
+// effect on similarity matrix UR:
+matrix U = unitmat(s);
+U[z,k] = - P;
+UR = UR * U;
+
+for(r=1; r<=s; r++)
+{
+M[r,k] = M[r,k] - P * M[r,z];
+}
+}// end k-loop
+
+// Use row manipulations to kill all (z,k)-entries of M for k>z:
+for(k=z+1; k<=s; k++)
+{
+int s = ncols(M);
+poly P = M[k,z]/M[z,z];
+
+// effect on similarity matrix UL:
+matrix U = unitmat(s);
+U[k,z] = - P;
+UL = U * UL;
+
+for(r=1; r<=s; r++)
+{
+M[k,r] = M[k,r] - P * M[z,r];
+}
+}// end k-loop
+
+break;
+}
+}// end j-loop
+
+}// end i-loop
+
+list L = M,UL,UR;
+return(L);
 }
 
 
@@ -617,6 +976,37 @@ for(i=nr+1;i<=2*nr;i++){for(j=nc+1;j<=2*nc;j++){m[i,j]=block4[i-nr,j-nc];}}
 return(m);
 }
 
+
+// To get blocks from block square matrix returns list (1-4 of blocks)
+
+proc blocksq(matrix m)
+{
+int n=nrows(m);
+int intnon2=n/2;
+number non2=number(n)/2;
+if(n!=ncols(m))
+{
+	printf("Matrix should be square");
+	return();
+}
+if(non2!=intnon2)
+{
+	printf("Matrix should have an even number of rows/columns");
+	return();
+}
+matrix block1[intnon2][intnon2]=submat(m,1..intnon2,1..intnon2);
+matrix block2[intnon2][intnon2]=submat(m,1..intnon2,intnon2+1..n);;
+matrix block3[intnon2][intnon2]=submat(m,intnon2+1..n,1..intnon2);;
+matrix block4[intnon2][intnon2]=submat(m,intnon2+1..n,intnon2+1..n);;
+list L=block1,block2,block3,block4;
+kill n,intnon2,non2,block1,block2,block3,block4;
+return(L);
+}
+
+
+
+/// NEW 1/7/10 Dan.
+
 ////////////////////////////////////////////////////////////////////
 // MFreduce
 //
@@ -735,8 +1125,8 @@ proc MFreduce(matrix A, list #)
 	}
 	
 	// Our MF (b0,b1) is now guaranteed to be free of constants. At this point
-	// we just apply usual Guassian elimination. We do this both to the matrix b0
-	// and its transpose.
+	// we just apply usual Guassian elimination: TODO it only looks for lower triangular
+	// reduced forms...
 	
 	// NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
 	matrix zero_b[nrows(b0)][ncols(b0)];
@@ -877,7 +1267,6 @@ proc matrixreduce(matrix M)
 	{
 		for(j=1;j<=mrank;j++)
 		{
-			// Note deg(0) = -1 so this only picks up nonzero constants
 			if( deg(M[i,j]) == 0 )
 			{
 				// We found our constant term, permute it to (1,1)
@@ -1069,7 +1458,6 @@ proc test_MFreduce()
 	matrix g = l[3];
 	
 	// B should be reduced and f: d -> b and g: b -> d should be morphisms
-	// TODO: Test for B reduced
 	if( f * d != b * f ){ passed = 0; }
 	if( g * b != d * g ){ passed = 0; }
 	
