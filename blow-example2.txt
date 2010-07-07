@@ -9,7 +9,7 @@ LIB "blow.lib";
 LIB "matrix.lib";
 int nx=1;
 int ny=1;
-ring rr=(0,eta),(x(1..nx),y(1..ny)),dp;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
 int baa = 10;
 poly W = x(1)^baa;
 
@@ -19,15 +19,15 @@ matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
 matrix Y[2][2] = 0, y(1) - x(1), (y(1)^baa - x(1)^baa)/(y(1)-x(1)), 0;
 matrix D = MFtensor(Y,X);
 
-matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
+matrix Dblow = mablow(D,W,0); // Blow up D using Jac(W)
 list l = MFreduce(Dblow,1);
 matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
+matrix dq = dQ(X, W, nx, baa, 0); // This is dQ_X: 
 matrix iddQ = ZZtensor( unitmat(2), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx, baa); // This is deltaQ_D
+matrix delQ = deltaQ(D, W, nx, baa, 0); // This is deltaQ_D
 
 // And finally the idempotent e on Dblow
 number frac = baa;
