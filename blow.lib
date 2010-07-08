@@ -13,165 +13,161 @@ LIB "linalg.lib";
 LIB "matrix.lib";
 LIB "ring.lib";
 
+////////////////////////////////////////////////////////////////////
+// USAGE GUIDE
+//
+// At the moment we expect our ambient ring to be of one of the types
+//
+//     0,(x(1..nx),y(1..ny)),dp    OR    (0,r),(x(1..nx),y(1..ny)),dp
+// 
+// where nx, ny are integer variables that we expect to be defined before calling
+// any of the routines in this library. The x variables are the "internal" variables.
+// We always expect "r" to be the parameter defining an extension ring.
+//
+// In the second case where we define a ring extension, in addition to defining
+// the minpoly we expect that before using this library an additional variable
+// "minblowpoly" is defined, which is the minimum polynomial of r over Q expressed
+// in terms of the variable x(1). For example
+//
+//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    minpoly = r^2 + 1;
+//    minpolyblow = x(1)^2 + 1;
+//
+// If minpolyblow or r is undefined we proceed by ignoring the ring extension.
+
+//////////////////////////////////////////////////////////////////////////////////
+// "ringwithoutyvars" returns the ambient ring with y variables removed
+//////////////////////////////////////////////////////////////////////////////////
+
+proc ringWithoutYVars()
+{
+	def RRR = basering;
+
+	// Define new ring -- exactly the same as RRR, but without the y-variables:
+	// ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
+	if(size(ringlist(RRR)[1]) > 1)
+	{
+		int i,j,k;
+		list L = ringlist(RRR);
+		for(i=1; i<=ny; i++)
+		{
+			L[2] = delete(L[2],nx + 1);
+		}
+		intvec kk = (1..nx);
+
+		for(i=1; i<=nx; i++)
+		{
+			kk[i] = 1;
+		}
+		L[3][1][2] = kk;
+		L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+		def nR = ring(L);
+
+		setring nR;
+
+		// Now complete the correct definition of nR by specifying the right minpoly: 
+		if( defined(minpolyblow) && defined(r) )
+		{
+			poly P = imap(RRR,minpolyblow);
+			poly z = subst(P,x(1),r);
+			number nu = leadcoef(z);
+			minpoly = nu;
+		}
+		else
+		{
+			print("[poly2matrix] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+		}
+	}
+	else
+	{
+		ring nR = char(RRR), x(1..nx), dp;
+	}	
+	
+	def newRing = basering;
+	
+	// Before returning the new ring, set the ambient ring as current
+	setring RRR;
+	
+	return(newRing);
+}
+
 //////////////////////////////////////////////////////////////////////////////////
 // "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
 // the matrices that represent the former's action on Jac(W).
-// 
-// The third argument MP is the minpoly of the "big" ring (i.e. the one with both
-// x- and y-variables, but given with x(1) as a variable. For example, if the big
-// ring is defined via
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//    minpoly = r^2 + 1;
-// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
-// field is the rational numbers. 
-//
-// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc poly2matrix(poly tepo, W, MP)
+proc poly2matrix(poly tepo, W)
 {
-int i,j,k,u;
-def RRR = basering;
+	int i,j,k,u;
+	def RRR = basering;
+	def nR = ringWithoutYVars();
+	setring nR;
 
-// Define new ring -- exactly the same as RRR, but without the y-variables:
+	// Compute n := dimension of Jac(W):
+	poly W = imap(RRR,W);
+	ideal jaci = std(jacob(W));
+	ideal ba = kbase(jaci);
+	int n = size(ba);
+	setring RRR;
 
-if(size(ringlist(RRR)[1]) > 1)
-{
-int i,j,k,u;
-list L = ringlist(RRR);
-for(i=1; i<=ny; i++)
-{
-L[2] = delete(L[2],nx + 1);
-}
-intvec kk = (1..nx);
-for(i=1; i<=nx; i++)
-{
-kk[i] = 1;
-}
-L[3][1][2] = kk;
-L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
-def nR = ring(L);
+	// Compute the matrix MAtepo corresponding to the polynomial tepo:
+	poly yprod = 1; 
+	for(i=1; i<=ny; i++)
+	{
+		yprod = yprod * y(i);
+	}
+	matrix koffer = coef(tepo, yprod);
+	matrix MAtepo[n][n];
 
-setring nR;
+	for(u=1; u<=ncols(koffer); u++)
+	{
+		poly bla = koffer[2,u];
 
-// Now complete the correct definition of nR by specifying the right minpoly: 
+		// Switch the ring without y vars
+		setring nR;
 
-poly P = imap(RRR,MP);
-poly z = subst(P,x(1),r);
-number nu = leadcoef(z);
-minpoly = nu;
-}
-else
-{
-ring nR = char(RRR), x(1..nx), dp;
-}
+		poly f = imap(RRR,bla);
 
-// Compute n := dimension of Jac(W):
+		int j,k;
 
-poly W = imap(RRR,W);
-ideal jaci = std(jacob(W));
-ideal ba = kbase(jaci);
-int n = size(ba);
-setring RRR;
+		poly W = imap(RRR,W);
 
-// Compute the matrix MAtepo corresponding to the polynomial tepo:
+		ideal jaci = std(jacob(W));
+		ideal ba = kbase(jaci);
+		int n = size(ba);
+		module BB = reduce(ba,jaci);
 
-poly yprod = 1; 
-for(i=1; i<=ny; i++)
-{
-yprod = yprod * y(i);
-}
-matrix koffer = coef(tepo, yprod);
-matrix MAtepo[n][n];
+		list L;
+		for(k=1; k<=n; k++)
+		{
+			module ff = reduce(f*ba[k],jaci);
+			matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+			L = L + list(MM);
+		}
 
-for(u=1; u<=ncols(koffer); u++)
-{
-poly bla = koffer[2,u];
+		matrix U = L[1];
+		for(k=2; k<=n; k++)
+		{
+			U=concat(U,L[k]);
+		}
 
-// Define new ring -- exactly the same as RRR, but without the y-variables:
+		// Switch back to original ring
+		setring RRR;
 
-if(size(ringlist(RRR)[1]) > 1)
-{
-int i,j,k;
-list L = ringlist(RRR);
-for(i=1; i<=ny; i++)
-{
-L[2] = delete(L[2],nx + 1);
-}
-intvec kk = (1..nx);
-for(i=1; i<=nx; i++)
-{
-kk[i] = 1;
-}
-L[3][1][2] = kk;
-L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
-def nR = ring(L);
+		matrix fop = imap(nR,U);
 
-setring nR;
+		MAtepo = MAtepo + koffer[1,u] * fop; 
+	}
 
-// Now complete the correct definition of nR by specifying the right minpoly: 
-
-poly P = imap(RRR,MP);
-poly z = subst(P,x(1),r);
-number nu = leadcoef(z);
-minpoly = nu;
-}
-else
-{
-ring nR = char(RRR), x(1..nx), dp;
-}
-
-poly f = imap(RRR,bla);
-
-int j,k;
-
-poly W = imap(RRR,W);
-
-ideal jaci = std(jacob(W));
-ideal ba = kbase(jaci);
-int n = size(ba);
-module BB = reduce(ba,jaci);
-
-list L;
-for(k=1; k<=n; k++)
-{
-module ff = reduce(f*ba[k],jaci);
-matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-L = L + list(MM);
-}
-
-matrix U = L[1];
-for(k=2; k<=n; k++)
-{
-U=concat(U,L[k]);
-}
-
-setring RRR;
-
-matrix fop = imap(nR,U);
-
-MAtepo = MAtepo + koffer[1,u] * fop; 
-}
-
-return(MAtepo);
+	return(MAtepo);
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////
 // "mablow" blows up a matrix by blowing up all its entries using poly2matrix.
-// 
-// The third argument MP is the minpoly of the "big" ring (i.e. the one with both
-// x- and y-variables, but given with x(1) as a variable. For example, if the big
-// ring is defined via
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//    minpoly = r^2 + 1;
-// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
-// field is the rational numbers. 
-//
-// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc mablow(matrix M, poly W, poly MP)
+proc mablow(matrix M, poly W)
 {
 int s = ncols(M);
 
@@ -204,7 +200,7 @@ setring nR;
 
 // Now complete the correct definition of nR by specifying the right minpoly: 
 
-poly P = imap(RRR,MP);
+poly P = imap(RRR,minpolyblow);
 poly z = subst(P,x(1),r);
 number nu = leadcoef(z);
 minpoly = nu;
@@ -233,7 +229,7 @@ for(i1=1; i1<=s; i1++)
 {
 for(j1=1; j1<=s; j1++)
 {
-L[i1] = insert(L[i1], poly2matrix(M[i1,j1], W, MP),j1-1);
+L[i1] = insert(L[i1], poly2matrix(M[i1,j1], W, minpolyblow),j1-1);
 }}
 
 matrix A[s*n][s*n];
@@ -255,19 +251,9 @@ return(A);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // "DRN" computes the matrix representing [g_i, XA], where XA is a monomial in the x-variables.
-//
-// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
-// x- and y-variables, but given with x(1) as a variable. For example, if the big
-// ring is defined via
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//    minpoly = r^2 + 1;
-// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
-// field is the rational numbers. 
-//
-// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-proc DRN(poly W, poly XA, int i, int degwminusone, poly MP)
+proc DRN(poly W, poly XA, int i, int degwminusone)
 {
 int j,k;
 def RRR = basering;
@@ -295,7 +281,7 @@ setring nR;
 
 // Now complete the correct definition of nR by specifying the right minpoly: 
 
-poly P = imap(RRR,MP);
+poly P = imap(RRR,minpolyblow);
 poly z = subst(P,x(1),r);
 number nu = leadcoef(z);
 minpoly = nu;
@@ -342,19 +328,9 @@ return(NN);
 //////////////////////////////////////////////////////////////////////////////////
 // "deltaImablow" blows up a matrix by blowing up all its entries using DRN. (This
 // is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
-//
-// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
-// x- and y-variables, but given with x(1) as a variable. For example, if the big
-// ring is defined via
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//    minpoly = r^2 + 1;
-// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
-// field is the rational numbers. 
-//
-// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaImablow(matrix M, poly W, int II, int degwminusone, poly MP)
+proc deltaImablow(matrix M, poly W, int II, int degwminusone)
 {
 int s = ncols(M);
 
@@ -385,7 +361,7 @@ setring nR;
 
 // Now complete the correct definition of nR by specifying the right minpoly: 
 
-poly P = imap(RRR,MP);
+poly P = imap(RRR,minpolyblow);
 poly z = subst(P,x(1),r);
 number nu = leadcoef(z);
 minpoly = nu;
@@ -428,7 +404,7 @@ matrix N[n][n];
 
 for(i=1; i<=anzahl; i++)
 {
-N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degwminusone, MP);
+N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degwminusone, minpolyblow);
 }
 
 L[i1] = insert(L[i1], N, j1-1);
@@ -480,24 +456,14 @@ return(L);
 /////////////////////////////////////////////////////////////////////////////////////
 // "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables),
 //  baa=deg(W)-1)
-//
-// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
-// x- and y-variables, but given with x(1) as a variable. For example, if the big
-// ring is defined via
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//    minpoly = r^2 + 1;
-// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
-// field is the rational numbers. 
-//
-// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc deltaQ(matrix F, poly W, int nx, int baa, poly MP)
+proc deltaQ(matrix F, poly W, int nx, int baa)
 {
 LIB "matrix.lib";
 int i,j,k;
 list S = SGroupintvecs(nx);
-int gg = ncols(deltaImablow(F, W, S[1][1], baa-1, MP));
+int gg = ncols(deltaImablow(F, W, S[1][1], baa-1, minpolyblow));
 matrix Mi[gg][gg];
 
 for(i=1; i<=size(S); i++)
@@ -505,7 +471,7 @@ for(i=1; i<=size(S); i++)
 matrix Ma = unitmat(gg);
 for(j=1; j<=nx; j++)
 {
-Ma = Ma * deltaImablow(F, W, S[i][j], baa-1, MP);
+Ma = Ma * deltaImablow(F, W, S[i][j], baa-1, minpolyblow);
 }
 Mi = Mi + Ma; 
 }
@@ -516,24 +482,14 @@ return(Mi);
 /////////////////////////////////////////////////////////////////////////////////////
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
 //  baa=deg(W)-1)
-//
-// The fifth argument MP is the minpoly of the "big" ring (i.e. the one with both
-// x- and y-variables, but given with x(1) as a variable. For example, if the big
-// ring is defined via
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-//    minpoly = r^2 + 1;
-// then MP would have to be x(1)^2 + 1. Note that MP=0 if the big ring's ground
-// field is the rational numbers. 
-//
-// NOTE: Always use "r" as the parameter to define a nonzero minpoly!
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc dQ(matrix f, poly W, int nx, int degw, poly MP)
+proc dQ(matrix f, poly W, int nx, int degw)
 {
 LIB "matrix.lib";
 int i,j,k;
 list S = SGroupintvecs(nx);
-int gg = ncols(deltaImablow(f, W, S[1][1], degw	-1, MP));
+int gg = ncols(deltaImablow(f, W, S[1][1], degw	-1, minpolyblow));
 
 matrix Mi[gg][gg];
 
@@ -542,7 +498,7 @@ for(i=1; i<=size(S); i++)
 matrix Ma = unitmat(gg);
 for(j=1; j<=nx; j++)
 {
-Ma = Ma * mablow(diff(f, x(S[i][j])), W, MP);
+Ma = Ma * mablow(diff(f, x(S[i][j])), W, minpolyblow);
 }
 Mi = Mi + Ma; 
 }
