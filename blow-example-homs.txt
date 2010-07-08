@@ -7,7 +7,7 @@ LIB "blow.lib";
 LIB "matrix.lib";
 int nx=1;
 int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
 int baa=10;
 poly W = x(1)^baa;
 
@@ -18,7 +18,7 @@ matrix Ydual = MFdual(Y);
 
 matrix D = MFtensor(Ydual,X);
 
-matrix Dblow = mablow(D,W,0); // Blow up D using Jac(W)
+matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
 list l = MFreduce(Dblow,1);
 matrix RD = l[1]; // Compute the reduced form of Dblow over k
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
@@ -28,9 +28,9 @@ matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 // a sum of copies of k and k[1], or it will be of the form (1,0) or (0,1)
 // in which case it is contractible.
 
-matrix dq = dQ(X, W, nx, baa, 0); // This is dQ_X: 
+matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
 matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx, baa, 0); // This is deltaQ_D
+matrix delQ = deltaQ(D, W, nx, baa); // This is deltaQ_D
 
 // And finally the idempotent e on Dblow
 number frac = baa;
@@ -68,7 +68,7 @@ LIB "blow.lib";
 LIB "matrix.lib";
 int nx=2;
 int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
 poly W = x(1)^3 + x(2)^4;
 
 matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2,-x(1) * x(2),-x(2)^3;

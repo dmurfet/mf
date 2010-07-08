@@ -31,7 +31,7 @@ LIB "ring.lib";
 //
 //    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
 //    minpoly = r^2 + 1;
-//    minpolyblow = x(1)^2 + 1;
+//    poly minpolyblow = x(1)^2 + 1;
 //
 // If minpolyblow or r is undefined we proceed by ignoring the ring extension.
 
@@ -64,11 +64,10 @@ proc ringWithoutYVars()
 		L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
 		def nR = ring(L);
 
-		setring nR;
-
 		// Now complete the correct definition of nR by specifying the right minpoly: 
 		if( defined(minpolyblow) && defined(r) )
 		{
+			setring nR;
 			poly P = imap(RRR,minpolyblow);
 			poly z = subst(P,x(1),r);
 			number nu = leadcoef(z);
@@ -194,7 +193,7 @@ proc mablow(matrix M, poly W)
 	{
 		for(j1=1; j1<=s; j1++)
 		{
-			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], W, minpolyblow),j1-1);
+			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], W),j1-1);
 		}
 	}
 
@@ -306,7 +305,7 @@ proc deltaImablow(matrix M, poly W, int II, int degwminusone)
 
 			for(i=1; i<=anzahl; i++)
 			{
-				N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degwminusone, minpolyblow);
+				N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degwminusone);
 			}
 
 			L[i1] = insert(L[i1], N, j1-1);
@@ -365,22 +364,23 @@ return(L);
 
 proc deltaQ(matrix F, poly W, int nx, int baa)
 {
-LIB "matrix.lib";
-int i,j,k;
-list S = SGroupintvecs(nx);
-int gg = ncols(deltaImablow(F, W, S[1][1], baa-1, minpolyblow));
-matrix Mi[gg][gg];
+	LIB "matrix.lib";
+	int i,j,k;
+	list S = SGroupintvecs(nx);
+	int gg = ncols(deltaImablow(F, W, S[1][1], baa-1));
+	matrix Mi[gg][gg];
 
-for(i=1; i<=size(S); i++)
-{
-matrix Ma = unitmat(gg);
-for(j=1; j<=nx; j++)
-{
-Ma = Ma * deltaImablow(F, W, S[i][j], baa-1, minpolyblow);
-}
-Mi = Mi + Ma; 
-}
-return(Mi);
+	for(i=1; i<=size(S); i++)
+	{
+		matrix Ma = unitmat(gg);
+		for(j=1; j<=nx; j++)
+		{
+			Ma = Ma * deltaImablow(F, W, S[i][j], baa-1);
+		}
+		Mi = Mi + Ma; 
+	}
+	
+	return(Mi);
 }
 
 
@@ -391,23 +391,24 @@ return(Mi);
 
 proc dQ(matrix f, poly W, int nx, int degw)
 {
-LIB "matrix.lib";
-int i,j,k;
-list S = SGroupintvecs(nx);
-int gg = ncols(deltaImablow(f, W, S[1][1], degw	-1, minpolyblow));
+	LIB "matrix.lib";
+	int i,j;
+	list S = SGroupintvecs(nx);
+	int gg = ncols(deltaImablow(f, W, S[1][1], degw-1));
 
-matrix Mi[gg][gg];
+	matrix Mi[gg][gg];
 
-for(i=1; i<=size(S); i++)
-{
-matrix Ma = unitmat(gg);
-for(j=1; j<=nx; j++)
-{
-Ma = Ma * mablow(diff(f, x(S[i][j])), W, minpolyblow);
-}
-Mi = Mi + Ma; 
-}
-return(Mi);
+	for(i=1; i<=size(S); i++)
+	{
+		matrix Ma = unitmat(gg);
+		for(j=1; j<=nx; j++)
+		{
+			Ma = Ma * mablow(diff(f, x(S[i][j])), W);
+		}
+		Mi = Mi + Ma; 
+	}
+	
+	return(Mi);
 }
 
 
@@ -959,7 +960,7 @@ proc MFreduce(matrix A, list #)
 	
 	// No do the same process to b1 (TODO: unify these two steps)
 	while( isMFreduced(b1) != 1 && ncols(b1) > 1 )
-	{	
+	{
 		dbprint(prl, " [MFreduce] while loop for b1");
 		
 		// There is a constant somewhere, begin looking in b1
@@ -1335,4 +1336,9 @@ proc test_MFreduce()
 	if( g * b != d * g ){ passed = 0; }
 	
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
+
+proc test_MFvarious()
+{
+	print(defined(minpolyblow));
 }
