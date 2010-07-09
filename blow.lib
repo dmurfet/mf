@@ -199,16 +199,8 @@ proc poly2matrix(poly tepo, W)
 proc mablow(matrix M, poly W)
 {
 	// Compute dimension of Jac(W)
-	def RRR = basering;
-	def nR = ringWithoutYVars();
-	setring nR;
-
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	setring RRR;
-
+	int n = dimInternalAlgebra(W);
+	
 	// Define L to be an appropriately indexed list of blown-up matrices:
 	int i1,j1,i2,j2,i;
 	int s = ncols(M);
@@ -1274,10 +1266,10 @@ proc ZZtensor(matrix A, matrix B)
 	b11 = lb[1]; b12 = lb[2]; b21 = lb[3]; b22 = lb[4];
 	
 	// Define the four corners of Z, then use blockmat
-	matrix z11 = blockmat( tensor(a11,b11), -1 * tensor(a12,b12), tensor(a21,b21), tensor(a22,b22) );
-	matrix z12 = blockmat( tensor(a11,b12), tensor(a12,b11), tensor(a21,b22), -1 * tensor(a22,b21) );
-	matrix z21 = blockmat( tensor(a11,b21), tensor(a12,b22), tensor(a21,b11), -1 * tensor(a22,b12) );
-	matrix z22 = blockmat( tensor(a11, b22), -1 * tensor(a12,b21), tensor(a21,b12), tensor(a22,b11) );
+	matrix z11 = blockmat( tensor(a11,b11), -1 * tensor(a12,b12), tensor(a21,b21), -1 * tensor(a22,b22) );
+	matrix z12 = blockmat( tensor(a11,b12), -1 * tensor(a12,b11), tensor(a21,b22), -1 * tensor(a22,b21) );
+	matrix z21 = blockmat( tensor(a11,b21), -1 * tensor(a12,b22), tensor(a21,b11), -1 * tensor(a22,b12) );
+	matrix z22 = blockmat( tensor(a11, b22), -1 * tensor(a12,b21), tensor(a21,b12), -1 * tensor(a22,b11) );
 	
 	matrix Z = blockmat(z11,z12,z21,z22);
 	
