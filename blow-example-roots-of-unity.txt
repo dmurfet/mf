@@ -90,7 +90,16 @@ print(e);
 print(e * Dblow - Dblow * e); // Check that e is a morphism
 
 matrix ep = F * e * G;
-// Output is that ep = 0, which implies e is null-homotopic and hence D is contractible over k[y].
+print(ep * RD - RD * ep);
+print(ep * ep - ep);
+
+
+// NOTE: With updates to blow.lib we now get something reasonable for ep, i.e. it is at least
+// nonzero. If you look at RD it is a direct sum of four indecomposable MFs, and ep seems
+// to be picking out one of them, which is the kind of thing we expect.
+
+// So you can ignore the rest of this example, which is referring to the earlier failure of
+// ep to be nonzero.
 
 // Here is some attempt at an explanation. Let us set
 matrix Y1d[2][2] = 0, x(1) + r^3 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2)), 0;
