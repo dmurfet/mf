@@ -274,6 +274,10 @@ proc DRN(poly W, poly XA, int i)
 
 	setring RRR;
 	matrix NN = imap(nR,U);
+	
+	dbprint(printlevel, "[DRN] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
+	dbprint(printlevel, NN);
+	
 	return(NN);
 }
 
@@ -281,10 +285,17 @@ proc DRN(poly W, poly XA, int i)
 //////////////////////////////////////////////////////////////////////////////////
 // "deltaImablow" blows up a matrix by blowing up all its entries using DRN. (This
 // is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
+//
+// II is the index of the variable which lives on the subscript of \delta.
 //////////////////////////////////////////////////////////////////////////////////
 
 proc deltaImablow(matrix M, poly W, int II)
 {
+	int prl = printlevel;
+	
+	dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
+	dbprint(prl,"[deltaImablow] Input variable is x(" + string(II) + ")");
+	
 	// Compute n := dimension of Jac(W):
 	def RRR = basering;
 	def nR = ringWithoutYVars();
@@ -297,49 +308,62 @@ proc deltaImablow(matrix M, poly W, int II)
 	setring RRR;
 
 	// Define L to be an appropriately indexed list of blown-up matrices:
-	int s = ncols(M);
+	int colsm = ncols(M);
 	int i1,j1,i2,j2,i;
 	list e,L;
 	
-	for(i=1; i<=s; i++)
+	poly yprod = 1; 
+	for(i=1; i<=ny; i++)
+	{
+		yprod = yprod * y(i);
+	}
+	
+	poly xprod = 1;
+	for(i=1; i<=nx; i++)
+	{
+		xprod = xprod * x(i);
+	}
+	
+	for(i=1; i<=colsm; i++)
 	{
 		L[i] = e;
 	}
-	for(i1=1; i1<=s; i1++)
+	for(i1=1; i1<=colsm; i1++)
 	{
-		for(j1=1; j1<=s; j1++)
+		for(j1=1; j1<=colsm; j1++)
 		{
-///////////////////////////////////////////////////
-// INTERESTING PART: 
-//
-			poly yprod = 1; 
-			for(i=1; i<=ny; i++)
-			{
-					yprod = yprod * y(i);
-			}
-
-			matrix koffer = coef(M[i1,j1], yprod);
-			int anzahl = ncols(koffer);
-
+			///////////////////////////////////////////////////
+			// INTERESTING PART: 
+			//
+			// koffer is a matrix with two rows. The first row contains
+			// all the x-monomials with nonzero coefficient in M[i1,j1].
+			// The second row contains the corresponding coefficient, which is a polynomial
+			// in only the y-variables.
+			
+			matrix koffer = coef(M[i1,j1], xprod);
 			matrix N[n][n];
 
-			for(i=1; i<=anzahl; i++)
+			for(i=1; i<=ncols(koffer); i++)
 			{
-				N = N + koffer[1,i] * DRN(W, koffer[2,i], II);
+				if( koffer[2,i] != 0 && koffer[1,i] != 0 )
+				{
+					dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(i) + "] = " + string(koffer[1,i]) + " and koffer[2," + string(i) + "] = " + string(koffer[2,i]));
+					N = N + koffer[2,i] * DRN(W, koffer[1,i], II);
+				}
 			}
 
 			L[i1] = insert(L[i1], N, j1-1);
-///////////////////////////////////////////////////
+			///////////////////////////////////////////////////
 		}
 	}
 
-	matrix A[s*n][s*n];
+	matrix A[colsm*n][colsm*n];
 
-	for(i1=1; i1<=s; i1++)
+	for(i1=1; i1<=colsm; i1++)
 	{
 		for(j1=1; j1<=n; j1++)
 		{
-			for(i2=1; i2<=s; i2++)
+			for(i2=1; i2<=colsm; i2++)
 			{
 				for(j2=1; j2<=n; j2++)
 				{
@@ -349,6 +373,9 @@ proc deltaImablow(matrix M, poly W, int II)
 		}
 	}
 
+	dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
+	dbprint(prl, "------------");
+	
 	return(A);
 }
 
@@ -383,6 +410,7 @@ proc deltaQ(matrix F, poly W, int nx)
 	LIB "matrix.lib";
 	
 	int n = dimInternalAlgebra(W);
+	int prl = printlevel;
 	
 	// The blown up matrix will be of dimension n x ncols(f)
 	int gg = ncols(F) * n;
@@ -401,6 +429,8 @@ proc deltaQ(matrix F, poly W, int nx)
 		{
 			Ma = Ma * deltaImablow(F, W, perm[j]);
 		}
+		
+		dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
 		Mi = Mi + Ma; 
 	}
 	
@@ -1251,11 +1281,11 @@ proc MFdual(matrix A)
 
 proc ZZtensor(matrix A, matrix B)
 {
-	int arank = ncols(A)/2; // Size of blocks in A
-	int brank = ncols(B)/2; // Size of blocks in B
+	//int arank = ncols(A)/2; // Size of blocks in A
+	//int brank = ncols(B)/2; // Size of blocks in B
 	
 	// The blocks in Z are therefore of size 2 * arank * brank
-	int zrank = 2 * arank * brank;
+	//int zrank = 2 * arank * brank;
 	
 	list la = extractblockmat(A);
 	list lb = extractblockmat(B);
@@ -1267,13 +1297,17 @@ proc ZZtensor(matrix A, matrix B)
 	
 	int degb = 0; // Default B to degree 0, i.e. even
 	
-	if( B != 0 && b11 == 0 && b22 == 0 ){ degb = 1; }
+	int brank = ncols(B)/2;
+	matrix zero[brank][brank];
+	matrix bigzero[ncols(B)][ncols(B)];
+	
+	if( B != bigzero && b11 == zero && b22 == zero ){ degb = 1; }
 	
 	// Define the four corners of Z, then use blockmat
 	matrix z11 = blockmat( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
 	matrix z12 = blockmat( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
 	matrix z21 = blockmat( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
-	matrix z22 = blockmat( tensor(a11, b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
+	matrix z22 = blockmat( tensor(a11,b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
 	
 	matrix Z = blockmat(z11,z12,z21,z22);
 	
