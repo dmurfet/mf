@@ -1265,11 +1265,15 @@ proc ZZtensor(matrix A, matrix B)
 	a11 = la[1]; a12 = la[2]; a21 = la[3]; a22 = la[4];
 	b11 = lb[1]; b12 = lb[2]; b21 = lb[3]; b22 = lb[4];
 	
+	int degb = 0; // Default B to degree 0, i.e. even
+	
+	if( B != 0 && b11 == 0 && b22 == 0 ){ degb = 1; }
+	
 	// Define the four corners of Z, then use blockmat
-	matrix z11 = blockmat( tensor(a11,b11), -1 * tensor(a12,b12), tensor(a21,b21), -1 * tensor(a22,b22) );
-	matrix z12 = blockmat( tensor(a11,b12), -1 * tensor(a12,b11), tensor(a21,b22), -1 * tensor(a22,b21) );
-	matrix z21 = blockmat( tensor(a11,b21), -1 * tensor(a12,b22), tensor(a21,b11), -1 * tensor(a22,b12) );
-	matrix z22 = blockmat( tensor(a11, b22), -1 * tensor(a12,b21), tensor(a21,b12), -1 * tensor(a22,b11) );
+	matrix z11 = blockmat( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
+	matrix z12 = blockmat( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
+	matrix z21 = blockmat( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
+	matrix z22 = blockmat( tensor(a11, b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
 	
 	matrix Z = blockmat(z11,z12,z21,z22);
 	
