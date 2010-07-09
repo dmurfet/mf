@@ -92,6 +92,28 @@ proc ringWithoutYVars()
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+// "dimInternalAlgebra" Returns the dimension of the internal algebra, that is, the
+// algebra I in the terminology of my note.
+//
+// At present, it just computes the Milnor number of the given W over the x-vars.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc dimInternalAlgebra(poly W)
+{
+	def RRR = basering;
+	def nR = ringWithoutYVars();
+	setring nR;
+
+	poly W = imap(RRR,W);
+	ideal jaci = std(jacob(W));
+	ideal ba = kbase(jaci);
+	int n = size(ba);
+	setring RRR;
+	
+	return(n);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 // "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
 // the matrices that represent the former's action on Jac(W).
 //////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +122,7 @@ proc poly2matrix(poly tepo, W)
 {
 	int i,j,k,u;
 	def RRR = basering;
+	
 	def nR = ringWithoutYVars();
 	setring nR;
 
@@ -119,6 +142,8 @@ proc poly2matrix(poly tepo, W)
 	matrix koffer = coef(tepo, yprod);
 	matrix MAtepo[n][n];
 
+	int k;
+	
 	for(u=1; u<=ncols(koffer); u++)
 	{
 		poly bla = koffer[2,u];
@@ -127,11 +152,9 @@ proc poly2matrix(poly tepo, W)
 		setring nR;
 
 		poly f = imap(RRR,bla);
-
-		int j,k;
-
 		poly W = imap(RRR,W);
 
+		// TODO: We really have to compute this every iteration of the loop??
 		ideal jaci = std(jacob(W));
 		ideal ba = kbase(jaci);
 		int n = size(ba);
@@ -263,10 +286,6 @@ proc DRN(poly W, poly XA, int i, int degwminusone)
 
 proc deltaImablow(matrix M, poly W, int II, int degwminusone)
 {
-	int s = ncols(M);
-
-	int i1,j1,i2,j2,i;
-
 	// Compute n := dimension of Jac(W):
 	def RRR = basering;
 	def nR = ringWithoutYVars();
@@ -279,8 +298,10 @@ proc deltaImablow(matrix M, poly W, int II, int degwminusone)
 	setring RRR;
 
 	// Define L to be an appropriately indexed list of blown-up matrices:
-
+	int s = ncols(M);
+	int i1,j1,i2,j2,i;
 	list e,L;
+	
 	for(i=1; i<=s; i++)
 	{
 		L[i] = e;
@@ -333,27 +354,24 @@ proc deltaImablow(matrix M, poly W, int II, int degwminusone)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "SGroupintvecs" produces the nx! permutations of (1,...,nx) as a list of intvecs.
+// "SGroupintvecs" produces the n! permutations of (1,...,n) as a list of intvecs.
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc SGroupintvecs(int nx)
+proc SGroupintvecs(int n)
 {
-LIB "qmatrix.lib";
-list L;
-int i,j,k;
-intmat M = SymGroup(nx);
+	LIB "qmatrix.lib";
+	list L;
+	int i;
+	
+	intmat M = SymGroup(n);
+	
+	for(i=1; i<=nrows(M); i++)
+	{
+		intvec c = M[i,1..n];
+		L[i] = c;
+	}
 
-for(i=1; i<=nrows(M); i++)
-{
-intvec c;
-for(j=1; j<=ncols(M); j++)
-{
-c[j] = M[i,j];
-}
-L[i] = c;
-}
-
-return(L);
+	return(L);
 }
 
 
@@ -365,17 +383,25 @@ return(L);
 proc deltaQ(matrix F, poly W, int nx, int baa)
 {
 	LIB "matrix.lib";
-	int i,j,k;
+	
+	int n = dimInternalAlgebra(W);
+	
+	// The blown up matrix will be of dimension n x ncols(f)
+	int gg = ncols(F) * n;
+	
 	list S = SGroupintvecs(nx);
-	int gg = ncols(deltaImablow(F, W, S[1][1], baa-1));
+	
+	int i,j;	
 	matrix Mi[gg][gg];
 
 	for(i=1; i<=size(S); i++)
 	{
-		matrix Ma = unitmat(gg);
+		intvec perm = S[i];
+		matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);
+		
 		for(j=1; j<=nx; j++)
 		{
-			Ma = Ma * deltaImablow(F, W, S[i][j], baa-1);
+			Ma = Ma * deltaImablow(F, W, perm[j], baa-1);
 		}
 		Mi = Mi + Ma; 
 	}
@@ -391,20 +417,31 @@ proc deltaQ(matrix F, poly W, int nx, int baa)
 
 proc dQ(matrix f, poly W, int nx, int degw)
 {
-	LIB "matrix.lib";
-	int i,j;
+	LIB "matrix.lib";	
+	
+	int n = dimInternalAlgebra(W);
+	
+	// The blown up matrix will be of dimension n x ncols(f)
+	int gg = ncols(f) * n;
+	
 	list S = SGroupintvecs(nx);
-	int gg = ncols(deltaImablow(f, W, S[1][1], degw-1));
+	int i,j;
 
 	matrix Mi[gg][gg];
 
 	for(i=1; i<=size(S); i++)
 	{
-		matrix Ma = unitmat(gg);
+		intvec perm = S[i];
+		matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);	
+		
+		//print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
+		
 		for(j=1; j<=nx; j++)
 		{
-			Ma = Ma * mablow(diff(f, x(S[i][j])), W);
+			Ma = Ma * mablow(diff(f, x(perm[j])), W);
 		}
+		
+		//print("[dQ] Adding summand"); print(Ma);
 		Mi = Mi + Ma; 
 	}
 	
