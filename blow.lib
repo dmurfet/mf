@@ -434,6 +434,10 @@ proc deltaQ(matrix F, poly W, int nx)
 		Mi = Mi + Ma; 
 	}
 	
+	// Multiply by the scaling factor
+	number fac = factorial(nx);
+	Mi = 1/fac * Mi;
+	
 	return(Mi);
 }
 
@@ -471,6 +475,10 @@ proc dQ(matrix f, poly W, int nx)
 		//print("[dQ] Adding summand"); print(Ma);
 		Mi = Mi + Ma; 
 	}
+	
+	// Multiply by the scaling factor
+	number fac = factorial(nx);
+	Mi = 1/fac * Mi;
 	
 	return(Mi);
 }
