@@ -80,3 +80,70 @@ matrix Xdual = MFdual(X);
 matrix D = MFtensor(Xdual,X);
 
 /////// WAITING ON mablow improvements.
+
+
+///////////// THIRD EXAMPLE - Computing Homs in x^d //////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=1;
+int ny=1;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+int baa = 3;
+poly W = x(1)^baa;
+
+matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
+matrix Y[2][2] = 0, x(1)^2, x(1)^(baa-2),0;
+
+matrix D = MFtensor(MFdual(Y), X);
+
+// Do all the typical rubbish
+matrix Dblow = mablow(D,W);
+list l = MFreduce(Dblow,1);
+matrix RD = l[1]; // Compute the reduced form of Dblow over k
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
+matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
+matrix delQ = deltaQ(D, W, nx, baa); // This is deltaQ_D
+
+// And finally the idempotent e on Dblow
+number frac = baa;
+matrix e = 1/frac * iddQ * delQ;
+print(e * Dblow - Dblow * e); // Not zero!!! So something is wrong in the calculation of e.
+
+// The corresponding idempotent on RD is
+matrix ep = F * e * G;
+print(RD); // The final reduced MF homotopy equivalent to Dblow
+print(ep);
+print(ep * RD - RD * ep); // ep is an endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+
+// Seems ep is not idempotent on the nose here
+
+
+
+
+
+// Independent calculation of Homs
+LIB "homolog.lib";
+ring S = 0,(x(1)),ds;
+
+int baa = 3;
+poly W = x(1)^baa;
+
+ideal I = W;
+qring A = std(I);
+
+matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
+matrix Y[2][2] = 0, x(1)^2, x(1)^(baa-2),0;
+
+module M = [X[1,2]];
+module N = [Y[1,2]];
+module Nsusp = [Y[2,1]];
+
+isCM(M); isCM(N);
+
+// We have one dimensions worth of morphisms M -> N and M -> N[1] in the stable cat of CMs
+Ext(2,N,M,1); Ext(2,Nsusp,M,1);
