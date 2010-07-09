@@ -34,6 +34,12 @@ LIB "ring.lib";
 //    poly minpolyblow = x(1)^2 + 1;
 //
 // If minpolyblow or r is undefined we proceed by ignoring the ring extension.
+//
+// We assume currently in dQ, deltaQ and related routines that the polynomial
+// we are passed is a sum of all the x-variables to some specific power.
+
+// NOTE: We should NOT have W be some ambient fixed polynomial, since we may want
+// to vary it in the foam case as we move among different edges.
 
 //////////////////////////////////////////////////////////////////////////////////
 // "ringwithoutyvars" returns the ambient ring with y variables removed
@@ -243,7 +249,7 @@ proc mablow(matrix M, poly W)
 // "DRN" computes the matrix representing [g_i, XA], where XA is a monomial in the x-variables.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-proc DRN(poly W, poly XA, int i, int degwminusone)
+proc DRN(poly W, poly XA, int i)
 {
 	// Compute n := dimension of Jac(W):
 	def RRR = basering;
@@ -258,11 +264,12 @@ proc DRN(poly W, poly XA, int i, int degwminusone)
 
 	int n = size(ba);
 	int k;
-
+	int exponent = deg(W) - 1;
+	
 	list L;
 	for(k=1; k<=n; k++)
 	{
-		module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^degwminusone)) )/(x(i)^degwminusone) - XA * ( ba[k] - reduce(ba[k],std(x(i)^degwminusone)) )/(x(i)^degwminusone),jaci);
+		module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^exponent)) )/(x(i)^exponent) - XA * ( ba[k] - reduce(ba[k],std(x(i)^exponent)) )/(x(i)^exponent),jaci);
 		matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
 		L = L + list(MM);
 	}
@@ -284,7 +291,7 @@ proc DRN(poly W, poly XA, int i, int degwminusone)
 // is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaImablow(matrix M, poly W, int II, int degwminusone)
+proc deltaImablow(matrix M, poly W, int II)
 {
 	// Compute n := dimension of Jac(W):
 	def RRR = basering;
@@ -326,7 +333,7 @@ proc deltaImablow(matrix M, poly W, int II, int degwminusone)
 
 			for(i=1; i<=anzahl; i++)
 			{
-				N = N + koffer[1,i] * DRN(W, koffer[2,i], II, degwminusone);
+				N = N + koffer[1,i] * DRN(W, koffer[2,i], II);
 			}
 
 			L[i1] = insert(L[i1], N, j1-1);
@@ -376,11 +383,10 @@ proc SGroupintvecs(int n)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables),
-//  baa=deg(W)-1)
+// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables)
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc deltaQ(matrix F, poly W, int nx, int baa)
+proc deltaQ(matrix F, poly W, int nx)
 {
 	LIB "matrix.lib";
 	
@@ -401,7 +407,7 @@ proc deltaQ(matrix F, poly W, int nx, int baa)
 		
 		for(j=1; j<=nx; j++)
 		{
-			Ma = Ma * deltaImablow(F, W, perm[j], baa-1);
+			Ma = Ma * deltaImablow(F, W, perm[j]);
 		}
 		Mi = Mi + Ma; 
 	}
@@ -412,10 +418,9 @@ proc deltaQ(matrix F, poly W, int nx, int baa)
 
 /////////////////////////////////////////////////////////////////////////////////////
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
-//  baa=deg(W)-1)
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc dQ(matrix f, poly W, int nx, int degw)
+proc dQ(matrix f, poly W, int nx)
 {
 	LIB "matrix.lib";	
 	
@@ -1373,9 +1378,4 @@ proc test_MFreduce()
 	if( g * b != d * g ){ passed = 0; }
 	
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
-}
-
-proc test_MFvarious()
-{
-	print(defined(minpolyblow));
 }
