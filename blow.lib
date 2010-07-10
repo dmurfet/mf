@@ -126,69 +126,62 @@ proc dimInternalAlgebra(poly W)
 
 proc poly2matrix(poly tepo, W)
 {
-	int i,j,k,u;
-	def RRR = basering;
-	
-	def nR = ringWithoutYVars();
-	setring nR;
+    int i,j,k,u;
+    def RRR = basering;
+    
+    def nR = ringWithoutYVars();
+    setring nR;
 
-	// Compute n := dimension of Jac(W):
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	setring RRR;
+    // Compute n := dimension of Jac(W):
+    poly W = imap(RRR,W);
+    ideal jaci = std(jacob(W));
+    ideal ba = kbase(jaci);
+    int n = size(ba);
+    module BB = reduce(ba,jaci);
+    setring RRR;
 
-	// Compute the matrix MAtepo corresponding to the polynomial tepo:
-	poly yprod = 1; 
-	for(i=1; i<=ny; i++)
-	{
-		yprod = yprod * y(i);
-	}
-	matrix koffer = coef(tepo, yprod);
-	matrix MAtepo[n][n];
+    // Compute the matrix MAtepo corresponding to the polynomial tepo:
+    poly yprod = 1; 
+    for(i=1; i<=ny; i++)
+    {
+        yprod = yprod * y(i);
+    }
+    matrix koffer = coef(tepo, yprod);
+    matrix MAtepo[n][n];
+    
+    for(u=1; u<=ncols(koffer); u++)
+    {
+        poly bla = koffer[2,u];
 
-	int k;
-	
-	for(u=1; u<=ncols(koffer); u++)
-	{
-		poly bla = koffer[2,u];
+        // Switch to the ring without y vars
+        setring nR;
 
-		// Switch the ring without y vars
-		setring nR;
+        poly f = imap(RRR,bla);
+        poly W = imap(RRR,W);
 
-		poly f = imap(RRR,bla);
-		poly W = imap(RRR,W);
+        list L;
+        for(k=1; k<=n; k++)
+        {
+            module ff = reduce(f*ba[k],jaci);
+            matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+            L = L + list(MM);
+        }
 
-		// TODO: We really have to compute this every iteration of the loop??
-		ideal jaci = std(jacob(W));
-		ideal ba = kbase(jaci);
-		int n = size(ba);
-		module BB = reduce(ba,jaci);
+        matrix U = L[1];
+        for(k=2; k<=n; k++)
+        {
+            U=concat(U,L[k]);
+        }
 
-		list L;
-		for(k=1; k<=n; k++)
-		{
-			module ff = reduce(f*ba[k],jaci);
-			matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-			L = L + list(MM);
-		}
+        // Switch back to original ring
+        setring RRR;
 
-		matrix U = L[1];
-		for(k=2; k<=n; k++)
-		{
-			U=concat(U,L[k]);
-		}
+        matrix fop = imap(nR,U);
 
-		// Switch back to original ring
-		setring RRR;
+        MAtepo = MAtepo + koffer[1,u] * fop; 
+    }
 
-		matrix fop = imap(nR,U);
-
-		MAtepo = MAtepo + koffer[1,u] * fop; 
-	}
-
-	return(MAtepo);
+    return(MAtepo);
 }
 
 
