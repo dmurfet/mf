@@ -435,12 +435,12 @@ proc deltaQ(matrix F, poly W, int nx)
 	}
 	
 	// Multiply by the scaling factor:
-	int fac = 1;
+	number ffac = 1;
 	for(i=1; i<=nx; i++)
 	{
-		fac = fac * i;
+		ffac = ffac / i;
 	}
-	Mi = 1/fac * Mi;
+	Mi = ffac * Mi;
 	
 	return(Mi);
 }
@@ -481,12 +481,12 @@ proc dQ(matrix f, poly W, int nx)
 	}
 	
 	// Multiply by the scaling factor
-	int fac = 1;
+	number ffac = 1;
 	for(i=1; i<=nx; i++)
 	{
-		fac = fac * i;
+		ffac = ffac / i;
 	}
-	Mi = 1/fac * Mi;
+	Mi = ffac * Mi;
 	
 	return(Mi);
 }
