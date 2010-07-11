@@ -583,7 +583,7 @@ return(M);
 //
 // NOTE: There must be some typos or other mistakes somewhere, as the similarity
 //       transformations constructed do not reproduce the reduced matrix. Don't try
-//       to fix this for the moment but use Dan's MFreduce instead (but leave don't
+//       to fix this for the moment but use Dan's mfReduce instead (but leave don't
 //       delete this code, it might be useful at some later point.)
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -1156,7 +1156,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
 }
 
 ////////////////////////////////////////////////////////////////////
-// MFreduce
+// mfReduce
 //
 // Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X.
 // The output is the differential B of a matrix factorisation Y homotopy equivalent to X which has no
@@ -1172,13 +1172,13 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
 // with each intermediate step a differential Bi of a MF together with even maps Fi, Gi representing
 // homotopy equivalences between A and Bi.
 
-proc MFreduce(matrix A, list #)
+proc mfReduce(matrix A, list #)
 {
 	LIB "linalg.lib";
 	
 	int prl = printlevel;
 
-	dbprint(prl, "[MFreduce]");
+	dbprint(prl, "[mfReduce]");
 	
 	// Extract the odd and even part of the differential
 	list blocks = extractblockmat(A);
@@ -1195,9 +1195,9 @@ proc MFreduce(matrix A, list #)
 	// A remains fixed, we work steadily on B and F, G until B has the desired form
 	// Begin by looking inside b0 for nonzero constants. If at some point b0 becomes
 	// a 1x1 matrix we bail (it must be contractible).
-	while( isMFreduced(b0) != 1 && ncols(b0) > 1 )
+	while( ismfReduced(b0) != 1 && ncols(b0) > 1 )
 	{	
-		dbprint(prl, " [MFreduce] while loop for b0");
+		dbprint(prl, " [mfReduce] while loop for b0");
 		
 		// There is a constant somewhere, begin looking in b0
 		list l = matrixreduce(b0);
@@ -1217,7 +1217,7 @@ proc MFreduce(matrix A, list #)
 		// Now that we guarantee b0 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
 		// piece and return the modified B, F, G
-		list out = MFreduce_work(b0,b1,f0,f1,g0,g1);
+		list out = mfReduce_work(b0,b1,f0,f1,g0,g1);
 		b0 = out[1]; b1 = out[2];
 		f0 = out[3]; f1 = out[4];
 		g0 = out[5]; g1 = out[6];
@@ -1233,9 +1233,9 @@ proc MFreduce(matrix A, list #)
 	}
 	
 	// No do the same process to b1 (TODO: unify these two steps)
-	while( isMFreduced(b1) != 1 && ncols(b1) > 1 )
+	while( ismfReduced(b1) != 1 && ncols(b1) > 1 )
 	{
-		dbprint(prl, " [MFreduce] while loop for b1");
+		dbprint(prl, " [mfReduce] while loop for b1");
 		
 		// There is a constant somewhere, begin looking in b1
 		list l = matrixreduce(b1);
@@ -1255,7 +1255,7 @@ proc MFreduce(matrix A, list #)
 		// Now that we guarantee b1 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
 		// piece and return the modified B, F, G
-		list out = MFreduce_work(b1,b0,f1,f0,g1,g0);
+		list out = mfReduce_work(b1,b0,f1,f0,g1,g0);
 		
 		// Note the orders are interchanged relative to the b0 case!
 		b0 = out[2]; b1 = out[1];
@@ -1285,7 +1285,7 @@ proc MFreduce(matrix A, list #)
 
 		matrix tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
 		matrix b0r = transpose(gau[1]); // The reduced form
-		if( tr * b0 != b0r ){ print("[MFreduce] Error in Gaussian elimination"); return(1); }
+		if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination"); return(1); }
 	
 		b0 = b0r;
 		b1 = b1 * inverse(tr);
@@ -1296,7 +1296,7 @@ proc MFreduce(matrix A, list #)
  		gau = gauss_row(transpose(b0),1);
 		matrix tr2 = gau[2];
 		b0r = gau[1];
-		if( b0 * tr2 != b0r ){ print("[MFreduce] Error in Gaussian column elimination"); return(1); }
+		if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination"); return(1); }
 
 		b0 = b0r;
 		b1 = inverse(tr2) * b1;
@@ -1325,15 +1325,15 @@ proc MFreduce(matrix A, list #)
 	}
 }
 
-proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
+proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
 {
 	// By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
 	// where W is the potential. There is a homotopy equivalence between this matrix factorisation
 	// and the factorisation (s, e)
 
-	if( ncols(b0) == 1 ){ print("[MFreduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
+	if( ncols(b0) == 1 ){ print("[mfReduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
 	
-	//dbprint(printlevel, "   [MFreduce_work] ====");
+	//dbprint(printlevel, "   [mfReduce_work] ====");
 	//dbprint(printlevel, "      Current b0"); dbprint(printlevel, b0);
 	//dbprint(printlevel, "      Current b1"); dbprint(printlevel, b1);
 	//dbprint(printlevel, "   =====================");
@@ -1373,7 +1373,7 @@ proc MFreduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
 }
 
 // Returns 1 if there are no constant terms in A (other than zero), and zero otherwise
-proc isMFreduced(matrix A)
+proc ismfReduced(matrix A)
 {
 	int i,j;
 	for(i=1;i<=ncols(A);i++)
@@ -1595,7 +1595,7 @@ proc test_ZZtensor()
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
 
-proc test_MFreduce()
+proc test_mfReduce()
 {
 	int passed = 1;
 	
@@ -1607,7 +1607,7 @@ proc test_MFreduce()
 	matrix z[4][4];
 
 	matrix d = blockmat(z,d1,d0,z);
-	list l = MFreduce(d,1);
+	list l = mfReduce(d,1);
 	
 	matrix b = l[1];
 	matrix f = l[2];
