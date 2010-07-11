@@ -31,9 +31,9 @@ matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 // a sum of copies of k and k[1], or it will be of the form (1,0) or (0,1)
 // in which case it is contractible.
 
-matrix dq = dQ(X, W, nx, baa); // This is dQ_X: 
+matrix dq = dQ(X, W, nx); // This is dQ_X: 
 matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx, baa); // This is deltaQ_D
+matrix delQ = deltaQ(D, W, nx); // This is deltaQ_D
 
 // And finally the idempotent e on Dblow
 number frac = baa;
@@ -46,6 +46,8 @@ print(RD); // The final reduced MF homotopy equivalent to Dblow
 print(ep);
 print(ep * RD - RD * ep); // ep is an endomorphism of RD
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep) ); // Yields k + k[1].
 
 // We know that Hom(Y,X) is homotopy equivalent to the splitting of ep. Hence on
 // cohomology (which is automatically the case here, since RD has zero differential) the
@@ -107,3 +109,46 @@ matrix Xdual = MFdual(X);
 matrix D = MFtensor(Xdual,X);
 
 /////// WAITING ON mablow improvements.
+
+
+
+////////////// THIRD EXAMPLE (testing mfSplitIdempotent)
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=1;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly=r^2+1;
+poly minpolyblow=x(1)^2+1;
+
+poly W = x(1)^2 + x(2)^2;
+
+// We give ourselves matrix factorisations X and Y of W over k[x]
+matrix X[2][2] = 0, x(1) - r * x(2), x(1) + r * x(2), 0;
+matrix Xdual = MFdual(X);
+
+matrix D = MFtensor(Xdual,X);
+
+matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
+list l = MFreduce(Dblow,1);
+matrix RD = l[1]; // Compute the reduced form of Dblow over k
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+matrix dq = dQ(X, W, nx); // This is dQ_X: 
+matrix iddQ = ZZtensor( unitmat(ncols(X)), dq ); // "iddQ" is "id x dQ_X"
+matrix delQ = deltaQ(D, W, nx); // This is deltaQ_D
+
+// And finally the idempotent e on Dblow
+matrix e = -1/4 * iddQ * delQ;
+print(e * Dblow - Dblow * e);
+
+// The corresponding idempotent on RD is
+matrix ep = F * e * G;
+print(RD); // The final reduced MF homotopy equivalent to Dblow
+print(ep);
+print(ep * RD - RD * ep); // ep is an endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep) );

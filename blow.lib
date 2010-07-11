@@ -908,19 +908,44 @@ return(m);
 }
 
 // Modification of blockmat to accommodate nonsquare entries (consider replacing blockmat with this)
-// We assume the blocks all have the same (possibly nonsquare) size
+// We assume only that a block matrix makes sense, i.e. that in the order given the matrices fit
+// together into a matrix. Here is the ASCII diagram
+//
+//       a        b
+//   ----------|-------|
+//   |         |       |
+//   |    1    |   2   |
+// c |         |       |
+//   |---------|-------|
+// d |     3   |   4   |
+//   |---------|-------|
+//
+// where we allow a, b, c, d to be arbitrary
+
 proc blockmat_nsq(matrix block1,matrix block2,matrix block3,matrix block4)
 {
-int i,j;
-int nc=ncols(block1);
-int nr=nrows(block1);
-matrix m[2*nr][2*nc];
+    int i,j;
+    int a = ncols(block1);
+    int b = ncols(block2);
+    int c = nrows(block1);
+    int d = nrows(block3);
+    
+    // Sanity check
+    if( a != ncols(block3) || b != ncols(block4) || c != nrows(block2) || d != nrows(block4) )
+    {
+        print("[blockmat] Incorrect block sizes, exiting.");
+        return();
+    }
+    
+    int nc=ncols(block1);
+    int nr=nrows(block1);
+    matrix m[c + d][a + b];
 
-for(i=1;i<=nr;i++){for(j=1;j<=nc;j++){m[i,j]=block1[i,j];}}
-for(i=1;i<=nr;i++){for(j=nc+1;j<=2*nc;j++){m[i,j]=block2[i,j-nc];}}
-for(i=nr+1;i<=2*nr;i++){for(j=1;j<=nc;j++){m[i,j]=block3[i-nr,j];}}
-for(i=nr+1;i<=2*nr;i++){for(j=nc+1;j<=2*nc;j++){m[i,j]=block4[i-nr,j-nc];}}
-return(m);
+    for(i=1;i<=c;i++){for(j=1;j<=a;j++){m[i,j]=block1[i,j];}}
+    for(i=1;i<=c;i++){for(j=a+1;j<=a+b;j++){m[i,j]=block2[i,j-a];}}
+    for(i=c+1;i<=c+d;i++){for(j=1;j<=a;j++){m[i,j]=block3[i-c,j];}}
+    for(i=c+1;i<=c+d;i++){for(j=a+1;j<=a+b;j++){m[i,j]=block4[i-c,j-a];}}
+    return(m);
 }
 
 
@@ -1017,8 +1042,10 @@ proc mfSuspend(matrix A, list #)
 // a list B, F, G consisting of the differential B on a MF Y and morphisms F: Y -> X, G: X -> Y such
 // that E = F * G and 1_Y = G * F. That is, we split the idempotent.
 //
-// WARNING: At present we don't guarantee that the returned MF consists of square matrices! Eg
-// you could use this to split an idempotent over a field.
+// WARNING: If X is a matrix factorisation of a nonzero potential, we return a block matrix with
+// square blocks, but if the potential is zero the blocks may be non-square.
+//
+// TODO: At the moment we do not treat the case of potential zero (we quit with an error).
 
 proc mfSplitIdempotent(matrix A, matrix E, list #)
 {
@@ -1044,10 +1071,10 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     }
     
     // Extract the odd and even part of the differential and morphism
-	list blocks = extractblockmat(A);
+    list blocks = extractblockmat(A);
     list e_blocks = extractblockmat(E);
     
-	matrix a0 = blocks[3]; matrix a1 = blocks[2];
+    matrix a0 = blocks[3]; matrix a1 = blocks[2];
     matrix e0 = e_blocks[1]; matrix e1 = e_blocks[4];
     
     // We produce morphisms f0, g0, f1, g1 where fi, gi is a splitting of ei, in the
@@ -1059,24 +1086,43 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // that interpreted as a morphism of free modules it is actually a monomorphism.
     // TODO: Fix this using minbase?
     //
-    // TODO: It's possible that since we split e0 and e1 separately, the splittings may
-    // be free of different ranks (i.e. the return matrices may be non-square)
+    // NOTE: It's possible that since we split e0 and e1 separately, the splittings may
+    // be free of different ranks (i.e. the return matrices may be non-square). Of course
+    // we know that the splitting will still be a factorisation of the same potential, so
+    // if X factorises a nonzero potential, it will follow that the return matrices are square.
     
     LIB "control.lib";
-    matrix f0 = rightKernel(unitmat(m/2) - e0); 
-    matrix g0 = leftInverse(f0) * e0; // Solves f0 * g0 = e0.
+
+    // Take the kernel ker0 of 1 - e0, write it as a map f0 between free modules. Then
+    // we obtain the map g0 by multiplying the left inverse of f0 by e0.
+    // NOTE: If e0 = 0 then ker0 is zero, and we should set f0 = g0 = 0.
+    module ker0 = rightKernel(unitmat(m/2) - e0);
+    matrix f0 = ker0;
+    matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+        
+    if( ker0[1] != [0] )
+    {
+        matrix g0 = leftInverse(f0) * e0; // Solves f0 * g0 = e0.
+    }
     
-    matrix f1 = rightKernel(unitmat(m/2) - e1);
-    matrix g1 = leftInverse(f1) * e1;
+    // Same in the odd degrees
+    module ker1 = rightKernel(unitmat(m/2) - e1);
+    matrix f1 = ker1;
+    matrix g1[ncols(f1)][nrows(f1)];
+    
+    if( ker1[1] != [0] )
+    {
+        matrix g1 = leftInverse(f1) * e1;    
+    }
     
     int n0 = nrows(g0);
     int n1 = nrows(g1);
     
-    // TODO: Currently we bail if n0 != n1, i.e. if the splittings give different rank free modules
-    if( n0 != n1 )
+    // Debug warn if nonsquare 
+    if( ker0[1] == [0] || ker1[1] == [0] || n0 != n1 )
     {
         print("[mfSplitIdempotent] Splitting produced nonsquare matrices, exiting.");
-        return();
+        return(zeromat(2));
     }
     
     // Sanity check
@@ -1091,11 +1137,14 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     }
     
     // Put the f and g matrices back together
-    matrix zf[nrows(f0)][ncols(f0)];
-    matrix zg[nrows(g0)][ncols(g0)];
+    matrix zf1[nrows(f0)][ncols(f1)];
+    matrix zf2[nrows(f1)][ncols(f0)];
     
-    matrix F = blockmat_nsq(f0, zf, zf, f1);
-    matrix G = blockmat_nsq(g0, zg, zg, g1);
+    matrix zg1[nrows(g0)][ncols(g1)];
+    matrix zg2[nrows(g1)][ncols(g0)];
+    
+    matrix F = blockmat_nsq(f0, zf1, zf2, f1);
+    matrix G = blockmat_nsq(g0, zg1, zg2, g1);
     
     // The differential on the splitting is given by B = G * A * F
     matrix B = G * A * F;
