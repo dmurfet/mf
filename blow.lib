@@ -97,6 +97,65 @@ proc ringWithoutYVars()
 	return(newRing);
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////
+// "ringWithoutXVars" returns the ambient ring with x variables removed
+// NOTE: We just return the ring, we do not change the current basering
+//////////////////////////////////////////////////////////////////////////////////
+
+proc ringWithoutXVars()
+{
+    def RRR = basering;
+
+    // Define new ring -- exactly the same as RRR, but without the x-variables:
+    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
+    if(size(ringlist(RRR)[1]) > 1)
+    {
+        int i,j,k;
+        list L = ringlist(RRR);
+        for(i=1; i<=nx; i++)
+        {
+            L[2] = delete(L[2], 1);
+        }
+        intvec kk = (1..ny);
+
+        for(i=1; i<=ny; i++)
+        {
+            kk[i] = 1;
+        }
+        L[3][1][2] = kk;
+        L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+        def nR = ring(L);
+
+        // Now complete the correct definition of nR by specifying the right minpoly: 
+        if( defined(minpolyblow) && defined(r) )
+        {
+            poly K = subst(minpolyblow,x(1),y(1));
+            setring nR;
+            poly P = imap(RRR,K);
+            poly z = subst(P,y(1),r);
+            number nu = leadcoef(z);
+            minpoly = nu;
+        }
+        else
+        {
+            print("[poly2matrix] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+        }
+    }
+    else
+    {
+        ring nR = char(RRR), x(1..ny), dp;
+    }    
+    
+    def newRing = basering;
+    
+    // Before returning the new ring, set the ambient ring as current
+    setring RRR;
+    
+    return(newRing);
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////
 // "dimInternalAlgebra" Returns the dimension of the internal algebra, that is, the
 // algebra I in the terminology of my note.
@@ -783,6 +842,72 @@ return(v);
 //-----------------------------------------------------------------------------
 proc MFco(matrix f,g,f',g')
 {
+module M=syz(dminus(f,g,f',g'));
+matrix Mker=M;
+module Q=modulo(M,module(dplus(f,g,f',g')));
+matrix base=kbase(std(Q));
+matrix m = Mker*base;
+
+module Mf=syz(dplus(f,g,f',g'));
+matrix Mkerf=Mf;
+module Qf=modulo(Mf,module(dminus(f,g,f',g')));
+matrix basef=kbase(std(Qf));
+matrix mf = Mkerf*basef;
+
+int i;
+int r = ncols(f);
+int r' = ncols(f');
+matrix ma[2*r'][2*r];
+list L;
+for(i=1; i<=ncols(m); i++){L = L + list(ma);}
+intvec v1 = 1..nrows(m);
+intvec v2;
+
+list Lf;
+for(i=1; i<=ncols(mf); i++){Lf = Lf + list(ma);}
+intvec vf1 = 1..nrows(mf);
+intvec vf2;
+
+for(i=1; i<=ncols(m); i++)
+{
+intvec v2 = i;
+L[i] = submat(m,v1,v2);
+}
+
+for(i=1; i<=ncols(mf); i++)
+{
+intvec vf2 = i;
+Lf[i] = submat(mf,vf1,vf2);
+}
+
+
+list MMb = vector2matrix(L, r, r');
+list MMf = vector2matrixFerm(Lf, r, r');
+
+matrix null[2*r'][2*r];
+list leer;
+if(MMb[1] == null)
+{MMb = leer;}
+if(MMf[1] == null)
+{MMf = leer;}
+
+
+list MM;
+MM[1] = MMb;
+MM[2] = MMf;
+
+return(MM);
+}
+
+
+//-----------------------------------------------------------------------------
+proc MFcofull(matrix QQQ,PPP)
+{
+matrix f = blocksq(QQQ)[3];
+matrix g = blocksq(QQQ)[2];
+matrix f' = blocksq(PPP)[3];
+matrix g' = blocksq(PPP)[2];
+
 module M=syz(dminus(f,g,f',g'));
 matrix Mker=M;
 module Q=modulo(M,module(dplus(f,g,f',g')));
