@@ -181,7 +181,10 @@ proc dimInternalAlgebra(poly W)
 
 //////////////////////////////////////////////////////////////////////////////////
 // "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
-// the matrices that represent the former's action on Jac(W).
+// the matrices that represent the former's action on Jac(W). 
+//
+// NOTE: This works for arbitrary potentials W, provided the Jacobi algebra is finite
+// dimensional and W is defined only in the x variables.
 //////////////////////////////////////////////////////////////////////////////////
 
 proc poly2matrix(poly tepo, W)
@@ -259,6 +262,8 @@ proc poly2matrix(poly tepo, W)
 
 //////////////////////////////////////////////////////////////////////////////////
 // "mablow" blows up a matrix by blowing up all its entries using poly2matrix.
+//
+// NOTE: This should be finte with arbitrary W, as in poly2matrix.
 //////////////////////////////////////////////////////////////////////////////////
 
 proc mablow(matrix M, poly W)
@@ -302,13 +307,20 @@ proc mablow(matrix M, poly W)
 	return(A);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-// "DRN" computes the matrix representing [g_i, XA], where XA is a monomial in the x-variables.
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+// DRN
+//
+// Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
+// representing the action of [g_i, XA] on the Jacobi algebra in the standard basis. Here
+// g_i stands for the k-linear endomorphism of the ring nR (without y-variables) which
+// sends a polynomial f to its division by x(i)^exponent without remainder.
+//
+// NOTE: For consistency with poly2matrix we put the polynomial W after the data defining
+// the inflation (it used to be in the reversed order).
 
-proc DRN(poly W, poly XA, int i)
+proc DRN(poly XA, int i, int exponent, poly W)
 {
-	// Compute n := dimension of Jac(W):
+    // Compute n := dimension of Jac(W):
 	def RRR = basering;
 	def nR = ringWithoutYVars();
 	setring nR;
@@ -316,17 +328,26 @@ proc DRN(poly W, poly XA, int i)
 	poly W = imap(RRR,W);
 	poly XA = imap(RRR,XA);
 	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	module BB = reduce(ba,jaci);
+	ideal basis = kbase(jaci);
+	module BB = reduce(basis,jaci);
 
-	int n = size(ba);
-	int k;
-	int exponent = deg(W) - 1;
+	int n = size(basis);
 	
+    int k;
 	list L;
 	for(k=1; k<=n; k++)
 	{
-		module ff = reduce(( XA * ba[k] - reduce(XA * ba[k],std(x(i)^exponent)) )/(x(i)^exponent) - XA * ( ba[k] - reduce(ba[k],std(x(i)^exponent)) )/(x(i)^exponent),jaci);
+        poly basisElt = basis[k];
+	    
+	    // First compute g_i( XA * - ) on our basis element
+        poly f1 = ( XA * basisElt - reduce(XA * basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
+        
+        // Next compute XA * g_i(-)
+        poly f2 = XA * ( basisElt - reduce(basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
+        
+        // To our output matrix we add the expression of the commutator f1 - f2 in the
+        // chosen basis of the Jacobi algebra.
+		module ff = reduce(f1 - f2,jaci);
 		matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
 		L = L + list(MM);
 	}
@@ -351,15 +372,15 @@ proc DRN(poly W, poly XA, int i)
 // "deltaImablow" blows up a matrix by blowing up all its entries using DRN. (This
 // is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
 //
-// II is the index of the variable which lives on the subscript of \delta.
+// exponent is the integer such that g_i is division without remainder by x(i)^exponent.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaImablow(matrix M, poly W, int II)
+proc deltaImablow(matrix M, int i, int exponent, poly W)
 {
 	int prl = printlevel;
 	
 	dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
-	dbprint(prl,"[deltaImablow] Input variable is x(" + string(II) + ")");
+	dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
 	
 	// Compute n := dimension of Jac(W):
 	def RRR = basering;
@@ -374,25 +395,20 @@ proc deltaImablow(matrix M, poly W, int II)
 
 	// Define L to be an appropriately indexed list of blown-up matrices:
 	int colsm = ncols(M);
-	int i1,j1,i2,j2,i;
+	int i1,j1,i2,j2,k;
 	list e,L;
-	
-	poly yprod = 1; 
-	for(i=1; i<=ny; i++)
-	{
-		yprod = yprod * y(i);
-	}
-	
+		
 	poly xprod = 1;
-	for(i=1; i<=nx; i++)
+	for(k=1; k<=nx; k++)
 	{
-		xprod = xprod * x(i);
+		xprod = xprod * x(k);
 	}
 	
-	for(i=1; i<=colsm; i++)
+	for(k=1; k<=colsm; k++)
 	{
-		L[i] = e;
+		L[k] = e;
 	}
+	
 	for(i1=1; i1<=colsm; i1++)
 	{
 		for(j1=1; j1<=colsm; j1++)
@@ -408,12 +424,12 @@ proc deltaImablow(matrix M, poly W, int II)
 			matrix koffer = coef(M[i1,j1], xprod);
 			matrix N[n][n];
 
-			for(i=1; i<=ncols(koffer); i++)
+			for(k=1; k<=ncols(koffer); k++)
 			{
-				if( koffer[2,i] != 0 && koffer[1,i] != 0 )
+				if( koffer[2,k] != 0 && koffer[1,k] != 0 )
 				{
-					dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(i) + "] = " + string(koffer[1,i]) + " and koffer[2," + string(i) + "] = " + string(koffer[2,i]));
-					N = N + koffer[2,i] * DRN(W, koffer[1,i], II);
+					dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
+					N = N + koffer[2,k] * deltaInflation(koffer[1,k], i, exponent, W);
 				}
 			}
 
@@ -468,10 +484,21 @@ proc SGroupintvecs(int n)
 
 /////////////////////////////////////////////////////////////////////////////////////
 // "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables)
+//
+// q is an intvec containing the exponents responsible for defining the operators g_i,
+// so that g_i is division by x(i)^q[i].
+//
+// For backwards compatibility, if deltaQ is called with no fourth parameter, it will
+// use the intvec q = (deg(W)-1):nx. This produces an intvec of length nx whose entries
+// are all deg(W)-1.
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc deltaQ(matrix F, poly W, int nx)
+proc deltaQ(matrix F, poly W, int nx, list #)
 {
+    // Deal with fourth parameter
+    intvec q = (deg(W)-1):nx;
+    if( size(#) != 0 ){ q = #[1]; }
+    
 	LIB "matrix.lib";
 	
 	int n = dimInternalAlgebra(W);
@@ -492,7 +519,7 @@ proc deltaQ(matrix F, poly W, int nx)
 		
 		for(j=1; j<=nx; j++)
 		{
-			Ma = Ma * deltaImablow(F, W, perm[j]);
+			Ma = Ma * deltaImablow(F, perm[j], q[perm[j]], W);
 		}
 		
 		dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
