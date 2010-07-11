@@ -955,6 +955,158 @@ return(L);
 /// NEW 1/7/10 Dan.
 
 ////////////////////////////////////////////////////////////////////
+// zeromat - Returns a square zero matrix of the specified size if
+// called with one parameter, and a zero matrix of size n x m if called
+// with two parameters n, m
+////////////////////////////////////////////////////////////////////
+
+proc zeromat(int n, list #)
+{
+    if( size(#) == 0 )
+    {
+        matrix M[n][n];
+        return(M);
+    }
+    else
+    {
+        int m = #[1];
+        matrix M[n][m];
+        return(M);
+    }
+}
+
+////////////////////////////////////////////////////////////////////
+// mfSuspend
+// 
+// Returns the suspension of the given matrix factorisation. If called
+// with no additional parameters we suspend once, otherwise we suspend
+// the number of times indicated by the second parameter.
+
+proc mfSuspend(matrix A, list #)
+{
+    int power = 1;
+    
+    if( size(#) != 0 ){ power = #[1]; }
+    
+    list blocks = extractblockmat(A);
+	matrix a0 = blocks[3]; matrix a1 = blocks[2];
+	
+    matrix z[ncols(A)/2][ncols(A)/2];
+    
+    if( power mod 2 == 0 )
+    {
+        // The power is even, so return the original MF
+        return(A);
+    }
+    else
+    {
+        // The power is odd, so suspend
+        matrix Asusp = blockmat(z, -1 * a0, -1 * a1, z);
+        return(Asusp);
+    }
+}
+
+////////////////////////////////////////////////////////////////////
+// mfSplitIdempotent
+//
+// Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X,
+// and an even block matrix E interpreted as an endomorphism of X, satisfying E * E = E. We return
+// the differential B on a MF Y splitting E (details in a moment) if no third parameter is given, and
+// if a third parameter is given then we return:
+//
+// a list B, F, G consisting of the differential B on a MF Y and morphisms F: Y -> X, G: X -> Y such
+// that E = F * G and 1_Y = G * F. That is, we split the idempotent.
+//
+// WARNING: At present we don't guarantee that the returned MF consists of square matrices! Eg
+// you could use this to split an idempotent over a field.
+
+proc mfSplitIdempotent(matrix A, matrix E, list #)
+{
+    // Sanity checks
+    if( ncols(A) != nrows(A) )
+    {
+        print("[mfSplitIdempotent] Passed a nonsquare matrix, exiting.");
+        return();
+    }
+    
+    int m = ncols(A);
+
+    if( A * E - E * A != zeromat(m) )
+    {
+        print("[mfSplitIdempotent] Passed a non-morphism, exiting.");
+        return();
+    }
+    
+    if( E * E - E != zeromat(m) )
+    {
+        print("[mfSplitIdempotent] Passed a non-idempotent endomorphism, exiting.");
+        return();
+    }
+    
+    // Extract the odd and even part of the differential and morphism
+	list blocks = extractblockmat(A);
+    list e_blocks = extractblockmat(E);
+    
+	matrix a0 = blocks[3]; matrix a1 = blocks[2];
+    matrix e0 = e_blocks[1]; matrix e1 = e_blocks[4];
+    
+    // We produce morphisms f0, g0, f1, g1 where fi, gi is a splitting of ei, in the
+    // sense that fi * gi = ei and gi * fi = 1. We do this by taking fi to be the kernel
+    // of 1 - ei and then computing gi as the left inverse of fi.
+    
+    // TODO: We know that Ker(1-ei) is a free module (Quillen-Suslin!) and we assume that
+    // rightKernel(unitmat(m/2) - e0) gives a minimal presentation of the kernel, in the sense
+    // that interpreted as a morphism of free modules it is actually a monomorphism.
+    // TODO: Fix this using minbase?
+    //
+    // TODO: It's possible that since we split e0 and e1 separately, the splittings may
+    // be free of different ranks (i.e. the return matrices may be non-square)
+    
+    LIB "control.lib";
+    matrix f0 = rightKernel(unitmat(m/2) - e0); 
+    matrix g0 = leftInverse(f0) * e0; // Solves f0 * g0 = e0.
+    
+    matrix f1 = rightKernel(unitmat(m/2) - e1);
+    matrix g1 = leftInverse(f1) * e1;
+    
+    int n0 = nrows(g0);
+    int n1 = nrows(g1);
+    
+    // TODO: Currently we bail if n0 != n1, i.e. if the splittings give different rank free modules
+    if( n0 != n1 )
+    {
+        print("[mfSplitIdempotent] Splitting produced nonsquare matrices, exiting.");
+        return();
+    }
+    
+    // Sanity check
+    if( f0 * g0 != e0 || f1 * g1 != e1 || g0 * f0 != unitmat(n0) || g1 * f1 != unitmat(n1) )
+    {
+        print("[mfSplitIdempotent] Splitting was not successful, exiting.");
+        
+        //dbprint(printlevel, "f0 is "); dbprint(printlevel, f0);
+        //dbprint(printlevel, "g0 is "); dbprint(printlevel, g0);
+        //print( f0 * g0 - e0 );
+        return();
+    }
+    
+    // Put the f and g matrices back together
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
+    
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+    
+    // The differential on the splitting is given by B = G * A * F
+    matrix B = G * A * F;
+    
+    if( size(#) == 0 ){ return(B); }
+    
+    list l = B, F, G;
+    return(l);
+}
+
+////////////////////////////////////////////////////////////////////
 // MFreduce
 //
 // Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X.
