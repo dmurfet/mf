@@ -114,6 +114,7 @@ proc dimInternalAlgebra(poly W)
 	ideal jaci = std(jacob(W));
 	ideal ba = kbase(jaci);
 	int n = size(ba);
+
 	setring RRR;
 	
 	return(n);
@@ -126,49 +127,59 @@ proc dimInternalAlgebra(poly W)
 
 proc poly2matrix(poly tepo, W)
 {
-    int i,j,k,u;
-    def RRR = basering;
+    int prl = printlevel;
+    dbprint(prl, "[poly2matrix] Computing inflated action of " + string(tepo) + " on the Jacobi algebra of " + string(W));
     
+    def RRR = basering;
     def nR = ringWithoutYVars();
     setring nR;
 
-    // Compute n := dimension of Jac(W):
+    // Compute the Jacobi algebra
     poly W = imap(RRR,W);
     ideal jaci = std(jacob(W));
-    ideal ba = kbase(jaci);
-    int n = size(ba);
-    module BB = reduce(ba,jaci);
+    ideal basis = kbase(jaci);
+    int milnor = size(basis);
+    module BB = reduce(basis,jaci);
+    
+    // Output the chosen basis of the Jacobi algebra
+    dbprint(prl, "[poly2matrix] Chosen basis of the Jacobi algebra is");
+    int i;
+    for(i=1;i<=milnor;i++){ dbprint(prl, basis[i]); }
+    
     setring RRR;
 
     // Compute the matrix MAtepo corresponding to the polynomial tepo:
-    poly yprod = 1; 
-    for(i=1; i<=ny; i++)
+    poly xprod = 1; 
+    for(i=1; i<=nx; i++)
     {
-        yprod = yprod * y(i);
+        xprod = xprod * x(i);
     }
-    matrix koffer = coef(tepo, yprod);
-    matrix MAtepo[n][n];
+    matrix koffer = coef(tepo, xprod);
+    matrix inflation[milnor][milnor];
     
+    dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
+    
+    int u, k;
     for(u=1; u<=ncols(koffer); u++)
     {
-        poly bla = koffer[2,u];
-
+        poly xmonomial = koffer[1,u];
+        
         // Switch to the ring without y vars
         setring nR;
 
-        poly f = imap(RRR,bla);
+        poly xmonomial = imap(RRR,xmonomial);
         poly W = imap(RRR,W);
 
         list L;
-        for(k=1; k<=n; k++)
+        for(k=1; k<=milnor; k++)
         {
-            module ff = reduce(f*ba[k],jaci);
+            module ff = reduce(xmonomial*basis[k],jaci);
             matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
             L = L + list(MM);
         }
 
         matrix U = L[1];
-        for(k=2; k<=n; k++)
+        for(k=2; k<=milnor; k++)
         {
             U=concat(U,L[k]);
         }
@@ -176,12 +187,14 @@ proc poly2matrix(poly tepo, W)
         // Switch back to original ring
         setring RRR;
 
-        matrix fop = imap(nR,U);
-
-        MAtepo = MAtepo + koffer[1,u] * fop; 
+        matrix inflationOfMonomial = imap(nR,U);
+        inflation = inflation + koffer[2,u] * inflationOfMonomial; 
+        
+        dbprint(prl, "[poly2matrix] Inflation of monomial " + string(xmonomial) + " is");
+        dbprint(prl, inflationOfMonomial);
     }
 
-    return(MAtepo);
+    return(inflation);
 }
 
 
