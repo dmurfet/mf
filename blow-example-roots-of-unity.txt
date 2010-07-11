@@ -93,46 +93,11 @@ matrix ep = F * e * G;
 print(ep * RD - RD * ep);
 print(ep * ep - ep);
 
-// NOTE: With updates to blow.lib we now get something reasonable for ep, i.e. it is at least
-// nonzero. If you look at RD it is a direct sum of four indecomposable MFs, and ep seems
-// to be picking out one of them, which is the kind of thing we expect.
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final); // Answer is Y2, as expected
 
-// So you can ignore the rest of this example, which is referring to the earlier failure of
-// ep to be nonzero.
 
-// Here is some attempt at an explanation. Let us set
-matrix Y1d[2][2] = 0, x(1) + r^3 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2)), 0;
-// Then Y1d is actually dual to Y1, and hence D = Y2 x Y1 x X = Y2 x Hom(Y1d,X). Now Y2 is not
-// contractible (it has nonzero cohomology) so the only way D can be contractible is if Hom(Y1d,X)
-// has zero cohomology (the tensor product defining D is over the field). So let us try to compute
-// this Hom space
-
-matrix H = MFtensor(MFdual(Y1d), X); // H for Hom
-
-matrix HBlow = mablow(H,W);
-list l = MFreduce(HBlow,1);
-matrix HReduced = l[1]; // Compute the reduced form of HomBlow over k
-matrix HF = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix HG = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix Hdq = dQ(X, W, nx);
-matrix HiddQ = ZZtensor( unitmat(ncols(Y1d)), Hdq );
-matrix HdelQ = deltaQ(H, W, nx);
-
-number frac = baa^2;
-matrix He = -1/frac * HiddQ * HdelQ;
-print(He * HBlow - HBlow * He); 
-
-matrix Hep = HF * He * HG;
-print(HReduced); // The final reduced MF homotopy equivalent to HomBlow
-print(Hep);
-print(Hep * HReduced - HReduced * Hep); // ep is an endomorphism of RD
-print(Hep * Hep - Hep); // is ep is an idempotent "on the nose"?
-
-// Again we see that Hom_ep = 0 which, assuming the calculations here are correct, implies that
-// Hom is actually a complex with zero cohomology, explaning why e above is also zero. 
-
-// Let's use a less sexy way to calculate the Homs
+///// OLD COMPUTATION OF HOMS, kept for reference //////
 LIB "homolog.lib";
 ring S = (0,r),(x(1),x(2)),ds;
 minpoly = rootofUnity(5);
@@ -156,11 +121,7 @@ Ext(2,N,M,1); // Ext^2(M,N) = Homs in stable category of CMs from N to M
 
 Ext(2,Nsusp,M,1);
 
-// The output is that this is one-dimensional. Which contradicts our calculation of H above, whose
-// cohomology should have also computed these Hom dimensions (but gave zero, which we now know
-// to be incorrect).
-
-// We conclude that ep = 0 is an error.
+// The output is that this is one-dimensional.
 
 
 /////////////////////////////////////////////////////////
