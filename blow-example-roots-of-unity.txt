@@ -149,12 +149,12 @@ module N = [x(1) + r^3 * x(2)];
 module Nsusp = [(x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2))]; // Suspension of N
 isCM(M); isCM(N); // Verify they are CM
 
-Ext(2,M,N,1); // Ext^2(M,N) = Homs in stable category of CMs from M to N
+Ext(2,N,M,1); // Ext^2(M,N) = Homs in stable category of CMs from N to M
 
 // The output is that the Krull dimension is -1 (i.e. the space is zero) so there are no nontrivial
-// morphisms in the stable category from M to N. But
+// morphisms in the stable category from N to M. But
 
-Ext(2,M,Nsusp,1);
+Ext(2,Nsusp,M,1);
 
 // The output is that this is one-dimensional. Which contradicts our calculation of H above, whose
 // cohomology should have also computed these Hom dimensions (but gave zero, which we now know
