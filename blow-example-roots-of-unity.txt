@@ -79,9 +79,11 @@ matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-matrix dq = dQ(X, W, nx); // This is dQ_X: 
+matrix C = varTrans(W)[2];
+matrix dq = dQ(X, W, nx, C);              // This is det(C) * dQ_X.
 matrix iddQ = ZZtensor( unitmat(4), dq ); // Extend it to Dblow by tensoring with id_Y
-matrix delQ = deltaQ(D, W, nx);
+intvec q = varTrans(W)[1];
+matrix delQ = deltaQ(D, W, nx, q);
 
 // Note that e has a sign (-1)^{nx choose 2} = -1 and a prefactor of (1/baa)^2
 number frac = baa^2;
@@ -91,10 +93,13 @@ print(e * Dblow - Dblow * e); // Check that e is a morphism
 
 matrix ep = F * e * G;
 print(ep * RD - RD * ep);
+
+// With the scaling by det(C), ep is not correctly normalised to be an idempotent
+// (hence mfSplitIdempotent will be unhappy below): 
 print(ep * ep - ep);
 
 matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final - Y2); // Answer is Y2, as expected
+// print(final - Y2); // Answer is Y2, as expected
 
 
 ///// OLD COMPUTATION OF HOMS, kept for reference //////
