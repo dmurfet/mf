@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE 1 (identity defect acting on (x,x^4))
+// EXAMPLE R1 - Identity defect acting on (x,x^4)
 //////////////////////////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib);option(redSB);
@@ -15,7 +15,6 @@ int baa=5;
 poly W = x(1)^baa;
 
 // Define X, Y and D = Y x X:
-
 matrix fY[1][1] = y(1)-x(1); 
 matrix gY[1][1] = (y(1)^5 - x(1)^5)/(y(1)-x(1));
 matrix fX[1][1] = x(1); 
@@ -26,31 +25,20 @@ matrix n1[1][1];
 matrix n2[2][2];
 matrix X = blockmat(n1,gX,fX,n1);
 matrix Y = blockmat(n1,gY,fY,n1);
-matrix D = blockmat(n2,gD,fD,n2);
 
-// This is dQ_X: 
+list l = compileFoam(Y, X, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 
-matrix dq = dQ(X, W, nx);
-print(dq);
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
 
-// "iddQ" is "id x dQ_X":
-
-matrix iddQ = tensor(unitmat(2), dq); 
-print(iddQ);
-
-// This is deltaQ_D:
-
-matrix delQ = deltaQ(D, W, nx);
-print(delQ);
-
-// This is e' (modulo prefactor):
-
-matrix e = iddQ * delQ;
-print(e);
-
+// Note this gives the suspension of X, but that's OK because Y is not the identity defect,
+// it is the suspension of the identity defect.
 
 //////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE 2 (2-variable example, defect is not the identity defect!)
+// EXAMPLE R2 - 2-variable example, defect is not the identity defect!
 //////////////////////////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib);option(redSB);
@@ -71,61 +59,19 @@ matrix X[2][2] = 0, x(1) + r^2 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^2 * x(2))
 matrix Y1[2][2] = 0, x(1) + r^3 * x(2), -(x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2)), 0;
 matrix Y2[2][2] = 0, y(1) + r^4 * y(2), (y(1)^baa + y(2)^baa)/(y(1) + r^4 * y(2)), 0;
 matrix Y = MFtensor(Y1, Y2);
-matrix D = MFtensor(Y, X);
 
-matrix Dblow = mablow(D,W);
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix dq = dQ(X, W, nx); // This is dQ_X: 
-matrix iddQ = ZZtensor( unitmat(4), dq ); // Extend it to Dblow by tensoring with id_Y
-matrix delQ = deltaQ(D, W, nx);
-
-// Note that e has a sign (-1)^{nx choose 2} = -1 and a prefactor of (1/baa)^2
-number frac = baa^2;
-matrix e = -1/frac * iddQ * delQ;
-print(e);
-print(e * Dblow - Dblow * e); // Check that e is a morphism
-
-matrix ep = F * e * G;
-print(ep * RD - RD * ep);
-print(ep * ep - ep);
+list l = compileFoam(Y, X, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 
 matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final - Y2); // Answer is Y2, as expected
+print(final);
 
-
-///// OLD COMPUTATION OF HOMS, kept for reference //////
-LIB "homolog.lib";
-ring S = (0,r),(x(1),x(2)),ds;
-minpoly = rootofUnity(5);
-
-int baa=5;
-poly W = x(1)^baa + x(2)^baa;
-
-ideal I = W;
-qring A = std(I);
-
-// Define M to be the Cokernel of X (i.e. the odd differential) and N the cokernel of Y1d
-module M = [x(1) + r^2 * x(2)];
-module N = [x(1) + r^3 * x(2)];
-module Nsusp = [(x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2))]; // Suspension of N
-isCM(M); isCM(N); // Verify they are CM
-
-Ext(2,N,M,1); // Ext^2(M,N) = Homs in stable category of CMs from N to M
-
-// The output is that the Krull dimension is -1 (i.e. the space is zero) so there are no nontrivial
-// morphisms in the stable category from N to M. But
-
-Ext(2,Nsusp,M,1);
-
-// The output is that this is one-dimensional.
-
+print(final - Y2); // Answer is that Y x X is Y2, as expected
 
 /////////////////////////////////////////////////////////
-// EXAMPLE 4 - extracting the Hom calculation that fails in Ex 3
+// EXAMPLE R3 - Example showing something fishy with parameters
 /////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib);option(redSB);
@@ -143,124 +89,12 @@ poly W = x(1)^baa + x(2)^baa;
 // Define X, Y and D = Y x X:
 matrix X[2][2] = 0, x(1) + r^2 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^2 * x(2)), 0;
 
-matrix H = MFtensor(MFdual(X), X); // H for Hom
+list l = compileFoam(MFdual(X), X, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 
-matrix HBlow = mablow(H,W);
-list l = mfReduce(HBlow,1);
-matrix HReduced = l[1]; // Compute the reduced form of HomBlow over k
-matrix HF = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix HG = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix Hdq = dQ(X, W, nx);
-matrix HiddQ = ZZtensor( unitmat(2), Hdq );
-matrix HdelQ = deltaQ(H, W, nx);
-
-number frac = baa^2;
-matrix He = -1/frac * HiddQ * HdelQ;
-print(He * HBlow - HBlow * He); 
-
-matrix Hep = HF * He * HG;
-print(HReduced); // The final reduced MF homotopy equivalent to HomBlow
-print(Hep);
-print(Hep * Hep - Hep); // is ep is an idempotent "on the nose"?
+///////// SOMETHING WRONG HERE /////////
 
 // Doesn't seem Hep is idempotent on the nose. But this can't be so, as it is an idempotent
-// endomorphism of a complx HBlow with zero differential, so homotopy endos must be equal.
-
-/////////////////////////////////////////////////////////
-// EXAMPLE 5 - Further simplification of Example 4, still testing for bugs
-/////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=2;
-int ny=1;
-ring rr=0,(x(1..nx),y(1..ny)),dp;
-int baa = 3;
-poly W = x(1)^baa + x(2)^baa;
-
-matrix X[2][2] = 0, x(1) + x(2), (x(1)^baa + x(2)^baa)/(x(1) + x(2)), 0;
-matrix H = MFtensor(MFdual(X), X); // H for Hom
-
-matrix HBlow = mablow(H,W);
-list l = mfReduce(HBlow,1);
-matrix HReduced = l[1]; // Compute the reduced form of HomBlow over k
-matrix HF = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix HG = l[3]; // A homotopy equivalence G: RD -> Dblow
-matrix Hdq = dQ(X, W, nx);
-matrix HiddQ = ZZtensor( unitmat(2), Hdq );
-matrix HdelQ = deltaQ(H, W, nx);
-
-number frac = baa^2;
-matrix He = -1/frac * HiddQ * HdelQ;
-print(He * HBlow - HBlow * He); 
-
-matrix Hep = HF * He * HG;
-print(HReduced); // The final reduced MF homotopy equivalent to HomBlow
-print(Hep);
-print(Hep * Hep - Hep); // is ep is an idempotent "on the nose"?
-
-// From this we compute that Hom(M,M) is two dimensional and Hom(M,M[1]) = 0.
-// Let's check this in the case baa = 3 using Exts
-
-// Let's use a less sexy way to calculate the Homs
-LIB "homolog.lib";
-ring S = 0,(x(1),x(2)),ds;
-int baa=3;
-poly W = x(1)^baa + x(2)^baa;
-
-ideal I = W;
-qring A = std(I);
-
-matrix X[2][2] = 0, x(1) + x(2), (x(1)^baa + x(2)^baa)/(x(1) + x(2)), 0;
-
-module M = [X[1,2]];
-module Msusp = [X[2,1]]; 
-isCM(M); // Verify they are CM
-
-Ext(2,M,M,1); // Ext^2(M,N) = Homs in stable category of CMs from M to N
-Ext(2,M,Msusp,1);
-
-// This suggests the bug in Example 4 is due purely to the presence of r.
-
-/////////////////////////////////////////////////////////
-// EXAMPLE 6 - extracting the Hom calculation that fails in Ex 3, using simpler parameter r
-/////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=2;
-int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(3);
-poly minpolyblow = x(1)^2+x(1)+1;
-
-int baa=2;
-poly W = x(1)^baa + x(2)^baa;
-
-// Define X, Y and D = Y x X:
-matrix X[2][2] = 0, x(1) + r^2 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^2 * x(2)), 0;
-
-matrix H = MFtensor(MFdual(X), X); // H for Hom
-
-matrix HBlow = mablow(H,W);
-list l = mfReduce(HBlow,1);
-matrix HReduced = l[1]; // Compute the reduced form of HomBlow over k
-matrix HF = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix HG = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix Hdq = dQ(X, W, nx);
-matrix HiddQ = ZZtensor( unitmat(2), Hdq );
-matrix HdelQ = deltaQ(H, W, nx);
-
-number frac = baa^2;
-matrix He = -1/frac * HiddQ * HdelQ;
-
-matrix Hep = HF * He * HG;
-print(HReduced); // The final reduced MF homotopy equivalent to HomBlow
-print(Hep);
-print(Hep * Hep - Hep); // is ep is an idempotent "on the nose"?
-
-// NO, Hep fails to be idempotent
+// endomorphism of a complex RD with zero differential, so homotopy endos must be equal.

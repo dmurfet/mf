@@ -38,9 +38,6 @@ LIB "ring.lib";
 // We assume currently in dQ, deltaQ and related routines that the polynomial
 // we are passed is a sum of all the x-variables to some specific power.
 
-// NOTE: We should NOT have W be some ambient fixed polynomial, since we may want
-// to vary it in the foam case as we move among different edges.
-
 //////////////////////////////////////////////////////////////////////////////////
 // "ringwithoutyvars" returns the ambient ring with y variables removed
 // NOTE: We just return the ring, we do not change the current basering
@@ -190,7 +187,7 @@ proc dimInternalAlgebra(poly W)
 proc poly2matrix(poly tepo, W)
 {
     int prl = printlevel;
-    dbprint(prl, "[poly2matrix] Computing inflated action of " + string(tepo) + " on the Jacobi algebra of " + string(W));
+    //dbprint(prl, "[poly2matrix] Computing inflated action of " + string(tepo) + " on the Jacobi algebra of " + string(W));
     
     def RRR = basering;
     def nR = ringWithoutYVars();
@@ -204,9 +201,9 @@ proc poly2matrix(poly tepo, W)
     module BB = reduce(basis,jaci);
     
     // Output the chosen basis of the Jacobi algebra
-    dbprint(prl, "[poly2matrix] Chosen basis of the Jacobi algebra is");
+    //dbprint(prl, "[poly2matrix] Chosen basis of the Jacobi algebra is");
     int i;
-    for(i=1;i<=milnor;i++){ dbprint(prl, basis[i]); }
+    //for(i=1;i<=milnor;i++){ dbprint(prl, basis[i]); }
     
     setring RRR;
 
@@ -219,7 +216,7 @@ proc poly2matrix(poly tepo, W)
     matrix koffer = coef(tepo, xprod);
     matrix inflation[milnor][milnor];
     
-    dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
+    //dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
     
     int u, k;
     for(u=1; u<=ncols(koffer); u++)
@@ -252,8 +249,8 @@ proc poly2matrix(poly tepo, W)
         matrix inflationOfMonomial = imap(nR,U);
         inflation = inflation + koffer[2,u] * inflationOfMonomial; 
         
-        dbprint(prl, "[poly2matrix] Inflation of monomial " + string(xmonomial) + " is");
-        dbprint(prl, inflationOfMonomial);
+        //dbprint(prl, "[poly2matrix] Inflation of monomial " + string(xmonomial) + " is");
+        //dbprint(prl, inflationOfMonomial);
     }
 
     return(inflation);
@@ -361,8 +358,8 @@ proc DRN(poly XA, int i, int exponent, poly W)
 	setring RRR;
 	matrix NN = imap(nR,U);
 	
-	dbprint(printlevel, "[DRN] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
-	dbprint(printlevel, NN);
+	//dbprint(printlevel, "[DRN] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
+	//dbprint(printlevel, NN);
 	
 	return(NN);
 }
@@ -379,8 +376,8 @@ proc deltaImablow(matrix M, int i, int exponent, poly W)
 {
 	int prl = printlevel;
 	
-	dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
-	dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
+	//dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
+	//dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
 	
 	// Compute n := dimension of Jac(W):
 	def RRR = basering;
@@ -428,8 +425,8 @@ proc deltaImablow(matrix M, int i, int exponent, poly W)
 			{
 				if( koffer[2,k] != 0 && koffer[1,k] != 0 )
 				{
-					dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
-					N = N + koffer[2,k] * deltaInflation(koffer[1,k], i, exponent, W);
+					//dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
+					N = N + koffer[2,k] * DRN(koffer[1,k], i, exponent, W);
 				}
 			}
 
@@ -454,8 +451,8 @@ proc deltaImablow(matrix M, int i, int exponent, poly W)
 		}
 	}
 
-	dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
-	dbprint(prl, "------------");
+	//dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
+	//dbprint(prl, "------------");
 	
 	return(A);
 }
@@ -522,7 +519,7 @@ proc deltaQ(matrix F, poly W, int nx, list #)
 			Ma = Ma * deltaImablow(F, perm[j], q[perm[j]], W);
 		}
 		
-		dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
+		//dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
 		Mi = Mi + Ma; 
 	}
 	
@@ -1390,10 +1387,10 @@ proc mfReduce(matrix A, list #)
 		current_stage = b0,b1,f0,f1,g0,g1;
 		transform_record = transform_record + list(current_stage);
 		
-		dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
-		dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-		dbprint(prl, "  Result of reduction, p:"); dbprint(prl,p);
-		dbprint(prl, "  Result of reduction, q:"); dbprint(prl,q);
+		//dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
+		//dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
+		dbprint(prl, "  Result of reduction, p0:"); dbprint(prl,p);
+		dbprint(prl, "  Result of reduction, q0:"); dbprint(prl,q);
 		dbprint(prl, "--------------------------");
 	}
 	
@@ -1430,10 +1427,10 @@ proc mfReduce(matrix A, list #)
 		current_stage = b0,b1,f0,f1,g0,g1;
 		transform_record = transform_record + list(current_stage);
 		
-		dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
-		dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-		dbprint(prl, "  Result of reduction, p:"); dbprint(prl,p);
-		dbprint(prl, "  Result of reduction, q:"); dbprint(prl,q);
+		//dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
+		//dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
+		dbprint(prl, "  Result of reduction, p1:"); dbprint(prl,p);
+		dbprint(prl, "  Result of reduction, q1:"); dbprint(prl,q);
 		dbprint(prl, "--------------------------");
 	}
 	
@@ -1450,10 +1447,19 @@ proc mfReduce(matrix A, list #)
 
 		matrix tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
 		matrix b0r = transpose(gau[1]); // The reduced form
-		if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination"); return(1); }
-	
+
+		if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
+        if( det(tr) == 0 ){ print("[mfReduce] Transformation matrix not invertible (first)."); 
+        
+        print(b0);
+        print("---");
+        print(b0r);
+        print("---");
+        print(tr); return(); }
+        
 		b0 = b0r;
-		b1 = b1 * inverse(tr);
+        b1 = b1 * inverse(tr);
+		
 		f1 = tr * f1;
 		g1 = g1 * inverse(tr);
 	
@@ -1461,8 +1467,10 @@ proc mfReduce(matrix A, list #)
  		gau = gauss_row(transpose(b0),1);
 		matrix tr2 = gau[2];
 		b0r = gau[1];
-		if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination"); return(1); }
-
+		
+		if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
+        if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
+        
 		b0 = b0r;
 		b1 = inverse(tr2) * b1;
 		f0 = inverse(tr2) * f0;
@@ -1783,4 +1791,150 @@ proc test_mfReduce()
 	if( g * b != d * g ){ passed = 0; }
 	
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
+
+////////////////////////////////////////////////////////////////////
+// fuseDefects
+//
+// Returns the reduced tensor product of Y with X, as a pair (B, e) 
+// consisting of the differential B of a matrix factorisation of the total
+// potential and an idempotent endomorphism e whose splitting is (YxX)[nx],
+// where nx is the number of internal variables.
+
+proc fuseDefects(matrix Y, matrix X, poly W)
+{
+    int prl = printlevel;
+    
+    // First compute the internal algebra. That is, find powers of the internal
+    // variables which can be written as linear combinations of the partials. If
+    // we follow the notation of my note then this is the algebra I.
+    list t = computeInternalAlgebra(W,nx);
+    matrix C = t[1];
+    intvec q = t[2];
+
+    // Compute the ordinary tensor product
+    matrix D = MFtensor(Y,X);
+    
+    // Inflate or blow up the differential on this tensor product, that is,
+    // compute the differential of Y x X x I.
+    dbprint(prl, "[fuseDefects] Blowing up differential on tensor product.");
+    matrix Dblow = mablow(D,W);
+    
+    // Reduce this inflated differential
+    dbprint(prl, "[fuseDefects] Reducing blown up differential.");
+    list l = mfReduce(Dblow,1);
+    matrix RD = l[1];
+    matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+    matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+    // Compute the matrix dQ_X
+    dbprint(prl, "[fuseDefects] Computing dQ.");
+    matrix dq = dQ(X, W, nx);
+    matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
+    
+    // Compute the matrix deltaQ
+    dbprint(prl, "[fuseDefects] Computing deltaQ.");
+    matrix delQ = deltaQ(D, W, nx, q);
+
+    // And finally the idempotent e on Dblow
+    int sign = (nx * (nx-1)) div 2;
+    matrix e = (-1)^(sign) * det(C) * iddQ * delQ;
+    
+    // The induced idempotent on the reduction is denoted ep
+    matrix ep = F * e * G;
+
+    // Sanity check: ep must be an endomorphism of RD
+    int h = ncols(ep * RD);
+    matrix zero[h][h];
+    
+    if( ep * RD - RD * ep != zero )
+    {
+        print("[fuseDefects] The reduced idempotent is not a morphism, exiting.");
+        return();
+    }
+    
+    list l = RD, ep;
+    
+    return(l);
+}
+
+////////////////////////////////////////////////////////////////////
+// computeInternalAlgebra
+//
+// Given a polynomial W, returns a pair consisting of a matrix C over
+// the x-variables and an intvec q, with the property that for each i
+//
+//          x(i)^q[i] = \sum_j C_{ij} \partial_{x(j)} W.
+//
+// This is possible if and only if the Jacobi algebra of W is finite
+// dimensional, and we assume this is the case (otherwise this proc
+// may not terminate).
+
+proc computeInternalAlgebra(poly W, int nx)
+{
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
+
+    // Compute the Jacobi algebra
+    poly W = imap(RRR,W);
+    ideal jaci = jacob(W);
+    
+    // We loop through each variable and find how to write it as a linear
+    // combination of the partial derivatives of W, using only the x variables
+    intvec q;
+    list L;
+    int i;
+    
+    for(i=1;i<=nx;i++)
+    {
+        // Find which power belongs to the Jacobi ideal
+        int power = 1;
+        while( reduce(x(i)^power, std(jaci)) != 0 )
+        {
+            power++;
+        }
+        
+        q[i] = power;
+        
+        // Find this power as a linear combination of partial derivatives
+        matrix T = lift(jaci, x(i)^power);
+        L = L + list(T);
+        
+        //print("We have x(" + string(i) + ")^" + string(power) + " belonging to the jacobi ideal");
+        //print(T);
+        //print("---");
+    }
+    
+    // Assemble C from the columns produced in the loop
+    matrix C = L[1];
+    for(i=2; i<=nx; i++)
+    {
+        C=concat(C,L[i]);
+    }
+    
+    // Check that C does transform the partials to powers of the variables
+    for(i=1;i<=nx;i++)
+    {
+        poly f;
+        int j;
+        for(j=1;j<=nx;j++)
+        {
+            f = f + C[i,j] * diff(W,x(j));
+        }
+        
+        if( f != x(i)^(q[i]) )
+        {
+            print("[computeInternalAlgebra] Failed to compute transformation matrix correctly, exiting.");
+            return();
+        }
+    }
+
+    // Convert back to RRR
+    setring RRR;    
+    
+    matrix Cret = imap(nR,C);
+    list R = Cret, q;
+    
+    return(R);
 }

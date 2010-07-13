@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE - Computing Homs using idempotents
+// EXAMPLE H1 - Computing Homs using idempotents, for x^d
 //////////////////////////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib);option(redSB);
@@ -14,40 +14,15 @@ poly W = x(1)^baa;
 // We give ourselves matrix factorisations X and Y of W over k[x]
 matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
 matrix Y[2][2] = 0, x(1)^4, x(1)^(baa-4), 0;
-matrix Ydual = MFdual(Y);
 
 // For baa = 10 we calculate that Hom(Y,X) and Hom(Y,X[1]) are one dimensional using Exts,
 // when X = (x^9, x) and Y = (x^6, x^4). This agrees with the idempotent calculation below.
-
-matrix D = MFtensor(Ydual,X);
-
-matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-// NOTE: RD will either have zero differential, in which case it is
-// a sum of copies of k and k[1], or it will be of the form (1,0) or (0,1)
-// in which case it is contractible.
-
-matrix dq = dQ(X, W, nx); // This is dQ_X: 
-matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx); // This is deltaQ_D
-
-// And finally the idempotent e on Dblow
-number frac = baa;
-matrix e = 1/frac * iddQ * delQ;
-print(e * Dblow - Dblow * e);
-
-// The corresponding idempotent on RD is
-matrix ep = F * e * G;
-print(RD); // The final reduced MF homotopy equivalent to Dblow
-print(ep);
-print(ep * RD - RD * ep); // ep is an endomorphism of RD
+list l = fuseDefects(MFdual(Y), X, W);
+matrix RD = l[1]; // Reduced inflation of MFdual(Y) x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep) ); // Yields k + k[1].
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final); // Yields k + k[1].
 
 // We know that Hom(Y,X) is homotopy equivalent to the splitting of ep. Hence on
 // cohomology (which is automatically the case here, since RD has zero differential) the
@@ -86,12 +61,10 @@ isCM(M); isCM(N);
 // We have one dimensions worth of morphisms M -> N and M -> N[1] in the stable cat of CMs
 Ext(2,N,M,1); Ext(2,Nsusp,M,1);
 
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE H2 - Computing the endomorphism space of a certain MF over the E6 singularity
+//////////////////////////////////////////////////////////////////////////////////////
 
-
-
-///////////// SECOND EXAMPLE //////////
-
-// We compute the endomorphism space of a certain MF over the E6 singularity
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
 LIB "matrix.lib";
@@ -104,34 +77,14 @@ matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2
 matrix psi[3][3] = x(2),0,x(1),x(1),-x(2)^2,0,0,x(1),-x(2);
 matrix z[3][3];
 matrix X = blockmat(z,phi,psi,z);
-matrix Xdual = MFdual(X);
 
-matrix D = MFtensor(Xdual,X);
-matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-// We take the algebra I to be defined by the ideal x(1)^2, x(2)^3, so our scaling
-// factor det(C) is 1/3 * 1/4.
-intvec q = 2,3; 
-matrix dq = dQ(X, W, nx); // This is dQ_X: 
-matrix iddQ = ZZtensor( unitmat(ncols(X)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx, q); // This is deltaQ_D
-
-// And finally the idempotent e on Dblow
-matrix e = -1/3 * 1/4 * iddQ * delQ;
-print(e * Dblow - Dblow * e);
-
-matrix ep = F * e * G;
-print(RD);
-print(ep);
-print(ep * RD - RD * ep); // ep is an endomorphism of RD
+list l = fuseDefects(MFdual(X), X, W);
+matrix RD = l[1];
+matrix ep = l[2];
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-
 matrix final = mfSuspend( mfSplitIdempotent(RD, ep) );
 print(final);
+
 // The output is that Hom(X,X) is six dimensional, and Hom(X,X[1]) is six dimensional. We can
 // check this using Exts as follows
 
@@ -156,44 +109,3 @@ isCM(M); isCM(Msusp);
 Ext(2,M,M,1); Ext(2,M,Msusp,1);
 
 // We find that both spaces have dimension six, which corroborates what we calculated above.
-
-////////////// THIRD EXAMPLE (testing mfSplitIdempotent)
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=2;
-int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly=r^2+1;
-poly minpolyblow=x(1)^2+1;
-
-poly W = x(1)^2 + x(2)^2;
-
-// We give ourselves matrix factorisations X and Y of W over k[x]
-matrix X[2][2] = 0, x(1) - r * x(2), x(1) + r * x(2), 0;
-matrix Xdual = MFdual(X);
-
-matrix D = MFtensor(Xdual,X);
-
-matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-matrix dq = dQ(X, W, nx); // This is dQ_X: 
-matrix iddQ = ZZtensor( unitmat(ncols(X)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx); // This is deltaQ_D
-
-// And finally the idempotent e on Dblow
-matrix e = -1/4 * iddQ * delQ;
-print(e * Dblow - Dblow * e);
-
-// The corresponding idempotent on RD is
-matrix ep = F * e * G;
-print(RD); // The final reduced MF homotopy equivalent to Dblow
-print(ep);
-print(ep * RD - RD * ep); // ep is an endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep) );
