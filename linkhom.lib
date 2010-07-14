@@ -1,0 +1,73 @@
+version="0.1";
+category="Miscellaneous";
+// summary description of the library
+info="
+LIBRARY:   linkhom.lib  Computation of link homology using foam compilation
+AUTHOR:    Nils Carqueville, Daniel Murfet
+KEYWORDS:  matrix factorization, link homology
+
+PROCEDURES:
+";
+
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+LIB "blow.lib"
+
+////////////////////////////////////////////////////////////////////
+// USAGE GUIDE
+//
+// We expect our ambient ring to be of the type
+//
+//     0,(x(1..nx),y(1..ny)),dp
+// 
+// where nx, ny are integer variables that we expect to be defined before calling
+// any of the routines in this library. The x variables are the "internal" variables.
+// The references to [KR] are to Khovanov and Rozansky "Matrix factorizations and
+// link homology" arXiv:math/0401268v2.
+
+/////////////////////////////////////////////////////////////////////////////////////
+// g - returns the polynomial g of [KR] p.48.
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc gpoly(poly s1, poly s2, int n)
+{
+    poly g = s1^(n+1);
+    
+    int i;
+    for(i=1;i<=(n+1)/2;i++)
+    {
+        g = g + (n+1) * (-1)^(i) * ( binomial(n-i,i-1) * s2^(i) * s1^(n+1-2*i) )/i;
+    }
+    
+    return(g);
+}
+
+////////////////////////////////////////////////////////////////////
+// mfWideEdge
+//
+// We are given four variables a,b,c,d and an integer N, and we return
+// the matrix factorisation of a^(n+1) + b^(n+1) - c^(n+1) - d^(n+1)
+// associated by Khovanov and Rozansky to a wide edge in the planar
+// diagram of a link (see p.48 of [KR]).
+
+proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
+{
+    poly W = a^(n+1) + b^(n+1) - c^(n+1) - d^(n+1);
+    
+    // Following KR we write W = (a + b - c - d)u1 + (ab - cd)u2 
+    poly u1 = (gpoly(a + b, a*b, n) - gpoly(c + d, a*b, n))/(a+b-c-d);
+    poly u2 = (gpoly(c + d, a*b, n) - gpoly(c + d, c*d, n))/(a*b-c*d);
+    
+    if( W != u1 * (a + b - c - d) + u2 * (a * b - c * d) )
+    {
+        print("[mfWideEdge] Something wrong in the calculation, exiting.");
+        return();
+    }
+    
+    matrix koszul1[2][2] = 0, a + b - c - d, u1, 0;
+    matrix koszul2[2][2] = 0, a * b - c * d, u2, 0;
+    
+    matrix D = MFtensor(koszul1, koszul2);
+    return(D);
+}

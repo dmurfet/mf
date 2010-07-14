@@ -1845,3 +1845,70 @@ proc test_mfReduce()
 	
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
+
+
+
+////////////////////////////////////////////////////////////////////
+// fuseDefects
+//
+// Returns the reduced tensor product of Y with X, as a pair (B, e) 
+// consisting of the differential B of a matrix factorisation of the total
+// potential and an idempotent endomorphism e whose splitting is (YxX)[nx],
+// where nx is the number of internal variables.
+
+proc fuseDefects(matrix Y, matrix X, poly W)
+{
+    int prl = printlevel;
+    
+    // First compute the internal algebra. That is, find powers of the internal
+    // variables which can be written as linear combinations of the partials. If
+    // we follow the notation of my note then this is the algebra I.
+    list t = varTrans(W);
+    matrix C = t[2];
+    intvec q = t[1];
+
+    // Compute the ordinary tensor product
+    matrix D = MFtensor(Y,X);
+    
+    // Inflate or blow up the differential on this tensor product, that is,
+    // compute the differential of Y x X x I.
+    dbprint(prl, "[fuseDefects] Blowing up differential on tensor product.");
+    matrix Dblow = mablow(D,W);
+    
+    // Reduce this inflated differential
+    dbprint(prl, "[fuseDefects] Reducing blown up differential.");
+    list l = mfReduce(Dblow,1);
+    matrix RD = l[1];
+    matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+    matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+    // Compute the matrix dQ_X
+    dbprint(prl, "[fuseDefects] Computing dQ.");
+    matrix dq = dQ(X, W, nx, C);
+    matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
+    
+    // Compute the matrix deltaQ
+    dbprint(prl, "[fuseDefects] Computing deltaQ.");
+    matrix delQ = deltaQ(D, W, nx, q);
+
+    // And finally the idempotent e on Dblow
+    int sign = (nx * (nx-1)) div 2;
+    matrix e = (-1)^(sign) * iddQ * delQ;
+    
+    // The induced idempotent on the reduction is denoted ep
+    matrix ep = F * e * G;
+
+    // Sanity check: ep must be an endomorphism of RD
+    int h = ncols(ep * RD);
+    matrix zero[h][h];
+    
+    if( ep * RD - RD * ep != zero )
+    {
+        print("[fuseDefects] The reduced idempotent is not a morphism, exiting.");
+        return();
+    }
+    
+    list l = RD, ep;
+    
+    return(l);
+}
