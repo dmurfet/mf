@@ -1,0 +1,85 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE L1 - Two stacked wide edges
+//////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////
+// Computation History
+//
+// - Tried N = 1 with open composite of two wide edges, gives a contractible complex
+// - Tried N = 2 but the answer is some rank 32 MF with an endomorphism which is
+// not split on the nose, so not much to say about that.
+
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=4;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+int N = 1; // The N in sl(N) link homology
+
+// Consider the planar diagram which looks something like the following
+// hideous ASCII diagram
+//
+//      | |
+//      \/
+//      o
+//     /\
+//    | |
+//    \/
+//    o
+//   /\
+//  | |
+//
+// At each vertex we place the matrix factorisation that Khovanov and
+// Rozansky assign to a wide edge. Reading from left to right and top
+// to bottom, we assign the variables y(1),y(2),x(1),x(2),y(3),y(4)
+// to the edges, so that the x variables are the internal variables.
+
+matrix D1 = mfWideEdge(y(1),y(2),x(1),x(2),N);
+matrix D2 = mfWideEdge(x(1),x(2),y(3),y(4),N);
+
+// The tensor product of these two is a factorisation of the total
+// potential, which is y(1)^(N+1) + y(2)^(N+1) - y(3)^(N+1) - y(4)^(N+1).
+// In order to compile this foam into a finite rank factorisation of this
+// total potential, we need to decide which tensor factor will be used
+// to contract off the action of the partial derivatives of the internal
+// potentials (meaning: the potentials x(1)^(N+1) and x(2)^(N+2) on the
+// internal edges). Our convention in our note is to use the factorisation
+// living on the vertex at the origin of the internal edge, that is, D2.
+// So, to compare with the defect fusion examples, D2 = X and D1 = Y.
+
+// W should be the potential that D2 factorises
+poly W = x(1)^(N+1) + x(2)^(N+1) - y(3)^(N+1) - y(4)^(N+1);
+print(D2 * D2 - W * unitmat(4));
+
+list l = compileFoam(D1, D2, W);
+matrix RD = l[1]; // Reduced inflation of D1 x D2
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
+
+////// CLOSED FOAM //////
+
+// If in the above we take y(1) = y(3) and y(2) = y(4) we obtain
+// a closed foam
+
+int N = 2;
+matrix D1c = mfWideEdge(y(1),y(2),x(1),x(2),N);
+matrix D2c = mfWideEdge(x(1),x(2),y(1),y(2),N);
+
+// W should be the potential that D2 factorises
+poly Wc = x(1)^(N+1) + x(2)^(N+1) - y(1)^(N+1) - y(2)^(N+1);
+print(D2c * D2c - Wc * unitmat(4));
+
+list lc = compileFoam(D1c, D2c, Wc);
+matrix RDc = lc[1]; // Reduced inflation of D1 x D2
+matrix epc = lc[2]; // Idempotent endomorphism of RD
+print(epc * epc - epc); // is ep is an idempotent "on the nose"?
+matrix finalc = mfSuspend( mfSplitIdempotent(RDc, epc), nx );
+print(finalc);
+
+// YOU cannot expect this to work, as the formula used by compileFoam is only ... well we have to differentiate
+// with respect to different potentials on each internal edge
