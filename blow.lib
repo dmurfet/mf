@@ -593,6 +593,9 @@ proc dQ(matrix f, poly W, int nx, list #)
 // "varTrans" gives a list L of with two entries:
 // -- L[1]: an intvec q used to define g_i as division by x(i)^q[i] without remainder
 // -- L[2]: a matrix C such that x(i)^q[i] = \sum_j C_{i,j} \partial_j W
+// This is possible if and only if the Jacobi algebra of W is finite
+// dimensional, and we assume this is the case (otherwise this proc
+// may not terminate).
 /////////////////////////////////////////////////////////////////////////////////////
 
 proc varTrans(poly W)
@@ -613,15 +616,13 @@ proc varTrans(poly W)
     // Find the smallest possible integers qvec[i] such that x(i)^qvec[i] is in jacob(W):
     for(i=1; i<=nx; i++)
     {
-        for(expo=2; expo<=100; expo++)
-            {
-            K = reduce( x(i)^expo, J );
-            if( K == 0 )
-            {
-                qvec[i] = expo;
-                break;
-            }
+        int expo = 1;
+        while( reduce( x(i)^expo, J ) != 0 )
+        {
+            expo++;
         }
+        
+        qvec[i] = expo;
     }
 
     // Define transformation matrix C:
@@ -631,6 +632,23 @@ proc varTrans(poly W)
         for(j=1; j<=nx; j++)
         {
             C[j,i] = lift( jaci, x(j)^(qvec[j]) )[i,1];
+        }
+    }
+    
+    // Check that C does transform the partials to powers of the variables
+    for(i=1;i<=nx;i++)
+    {
+        poly f;
+        int j;
+        for(j=1;j<=nx;j++)
+        {
+            f = f + C[i,j] * diff(W,x(j));
+        }
+
+        if( f != x(i)^(qvec[i]) )
+        {
+            print("[varTrans] Failed to compute transformation matrix correctly, exiting.");
+            return();
         }
     }
 
@@ -1921,85 +1939,4 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     list l = RD, ep;
     
     return(l);
-}
-
-////////////////////////////////////////////////////////////////////
-// computeInternalAlgebra
-//
-// Given a polynomial W, returns a pair consisting of a matrix C over
-// the x-variables and an intvec q, with the property that for each i
-//
-//          x(i)^q[i] = \sum_j C_{ij} \partial_{x(j)} W.
-//
-// This is possible if and only if the Jacobi algebra of W is finite
-// dimensional, and we assume this is the case (otherwise this proc
-// may not terminate).
-
-proc computeInternalAlgebra(poly W, int nx)
-{
-    def RRR = basering;
-    def nR = ringWithoutYVars();
-    setring nR;
-
-    // Compute the Jacobi algebra
-    poly W = imap(RRR,W);
-    ideal jaci = jacob(W);
-    
-    // We loop through each variable and find how to write it as a linear
-    // combination of the partial derivatives of W, using only the x variables
-    intvec q;
-    list L;
-    int i;
-    
-    for(i=1;i<=nx;i++)
-    {
-        // Find which power belongs to the Jacobi ideal
-        int power = 1;
-        while( reduce(x(i)^power, std(jaci)) != 0 )
-        {
-            power++;
-        }
-        
-        q[i] = power;
-        
-        // Find this power as a linear combination of partial derivatives
-        matrix T = lift(jaci, x(i)^power);
-        L = L + list(T);
-        
-        //print("We have x(" + string(i) + ")^" + string(power) + " belonging to the jacobi ideal");
-        //print(T);
-        //print("---");
-    }
-    
-    // Assemble C from the columns produced in the loop
-    matrix C = L[1];
-    for(i=2; i<=nx; i++)
-    {
-        C=concat(C,L[i]);
-    }
-    
-    // Check that C does transform the partials to powers of the variables
-    for(i=1;i<=nx;i++)
-    {
-        poly f;
-        int j;
-        for(j=1;j<=nx;j++)
-        {
-            f = f + C[i,j] * diff(W,x(j));
-        }
-        
-        if( f != x(i)^(q[i]) )
-        {
-            print("[computeInternalAlgebra] Failed to compute transformation matrix correctly, exiting.");
-            return();
-        }
-    }
-
-    // Convert back to RRR
-    setring RRR;    
-    
-    matrix Cret = imap(nR,C);
-    list R = Cret, q;
-    
-    return(R);
 }
