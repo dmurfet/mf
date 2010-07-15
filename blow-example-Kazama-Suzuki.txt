@@ -1,0 +1,49 @@
+// Example:  defect action on brane in Kazama-Suzuki model
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "ring.lib";
+int nx=2;
+int ny=2;
+ring RRR=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly = rootofUnity(8);
+poly minpolyblow = x(1)^4 + 1;
+
+// Define W both in x- and in y-variables:
+
+poly Wx = x(1)^4+x(2)^4;
+poly Wy = y(1)^4-4*y(1)^2*y(2)+2*y(2)^2;
+
+// Define "effective action" of D1 x Dy on Q:
+
+matrix Q[2][2] = 0, x(1)^2 + r^4 * x(2)^2 - (1 + r^2) *r* x(1) * x(2), 
+                      x(1)^2 + r^4 * x(2)^2 - ((1 + r^6)/r) * x(1) * x(2), 0;
+    
+// Define remaining defect:
+
+poly Ja=y(1)-x(1)-x(2);
+poly Jb=y(2)-x(1)*x(2);
+poly Ea=(y(1)+x(1)+x(2))*(y(1)^2-4*y(2)+(x(1)+x(2))^2);
+poly Eb=-4*x(1)^2-6*x(1)*x(2)-4*x(2)^2+2*y(2);
+matrix D[4][4]=
+    0,0,Ja,Eb,
+    0,0,Jb,-Ea,
+    Ea,Eb,0,0,
+    Jb,-Ja;
+
+// Define DQ := D x Q (and check that it is a MF of Wy):
+
+matrix DQ = MFtensor(D,Q);
+print( DQ * DQ - Wy * unitmat(8) );
+
+list l = fuseDefects(D, Q, Wx);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
+
+// Check that this really is a MF: 
+
+print( final * final - Wy * unitmat(4) );
