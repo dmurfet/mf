@@ -21,33 +21,17 @@ poly W = x(1)^d;
 int m = 1;
 int a = 1;
 
-// Define T, P and D = P x T:
-
+// Define T and P
 matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
 matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
-matrix D = MFtensor(P, T);
 
-matrix Dblow = mablow(D,W);
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix dq = dQ(T, W, nx);
-matrix iddQ = ZZtensor( unitmat(2), dq ); // Extend it to Dblow by tensoring with id_P
-matrix delQ = deltaQ(D, W, nx);
-
-number frac = d;
-matrix e = 1/frac * iddQ * delQ;
-print(e);
-print(e * Dblow - Dblow * e);
-
-matrix ep = F * e * G;
-print(ep * RD - RD * ep);
-print(ep * ep - ep);
-
-// Split the idempotent and suspend nx times
+// Do the fusion
+list l = fuseDefects(P, T, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
 
 // According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
 // T2 := (0, y(1)^2 // y(1)^3, 0). And indeed, if we define
@@ -78,36 +62,20 @@ poly W = x(1)^d;
 int m = 3;                   // THIS IS THE ONLY DIFFERENCE TO EXAMPLE DQ1
 int a = 1;
 
-// Define T, P and D = P x T:
-
+// Define T and P
 matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
 matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
-matrix D = MFtensor(P, T);
 
-matrix Dblow = mablow(D,W);
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix dq = dQ(T, W, nx);
-matrix iddQ = ZZtensor( unitmat(2), dq ); // Extend it to Dblow by tensoring with id_P
-matrix delQ = deltaQ(D, W, nx);
-
-number frac = d;
-matrix e = 1/frac * iddQ * delQ;
-print(e);
-print(e * Dblow - Dblow * e);
-
-matrix ep = F * e * G;
-print(ep * RD - RD * ep);
-print(ep * ep - ep);
+// Do the fusion
+list l = fuseDefects(P, T, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
 
 // According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
 // (0, y(1)^2 // y(1)^3, 0). As in example DQ1 above, this is confirmed by splitting ep.
-
-// Split the idempotent and suspend nx times
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
 
 //////////////////////////////////////////////////////////////////////////////////////
 // EXAMPLE DQ3 
@@ -128,37 +96,20 @@ poly W = x(1)^d;
 int m = 1;
 int a = 2;
 
-// Define T, P and D = P x T:
-
+// Define T and P
 matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
 matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
-matrix D = MFtensor(P, T);
 
-matrix Dblow = mablow(D,W);
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix dq = dQ(T, W, nx);
-matrix iddQ = ZZtensor( unitmat(2), dq ); // Extend it to Dblow by tensoring with id_P
-matrix delQ = deltaQ(D, W, nx);
-
-number frac = d;
-matrix e = 1/frac * iddQ * delQ;
-print(e);
-print(e * Dblow - Dblow * e);
-
-matrix ep = F * e * G;
-print(ep * RD - RD * ep);
-print(ep * ep - ep);
+// Do the fusion
+list l = fuseDefects(P, T, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
 
 // According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
 // (0, y(1)^1 // y(1)^4, 0) + (0, y(1)^3 // y(1)^2, 0). 
-
-// Split the idempotent and suspend nx times
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-
 
 // Compute the endomorphisms of the MFs final and 
 // BR := (0, y(1)^1 // y(1)^4, 0) + (0, y(1)^3 // y(1)^2, 0): 

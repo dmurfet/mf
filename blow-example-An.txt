@@ -19,35 +19,14 @@ matrix X[2][2] = 0, x(1)^2, x(1), 0;
 matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
 matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
 matrix z[2][2];
-
 matrix Y = blockmat(z,Y1,Y0,z);
 
-matrix D = MFtensor(Y,X);
-
-matrix Dblow = mablow(D,W); // Blow up D using Jac(W)
-list l = mfReduce(Dblow,1);
-matrix RD = l[1]; // Compute the reduced form of Dblow over k[y]
-matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
-matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
-
-matrix dq = dQ(X, W, nx, 3); // This is dQ_X: 
-matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, W, nx); // This is deltaQ_D
-
-// And finally the idempotent e on Dblow
-number frac = baa;
-matrix e = 1/frac * iddQ * delQ;
-print(e * Dblow - Dblow * e);
-
-// The corresponding idempotent on RD is
-matrix ep = F * e * G;
-print(RD); // The final reduced MF homotopy equivalent to Dblow
-print(ep);
-print(ep * RD - RD * ep); // ep is an endomorphism of RD
+list l = fuseDefects(Y, X, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-
-matrix final = mfSuspend( mfSplitIdempotent(RD,ep) );
-print(final);
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final); 
 
 ///////// OLD COMPUTATION OF SPLITTING BY HAND ///////////
 

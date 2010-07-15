@@ -71,35 +71,6 @@ print(final);
 
 print(final - Y2); // Answer is that Y x X is Y2, as expected
 
-
-///// OLD COMPUTATION OF HOMS, kept for reference //////
-LIB "homolog.lib";
-ring S = (0,r),(x(1),x(2)),ds;
-minpoly = rootofUnity(5);
-
-int baa=5;
-poly W = x(1)^baa + x(2)^baa;
-
-ideal I = W;
-qring A = std(I);
-
-// Define M to be the Cokernel of X (i.e. the odd differential) and N the cokernel of Y1d
-module M = [x(1) + r^2 * x(2)];
-module N = [x(1) + r^3 * x(2)];
-module Nsusp = [(x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2))]; // Suspension of N
-isCM(M); isCM(N); // Verify they are CM
-
-Ext(2,N,M,1); // Ext^2(M,N) = Homs in stable category of CMs from N to M
-
-// The output is that the Krull dimension is -1 (i.e. the space is zero) so there are no nontrivial
-// morphisms in the stable category from N to M. But
-
-Ext(2,Nsusp,M,1);
-
-// The output is that this is one-dimensional.
-
-print(final - Y2); // Answer is that Y x X is Y2, as expected
-
 /////////////////////////////////////////////////////////
 // EXAMPLE R3 - Example showing something fishy with parameters
 /////////////////////////////////////////////////////////
@@ -119,7 +90,7 @@ poly W = x(1)^baa + x(2)^baa;
 // Define X, Y and D = Y x X:
 matrix X[2][2] = 0, x(1) + r^2 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^2 * x(2)), 0;
 
-list l = compileFoam(MFdual(X), X, W);
+list l = fuseDefects(MFdual(X), X, W);
 matrix RD = l[1]; // Reduced inflation of Y x X
 matrix ep = l[2]; // Idempotent endomorphism of RD
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
