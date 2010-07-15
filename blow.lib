@@ -304,8 +304,8 @@ proc mablow(matrix M, poly W)
 	return(A);
 }
 
-////////////////////////////////////////////////////////////////////
-// DRN
+//////////////////////////////////////////////////////////////////////////////////
+// "deltaInflation"
 //
 // Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
 // representing the action of [g_i, XA] on the Jacobi algebra in the standard basis. Here
@@ -314,8 +314,9 @@ proc mablow(matrix M, poly W)
 //
 // NOTE: For consistency with poly2matrix we put the polynomial W after the data defining
 // the inflation (it used to be in the reversed order).
+//////////////////////////////////////////////////////////////////////////////////
 
-proc DRN(poly XA, int i, int exponent, poly W)
+proc deltaInflation(poly XA, int i, int exponent, poly W)
 {
     // Compute n := dimension of Jac(W):
 	def RRR = basering;
@@ -483,7 +484,7 @@ proc SGroupintvecs(int n)
 // "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables)
 //
 // q is an intvec containing the exponents responsible for defining the operators g_i,
-// so that g_i is division by x(i)^q[i].
+// so that g_i is division by x(i)^q[i] without remainder.
 //
 // For backwards compatibility, if deltaQ is called with no fourth parameter, it will
 // use the intvec q = (deg(W)-1):nx. This produces an intvec of length nx whose entries
@@ -539,9 +540,13 @@ proc deltaQ(matrix F, poly W, int nx, list #)
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc dQ(matrix f, poly W, int nx)
+proc dQ(matrix f, poly W, int nx, list #)
 {
-	LIB "matrix.lib";	
+    // Deal with fourth parameter
+	LIB "matrix.lib";
+    matrix C = unitmat(nx);
+    if( size(#) != 0 ){ C = #[1]; }
+    poly detC = det(C);
 	
 	int n = dimInternalAlgebra(W);
 	
@@ -566,6 +571,9 @@ proc dQ(matrix f, poly W, int nx)
 		}
 		
 		//print("[dQ] Adding summand"); print(Ma);
+		
+		// Multiply with det(C):
+		Ma = Ma * mablow( detC * unitmat(ncols(f)), W);
 		Mi = Mi + Ma; 
 	}
 	
@@ -578,6 +586,59 @@ proc dQ(matrix f, poly W, int nx)
 	Mi = ffac * Mi;
 	
 	return(Mi);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "varTrans" gives a list L of with two entries:
+// -- L[1]: an intvec q used to define g_i as division by x(i)^q[i] without remainder
+// -- L[2]: a matrix C such that x(i)^q[i] = \sum_j C_{i,j} \partial_j W
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc varTrans(poly W)
+{
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
+
+    poly W = imap(RRR, W);
+    ideal jaci = jacob(W);
+    ideal J = std(jaci);
+    int nx = nvars(nR);
+
+    int i,j,expo;
+    intvec qvec;
+    poly K;
+
+    // Find the smallest possible integers qvec[i] such that x(i)^qvec[i] is in jacob(W):
+    for(i=1; i<=nx; i++)
+    {
+        for(expo=2; expo<=100; expo++)
+            {
+            K = reduce( x(i)^expo, J );
+            if( K == 0 )
+            {
+                qvec[i] = expo;
+                break;
+            }
+        }
+    }
+
+    // Define transformation matrix C:
+    matrix C[nx][nx];
+    for(i=1; i<=nx; i++)
+    {
+        for(j=1; j<=nx; j++)
+        {
+            C[j,i] = lift( jaci, x(j)^(qvec[j]) )[i,1];
+        }
+    }
+
+    setring RRR;
+    matrix C = imap(nR, C);
+    list L = qvec, C;
+    
+    return(L);
 }
 
 
