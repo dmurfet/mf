@@ -359,7 +359,7 @@ proc deltaInflation(poly XA, int i, int exponent, poly W)
 	setring RRR;
 	matrix NN = imap(nR,U);
 	
-	//dbprint(printlevel, "[DRN] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
+	//dbprint(printlevel, "[deltaInflation] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
 	//dbprint(printlevel, NN);
 	
 	return(NN);
@@ -367,7 +367,7 @@ proc deltaInflation(poly XA, int i, int exponent, poly W)
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// "deltaImablow" blows up a matrix by blowing up all its entries using DRN. (This
+// "deltaImablow" blows up a matrix by blowing up all its entries using deltaInflation. (This
 // is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
 //
 // exponent is the integer such that g_i is division without remainder by x(i)^exponent.
@@ -427,7 +427,7 @@ proc deltaImablow(matrix M, int i, int exponent, poly W)
 				if( koffer[2,k] != 0 && koffer[1,k] != 0 )
 				{
 					//dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
-					N = N + koffer[2,k] * DRN(koffer[1,k], i, exponent, W);
+					N = N + koffer[2,k] * deltaInflation(koffer[1,k], i, exponent, W);
 				}
 			}
 
