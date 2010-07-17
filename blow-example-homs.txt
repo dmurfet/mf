@@ -109,3 +109,36 @@ isCM(M); isCM(Msusp);
 Ext(2,M,M,1); Ext(2,M,Msusp,1);
 
 // We find that both spaces have dimension six, which corroborates what we calculated above.
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE H3 - Computing the endomorphism space of a certain MF over the D5 singularity
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=1;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+poly W = x(1)^2 * x(2) + x(2)^4;
+
+matrix phi[2][2] = x(1) * x(2), x(2)^2, x(2)^3, -x(1) * x(2);
+matrix psi[2][2] = x(1), x(2), x(2)^2, -x(1);
+matrix z[2][2];
+matrix X = blockmat(z,phi,psi,z);
+
+// We know from previous calculations that End(X) is four dimensional.
+
+list l = fuseDefects(MFdual(X), X, W);
+matrix RD = l[1];
+matrix ep = l[2];
+print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+
+// We see that RD has zero differential (of course) and 
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
+
+print(mat_rk(ep0)); // Output is dim H^0 Hom(X,X)
+print(mat_rk(ep1)); // Output is dim H^1 Hom(X,X) 
+
+// Which tells us that dim H^0Hom(X,X) = 4, as expected.
