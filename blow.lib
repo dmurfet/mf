@@ -460,8 +460,7 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
         }
     }
 
-    dbprint(prl, "[deltaImablow] done loop.");
-    
+    // TODO: This next loop is very slow...
     matrix A[colsm*n][colsm*n];
 
     for(i1=1; i1<=colsm; i1++)
@@ -478,7 +477,6 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
         }
     }
 
-    dbprint(prl, "[deltaImablow] done.");
     //dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
     //dbprint(prl, "------------");
     
@@ -538,6 +536,14 @@ proc deltaQ(matrix F, intvec q)
     int j;	
     matrix Mi[gg][gg];
 
+    // Precompute all the deltas
+    list deltas; 
+    for(j = 1; j <= nx; j++)
+    {
+        dbprint(printlevel, "[deltaQ] Calculating deltaImablow for index " + string(j));
+        deltas[j] = deltaImablow(F, j, q[j], J);
+    }
+    
     for(i=1; i<=size(S); i++)
     {
         intvec perm = S[i];
@@ -545,11 +551,9 @@ proc deltaQ(matrix F, intvec q)
         
         for(j=1; j<=nx; j++)
         {
-            dbprint(printlevel, "[deltaQ] Calculating deltaImablow for index (i,j)=(" + string(i) + "," + string(j) + ") of (" + string(size(S)) + "," + string(nx) + ").");
-            Ma = Ma * deltaImablow(F, perm[j], q[perm[j]], J);
+            Ma = Ma * deltas[perm[j]];
         }
         
-        //dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
         Mi = Mi + Ma; 
     }
 

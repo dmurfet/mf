@@ -71,3 +71,16 @@ proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
     matrix D = MFtensor(koszul1, koszul2);
     return(D);
 }
+
+////////////////////////////////////////////////////////////////////
+// mfIdentityDefect
+//
+// We are given two potentials W1 and W2 and two variables y and x.
+// We assume that W1 = W(y) and W2 = W(x) for some fixed polynomial
+// W and we return the identity defect W2 -> W1
+
+proc mfIdentityDefect(poly W1, poly W2, poly y, poly x)
+{
+    matrix koszul1[2][2] = 0, y - x, (W1 - W2)/(y - x), 0;
+    return(koszul1);
+}

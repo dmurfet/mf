@@ -5,10 +5,6 @@
 ///////////////////////////////
 // Computation History
 //
-// - Tried N = 1 with open composite of two wide edges, gives a contractible complex
-// - Tried N = 2 but the answer is some rank 32 MF with an endomorphism which is
-// not split on the nose, so not much to say about that.
-
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
@@ -17,7 +13,7 @@ LIB "matrix.lib";
 int nx=2;
 int ny=4;
 ring rr=0,(x(1..nx),y(1..ny)),dp;
-int N = 1; // The N in sl(N) link homology
+int N = 2; // The N in sl(N) link homology
 
 // Consider the planar diagram which looks something like the following
 // hideous ASCII diagram
@@ -50,36 +46,134 @@ matrix D2 = mfWideEdge(x(1),x(2),y(3),y(4),N);
 // living on the vertex at the origin of the internal edge, that is, D2.
 // So, to compare with the defect fusion examples, D2 = X and D1 = Y.
 
-// W should be the potential that D2 factorises
-poly W = x(1)^(N+1) + x(2)^(N+1) - y(3)^(N+1) - y(4)^(N+1);
+// We have two internal edges, which we denote e1 and e2, with the respective
+// variables x(1) and x(2) and potentials x(1)^(N+1) and x(2)^(N+1). Hence
+// the internal algebra is I = k[x(1),x(2)]/(x(1)^N, x(2)^N) and the
+// change of variables is given by
+
+ideal J = x(1)^N, x(2)^N;
+intvec q = N, N;
+number Nn = N;
+matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+// Compute the ordinary tensor product
+matrix D = MFtensor(D1,D2);
+
+// Inflate or blow up the differential on this tensor product, that is,
+// compute the differential of Y x X x I.
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// Compute the matrix det(C) * dQ_X
+matrix dq = dQ(D2, q, C);
+matrix iddQ = ZZtensor( unitmat(ncols(D1)), dq ); // "iddQ" is "id x dQ_X"
+    
+// Compute the matrix deltaQ
+matrix delQ = deltaQ(D, q);
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ;
+    
+// The induced idempotent on the reduction is denoted ep
+matrix ep = F * e * G;
+
+// Sanity check: ep must be an endomorphism of RD
+print(ep * RD - RD * ep);
+
+// ep is NOT an idempotent on the nose:
+print(ep * ep - ep);
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE L2 - Closed variant of the above
+//////////////////////////////////////////////////////////////////////////////////////
+
+// Take the same picture as above, but now join the strands together (i.e. identify
+// the variable y(1) with y(3), and y(2) with y(4). Hence all variables are internal
+// and so we rename y(3) to x(3) and y(4) to x(4).
+
+// To be clear regarding indexing: in the note we order the vertices and edges, and
+// this ordering is important (well...) because it determines some sign factor and
+// the ordering on the tensor product defining the total defect. In our diagram the
+// bottom vertex is v2 and the top vertex is v1, so that D1 lives on v1 and D2 on v2.
+// The edges have the ordering we have already decided on. NOTE that this means that
+// the permutation tau in the note is x(3),x(4),x(1),x(2) which has sign +1.
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+ring rr=0,(x(1..nx)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+// The two defects involved in this closed foam
+matrix D1 = mfWideEdge(x(3),x(4),x(1),x(2),N);
+matrix D2 = mfWideEdge(x(1),x(2),x(3),x(4),N);
+
+// D2 factorises W and D1 factorises -W
+poly W = x(1)^(N+1) + x(2)^(N+1) - x(3)^(N+1) - x(4)^(N+1);
 print(D2 * D2 - W * unitmat(4));
+print(D1 * D1 + W * unitmat(4));
 
-list l = compileFoam(D1, D2, W);
-matrix RD = l[1]; // Reduced inflation of D1 x D2
-matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final);
+// The internal algebra is defined by the ideal J
+ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+intvec q = N, N, N, N;
+number Nn = N;
+matrix C = 1/Nn * unitmat(4);
 
-////// CLOSED FOAM //////
+// Compute the ordinary tensor product, which is a two-periodic complex
+matrix D = MFtensor(D1,D2);
+print(D*D);
 
-// If in the above we take y(1) = y(3) and y(2) = y(4) we obtain
-// a closed foam
+// Inflate or blow up the differential on this tensor product, that is,
+// compute the differential of Y x X x I.
+matrix Dblow = mablow(D,J);
 
-int N = 2;
-matrix D1c = mfWideEdge(y(1),y(2),x(1),x(2),N);
-matrix D2c = mfWideEdge(x(1),x(2),y(1),y(2),N);
+// Reduce this inflated differential
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-// W should be the potential that D2 factorises
-poly Wc = x(1)^(N+1) + x(2)^(N+1) - y(1)^(N+1) - y(2)^(N+1);
-print(D2c * D2c - Wc * unitmat(4));
+// The idempotent e is given by
+//
+//  e = (-1)^(nx choose 2) * det(C) * partial_int(D1) * partial_int(D2) * delta(D)
 
-list lc = compileFoam(D1c, D2c, Wc);
-matrix RDc = lc[1]; // Reduced inflation of D1 x D2
-matrix epc = lc[2]; // Idempotent endomorphism of RD
-print(epc * epc - epc); // is ep is an idempotent "on the nose"?
-matrix finalc = mfSuspend( mfSplitIdempotent(RDc, epc), nx );
-print(finalc);
+matrix diff2 = ZZtensor( unitmat(ncols(D1)), diff(D2, x(1)) * diff(D2, x(2)) );
+matrix diff1 = ZZtensor( diff(D1, x(3)) * diff(D1, x(4)), unitmat(ncols(D2)) );
 
-// YOU cannot expect this to work, as the formula used by compileFoam is only ... well we have to differentiate
-// with respect to different potentials on each internal edge
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+
+// Check commutation rules on the delta_i(Q)'s
+matrix delQ1 = deltaImablow(D, 1, q[1], J);
+matrix delQ2 = deltaImablow(D, 2, q[2], J);
+matrix delQ3 = deltaImablow(D, 3, q[3], J);
+matrix delQ4 = deltaImablow(D, 4, q[4], J);
+
+matrix z[ncols(delQ1)][ncols(delQ1)];
+
+print((delQ1 * delQ2 - delQ2 * delQ1) == z);
+print((delQ1 * delQ2 + delQ2 * delQ1) == z);
+
+// They don't anticommute (or commute), so you can't simplify the calculation of deltaQ.
+matrix delQ = deltaQ(D,q);
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ;
+print((e * Dblow - Dblow * e)==z);
+
+// The induced idempotent on the reduction is denoted ep
+matrix ep = F * e * G;
+matrix zn[ncols(ep)][ncols(ep)];
+print((ep * RD - RD * ep)==zn); // ep is at least a morphism
+
+print((ep * ep - ep)==zn); // But it fails to be an idempotent, which is "impossible"
