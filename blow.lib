@@ -258,15 +258,12 @@ proc poly2matrix(poly tepo, ideal J)
 
 //////////////////////////////////////////////////////////////////////////////////
 // "mablow" blows up a matrix by blowing up all its entries using poly2matrix.
-//
-// NOTE: This should be finte with arbitrary W, as in poly2matrix.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc mablow(matrix M, poly W)
+proc mablow(matrix M, ideal J)
 {
-	// Compute dimension of Jac(W)
-    ideal jaci = jacob(W);
-	int n = dimAlgebraOverInternalVariables(jaci);
+	// Compute dimension of the algebra k[x-vars]/J
+	int n = dimAlgebraOverInternalVariables(J);
 	
 	// Define L to be an appropriately indexed list of blown-up matrices:
 	int i1,j1,i2,j2,i;
@@ -281,7 +278,7 @@ proc mablow(matrix M, poly W)
 	{
 		for(j1=1; j1<=s; j1++)
 		{
-			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], jaci),j1-1);
+			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J),j1-1);
 		}
 	}
 
@@ -307,62 +304,64 @@ proc mablow(matrix M, poly W)
 //////////////////////////////////////////////////////////////////////////////////
 // "deltaInflation"
 //
-// Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
-// representing the action of [g_i, XA] on the Jacobi algebra in the standard basis. Here
-// g_i stands for the k-linear endomorphism of the ring nR (without y-variables) which
-// sends a polynomial f to its division by x(i)^exponent without remainder.
+// Let us write nR for the basering without its y-variables.
 //
-// NOTE: For consistency with poly2matrix we put the polynomial W after the data defining
-// the inflation (it used to be in the reversed order).
+// Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
+// representing the action of [g_i, XA] on the algebra I = nR/J. Here g_i stands for the
+// k-linear endomorphism of the ring nR (without y-variables) which sends a polynomial f
+// to its division by x(i)^exponent without remainder.
+//
+// NOTE: x(i) only appears as x(i)^exponent, so maybe we should pass the latter rather than
+// i and the exponent separately.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaInflation(poly XA, int i, int exponent, poly W)
+proc deltaInflation(poly XA, int i, int exponent, ideal J)
 {
-    // Compute n := dimension of Jac(W):
-	def RRR = basering;
-	def nR = ringWithoutYVars();
-	setring nR;
+    // Compute a k-basis of I
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
 
-	poly W = imap(RRR,W);
-	poly XA = imap(RRR,XA);
-	ideal jaci = std(jacob(W));
-	ideal basis = kbase(jaci);
-	module BB = reduce(basis,jaci);
+    ideal J = imap(RRR,J);
+    poly XA = imap(RRR,XA);
+    ideal Jstd = std(J);
+    ideal basis = kbase(Jstd);
+    module BB = reduce(basis,Jstd);
 
-	int n = size(basis);
-	
+    int n = size(basis);
+    
     int k;
-	list L;
-	for(k=1; k<=n; k++)
-	{
+    list L;
+    for(k=1; k<=n; k++)
+    {
         poly basisElt = basis[k];
-	    
-	    // First compute g_i( XA * - ) on our basis element
+
+        // First compute g_i( XA * - ) on our basis element
         poly f1 = ( XA * basisElt - reduce(XA * basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
-        
+
         // Next compute XA * g_i(-)
         poly f2 = XA * ( basisElt - reduce(basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
-        
+
         // To our output matrix we add the expression of the commutator f1 - f2 in the
-        // chosen basis of the Jacobi algebra.
-		module ff = reduce(f1 - f2,jaci);
-		matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-		L = L + list(MM);
-	}
+        // chosen basis of the algebra I
+        module ff = reduce(f1 - f2,Jstd);
+        matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+        L = L + list(MM);
+    }
 
-	matrix U = L[1];
-	for(k=2; k<=n; k++)
-	{
-		U=concat(U,L[k]);
-	}
+    matrix U = L[1];
+    for(k=2; k<=n; k++)
+    {
+        U=concat(U,L[k]);
+    }
 
-	setring RRR;
-	matrix NN = imap(nR,U);
-	
-	//dbprint(printlevel, "[deltaInflation] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
-	//dbprint(printlevel, NN);
-	
-	return(NN);
+    setring RRR;
+    matrix NN = imap(nR,U);
+    
+    //dbprint(printlevel, "[deltaInflation] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
+    //dbprint(printlevel, NN);
+
+    return(NN);
 }
 
 
@@ -373,89 +372,81 @@ proc deltaInflation(poly XA, int i, int exponent, poly W)
 // exponent is the integer such that g_i is division without remainder by x(i)^exponent.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaImablow(matrix M, int i, int exponent, poly W)
+proc deltaImablow(matrix M, int i, int exponent, ideal J)
 {
-	int prl = printlevel;
-	
-	//dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
-	//dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
-	
-	// Compute n := dimension of Jac(W):
-	def RRR = basering;
-	def nR = ringWithoutYVars();
-	setring nR;
-	
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
-	setring RRR;
+    int prl = printlevel;
 
-	// Define L to be an appropriately indexed list of blown-up matrices:
-	int colsm = ncols(M);
-	int i1,j1,i2,j2,k;
-	list e,L;
-		
-	poly xprod = 1;
-	for(k=1; k<=nx; k++)
-	{
-		xprod = xprod * x(k);
-	}
-	
-	for(k=1; k<=colsm; k++)
-	{
-		L[k] = e;
-	}
-	
-	for(i1=1; i1<=colsm; i1++)
-	{
-		for(j1=1; j1<=colsm; j1++)
-		{
-			///////////////////////////////////////////////////
-			// INTERESTING PART: 
-			//
-			// koffer is a matrix with two rows. The first row contains
-			// all the x-monomials with nonzero coefficient in M[i1,j1].
-			// The second row contains the corresponding coefficient, which is a polynomial
-			// in only the y-variables.
-			
-			matrix koffer = coef(M[i1,j1], xprod);
-			matrix N[n][n];
+    //dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
+    //dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
 
-			for(k=1; k<=ncols(koffer); k++)
-			{
-				if( koffer[2,k] != 0 && koffer[1,k] != 0 )
-				{
-					//dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
-					N = N + koffer[2,k] * deltaInflation(koffer[1,k], i, exponent, W);
-				}
-			}
+    // Compute n := dimension of I = k[x-vars]/J
+    int n = dimAlgebraOverInternalVariables(J);
 
-			L[i1] = insert(L[i1], N, j1-1);
-			///////////////////////////////////////////////////
-		}
-	}
+    // Define L to be an appropriately indexed list of blown-up matrices:
+    int colsm = ncols(M);
+    int i1,j1,i2,j2,k;
+    list e,L;
 
-	matrix A[colsm*n][colsm*n];
+    poly xprod = 1;
+    for(k=1; k<=nx; k++)
+    {
+        xprod = xprod * x(k);
+    }
 
-	for(i1=1; i1<=colsm; i1++)
-	{
-		for(j1=1; j1<=n; j1++)
-		{
-			for(i2=1; i2<=colsm; i2++)
-			{
-				for(j2=1; j2<=n; j2++)
-				{
-					A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
-				}
-			}
-		}
-	}
+    for(k=1; k<=colsm; k++)
+    {
+        L[k] = e;
+    }
 
-	//dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
-	//dbprint(prl, "------------");
-	
-	return(A);
+    for(i1=1; i1<=colsm; i1++)
+    {
+        for(j1=1; j1<=colsm; j1++)
+        {
+            ///////////////////////////////////////////////////
+            // INTERESTING PART: 
+            //
+            // koffer is a matrix with two rows. The first row contains
+            // all the x-monomials with nonzero coefficient in M[i1,j1].
+            // The second row contains the corresponding coefficient, which is a polynomial
+            // in only the y-variables.
+
+            matrix koffer = coef(M[i1,j1], xprod);
+            matrix N[n][n];
+
+            for(k=1; k<=ncols(koffer); k++)
+            {
+                if( koffer[2,k] != 0 && koffer[1,k] != 0 )
+                {
+                    //dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
+                    N = N + koffer[2,k] * deltaInflation(koffer[1,k], i, exponent, J);
+                }
+            }
+
+            L[i1] = insert(L[i1], N, j1-1);
+            ///////////////////////////////////////////////////
+        }
+    }
+
+    matrix A[colsm*n][colsm*n];
+
+    for(i1=1; i1<=colsm; i1++)
+    {
+        for(j1=1; j1<=n; j1++)
+        {
+            for(i2=1; i2<=colsm; i2++)
+            {
+                for(j2=1; j2<=n; j2++)
+                {
+                    A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+                }
+            }
+        }
+    }
+
+    //dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
+    //dbprint(prl, "------------");
+    
+    return(A);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -485,55 +476,55 @@ proc SGroupintvecs(int n)
 //
 // q is an intvec containing the exponents responsible for defining the operators g_i,
 // so that g_i is division by x(i)^q[i] without remainder.
-//
-// For backwards compatibility, if deltaQ is called with no fourth parameter, it will
-// use the intvec q = (deg(W)-1):nx. This produces an intvec of length nx whose entries
-// are all deg(W)-1.
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc deltaQ(matrix F, poly W, int nx, list #)
+proc deltaQ(matrix F, intvec q)
 {
-    // Deal with fourth parameter
-    intvec q = (deg(W)-1):nx;
-    if( size(#) != 0 ){ q = #[1]; }
+    LIB "matrix.lib";
     
-	LIB "matrix.lib";
-	
-    ideal jaci = jacob(W);
-	int n = dimAlgebraOverInternalVariables(jaci);
-	int prl = printlevel;
-	
-	// The blown up matrix will be of dimension n x ncols(f)
-	int gg = ncols(F) * n;
-	
-	list S = SGroupintvecs(nx);
-	
-	int i,j;	
-	matrix Mi[gg][gg];
+    // The ideal whose quotient gives the algebra I is generated by the internal
+    // variables to the powers given by q
+    int i;
+    ideal J;
+    for( i = 1; i <= nx; i++ )
+    {
+        J[i] = x(i)^(q[i]);
+    }
 
-	for(i=1; i<=size(S); i++)
-	{
-		intvec perm = S[i];
-		matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);
-		
-		for(j=1; j<=nx; j++)
-		{
-			Ma = Ma * deltaImablow(F, perm[j], q[perm[j]], W);
-		}
-		
-		//dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
-		Mi = Mi + Ma; 
-	}
-	
-	// Multiply by the scaling factor:
-	number ffac = 1;
-	for(i=1; i<=nx; i++)
-	{
-		ffac = ffac / i;
-	}
-	Mi = ffac * Mi;
-	
-	return(Mi);
+    int n = dimAlgebraOverInternalVariables(J);
+    int prl = printlevel;
+
+    // The blown up matrix will be of dimension n x ncols(f)
+    int gg = ncols(F) * n;
+
+    list S = SGroupintvecs(nx);
+
+    int j;	
+    matrix Mi[gg][gg];
+
+    for(i=1; i<=size(S); i++)
+    {
+        intvec perm = S[i];
+        matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);
+        
+        for(j=1; j<=nx; j++)
+        {
+            Ma = Ma * deltaImablow(F, perm[j], q[perm[j]], J);
+        }
+        
+        //dbprint(prl, "[deltaQ] Current summand is "); dbprint(prl, Ma);
+        Mi = Mi + Ma; 
+    }
+
+    // Multiply by the scaling factor:
+    number ffac = 1;
+    for(i=1; i<=nx; i++)
+    {
+        ffac = ffac / i;
+    }
+    Mi = ffac * Mi;
+
+    return(Mi);
 }
 
 
@@ -541,41 +532,45 @@ proc deltaQ(matrix F, poly W, int nx, list #)
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
 /////////////////////////////////////////////////////////////////////////////////////
 
-proc dQ(matrix f, poly W, int nx, list #)
+proc dQ(matrix f, intvec q, matrix C)
 {
-    // Deal with fourth parameter
-	LIB "matrix.lib";
-    matrix C = unitmat(nx);
-    if( size(#) != 0 ){ C = #[1]; }
+    LIB "matrix.lib";
     poly detC = det(C);
-	
-    ideal jaci = jacob(W);
-	int n = dimAlgebraOverInternalVariables(jaci);
-	
-	// The blown up matrix will be of dimension n x ncols(f)
-	int gg = ncols(f) * n;
-	
-	list S = SGroupintvecs(nx);
-	int i,j;
+    
+    // The ideal whose quotient gives the algebra I is generated by the internal
+    // variables to the powers given by q
+    int i;
+    ideal J;
+    for( i = 1; i <= nx; i++ )
+    {
+        J[i] = x(i)^(q[i]);
+    }
 
-	matrix Mi[gg][gg];
+    int n = dimAlgebraOverInternalVariables(J);
+    
+    // The blown up matrix will be of dimension n x ncols(f)
+    int gg = ncols(f) * n;
 
-	for(i=1; i<=size(S); i++)
+    list S = SGroupintvecs(nx);
+    int j;
+
+    matrix Mi[gg][gg];
+
+    for(i=1; i<=size(S); i++)
 	{
 		intvec perm = S[i];
 		matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);	
 		
 		//print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
-		
 		for(j=1; j<=nx; j++)
 		{
-			Ma = Ma * mablow(diff(f, x(perm[j])), W);
+			Ma = Ma * mablow(diff(f, x(perm[j])), J);
 		}
 		
 		//print("[dQ] Adding summand"); print(Ma);
 		
 		// Multiply with det(C):
-		Ma = Ma * mablow( detC * unitmat(ncols(f)), W);
+		Ma = Ma * mablow( detC * unitmat(ncols(f)), J);
 		Mi = Mi + Ma; 
 	}
 	
@@ -1915,7 +1910,7 @@ proc test_poly2matrix()
 proc fuseDefects(matrix Y, matrix X, poly W)
 {
     int prl = printlevel;
-    
+
     // First compute the internal algebra. That is, find powers of the internal
     // variables which can be written as linear combinations of the partials. If
     // we follow the notation of my note then this is the algebra I.
@@ -1924,13 +1919,22 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     matrix C = t[2];
     intvec q = t[1];
 
+    // The ideal whose quotient gives the algebra I is generated by the internal
+    // variables to the powers given by q
+    int i;
+    ideal J;
+    for( i = 1; i <= nx; i++ )
+    {
+        J[i] = x(i)^(q[i]);
+    }
+
     // Compute the ordinary tensor product
     matrix D = MFtensor(Y,X);
     
     // Inflate or blow up the differential on this tensor product, that is,
     // compute the differential of Y x X x I.
     dbprint(prl, "[fuseDefects] Blowing up differential on tensor product.");
-    matrix Dblow = mablow(D,W);
+    matrix Dblow = mablow(D,J);
     
     // Reduce this inflated differential
     dbprint(prl, "[fuseDefects] Reducing blown up differential.");
@@ -1941,12 +1945,12 @@ proc fuseDefects(matrix Y, matrix X, poly W)
 
     // Compute the matrix dQ_X
     dbprint(prl, "[fuseDefects] Computing dQ.");
-    matrix dq = dQ(X, W, nx, C);
+    matrix dq = dQ(X, q, C);
     matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
     
     // Compute the matrix deltaQ
     dbprint(prl, "[fuseDefects] Computing deltaQ.");
-    matrix delQ = deltaQ(D, W, nx, q);
+    matrix delQ = deltaQ(D, q);
 
     // And finally the idempotent e on Dblow
     int sign = (nx * (nx-1)) div 2;
