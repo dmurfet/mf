@@ -78,7 +78,7 @@ proc ringWithoutYVars()
 		}
 		else
 		{
-			print("[poly2matrix] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+			print("[ringWithoutYVars] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
 		}
 	}
 	else
@@ -136,7 +136,7 @@ proc ringWithoutXVars()
         }
         else
         {
-            print("[poly2matrix] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+            print("[ringWithoutXVars] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
         }
     }
     else
@@ -178,81 +178,81 @@ proc dimInternalAlgebra(poly W)
 
 //////////////////////////////////////////////////////////////////////////////////
 // "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
-// the matrices that represent the former's action on Jac(W). 
+// the matrices that represent the former's action on the algebra k[x-variables]/J
 //
-// NOTE: This works for arbitrary potentials W, provided the Jacobi algebra is finite
-// dimensional and W is defined only in the x variables.
+// NOTE: We assume that the algebra k[x-variables]/J is finite-dimensional.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc poly2matrix(poly tepo, W)
+proc poly2matrix(poly tepo, ideal J)
 {
     int prl = printlevel;
-    //dbprint(prl, "[poly2matrix] Computing inflated action of " + string(tepo) + " on the Jacobi algebra of " + string(W));
     
-    def RRR = basering;
-    def nR = ringWithoutYVars();
-    setring nR;
-
-    // Compute the Jacobi algebra
-    poly W = imap(RRR,W);
-    ideal jaci = std(jacob(W));
-    ideal basis = kbase(jaci);
-    int milnor = size(basis);
-    module BB = reduce(basis,jaci);
-    
-    // Output the chosen basis of the Jacobi algebra
-    //dbprint(prl, "[poly2matrix] Chosen basis of the Jacobi algebra is");
+    // First compute the x-monomials and their coefficients in tepo
     int i;
-    //for(i=1;i<=milnor;i++){ dbprint(prl, basis[i]); }
-    
-    setring RRR;
-
-    // Compute the matrix MAtepo corresponding to the polynomial tepo:
     poly xprod = 1; 
     for(i=1; i<=nx; i++)
     {
         xprod = xprod * x(i);
     }
     matrix koffer = coef(tepo, xprod);
-    matrix inflation[milnor][milnor];
+
+    // dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
     
-    //dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
+    // For each x monomial we find and store the corresponding matrix representing
+    // multiplication by this monomial on the algebra k[x]/J (the internal algebra).
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
+    
+    ideal Jx = std(imap(RRR,J));
+    matrix kofferx = imap(RRR,koffer);
+    
+    ideal basis = kbase(Jx);
+    int jdim = size(basis);
+    module BB = reduce(basis,Jx);
+    
+    // dbprint(prl, "[poly2matrix] Chosen basis of the algebra");
+    // for(i=1;i<=jdim;i++){ dbprint(printlevel, basis[i]); }
     
     int u, k;
-    for(u=1; u<=ncols(koffer); u++)
+    list monomialAction;
+    
+    for(u=1; u<=ncols(kofferx); u++)
     {
-        poly xmonomial = koffer[1,u];
-        
-        // Switch to the ring without y vars
-        setring nR;
-
-        poly xmonomial = imap(RRR,xmonomial);
-        poly W = imap(RRR,W);
+        poly xmonomial = kofferx[1,u];
 
         list L;
-        for(k=1; k<=milnor; k++)
+        for(k=1; k<=jdim; k++)
         {
-            module ff = reduce(xmonomial*basis[k],jaci);
+            module ff = reduce(xmonomial*basis[k],Jx);
             matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
             L = L + list(MM);
         }
 
         matrix U = L[1];
-        for(k=2; k<=milnor; k++)
+        for(k=2; k<=jdim; k++)
         {
             U=concat(U,L[k]);
         }
-
-        // Switch back to original ring
-        setring RRR;
-
-        matrix inflationOfMonomial = imap(nR,U);
-        inflation = inflation + koffer[2,u] * inflationOfMonomial; 
         
         //dbprint(prl, "[poly2matrix] Inflation of monomial " + string(xmonomial) + " is");
-        //dbprint(prl, inflationOfMonomial);
+        //dbprint(prl, U);
+        
+        monomialAction = monomialAction + list(U);
     }
+    
+    setring RRR;
 
+    // Now for each column of koffer we have a scalar matrix giving
+    // the action of the corresponding monomial on k[x]/J.
+    list monomialAction = imap(nR,monomialAction);
+    
+    matrix inflation[jdim][jdim];
+    for(u=1;u<=ncols(koffer);u++)
+    {
+        inflation = inflation + koffer[2,u] * monomialAction[u];
+    }
+    
     return(inflation);
 }
 
@@ -271,17 +271,18 @@ proc mablow(matrix M, poly W)
 	// Define L to be an appropriately indexed list of blown-up matrices:
 	int i1,j1,i2,j2,i;
 	int s = ncols(M);
-
+    ideal J = jacob(W);
+    
 	list e,L;
 	for(i=1; i<=s; i++)
 	{
 		L[i] = e;
 	}
 	for(i1=1; i1<=s; i1++)
-	{
+	
 		for(j1=1; j1<=s; j1++)
 		{
-			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], W),j1-1);
+			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J),j1-1);
 		}
 	}
 
@@ -1872,7 +1873,34 @@ proc test_mfReduce()
 	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
 
+proc test_poly2matrix()
+{
+    int passed = 1;
 
+    // Test 1
+    int nx=2;
+    int ny=2;
+    ring RRR=0,(x(1..nx),y(1..ny)),dp;
+
+    ideal J = x(1)^2, x(2)^2;
+    
+    matrix a = poly2matrix(1,J);
+    if( a != unitmat(4) ){ passed = 0; }
+    
+    matrix a = poly2matrix(x(1),J);
+    matrix c[4][4] = 0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0;
+    if( a != c ){ passed = 0; }
+    
+    matrix a = poly2matrix(x(2),J);
+    matrix c[4][4] = 0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0;
+    if( a != c ){ passed = 0; }
+    
+    matrix a = poly2matrix(x(1)*x(2),J);
+    matrix c[4][4] = 0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0;
+    if( a != c ){ passed = 0; }
+    
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
 
 
 ////////////////////////////////////////////////////////////////////
