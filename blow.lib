@@ -1447,10 +1447,13 @@ proc mfReduce(matrix A, list #)
 		// We remember the transformation by adjusting F and G, so
 		// that at each stage F is an isomorphism between X and Y with inverse G
 
+        matrix qinv = inverse(q);
+        matrix pinv = inverse(p);
+        
 		b0 = l[1];
-		b1 = inverse(q) * b1 * inverse(p);
-		f0 = inverse(q) * f0; f1 = p * f1;
-		g0 = g0 * q; g1 = g1 * inverse(p);
+		b1 = qinv * b1 * pinv;
+		f0 = qinv * f0; f1 = p * f1;
+		g0 = g0 * q; g1 = g1 * pinv;
 					
 		// Now that we guarantee b0 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
@@ -1485,10 +1488,13 @@ proc mfReduce(matrix A, list #)
 		// We remember the transformation by adjusting F and G, so
 		// that at each stage F is an isomorphism between X and Y with inverse G
 
+        matrix qinv = inverse(q);
+        matrix pinv = inverse(p);
+        
 		b1 = l[1];
-		b0 = inverse(q) * b0 * inverse(p);
-		f0 = p * f0; f1 = inverse(q) * f1;
-		g0 = g0 * inverse(p); g1 = g1 * q;
+		b0 = qinv * b0 * pinv;
+		f0 = p * f0; f1 = qinv * f1;
+		g0 = g0 * pinv; g1 = g1 * q;
 
 		// Now that we guarantee b1 has an identity in the top left and zeros in the rest
 		// of the first column, call a worker routine to "split" off this contractible
@@ -1525,19 +1531,25 @@ proc mfReduce(matrix A, list #)
 		matrix b0r = transpose(gau[1]); // The reduced form
 
 		if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
-        if( det(tr) == 0 ){ print("[mfReduce] Transformation matrix not invertible (first)."); 
+        if( det(tr) == 0 )
+        {
+            print("[mfReduce] Transformation matrix not invertible (first)."); 
         
-        print(b0);
-        print("---");
-        print(b0r);
-        print("---");
-        print(tr); return(); }
+            print(b0);
+            print("---");
+            print(b0r);
+            print("---");
+            print(tr);
+            return();
+        }
+        
+        matrix trinv = inverse(tr);
         
 		b0 = b0r;
-        b1 = b1 * inverse(tr);
+        b1 = b1 * trinv;
 		
 		f1 = tr * f1;
-		g1 = g1 * inverse(tr);
+		g1 = g1 * trinv;
 	
 		// Try a second time on the transpose
  		gau = gauss_row(transpose(b0),1);
@@ -1547,9 +1559,11 @@ proc mfReduce(matrix A, list #)
 		if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
         if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
         
+        matrix tr2inv = inverse(tr2);
+        
 		b0 = b0r;
-		b1 = inverse(tr2) * b1;
-		f0 = inverse(tr2) * f0;
+		b1 = tr2inv * b1;
+		f0 = tr2inv * f0;
 		g0 = g0 * tr2;
 		/////// END GAUSS ////////
 	}
