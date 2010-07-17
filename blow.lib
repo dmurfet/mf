@@ -45,53 +45,53 @@ LIB "ring.lib";
 
 proc ringWithoutYVars()
 {
-	def RRR = basering;
+    def RRR = basering;
 
-	// Define new ring -- exactly the same as RRR, but without the y-variables:
-	// ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
-	if(size(ringlist(RRR)[1]) > 1)
-	{
-		int i,j,k;
-		list L = ringlist(RRR);
-		for(i=1; i<=ny; i++)
-		{
-			L[2] = delete(L[2],nx + 1);
-		}
-		intvec kk = (1..nx);
+    // Define new ring -- exactly the same as RRR, but without the y-variables:
+    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
+    if(size(ringlist(RRR)[1]) > 1)
+    {
+        int i,j,k;
+        list L = ringlist(RRR);
+        for(i=1; i<=ny; i++)
+        {
+            L[2] = delete(L[2],nx + 1);
+        }
+        intvec kk = (1..nx);
 
-		for(i=1; i<=nx; i++)
-		{
-			kk[i] = 1;
-		}
-		L[3][1][2] = kk;
-		L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
-		def nR = ring(L);
+        for(i=1; i<=nx; i++)
+        {
+            kk[i] = 1;
+        }
+        L[3][1][2] = kk;
+        L[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+        def nR = ring(L);
 
-		// Now complete the correct definition of nR by specifying the right minpoly: 
-		if( defined(minpolyblow) && defined(r) )
-		{
-			setring nR;
-			poly P = imap(RRR,minpolyblow);
-			poly z = subst(P,x(1),r);
-			number nu = leadcoef(z);
-			minpoly = nu;
-		}
-		else
-		{
-			print("[ringWithoutYVars] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
-		}
-	}
-	else
-	{
-		ring nR = char(RRR), x(1..nx), dp;
-	}	
-	
-	def newRing = basering;
-	
-	// Before returning the new ring, set the ambient ring as current
-	setring RRR;
-	
-	return(newRing);
+        // Now complete the correct definition of nR by specifying the right minpoly: 
+        if( defined(minpolyblow) && defined(r) )
+        {
+            setring nR;
+            poly P = imap(RRR,minpolyblow);
+            poly z = subst(P,x(1),r);
+            number nu = leadcoef(z);
+            minpoly = nu;
+        }
+        else
+        {
+            print("[ringWithoutYVars] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+        }
+    }
+    else
+    {
+        ring nR = char(RRR), x(1..nx), dp;
+    }
+
+    def newRing = basering;
+    
+    // Before returning the new ring, set the ambient ring as current
+    setring RRR;
+    
+    return(newRing);
 }
 
 
@@ -154,26 +154,25 @@ proc ringWithoutXVars()
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// "dimInternalAlgebra" Returns the dimension of the internal algebra, that is, the
-// algebra I in the terminology of my note.
-//
-// At present, it just computes the Milnor number of the given W over the x-vars.
+// "dimAlgebraOverInternalVariables" Returns the dimension of the quotient of the
+// polynomial ring in the internal variables (as returned by ringWithoutYVars) by the
+// specified ideal (given as an ideal in the basering).
 //////////////////////////////////////////////////////////////////////////////////
 
-proc dimInternalAlgebra(poly W)
+proc dimAlgebraOverInternalVariables(ideal J)
 {
-	def RRR = basering;
-	def nR = ringWithoutYVars();
-	setring nR;
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
 
-	poly W = imap(RRR,W);
-	ideal jaci = std(jacob(W));
-	ideal ba = kbase(jaci);
-	int n = size(ba);
+    ideal J = imap(RRR,J);
+    ideal Jstd = std(J);
+    ideal ba = kbase(Jstd);
+    int n = size(ba);
 
-	setring RRR;
-	
-	return(n);
+    setring RRR;
+
+    return(n);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -266,12 +265,12 @@ proc poly2matrix(poly tepo, ideal J)
 proc mablow(matrix M, poly W)
 {
 	// Compute dimension of Jac(W)
-	int n = dimInternalAlgebra(W);
+    ideal jaci = jacob(W);
+	int n = dimAlgebraOverInternalVariables(jaci);
 	
 	// Define L to be an appropriately indexed list of blown-up matrices:
 	int i1,j1,i2,j2,i;
 	int s = ncols(M);
-    ideal J = jacob(W);
     
 	list e,L;
 	for(i=1; i<=s; i++)
@@ -279,10 +278,10 @@ proc mablow(matrix M, poly W)
 		L[i] = e;
 	}
 	for(i1=1; i1<=s; i1++)
-	
+	{
 		for(j1=1; j1<=s; j1++)
 		{
-			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J),j1-1);
+			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], jaci),j1-1);
 		}
 	}
 
@@ -500,7 +499,8 @@ proc deltaQ(matrix F, poly W, int nx, list #)
     
 	LIB "matrix.lib";
 	
-	int n = dimInternalAlgebra(W);
+    ideal jaci = jacob(W);
+	int n = dimAlgebraOverInternalVariables(jaci);
 	int prl = printlevel;
 	
 	// The blown up matrix will be of dimension n x ncols(f)
@@ -549,7 +549,8 @@ proc dQ(matrix f, poly W, int nx, list #)
     if( size(#) != 0 ){ C = #[1]; }
     poly detC = det(C);
 	
-	int n = dimInternalAlgebra(W);
+    ideal jaci = jacob(W);
+	int n = dimAlgebraOverInternalVariables(jaci);
 	
 	// The blown up matrix will be of dimension n x ncols(f)
 	int gg = ncols(f) * n;
@@ -1878,7 +1879,7 @@ proc test_poly2matrix()
     int passed = 1;
 
     // Test 1
-    int nx=2;
+    int nx=2; // PROBLEM: not a global, so if you run this test nx will be undefined.
     int ny=2;
     ring RRR=0,(x(1..nx),y(1..ny)),dp;
 
