@@ -371,13 +371,27 @@ proc deltaInflation(poly XA, int i, int exponent, ideal J)
 //
 // exponent is the integer such that g_i is division without remainder by x(i)^exponent.
 //////////////////////////////////////////////////////////////////////////////////
+// TODO: Skip pairs of monomials and i's we know yield zero
+
+// TODO: Future optimisation, lookup table for return values from deltaInflation
+//proc lookupIndexFromMonomial(poly monom)
+//{
+//  int ret;
+//    intvec p = factorize(monom,2)[2]; // Gives the powers of the variables present
+// int i;
+//for(i=1;i<=nx;i++)
+//{
+//ret = ret + p[i] * 10^(i);
+//}
+//return(ret);
+//}
 
 proc deltaImablow(matrix M, int i, int exponent, ideal J)
 {
     int prl = printlevel;
 
     //dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
-    //dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
+    dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
 
     // Compute n := dimension of I = k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
@@ -398,6 +412,17 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
         L[k] = e;
     }
 
+    // A lookup table for the scalar matrices produced by deltaInflation, so we don't
+    // have to continually recompute them. Here is how you look something up in the table:
+    // if an entry of lookupTable has type "none" then it hasn't been set yet.
+    // Given a monomial XA = x(1)^(e1) * ... * x(nx)^(enx) the corresponding integer is the 
+    // integer M with digits e1e2...enx. We place the matrix 
+    //
+    //      deltaInflation(XA, i, exponent, J)
+    //
+    // in the list lookupTable at position M = e1 * 10^(nx) + e2 * 10^(nx-1) + ...
+    // list lookupTable;
+    
     for(i1=1; i1<=colsm; i1++)
     {
         for(j1=1; j1<=colsm; j1++)
@@ -415,10 +440,18 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
 
             for(k=1; k<=ncols(koffer); k++)
             {
-                if( koffer[2,k] != 0 && koffer[1,k] != 0 )
+                poly monom = koffer[1,k];
+                
+                // Compute the power of the x(i)-variable in monom. Note that deltaInflation
+                // of any monomial NOT involving x(i) must be zero. Note we multiply with
+                // all the variables to ensure that factorize returns a matrix whose ith
+                // column is the integer we're interested in + 1.
+                int p = factorize(monom * xprod,2)[2][i] - 1; 
+                
+                if( koffer[2,k] != 0 && monom != 0 && p > 0 )
                 {
-                    //dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
-                    N = N + koffer[2,k] * deltaInflation(koffer[1,k], i, exponent, J);
+                    dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
+                    N = N + koffer[2,k] * deltaInflation(monom, i, exponent, J);
                 }
             }
 
@@ -427,6 +460,8 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
         }
     }
 
+    dbprint(prl, "[deltaImablow] done loop.");
+    
     matrix A[colsm*n][colsm*n];
 
     for(i1=1; i1<=colsm; i1++)
@@ -443,6 +478,7 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
         }
     }
 
+    dbprint(prl, "[deltaImablow] done.");
     //dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
     //dbprint(prl, "------------");
     
@@ -509,6 +545,7 @@ proc deltaQ(matrix F, intvec q)
         
         for(j=1; j<=nx; j++)
         {
+            dbprint(printlevel, "[deltaQ] Calculating deltaImablow for index (i,j)=(" + string(i) + "," + string(j) + ") of (" + string(size(S)) + "," + string(nx) + ").");
             Ma = Ma * deltaImablow(F, perm[j], q[perm[j]], J);
         }
         
@@ -531,6 +568,8 @@ proc deltaQ(matrix F, intvec q)
 /////////////////////////////////////////////////////////////////////////////////////
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
 /////////////////////////////////////////////////////////////////////////////////////
+// TODO: May be faster to compute dQ_X first, then mablow the result, rather than
+// mablowing every factor
 
 proc dQ(matrix f, intvec q, matrix C)
 {
