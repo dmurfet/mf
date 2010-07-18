@@ -599,6 +599,15 @@ proc dQ(matrix f, intvec q, matrix C)
 
     matrix Mi[gg][gg];
 
+    // Precompute all the mablows
+    list dels; 
+    for(j = 1; j <= nx; j++)
+    {
+        dels[j] = mablow(diff(f,x(j)), J);
+    }
+
+    // TODO: Probably these summands are all equal and there is no point summing over
+    // n! of them.
     for(i=1; i<=size(S); i++)
 	{
 		intvec perm = S[i];
@@ -607,16 +616,16 @@ proc dQ(matrix f, intvec q, matrix C)
 		//print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
 		for(j=1; j<=nx; j++)
 		{
-			Ma = Ma * mablow(diff(f, x(perm[j])), J);
+            Ma = Ma * dels[perm[j]];
 		}
 		
 		//print("[dQ] Adding summand"); print(Ma);
-		
-		// Multiply with det(C):
-		Ma = Ma * mablow( detC * unitmat(ncols(f)), J);
 		Mi = Mi + Ma; 
 	}
-	
+
+    // Multiply with detC
+    Mi = mablow( detC * unitmat(ncols(f)), J) * Mi;
+
 	// Multiply by the scaling factor
 	number ffac = 1;
 	for(i=1; i<=nx; i++)
