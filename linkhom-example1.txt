@@ -89,6 +89,12 @@ print(ep * RD - RD * ep);
 // ep is NOT an idempotent on the nose:
 print(ep * ep - ep);
 
+// For example, the entry ep[32,18] wants a rescaling by 4/9, but the entry ep[29,18]
+// wants a factor of 2/9. Hence ep is NOT proportional to an idempotent on the nose.
+//
+// What we can try to do is to use lift and reduce to check whether ep*ep-ep is zero
+// in cohomology, i.e. as an element of End_{HMF(W)}(RD). 
+
 
 //////////////////////////////////////////////////////////////////////////////////////
 // EXAMPLE L2 - Closed variant of the above
@@ -112,7 +118,7 @@ LIB "matrix.lib";
 int nx=4;
 ring rr=0,(x(1..nx)),dp;
 int N = 2; // The N in sl(N) link homology
-printlevel = 1;
+printlevel = 0;
 
 // The two defects involved in this closed foam
 matrix D1 = mfWideEdge(x(3),x(4),x(1),x(2),N);
@@ -174,8 +180,8 @@ matrix delQ = deltaQ(D,q);
 
 // And finally the idempotent e on Dblow
 int sign = (nx * (nx-1)) div 2;
-matrix z[ncols(e)][ncols(e)];
 matrix e = (-1)^(sign) * iddQ * delQ;
+matrix z[ncols(e)][ncols(e)];
 print((e * Dblow - Dblow * e)==z);
 
 // The induced idempotent on the reduction is denoted ep
@@ -184,3 +190,8 @@ matrix zn[ncols(ep)][ncols(ep)];
 print((ep * RD - RD * ep)==zn); // ep is at least a morphism
 
 print((ep * ep - ep)==zn); // But it fails to be an idempotent, which is "impossible"
+
+// Rescaling helps:
+
+matrix EE = 16/81 * ep;
+print((EE * EE - EE)==zn);

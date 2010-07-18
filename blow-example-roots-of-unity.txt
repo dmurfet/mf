@@ -99,3 +99,37 @@ print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 
 // Doesn't seem Hep is idempotent on the nose. But this can't be so, as it is an idempotent
 // endomorphism of a complex RD with zero differential, so homotopy endos must be equal.
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE R4 - Fusion of symmetry defects in A-type minimal models. 
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+int nx=1;
+int ny=2;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
+
+poly W = x(1)^5;
+
+// Define Pi = P_{i}, Pj = P_{j} and Pij = P_{i+j}:
+
+int i,j = 77,42;
+
+matrix Pj[2][2] = 0, ( x(1) - r^j * y(2) ), ( x(1)^5 - y(2)^5 )/(( x(1) - r^j * y(2) )), 0;
+matrix Pi[2][2] = 0, ( y(1) - r^i * x(1) ), ( y(1)^5 - x(1)^5 )/(( y(1) - r^i * x(1) )), 0;
+
+matrix Pij[2][2] = 0, ( y(1) - r^(i+j) * y(2) ), ( y(1)^5 - y(2)^5 )/(( y(1) - r^(i+j) * y(2) )), 0;
+
+list l = fuseDefects(Pi, Pj, W);
+matrix RD = l[1];
+matrix ep = l[2];
+print(ep * ep - ep);
+
+// The result is that is Pi x Pj is equal to -Pij and therefore isomorphic to Pij:
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final + Pij);
