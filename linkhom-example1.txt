@@ -147,8 +147,14 @@ matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 //
 //  e = (-1)^(nx choose 2) * det(C) * partial_int(D1) * partial_int(D2) * delta(D)
 
-matrix diff2 = ZZtensor( unitmat(ncols(D1)), diff(D2, x(1)) * diff(D2, x(2)) );
-matrix diff1 = ZZtensor( diff(D1, x(3)) * diff(D1, x(4)), unitmat(ncols(D2)) );
+// matrix diff2 = ZZtensor( unitmat(ncols(D1)), diff(D2, x(1)) * diff(D2, x(2)) );
+// matrix diff1 = ZZtensor( diff(D1, x(3)) * diff(D1, x(4)), unitmat(ncols(D2)) );
+// matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+// I had thought that this iddQ would agree with the iddQ computed "properly", as done
+// below, but it seems they are actually different.
+
+matrix diff2 = ZZtensor( unitmat(ncols(D1)), 1/2 * (diff(D2, x(1)) * diff(D2, x(2)) - diff(D2,x(2)) * diff(D2,x(1))));
+matrix diff1 = ZZtensor( 1/2 * (diff(D1, x(3)) * diff(D1, x(4)) - diff(D1,x(4)) * diff(D1,x(3))), unitmat(ncols(D2)) );
 
 matrix iddQ = mablow( det(C) * diff1 * diff2, J );
 
@@ -168,6 +174,7 @@ matrix delQ = deltaQ(D,q);
 
 // And finally the idempotent e on Dblow
 int sign = (nx * (nx-1)) div 2;
+matrix z[ncols(e)][ncols(e)];
 matrix e = (-1)^(sign) * iddQ * delQ;
 print((e * Dblow - Dblow * e)==z);
 
