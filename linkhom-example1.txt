@@ -132,7 +132,7 @@ print(D1 * D1 + W * unitmat(4));
 // The internal algebra is defined by the ideal J
 ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
 intvec q = N, N, N, N;
-number Nn = N;
+number Nn = N + 1;
 matrix C = 1/Nn * unitmat(4);
 
 // Compute the ordinary tensor product, which is a two-periodic complex
@@ -165,15 +165,13 @@ matrix diff1 = ZZtensor( 1/2 * (diff(D1, x(3)) * diff(D1, x(4)) - diff(D1,x(4)) 
 matrix iddQ = mablow( det(C) * diff1 * diff2, J );
 
 // Check commutation rules on the delta_i(Q)'s
-matrix delQ1 = deltaImablow(D, 1, q[1], J);
-matrix delQ2 = deltaImablow(D, 2, q[2], J);
-matrix delQ3 = deltaImablow(D, 3, q[3], J);
-matrix delQ4 = deltaImablow(D, 4, q[4], J);
-
-matrix z[ncols(delQ1)][ncols(delQ1)];
-
-print((delQ1 * delQ2 - delQ2 * delQ1) == z);
-print((delQ1 * delQ2 + delQ2 * delQ1) == z);
+//matrix delQ1 = deltaImablow(D, 1, q[1], J);
+//matrix delQ2 = deltaImablow(D, 2, q[2], J);
+//matrix delQ3 = deltaImablow(D, 3, q[3], J);
+//matrix delQ4 = deltaImablow(D, 4, q[4], J);
+//matrix z[ncols(delQ1)][ncols(delQ1)];
+//print((delQ1 * delQ2 - delQ2 * delQ1) == z);
+//print((delQ1 * delQ2 + delQ2 * delQ1) == z);
 
 // They don't anticommute (or commute), so you can't simplify the calculation of deltaQ.
 matrix delQ = deltaQ(D,q);
@@ -189,9 +187,11 @@ matrix ep = F * e * G;
 matrix zn[ncols(ep)][ncols(ep)];
 print((ep * RD - RD * ep)==zn); // ep is at least a morphism
 
-print((ep * ep - ep)==zn); // But it fails to be an idempotent, which is "impossible"
+print((ep * ep - ep)==zn); // ep is an idempotent on the nose
 
-// Rescaling helps:
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
 
-matrix EE = 16/81 * ep;
-print((EE * EE - EE)==zn);
+print(mat_rk(ep0)); 
+print(mat_rk(ep1));
+
