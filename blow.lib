@@ -1338,7 +1338,7 @@ proc mfSuspendMorph(matrix A, list #)
     list blocks = extractblockmat(A);
 	matrix a0 = blocks[1]; matrix a1 = blocks[4];
 	
-    matrix z[ncols(A)/2][ncols(A)/2];
+    matrix z[nrows(A)/2][ncols(A)/2];
     
     if( power mod 2 == 0 )
     {
@@ -1348,7 +1348,7 @@ proc mfSuspendMorph(matrix A, list #)
     else
     {
         // The power is odd, so suspend
-        matrix Asusp = blockmat(a1, z, z, a0);
+        matrix Asusp = blockmat_nsq(a1, z, z, a0);
         return(Asusp);
     }
 }
