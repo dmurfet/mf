@@ -1321,6 +1321,38 @@ proc mfSuspend(matrix A, list #)
     }
 }
 
+
+////////////////////////////////////////////////////////////////////
+// mfSuspendMorph
+// 
+// Returns the suspension of the given even morphism of matrix factorisations. If called
+// with no additional parameters we suspend once, otherwise we suspend
+// the number of times indicated by the second parameter.
+
+proc mfSuspendMorph(matrix A, list #)
+{
+    int power = 1;
+    
+    if( size(#) != 0 ){ power = #[1]; }
+    
+    list blocks = extractblockmat(A);
+	matrix a0 = blocks[1]; matrix a1 = blocks[4];
+	
+    matrix z[ncols(A)/2][ncols(A)/2];
+    
+    if( power mod 2 == 0 )
+    {
+        // The power is even, so return the original MF
+        return(A);
+    }
+    else
+    {
+        // The power is odd, so suspend
+        matrix Asusp = blockmat(a1, z, z, a0);
+        return(Asusp);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////
 // mfSplitIdempotent
 //
