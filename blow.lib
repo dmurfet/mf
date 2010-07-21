@@ -491,19 +491,19 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
 
 proc SGroupintvecs(int n)
 {
-	LIB "qmatrix.lib";
-	list L;
-	int i;
-	
-	intmat M = SymGroup(n);
-	
-	for(i=1; i<=nrows(M); i++)
-	{
-		intvec c = M[i,1..n];
-		L[i] = c;
-	}
+    LIB "qmatrix.lib";
+    list L;
+    int i;
+    
+    intmat M = SymGroup(n);
+    
+    for(i=1; i<=nrows(M); i++)
+    {
+        intvec c = M[i,1..n];
+        L[i] = c;
+    }
 
-	return(L);
+    return(L);
 }
 
 
@@ -535,7 +535,7 @@ proc deltaQ(matrix F, intvec q)
 
     list S = SGroupintvecs(nx);
 
-    int j;	
+    int j;    
     matrix Mi[gg][gg];
 
     // Precompute all the deltas
@@ -611,32 +611,32 @@ proc dQ(matrix f, intvec q, matrix C)
     // TODO: Probably these summands are all equal and there is no point summing over
     // n! of them.
     for(i=1; i<=size(S); i++)
-	{
-		intvec perm = S[i];
-		matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);	
-		
-		//print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
-		for(j=1; j<=nx; j++)
-		{
+    {
+        intvec perm = S[i];
+        matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);    
+        
+        //print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
+        for(j=1; j<=nx; j++)
+        {
             Ma = Ma * dels[perm[j]];
-		}
-		
-		//print("[dQ] Adding summand"); print(Ma);
-		Mi = Mi + Ma; 
-	}
+        }
+        
+        //print("[dQ] Adding summand"); print(Ma);
+        Mi = Mi + Ma; 
+    }
 
     // Multiply with detC
     Mi = mablow( detC * unitmat(ncols(f)), J) * Mi;
 
-	// Multiply by the scaling factor
-	number ffac = 1;
-	for(i=1; i<=nx; i++)
-	{
-		ffac = ffac / i;
-	}
-	Mi = ffac * Mi;
-	
-	return(Mi);
+    // Multiply by the scaling factor
+    number ffac = 1;
+    for(i=1; i<=nx; i++)
+    {
+        ffac = ffac / i;
+    }
+    Mi = ffac * Mi;
+    
+    return(Mi);
 }
 
 
@@ -1250,13 +1250,13 @@ int intnon2=n/2;
 number non2=number(n)/2;
 if(n!=ncols(m))
 {
-	printf("Matrix should be square");
-	return();
+    printf("Matrix should be square");
+    return();
 }
 if(non2!=intnon2)
 {
-	printf("Matrix should have an even number of rows/columns");
-	return();
+    printf("Matrix should have an even number of rows/columns");
+    return();
 }
 matrix block1[intnon2][intnon2]=submat(m,1..intnon2,1..intnon2);
 matrix block2[intnon2][intnon2]=submat(m,1..intnon2,intnon2+1..n);;
@@ -1306,8 +1306,8 @@ proc mfSuspend(matrix A, list #)
     if( size(#) != 0 ){ power = #[1]; }
     
     list blocks = extractblockmat(A);
-	matrix a0 = blocks[3]; matrix a1 = blocks[2];
-	
+    matrix a0 = blocks[3]; matrix a1 = blocks[2];
+    
     matrix z[ncols(A)/2][ncols(A)/2];
     
     if( power mod 2 == 0 )
@@ -1338,8 +1338,8 @@ proc mfSuspendMorph(matrix A, list #)
     if( size(#) != 0 ){ power = #[1]; }
     
     list blocks = extractblockmat(A);
-	matrix a0 = blocks[1]; matrix a1 = blocks[4];
-	
+    matrix a0 = blocks[1]; matrix a1 = blocks[4];
+    
     matrix z[nrows(A)/2][ncols(A)/2];
     
     if( power mod 2 == 0 )
@@ -1498,125 +1498,125 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
 
 proc mfReduce(matrix A, list #)
 {
-	LIB "linalg.lib";
-	
-	int prl = printlevel;
+    LIB "linalg.lib";
+    
+    int prl = printlevel;
 
-	dbprint(prl, "[mfReduce]");
-	
-	// Extract the odd and even part of the differential
-	list blocks = extractblockmat(A);
-	matrix b0 = blocks[3]; matrix b1 = blocks[2];
-	
-	// F and G begin as identity maps
-	matrix f0 = unitmat(ncols(A)/2); matrix f1 = unitmat(ncols(A)/2);
-	matrix g0 = unitmat(ncols(A)/2); matrix g1 = unitmat(ncols(A)/2);
-	
-	list transform_record;
-	list current_stage = b0,b1,f0,f1,g0,g1;
-	transform_record = transform_record + list(current_stage);
-		
-	// A remains fixed, we work steadily on B and F, G until B has the desired form
-	// Begin by looking inside b0 for nonzero constants. If at some point b0 becomes
-	// a 1x1 matrix we bail (it must be contractible).
-	while( ismfReduced(b0) != 1 && ncols(b0) > 1 )
-	{	
-		dbprint(prl, " [mfReduce] while loop for b0");
-		
-		// There is a constant somewhere, begin looking in b0
-		list l = matrixreduce(b0);
-		matrix p = l[2]; matrix q = l[3];
-			
-		// The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
-		// via the morphism (from the former to the latter) given by the pair
-		// (q^{-1},p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1}.
-		// We remember the transformation by adjusting F and G, so
-		// that at each stage F is an isomorphism between X and Y with inverse G
+    dbprint(prl, "[mfReduce]");
+    
+    // Extract the odd and even part of the differential
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    
+    // F and G begin as identity maps
+    matrix f0 = unitmat(ncols(A)/2); matrix f1 = unitmat(ncols(A)/2);
+    matrix g0 = unitmat(ncols(A)/2); matrix g1 = unitmat(ncols(A)/2);
+    
+    list transform_record;
+    list current_stage = b0,b1,f0,f1,g0,g1;
+    transform_record = transform_record + list(current_stage);
+        
+    // A remains fixed, we work steadily on B and F, G until B has the desired form
+    // Begin by looking inside b0 for nonzero constants. If at some point b0 becomes
+    // a 1x1 matrix we bail (it must be contractible).
+    while( ismfReduced(b0) != 1 && ncols(b0) > 1 )
+    {    
+        dbprint(prl, " [mfReduce] while loop for b0");
+        
+        // There is a constant somewhere, begin looking in b0
+        list l = matrixreduce(b0);
+        matrix p = l[2]; matrix q = l[3];
+            
+        // The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
+        // via the morphism (from the former to the latter) given by the pair
+        // (q^{-1},p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1}.
+        // We remember the transformation by adjusting F and G, so
+        // that at each stage F is an isomorphism between X and Y with inverse G
 
         matrix qinv = inverse(q);
         matrix pinv = inverse(p);
         
-		b0 = l[1];
-		b1 = qinv * b1 * pinv;
-		f0 = qinv * f0; f1 = p * f1;
-		g0 = g0 * q; g1 = g1 * pinv;
-					
-		// Now that we guarantee b0 has an identity in the top left and zeros in the rest
-		// of the first column, call a worker routine to "split" off this contractible
-		// piece and return the modified B, F, G
-		list out = mfReduce_work(b0,b1,f0,f1,g0,g1);
-		b0 = out[1]; b1 = out[2];
-		f0 = out[3]; f1 = out[4];
-		g0 = out[5]; g1 = out[6];
-		
-		current_stage = b0,b1,f0,f1,g0,g1;
-		transform_record = transform_record + list(current_stage);
-		
-		//dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
-		//dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-		dbprint(prl, "  Result of reduction, p0:"); dbprint(prl,p);
-		dbprint(prl, "  Result of reduction, q0:"); dbprint(prl,q);
-		dbprint(prl, "--------------------------");
-	}
-	
-	// No do the same process to b1 (TODO: unify these two steps)
-	while( ismfReduced(b1) != 1 && ncols(b1) > 1 )
-	{
-		dbprint(prl, " [mfReduce] while loop for b1");
-		
-		// There is a constant somewhere, begin looking in b1
-		list l = matrixreduce(b1);
-		matrix p = l[2]; matrix q = l[3];
-			
-		// The matrix factorisation (b0,b1) is isomorphic to (q^{-1} * b0 * p^{-1}, p * b1 * q)
-		// via the morphism (from the former to the latter) given by the pair
-		// (p,q^{-1}). We now transform b0 to b0 = q^{-1} * b0 * p^{-1}.
-		// We remember the transformation by adjusting F and G, so
-		// that at each stage F is an isomorphism between X and Y with inverse G
+        b0 = l[1];
+        b1 = qinv * b1 * pinv;
+        f0 = qinv * f0; f1 = p * f1;
+        g0 = g0 * q; g1 = g1 * pinv;
+                    
+        // Now that we guarantee b0 has an identity in the top left and zeros in the rest
+        // of the first column, call a worker routine to "split" off this contractible
+        // piece and return the modified B, F, G
+        list out = mfReduce_work(b0,b1,f0,f1,g0,g1);
+        b0 = out[1]; b1 = out[2];
+        f0 = out[3]; f1 = out[4];
+        g0 = out[5]; g1 = out[6];
+        
+        current_stage = b0,b1,f0,f1,g0,g1;
+        transform_record = transform_record + list(current_stage);
+        
+        //dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
+        //dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
+        dbprint(prl, "  Result of reduction, p0:"); dbprint(prl,p);
+        dbprint(prl, "  Result of reduction, q0:"); dbprint(prl,q);
+        dbprint(prl, "--------------------------");
+    }
+    
+    // No do the same process to b1 (TODO: unify these two steps)
+    while( ismfReduced(b1) != 1 && ncols(b1) > 1 )
+    {
+        dbprint(prl, " [mfReduce] while loop for b1");
+        
+        // There is a constant somewhere, begin looking in b1
+        list l = matrixreduce(b1);
+        matrix p = l[2]; matrix q = l[3];
+            
+        // The matrix factorisation (b0,b1) is isomorphic to (q^{-1} * b0 * p^{-1}, p * b1 * q)
+        // via the morphism (from the former to the latter) given by the pair
+        // (p,q^{-1}). We now transform b0 to b0 = q^{-1} * b0 * p^{-1}.
+        // We remember the transformation by adjusting F and G, so
+        // that at each stage F is an isomorphism between X and Y with inverse G
 
         matrix qinv = inverse(q);
         matrix pinv = inverse(p);
         
-		b1 = l[1];
-		b0 = qinv * b0 * pinv;
-		f0 = p * f0; f1 = qinv * f1;
-		g0 = g0 * pinv; g1 = g1 * q;
+        b1 = l[1];
+        b0 = qinv * b0 * pinv;
+        f0 = p * f0; f1 = qinv * f1;
+        g0 = g0 * pinv; g1 = g1 * q;
 
-		// Now that we guarantee b1 has an identity in the top left and zeros in the rest
-		// of the first column, call a worker routine to "split" off this contractible
-		// piece and return the modified B, F, G
-		list out = mfReduce_work(b1,b0,f1,f0,g1,g0);
-		
-		// Note the orders are interchanged relative to the b0 case!
-		b0 = out[2]; b1 = out[1];
-		f0 = out[4]; f1 = out[3];
-		g0 = out[6]; g1 = out[5];
-		
-		current_stage = b0,b1,f0,f1,g0,g1;
-		transform_record = transform_record + list(current_stage);
-		
-		//dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
-		//dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-		dbprint(prl, "  Result of reduction, p1:"); dbprint(prl,p);
-		dbprint(prl, "  Result of reduction, q1:"); dbprint(prl,q);
-		dbprint(prl, "--------------------------");
-	}
-	
-	// Our MF (b0,b1) is now guaranteed to be free of constants. At this point
-	// we just apply usual Guassian elimination: TODO it only looks for lower triangular
-	// reduced forms...
-	
-	// NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
-	matrix zero_b[nrows(b0)][ncols(b0)];
-	if( b0 != zero_b && b1 != zero_b )
-	{
-		////// BEGIN GAUSS //////
-		list gau = gauss_row(b0,1);
+        // Now that we guarantee b1 has an identity in the top left and zeros in the rest
+        // of the first column, call a worker routine to "split" off this contractible
+        // piece and return the modified B, F, G
+        list out = mfReduce_work(b1,b0,f1,f0,g1,g0);
+        
+        // Note the orders are interchanged relative to the b0 case!
+        b0 = out[2]; b1 = out[1];
+        f0 = out[4]; f1 = out[3];
+        g0 = out[6]; g1 = out[5];
+        
+        current_stage = b0,b1,f0,f1,g0,g1;
+        transform_record = transform_record + list(current_stage);
+        
+        //dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
+        //dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
+        dbprint(prl, "  Result of reduction, p1:"); dbprint(prl,p);
+        dbprint(prl, "  Result of reduction, q1:"); dbprint(prl,q);
+        dbprint(prl, "--------------------------");
+    }
+    
+    // Our MF (b0,b1) is now guaranteed to be free of constants. At this point
+    // we just apply usual Guassian elimination: TODO it only looks for lower triangular
+    // reduced forms...
+    
+    // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
+    matrix zero_b[nrows(b0)][ncols(b0)];
+    if( b0 != zero_b && b1 != zero_b )
+    {
+        ////// BEGIN GAUSS //////
+        list gau = gauss_row(b0,1);
 
-		matrix tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
-		matrix b0r = transpose(gau[1]); // The reduced form
+        matrix tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
+        matrix b0r = transpose(gau[1]); // The reduced form
 
-		if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
+        if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
         if( det(tr) == 0 )
         {
             print("[mfReduce] Transformation matrix not invertible (first)."); 
@@ -1631,112 +1631,112 @@ proc mfReduce(matrix A, list #)
         
         matrix trinv = inverse(tr);
         
-		b0 = b0r;
+        b0 = b0r;
         b1 = b1 * trinv;
-		
-		f1 = tr * f1;
-		g1 = g1 * trinv;
-	
-		// Try a second time on the transpose
- 		gau = gauss_row(transpose(b0),1);
-		matrix tr2 = gau[2];
-		b0r = gau[1];
-		
-		if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
+        
+        f1 = tr * f1;
+        g1 = g1 * trinv;
+    
+        // Try a second time on the transpose
+         gau = gauss_row(transpose(b0),1);
+        matrix tr2 = gau[2];
+        b0r = gau[1];
+        
+        if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
         if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
         
         matrix tr2inv = inverse(tr2);
         
-		b0 = b0r;
-		b1 = tr2inv * b1;
-		f0 = tr2inv * f0;
-		g0 = g0 * tr2;
-		/////// END GAUSS ////////
-	}
-	
-	// Pack everything into block matrices
-	matrix zb[nrows(b0)][ncols(b0)];
-	matrix zf[nrows(f0)][ncols(f0)];
-	matrix zg[nrows(g0)][ncols(g0)];
+        b0 = b0r;
+        b1 = tr2inv * b1;
+        f0 = tr2inv * f0;
+        g0 = g0 * tr2;
+        /////// END GAUSS ////////
+    }
+    
+    // Pack everything into block matrices
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
 
-	matrix B = blockmat(zb, b1, b0, zb);
-	matrix F = blockmat_nsq(f0, zf, zf, f1);
-	matrix G = blockmat_nsq(g0, zg, zg, g1);
-	
-	if( size(#) != 0 )
-	{
-		list ret = B, F, G, transform_record;
-		return(ret);
-	}
-	else
-	{
-		return(B);
-	}
+    matrix B = blockmat(zb, b1, b0, zb);
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+    
+    if( size(#) != 0 )
+    {
+        list ret = B, F, G, transform_record;
+        return(ret);
+    }
+    else
+    {
+        return(B);
+    }
 }
 
 proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
 {
-	// By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
-	// where W is the potential. There is a homotopy equivalence between this matrix factorisation
-	// and the factorisation (s, e)
+    // By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
+    // where W is the potential. There is a homotopy equivalence between this matrix factorisation
+    // and the factorisation (s, e)
 
-	if( ncols(b0) == 1 ){ print("[mfReduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
-	
-	//dbprint(printlevel, "   [mfReduce_work] ====");
-	//dbprint(printlevel, "      Current b0"); dbprint(printlevel, b0);
-	//dbprint(printlevel, "      Current b1"); dbprint(printlevel, b1);
-	//dbprint(printlevel, "   =====================");
-		
-	// Read off s,e and t from b0 and b1
-	int i,j;
-	matrix S[nrows(b0)-1][ncols(b0)-1];
-	for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ S[j-1,i-1] = b0[j,i]; } }
-	
-	matrix E[nrows(b0)-1][ncols(b0)-1];
-	for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ E[j-1,i-1] = b1[j,i]; } }
-	
-	matrix T[1][ncols(b0)-1];
-	for(i=2;i<=ncols(b0);i++){ T[1,i-1] = b0[1,i]; }
-			
-	// The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
-	// ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
-	// so we need to stick these on the appropriate side of F, G
-	
-	// Matrix of (0 1)
-	matrix zeroone[nrows(S)][ncols(S)+1];
-	for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; }
-	
-	matrix negtone[nrows(S)+1][ncols(S)];
-	for(i=1;i<=nrows(S);i++){ negtone[i+1,i] = 1; }
-	for(i=1;i<=ncols(S);i++){ negtone[1,i] = -T[1,i]; }
-	
-	// Modify f and g by the appropriate things
-	matrix f0r = zeroone * f0;
-	matrix f1r = zeroone * f1;
-	matrix g0r = g0 * negtone;
-	matrix g1r = g1 * transpose(zeroone);
-	
-	// Our return list is b0,b1,f0,f1,g0,g1
-	list l = S, E, f0r, f1r, g0r, g1r;
-	return (l);
+    if( ncols(b0) == 1 ){ print("[mfReduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
+    
+    //dbprint(printlevel, "   [mfReduce_work] ====");
+    //dbprint(printlevel, "      Current b0"); dbprint(printlevel, b0);
+    //dbprint(printlevel, "      Current b1"); dbprint(printlevel, b1);
+    //dbprint(printlevel, "   =====================");
+        
+    // Read off s,e and t from b0 and b1
+    int i,j;
+    matrix S[nrows(b0)-1][ncols(b0)-1];
+    for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ S[j-1,i-1] = b0[j,i]; } }
+    
+    matrix E[nrows(b0)-1][ncols(b0)-1];
+    for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ E[j-1,i-1] = b1[j,i]; } }
+    
+    matrix T[1][ncols(b0)-1];
+    for(i=2;i<=ncols(b0);i++){ T[1,i-1] = b0[1,i]; }
+            
+    // The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
+    // ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
+    // so we need to stick these on the appropriate side of F, G
+    
+    // Matrix of (0 1)
+    matrix zeroone[nrows(S)][ncols(S)+1];
+    for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; }
+    
+    matrix negtone[nrows(S)+1][ncols(S)];
+    for(i=1;i<=nrows(S);i++){ negtone[i+1,i] = 1; }
+    for(i=1;i<=ncols(S);i++){ negtone[1,i] = -T[1,i]; }
+    
+    // Modify f and g by the appropriate things
+    matrix f0r = zeroone * f0;
+    matrix f1r = zeroone * f1;
+    matrix g0r = g0 * negtone;
+    matrix g1r = g1 * transpose(zeroone);
+    
+    // Our return list is b0,b1,f0,f1,g0,g1
+    list l = S, E, f0r, f1r, g0r, g1r;
+    return (l);
 }
 
 // Returns 1 if there are no constant terms in A (other than zero), and zero otherwise
 proc ismfReduced(matrix A)
 {
-	int i,j;
-	for(i=1;i<=ncols(A);i++)
-	{
-		for(j=1;j<=ncols(A);j++)
-		{
-			if( deg(A[i,j]) == 0 && A[i,j] != 0 )
-			{
-				return(0);
-			}
-		}
-	}
-	
-	return(1);
+    int i,j;
+    for(i=1;i<=ncols(A);i++)
+    {
+        for(j=1;j<=ncols(A);j++)
+        {
+            if( deg(A[i,j]) == 0 && A[i,j] != 0 )
+            {
+                return(0);
+            }
+        }
+    }
+    
+    return(1);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1752,48 +1752,48 @@ proc ismfReduced(matrix A)
 
 proc matrixreduce(matrix M)
 {
-	int mrank = ncols(M);
-	matrix P = unitmat(mrank);
-	matrix Q = unitmat(mrank);
-	matrix N = M;
-	
-	// Let us find a constant entry in M
-	int i,j;
-	
-	for(i=1;i<=mrank;i++)
-	{
-		for(j=1;j<=mrank;j++)
-		{
-			if( deg(M[i,j]) == 0 )
-			{
-				// We found our constant term, permute it to (1,1)
-				P = 1/(M[i,j]) * permrow(P, 1,i);
-				Q = permcol(Q, 1,j);
-				N = P * M * Q;
-				
-				// Go through the first column and transform away everything
-				int k;
-				for(k=2;k<=mrank;k++)
-				{
-					if(N[k,1] != 0)
-					{
-						matrix Pn = unitmat(mrank);
-						Pn[k,1] = - N[k,1];
-						
-						P = Pn * P;
-						N = Pn * N;
-					}
-				}
-				
-				list l = N,P,Q;
-				return(l);
-			}
-		}
-	}
+    int mrank = ncols(M);
+    matrix P = unitmat(mrank);
+    matrix Q = unitmat(mrank);
+    matrix N = M;
+    
+    // Let us find a constant entry in M
+    int i,j;
+    
+    for(i=1;i<=mrank;i++)
+    {
+        for(j=1;j<=mrank;j++)
+        {
+            if( deg(M[i,j]) == 0 )
+            {
+                // We found our constant term, permute it to (1,1)
+                P = 1/(M[i,j]) * permrow(P, 1,i);
+                Q = permcol(Q, 1,j);
+                N = P * M * Q;
+                
+                // Go through the first column and transform away everything
+                int k;
+                for(k=2;k<=mrank;k++)
+                {
+                    if(N[k,1] != 0)
+                    {
+                        matrix Pn = unitmat(mrank);
+                        Pn[k,1] = - N[k,1];
+                        
+                        P = Pn * P;
+                        N = Pn * N;
+                    }
+                }
+                
+                list l = N,P,Q;
+                return(l);
+            }
+        }
+    }
 
-	// We failed to find a constant term, so return M, 1, 1
-	list l = N, P, Q;
-	return(l);
+    // We failed to find a constant term, so return M, 1, 1
+    list l = N, P, Q;
+    return(l);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1804,11 +1804,11 @@ proc matrixreduce(matrix M)
 
 proc MFtensor(matrix A, matrix B)
 {
-	// There are two differentials A x 1 and B x 1 on the tensor product and we return their sum
-	int arank = ncols(A);
-	int brank = ncols(B);
-	
-	return( ZZtensor( unitmat(arank), B ) + ZZtensor( A, unitmat(brank) ) );
+    // There are two differentials A x 1 and B x 1 on the tensor product and we return their sum
+    int arank = ncols(A);
+    int brank = ncols(B);
+    
+    return( ZZtensor( unitmat(arank), B ) + ZZtensor( A, unitmat(brank) ) );
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1820,10 +1820,10 @@ proc MFtensor(matrix A, matrix B)
 
 proc MFdual(matrix A)
 {
-	list blocks = extractblockmat(A);
-	matrix z[nrows(A)/2][ncols(A)/2];
-	matrix dual = blockmat_nsq( z, transpose(blocks[3]), -transpose(blocks[2]), z );
-	return(dual);
+    list blocks = extractblockmat(A);
+    matrix z[nrows(A)/2][ncols(A)/2];
+    matrix dual = blockmat_nsq( z, transpose(blocks[3]), -transpose(blocks[2]), z );
+    return(dual);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1840,37 +1840,37 @@ proc MFdual(matrix A)
 
 proc ZZtensor(matrix A, matrix B)
 {
-	//int arank = ncols(A)/2; // Size of blocks in A
-	//int brank = ncols(B)/2; // Size of blocks in B
-	
-	// The blocks in Z are therefore of size 2 * arank * brank
-	//int zrank = 2 * arank * brank;
-	
-	list la = extractblockmat(A);
-	list lb = extractblockmat(B);
-	
-	matrix a11, a12, a21, a22, b11, b12, b21, b22;
-	
-	a11 = la[1]; a12 = la[2]; a21 = la[3]; a22 = la[4];
-	b11 = lb[1]; b12 = lb[2]; b21 = lb[3]; b22 = lb[4];
-	
-	int degb = 0; // Default B to degree 0, i.e. even
-	
-	int brank = ncols(B)/2;
-	matrix zero[brank][brank];
-	matrix bigzero[ncols(B)][ncols(B)];
-	
-	if( B != bigzero && b11 == zero && b22 == zero ){ degb = 1; }
-	
-	// Define the four corners of Z, then use blockmat
-	matrix z11 = blockmat( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
-	matrix z12 = blockmat( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
-	matrix z21 = blockmat( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
-	matrix z22 = blockmat( tensor(a11,b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
-	
-	matrix Z = blockmat(z11,z12,z21,z22);
-	
-	return(Z);
+    //int arank = ncols(A)/2; // Size of blocks in A
+    //int brank = ncols(B)/2; // Size of blocks in B
+    
+    // The blocks in Z are therefore of size 2 * arank * brank
+    //int zrank = 2 * arank * brank;
+    
+    list la = extractblockmat(A);
+    list lb = extractblockmat(B);
+    
+    matrix a11, a12, a21, a22, b11, b12, b21, b22;
+    
+    a11 = la[1]; a12 = la[2]; a21 = la[3]; a22 = la[4];
+    b11 = lb[1]; b12 = lb[2]; b21 = lb[3]; b22 = lb[4];
+    
+    int degb = 0; // Default B to degree 0, i.e. even
+    
+    int brank = ncols(B)/2;
+    matrix zero[brank][brank];
+    matrix bigzero[ncols(B)][ncols(B)];
+    
+    if( B != bigzero && b11 == zero && b22 == zero ){ degb = 1; }
+    
+    // Define the four corners of Z, then use blockmat
+    matrix z11 = blockmat( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
+    matrix z12 = blockmat( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
+    matrix z21 = blockmat( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
+    matrix z22 = blockmat( tensor(a11,b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
+    
+    matrix Z = blockmat(z11,z12,z21,z22);
+    
+    return(Z);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1880,93 +1880,93 @@ proc ZZtensor(matrix A, matrix B)
 
 proc extractblockmat(matrix block)
 {
-	int nr = nrows(block)/2;
-	int nc = ncols(block)/2;
-	
-	matrix a[nr][nc];
-	matrix b[nr][nc];
-	matrix c[nr][nc];
-	matrix d[nr][nc];
-	
-	int i,j; // i is the row and j the column
-	for(i=1;i <= nr; i++)
-	{
-		for(j=1;j <= nc; j++)
-		{
-			a[i,j] = block[i,j];
-			b[i,j] = block[i,j+nc];
-			c[i,j] = block[i+nr,j];
-			d[i,j] = block[i+nr,j+nc];
-		}
-	}
-	
-	list l = a,b,c,d;
-	return(l);
+    int nr = nrows(block)/2;
+    int nc = ncols(block)/2;
+    
+    matrix a[nr][nc];
+    matrix b[nr][nc];
+    matrix c[nr][nc];
+    matrix d[nr][nc];
+    
+    int i,j; // i is the row and j the column
+    for(i=1;i <= nr; i++)
+    {
+        for(j=1;j <= nc; j++)
+        {
+            a[i,j] = block[i,j];
+            b[i,j] = block[i,j+nc];
+            c[i,j] = block[i+nr,j];
+            d[i,j] = block[i+nr,j+nc];
+        }
+    }
+    
+    list l = a,b,c,d;
+    return(l);
 }
 
 ///////////// TESTS ///////////////
 
 proc test_matrixreduce()
 {
-	int passed = 1;
-	
-	ring RR = 0,(x,y),dp;
-	
-	// Test 1
-	matrix M[2][2] = x,5,x,1;
-	list l = matrixreduce(M);
-	matrix N[2][2] = 1,1/5*x,0,4/25*x;	
-	if( l[1] != N || l[2] * M * l[3] != l[1] ){ passed = 0; }
-	
-	// Test 2
-	matrix A[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
-	list b = matrixreduce(A);
-	matrix B[4][4] = 1,0,0,-y,0,0,0,-y2,0,0,-y2,0,0,-y2,-y,y;
-	
-	if( b[1] != B || b[2] * A * b[3] != b[1] ){ passed = 0; }
-	
-	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+    int passed = 1;
+    
+    ring RR = 0,(x,y),dp;
+    
+    // Test 1
+    matrix M[2][2] = x,5,x,1;
+    list l = matrixreduce(M);
+    matrix N[2][2] = 1,1/5*x,0,4/25*x;    
+    if( l[1] != N || l[2] * M * l[3] != l[1] ){ passed = 0; }
+    
+    // Test 2
+    matrix A[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+    list b = matrixreduce(A);
+    matrix B[4][4] = 1,0,0,-y,0,0,0,-y2,0,0,-y2,0,0,-y2,-y,y;
+    
+    if( b[1] != B || b[2] * A * b[3] != b[1] ){ passed = 0; }
+    
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
 
 proc test_ZZtensor()
 {
-	int passed = 1;
-	
-	// Test 1
-	matrix A[2][2] = 1,0,0,1;
-	matrix B[2][2] = 0,1,1,0;
-	
-	// The tensor product A x B should be the following matrix
-	matrix AB[4][4] = 0, 0, 1, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, -1, 0, 0;
-	
-	if( AB != ZZtensor(A,B) ){ passed = 0; }
-		
-	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+    int passed = 1;
+    
+    // Test 1
+    matrix A[2][2] = 1,0,0,1;
+    matrix B[2][2] = 0,1,1,0;
+    
+    // The tensor product A x B should be the following matrix
+    matrix AB[4][4] = 0, 0, 1, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, -1, 0, 0;
+    
+    if( AB != ZZtensor(A,B) ){ passed = 0; }
+        
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
 
 proc test_mfReduce()
 {
-	int passed = 1;
-	
-	// Test 1
-	ring RR = 0,(x,y),dp;
-	
-	matrix d0[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
-	matrix d1[4][4] = 0,0,y,0,1,0,-1,y,y2,0,0,0,y,y2,0,0;
-	matrix z[4][4];
+    int passed = 1;
+    
+    // Test 1
+    ring RR = 0,(x,y),dp;
+    
+    matrix d0[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+    matrix d1[4][4] = 0,0,y,0,1,0,-1,y,y2,0,0,0,y,y2,0,0;
+    matrix z[4][4];
 
-	matrix d = blockmat(z,d1,d0,z);
-	list l = mfReduce(d,1);
-	
-	matrix b = l[1];
-	matrix f = l[2];
-	matrix g = l[3];
-	
-	// B should be reduced and f: d -> b and g: b -> d should be morphisms
-	if( f * d != b * f ){ passed = 0; }
-	if( g * b != d * g ){ passed = 0; }
-	
-	if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+    matrix d = blockmat(z,d1,d0,z);
+    list l = mfReduce(d,1);
+    
+    matrix b = l[1];
+    matrix f = l[2];
+    matrix g = l[3];
+    
+    // B should be reduced and f: d -> b and g: b -> d should be morphisms
+    if( f * d != b * f ){ passed = 0; }
+    if( g * b != d * g ){ passed = 0; }
+    
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
 
 proc test_poly2matrix()
