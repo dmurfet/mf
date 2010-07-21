@@ -209,6 +209,7 @@ proc poly2matrix(poly tepo, ideal J)
     ideal basis = kbase(Jx);
     int jdim = size(basis);
     module BB = reduce(basis,Jx);
+    module syzBB = std(syz(BB)); 
     
     // dbprint(prl, "[poly2matrix] Chosen basis of the algebra");
     // for(i=1;i<=jdim;i++){ dbprint(printlevel, basis[i]); }
@@ -224,7 +225,7 @@ proc poly2matrix(poly tepo, ideal J)
         for(k=1; k<=jdim; k++)
         {
             module ff = reduce(xmonomial*basis[k],Jx);
-            matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+            matrix MM = matrix(reduce(lift(BB,ff),  syzBB ));
             L = L + list(MM);
         }
 
@@ -238,6 +239,7 @@ proc poly2matrix(poly tepo, ideal J)
         //dbprint(prl, U);
         
         monomialAction = monomialAction + list(U);
+        kill U, L;
     }
     
     setring RRR;
@@ -262,43 +264,43 @@ proc poly2matrix(poly tepo, ideal J)
 
 proc mablow(matrix M, ideal J)
 {
-	// Compute dimension of the algebra k[x-vars]/J
-	int n = dimAlgebraOverInternalVariables(J);
-	
-	// Define L to be an appropriately indexed list of blown-up matrices:
-	int i1,j1,i2,j2,i;
-	int s = ncols(M);
+    // Compute dimension of the algebra k[x-vars]/J
+    int n = dimAlgebraOverInternalVariables(J);
     
-	list e,L;
-	for(i=1; i<=s; i++)
-	{
-		L[i] = e;
-	}
-	for(i1=1; i1<=s; i1++)
-	{
-		for(j1=1; j1<=s; j1++)
-		{
-			L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J),j1-1);
-		}
-	}
+    // Define L to be an appropriately indexed list of blown-up matrices:
+    int i1,j1,i2,j2,i;
+    int s = ncols(M);
+    
+    list e,L;
+    for(i=1; i<=s; i++)
+    {
+        L[i] = e;
+    }
+    for(i1=1; i1<=s; i1++)
+    {
+        for(j1=1; j1<=s; j1++)
+        {
+            L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J),j1-1);
+        }
+    }
 
-	matrix A[s*n][s*n];
+    matrix A[s*n][s*n];
 
-	for(i1=1; i1<=s; i1++)
-	{
-		for(j1=1; j1<=n; j1++)
-		{
-			for(i2=1; i2<=s; i2++)
-			{
-				for(j2=1; j2<=n; j2++)
-				{
-					A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
-				}
-			}
-		}
-	}
+    for(i1=1; i1<=s; i1++)
+    {
+        for(j1=1; j1<=n; j1++)
+        {
+            for(i2=1; i2<=s; i2++)
+            {
+                for(j2=1; j2<=n; j2++)
+                {
+                    A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+                }
+            }
+        }
+    }
 
-	return(A);
+    return(A);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
