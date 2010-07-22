@@ -1,0 +1,373 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// Compute KR cohomology of "twisted unknot".
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Part TK0: Treat one of the two loops of the Gamma0-resolution of the crossing. This 
+//           means compiling a closed web with two 2-valent vertices decorated by 
+//           identity defects.
+/////////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=2;
+ring rr0=0,(x(1..nx)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
+int N = 2; // The N in sl(N) link homology
+printlevel = 0;
+
+poly Wx1 = x(1)^(N+1);
+poly Wx2 = x(2)^(N+1);
+
+matrix D1 = mfIdentityDefect( Wx2,  Wx1,  x(2),  x(1) );
+matrix D2 = mfIdentityDefect( Wx1,  Wx2,  x(1),  x(2) );
+
+// The internal algebra is defined by the ideal J
+ideal J = x(1)^N, x(2)^N;
+intvec q = N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(2);
+
+// Compute the ordinary tensor product, which is a two-periodic complex:
+matrix D = MFtensor(D1,D2);
+print(D*D);
+
+// Inflate or blow up the differential on this tensor product:
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential:
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// The idempotent e is given by
+//
+//  e = (-1)^(nx choose 2) * det(C) * partial_int(D1) * partial_int(D2) * delta(D)
+
+matrix diff2 = ZZtensor( unitmat(ncols(D1)), diff(D2, x(1)) );
+matrix diff1 = ZZtensor( diff(D1, x(2)), unitmat(ncols(D2)) );
+
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+matrix delQ = deltaQ(D,q);
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = - (-1)^(sign) * iddQ * delQ;
+matrix z[ncols(e)][ncols(e)];
+print((e * Dblow - Dblow * e)==z);
+
+// The induced idempotent on the reduction is denoted ep
+matrix ep = F * e * G;
+matrix zn[ncols(ep)][ncols(ep)];
+print((ep * RD - RD * ep)==zn); // ep is at least a morphism
+
+// ep is an idempotent on the nose
+print((ep * ep - ep)==zn); 
+
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
+
+print(mat_rk(ep0));       // Gives 0 
+print(mat_rk(ep1));       // Gives 2
+
+// Hence the cohomology assigned to this loop is concentrated in Z2-degree 1
+// and 2-dimensional. (Note that this is consistent with the fact that KR's
+// recipe assigns the shifted Jacobi ring, i.e. something 2-dimensional in 
+// Z2-degree 1, to an unmarked loop.) Thus C("2 loops"), which is the full 
+// Gamma0-resolution of the web (using the notation of [KR, p.81]), is 
+// concentrated in Z2-degree 0 and 4-dimensional (which should be a tensor 
+// product of Jac(x^3)). 
+
+// Compute splitting of ep "by hand" (TODO: write another version of mfSplitIdempotent
+// that automatises this):
+
+    matrix A = RD;
+    matrix E = ep;
+    int m = ncols(A);
+    list blocks = extractblockmat(A);
+    list e_blocks = extractblockmat(E);
+
+    matrix a0 = blocks[3]; matrix a1 = blocks[2];
+    matrix e0 = e_blocks[1]; matrix e1 = e_blocks[4];
+    
+        LIB "control.lib";
+
+    module ker1 = rightKernel(unitmat(m/2) - e1);
+    matrix f1 = ker1;
+    matrix g1[ncols(f1)][nrows(f1)];
+    if( ker1[1] != [0] )
+    {
+        matrix g1 = leftInverse(f1) * e1;    
+    };
+
+    // Put the f and g matrices back together.
+    // First define f0 and g0 by hand (TODO: IS THIS CORRECT?):
+    matrix f0[nrows(f1)][ncols(f1)]; f0[1,1]=1; f0[3,2]=1;
+    matrix g0[nrows(g1)][ncols(g1)]; g0[1,1]=1; g0[2,3]=1;    
+    
+    matrix zf1[nrows(f0)][ncols(f1)];
+    matrix zf2[nrows(f1)][ncols(f0)];
+    
+    matrix zg1[nrows(g0)][ncols(g1)];
+    matrix zg2[nrows(g1)][ncols(g0)];
+    
+    // Let Z denote the finite-rank MF to which D is isomorphic to.
+    matrix FF = blockmat_nsq(f0, zf1, zf2, f1);     // FF: Z --> RD
+    matrix GG = blockmat_nsq(g0, zg1, zg2, g1);     // GG: RD --> Z
+    matrix Z = GG * A * FF;
+    
+    // (f1loop,g1loop) should be a splitting of the idempotent e (note that nx=2,
+    // so we need not worry about the suspension, Dblow=Dblow[nx]):
+    
+matrix f1loop = G * FF;                                  // f1loop: Z --> Dblow
+matrix g1loop = GG * F;                                  // g1loop: Dblow --> Z
+
+print(g1loop * f1loop == unitmat(ncols(f1loop)) );       // Gives 1
+print(f1loop * g1loop == e );                            // Gives 0
+
+// Note that (f1loop,g1loop) splits the idempotent associated to _one_ loop. 
+// To get a splitting of the idempotent associated to the Gamma0-resolution,
+// we have to tensor them:
+
+list blocksf1loop = extractblockmat(f1loop);
+matrix f00 = tensor(blocksf1loop[1], blocksf1loop[1]);
+matrix f11 = tensor(blocksf1loop[4], blocksf1loop[4]);
+matrix f10 = tensor(blocksf1loop[4], blocksf1loop[1]);
+matrix f01 = tensor(blocksf1loop[1], blocksf1loop[4]);
+matrix zf = tensor(blocksf1loop[2], blocksf1loop[2]);
+matrix f0 = blockmat_nsq(f00, zf, zf, f11);
+matrix f1 = blockmat_nsq(f10, zf, zf, f01);
+matrix zerof = 0 * f0;
+
+list blocksg1loop = extractblockmat(g1loop);
+matrix g00 = tensor(blocksg1loop[1], blocksg1loop[1]);
+matrix g11 = tensor(blocksg1loop[4], blocksg1loop[4]);
+matrix g10 = tensor(blocksg1loop[4], blocksg1loop[1]);
+matrix g01 = tensor(blocksg1loop[1], blocksg1loop[4]);
+matrix zg = tensor(blocksg1loop[2], blocksg1loop[2]);
+matrix g0 = blockmat_nsq(g00, zg, zg, g11);
+matrix g1 = blockmat_nsq(g10, zg, zg, g01);
+matrix zerog = 0 * g0;
+
+// Final result for splitting of idempotent for Gamm0-resolution:
+
+matrix f = blockmat_nsq(f0, zerof, zerof, f1);
+matrix g = blockmat_nsq(g0, zerog, zerog, g1);
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Part TK1: Treat the Gamma1-resolution of the crossing. This means compiling a closed 
+//           web with two 2-valent vertices decorated by identity defects which are 
+//           connected to a 4-valent vertex decorated by the "wide edge defect". 
+//           The identity defect D2 has one incoming edge labelled by x1 and one outgoing
+//           edge labelled by x2. 
+//           The identity defect D3 has one incoming edge labelled by x3 and one outgoing
+//           edge labelled by x4. 
+//           The wide edge defect D1 has two incoming edges labelled by x2, x4, and two
+//           outgoing edges labelled by x1, x3. 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+int ny=0;
+ring rr1=(0,r),x(1..nx),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
+
+int N=2;
+
+matrix D1 = mfWideEdge( x(1), x(3), x(2), x(4), N);
+matrix D2 = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
+matrix D3 = mfIdentityDefect( x(4)^(N+1), x(3)^(N+1), x(4), x(3) );
+
+// The internal algebra is defined by the ideal J
+ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+intvec q = N, N, N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(4);
+
+// Compute the ordinary tensor product, which is a two-periodic complex:
+matrix D' = MFtensor(D1,D2);
+matrix D = MFtensor(D3,D');
+print(D*D);
+
+// Inflate or blow up the differential on this tensor product:
+matrix Dblow = mablow(D,J);            // A (256 x 256)-matrix
+
+// Reduce this inflated differential:
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// The idempotent e is given by
+//
+//  e = - (-1)^(nx choose 2) * det(C) * partial_int(D1) * partial_int(D2) * partial_int(D3) * delta(D)
+
+matrix diff1 = ZZtensor( unitmat(ncols(D3)), ZZtensor( 1/2 * ( diff(D1, x(1)) * diff(D1, x(3)) - diff(D1, x(3)) * diff(D1, x(1)) ), unitmat(ncols(D2)) ));
+matrix diff2 = ZZtensor( unitmat(ncols(D3)), ZZtensor( unitmat(ncols(D1)), diff(D2, x(2)) ));
+matrix diff3 = ZZtensor( diff(D3, x(4)), ZZtensor( unitmat(ncols(D1)) , unitmat(ncols(D2)) ));
+
+matrix iddQ = mablow( det(C) * diff1 * diff2 * diff3, J );
+matrix delQ = deltaQ(D,q);
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = - (-1)^(sign) * iddQ * delQ;
+matrix z[ncols(e)][ncols(e)];
+print((e * Dblow - Dblow * e)==z);
+
+// The induced idempotent on the reduction is denoted ep
+matrix ep = F * e * G;
+matrix zn[ncols(ep)][ncols(ep)];
+print((ep * RD - RD * ep)==zn); // ep is at least a morphism
+
+// ep is NOT an idempotent on the nose (AND CANNOT BE RESCALED)
+print( (ep * ep - ep)==zn );
+
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
+
+print(mat_rk(ep0));        // Gives 2
+print(mat_rk(ep1));        // Gives 0
+
+// Compute splitting of ep "by hand" (TODO: write another version of mfSplitIdempotent
+// that automatises this):
+
+    matrix A = RD;
+    matrix E = ep;
+    int m = ncols(A);
+    // Extract the odd and even part of the differential and morphism
+    list blocks = extractblockmat(A);
+    list e_blocks = extractblockmat(E);
+    
+    matrix a0 = blocks[3]; matrix a1 = blocks[2];
+    matrix e0 = e_blocks[1]; matrix e1 = e_blocks[4];
+    
+    LIB "control.lib";
+    module ker0 = rightKernel(unitmat(m/2) - e0);
+    matrix f0 = ker0;
+    matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+        
+    if( ker0[1] != [0] )
+    {
+        matrix g0 = leftInverse(f0) * e0; // Solves f0 * g0 = e0.
+    };
+
+    // Put the f and g matrices back together.
+    // First define f1 and g1 by hand (TODO: IS THIS CORRECT?):
+    matrix f1[nrows(f0)][ncols(f0)]; f1[1,1]=1; f1[9,2]=1;
+    matrix g1[nrows(g0)][ncols(g0)]; g1[1,1]=1; g1[2,9]=1;
+    
+    matrix zf1[nrows(f0)][ncols(f1)];
+    matrix zf2[nrows(f1)][ncols(f0)];
+    
+    matrix zg1[nrows(g0)][ncols(g1)];
+    matrix zg2[nrows(g1)][ncols(g0)];
+    
+    // Let Z denote the finite-rank MF to which D is isomorphic to.
+    matrix FF = blockmat_nsq(f0, zf1, zf2, f1);     // FF: Z --> RD
+    matrix GG = blockmat_nsq(g0, zg1, zg2, g1);     // GG: RD --> Z
+    matrix Z = GG * A * FF;
+
+// (f',g') should be a splitting of the idempotent e (note that nx=4,
+// so we need not worry about the suspension, Dblow=Dblow[nx]):
+
+matrix f' = G * FF;                                 // f': Z --> Dblow
+matrix g' = GG * F;                                 // g': Dblow --> Z
+
+print(g' * f' == unitmat(ncols(f')) );              // Gives 1
+print(f' * g' == e );                               // Gives 0
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Part TK2: Compute the map between the two resolutions of the twisted unknot.
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// option(noredefine);option(noloadLib);option(redSB);
+// LIB "blow.lib";
+// LIB "linkhom.lib";
+// LIB "matrix.lib";
+// int nx=4;
+// int ny=0;
+// ring rr2=(0,r),x(1..nx),dp;
+// minpoly = rootofUnity(5);
+// poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
+
+// int N=2;
+
+// // The internal algebra is defined by the ideal J
+// ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+// intvec q = N, N, N, N;
+// number Nn = N + 1;
+// matrix C = 1/Nn * unitmat(4);
+
+// The map between C("2 loops") and C("wide edge web") is id_D3 x (chi0 x id_D2). 
+// We represent it by first inflating chi0 and then conjugating with g' and f from above.
+
+// Note that what is called x1, x2, x3, x4 in [KR, fig.5], we call
+// x(3), x(1), x(4), x(2), respectively.
+
+poly pi23 = ( x(4)^(N+1) - x(1)^(N+1) )/( x(4)-x(1) );
+poly u1 = ( gpoly(x(2)+x(4), x(2)*x(4), N) - gpoly(x(1)+x(3), x(2)*x(4), N) )/( x(2)+x(4)-x(1)-x(3) );
+poly u2 = ( gpoly(x(1)+x(3), x(2)*x(4), N) - gpoly(x(1)+x(3), x(1)*x(3), N) )/( x(2)*x(4)-x(1)*x(3) );
+poly aa1 = -u2 + ( u1 +  x(2) * u2 - pi23 )/( x(2) - x(3) );
+
+matrix chi0[4][4] = x(3)-x(4), 0, 0,    0,
+                    aa1,        1, 0,    0,
+                    0,         0, x(3), -x(4),
+                    0,         0, -1,   1;            // We set mu=0.
+
+// Compute chi0 x id_D2:
+
+matrix chi0id[8][8] = 
+x(3)-x(4), 0, 0,    0,     0,    0,     0,         0,
+a1,        1, 0,    0,     0,    0,     0,         0, 
+0,         0, x(3), -x(4), 0,    0,     0,         0,
+0,         0, -1,   1,     0,    0,     0,         0,
+0,         0, 0,    0,     x(3), -x(4), 0,         0,
+0,         0, 0,    0,     -1,   1,     0,         0,
+0,         0, 0,    0,     0,    0,     x(3)-x(4), 0,
+0,         0, 0,    0,     0,    0,     a1,        1;
+
+// Compute id_D3 x (chi0 x id_D2):
+
+list blockschi0id = extractblockmat(chi0id);
+matrix c0 = blockschi0id[1];
+matrix c1 = blockschi0id[4];
+matrix z4 = zeromat(ncols(c0));
+matrix z8 = zeromat(2*ncols(c0));
+matrix IdChiId0 = blockmat_nsq(c0, z4, z4, c1);
+matrix IdChiId1 = blockmat_nsq(c0, z4, z4, c1);
+
+matrix IdChiId = blockmat_nsq(IdChiId0, z8, z8, IdChiId1);
+
+// Inflate this matrix:
+
+matrix chiblow = mablow(IdChiId,J);                   // A nonzero (256 x 256)-matrix:
+print( chiblow == zeromat(ncols(chiblow)) );
+
+// Import f:
+
+matrix f = imap(rr0,f);
+
+// Compute the map between the reduced MFs induced by id_D3 x (chi0 x id_D2):
+
+matrix Phi = g' * chiblow * f;
+print(Phi);
+
+// Phi is the (4 x 16)-zero matrix. The size is correct. But viewed as the differential
+// in the complex of MFs that computes KR cohomology of the twisted unknot, it does not
+// give the same result as KR cohomology of the untwisted unknot, which should be just
+// one copy of the Jacobi ring. Maybe the reason for this mismatch is that above the
+// "by hand"-splittings of ep are not done correctly, or simply some typo somewhere. 
+// All this was done a bit in a hurry, and I'm not sure whether I will have the chance
+// to continue working on this within the next few days, so I leave it in this state for 
+// the moment. 
