@@ -6,19 +6,14 @@ LIB "linkhom.lib";
 LIB "matrix.lib";
 int nx=2;
 int ny=2;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(5);
-poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
+ring rr=0,(x(1..nx),y(1..ny)),dp;
 
-int N=4;
-poly W = x(1)^5 + x(2)^5;
+int N = 4;
 
-
+// We consider C1 to be lying at the first vertex, L12 at the second
+// vertex (= mark). Then the internal variables occur in the order x(1),x(2).
 matrix C1 = mfWideEdge( x(1), y(1), x(2), y(2), N);
-matrix L13 = mfIdentityDefect( x(2)^5, x(1)^5, x(2), x(1) );
-
-matrix D1 = C1;
-matrix D2 = L13;
+matrix L12 = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
 
 // The internal algebra is defined by the ideal J
 ideal J = x(1)^N, x(2)^N;
@@ -26,9 +21,9 @@ intvec q = N, N;
 number Nn = N + 1;
 matrix C = 1/Nn * unitmat(2);
 
-// Compute the ordinary tensor product, which is a two-periodic complex:
-matrix D = MFtensor(D1,D2);
-print(D*D);
+// Compute the tensor product, which is factorisation of y(1)^(N+1)-y(2)^(N+1)
+matrix D = MFtensor(C1,L12);
+print(D * D);
 
 // Inflate or blow up the differential on this tensor product:
 matrix Dblow = mablow(D,J);
@@ -43,8 +38,8 @@ matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 //
 //  e = (-1)^(nx choose 2) * det(C) * partial_int(D1) * partial_int(D2) * delta(D)
 
-matrix diff2 = ZZtensor( unitmat(ncols(D1)), diff(D2, x(2)) );
-matrix diff1 = ZZtensor( diff(D1, x(1)), unitmat(ncols(D2)) );
+matrix diff1 = ZZtensor( diff(C1, x(1)), unitmat(ncols(L12)) );
+matrix diff2 = ZZtensor( unitmat(ncols(C1)), diff(L12, x(2)) );
 
 matrix iddQ = mablow( det(C) * diff1 * diff2, J );
 matrix delQ = deltaQ(D,q);
@@ -58,14 +53,26 @@ print((e * Dblow - Dblow * e)==z);
 // The induced idempotent on the reduction is denoted ep
 matrix ep = F * e * G;
 matrix zn[ncols(ep)][ncols(ep)];
-print((ep * RD - RD * ep)==zn); // ep is at least a morphism
 
-// ep is NOT an idempotent on the nose (AND CANNOT BE RESCALED)
+// Is ep is an idempotent endomorphism "on the nose" of RD,
+// which is a factorisation of y(1)^(N+1) - y(2)^(N+1)
+print((ep * RD - RD * ep)==zn);
 print( (ep * ep - ep)==zn );
 
-matrix ep0 = extractblockmat(ep)[1];
-matrix ep1 = extractblockmat(ep)[4];
+// Split the idempotent to obtain our final fusion
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+print(final);
 
-print(mat_rk(ep0)); 
-print(mat_rk(ep1));
+// By Proposition 29 of [KR] we should expect to obtain
+//
+//    C(C1 * L12)<1> = \oplus_{i=0}^{N-2} C(Ly12){2 - N + 2i}
+//
+// where Ly12 stands for the identity defect between y(1)^(N+1)
+// and y(2)^(N+1), <1> is a Z2-grading shift and {..} is the internal
+// grading shift. For N = 2 we should see that
+//
+//    C(C1 * L12)<1> = C(Ly12)
+//
+// and indeed that is exactly the output of the above calculation in this case.
 
+// For N = 3,4 we do not get an idempotent on the nose.
