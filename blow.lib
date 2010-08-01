@@ -2,7 +2,7 @@ version="0.1";
 category="Miscellaneous";
 // summary description of the library
 info="
-LIBRARY:   blow.lib  Compilation of defect foams
+LIBRARY:   blow.lib  Compilation of defect webs
 AUTHOR:    Nils Carqueville, Daniel Murfet
 KEYWORDS:  matrix factorization
 
@@ -176,6 +176,68 @@ proc dimAlgebraOverInternalVariables(ideal J)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
+// "deltaInflationList" Returns a list containing, in order, the matrix representing
+// the operator [g_i,x(i)^b] for b = 1,...,2*exponent - 1.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc deltaInflationList(int i, int exponent, ideal J)
+{
+    int prl = printlevel;
+    
+    // Compute a k-basis of I
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
+
+    ideal J = imap(RRR,J);
+    ideal Jstd = std(J);
+    ideal basis = kbase(Jstd);
+    module BB = reduce(basis,Jstd);
+
+    int jdim = size(basis);
+    int b, k;
+    list deltaActions;
+    
+    for(b=1; b<= 2*exponent - 1; b++)
+    {
+        // Compute the matrix representing the operator [g_i, x(i)^b] on I = nR/J
+        list L;
+        for(k=1; k<=jdim; k++)
+        {
+            // First compute g_i( x(i)^b * - ) on our basis element
+            poly f1 = ( x(i)^b * basis[k] - reduce(x(i)^b * basis[k],std(x(i)^exponent)) )/(x(i)^exponent);
+
+            // Next compute x(i)^b * g_i(-)
+            poly f2 = x(i)^b * ( basis[k] - reduce(basis[k],std(x(i)^exponent)) )/(x(i)^exponent);
+
+            // To our output matrix we add the expression of the commutator f1 - f2 in the
+            // chosen basis of the algebra I
+            module ff = reduce(f1 - f2,Jstd);
+            matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+            L = L + list(MM);
+            kill f1,f2,ff,MM;
+        }
+
+        matrix U = L[1];
+        for(k=2; k<=jdim; k++)
+        {
+            U=concat(U,L[k]);
+        }
+        
+        //dbprint(prl, "[deltaInflationList] Matrix for (i,b,exponent) = (" + string(i) + "," + string(b) + "," + string(exponent) + ") is");
+        //dbprint(prl, U);
+        
+        deltaActions = deltaActions + list(U);
+        kill U, L;
+    }
+    
+    setring RRR;
+    list deltaActions = imap(nR,deltaActions);
+    
+    return(deltaActions);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 // "variableInflationList" Returns a list containing, in order, the matrix representing
 // the action of each of the internal variables on k[x]/J (the internal algebra).
 //////////////////////////////////////////////////////////////////////////////////
@@ -334,172 +396,123 @@ proc mablow(matrix M, ideal J)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-// "deltaInflation"
+// "poly2matrix_delta"
 //
 // Let us write nR for the basering without its y-variables.
 //
-// Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
-// representing the action of [g_i, XA] on the algebra I = nR/J. Here g_i stands for the
-// k-linear endomorphism of the ring nR (without y-variables) which sends a polynomial f
-// to its division by x(i)^exponent without remainder.
-//
-// NOTE: x(i) only appears as x(i)^exponent, so maybe we should pass the latter rather than
-// i and the exponent separately.
+// Given a polynomial in the x and y-variables and an integer i, we return a matrix
+// in only the y-variables, where the x monomials are "inflated" by their action on
+// the algebra I = nR/J.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc deltaInflation(poly XA, int i, int exponent, ideal J)
+proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableActions, list deltaActions, int jdim)
 {
-    // Compute a k-basis of I
-    def RRR = basering;
-    def nR = ringWithoutYVars();
-    setring nR;
+    // First compute the x-monomials and their coefficients in tepo
+    int t;
+    poly xprod = 1; 
+    for(t=1; t<=nx; t++)
+    {
+        xprod = xprod * x(t);
+    }
+    matrix koffer = coef(tepo, xprod);
 
-    ideal J = imap(RRR,J);
-    poly XA = imap(RRR,XA);
-    ideal Jstd = std(J);
-    ideal basis = kbase(Jstd);
-    module BB = reduce(basis,Jstd);
+    //dbprint(prl, "[poly2matrix_delta] Polynomial tepo is " + string(tepo));
+    //dbprint(prl, "[poly2matrix_delta] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
 
-    int n = size(basis);
+    int u,k;
+    matrix inflation[jdim][jdim];
     
-    int k;
-    list L;
-    for(k=1; k<=n; k++)
+    for(u=1;u<=ncols(koffer);u++)
     {
-        poly basisElt = basis[k];
-
-        // First compute g_i( XA * - ) on our basis element
-        poly f1 = ( XA * basisElt - reduce(XA * basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
-
-        // Next compute XA * g_i(-)
-        poly f2 = XA * ( basisElt - reduce(basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
-
-        // To our output matrix we add the expression of the commutator f1 - f2 in the
-        // chosen basis of the algebra I
-        module ff = reduce(f1 - f2,Jstd);
-        matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-        L = L + list(MM);
-    }
-
-    matrix U = L[1];
-    for(k=2; k<=n; k++)
-    {
-        U=concat(U,L[k]);
-    }
-
-    setring RRR;
-    matrix NN = imap(nR,U);
-    
-    //dbprint(printlevel, "[deltaInflation] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
-    //dbprint(printlevel, NN);
-
-    return(NN);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// "deltaImablow" blows up a matrix by blowing up all its entries using deltaInflation. (This
-// is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
-//
-// exponent is the integer such that g_i is division without remainder by x(i)^exponent.
-//////////////////////////////////////////////////////////////////////////////////
-// TODO: Skip pairs of monomials and i's we know yield zero
-
-// TODO: Future optimisation, lookup table for return values from deltaInflation
-//proc lookupIndexFromMonomial(poly monom)
-//{
-//  int ret;
-//    intvec p = factorize(monom,2)[2]; // Gives the powers of the variables present
-// int i;
-//for(i=1;i<=nx;i++)
-//{
-//ret = ret + p[i] * 10^(i);
-//}
-//return(ret);
-//}
-
-proc deltaImablow(matrix M, int i, int exponent, ideal J)
-{
-    int prl = printlevel;
-
-    //dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
-    dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
-
-    // Compute n := dimension of I = k[x-vars]/J
-    int n = dimAlgebraOverInternalVariables(J);
-
-    // Define L to be an appropriately indexed list of blown-up matrices:
-    int colsm = ncols(M);
-    int i1,j1,i2,j2,k;
-    list e,L;
-
-    poly xprod = 1;
-    for(k=1; k<=nx; k++)
-    {
-        xprod = xprod * x(k);
-    }
-
-    for(k=1; k<=colsm; k++)
-    {
-        L[k] = e;
-    }
-
-    // A lookup table for the scalar matrices produced by deltaInflation, so we don't
-    // have to continually recompute them. Here is how you look something up in the table:
-    // if an entry of lookupTable has type "none" then it hasn't been set yet.
-    // Given a monomial XA = x(1)^(e1) * ... * x(nx)^(enx) the corresponding integer is the 
-    // integer M with digits e1e2...enx. We place the matrix 
-    //
-    //      deltaInflation(XA, i, exponent, J)
-    //
-    // in the list lookupTable at position M = e1 * 10^(nx) + e2 * 10^(nx-1) + ...
-    // list lookupTable;
-    
-    for(i1=1; i1<=colsm; i1++)
-    {
-        for(j1=1; j1<=colsm; j1++)
+        // Each column of koffer represents an x-monomial, let us now factorize this.
+        // The list powers contains, in order, the power of each internal variable
+        // in monom + 1 (since we multiply by xprod to make sure all vars appear)
+        poly monom = koffer[1,u];
+        intvec powers = factorize(monom*xprod,2)[2];
+        matrix monomAction = unitmat(jdim);
+        
+        for(k=1;k<=nx;k++)
         {
-            ///////////////////////////////////////////////////
-            // INTERESTING PART: 
-            //
-            // koffer is a matrix with two rows. The first row contains
-            // all the x-monomials with nonzero coefficient in M[i1,j1].
-            // The second row contains the corresponding coefficient, which is a polynomial
-            // in only the y-variables.
-
-            matrix koffer = coef(M[i1,j1], xprod);
-            matrix N[n][n];
-
-            for(k=1; k<=ncols(koffer); k++)
+            // If k is not equal to i, then we just take the usual inflation,
+            // but for k = i we do the "delta" inflation
+            if( k != i )
             {
-                poly monom = koffer[1,k];
-                
-                // Compute the power of the x(i)-variable in monom. Note that deltaInflation
-                // of any monomial NOT involving x(i) must be zero. Note we multiply with
-                // all the variables to ensure that factorize returns a matrix whose ith
-                // column is the integer we're interested in + 1.
-                int p = factorize(monom * xprod,2)[2][i] - 1; 
-                
-                if( koffer[2,k] != 0 && monom != 0 && p > 0 )
+                monomAction = monomAction * power(variableActions[k],powers[k]-1);
+            }
+            else
+            {
+                // We have to multiply by a factor corresponding to x(i)^(powers[k]-1),
+                // which is the action on the internal algebra of the operator
+                // [g_i,x(i)^(powers[k]-1)], as recorded in deltaActions. If the exponent
+                // is between one and 2 * exponent - 1 we use the array. Otherwise the
+                // operator is zero, so multiply by zero.
+
+                if( powers[k] - 1 >= 1 && powers[k] - 1 <= 2*exponent - 1)
                 {
-                    dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
-                    N = N + koffer[2,k] * deltaInflation(monom, i, exponent, J);
+                    //dbprint(printlevel, "[poly2matrix_delta] index is " + string(powers[k]-1) + " with matrix ");
+                    //dbprint(printlevel, deltaActions[powers[k]-1]);
+                    monomAction = monomAction * deltaActions[powers[k]-1];
+                }
+                else
+                {
+                    monomAction = 0 * monomAction;
                 }
             }
-
-            L[i1] = insert(L[i1], N, j1-1);
-            ///////////////////////////////////////////////////
         }
+        
+        inflation = inflation + koffer[2,u] * monomAction;
+        
+        kill monom, powers, monomAction;
     }
+    
+    return(inflation);
+}
 
-    // TODO: This next loop is very slow...
-    matrix A[colsm*n][colsm*n];
+/////////////////////////////////////////////////////////////////////////////////////////
+// "mablow_delta" blows up a matrix by blowing up all its entries using poly2matrix_delta
+//
+// exponent is the integer such that g_i is division without remainder by x(i)^exponent.
+/////////////////////////////////////////////////////////////////////////////////////////
 
-    for(i1=1; i1<=colsm; i1++)
+proc mablow_delta(matrix M, int i, int exponent, ideal J)
+{
+    // Compute dimension of the algebra k[x-vars]/J
+    int n = dimAlgebraOverInternalVariables(J);
+ 
+    dbprint(printlevel, "[mablow_delta] Computing variable inflations");
+
+    // Compute the ordinary inflation of individual variables
+    list variableActions = variableInflationList(J);
+    
+    // Compute the delta inflation [g_i,x(i)^b] for all integers b
+    list deltaActions = deltaInflationList(i,exponent,J);
+ 
+    // Define L to be an appropriately indexed list of blown-up matrices:
+    int i1,j1,i2,j2,t;
+    int s = ncols(M);
+ 
+    list e,L;
+    for(t=1; t<=s; t++)
     {
+        L[t] = e;
+    }
+    for(i1=1; i1<=s; i1++)
+    {
+        for(j1=1; j1<=s; j1++)
+        {
+            dbprint(printlevel, "[mablow_delta] Iteration count is (" + string(i1) + "," + string(j1) + ")/(" + string(s) + "," + string(s) + ")");
+            L[i1] = insert(L[i1], poly2matrix_delta(M[i1,j1], J, i, exponent, variableActions, deltaActions, n),j1-1);
+        }
+    }   
+    
+    matrix A[s*n][s*n];
+
+    for(i1=1; i1<=s; i1++)
+    {
+        dbprint(printlevel, "[mablow_delta] Assembly count is " + string(i1) + " / " + string(s));
         for(j1=1; j1<=n; j1++)
         {
-            for(i2=1; i2<=colsm; i2++)
+            for(i2=1; i2<=s; i2++)
             {
                 for(j2=1; j2<=n; j2++)
                 {
@@ -509,9 +522,6 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
         }
     }
 
-    //dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
-    //dbprint(prl, "------------");
-    
     return(A);
 }
 
@@ -572,8 +582,8 @@ proc deltaQ(matrix F, intvec q)
     list deltas; 
     for(j = 1; j <= nx; j++)
     {
-        dbprint(printlevel, "[deltaQ] Calculating deltaImablow for index " + string(j));
-        deltas[j] = deltaImablow(F, j, q[j], J);
+        dbprint(printlevel, "[deltaQ] Calculating mablow_delta for index " + string(j));
+        deltas[j] = mablow_delta(F, j, q[j], J);
     }
     
     for(i=1; i<=size(S); i++)
@@ -1297,10 +1307,6 @@ kill n,intnon2,non2,block1,block2,block3,block4;
 return(L);
 }
 
-
-
-/// NEW 1/7/10 Dan.
-
 ////////////////////////////////////////////////////////////////////
 // zeromat - Returns a square zero matrix of the specified size if
 // called with one parameter, and a zero matrix of size n x m if called
@@ -1563,6 +1569,9 @@ proc mfReduce(matrix A, list #)
         // We remember the transformation by adjusting F and G, so
         // that at each stage F is an isomorphism between X and Y with inverse G
 
+        // TODO: In a matrix factorisation each matrix is determined uniquely by the other,
+        // so we can probably avoid computing the inverses of p and q here, just deal with
+        // b0 and then recover b1 at the end ?
         matrix qinv = inverse(q);
         matrix pinv = inverse(p);
         
@@ -2077,4 +2086,163 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     list l = RD, ep;
     
     return(l);
+}
+
+////// DEPRECATED
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// "deltaInflation"
+//
+// Let us write nR for the basering without its y-variables.
+//
+// Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
+// representing the action of [g_i, XA] on the algebra I = nR/J. Here g_i stands for the
+// k-linear endomorphism of the ring nR (without y-variables) which sends a polynomial f
+// to its division by x(i)^exponent without remainder.
+//
+// NOTE: x(i) only appears as x(i)^exponent, so maybe we should pass the latter rather than
+// i and the exponent separately.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc deltaInflation(poly XA, int i, int exponent, ideal J)
+{
+    // Compute a k-basis of I
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+    setring nR;
+
+    ideal J = imap(RRR,J);
+    poly XA = imap(RRR,XA);
+    ideal Jstd = std(J);
+    ideal basis = kbase(Jstd);
+    module BB = reduce(basis,Jstd);
+
+    int n = size(basis);
+    
+    int k;
+    list L;
+    for(k=1; k<=n; k++)
+    {
+        poly basisElt = basis[k];
+
+        // First compute g_i( XA * - ) on our basis element
+        poly f1 = ( XA * basisElt - reduce(XA * basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
+
+        // Next compute XA * g_i(-)
+        poly f2 = XA * ( basisElt - reduce(basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
+
+        // To our output matrix we add the expression of the commutator f1 - f2 in the
+        // chosen basis of the algebra I
+        module ff = reduce(f1 - f2,Jstd);
+        matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
+        L = L + list(MM);
+    }
+
+    matrix U = L[1];
+    for(k=2; k<=n; k++)
+    {
+        U=concat(U,L[k]);
+    }
+
+    setring RRR;
+    matrix NN = imap(nR,U);
+    
+    //dbprint(printlevel, "[deltaInflation] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
+    //dbprint(printlevel, NN);
+
+    return(NN);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// "deltaImablow" blows up a matrix by blowing up all its entries using deltaInflation. (This
+// is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
+//
+// exponent is the integer such that g_i is division without remainder by x(i)^exponent.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc deltaImablow(matrix M, int i, int exponent, ideal J)
+{
+    int prl = printlevel;
+
+    //dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
+    dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
+
+    // Compute n := dimension of I = k[x-vars]/J
+    int n = dimAlgebraOverInternalVariables(J);
+
+    // Define L to be an appropriately indexed list of blown-up matrices:
+    int colsm = ncols(M);
+    int i1,j1,i2,j2,k;
+    list e,L;
+
+    poly xprod = 1;
+    for(k=1; k<=nx; k++)
+    {
+        xprod = xprod * x(k);
+    }
+
+    for(k=1; k<=colsm; k++)
+    {
+        L[k] = e;
+    }
+    
+    for(i1=1; i1<=colsm; i1++)
+    {
+        for(j1=1; j1<=colsm; j1++)
+        {
+            ///////////////////////////////////////////////////
+            // INTERESTING PART: 
+            //
+            // koffer is a matrix with two rows. The first row contains
+            // all the x-monomials with nonzero coefficient in M[i1,j1].
+            // The second row contains the corresponding coefficient, which is a polynomial
+            // in only the y-variables.
+
+            matrix koffer = coef(M[i1,j1], xprod);
+            matrix N[n][n];
+
+            for(k=1; k<=ncols(koffer); k++)
+            {
+                poly monom = koffer[1,k];
+                
+                // Compute the power of the x(i)-variable in monom. Note that deltaInflation
+                // of any monomial NOT involving x(i) must be zero. Note we multiply with
+                // all the variables to ensure that factorize returns a matrix whose ith
+                // column is the integer we're interested in + 1.
+                int p = factorize(monom * xprod,2)[2][i] - 1; 
+                
+                if( koffer[2,k] != 0 && monom != 0 && p > 0 )
+                {
+                    dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
+                    N = N + koffer[2,k] * deltaInflation(monom, i, exponent, J);
+                }
+            }
+
+            L[i1] = insert(L[i1], N, j1-1);
+            ///////////////////////////////////////////////////
+        }
+    }
+
+    // TODO: This next loop is very slow...
+    matrix A[colsm*n][colsm*n];
+
+    for(i1=1; i1<=colsm; i1++)
+    {
+        for(j1=1; j1<=n; j1++)
+        {
+            for(i2=1; i2<=colsm; i2++)
+            {
+                for(j2=1; j2<=n; j2++)
+                {
+                    A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
+                }
+            }
+        }
+    }
+
+    //dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
+    //dbprint(prl, "------------");
+    
+    return(A);
 }
