@@ -107,6 +107,14 @@ matrix D3 = mfIdentityDefect( x(4)^(N+1), x(1)^(N+1), x(4), x(1) );
 // Part TK2: Compute the map between the two resolutions of the twisted unknot.
 /////////////////////////////////////////////////////////////////////////////////////////
 
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+ring rr0=0,(x(1..nx)),dp;
+int N = 2; // The N in sl(N) link homology
+
 // First we produce the matrix representing the morphism chi of [KR] p.50.
 poly pi23 = ( x(2)^(N+1) - x(3)^(N+1) )/( x(2)-x(3) );
 poly u1 = ( gpoly(x(1)+x(2), x(1)*x(2), N) - gpoly(x(3)+x(4), x(1)*x(2), N) )/( x(1)+x(2)-x(3)-x(4) );
@@ -136,3 +144,96 @@ matrix Gamma0 = MFtensor(t1, MFtensor(D2,D3));
 matrix Gamma1 = MFtensor(t2, MFtensor(D2,D3));
 matrix gzz[ncols(Gamma0)][ncols(Gamma0)];
 print( (chiT * Gamma0 - Gamma1 * chiT) == gzz );
+
+// Now blow up the Gammas and chiT, and check the latter is still a morphism
+ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+intvec q = N, N, N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(4);
+
+matrix Gamma0blow = mablow(Gamma0,J);
+matrix Gamma1blow = mablow(Gamma1,J);
+matrix chiTblow = mablow(chiT,J);
+matrix gzzb[ncols(Gamma0blow)][ncols(Gamma0blow)];
+print( (chiTblow * Gamma0blow - Gamma1blow * chiTblow) == gzzb );
+
+// Now reduce both the Gammas and compute the induced map chir between them
+list l = mfReduce(Gamma0blow,1);
+matrix RD0 = l[1];
+matrix F0 = l[2]; // A homotopy equivalence F: Gamma0blow -> RD0
+matrix G0 = l[3]; // A homotopy equivalence G: RD0 -> Gamma0blow
+
+l = mfReduce(Gamma1blow,1);
+matrix RD1 = l[1];
+matrix F1 = l[2]; // A homotopy equivalence F: Gamma0blow -> RD1
+matrix G1 = l[3]; // A homotopy equivalence G: RD1 -> Gamma0blow
+
+// chir gives a map between these two complexes (both of which have zero differential)
+matrix chir = F1 * chiTblow * G0;
+
+// Now since our link has two components, we know that the reduced C(Gamma0) and
+// C(Gamma1), which split the idempotents on RD0 and RD1 respectively, live only
+// in degree zero. So it suffices to study the map induced by chir on these degree
+// zero pieces. We find these spaces by splitting the idempotents in degree zero.
+// We write eq0 for the idempotent on RD0 and eq1 for the idempotent on RD1.
+
+/////////// OBTAINING IDEMPOTENT eq0 ///////////
+matrix diff1 = ZZtensor( diff(t1, x(1)) * diff(t1,x(2)), unitmat(ncols(D2)*ncols(D3)) );
+matrix diff2 = ZZtensor( unitmat(ncols(t1)), ZZtensor( diff(D2,x(3)), unitmat(ncols(D3))) );
+matrix diff3 = ZZtensor( unitmat(ncols(t1)), ZZtensor( unitmat(ncols(D2)), diff(D3,x(4))));
+matrix iddQ = mablow( det(C) * diff1 * diff2 * diff3, J );
+matrix delQ = deltaQ(Gamma0,q);
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ; 
+matrix z[ncols(e)][ncols(e)];
+print((e * Gamma0blow - Gamma0blow * e)==z); // Endo of Gamma0blow
+matrix eq0 = F0 * e * G0;
+matrix zn[ncols(eq0)][ncols(eq0)];
+print((eq0 * eq0 - eq0)==zn); 
+
+/////////// OBTAINING IDEMPOTENT eq1 ///////////
+matrix diff1 = ZZtensor( diff(t2, x(1)) * diff(t2,x(2)), unitmat(ncols(D2)*ncols(D3)) );
+matrix diff2 = ZZtensor( unitmat(ncols(t2)), ZZtensor( diff(D2,x(3)), unitmat(ncols(D3))) );
+matrix diff3 = ZZtensor( unitmat(ncols(t2)), ZZtensor( unitmat(ncols(D2)), diff(D3,x(4))));
+matrix iddQ = mablow( det(C) * diff1 * diff2 * diff3, J );
+matrix delQ = deltaQ(Gamma1,q);
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ; 
+matrix z[ncols(e)][ncols(e)];
+print((e * Gamma1blow - Gamma1blow * e)==z);
+matrix eq1 = F1 * e * G1;
+matrix zn[ncols(eq1)][ncols(eq1)];
+print((eq1 * eq1 - eq1)==zn);
+
+// Now replace both idempotents by their degree zero components (which are the only
+// nonzero bits) and also chir by its degree zero component
+
+matrix eq0f = extractblockmat(eq0)[1];
+matrix eq1f = extractblockmat(eq1)[1];
+matrix chirf = extractblockmat(chir)[1];
+
+// Now split each of the idempotents by hand
+LIB "control.lib";
+module ker0 = rightKernel(unitmat(ncols(eq0f)) - eq0f);
+matrix f0 = ker0;
+matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+    
+if( ker0[1] != [0] )
+{
+    matrix g0 = leftInverse(f0) * eq0f; // Solves f0 * g0 = eq0f.
+};
+
+// Split eq1
+module ker1 = rightKernel(unitmat(ncols(eq1f)) - eq1f);
+matrix f1 = ker1;
+matrix g1[ncols(f1)][nrows(f1)]; // Defaults to zero
+    
+if( ker1[1] != [0] )
+{
+    matrix g1 = leftInverse(f1) * eq1f; // Solves f1 * g1 = eq1.
+};
+
+matrix finalMap = g1 * chirf * f0;
+print(nrows(g1) - mat_rk(finalMap)); // Dimension of H^1
+matrix k = rightKernel(finalMap);
+print(ncols(k)); // Dimension of H^0
