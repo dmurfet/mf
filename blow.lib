@@ -1520,11 +1520,13 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
 // If a nonzero second parameter is specified then instead of returning just a matrix we return a list.
 // The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
 // which are mutually inverse in the homotopy category.
-//
+
+// DEPRECATED ------
 // The final output is a "record" of each of the reduction steps: that is, a list L = (R1,R2,...) which
 // is a series of triples Ri = (b0i,b1i,f0i,f1i, g0i,g1i) beginning with R1 = (A,1,1) and ending with R? = (B, F, G)
 // with each intermediate step a differential Bi of a MF together with even maps Fi, Gi representing
 // homotopy equivalences between A and Bi.
+// ----- this was eating too much memory, so it has been commented out.
 
 proc mfReduce(matrix A, list #)
 {
@@ -1532,8 +1534,6 @@ proc mfReduce(matrix A, list #)
     
     int prl = printlevel;
 
-    dbprint(prl, "[mfReduce]");
-    
     // Extract the odd and even part of the differential
     list blocks = extractblockmat(A);
     matrix b0 = blocks[3]; matrix b1 = blocks[2];
@@ -1542,16 +1542,16 @@ proc mfReduce(matrix A, list #)
     matrix f0 = unitmat(ncols(A)/2); matrix f1 = unitmat(ncols(A)/2);
     matrix g0 = unitmat(ncols(A)/2); matrix g1 = unitmat(ncols(A)/2);
     
-    list transform_record;
-    list current_stage = b0,b1,f0,f1,g0,g1;
-    transform_record = transform_record + list(current_stage);
+    //list transform_record;
+    //list current_stage = b0,b1,f0,f1,g0,g1;
+    //transform_record = transform_record + list(current_stage);
         
     // A remains fixed, we work steadily on B and F, G until B has the desired form
     // Begin by looking inside b0 for nonzero constants. If at some point b0 becomes
     // a 1x1 matrix we bail (it must be contractible).
     while( ismfReduced(b0) != 1 && ncols(b0) > 1 )
     {    
-        dbprint(prl, " [mfReduce] while loop for b0");
+        dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(ncols(b0)));
         
         // There is a constant somewhere, begin looking in b0
         list l = matrixreduce(b0);
@@ -1579,21 +1579,23 @@ proc mfReduce(matrix A, list #)
         f0 = out[3]; f1 = out[4];
         g0 = out[5]; g1 = out[6];
         
-        current_stage = b0,b1,f0,f1,g0,g1;
-        transform_record = transform_record + list(current_stage);
+        //current_stage = b0,b1,f0,f1,g0,g1;
+        //transform_record = transform_record + list(current_stage);
         
         //dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
         //dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-        dbprint(prl, "  Result of reduction, p0:"); dbprint(prl,p);
-        dbprint(prl, "  Result of reduction, q0:"); dbprint(prl,q);
-        dbprint(prl, "--------------------------");
+        //dbprint(prl, "  Result of reduction, p0:"); dbprint(prl,p);
+        //dbprint(prl, "  Result of reduction, q0:"); dbprint(prl,q);
+        //dbprint(prl, "--------------------------");
+        
+        kill l, p, q, qinv, pinv, out;
     }
     
     // No do the same process to b1 (TODO: unify these two steps)
     while( ismfReduced(b1) != 1 && ncols(b1) > 1 )
     {
-        dbprint(prl, " [mfReduce] while loop for b1");
-        
+        dbprint(prl, "[mfReduce] Reducing b1, currently size " + string(ncols(b1)));
+                
         // There is a constant somewhere, begin looking in b1
         list l = matrixreduce(b1);
         matrix p = l[2]; matrix q = l[3];
@@ -1622,14 +1624,16 @@ proc mfReduce(matrix A, list #)
         f0 = out[4]; f1 = out[3];
         g0 = out[6]; g1 = out[5];
         
-        current_stage = b0,b1,f0,f1,g0,g1;
-        transform_record = transform_record + list(current_stage);
+        //current_stage = b0,b1,f0,f1,g0,g1;
+        //transform_record = transform_record + list(current_stage);
         
         //dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
         //dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-        dbprint(prl, "  Result of reduction, p1:"); dbprint(prl,p);
-        dbprint(prl, "  Result of reduction, q1:"); dbprint(prl,q);
-        dbprint(prl, "--------------------------");
+        //dbprint(prl, "  Result of reduction, p1:"); dbprint(prl,p);
+        //dbprint(prl, "  Result of reduction, q1:"); dbprint(prl,q);
+        //dbprint(prl, "--------------------------");
+        
+        kill l, p, q, qinv, pinv, out;
     }
     
     // Our MF (b0,b1) is now guaranteed to be free of constants. At this point
@@ -1668,7 +1672,7 @@ proc mfReduce(matrix A, list #)
         g1 = g1 * trinv;
     
         // Try a second time on the transpose
-         gau = gauss_row(transpose(b0),1);
+        gau = gauss_row(transpose(b0),1);
         matrix tr2 = gau[2];
         b0r = gau[1];
         
@@ -1695,7 +1699,8 @@ proc mfReduce(matrix A, list #)
     
     if( size(#) != 0 )
     {
-        list ret = B, F, G, transform_record;
+        //list ret = B, F, G, transform_record;
+        list ret = B, F, G;
         return(ret);
     }
     else
