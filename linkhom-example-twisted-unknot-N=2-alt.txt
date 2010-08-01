@@ -1,0 +1,126 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// Compute KR cohomology of "twisted unknot".
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Part TK0: Treat the Gamma0-resolution of the crossing. The relevant web has three vertices,
+// two of which are "marks" in the KR terminology and one of which is the "null crossing"
+// where the crossing has been removed. Reading from left to right on the diagram "OO" we
+// index these vertices by 3, 1, 2 and orient the edges as KR do, towards the top of the
+// page. The variables are x(1),x(2),x(3),x(4), with the first two outgoing from the null
+// crossing and the latter two incoming.
+//
+// The vertices 2,3 are decorated by the appropriate identity defects, and 1 is decorated
+// by the tensor product of two identity defects.
+//
+// Note with this indexing the sign factor B is +1.
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+ring rr0=0,(x(1..nx)),dp;
+int N = 2; // The N in sl(N) link homology
+
+////////// SECTION A ///////////
+matrix D1a = mfIdentityDefect( x(1)^(N+1), x(4)^(N+1), x(1), x(4) );
+matrix D1b = mfIdentityDefect( x(2)^(N+1), x(3)^(N+1), x(2), x(3) );
+matrix D1 = MFtensor(D1a, D1b);
+matrix D2 = mfIdentityDefect( x(3)^(N+1), x(2)^(N+1), x(3), x(2) );
+matrix D3 = mfIdentityDefect( x(4)^(N+1), x(1)^(N+1), x(4), x(1) );
+////////// END SECTION A /////////
+
+// The internal algebra is defined by the ideal J
+ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+intvec q = N, N, N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(4);
+
+// Compute the ordinary tensor product, which is a two-periodic complex
+// NOTE: bracketing matters in tensor products, because different bracketing
+// determines a different basis ordering. That is, MFtensor(-,MFtensor(-,-))
+// is not the same as MFtensor(MFtensor(-,-),-). Obvious but it caught me!
+// This bracketing must be consistent with the choice of bracketing used
+// for the computation of diff1,diff2 etc. below
+matrix D = MFtensor(D1, MFtensor(D2,D3));
+print(D*D);
+
+// Inflate the differential on this tensor product
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential:
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// The idempotent e is given by
+//
+//  e = (-1)^(nx choose 2) * det(C) * partial(D1) * partial(D2) * partial(D3) * delta(D)
+
+matrix diff1 = ZZtensor( diff(D1, x(1)) * diff(D1,x(2)), unitmat(ncols(D2)*ncols(D3)) );
+matrix diff2 = ZZtensor( unitmat(ncols(D1)), ZZtensor( diff(D2,x(3)), unitmat(ncols(D3))) );
+matrix diff3 = ZZtensor( unitmat(ncols(D1)), ZZtensor( unitmat(ncols(D2)), diff(D3,x(4))));
+
+matrix iddQ = mablow( det(C) * diff1 * diff2 * diff3, J );
+matrix delQ = deltaQ(D,q);
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ; 
+matrix z[ncols(e)][ncols(e)];
+print((e * Dblow - Dblow * e)==z);
+
+// The induced idempotent on the reduction is denoted ep
+matrix ep = F * e * G;
+matrix zn[ncols(ep)][ncols(ep)];
+print((ep * RD - RD * ep)==zn); // ep is at least a morphism
+
+// ep is an idempotent on the nose
+print((ep * ep - ep)==zn); 
+
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
+
+print(mat_rk(ep0));       // Gives N * N, as expected
+print(mat_rk(ep1));       // Gives 0
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Part TK1: Treat the Gamma1-resolution of the crossing. This means compiling a closed 
+//           web with two 2-valent vertices decorated by identity defects which are 
+//           connected to a 4-valent vertex decorated by the "wide edge defect". 
+//           The identity defect D2 has one incoming edge labelled by x1 and one outgoing
+//           edge labelled by x3. 
+//           The identity defect D3 has one incoming edge labelled by x2 and one outgoing
+//           edge labelled by x4. 
+//           The wide edge defect D1 has two incoming edges labelled by x3, x4, and two
+//           outgoing edges labelled by x1, x2. 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// Just run the above with "Section A" replaced by the following:
+matrix D1 = mfWideEdge( x(1), x(2), x(3), x(4), N);
+matrix D2 = mfIdentityDefect( x(3)^(N+1), x(2)^(N+1), x(3), x(2) );
+matrix D3 = mfIdentityDefect( x(4)^(N+1), x(1)^(N+1), x(4), x(1) );
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Part TK2: Compute the map between the two resolutions of the twisted unknot.
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// First we produce the matrix representing the morphism chi of [KR] p.50.
+poly pi23 = ( x(2)^(N+1) - x(3)^(N+1) )/( x(2)-x(3) );
+poly u1 = ( gpoly(x(1)+x(2), x(1)*x(2), N) - gpoly(x(3)+x(4), x(1)*x(2), N) )/( x(1)+x(2)-x(3)-x(4) );
+poly u2 = ( gpoly(x(3)+x(4), x(1)*x(2), N) - gpoly(x(3)+x(4), x(3)*x(4), N) )/( x(1)*x(2)-x(3)*x(4) );
+poly aa1 = -u2 + ( u1 +  x(1) * u2 - pi23 )/( x(1) - x(4) );
+
+matrix chi[4][4] = x(4)-x(2), 0, 0,    0,
+                    aa1,        1, 0,    0,
+                    0,         0, x(4), -x(2),
+                    0,         0, -1,   1;            // We set mu=0.
+
+// Check it is a morphism from the tensor product of two identity defects to the wide edge
+// Below t1 agrees with what KR give as the MF P on p.50, and t2 agrees with Q
+matrix t1 = MFtensor( mfIdentityDefect(x(2)^(N+1),x(3)^(N+1),x(2),x(3)), mfIdentityDefect(x(1)^(N+1),x(4)^(N+1),x(1),x(4)));
+matrix t2 = mfWideEdge( x(1), x(2), x(3), x(4), N);
+matrix tzz[ncols(t1)][ncols(t1)];
+print( (t2 * chi - chi * t1) == tzz )
