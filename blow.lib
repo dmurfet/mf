@@ -176,56 +176,36 @@ proc dimAlgebraOverInternalVariables(ideal J)
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-// "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
-// the matrices that represent the former's action on the algebra k[x-variables]/J
-//
-// NOTE: We assume that the algebra k[x-variables]/J is finite-dimensional.
+// "variableInflationList" Returns a list containing, in order, the matrix representing
+// the action of each of the internal variables on k[x]/J (the internal algebra).
 //////////////////////////////////////////////////////////////////////////////////
 
-proc poly2matrix(poly tepo, ideal J)
+proc variableInflationList(ideal J)
 {
     int prl = printlevel;
-    
-    // First compute the x-monomials and their coefficients in tepo
-    int i;
-    poly xprod = 1; 
-    for(i=1; i<=nx; i++)
-    {
-        xprod = xprod * x(i);
-    }
-    matrix koffer = coef(tepo, xprod);
 
-    // dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
-    
-    // For each x monomial we find and store the corresponding matrix representing
-    // multiplication by this monomial on the algebra k[x]/J (the internal algebra).
     def RRR = basering;
     def nR = ringWithoutYVars();
     setring nR;
     
     ideal Jx = std(imap(RRR,J));
-    matrix kofferx = imap(RRR,koffer);
-    
     ideal basis = kbase(Jx);
     int jdim = size(basis);
     module BB = reduce(basis,Jx);
     module syzBB = std(syz(BB)); 
     
-    // dbprint(prl, "[poly2matrix] Chosen basis of the algebra");
-    // for(i=1;i<=jdim;i++){ dbprint(printlevel, basis[i]); }
+    //dbprint(prl, "[poly2matrix] Dimension of the internal algebra is " + string(jdim));
     
-    int u, k;
-    list monomialAction;
+    int i, k;
+    list variableActions;
     
-    for(u=1; u<=ncols(kofferx); u++)
+    for(i=1; i<=nx; i++)
     {
-        poly xmonomial = kofferx[1,u];
-
         list L;
         for(k=1; k<=jdim; k++)
         {
-            module ff = reduce(xmonomial*basis[k],Jx);
-            matrix MM = matrix(reduce(lift(BB,ff),  syzBB ));
+            module ff = reduce(x(i)*basis[k],Jx);
+            matrix MM = matrix(reduce(lift(BB,ff), syzBB));
             L = L + list(MM);
         }
 
@@ -235,23 +215,67 @@ proc poly2matrix(poly tepo, ideal J)
             U=concat(U,L[k]);
         }
         
-        //dbprint(prl, "[poly2matrix] Inflation of monomial " + string(xmonomial) + " is");
+        //dbprint(prl, "[poly2matrix] Inflation of variable x(" + string(i) + ") is");
         //dbprint(prl, U);
         
-        monomialAction = monomialAction + list(U);
+        variableActions = variableActions + list(U);
         kill U, L;
     }
     
     setring RRR;
-
-    // Now for each column of koffer we have a scalar matrix giving
-    // the action of the corresponding monomial on k[x]/J.
-    list monomialAction = imap(nR,monomialAction);
+    list variableActions = imap(nR,variableActions);
     
+    return(variableActions);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
+// the matrices that represent the former's action on the algebra k[x-variables]/J
+//
+// NOTE: We assume that the algebra k[x-variables]/J is finite-dimensional.
+//
+// We must be passed a list "variableActions" which gives, in order, the matrices
+// representing the action of multiplication by each internal variable on the
+// internal algebra (as given by variableInflationList).
+//
+// To avoid computing it repeatedly, we also require that the dimension jdim of
+// the internal algebra be given to us.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
+{
+    // First compute the x-monomials and their coefficients in tepo
+    int i;
+    poly xprod = 1; 
+    for(i=1; i<=nx; i++)
+    {
+        xprod = xprod * x(i);
+    }
+    matrix koffer = coef(tepo, xprod);
+
+    //dbprint(prl, "[poly2matrix] Polynomial tepo is " + string(tepo));
+    //dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
+
+    int u,k;
     matrix inflation[jdim][jdim];
+    
     for(u=1;u<=ncols(koffer);u++)
     {
-        inflation = inflation + koffer[2,u] * monomialAction[u];
+        // Each column of koffer represents an x-monomial, let us now factorize this.
+        // The list powers contains, in order, the power of each internal variable
+        // in monom + 1 (since we multiply by xprod to make sure all vars appear)
+        poly monom = koffer[1,u];
+        intvec powers = factorize(monom*xprod,2)[2];
+        matrix monomAction = unitmat(jdim);
+        
+        for(k=1;k<=nx;k++)
+        {
+            monomAction = monomAction * power(variableActions[k],powers[k]-1);
+        }
+        
+        inflation = inflation + koffer[2,u] * monomAction;
+        
+        kill monom, powers, monomAction;
     }
     
     return(inflation);
@@ -267,6 +291,10 @@ proc mablow(matrix M, ideal J)
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
     
+    dbprint(printlevel, "[mablow] Computing variable inflations");
+    // Compute the inflation of individual variables
+    list variableActions = variableInflationList(J);
+    
     // Define L to be an appropriately indexed list of blown-up matrices:
     int i1,j1,i2,j2,i;
     int s = ncols(M);
@@ -280,7 +308,8 @@ proc mablow(matrix M, ideal J)
     {
         for(j1=1; j1<=s; j1++)
         {
-            L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J),j1-1);
+            dbprint(printlevel, "[mablow] Iteration count is (" + string(i1) + "," + string(j1) + ")/(" + string(s) + "," + string(s) + ")");
+            L[i1] = insert(L[i1], poly2matrix(M[i1,j1], J, variableActions, n),j1-1);
         }
     }
 
@@ -288,6 +317,7 @@ proc mablow(matrix M, ideal J)
 
     for(i1=1; i1<=s; i1++)
     {
+        dbprint(printlevel, "[mablow] Assembly count is " + string(i1) + " / " + string(s));
         for(j1=1; j1<=n; j1++)
         {
             for(i2=1; i2<=s; i2++)
@@ -1968,36 +1998,6 @@ proc test_mfReduce()
     
     if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
 }
-
-proc test_poly2matrix()
-{
-    int passed = 1;
-
-    // Test 1
-    int nx=2; // PROBLEM: not a global, so if you run this test nx will be undefined.
-    int ny=2;
-    ring RRR=0,(x(1..nx),y(1..ny)),dp;
-
-    ideal J = x(1)^2, x(2)^2;
-    
-    matrix a = poly2matrix(1,J);
-    if( a != unitmat(4) ){ passed = 0; }
-    
-    matrix a = poly2matrix(x(1),J);
-    matrix c[4][4] = 0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0;
-    if( a != c ){ passed = 0; }
-    
-    matrix a = poly2matrix(x(2),J);
-    matrix c[4][4] = 0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0;
-    if( a != c ){ passed = 0; }
-    
-    matrix a = poly2matrix(x(1)*x(2),J);
-    matrix c[4][4] = 0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0;
-    if( a != c ){ passed = 0; }
-    
-    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
-}
-
 
 ////////////////////////////////////////////////////////////////////
 // fuseDefects
