@@ -1,0 +1,64 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE S1 - Autopsy of something not idempotent on the nose
+//////////////////////////////////////////////////////////////////////////////////////
+
+// This example is taken from linkhom-example1
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=4;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+int N = 2; // The N in sl(N) link homology
+
+matrix D1 = mfWideEdge(y(1),y(2),x(1),x(2),N);
+matrix D2 = mfWideEdge(x(1),x(2),y(3),y(4),N);
+
+ideal J = x(1)^N, x(2)^N;
+intvec q = N, N;
+number Nn = N;
+matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+// Compute the ordinary tensor product
+matrix D = MFtensor(D1,D2);
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+matrix dq = dQ(D2, q, C);
+matrix iddQ = ZZtensor( unitmat(ncols(D1)), dq ); // "iddQ" is "id x dQ_X"
+matrix delQ = deltaQ(D, q);
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ;
+
+matrix ep = F * e * G;
+print(ep * RD == RD * ep);
+print(ep * ep == ep);
+
+// So ep is not idempotent on the nose, but we will now check that it is idempotent up to
+// homotopy, by showing that ep * ep - ep is null-homotopic.
+def nR = ringWithoutXVars();
+setring nR;
+
+matrix RD = imap(rr, RD);
+matrix ep = imap(rr, ep);
+list RD_blocks = extractblockmat( RD );
+matrix RD0 = RD_blocks[3];
+matrix RD1 = RD_blocks[2];
+
+// If Q = ( 0 & g // f & 0 ) and Q' = ( 0 & gs // fs & 0 ) are two matrix factorisations
+// described by  matrices f, g and fs, gs in Singular, respectively, the output of 
+// MFcohom(f,g,fs,gs) is a complete list of representatives of the cohomology Hom_MF(Q, Q′ ).
+
+module Im = MFIm(RD0,RD1,RD0,RD1);
+
+// To test whether ep belongs to Im, we must first convert it into a vector
+vector v = matrix2vector(ep * ep - ep);
+reduce( v, std(Im) );
