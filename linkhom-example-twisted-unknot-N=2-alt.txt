@@ -86,6 +86,21 @@ matrix ep1 = extractblockmat(ep)[4];
 print(mat_rk(ep0));       // Gives N * N, as expected
 print(mat_rk(ep1));       // Gives 0
 
+// Hence the reduced form of C(Gamma0) is QQ^(N*N) -> 0 -> QQ^(N*N), where QQ = rationals.
+
+// OPTIONAL: Computing the Chern character of the web
+
+poly c1 = supertrace( diff(D1,x(1)) * diff(D1,x(2)) * diff(D1,x(3)) * diff(D1,x(4)) );
+poly c2 = supertrace( diff(D2,x(2)) * diff(D2,x(3)) );
+poly c3 = supertrace( diff(D3,x(1)) * diff(D3,x(4)) );
+
+poly total_chern = reduce( c1 * c2 * c3, std(J) );
+
+// Now taking the residue means dividing by all the partials, that is,
+// by (N+1)^4 * x(1)^N x(2)^N x(3)^N x(4)^N, and looking at the coefficient
+// of x(1)^{-1} x(2)^{-1} x(3)^{-1} x(4)^{-1}. In this case, it is 324/81 = 4,
+// giving an independent check of the above calculation.
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // Part TK1: Treat the Gamma1-resolution of the crossing. This means compiling a closed 
 //           web with two 2-valent vertices decorated by identity defects which are 
@@ -102,6 +117,21 @@ print(mat_rk(ep1));       // Gives 0
 matrix D1 = mfWideEdge( x(1), x(2), x(3), x(4), N);
 matrix D2 = mfIdentityDefect( x(3)^(N+1), x(2)^(N+1), x(3), x(2) );
 matrix D3 = mfIdentityDefect( x(4)^(N+1), x(1)^(N+1), x(4), x(1) );
+
+// The reduced form of C(Gamma1) is QQ^(N) -> 0 -> QQ^(N), where QQ = rationals.
+
+// OPTIONAL: Computing the Chern character of the web
+
+poly c1 = supertrace( diff(D1,x(1)) * diff(D1,x(2)) * diff(D1,x(3)) * diff(D1,x(4)) );
+poly c2 = supertrace( diff(D2,x(2)) * diff(D2,x(3)) );
+poly c3 = supertrace( diff(D3,x(1)) * diff(D3,x(4)) );
+
+poly total_chern = reduce( c1 * c2 * c3, std(J) );
+
+// Now taking the residue means dividing by all the partials, that is,
+// by (N+1)^4 * x(1)^N x(2)^N x(3)^N x(4)^N, and looking at the coefficient
+// of x(1)^{-1} x(2)^{-1} x(3)^{-1} x(4)^{-1}. In this case, it is 162/81 = 2,
+// giving an independent check of the above calculation.
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Part TK2: Compute the map between the two resolutions of the twisted unknot.
