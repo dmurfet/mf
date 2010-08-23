@@ -13,7 +13,7 @@ ring rr=0,(x(1..nx),y(1..ny)),dp;
 int N = 2; // The N in sl(N) link homology
 
 matrix D1 = mfWideEdge(y(1),y(2),x(1),x(2),N);
-matrix D2 = mfWideEdge(x(1),x(2),y(3),y(4),N);
+matrix D2 = mfWideEdge(x(2),x(1),y(3),y(4),N);
 
 ideal J = x(1)^N, x(2)^N;
 intvec q = N, N;
@@ -42,23 +42,21 @@ matrix ep = F * e * G;
 print(ep * RD == RD * ep);
 print(ep * ep == ep);
 
+matrix ep2 = mfStrictifyIdempotent(RD, ep);
+
 // So ep is not idempotent on the nose, but we will now check that it is idempotent up to
 // homotopy, by showing that ep * ep - ep is null-homotopic.
-def nR = ringWithoutXVars();
-setring nR;
-
-matrix RD = imap(rr, RD);
-matrix ep = imap(rr, ep);
-list RD_blocks = extractblockmat( RD );
-matrix RD0 = RD_blocks[3];
-matrix RD1 = RD_blocks[2];
-
+//def nR = ringWithoutXVars();
+//setring nR;
+//matrix RD = imap(rr, RD);
+//matrix ep = imap(rr, ep);
+//list RD_blocks = extractblockmat( RD );
+//matrix RD0 = RD_blocks[3];
+//matrix RD1 = RD_blocks[2];
 // If Q = ( 0 & g // f & 0 ) and Q' = ( 0 & gs // fs & 0 ) are two matrix factorisations
 // described by  matrices f, g and fs, gs in Singular, respectively, the output of 
 // MFcohom(f,g,fs,gs) is a complete list of representatives of the cohomology Hom_MF(Q, Q′ ).
-
-module Im = MFIm(RD0,RD1,RD0,RD1);
-
+//module Im = MFIm(RD0,RD1,RD0,RD1);
 // To test whether ep belongs to Im, we must first convert it into a vector
-vector v = matrix2vector(ep * ep - ep);
-reduce( v, std(Im) );
+//vector v = matrix2vector(ep * ep - ep);
+//reduce( v, std(Im) );
