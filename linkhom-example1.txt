@@ -53,7 +53,7 @@ matrix D2 = mfWideEdge(x(1),x(2),y(3),y(4),N);
 
 ideal J = x(1)^N, x(2)^N;
 intvec q = N, N;
-number Nn = N;
+number Nn = N + 1;
 matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
 
 // Compute the ordinary tensor product
@@ -82,12 +82,8 @@ matrix e = (-1)^(sign) * iddQ * delQ;
     
 // The induced idempotent on the reduction is denoted ep
 matrix ep = F * e * G;
-
-// Sanity check: ep must be an endomorphism of RD
-print(ep * RD - RD * ep);
-
-// ep is NOT an idempotent on the nose:
-print(ep * ep - ep);
+ep * RD == RD * ep;
+ep * ep == ep;
 
 // For example, the entry ep[32,18] wants a rescaling by 4/9, but the entry ep[29,18]
 // wants a factor of 2/9. Hence ep is NOT proportional to an idempotent on the nose.
@@ -195,3 +191,74 @@ matrix ep1 = extractblockmat(ep)[4];
 print(mat_rk(ep0)); 
 print(mat_rk(ep1));
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// Treat the "open" Gamma0-resolution of the crossing. The relevant web has two vertices,
+// one of which is a "mark" in the KR terminology and one of which is the "null crossing"
+// where the crossing has been removed. Reading from left to right on the diagram "OC" we
+// index these vertices by 2, 1 and orient the edges as KR do, towards the top of the
+// page. The variables are x(1),y(1),x(2),x(2), with the first two outgoing from the null
+// crossing and the latter two incoming.
+//
+// The vertex 2 is decorated by the appropriate identity defect, and 1 is decorated
+// by the tensor product of two identity defects.
+//
+// Note with this indexing the sign factor B is +1.
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=2;
+ring rr0=0,(x(1..nx),y(1..ny)),dp;
+int N = 2; // The N in sl(N) link homology
+
+////////// SECTION A ///////////
+matrix D1a = mfIdentityDefect( x(1)^(N+1), x(2)^(N+1), x(1), x(2) );
+matrix D1b = mfIdentityDefect( y(1)^(N+1), y(2)^(N+1), y(1), y(2) );
+matrix D1 = MFtensor(D1b, D1a);
+matrix D2 = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
+////////// END SECTION A /////////
+
+// The internal algebra is defined by the ideal J
+ideal J = x(1)^N, x(2)^N;
+intvec q = N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(2);
+
+// Compute the ordinary tensor product, which is a two-periodic complex
+matrix D = MFtensor(D1, D2);
+print(D*D);
+
+// Inflate the differential on this tensor product
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential:
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// The idempotent e is given by
+//
+//  e = (-1)^(nx choose 2) * det(C) * partial(D1) * partial(D2) * partial(D3) * delta(D)
+
+matrix diff1 = ZZtensor( diff(D1, x(1)), unitmat(ncols(D2)) );
+matrix diff2 = ZZtensor( unitmat(ncols(D1)), diff(D2,x(2)) );
+
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+matrix delta1 = mablow_delta(D, 1, N, J);
+matrix delta2 = mablow_delta(D, 2, N, J);
+matrix delQ = delta1 * delta2;
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ; 
+e * Dblow == Dblow * e;
+
+// The induced idempotent on the reduction is denoted ep
+matrix ep = F * e * G;
+ep * RD == RD * ep;
+ep * ep == ep;

@@ -12,12 +12,29 @@ int ny=4;
 ring rr=0,(x(1..nx),y(1..ny)),dp;
 int N = 2; // The N in sl(N) link homology
 
+// Consider the planar diagram which looks something like the following
+//
+//      | |
+//      \/
+//      o
+//     /\
+//    | |
+//    \/
+//    o
+//   /\
+//  | |
+//
+// At each vertex we place the matrix factorisation that Khovanov and
+// Rozansky assign to a wide edge. Reading from left to right and top
+// to bottom, we assign the variables y(1),y(2),x(1),x(2),y(3),y(4)
+// to the edges, so that the x variables are the internal variables.
+
 matrix D1 = mfWideEdge(y(1),y(2),x(1),x(2),N);
-matrix D2 = mfWideEdge(x(2),x(1),y(3),y(4),N);
+matrix D2 = mfWideEdge(x(1),x(2),y(3),y(4),N);
 
 ideal J = x(1)^N, x(2)^N;
 intvec q = N, N;
-number Nn = N;
+number Nn = N + 1;
 matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
 
 // Compute the ordinary tensor product
@@ -32,6 +49,7 @@ matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
 matrix dq = mablow(det(C) * diff(D2,x(1)) * diff(D2,x(2)), J);
 matrix iddQ = ZZtensor( unitmat(ncols(D1)), dq ); // "iddQ" is "id x dQ_X"
+
 matrix delta1 = mablow_delta(D, 1, 2, J);
 matrix delta2 = mablow_delta(D, 2, 2, J);
 matrix delQ = delta1 * delta2;
@@ -41,33 +59,42 @@ int sign = (nx * (nx-1)) div 2;
 matrix e = (-1)^(sign) * iddQ * delQ;
 
 matrix ep = F * e * G;
-print(ep * RD == RD * ep);
-print(ep * ep == ep);
+ep * RD == RD * ep;
+ep * ep == ep;
+
+// Strictify this idempotent
+matrix epfinal = mfStrictifyIdempotent(RD, ep);
+epfinal * RD == RD * epfinal;
+epfinal * epfinal == epfinal;
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+print(final);
+
+// Little check that epfinal is reasonable: compute the Chern char of the splitting, firstly using
+// the idempotent and then directly using the differential on final
+poly chern1 = supertrace( epfinal * diff(RD,y(1)) * diff(RD,y(2)) * diff(RD,y(3)) * diff(RD,y(4)) );
+poly chern2 = supertrace( diff(final,y(1)) * diff(final,y(2)) * diff(final,y(3)) * diff(final,y(4)) );
+
+// The chern characters differ, but their difference lies in the Jacobi ideal, which is as it should be
+ideal K = y(1)^N, y(2)^N, y(3)^N, y(4)^N;
+reduce( chern1 - chern2, std(K) );
+
+
+
+
+
+/////// OLD STUFF, kept for reference ///////
 
 // We find that ep is  not idempotent on the nose, or even up to homotopy! This you can check
 // by looking at
 
-matrix U = ep * ep - ep;
-U = subst(U,y(1),0);
-U = subst(U,y(2),0);
-U = subst(U,y(3),0);
-U = subst(U,y(4),0);
-print(U);
+//matrix U = ep * ep - ep;
+//U = subst(U,y(1),0);
+//U = subst(U,y(2),0);
+//U = subst(U,y(3),0);
+//U = subst(U,y(4),0);
+//print(U);
 
 // If ep were a homotopy idempotent, then U would be dh + hd and d has no degree zero term (in the
 // polynomial grading) so U must have no degree term either. But, as the above calculation shows,
 // U actually does have a degree zero term.
-
-// However 9/4 * ep - ep * ep has no constants, so we guess that ep2 = 4/9 ep is idempotent up to homotopy
-// So somewhere in the above we have made a mistake and missed a normalisation factor...
-matrix ep2 = 4/9 * ep;
-ep2 * ep2 == ep2; // Still not idempotent on the nose
-matrix epfinal = mfStrictifyIdempotent(RD, ep2);
-epfinal * RD == RD * epfinal;
-epfinal * epfinal == epfinal;
-
-// Little check that epfinal is reasonable: compute the Chern char of the splitting
-supertrace( epfinal * diff(RD,y(1)) * diff(RD,y(2)) * diff(RD,y(3)) * diff(RD,y(4)) );
-
-matrix final = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
-print(final);

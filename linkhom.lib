@@ -49,7 +49,31 @@ proc gpoly(poly s1, poly s2, int n)
 // We are given four variables a,b,c,d and an integer N, and we return
 // the matrix factorisation of a^(n+1) + b^(n+1) - c^(n+1) - d^(n+1)
 // associated by Khovanov and Rozansky to a wide edge in the planar
-// diagram of a link (see p.48 of [KR]).
+// diagram of a link (see p.48 of [KR]). Let us include the
+// following picture of a wide edge
+//
+//       a        b
+//         \   /
+//          \/
+//          |
+//          |
+//         /\
+//       /   \
+//     c       d
+//
+// where a,b,c,d are variables labelled on the edges as shown (see Figure 5
+// on p.6 of [KR]).
+//
+// WARNING: Note that in Figure 8 on p.9 of [KR] the variable ordering on the "bottom"
+// two variables is swapped. This becomes relevant when you start reading Section 6
+// which assigns a factorisation to labelling chosen in Figure 8. With our conventions,
+// this means that if you call
+//
+//  matrix D = mfWideEdge(x(1),x(2),x(4),x(3),N);
+//
+// Then the matrix D you get will be the (Q1,Q2) pair written on p.50 of [KR]. Note however
+// that everything is symmetric for the exchange x(1) <-> x(2) and x(4) <-> x(3), so there
+// is no need to worry about this ordering.
 
 proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
 {
@@ -68,6 +92,9 @@ proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
     matrix koszul1[2][2] = 0, a + b - c - d, u1, 0;
     matrix koszul2[2][2] = 0, a * b - c * d, u2, 0;
     
+    // Note the order that we tensor these two Koszul complexes is opposite
+    // to the order suggested on p.48 of [KR]. This is done so as to agree
+    // with the matrices written on p.50.
     matrix D = MFtensor(koszul2, koszul1);
     return(D);
 }
