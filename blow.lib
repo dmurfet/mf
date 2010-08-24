@@ -1419,8 +1419,6 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     matrix N = U * U - U;
     matrix z[m][m];
     
-    dbprint(printlevel, "[mfStrictifyIdempotent] Looking for vanishing order.");
-    
     matrix powerOfN = N;
     int vanishingOrder = 1;
     
@@ -1446,7 +1444,6 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     for(i = 1; i < vanishingOrder; i++)
     {
         X = X + (-1)^(i+1) * int(binomial(2 * i, i)) * power(N,i);
-        dbprint(printlevel, "[mfStrictifyIdempotent] Computing X at order " + string(i));
     }
     
     X = 1/2 * X;
@@ -1519,11 +1516,11 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // sense that fi * gi = ei and gi * fi = 1. We do this by taking fi to be the kernel
     // of 1 - ei and then computing gi as the left inverse of fi.
     
-    // TODO: We know that Ker(1-ei) is a free module (Quillen-Suslin!) and we assume that
-    // rightKernel(unitmat(m/2) - e0) gives a minimal presentation of the kernel, in the sense
-    // that interpreted as a morphism of free modules it is actually a monomorphism.
-    // TODO: Fix this using minbase?
-    //
+    // We know that Ker(1-ei) is a free module (Quillen-Suslin!) and that the output of
+    // rightKernel(unitmat(m/2) - e0) gives a presentation of the kernel. But this may not
+    // be minimal, in the sense that interpreted as a morphism of free modules it may not
+    // actually a monomorphism. We fix this by calling minbase.
+
     // NOTE: It's possible that since we split e0 and e1 separately, the splittings may
     // be free of different ranks (i.e. the return matrices may be non-square). Of course
     // we know that the splitting will still be a factorisation of the same potential, so
@@ -1535,7 +1532,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // we obtain the map g0 by multiplying the left inverse of f0 by e0.
     // NOTE: If e0 = 0 then ker0 is zero, and we should set f0 = g0 = 0.
     module ker0 = rightKernel(unitmat(m/2) - e0);
-    matrix f0 = ker0;
+    matrix f0 = minbase(ker0); // TODO: minbase is recent change, requires testing
     matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
         
     if( ker0[1] != [0] )
@@ -1545,11 +1542,12 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     // Same in the odd degrees
     module ker1 = rightKernel(unitmat(m/2) - e1);
-    matrix f1 = ker1;
+    matrix f1 = minbase(ker1); // TODO: minbase is recent change, requires testing
     matrix g1[ncols(f1)][nrows(f1)];
     
     if( ker1[1] != [0] )
     {
+        dbprint(printlevel, "[mfSplitIdempotent] Debug break 3");
         matrix g1 = leftInverse(f1) * e1;    
     }
     
@@ -1728,7 +1726,7 @@ proc mfReduce(matrix A, list #)
     // reduced forms...
     
     // DEBUG. If set to 0, we use rowred rather than gauss_row in the following
-    int useGaussRow = 0;
+    int useGaussRow = 1;
     
     // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
     matrix zero_b[nrows(b0)][ncols(b0)];
