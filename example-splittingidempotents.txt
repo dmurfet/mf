@@ -31,12 +31,10 @@ matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
 matrix dq = mablow(det(C) * diff(D2,x(1)) * diff(D2,x(2)), J);
-//matrix dq = dQ(D2, q, C);
 matrix iddQ = ZZtensor( unitmat(ncols(D1)), dq ); // "iddQ" is "id x dQ_X"
 matrix delta1 = mablow_delta(D, 1, 2, J);
 matrix delta2 = mablow_delta(D, 2, 2, J);
 matrix delQ = delta1 * delta2;
-//matrix delQ = deltaQ(D, q);
 
 // And finally the idempotent e on Dblow
 int sign = (nx * (nx-1)) div 2;
@@ -46,10 +44,8 @@ matrix ep = F * e * G;
 print(ep * RD == RD * ep);
 print(ep * ep == ep);
 
-matrix ep2 = mfStrictifyIdempotent(RD, ep);
-// This doesn't work. RD is reduced (no units) but ep * ep - ep has a nontrivial graded degree zero,
-// which is impossible if it is really null-homotopic. We conclude that ep is NOT idempotent up to
-// homotopy, so we have made a mistake somewhere.
+// We find that ep is  not idempotent on the nose, or even up to homotopy! This you can check
+// by looking at
 
 matrix U = ep * ep - ep;
 U = subst(U,y(1),0);
@@ -58,20 +54,20 @@ U = subst(U,y(3),0);
 U = subst(U,y(4),0);
 print(U);
 
+// If ep were a homotopy idempotent, then U would be dh + hd and d has no degree zero term (in the
+// polynomial grading) so U must have no degree term either. But, as the above calculation shows,
+// U actually does have a degree zero term.
 
-// So ep is not idempotent on the nose, but we will now check that it is idempotent up to
-// homotopy, by showing that ep * ep - ep is null-homotopic.
-//def nR = ringWithoutXVars();
-//setring nR;
-//matrix RD = imap(rr, RD);
-//matrix ep = imap(rr, ep);
-//list RD_blocks = extractblockmat( RD );
-//matrix RD0 = RD_blocks[3];
-//matrix RD1 = RD_blocks[2];
-// If Q = ( 0 & g // f & 0 ) and Q' = ( 0 & gs // fs & 0 ) are two matrix factorisations
-// described by  matrices f, g and fs, gs in Singular, respectively, the output of 
-// MFcohom(f,g,fs,gs) is a complete list of representatives of the cohomology Hom_MF(Q, Q′ ).
-//module Im = MFIm(RD0,RD1,RD0,RD1);
-// To test whether ep belongs to Im, we must first convert it into a vector
-//vector v = matrix2vector(ep * ep - ep);
-//reduce( v, std(Im) );
+// However 9/4 * ep - ep * ep has no constants, so we guess that ep2 = 4/9 ep is idempotent up to homotopy
+// So somewhere in the above we have made a mistake and missed a normalisation factor...
+matrix ep2 = 4/9 * ep;
+ep2 * ep2 == ep2; // Still not idempotent on the nose
+matrix epfinal = mfStrictifyIdempotent(RD, ep2);
+epfinal * RD == RD * epfinal;
+epfinal * epfinal == epfinal;
+
+// Little check that epfinal is reasonable: compute the Chern char of the splitting
+supertrace( epfinal * diff(RD,y(1)) * diff(RD,y(2)) * diff(RD,y(3)) * diff(RD,y(4)) );
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+print(final);
