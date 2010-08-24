@@ -30,9 +30,13 @@ matrix RD = l[1];
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-matrix dq = dQ(D2, q, C);
+matrix dq = mablow(det(C) * diff(D2,x(1)) * diff(D2,x(2)), J);
+//matrix dq = dQ(D2, q, C);
 matrix iddQ = ZZtensor( unitmat(ncols(D1)), dq ); // "iddQ" is "id x dQ_X"
-matrix delQ = deltaQ(D, q);
+matrix delta1 = mablow_delta(D, 1, 2, J);
+matrix delta2 = mablow_delta(D, 2, 2, J);
+matrix delQ = delta1 * delta2;
+//matrix delQ = deltaQ(D, q);
 
 // And finally the idempotent e on Dblow
 int sign = (nx * (nx-1)) div 2;
@@ -43,6 +47,17 @@ print(ep * RD == RD * ep);
 print(ep * ep == ep);
 
 matrix ep2 = mfStrictifyIdempotent(RD, ep);
+// This doesn't work. RD is reduced (no units) but ep * ep - ep has a nontrivial graded degree zero,
+// which is impossible if it is really null-homotopic. We conclude that ep is NOT idempotent up to
+// homotopy, so we have made a mistake somewhere.
+
+matrix U = ep * ep - ep;
+U = subst(U,y(1),0);
+U = subst(U,y(2),0);
+U = subst(U,y(3),0);
+U = subst(U,y(4),0);
+print(U);
+
 
 // So ep is not idempotent on the nose, but we will now check that it is idempotent up to
 // homotopy, by showing that ep * ep - ep is null-homotopic.
