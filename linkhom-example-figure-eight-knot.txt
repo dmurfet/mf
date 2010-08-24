@@ -1,0 +1,172 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// Compute KR cohomology of "figure-eight knot".
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// We use the conventions and labellings of the note [FEK] from 2010-08-09. 
+//
+// Part 1: Try to reduce the matrix factorisations "((AA)B)B" from [FEK, p.3].
+/////////////////////////////////////////////////////////////////////////////////////////
+
+// Step 1.1: Compile "AA"
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=4;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+matrix A1a = mfIdentityDefect( y(1)^(N+1), y(2)^(N+1), y(1), y(2) );
+matrix A1b = mfIdentityDefect( x(1)^(N+1), x(2)^(N+1), x(1), x(2) );
+matrix A1 = MFtensor(A1a, A1b);
+matrix A2a = mfIdentityDefect( y(3)^(N+1), y(4)^(N+1), y(3), y(4) );
+matrix A2b = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
+matrix A2 = MFtensor(A2a, A2b);
+
+ideal J = x(1)^N, x(2)^N;
+intvec q = N, N;
+number Nn = N + 1;
+matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+// Compute the ordinary tensor product
+matrix D = MFtensor(A1,A2);
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+matrix diff1 = ZZtensor( diff(A1, x(1)), unitmat(ncols(A2)) );
+matrix diff2 = ZZtensor( unitmat(ncols(A1)), diff(A2, x(2)) );
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+
+matrix delta1 = mablow_delta(D, 1, 2, J);
+matrix delta2 = mablow_delta(D, 2, 2, J);
+matrix delQ = delta1 * delta2;
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ;
+
+matrix ep = F * e * G;
+ep * RD == RD * ep;
+ep * ep == ep;
+
+// Strictify this idempotent (ep is already idempotent on the nose, so this is not really necessary):
+matrix epfinal = mfStrictifyIdempotent(RD, ep);
+epfinal * RD == RD * epfinal;
+epfinal * epfinal == epfinal;
+
+matrix finalAA = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+print(finalAA);
+
+// Step 1.2: Compile "AAB"
+
+// Relabel variables (y2 and y3 become internal variables):
+matrix AAv = subst(finalAA,y(2),x(1));
+matrix AA = subst(AAv,y(3),x(2));
+
+matrix B3 = mfWideEdge( y(2), x(1), y(3), x(2), N );
+
+// Compute the ordinary tensor product
+matrix D = MFtensor(AA,B3);
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+matrix diff1 = ZZtensor( diff(AA, x(2)), unitmat(ncols(B3)) );
+matrix diff2 = ZZtensor( unitmat(ncols(AA)), diff(B3, x(1)) );
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+
+matrix delta1 = mablow_delta(D, 1, 2, J);
+matrix delta2 = mablow_delta(D, 2, 2, J);
+matrix delQ = delta1 * delta2;
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = -1 * (-1)^(sign) * iddQ * delQ;
+
+matrix ep = F * e * G;
+ep * RD == RD * ep;
+ep * ep == ep;
+
+// Strictify this idempotent (ep is already idempotent on the nose, so this is not really necessary):
+matrix epfinal = mfStrictifyIdempotent(RD, ep);
+epfinal * RD == RD * epfinal;
+epfinal * epfinal == epfinal;
+
+matrix finalAAB = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+print(finalAAB);
+
+// Step 1.3: Compile "AABB"
+
+// Relabel variables:
+int nx=4;
+int ny=4;
+ring rr2=0,(x(1..nx),y(1..ny)),dp;
+int N = 2; // The N in sl(N) link homology
+matrix finalAAB = imap(rr,finalAAB);
+matrix AAB1 = subst(finalAAB,y(1),x(1));
+matrix AAB2 = subst(AAB1,y(2),x(2));
+matrix AAB3 = subst(AAB2,y(3),x(3));
+matrix AAB = subst(AAB3,y(4),x(4));
+int nx=4;
+ring rr3=0,(x(1..nx)),dp;
+int N = 2;
+matrix AAB = imap(rr2,AAB);
+
+matrix B4 = mfWideEdge( x(3), x(4), x(2), x(1), N );
+
+ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+intvec q = N, N, N, N;
+number Nn = N + 1;
+matrix C[4][4] = 1/Nn * unitmat(4);
+
+// Compute the ordinary tensor product
+matrix D = MFtensor(AAB,B4);
+matrix Dblow = mablow(D,J);
+
+// Reduce this inflated differential
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+
+// RD is the zero matrix (though it should not!):
+RD == zeromat(ncols(RD));
+
+matrix diff1 = ZZtensor( diff(AAB, x(1)) * diff(AAB, x(2)), unitmat(ncols(B4)) );
+matrix diff2 = ZZtensor( unitmat(ncols(AAB)), diff(B4, x(3)) * diff(B4, x(4)) );
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+
+matrix delta1 = mablow_delta(D, 1, 2, J);
+matrix delta2 = mablow_delta(D, 2, 2, J);
+matrix delQ = delta1 * delta2;
+
+// And finally the idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ;
+
+matrix ep = F * e * G;
+ep * RD == RD * ep;
+ep * ep == ep;
+
+// Strictify this idempotent:
+matrix epfinal = mfStrictifyIdempotent(RD, ep);
+epfinal * RD == RD * epfinal;
+epfinal * epfinal == epfinal;
+
+// epfinal is the zero matrix:
+epfinal == zeromat(ncols(epfinal));
+
+// This cannot be true.
