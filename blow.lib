@@ -1443,17 +1443,15 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     int i;
     matrix X[m][m];
     
-    for(i = 1; i++; i < vanishingOrder)
+    for(i = 1; i < vanishingOrder; i++)
     {
-        int sign = (nx * (nx-1)) div 2;
-        matrix e = (-1)^(sign) * iddQ * delQ;
         X = X + (-1)^(i+1) * int(binomial(2 * i, i)) * power(N,i);
         dbprint(printlevel, "[mfStrictifyIdempotent] Computing X at order " + string(i));
     }
     
     X = 1/2 * X;
     
-    matrix E = U + X * (1 - 2 * U);
+    matrix E = U + X * (unitmat(m) - 2 * U);
     
     // Sanity check
     if( A * E != E * A )
@@ -1729,16 +1727,28 @@ proc mfReduce(matrix A, list #)
     // we just apply usual Guassian elimination: TODO it only looks for lower triangular
     // reduced forms...
     
+    // DEBUG. If set to 0, we use rowred rather than gauss_row in the following
+    int useGaussRow = 0;
+    
     // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
     matrix zero_b[nrows(b0)][ncols(b0)];
     if( b0 != zero_b && b1 != zero_b )
     {
-        ////// BEGIN GAUSS //////
-        list gau = gauss_row(b0,1);
-
-        matrix tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
-        matrix b0r = transpose(gau[1]); // The reduced form
-
+        matrix tr, b0r;
+        
+        if( useGaussRow )
+        {
+            list gau = gauss_row(b0,1);
+            tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
+            b0r = transpose(gau[1]); // The reduced form
+        }
+        else
+        {
+            list gau = rowred(b0,1);
+            tr = gau[2];
+            b0r = gau[1];
+        }
+        
         if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
         if( det(tr) == 0 )
         {
@@ -1760,10 +1770,21 @@ proc mfReduce(matrix A, list #)
         f1 = tr * f1;
         g1 = g1 * trinv;
     
+        matrix tr2;
+        
         // Try a second time on the transpose
-        gau = gauss_row(transpose(b0),1);
-        matrix tr2 = gau[2];
-        b0r = gau[1];
+        if( useGaussRow )
+        {
+            list gau = gauss_row(transpose(b0),1);
+            tr2 = gau[2];
+            b0r = gau[1];
+        }
+        else
+        {
+            list gau = rowred(transpose(b0),1);
+            tr2 = transpose(gau[2]);
+            b0r = transpose(gau[1]);
+        }
         
         if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
         if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
