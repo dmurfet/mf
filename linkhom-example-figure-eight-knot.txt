@@ -142,7 +142,7 @@ matrix RD = l[1];
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-// RD is the zero matrix (though it should not!):
+// RD is the zero matrix:
 RD == zeromat(ncols(RD));
 
 matrix diff1 = ZZtensor( diff(AAB, x(1)) * diff(AAB, x(2)), unitmat(ncols(B4)) );
@@ -151,7 +151,9 @@ matrix iddQ = mablow( det(C) * diff1 * diff2, J );
 
 matrix delta1 = mablow_delta(D, 1, 2, J);
 matrix delta2 = mablow_delta(D, 2, 2, J);
-matrix delQ = delta1 * delta2;
+matrix delta3 = mablow_delta(D, 3, 2, J);
+matrix delta4 = mablow_delta(D, 4, 2, J);
+matrix delQ = delta1 * delta2 * delta3 * delta4;
 
 // And finally the idempotent e on Dblow
 int sign = (nx * (nx-1)) div 2;
@@ -166,7 +168,15 @@ matrix epfinal = mfStrictifyIdempotent(RD, ep);
 epfinal * RD == RD * epfinal;
 epfinal * epfinal == epfinal;
 
-// epfinal is the zero matrix:
-epfinal == zeromat(ncols(epfinal));
+matrix finalAABB = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+// This gives (since mfSplitIdempotent is not equipped to deal with MFs of zero): 
+// [mfSplitIdempotent] Debug break 3
+// [mfSplitIdempotent] Splitting produced nonsquare matrices, exiting.
 
-// This cannot be true.
+matrix ep0 = extractblockmat(epfinal)[1];
+matrix ep1 = extractblockmat(epfinal)[4];
+print(mat_rk(ep0));
+print(mat_rk(ep1));
+
+// Hence the reduced form of AABB is 0 -> QQ^8 -> 0, where QQ = rationals.
+
