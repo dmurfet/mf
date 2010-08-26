@@ -1420,24 +1420,23 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     matrix z[m][m];
     
     matrix powerOfN = N;
-    int vanishingOrder = 1;
+    int vanishingOrder;
     
-    while( powerOfN != z )
+    for( vanishingOrder = 1; vanishingOrder < 1000; vanishingOrder++ )
     {
-        vanishingOrder++;
-        powerOfN = N * powerOfN;
-        
         dbprint(printlevel, "[mfStrictifyIdempotent] Looking at order " + string(vanishingOrder));
+        if( powerOfN == z ){ break; }
         
-        if( vanishingOrder > 1000 )
-        {
-            print("[mfStrictifyIdempotent] Exceeded bound looking for nilpotent, exiting.");
-            return();
-        }
+        powerOfN = N * powerOfN;
+    }
+    
+    if( powerOfN != z )
+    {
+        print("[mfStrictifyIdempotent] Exceeded bound looking for nilpotent, exiting.");
+        return();
     }
     
     // vanishingOrder is the smallest integer positive such that N^vanishingOrder = 0.
-    
     int i;
     matrix X[m][m];
     
