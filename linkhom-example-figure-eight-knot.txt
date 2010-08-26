@@ -20,7 +20,7 @@ ring rr=0,(x(1..nx),y(1..ny)),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
-// In the notation of [FEK, p.1] A1 the Figure eight knot has four crossings, which
+// In the notation of [FEK, p.1] the Figure eight knot has four crossings, which
 // we refer to by the tuple of variables incident at the crossing (e.g. 1578). At the
 // crossing 1578 we place A1 and at 2678 we place A2, defined as follows:
 
@@ -201,6 +201,32 @@ print(mat_rk(ep0));
 print(mat_rk(ep1));
 
 // Hence the reduced form of AABB is 0 -> QQ^8 -> 0, where QQ = rationals.
+
+// We can also check this using the following Chern character calculation
+// In the following the variable x(i) maps to the edge i.
+// option(noredefine);option(noloadLib);option(redSB);
+// LIB "blow.lib";
+// LIB "linkhom.lib";
+// LIB "matrix.lib";
+// int nx=8;
+// int N = 2; // The N in sl(N) link homology
+// ring rr=0,(x(1..nx)),dp;
+// matrix A1a = mfIdentityDefect( x(7)^(N+1), x(8)^(N+1), x(7), x(8) );
+// matrix A1b = mfIdentityDefect( x(1)^(N+1), x(5)^(N+1), x(1), x(5) );
+// matrix A1 = MFtensor(A1a, A1b);
+// poly ch1 = supertrace( diff(A1, x(1)) * diff(A1, x(5)) * diff(A1, x(7)) * diff(A1, x(8)) );
+// matrix A2a = mfIdentityDefect( x(8)^(N+1), x(7)^(N+1), x(8), x(7) );
+// matrix A2b = mfIdentityDefect( x(6)^(N+1), x(2)^(N+1), x(6), x(2) );
+// matrix A2 = MFtensor(A2a, A2b);
+// poly ch2 = supertrace( diff(A2, x(2)) * diff(A2,x(6)) * diff(A2,x(7)) * diff(A2,x(8)));
+// matrix B3 = mfWideEdge( x(3), x(5), x(6), x(4), N );
+// poly ch3 = supertrace( diff(B3, x(3)) * diff(B3,x(5)) * diff(B3,x(6)) * diff(B3,x(4)));
+// matrix B4 = mfWideEdge( x(2), x(4), x(1), x(3), N );
+// poly ch4 = supertrace( diff(B4, x(2)) * diff(B4,x(4)) * diff(B4,x(1)) * diff(B4,x(3)));
+// ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N, x(5)^N, x(6)^N, x(7)^N, x(8)^N;
+// poly chernFinal = reduce( ch1 * ch2 * ch3 * ch4, std(J) );
+// The total Chern character is this divided by (N+1)^8 and with Res( - / x(1)^N ... x(8)^N ) applied.
+// For N = 2 this yields 8 (up to a sign), confirming the calculation above.
 
 matrix eq0f = ep1;
 
