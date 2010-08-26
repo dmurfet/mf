@@ -180,3 +180,50 @@ print(mat_rk(ep1));
 
 // Hence the reduced form of AABB is 0 -> QQ^8 -> 0, where QQ = rationals.
 
+matrix eq0f = ep1;
+
+// Now split the idempotent by hand:
+LIB "control.lib";
+module ker0 = rightKernel(unitmat(ncols(eq0f)) - eq0f);
+matrix f0 = ker0;
+matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+    
+if( ker0[1] != [0] )
+{
+    matrix g0 = leftInverse(f0) * eq0f; // Solves f0 * g0 = eq0f.
+};
+
+// Check that (f0,g0) is a splitting of ep1:
+f0 * g0 == ep1;
+g0 * f0 == unitmat(ncols(g0 * f0));
+
+
+// Step 2: define and reduce the map between AABB and AABA+AAAB++BABB+ABBB:
+
+matrix chi0 = mfChi0(x(1),x(2),x(3),x(4),N);
+matrix chi1 = mfChi1(x(1),x(2),x(3),x(4),N);
+
+
+// Let (f x g) x h : (A x B) x C --> (A' x B') x C' be a morphism, and let
+// F1: (A x B)_blow --> (A x B)_reduced be a morphism with homotopy inverse G1, 
+// F2: ((A x B)_reduced x C)_blow --> ((A x B)_reduced x C)_reduced be a 
+// morphism with homotopy inverse G2. Then
+//     (((f x g)_blow o G1) x h)_blow o G2
+// is the associated morphism ((A x B)_reduced x C)_reduced --> (A' x B') x C'.
+// Similarly, we get a morphism 
+// ((A x B)_reduced x C)_reduced --> ((A' x B')_reduced x C')_reduced by also
+// making use of F1 and F1 "from the left".
+//
+// Iterating this construction one more time and using the various maps F,G from
+// above (which have to be renamed F1,G1,F2,G2,F3,G3), we obtain the map 
+// (AABB)_reduced --> (AABA+AAAB++BABB+ABBB)_reduced (together with Step 3 below)
+// between the degree -2 piece and the degree -1 piece of KR cohomology.
+
+// I will do this later.
+
+
+// Step 3: TODO: compile the web AABA+AAAB++BABB+ABBB:
+
+
+
+
