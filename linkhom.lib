@@ -31,7 +31,10 @@ LIB "blow.lib"
 //
 // In [KR, p.47] all variables are assigned degree two. The conventions for graded
 // matrix factorisations are explained in [KR, p.44]
-
+//
+// Note that the Jacobi algebra A = QQ[x]/(x^n) (notation of [KR]) is naturally graded,
+// but this grading is shifted down by n - 1 (see [KR,p.45]) so that |1| = 1 - n and
+// |x^i| = 2i + 1 - n.
 
 /////////////////////////////////////////////////////////////////////////////////////
 // g - returns the polynomial g of [KR] p.48.
@@ -118,6 +121,10 @@ proc mfWideEdgeGrading(int n)
     
     // Grading vector on the tensor product
     intvec r = MFtensorGradings(h, g);
+    
+    // The grading is then shifted by -1, as defined on [KR, p.48]
+    int i;
+    for(i=1;i<=size(r);i++){ r[i] = r[i] - 1; }
     
     return(r);
 }
