@@ -68,6 +68,9 @@ LIB "ring.lib";
 // deg(a0[2,1]) = -1,
 // deg(a0[2,2]) = 0
 // so in particular a0[1,2] = a0[2,1] = 0. Similarly for a1.
+//
+// NOTE: All operations on graded MFs assume that A is square (i.e. both degrees have
+// the same rank).
 
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -2029,6 +2032,36 @@ proc MFtensor(matrix A, matrix B)
     int brank = ncols(B);
     
     return( ZZtensor( unitmat(arank), B ) + ZZtensor( A, unitmat(brank) ) );
+}
+
+proc MFtensorGradings(intvec g, intvec h)
+{
+    // With the notation of MFtensor, X x Y is, as a Z/2-graded free module
+    // (X x Y)0 = (X0 x Y0) + (X1 x Y1)
+    // (X x Y)1 = (X0 x Y1) + (X1 x Y0)
+    // with the basis ordered in the usual way. If X,Y are graded free modules
+    // with the gradings described by intvecs g, h resp. then the intvec describing
+    // the shifts on the free modules in X x Y is
+   
+    int sizeX = size(g)/2;
+    int sizeY = size(h)/2;
+    int rankProduct = sizeX * sizeY;
+    
+    intvec g;
+    
+    int i, j;
+    for(i=1;i<=sizeX;i++)
+    {
+        for(j=1;j<=sizeY;j++)
+        {
+            g[(i-1)*sizeY + j] = g[i] + h[j]; // Gradings on X0 x Y0
+            g[rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[sizeY + j]; // Grading on X1 x Y1
+            g[2*rankProduct + (i-1)*sizeY + j] = g[i] + h[sizeY + j]; // X0 x Y1
+            g[3*rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[j]; // X1 x Y0
+        }
+    }
+    
+    return(g);
 }
 
 ////////////////////////////////////////////////////////////////////
