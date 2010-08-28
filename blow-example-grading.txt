@@ -1,0 +1,35 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// Demonstrate how to use graded MFs
+//
+// See the Usage Guide in blow.lib for our conventions on grading. We refer to the
+// usual grading on a polynomial ring by "deg" and the doubled grading by bars |-|, so that
+// |f| = 2 * deg(f). See [KR, p.44] for our choice of grading for Koszul factorisations.
+/////////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+ring rr=0,(x(1..nx)),dp;
+printlevel = 1;
+
+// Consider a Koszul factorisation of the potential
+poly W = x(1)^3 * x(2);
+// which, in the doubled grading, has degree 8, so that n = 3.
+
+matrix D[2][2] = 0, x(1)^3, x(2), 0;
+intvec g = 0,2;
+
+// With this differential and choice of grading shifts, the MF can be represented by
+// the pair R -- x(2) --> R{2} -- x(1)^3 --> R. Notice that n + 1 - |x(2)| = 2.
+isGradingValid(D,g);
+
+poly V = x(3)^2 * x(4)^2; // again n = 3
+matrix E[2][2] = 0, x(3)^2, x(4)^2, 0;
+intvec h = 0, 0;
+isGradingValid(E,h);
+
+matrix DE = MFtensor(D, E);
+intvec gh = MFtensorGradings(g, h);
+isGradingValid(DE,gh);
