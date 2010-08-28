@@ -33,3 +33,13 @@ isGradingValid(E,h);
 matrix DE = MFtensor(D, E);
 intvec gh = MFtensorGradings(g, h);
 isGradingValid(DE,gh);
+
+// Try out the wide edge gradings
+matrix F = mfWideEdge(x(1),x(2),x(3),x(4),2);
+intvec f = mfWideEdgeGrading(2);
+isGradingValid(F,f);
+
+// Try out the identity defect
+F = mfIdentityDefect( x(1)^3, x(2)^3, x(1), x(2) );
+f = mfIdentityDefectGrading( x(1)^3 );
+isGradingValid(F,f);

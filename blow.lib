@@ -1944,15 +1944,17 @@ proc isGradingValid(matrix A, intvec g)
         {
             // First we check that the polynomial a0[i,j] is "valid". It is a map
             // R{a} -> R{b} where a = g[j] and b = g[m + i], and for A to be a valid
-            // graded MF this map should be of degree n + 1.
-            if( n+1 - g[m+i] + g[j] != deg(a0[i,j]) )
+            // graded MF this map should be of degree n + 1 (note doubling of grading!)
+            if( n+1 - g[m+i] + g[j] != 2 * deg(a0[i,j]) )
             {
+                //dbprint(printlevel, "[isGradingValid] First test " + string(n+1-g[m+i]+g[j]) + "=" + string(2 * deg(a0[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
                 return(0);
             }
             
             // Next check that a1[i,j] is valid
-            if( n+1 - g[i] + g[m+j] != deg(a1[i,j]) )
+            if( n+1 - g[i] + g[m+j] != 2 * deg(a1[i,j]) )
             {
+                //dbprint(printlevel, "[isGradingValid] Second test " + string(n+1-g[i]+g[m+j]) + "=" + string(2 * deg(a1[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
                 return(0);
             }
         }
@@ -2047,21 +2049,21 @@ proc MFtensorGradings(intvec g, intvec h)
     int sizeY = size(h)/2;
     int rankProduct = sizeX * sizeY;
     
-    intvec g;
+    intvec r;
     
     int i, j;
     for(i=1;i<=sizeX;i++)
     {
         for(j=1;j<=sizeY;j++)
         {
-            g[(i-1)*sizeY + j] = g[i] + h[j]; // Gradings on X0 x Y0
-            g[rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[sizeY + j]; // Grading on X1 x Y1
-            g[2*rankProduct + (i-1)*sizeY + j] = g[i] + h[sizeY + j]; // X0 x Y1
-            g[3*rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[j]; // X1 x Y0
+            r[(i-1)*sizeY + j] = g[i] + h[j]; // Gradings on X0 x Y0
+            r[rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[sizeY + j]; // Grading on X1 x Y1
+            r[2*rankProduct + (i-1)*sizeY + j] = g[i] + h[sizeY + j]; // X0 x Y1
+            r[3*rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[j]; // X1 x Y0
         }
     }
     
-    return(g);
+    return(r);
 }
 
 ////////////////////////////////////////////////////////////////////

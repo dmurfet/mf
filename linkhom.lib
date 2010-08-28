@@ -26,6 +26,13 @@ LIB "blow.lib"
 // The references to [KR] are to Khovanov and Rozansky "Matrix factorizations and
 // link homology" arXiv:math/0401268v2.
 
+////////////////////////////////////////////////////////////////////
+// NOTES ON GRADING
+//
+// In [KR, p.47] all variables are assigned degree two. The conventions for graded
+// matrix factorisations are explained in [KR, p.44]
+
+
 /////////////////////////////////////////////////////////////////////////////////////
 // g - returns the polynomial g of [KR] p.48.
 /////////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +104,22 @@ proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
     // to the order suggested on p.48 of [KR]. This is done so as to agree
     // with the matrices written on p.50.
     matrix D = MFtensor(koszul2, koszul1);
+    
     return(D);
+}
+
+proc mfWideEdgeGrading(int n)
+{
+    // Note that deg(u1) = n and deg(u2) = n - 1 so as written on 
+    // [KR, p.48] the Koszul factorisations koszul1 and koszul2 have
+    // respective grading vectors
+    intvec g = 0, 1-n;
+    intvec h = 0, 3-n;
+    
+    // Grading vector on the tensor product
+    intvec r = MFtensorGradings(h, g);
+    
+    return(r);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -114,6 +136,18 @@ proc mfIdentityDefect(poly W1, poly W2, poly y, poly x)
     return(koszul1);
 }
 
+// We assume that W is homogeneous
+proc mfIdentityDefectGrading(poly W)
+{
+    int n = deg(W) - 1;
+    
+    // We have |W| = 2(n+1) and the identity defect is given the grading
+    // R ---> R{1+n-|(W1-W2)/(y-x)|} --> R, but |(W1-W2)/(y-x)| = 2 * n so
+    // this is R ---> R{1-n} ---> R, see [KR, p.45].
+    
+    intvec g = 0, 1-n;
+    return(g);
+}
 
 ////////////////////////////////////////////////////////////////////
 // mfChi0
