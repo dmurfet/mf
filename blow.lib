@@ -38,6 +38,41 @@ LIB "ring.lib";
 // We assume currently in dQ, deltaQ and related routines that the polynomial
 // we are passed is a sum of all the x-variables to some specific power.
 
+////////////////////////////////////////////////////////////////////
+// GRADED MATRIX FACTORISATIONS
+//
+// IMPORTANT: Following KR we make use of the grading on our polynomial rings where each
+// variable has degree 2. This is NOT imposed on the level of Singular code, it just affects
+// our convention for grading vectors. Given a graded module M, M{1} denotes the module with grading
+// M{1}_i = M_{i-1}.
+//
+// The doubled grading is adopted for the following reason: let R be a polynomial ring
+// with this grading, and W an element of R of degree 2(n+1). If W = fg for homogeneous f,g
+// then we can write W: R -> R as a composite of two maps g: R -> R{n+1-|g|} and f: R{n+1-|g|} -> R
+// of graded R-modules of degree n+1.
+//
+// A matrix factorisation is represented by an odd supermatrix A giving the differential
+// on some Z/2-graded free module X (over a polynomial ring). A _graded_ matrix factorisation
+// is this differential together with an intvec g, whose length is equal to the number of
+// columns in A, giving the "grading shift" on each free module in X. We require that the
+// components a0 and a1 of A are then morphisms of graded modules of degree n+1 where the
+// potential is of degree 2(n+1).
+//
+// For example, if X = X0 + X1 is a free module of rank 4, then g = (1 2 3 1) would express
+// that as a graded module X0 = R{1} + R{2} and X1 = R{3} + R{4} where R is the polynomial
+// ring with the doubled grading. Suppose that the potential W has degree 4, so n = 1. Then
+// the differential A = (0, a1 \\ a0, 0) would have to consist of a morphism
+// a0: R{1}+R{2} -> R{3}+R{4} of degree n+1 = 2, so 
+// deg(a0[1,1]) = 0,
+// deg(a0[1,2]) = 1,
+// deg(a0[2,1]) = -1,
+// deg(a0[2,2]) = 0
+// so in particular a0[1,2] = a0[2,1] = 0. Similarly for a1.
+//
+// NOTE: All operations on graded MFs assume that A is square (i.e. both degrees have
+// the same rank).
+
+
 //////////////////////////////////////////////////////////////////////////////////
 // "ringwithoutyvars" returns the ambient ring with y variables removed
 // NOTE: We just return the ring, we do not change the current basering
@@ -353,7 +388,6 @@ proc mablow(matrix M, ideal J)
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
     
-    dbprint(printlevel, "[mablow] Computing variable inflations");
     // Compute the inflation of individual variables
     list variableActions = variableInflationList(J);
     
@@ -397,6 +431,46 @@ proc mablow(matrix M, ideal J)
     }
 
     return(A);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// "mablowGrading" returns the grading vector for an inflated MF, given the grading
+// vector of the original MF and the ideal to inflate with. We use the basis for 
+// R/J given by reduce(kbase(std(J)),std(J)).
+//
+// The underlying graded free module of the MF is R{g[1]} + R{g[2]} + ... and
+// the underlying graded free module of the inflation is a direct sum of modules
+// of the form R{g[i]} x R/J which has the usual grading. Obviously this only makes
+// sense if J is a graded ideal.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc mablowGrading(intvec g, ideal J)
+{
+    def RRR = basering;
+    
+    def nR = ringWithoutYVars();
+    setring nR;
+        
+    ideal J = imap(RRR,J);
+    ideal Jstd = std(J);
+    ideal basis = kbase(Jstd);
+    int jdim = size(basis);
+    module BB = reduce(basis,Jstd);
+        
+    intvec r;   
+    
+    int i,j;
+    for(i=1;i <= size(g); i++)
+    {
+        for(j=1;j<=jdim;j++)
+        {
+            r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]);
+        }
+    }
+    
+    setring RRR;
+    
+    return(r);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -1881,6 +1955,64 @@ proc ismfReduced(matrix A)
 }
 
 ////////////////////////////////////////////////////////////////////
+// isGradingValid
+//
+// Given the differential of a MF and a grading vector, checks whether
+// the pair defines a graded MF in the sense explained in "Usage Guide" above.
+// Returns 1 if the input is a valid graded MF, 0 otherwise.
+
+proc isGradingValid(matrix A, intvec g)
+{
+    // Find the degree of our potential. Let R denote the basering, which
+    // we view as a graded ring with the grading which assigns degree 2 to
+    // each variable.
+    
+    int m = ncols(A)/2;
+    poly W = (A * A)[1,1];
+    
+    if( W == 0 ){ print("[isGradingValid] Potential is zero, exiting."); return(); }
+        
+    // In R this W has degree 2 * (n+1) where n is given by
+    int n = deg(W) - 1;
+    
+    matrix a0 = extractblockmat(A)[3];
+    matrix a1 = extractblockmat(A)[2];
+    
+    int i, j;
+    for(i = 1; i <= m; i++) // row
+    {
+        for(j = 1; j <= m; j++) // column
+        {
+            // First we check that the polynomial a0[i,j] is "valid". It is a map
+            // R{a} -> R{b} where a = g[j] and b = g[m + i], and for A to be a valid
+            // graded MF this map should be of degree n + 1 (note doubling of grading!)
+            
+            int deg_a0entry = deg(a0[i,j]);
+            if( deg_a0entry == -1 ){ deg_a0entry = 0; } // We want 0 to have degree 0
+            
+            if( n+1 - g[m+i] + g[j] != 2 * deg_a0entry )
+            {
+                dbprint(printlevel, "[isGradingValid] First test " + string(n+1-g[m+i]+g[j]) + "=" + string(2 * deg_a0entry) + " failed for (" + string(i) + "," + string(j) + ")");
+                return(0);
+            }
+            
+            int deg_a1entry = deg(a1[i,j]);
+            if( deg_a1entry == -1 ){ deg_a1entry = 0; }
+            
+            // Next check that a1[i,j] is valid
+            if( n+1 - g[i] + g[m+j] != 2 * deg_a1entry )
+            {
+                dbprint(printlevel, "[isGradingValid] Second test " + string(n+1-g[i]+g[m+j]) + "=" + string(2 * deg_a1entry) + " failed for (" + string(i) + "," + string(j) + ")");
+                return(0);
+            }
+        }
+    }
+    
+    // If we are still here then A is valid
+    return(1);
+}
+
+////////////////////////////////////////////////////////////////////
 // matrixreduce
 //
 // After some bad experiences with examples I don't trust Singular's gaussian elimination
@@ -1950,6 +2082,36 @@ proc MFtensor(matrix A, matrix B)
     int brank = ncols(B);
     
     return( ZZtensor( unitmat(arank), B ) + ZZtensor( A, unitmat(brank) ) );
+}
+
+proc MFtensorGradings(intvec g, intvec h)
+{
+    // With the notation of MFtensor, X x Y is, as a Z/2-graded free module
+    // (X x Y)0 = (X0 x Y0) + (X1 x Y1)
+    // (X x Y)1 = (X0 x Y1) + (X1 x Y0)
+    // with the basis ordered in the usual way. If X,Y are graded free modules
+    // with the gradings described by intvecs g, h resp. then the intvec describing
+    // the shifts on the free modules in X x Y is
+   
+    int sizeX = size(g)/2;
+    int sizeY = size(h)/2;
+    int rankProduct = sizeX * sizeY;
+    
+    intvec r;
+    
+    int i, j;
+    for(i=1;i<=sizeX;i++)
+    {
+        for(j=1;j<=sizeY;j++)
+        {
+            r[(i-1)*sizeY + j] = g[i] + h[j]; // Gradings on X0 x Y0
+            r[rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[sizeY + j]; // Grading on X1 x Y1
+            r[2*rankProduct + (i-1)*sizeY + j] = g[i] + h[sizeY + j]; // X0 x Y1
+            r[3*rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[j]; // X1 x Y0
+        }
+    }
+    
+    return(r);
 }
 
 ////////////////////////////////////////////////////////////////////

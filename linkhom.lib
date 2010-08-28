@@ -26,6 +26,17 @@ LIB "blow.lib"
 // The references to [KR] are to Khovanov and Rozansky "Matrix factorizations and
 // link homology" arXiv:math/0401268v2.
 
+////////////////////////////////////////////////////////////////////
+// NOTES ON GRADING
+//
+// In [KR, p.47] all variables are assigned degree two. The conventions for graded
+// matrix factorisations are explained in [KR, p.44]
+//
+// Note that the Jacobi algebra A = QQ[x]/(x^n) (notation of [KR]) is naturally graded,
+// but this grading is shifted up by n - 1 so that |1| = n - 1 and |x^i| = 2i + n - 1.
+// Note this shift is the opposite direction to the one given in (see [KR,p.45]), but
+// actual calculations seem to suggest that this is an error in [KR]. See blow-example-grading.
+
 /////////////////////////////////////////////////////////////////////////////////////
 // g - returns the polynomial g of [KR] p.48.
 /////////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +108,26 @@ proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
     // to the order suggested on p.48 of [KR]. This is done so as to agree
     // with the matrices written on p.50.
     matrix D = MFtensor(koszul2, koszul1);
+    
     return(D);
+}
+
+proc mfWideEdgeGrading(int n)
+{
+    // Note that deg(u1) = n and deg(u2) = n - 1 so as written on 
+    // [KR, p.48] the Koszul factorisations koszul1 and koszul2 have
+    // respective grading vectors
+    intvec g = 0, 1-n;
+    intvec h = 0, 3-n;
+    
+    // Grading vector on the tensor product
+    intvec r = MFtensorGradings(h, g);
+    
+    // The grading is then shifted by -1, as defined on [KR, p.48]
+    int i;
+    for(i=1;i<=size(r);i++){ r[i] = r[i] - 1; }
+    
+    return(r);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -114,6 +144,18 @@ proc mfIdentityDefect(poly W1, poly W2, poly y, poly x)
     return(koszul1);
 }
 
+// We are given the degree of some homogeneous potential
+proc mfIdentityDefectGrading(int dg)
+{
+    int n = dg - 1;
+    
+    // We have |W| = 2(n+1) and the identity defect is given the grading
+    // R ---> R{1+n-|(W1-W2)/(y-x)|} --> R, but |(W1-W2)/(y-x)| = 2 * n so
+    // this is R ---> R{1-n} ---> R, see [KR, p.45].
+    
+    intvec g = 0, 1-n;
+    return(g);
+}
 
 ////////////////////////////////////////////////////////////////////
 // mfChi0
@@ -161,3 +203,33 @@ proc mfChi1(poly p(1), p(2), p(3), p(4), int N)
     return(chi1);
 }
 
+////////////////////////////////////////////////////////////////////
+// printBasisDegree
+////////////////////////////////////////////////////////////////////
+
+proc printBasisDegree(matrix A, intvec g)
+{
+    int i;
+    for(i=1;i<=ncols(A);i++)
+    {
+        int j;
+        int currentDegree = 0;
+        for(j=1;j<=size(g);j++)
+        {
+            if( A[j,i] != 0 )
+            {
+               if( currentDegree != 0 && currentDegree != g[j] )
+               {
+                   print("[printBasisDegree] Encountered multiple nonzero degrees, exiting.");
+                   return();
+               }
+               else
+               {
+                   currentDegree = g[j];
+               }
+            }
+        }
+        
+        print("[printBasisDegree] Basis element no." + string(i) + " has degree " + string(currentDegree));
+    }
+}

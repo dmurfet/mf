@@ -1,0 +1,126 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// Demonstrate how to use graded MFs
+//
+// See the Usage Guide in blow.lib for our conventions on grading. We refer to the
+// usual grading on a polynomial ring by "deg" and the doubled grading by bars |-|, so that
+// |f| = 2 * deg(f). See [KR, p.44] for our choice of grading for Koszul factorisations.
+/////////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+ring rr=0,(x(1..nx)),dp;
+printlevel = 1;
+
+// Consider a Koszul factorisation of the potential
+poly W = x(1)^3 * x(2);
+// which, in the doubled grading, has degree 8, so that n = 3.
+
+matrix D[2][2] = 0, x(1)^3, x(2), 0;
+intvec g = 0,2;
+
+// With this differential and choice of grading shifts, the MF can be represented by
+// the pair R -- x(2) --> R{2} -- x(1)^3 --> R. Notice that n + 1 - |x(2)| = 2.
+isGradingValid(D,g);
+
+poly V = x(3)^2 * x(4)^2; // again n = 3
+matrix E[2][2] = 0, x(3)^2, x(4)^2, 0;
+intvec h = 0, 0;
+isGradingValid(E,h);
+
+matrix DE = MFtensor(D, E);
+intvec gh = MFtensorGradings(g, h);
+isGradingValid(DE,gh);
+
+// Try out the wide edge gradings
+matrix F = mfWideEdge(x(1),x(2),x(3),x(4),2);
+intvec f = mfWideEdgeGrading(2);
+isGradingValid(F,f);
+
+// Try out the identity defect
+F = mfIdentityDefect( x(1)^3, x(2)^3, x(1), x(2) );
+f = mfIdentityDefectGrading( 3 );
+isGradingValid(F,f);
+
+///////////////////////////////////////
+// Testing the fusion of two identity defects eating each other's tails
+///////////////////////////////////////
+
+int nx=2;
+ring rr=0,(x(1..nx)),dp;
+printlevel = 1;
+int N = 2;
+matrix I1 = mfIdentityDefect( x(1)^(N+1), x(2)^(N+1), x(1), x(2) );
+matrix I2 = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
+intvec I1_gr = mfIdentityDefectGrading( N+1 );
+intvec I2_gr = mfIdentityDefectGrading( N+1 );
+matrix I = MFtensor(I1,I2);
+intvec I_gr = MFtensorGradings(I1_gr, I2_gr);
+// No point testing for valid grading, as the potential is zero.
+
+ideal J = x(1)^N, x(2)^N;
+intvec q = N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(2);
+matrix Dblow = mablow(I,J);
+
+intvec Dblow_gr = mablowGrading(I_gr,J); // ONLY INTERESTING LINE
+
+list l = mfReduce(Dblow,1);
+matrix RD = l[1];
+matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
+matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+matrix diff1 = ZZtensor( diff(I1, x(1)), unitmat(ncols(I2)) );
+matrix diff2 = ZZtensor( unitmat(ncols(I1)), diff(I2,x(2)) );
+matrix iddQ = mablow( det(C) * diff1 * diff2, J );
+matrix delQ = deltaQ(I,q);
+
+// The idempotent e on Dblow
+int sign = (nx * (nx-1)) div 2;
+matrix e = (-1)^(sign) * iddQ * delQ; 
+e * Dblow == Dblow * e;
+matrix ep = F * e * G;
+ep * RD == RD * ep;
+ep * ep == ep;
+
+matrix ep0 = extractblockmat(ep)[1];
+matrix ep1 = extractblockmat(ep)[4];
+
+print(mat_rk(ep0));       // Gives N
+print(mat_rk(ep1));       // Gives 0
+
+// We conclude that the splitting of e is the factorisation 0 --> QQ^N --> 0.
+// Next we split the idempotent in degree one by hand
+LIB "control.lib";
+module ker1 = rightKernel(unitmat(ncols(ep1)) - ep1);
+matrix f1 = ker1;
+matrix g1[ncols(f1)][nrows(f1)];
+    
+if( ker1[1] != [0] )
+{
+    matrix g1 = leftInverse(f1) * ep1; // Solves f1 * g1 = ep1
+};
+
+// Check that (f1,g1) is a splitting of ep1:
+f1 * g1 == ep1;
+g1 * f1 == unitmat(ncols(g1 * f1));
+
+matrix G1 = extractblockmat(G)[4];
+matrix Gv = G1 * f1;
+
+int k = size(Dblow_gr)/2;
+intvec Dblow_grtrunc = Dblow_gr[(k+1)..(2*k)];
+printBasisDegree(Gv, Dblow_grtrunc);
+
+// N = 2 output is that our QQ^2 lives in degrees 1 and 3. Note that QQ[x]/(x^2) lives in degrees 0
+// and 2, and shifting by one we obtain the output of the above calculation.
+
+// N = 3 output is that QQ^3 lives in degrees 2, 4, 6 which is QQ[x]/(x^3) shifted by 2
+
+// N = 4 output is that QQ^4 lives in degrees 3, 5, 7, 9
+
+// This suggests that [KR,p.45] is in error, and we should instead take A = QQ[x]/(x^n) with
+// the grading shifted UP by n - 1, so that 1 lives in degree n - 1. This would then be consistent
+// with the above calculation, which should by the general theory produce A<1>.
