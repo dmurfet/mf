@@ -38,6 +38,38 @@ LIB "ring.lib";
 // We assume currently in dQ, deltaQ and related routines that the polynomial
 // we are passed is a sum of all the x-variables to some specific power.
 
+////////////////////////////////////////////////////////////////////
+// GRADED MATRIX FACTORISATIONS
+//
+// IMPORTANT: Following KR we make use of the grading on our polynomial rings where each
+// variable has degree 2. This is NOT imposed on the level of Singular code, it just affects
+// our convention for grading vectors. Given a graded module M, M{1} denotes the module with grading
+// M{1}_i = M_{i-1}.
+//
+// The doubled grading is adopted for the following reason: let R be a polynomial ring
+// with this grading, and W an element of R of degree 2(n+1). If W = fg for homogeneous f,g
+// then we can write W: R -> R as a composite of two maps g: R -> R{n+1-|g|} and f: R{n+1-|g|} -> R
+// of graded R-modules of degree n+1.
+//
+// A matrix factorisation is represented by an odd supermatrix A giving the differential
+// on some Z/2-graded free module X (over a polynomial ring). A _graded_ matrix factorisation
+// is this differential together with an intvec g, whose length is equal to the number of
+// columns in A, giving the "grading shift" on each free module in X. We require that the
+// components a0 and a1 of A are then morphisms of graded modules of degree n+1 where the
+// potential is of degree 2(n+1).
+//
+// For example, if X = X0 + X1 is a free module of rank 4, then g = (1 2 3 1) would express
+// that as a graded module X0 = R{1} + R{2} and X1 = R{3} + R{4} where R is the polynomial
+// ring with the doubled grading. Suppose that the potential W has degree 4, so n = 1. Then
+// the differential A = (0, a1 \\ a0, 0) would have to consist of a morphism
+// a0: R{1}+R{2} -> R{3}+R{4} of degree n+1 = 2, so 
+// deg(a0[1,1]) = 0,
+// deg(a0[1,2]) = 1,
+// deg(a0[2,1]) = -1,
+// deg(a0[2,2]) = 0
+// so in particular a0[1,2] = a0[2,1] = 0. Similarly for a1.
+
+
 //////////////////////////////////////////////////////////////////////////////////
 // "ringwithoutyvars" returns the ambient ring with y variables removed
 // NOTE: We just return the ring, we do not change the current basering
@@ -1877,6 +1909,53 @@ proc ismfReduced(matrix A)
         }
     }
     
+    return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// isGradingValid
+//
+// Given the differential of a MF and a grading vector, checks whether
+// the pair defines a graded MF in the sense explained in "Usage Guide" above.
+// Returns 1 if the input is a valid graded MF, 0 otherwise.
+
+proc isGradingValid(matrix A, intvec g)
+{
+    // Find the degree of our potential. Let R denote the basering, which
+    // we view as a graded ring with the grading which assigns degree 2 to
+    // each variable.
+    
+    int m = ncols(A)/2;
+    poly W = (A * A)[1,1];
+    
+    // In R this W has degree 2 * (n+1) where n is given by
+    int n = deg(W) - 1;
+    
+    matrix a0 = extractblockmat(A)[3];
+    matrix a1 = extractblockmat(A)[2];
+    
+    int i, j;
+    for(i = 1; i <= m; i++) // row
+    {
+        for(j = 1; j <= m; j++) // column
+        {
+            // First we check that the polynomial a0[i,j] is "valid". It is a map
+            // R{a} -> R{b} where a = g[j] and b = g[m + i], and for A to be a valid
+            // graded MF this map should be of degree n + 1.
+            if( n+1 - g[m+i] + g[j] != deg(a0[i,j]) )
+            {
+                return(0);
+            }
+            
+            // Next check that a1[i,j] is valid
+            if( n+1 - g[i] + g[m+j] != deg(a1[i,j]) )
+            {
+                return(0);
+            }
+        }
+    }
+    
+    // If we are still here then A is valid
     return(1);
 }
 
