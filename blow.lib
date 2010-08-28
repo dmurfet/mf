@@ -388,7 +388,6 @@ proc mablow(matrix M, ideal J)
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
     
-    dbprint(printlevel, "[mablow] Computing variable inflations");
     // Compute the inflation of individual variables
     list variableActions = variableInflationList(J);
     
@@ -432,6 +431,46 @@ proc mablow(matrix M, ideal J)
     }
 
     return(A);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// "mablowGrading" returns the grading vector for an inflated MF, given the grading
+// vector of the original MF and the ideal to inflate with. We use the basis for 
+// R/J given by reduce(kbase(std(J)),std(J)).
+//
+// The underlying graded free module of the MF is R{g[1]} + R{g[2]} + ... and
+// the underlying graded free module of the inflation is a direct sum of modules
+// of the form R{g[i]} x R/J which has the usual grading. Obviously this only makes
+// sense if J is a graded ideal.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc mablowGrading(intvec g, ideal J)
+{
+    def RRR = basering;
+    
+    def nR = ringWithoutYVars();
+    setring nR;
+        
+    ideal J = imap(RRR,J);
+    ideal Jstd = std(J);
+    ideal basis = kbase(Jstd);
+    int jdim = size(basis);
+    module BB = reduce(basis,Jstd);
+        
+    intvec r;   
+    
+    int i,j;
+    for(i=1;i <= size(g); i++)
+    {
+        for(j=1;j<=jdim;j++)
+        {
+            r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]);
+        }
+    }
+    
+    setring RRR;
+    
+    return(r);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
