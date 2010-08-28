@@ -1970,6 +1970,8 @@ proc isGradingValid(matrix A, intvec g)
     int m = ncols(A)/2;
     poly W = (A * A)[1,1];
     
+    if( W == 0 ){ print("[isGradingValid] Potential is zero, exiting."); return(); }
+        
     // In R this W has degree 2 * (n+1) where n is given by
     int n = deg(W) - 1;
     
@@ -1986,14 +1988,14 @@ proc isGradingValid(matrix A, intvec g)
             // graded MF this map should be of degree n + 1 (note doubling of grading!)
             if( n+1 - g[m+i] + g[j] != 2 * deg(a0[i,j]) )
             {
-                //dbprint(printlevel, "[isGradingValid] First test " + string(n+1-g[m+i]+g[j]) + "=" + string(2 * deg(a0[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
+                dbprint(printlevel, "[isGradingValid] First test " + string(n+1-g[m+i]+g[j]) + "=" + string(2 * deg(a0[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
                 return(0);
             }
             
             // Next check that a1[i,j] is valid
             if( n+1 - g[i] + g[m+j] != 2 * deg(a1[i,j]) )
             {
-                //dbprint(printlevel, "[isGradingValid] Second test " + string(n+1-g[i]+g[m+j]) + "=" + string(2 * deg(a1[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
+                dbprint(printlevel, "[isGradingValid] Second test " + string(n+1-g[i]+g[m+j]) + "=" + string(2 * deg(a1[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
                 return(0);
             }
         }

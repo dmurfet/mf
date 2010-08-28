@@ -33,8 +33,9 @@ LIB "blow.lib"
 // matrix factorisations are explained in [KR, p.44]
 //
 // Note that the Jacobi algebra A = QQ[x]/(x^n) (notation of [KR]) is naturally graded,
-// but this grading is shifted down by n - 1 (see [KR,p.45]) so that |1| = 1 - n and
-// |x^i| = 2i + 1 - n.
+// but this grading is shifted up by n - 1 so that |1| = n - 1 and |x^i| = 2i + n - 1.
+// Note this shift is the opposite direction to the one given in (see [KR,p.45]), but
+// actual calculations seem to suggest that this is an error in [KR]. See blow-example-grading.
 
 /////////////////////////////////////////////////////////////////////////////////////
 // g - returns the polynomial g of [KR] p.48.
@@ -202,3 +203,33 @@ proc mfChi1(poly p(1), p(2), p(3), p(4), int N)
     return(chi1);
 }
 
+////////////////////////////////////////////////////////////////////
+// printBasisDegree
+////////////////////////////////////////////////////////////////////
+
+proc printBasisDegree(matrix A, intvec g)
+{
+    int i;
+    for(i=1;i<=ncols(A);i++)
+    {
+        int j;
+        int currentDegree = 0;
+        for(j=1;j<=size(g);j++)
+        {
+            if( A[j,i] != 0 )
+            {
+               if( currentDegree != 0 && currentDegree != g[j] )
+               {
+                   print("[printBasisDegree] Encountered multiple nonzero degrees, exiting.");
+                   return();
+               }
+               else
+               {
+                   currentDegree = g[j];
+               }
+            }
+        }
+        
+        print("[printBasisDegree] Basis element no." + string(i) + " has degree " + string(currentDegree));
+    }
+}
