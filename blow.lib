@@ -1987,23 +1987,24 @@ proc isGradingValid(matrix A, intvec g)
             // R{a} -> R{b} where a = g[j] and b = g[m + i], and for A to be a valid
             // graded MF this map should be of degree n + 1 (note doubling of grading!)
             
-            int deg_a0entry = deg(a0[i,j]);
-            if( deg_a0entry == -1 ){ deg_a0entry = 0; } // We want 0 to have degree 0
-            
-            if( n+1 - g[m+i] + g[j] != 2 * deg_a0entry )
+            // Note that zeros are always OK
+            if( a0[i,j] != 0 )
             {
-                dbprint(printlevel, "[isGradingValid] First test " + string(n+1-g[m+i]+g[j]) + "=" + string(2 * deg_a0entry) + " failed for (" + string(i) + "," + string(j) + ")");
-                return(0);
+                if( n+1 - g[m+i] + g[j] != 2 * deg(a0[i,j]) )
+                {
+                    dbprint(printlevel, "[isGradingValid] First test " + string(n+1-g[m+i]+g[j]) + "=" + string(2 * deg(a0[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
+                    return(0);
+                }
             }
             
-            int deg_a1entry = deg(a1[i,j]);
-            if( deg_a1entry == -1 ){ deg_a1entry = 0; }
-            
             // Next check that a1[i,j] is valid
-            if( n+1 - g[i] + g[m+j] != 2 * deg_a1entry )
+            if( a1[i,j] != 0 )
             {
-                dbprint(printlevel, "[isGradingValid] Second test " + string(n+1-g[i]+g[m+j]) + "=" + string(2 * deg_a1entry) + " failed for (" + string(i) + "," + string(j) + ")");
-                return(0);
+                if( n+1 - g[i] + g[m+j] != 2 * deg(a1[i,j]) )
+                {
+                    dbprint(printlevel, "[isGradingValid] Second test " + string(n+1-g[i]+g[m+j]) + "=" + string(2 * deg(a1[i,j])) + " failed for (" + string(i) + "," + string(j) + ")");
+                    return(0);
+                }
             }
         }
     }
