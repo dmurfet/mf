@@ -403,9 +403,9 @@ proc mablow(matrix M, ideal J)
     }
     for(i1=1; i1<=s; i1++)
     {
+        dbprint(printlevel, "[mablow] Iteration count is " + string(i1) + "/" + string(s));
         for(j1=1; j1<=s; j1++)
         {
-            dbprint(printlevel, "[mablow] Iteration count is (" + string(i1) + "," + string(j1) + ")/(" + string(s) + "," + string(s) + ")");
             matrix PM = poly2matrix(M[i1,j1], J, variableActions, n);
             //L[i1] = insert(L[i1], PM, j1-1);
             //L[i1] = L[i1] + list(PM);
@@ -577,9 +577,9 @@ proc mablow_delta(matrix M, int i, int exponent, ideal J)
     }
     for(i1=1; i1<=s; i1++)
     {
+        dbprint(printlevel, "[mablow_delta] Iteration count is " + string(i1) + "/" + string(s));
         for(j1=1; j1<=s; j1++)
         {
-            dbprint(printlevel, "[mablow_delta] Iteration count is (" + string(i1) + "," + string(j1) + ")/(" + string(s) + "," + string(s) + ")");
             L[i1] = insert(L[i1], poly2matrix_delta(M[i1,j1], J, i, exponent, variableActions, deltaActions, n),j1-1);
         }
     }   
