@@ -1,3 +1,6 @@
+computeGradingFromInjection
+mfSplitIdempotent
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // Compute KR cohomology of "figure-eight knot".
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +34,13 @@ matrix A2a = mfIdentityDefect( y(3)^(N+1), y(4)^(N+1), y(3), y(4) );
 matrix A2b = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
 matrix A2 = MFtensor(A2a, A2b);
 
+intvec A1agr = mfIdentityDefectGrading( N+1 );
+intvec A1bgr = mfIdentityDefectGrading( N+1 );
+intvec A1gr = MFtensorGradings(A1agr, A1bgr);
+intvec A2agr = mfIdentityDefectGrading( N+1 );
+intvec A2bgr = mfIdentityDefectGrading( N+1 );
+intvec A2gr = MFtensorGradings(A2agr, A2bgr);
+
 // Here the mapping between Singular variables and edge labels of [FEK] is
 // x(1) = 7, x(2) = 8, y(1) = 1, y(2) = 5, y(3) = 6, y(4) = 2
 
@@ -41,13 +51,20 @@ matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
 
 // Compute the ordinary tensor product
 matrix D = MFtensor(A1,A2);
+intvec Dgr = MFtensorGradings(A1gr, A2gr);
+isGradingValid(D,Dgr);
+
 matrix Dblow = mablow(D,J);
+intvec Dblowgr = mablowGrading(Dgr,J);
+isGradingValid(Dblow,Dblowgr);
 
 // Reduce this inflated differential
 list l = mfReduce(Dblow,1);
 matrix RD = l[1];
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+intvec RDgr = computeGradingFromInjection(G,Dblowgr);
+isGradingValid(RD,RDgr);
 
 matrix diff1 = ZZtensor( diff(A1, x(1)), unitmat(ncols(A2)) );
 matrix diff2 = ZZtensor( unitmat(ncols(A1)), diff(A2, x(2)) );
@@ -70,7 +87,13 @@ matrix epfinal = mfStrictifyIdempotent(RD, ep);
 epfinal * RD == RD * epfinal;
 epfinal * epfinal == epfinal;
 
-matrix finalAA = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+l = mfSplitIdempotent(RD, epfinal, RDgr);
+// l[1] is the differential on the splitting, l[4] is the grading vector
+
+matrix finalAA = mfSuspend( l[1], nx );
+intvec finalAAgr = mfSuspendGrading( l[4], nx );
+isGradingValid(finalAA,finalAAgr);
+
 print(finalAA);
 
 // Step 1.2: Compile "AAB"

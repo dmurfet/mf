@@ -43,8 +43,10 @@ LIB "ring.lib";
 //
 // IMPORTANT: Following KR we make use of the grading on our polynomial rings where each
 // variable has degree 2. This is NOT imposed on the level of Singular code, it just affects
-// our convention for grading vectors. Given a graded module M, M{1} denotes the module with grading
-// M{1}_i = M_{i-1}.
+// our convention for grading vectors (which terminology will be explained presently). Given
+// a polynomial p we write deg(p) for the usual degree, as understood by Singular, and |p| for
+// the doubled grading, so |p| = 2 * deg(p). Given a graded module M, M{1} denotes the module
+// with grading M{1}_i = M_{i-1}.
 //
 // The doubled grading is adopted for the following reason: let R be a polynomial ring
 // with this grading, and W an element of R of degree 2(n+1). If W = fg for homogeneous f,g
@@ -58,16 +60,15 @@ LIB "ring.lib";
 // components a0 and a1 of A are then morphisms of graded modules of degree n+1 where the
 // potential is of degree 2(n+1).
 //
-// For example, if X = X0 + X1 is a free module of rank 4, then g = (1 2 3 1) would express
-// that as a graded module X0 = R{1} + R{2} and X1 = R{3} + R{4} where R is the polynomial
-// ring with the doubled grading. Suppose that the potential W has degree 4, so n = 1. Then
+// For example, if X = X0 + X1 is a free module of rank 4, then g = (3 3 2 1) would express
+// that as a graded module X0 = R{3} + R{3} and X1 = R{2} + R{1} where R is the polynomial
+// ring with the doubled grading. Suppose that the potential W has |W| = 4, so n = 1. Then
 // the differential A = (0, a1 \\ a0, 0) would have to consist of a morphism
-// a0: R{1}+R{2} -> R{3}+R{4} of degree n+1 = 2, so 
-// deg(a0[1,1]) = 0,
-// deg(a0[1,2]) = 1,
-// deg(a0[2,1]) = -1,
-// deg(a0[2,2]) = 0
-// so in particular a0[1,2] = a0[2,1] = 0. Similarly for a1.
+// a0: R{3}+R{3} -> R{2}+R{1} of degree n+1 = 2, so 
+// |a0[1,1]| = 3,
+// |a0[1,2]| = 3,
+// |a0[2,1]| = 4,
+// |a0[2,2]| = 4
 //
 // NOTE: All operations on graded MFs assume that A is square (i.e. both degrees have
 // the same rank).
@@ -1437,6 +1438,24 @@ proc mfSuspend(matrix A, list #)
     }
 }
 
+proc mfSuspendGrading(intvec g, list #)
+{
+    int power = 1;
+    
+    if( size(#) != 0 ){ power = #[1]; }
+    
+    if( power mod 2 == 0 )
+    {
+        return(g);
+    }
+    else
+    {
+        int n = size(g)/2;
+        intvec r = g[(n+1)..2*n], g[1..n];
+    
+        return(r);
+    }
+}
 
 ////////////////////////////////////////////////////////////////////
 // mfSuspendMorph
@@ -1540,20 +1559,85 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
 }
 
 ////////////////////////////////////////////////////////////////////
+// computeGradingFromInjection
+//
+// Given a matrix F interpreted as a morphism of free modules, and an
+// intvec g assigning degrees to the basis elements of the target module,
+// we derive the induced grading intvec of the source module making the map F
+// into a homogeneous map of degree zero.
+
+proc computeGradingFromInjection(matrix F, intvec g)
+{
+    LIB "control.lib";
+    
+    // Sanity checks
+    
+    // Check that F is a monomorphism
+    module kerF = rightKernel(F);
+    if( kerF[1] != 0 )
+    {
+        print("[computeGradingFromInjection] Passed a non-injective map, exiting.");
+        return();
+    }
+    
+    // Check that the sizes of g and F are compatible
+    if( size(g) != nrows(F) )
+    {
+        print("[computeGradingFromInjection] Sizes of map and grading vector not compatible, exiting.");
+        return();
+    }
+    
+    int i;
+    intvec r;
+    for(i=1;i<=ncols(F);i++)
+    {
+        int j;
+        int currentDegree = 0;
+        for(j=1;j<=size(g);j++)
+        {
+            if( F[j,i] != 0 )
+            {
+               //dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
+               if( currentDegree != 0 && currentDegree != g[j] + 2 * deg(F[j,i]) )
+               {
+                   print("[computeGradingFromInjection] Encountered multiple nonzero degrees, exiting.");
+                   return();
+               }
+               else
+               {
+                   currentDegree = g[j] + 2 * deg(F[j,i]);
+               }
+            }
+        }
+        
+        r[i] = currentDegree;
+    }
+    
+    return(r);
+}
+
+
+////////////////////////////////////////////////////////////////////
 // mfSplitIdempotent
 //
 // Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X,
 // and an even block matrix E interpreted as an endomorphism of X, satisfying E * E = E. We return
 // the differential B on a MF Y splitting E (details in a moment) if no third parameter is given, and
-// if a third parameter is given then we return:
+// if a third parameter is given then there are two cases:
 //
-// a list B, F, G consisting of the differential B on a MF Y and morphisms F: Y -> X, G: X -> Y such
-// that E = F * G and 1_Y = G * F. That is, we split the idempotent.
+// A) The third parameter is NOT an intvec, in which case we return a list B, F, G consisting of
+// the differential B on a MF Y and morphisms F: Y -> X, G: X -> Y such that E = F * G and
+// 1_Y = G * F. That is, we split the idempotent.
+//
+// B) If the third parameter is of type intvec, we presume it is a grading vector and use it to compute
+// a grading on the splitting of the idempotent making F,G homogeneous of degree zero. We then return
+// the corresponding grading vector r as the fourth element of the return list B, F, G, r.
 //
 // WARNING: If X is a matrix factorisation of a nonzero potential, we return a block matrix with
 // square blocks, but if the potential is zero the blocks may be non-square.
 //
 // TODO: At the moment we do not treat the case of potential zero (we quit with an error).
+//
 
 proc mfSplitIdempotent(matrix A, matrix E, list #)
 {
@@ -1566,13 +1650,13 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     int m = ncols(A);
 
-    if( A * E - E * A != zeromat(m) )
+    if( A * E != E * A )
     {
         print("[mfSplitIdempotent] Passed a non-morphism, exiting.");
         return();
     }
     
-    if( E * E - E != zeromat(m) )
+    if( E * E != E )
     {
         print("[mfSplitIdempotent] Passed a non-idempotent endomorphism, exiting.");
         return();
@@ -1659,8 +1743,19 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     if( size(#) == 0 ){ return(B); }
     
-    list l = B, F, G;
-    return(l);
+    if( typeof(#[1]) == "intvec" )
+    {
+        // We are dealing with graded MFs
+        intvec g = #[1];
+        intvec r = computeGradingFromInjection(F, g);
+        list l = B, F, G, r;
+        return(l);
+    }
+    else
+    {
+        list l = B, F, G;
+        return(l);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////
