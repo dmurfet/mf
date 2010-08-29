@@ -79,7 +79,10 @@ matrix ep = F * e * G;
 ep * RD == RD * ep;
 ep * ep == ep;
 
-// Strictify this idempotent (ep is already idempotent on the nose, so this is not really necessary):
+// Check that ep is indeed degree zero 
+isMorphismDegreeZero(RD,RDgr,RD,RDgr,ep);
+
+// Strictify this idempotent
 matrix epfinal = mfStrictifyIdempotent(RD, ep);
 epfinal * RD == RD * epfinal;
 epfinal * epfinal == epfinal;
