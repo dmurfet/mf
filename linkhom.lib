@@ -202,34 +202,3 @@ proc mfChi1(poly p(1), p(2), p(3), p(4), int N)
                     
     return(chi1);
 }
-
-////////////////////////////////////////////////////////////////////
-// printBasisDegree
-////////////////////////////////////////////////////////////////////
-
-proc printBasisDegree(matrix A, intvec g)
-{
-    int i;
-    for(i=1;i<=ncols(A);i++)
-    {
-        int j;
-        int currentDegree = 0;
-        for(j=1;j<=size(g);j++)
-        {
-            if( A[j,i] != 0 )
-            {
-               if( currentDegree != 0 && currentDegree != g[j] )
-               {
-                   print("[printBasisDegree] Encountered multiple nonzero degrees, exiting.");
-                   return();
-               }
-               else
-               {
-                   currentDegree = g[j];
-               }
-            }
-        }
-        
-        print("[printBasisDegree] Basis element no." + string(i) + " has degree " + string(currentDegree));
-    }
-}

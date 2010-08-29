@@ -31,6 +31,13 @@ matrix A2a = mfIdentityDefect( y(3)^(N+1), y(4)^(N+1), y(3), y(4) );
 matrix A2b = mfIdentityDefect( x(2)^(N+1), x(1)^(N+1), x(2), x(1) );
 matrix A2 = MFtensor(A2a, A2b);
 
+intvec A1agr = mfIdentityDefectGrading( N+1 );
+intvec A1bgr = mfIdentityDefectGrading( N+1 );
+intvec A1gr = MFtensorGradings(A1agr, A1bgr);
+intvec A2agr = mfIdentityDefectGrading( N+1 );
+intvec A2bgr = mfIdentityDefectGrading( N+1 );
+intvec A2gr = MFtensorGradings(A2agr, A2bgr);
+
 // Here the mapping between Singular variables and edge labels of [FEK] is
 // x(1) = 7, x(2) = 8, y(1) = 1, y(2) = 5, y(3) = 6, y(4) = 2
 
@@ -41,13 +48,20 @@ matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
 
 // Compute the ordinary tensor product
 matrix D = MFtensor(A1,A2);
+intvec Dgr = MFtensorGradings(A1gr, A2gr);
+isGradingValid(D,Dgr);
+
 matrix Dblow = mablow(D,J);
+intvec Dblowgr = mablowGrading(Dgr,J);
+isGradingValid(Dblow,Dblowgr);
 
 // Reduce this inflated differential
 list l = mfReduce(Dblow,1);
 matrix RD = l[1];
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+intvec RDgr = computeGradingFromInjection(G,Dblowgr);
+isGradingValid(RD,RDgr);
 
 matrix diff1 = ZZtensor( diff(A1, x(1)), unitmat(ncols(A2)) );
 matrix diff2 = ZZtensor( unitmat(ncols(A1)), diff(A2, x(2)) );
@@ -70,7 +84,13 @@ matrix epfinal = mfStrictifyIdempotent(RD, ep);
 epfinal * RD == RD * epfinal;
 epfinal * epfinal == epfinal;
 
-matrix finalAA = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+l = mfSplitIdempotent(RD, epfinal, RDgr);
+// l[1] is the differential on the splitting, l[4] is the grading vector
+
+matrix finalAA = mfSuspend( l[1], nx );
+intvec finalAAgr = mfSuspendGrading( l[4], nx );
+isGradingValid(finalAA,finalAAgr);
+
 print(finalAA);
 
 // Step 1.2: Compile "AAB"
@@ -83,6 +103,7 @@ print(finalAA);
 
 matrix AAv = subst(finalAA,y(2),x(1));
 matrix AA = subst(AAv,y(3),x(2));
+intvec AAgr = finalAAgr;
 
 // Then finalAA involves y(1),x(1),x(2),y(4). The remaining variables y(2),y(3) we now
 // consider to represent the edges 3,4. So the current mapping of Singular variables
@@ -90,16 +111,22 @@ matrix AA = subst(AAv,y(3),x(2));
 // x(1) = 5, x(2) = 6, y(1) = 1, y(2) = 3, y(3) = 4, y(4) = 2
 
 matrix B3 = mfWideEdge( y(2), x(1), y(3), x(2), N );
+intvec B3gr = mfWideEdgeGrading( N );
 
 // Compute the ordinary tensor product
 matrix D = MFtensor(AA,B3);
+intvec Dgr = MFtensorGradings(AAgr,B3gr);
+
 matrix Dblow = mablow(D,J);
+intvec Dblowgr = mablowGrading(Dgr,J);
 
 // Reduce this inflated differential
 list l = mfReduce(Dblow,1);
 matrix RD = l[1];
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+intvec RDgr = computeGradingFromInjection(G,Dblowgr);
+isGradingValid(RD,RDgr);
 
 matrix diff1 = ZZtensor( diff(AA, x(2)), unitmat(ncols(B3)) );
 matrix diff2 = ZZtensor( unitmat(ncols(AA)), diff(B3, x(1)) );
@@ -122,7 +149,12 @@ matrix epfinal = mfStrictifyIdempotent(RD, ep);
 epfinal * RD == RD * epfinal;
 epfinal * epfinal == epfinal;
 
-matrix finalAAB = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
+l = mfSplitIdempotent(RD, epfinal, RDgr);
+// l[1] is the differential on the splitting, l[4] is the grading vector
+
+matrix finalAAB = mfSuspend( l[1], nx );
+intvec finalAABgr = mfSuspendGrading( l[4], nx );
+isGradingValid(finalAAB,finalAABgr);
 print(finalAAB);
 
 // Step 1.3: Compile "AABB"
@@ -140,6 +172,7 @@ matrix AAB1 = subst(finalAAB,y(1),x(1));
 matrix AAB2 = subst(AAB1,y(2),x(2));
 matrix AAB3 = subst(AAB2,y(3),x(3));
 matrix AAB = subst(AAB3,y(4),x(4));
+intvec AABgr = finalAABgr;
 int nx=4;
 ring rr3=0,(x(1..nx)),dp;
 int N = 2;
@@ -148,6 +181,7 @@ matrix AAB = imap(rr2,AAB);
 // Our current mapping is x(1) = 1, x(2) = 3, x(3) = 4, x(4) = 2.
 
 matrix B4 = mfWideEdge( x(3), x(4), x(2), x(1), N );
+intvec B4gr = mfWideEdgeGrading( N );
 
 ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
 intvec q = N, N, N, N;
@@ -156,13 +190,17 @@ matrix C[4][4] = 1/Nn * unitmat(4);
 
 // Compute the ordinary tensor product
 matrix D = MFtensor(AAB,B4);
+intvec Dgr = MFtensorGradings(AABgr,B4gr);
+
 matrix Dblow = mablow(D,J);
+intvec Dblowgr = mablowGrading(Dgr, J);
 
 // Reduce this inflated differential
 list l = mfReduce(Dblow,1);
 matrix RD = l[1];
 matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
 matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
+intvec RDgr = computeGradingFromInjection(G,Dblowgr);
 
 // RD is the zero matrix:
 RD == zeromat(ncols(RD));
@@ -190,7 +228,6 @@ matrix epfinal = mfStrictifyIdempotent(RD, ep);
 epfinal * RD == RD * epfinal;
 epfinal * epfinal == epfinal;
 
-matrix finalAABB = mfSuspend( mfSplitIdempotent(RD, epfinal), nx );
 // This gives (since mfSplitIdempotent is not equipped to deal with MFs of zero): 
 // [mfSplitIdempotent] Debug break 3
 // [mfSplitIdempotent] Splitting produced nonsquare matrices, exiting.
@@ -245,6 +282,11 @@ if( ker0[1] != [0] )
 f0 * g0 == ep1;
 g0 * f0 == unitmat(ncols(g0 * f0));
 
+// The grading on RD1 is given by
+intvec RDgr1 = RDgr[(size(RDgr)/2+1)..size(RDgr)];
+
+// Hence the induced grading on QQ^8 is
+intvec splitgr = computeGradingFromInjection(f0, RDgr1);
 
 // Step 2: define and reduce the map between AABB and AABA+AAAB++BABB+ABBB:
 
