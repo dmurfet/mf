@@ -1024,13 +1024,13 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     {
         matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
     }
-        
+
     // Compute the ordinary tensor product:
     matrix T1 = MFtensor( final1, V1(k) );
     matrix T1blow = mablow(T1,J);
     matrix T2 = MFtensor( final2, V2(k) );
     matrix T2blow = mablow(T2,J);
-
+    
     // Reduce this inflated differential:
     list l1 = mfReduce(T1blow,1);
     matrix RT1 = l1[1];
@@ -1142,11 +1142,12 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     print("The reduced form of the first web is QQ^"+string(rank0)+" -> QQ^"+string(rank1)+" -> QQ^"+string(rank0)+", where QQ = rationals.");
     print("");
     print("The reduced form of the first web is QQ^"+string(rank0r)+" -> QQ^"+string(rank1r)+" -> QQ"+string(rank0r)+", where QQ = rationals.");
-
+    int z2degree;
+    
     // Now compute the non-zero part of the map of the above two complexes:
     if( rank1 != 0 )
     {
-        int z2degree = 1;
+        z2degree = 1;
         matrix eq0f = ep1;
         matrix eq0fr = ep1r;
 
@@ -1177,7 +1178,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     }
     if( rank0 != 0 )
     {
-        int z2degree = 0;
+        z2degree = 0;
         matrix eq0f = ep0;
         matrix eq0fr = ep0r;
 
@@ -1210,6 +1211,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     // The reduced MFs of zero are concentrated in Z2-degree z2degree, 
     // and webmap is the non-zero map between them:
 
+    setring RRR;
+    matrix webmap = imap(rr3,webmap);
+    
     list finaloutput = webmap, z2degree;
     return(finaloutput);
 }
