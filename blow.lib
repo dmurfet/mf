@@ -18,10 +18,9 @@ LIB "ring.lib";
 //
 // At the moment we expect our ambient ring to be of one of the types
 //
-//     0,(x(1..nx),y(1..ny)),dp    OR    (0,r),(x(1..nx),y(1..ny)),dp
+//     0,(x(1..t),y(1..s)),dp    OR    (0,r),(x(1..t),y(1..s)),dp
 // 
-// where nx, ny are integer variables that we expect to be defined before calling
-// any of the routines in this library. The x variables are the "internal" variables.
+// for some integers t and s. The x variables are the "internal" variables.
 // We always expect "r" to be the parameter defining an extension ring.
 //
 // In the second case where we define a ring extension, in addition to defining
@@ -29,7 +28,7 @@ LIB "ring.lib";
 // "minblowpoly" is defined, which is the minimum polynomial of r over Q expressed
 // in terms of the variable x(1). For example
 //
-//    ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+//    ring rr=(0,r),(x(1..t),y(1..s)),dp;
 //    minpoly = r^2 + 1;
 //    poly minpolyblow = x(1)^2 + 1;
 //
@@ -75,6 +74,56 @@ LIB "ring.lib";
 
 
 //////////////////////////////////////////////////////////////////////////////////
+// numXVars - Returns the number of x variables (i.e. "nx")
+//
+// We assume that the ring is structured as described at the beginning of this document,
+// so that the variables are x(1),..,x(t),y(1),...,y(s) for some integers t and s. This
+// routine returns the integer t (possibly zero).
+//////////////////////////////////////////////////////////////////////////////////
+
+proc numXVars()
+{
+    list varNames = ringlist(basering)[2];
+    
+    int num = 0;
+    int i;
+    for(i=1;i<=size(varNames);i++)
+    {
+        if( varNames[i][1] == "x" )
+        {
+            num++;
+        }
+    }
+    
+    return(num);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// numYVars - Returns the number of y variables (i.e. "ny")
+//
+// We assume that the ring is structured as described at the beginning of this document,
+// so that the variables are x(1),..,x(t),y(1),...,y(s) for some integers t and s. This
+// routine returns the integer s (possibly zero).
+//////////////////////////////////////////////////////////////////////////////////
+
+proc numYVars()
+{
+    list varNames = ringlist(basering)[2];
+    
+    int num = 0;
+    int i;
+    for(i=1;i<=size(varNames);i++)
+    {
+        if( varNames[i][1] == "y" )
+        {
+            num++;
+        }
+    }
+    
+    return(num);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
 // "ringwithoutyvars" returns the ambient ring with y variables removed
 // NOTE: We just return the ring, we do not change the current basering
 //////////////////////////////////////////////////////////////////////////////////
@@ -82,6 +131,8 @@ LIB "ring.lib";
 proc ringWithoutYVars()
 {
     def RRR = basering;
+    int numX = numXVars();
+    int numY = numYVars();
 
     // Define new ring -- exactly the same as RRR, but without the y-variables:
     // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
@@ -89,13 +140,13 @@ proc ringWithoutYVars()
     {
         int i,j,k;
         list L = ringlist(RRR);
-        for(i=1; i<=ny; i++)
+        for(i=1;i<=numY;i++)
         {
-            L[2] = delete(L[2],nx + 1);
+            L[2] = delete(L[2],numX+1);
         }
-        intvec kk = (1..nx);
+        intvec kk = (1..numX);
 
-        for(i=1; i<=nx; i++)
+        for(i=1; i<=numX; i++)
         {
             kk[i] = 1;
         }
@@ -119,7 +170,7 @@ proc ringWithoutYVars()
     }
     else
     {
-        ring nR = char(RRR), x(1..nx), dp;
+        ring nR = char(RRR), x(1..numX), dp;
     }
 
     def newRing = basering;
@@ -139,20 +190,22 @@ proc ringWithoutYVars()
 proc ringWithoutXVars()
 {
     def RRR = basering;
-
+    int numX = numXVars();
+    int numY = numYVars();
+    
     // Define new ring -- exactly the same as RRR, but without the x-variables:
     // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
         list L = ringlist(RRR);
-        for(i=1; i<=nx; i++)
+        for(i=1;i<=numX;i++)
         {
-            L[2] = delete(L[2], 1);
+            L[2] = delete(L[2],1);
         }
-        intvec kk = (1..ny);
+        intvec kk = (1..numY);
 
-        for(i=1; i<=ny; i++)
+        for(i=1; i<=numY; i++)
         {
             kk[i] = 1;
         }
@@ -177,7 +230,7 @@ proc ringWithoutXVars()
     }
     else
     {
-        ring nR = char(RRR), y(1..ny), dp;
+        ring nR = char(RRR), y(1..numY), dp;
     }    
     
     def newRing = basering;
@@ -224,7 +277,7 @@ proc deltaInflationList(int i, int exponent, ideal J)
     def RRR = basering;
     def nR = ringWithoutYVars();
     setring nR;
-
+    
     ideal J = imap(RRR,J);
     ideal Jstd = std(J);
     ideal basis = kbase(Jstd);
@@ -259,10 +312,7 @@ proc deltaInflationList(int i, int exponent, ideal J)
         {
             U=concat(U,L[k]);
         }
-        
-        //dbprint(prl, "[deltaInflationList] Matrix for (i,b,exponent) = (" + string(i) + "," + string(b) + "," + string(exponent) + ") is");
-        //dbprint(prl, U);
-        
+                
         deltaActions = deltaActions + list(U);
         kill U, L;
     }
@@ -292,12 +342,11 @@ proc variableInflationList(ideal J)
     module BB = reduce(basis,Jx);
     module syzBB = std(syz(BB)); 
     
-    //dbprint(prl, "[poly2matrix] Dimension of the internal algebra is " + string(jdim));
-    
     int i, k;
     list variableActions;
+    int numX = nvars(nR);
     
-    for(i=1; i<=nx; i++)
+    for(i=1; i<=numX; i++)
     {
         list L;
         for(k=1; k<=jdim; k++)
@@ -312,9 +361,6 @@ proc variableInflationList(ideal J)
         {
             U=concat(U,L[k]);
         }
-        
-        //dbprint(prl, "[poly2matrix] Inflation of variable x(" + string(i) + ") is");
-        //dbprint(prl, U);
         
         variableActions = variableActions + list(U);
         kill U, L;
@@ -344,15 +390,14 @@ proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
 {
     // First compute the x-monomials and their coefficients in tepo
     int i;
-    poly xprod = 1; 
-    for(i=1; i<=nx; i++)
+    poly xprod = 1;
+    int numX = numXVars();
+    
+    for(i=1; i<=numX; i++)
     {
         xprod = xprod * x(i);
     }
     matrix koffer = coef(tepo, xprod);
-
-    //dbprint(prl, "[poly2matrix] Polynomial tepo is " + string(tepo));
-    //dbprint(prl, "[poly2matrix] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
 
     int u,k;
     matrix inflation[jdim][jdim];
@@ -366,7 +411,7 @@ proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
         intvec powers = factorize(monom*xprod,2)[2];
         matrix monomAction = unitmat(jdim);
         
-        for(k=1;k<=nx;k++)
+        for(k=1;k<=numX;k++)
         {
             monomAction = monomAction * power(variableActions[k],powers[k]-1);
         }
@@ -403,12 +448,9 @@ proc mablow(matrix M, ideal J)
     }
     for(i1=1; i1<=s; i1++)
     {
-        dbprint(printlevel, "[mablow] Iteration count is " + string(i1) + "/" + string(s));
         for(j1=1; j1<=s; j1++)
         {
             matrix PM = poly2matrix(M[i1,j1], J, variableActions, n);
-            //L[i1] = insert(L[i1], PM, j1-1);
-            //L[i1] = L[i1] + list(PM);
             L[i1][j1] = PM;
             kill PM;
         }
@@ -418,7 +460,6 @@ proc mablow(matrix M, ideal J)
 
     for(i1=1; i1<=s; i1++)
     {
-        dbprint(printlevel, "[mablow] Assembly count is " + string(i1) + " / " + string(s));
         for(j1=1; j1<=n; j1++)
         {
             for(i2=1; i2<=s; i2++)
@@ -489,14 +530,12 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
     // First compute the x-monomials and their coefficients in tepo
     int t;
     poly xprod = 1; 
-    for(t=1; t<=nx; t++)
+    int numX = numXVars();
+    for(t=1; t<=numX; t++)
     {
         xprod = xprod * x(t);
     }
     matrix koffer = coef(tepo, xprod);
-
-    //dbprint(prl, "[poly2matrix_delta] Polynomial tepo is " + string(tepo));
-    //dbprint(prl, "[poly2matrix_delta] Coefficient matrix of x-monomials"); dbprint(prl, koffer);
 
     int u,k;
     matrix inflation[jdim][jdim];
@@ -510,7 +549,7 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
         intvec powers = factorize(monom*xprod,2)[2];
         matrix monomAction = unitmat(jdim);
         
-        for(k=1;k<=nx;k++)
+        for(k=1;k<=numX;k++)
         {
             // If k is not equal to i, then we just take the usual inflation,
             // but for k = i we do the "delta" inflation
@@ -528,8 +567,6 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
 
                 if( powers[k] - 1 >= 1 && powers[k] - 1 <= 2*exponent - 1)
                 {
-                    //dbprint(printlevel, "[poly2matrix_delta] index is " + string(powers[k]-1) + " with matrix ");
-                    //dbprint(printlevel, deltaActions[powers[k]-1]);
                     monomAction = monomAction * deltaActions[powers[k]-1];
                 }
                 else
@@ -558,8 +595,6 @@ proc mablow_delta(matrix M, int i, int exponent, ideal J)
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
  
-    dbprint(printlevel, "[mablow_delta] Computing variable inflations");
-
     // Compute the ordinary inflation of individual variables
     list variableActions = variableInflationList(J);
     
@@ -577,7 +612,6 @@ proc mablow_delta(matrix M, int i, int exponent, ideal J)
     }
     for(i1=1; i1<=s; i1++)
     {
-        dbprint(printlevel, "[mablow_delta] Iteration count is " + string(i1) + "/" + string(s));
         for(j1=1; j1<=s; j1++)
         {
             L[i1] = insert(L[i1], poly2matrix_delta(M[i1,j1], J, i, exponent, variableActions, deltaActions, n),j1-1);
@@ -588,7 +622,6 @@ proc mablow_delta(matrix M, int i, int exponent, ideal J)
 
     for(i1=1; i1<=s; i1++)
     {
-        dbprint(printlevel, "[mablow_delta] Assembly count is " + string(i1) + " / " + string(s));
         for(j1=1; j1<=n; j1++)
         {
             for(i2=1; i2<=s; i2++)
@@ -627,7 +660,7 @@ proc SGroupintvecs(int n)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q, nx=(# of x-variables)
+// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q)
 //
 // q is an intvec containing the exponents responsible for defining the operators g_i,
 // so that g_i is division by x(i)^q[i] without remainder.
@@ -641,7 +674,9 @@ proc deltaQ(matrix F, intvec q)
     // variables to the powers given by q
     int i;
     ideal J;
-    for( i = 1; i <= nx; i++ )
+    int numX = numXVars();
+    
+    for( i = 1; i <= numX; i++ )
     {
         J[i] = x(i)^(q[i]);
     }
@@ -652,16 +687,15 @@ proc deltaQ(matrix F, intvec q)
     // The blown up matrix will be of dimension n x ncols(f)
     int gg = ncols(F) * n;
 
-    list S = SGroupintvecs(nx);
+    list S = SGroupintvecs(numX);
 
     int j;    
     matrix Mi[gg][gg];
 
     // Precompute all the deltas
     list deltas; 
-    for(j = 1; j <= nx; j++)
+    for(j = 1; j <= numX; j++)
     {
-        dbprint(printlevel, "[deltaQ] Calculating mablow_delta for index " + string(j));
         deltas[j] = mablow_delta(F, j, q[j], J);
     }
     
@@ -670,7 +704,7 @@ proc deltaQ(matrix F, intvec q)
         intvec perm = S[i];
         matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);
         
-        for(j=1; j<=nx; j++)
+        for(j=1; j<=numX; j++)
         {
             Ma = Ma * deltas[perm[j]];
         }
@@ -680,7 +714,7 @@ proc deltaQ(matrix F, intvec q)
 
     // Multiply by the scaling factor:
     number ffac = 1;
-    for(i=1; i<=nx; i++)
+    for(i=1; i<=numX; i++)
     {
         ffac = ffac / i;
     }
@@ -691,7 +725,7 @@ proc deltaQ(matrix F, intvec q)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X, nx=(# of x-variables),
+// "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X)
 /////////////////////////////////////////////////////////////////////////////////////
 // TODO: May be faster to compute dQ_X first, then mablow the result, rather than
 // mablowing every factor
@@ -705,7 +739,9 @@ proc dQ(matrix f, intvec q, matrix C)
     // variables to the powers given by q
     int i;
     ideal J;
-    for( i = 1; i <= nx; i++ )
+    int numX = numXVars();
+    
+    for( i = 1; i <= numX; i++ )
     {
         J[i] = x(i)^(q[i]);
     }
@@ -715,14 +751,14 @@ proc dQ(matrix f, intvec q, matrix C)
     // The blown up matrix will be of dimension n x ncols(f)
     int gg = ncols(f) * n;
 
-    list S = SGroupintvecs(nx);
+    list S = SGroupintvecs(numX);
     int j;
 
     matrix Mi[gg][gg];
 
     // Precompute all the mablows
     list dels; 
-    for(j = 1; j <= nx; j++)
+    for(j = 1; j <= numX; j++)
     {
         dels[j] = mablow(diff(f,x(j)), J);
     }
@@ -735,7 +771,7 @@ proc dQ(matrix f, intvec q, matrix C)
         matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);    
         
         //print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
-        for(j=1; j<=nx; j++)
+        for(j=1; j<=numX; j++)
         {
             Ma = Ma * dels[perm[j]];
         }
@@ -749,7 +785,7 @@ proc dQ(matrix f, intvec q, matrix C)
 
     // Multiply by the scaling factor
     number ffac = 1;
-    for(i=1; i<=nx; i++)
+    for(i=1; i<=numX; i++)
     {
         ffac = ffac / i;
     }
@@ -777,14 +813,14 @@ proc varTrans(poly W)
     poly W = imap(RRR, W);
     ideal jaci = jacob(W);
     ideal J = std(jaci);
-    int nx = nvars(nR);
+    int numVars = nvars(nR);
 
     int i,j,expo;
     intvec qvec;
     poly K;
 
     // Find the smallest possible integers qvec[i] such that x(i)^qvec[i] is in jacob(W):
-    for(i=1; i<=nx; i++)
+    for(i=1; i<=numVars; i++)
     {
         int expo = 1;
         while( reduce( x(i)^expo, J ) != 0 )
@@ -796,21 +832,21 @@ proc varTrans(poly W)
     }
 
     // Define transformation matrix C:
-    matrix C[nx][nx];
-    for(i=1; i<=nx; i++)
+    matrix C[numVars][numVars];
+    for(i=1; i<=numVars; i++)
     {
-        for(j=1; j<=nx; j++)
+        for(j=1; j<=numVars; j++)
         {
             C[j,i] = lift( jaci, x(j)^(qvec[j]) )[i,1];
         }
     }
     
     // Check that C does transform the partials to powers of the variables
-    for(i=1;i<=nx;i++)
+    for(i=1;i<=numVars;i++)
     {
         poly f;
         int j;
-        for(j=1;j<=nx;j++)
+        for(j=1;j<=numVars;j++)
         {
             f = f + C[i,j] * diff(W,x(j));
         }
@@ -1192,8 +1228,6 @@ proc MFcofull(matrix QQQ,PPP)
     module Qf=modulo(Mf,module(dminus(f,g,f',g')));
     matrix basef=kbase(std(Qf));
     matrix mf = Mkerf*basef;
-
-    dbprint(printlevel, "[MFcofull] Intialised, beginning loops.");
 
     int i;
     int r = ncols(f);
@@ -1833,13 +1867,7 @@ proc mfReduce(matrix A, list #)
         
         //current_stage = b0,b1,f0,f1,g0,g1;
         //transform_record = transform_record + list(current_stage);
-        
-        //dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
-        //dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-        //dbprint(prl, "  Result of reduction, p0:"); dbprint(prl,p);
-        //dbprint(prl, "  Result of reduction, q0:"); dbprint(prl,q);
-        //dbprint(prl, "--------------------------");
-        
+                
         kill l, p, q, qinv, pinv, out;
     }
     
@@ -1878,13 +1906,7 @@ proc mfReduce(matrix A, list #)
         
         //current_stage = b0,b1,f0,f1,g0,g1;
         //transform_record = transform_record + list(current_stage);
-        
-        //dbprint(prl, "  Result of reduction, b0:"); dbprint(prl,b0);
-        //dbprint(prl, "  Result of reduction, b1:"); dbprint(prl,b1);
-        //dbprint(prl, "  Result of reduction, p1:"); dbprint(prl,p);
-        //dbprint(prl, "  Result of reduction, q1:"); dbprint(prl,q);
-        //dbprint(prl, "--------------------------");
-        
+                
         kill l, p, q, qinv, pinv, out;
     }
     
@@ -1893,7 +1915,7 @@ proc mfReduce(matrix A, list #)
     // reduced forms...
     
     // DEBUG. If set to 0, we use rowred rather than gauss_row in the following
-    int useGaussRow = 1;
+    int useGaussRow = 0;
     
     // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
     matrix zero_b[nrows(b0)][ncols(b0)];
@@ -1919,11 +1941,11 @@ proc mfReduce(matrix A, list #)
         {
             print("[mfReduce] Transformation matrix not invertible (first)."); 
         
-            print(b0);
-            print("---");
-            print(b0r);
-            print("---");
-            print(tr);
+            //print(b0);
+            //print("---");
+            //print(b0r);
+            //print("---");
+            //print(tr);
             return();
         }
         
@@ -1991,12 +2013,7 @@ proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
     // and the factorisation (s, e)
 
     if( ncols(b0) == 1 ){ print("[mfReduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
-    
-    //dbprint(printlevel, "   [mfReduce_work] ====");
-    //dbprint(printlevel, "      Current b0"); dbprint(printlevel, b0);
-    //dbprint(printlevel, "      Current b1"); dbprint(printlevel, b1);
-    //dbprint(printlevel, "   =====================");
-        
+            
     // Read off s,e and t from b0 and b1
     int i,j;
     matrix S[nrows(b0)-1][ncols(b0)-1];
@@ -2422,8 +2439,8 @@ proc test_mfReduce()
 //
 // Returns the reduced tensor product of Y with X, as a pair (B, e) 
 // consisting of the differential B of a matrix factorisation of the total
-// potential and an idempotent endomorphism e whose splitting is (YxX)[nx],
-// where nx is the number of internal variables.
+// potential and an idempotent endomorphism e whose splitting is (YxX)[n],
+// where n is the number of internal variables.
 
 proc fuseDefects(matrix Y, matrix X, poly W)
 {
@@ -2441,7 +2458,9 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     // variables to the powers given by q
     int i;
     ideal J;
-    for( i = 1; i <= nx; i++ )
+    int numX = numXVars();
+    
+    for( i = 1; i <= numX; i++ )
     {
         J[i] = x(i)^(q[i]);
     }
@@ -2471,7 +2490,7 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     matrix delQ = deltaQ(D, q);
 
     // And finally the idempotent e on Dblow
-    int sign = (nx * (nx-1)) div 2;
+    int sign = (numX * (numX-1)) div 2;
     matrix e = (-1)^(sign) * iddQ * delQ;
     
     // The induced idempotent on the reduction is denoted ep
@@ -2552,9 +2571,6 @@ proc deltaInflation(poly XA, int i, int exponent, ideal J)
     setring RRR;
     matrix NN = imap(nR,U);
     
-    //dbprint(printlevel, "[deltaInflation] Matrix of [g_" + string(i) + ", " + string(XA) + "] is");
-    //dbprint(printlevel, NN);
-
     return(NN);
 }
 
@@ -2569,9 +2585,6 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
 {
     int prl = printlevel;
 
-    //dbprint(prl,"[deltaImablow] Input matrix M is"); dbprint(prl,M);
-    dbprint(prl,"[deltaImablow] Input variable is x(" + string(i) + ")");
-
     // Compute n := dimension of I = k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
 
@@ -2581,7 +2594,9 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
     list e,L;
 
     poly xprod = 1;
-    for(k=1; k<=nx; k++)
+    int numX = numXVars();
+    
+    for(k=1; k<=numX; k++)
     {
         xprod = xprod * x(k);
     }
@@ -2618,7 +2633,6 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
                 
                 if( koffer[2,k] != 0 && monom != 0 && p > 0 )
                 {
-                    dbprint(prl, "[deltaImablow] In position (" + string(i1) + "," + string(j1) + "), koffer[1," + string(k) + "] = " + string(koffer[1,k]) + " and koffer[2," + string(k) + "] = " + string(koffer[2,k]));
                     N = N + koffer[2,k] * deltaInflation(monom, i, exponent, J);
                 }
             }
@@ -2644,9 +2658,6 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
             }
         }
     }
-
-    //dbprint(prl, "[deltaImablow] Final output is "); dbprint(prl, A);
-    //dbprint(prl, "------------");
     
     return(A);
 }
@@ -2683,8 +2694,6 @@ proc MFKer(matrix f, matrix g, matrix fs, matrix gs)
 		{
 			for(j=1; j<=r; j++) 
 			{
-			    //dbprint(printlevel, "[MFKer] Loop 1 iteration (" + string(k) + "," + string(i)
-                //    + "," + string(j) + ") of (" + string(r) + ")");
 				A[i + k*r - r, j + k*r - r] = - g[j,i]; 
 			} 
 		} 
