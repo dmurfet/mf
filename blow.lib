@@ -1639,6 +1639,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
                }
                else
                {
+                   //dbprint(printlevel, "[computeGradingFromInjection] Assigning degree " + string(g[j] + 2 * deg(F[j,i])));
                    currentDegree = g[j] + 2 * deg(F[j,i]);
                }
             }
@@ -2085,12 +2086,13 @@ proc isMorphismDegreeZero(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F)
     
     matrix f0 = extractblockmat(F)[1];
     matrix f1 = extractblockmat(F)[4];
-    int m = ncols(F)/2;
+    int blockCols = ncols(F)/2;
+    int blockRows = nrows(F)/2;
     
     int i, j;
-    for(i = 1; i <= m; i++) // row
+    for(i = 1; i <= blockRows; i++) // row
     {
-        for(j = 1; j <= m; j++) // column
+        for(j = 1; j <= blockCols; j++) // column
         {
             if( f0[i,j] != 0 )
             {
@@ -2103,7 +2105,7 @@ proc isMorphismDegreeZero(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F)
             
             if( f1[i,j] != 0 )
             {
-                if( Bgr[m+i] - Agr[m+j] != -2 * deg(f1[i,j]) )
+                if( Bgr[blockRows+i] - Agr[blockCols+j] != -2 * deg(f1[i,j]) )
                 {
                     dbprint(printlevel, "[isMorphismDegreeZero] Second test failed at (" + string(i) + "," + string(j) + ")");
                     return(0);
