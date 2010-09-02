@@ -1634,7 +1634,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
         {
             if( F[j,i] != 0 )
             {
-               //dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ")/(" + string(ncolsF) + "," + string(sizeg) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
+               dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ")/(" + string(ncolsF) + "," + string(sizeg) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
                if( currentDegree != 0 && currentDegree != g[j] + 2 * deg(F[j,i]) )
                {
                    print("[computeGradingFromInjection] Encountered multiple nonzero degrees, exiting.");
@@ -1642,7 +1642,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
                }
                else
                {
-                   //dbprint(printlevel, "[computeGradingFromInjection] Assigning degree " + string(g[j] + 2 * deg(F[j,i])));
+                   dbprint(printlevel, "[computeGradingFromInjection] Assigning degree " + string(g[j] + 2 * deg(F[j,i])));
                    currentDegree = g[j] + 2 * deg(F[j,i]);
                }
             }
@@ -1814,6 +1814,9 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
 // with each intermediate step a differential Bi of a MF together with even maps Fi, Gi representing
 // homotopy equivalences between A and Bi.
 // ----- this was eating too much memory, so it has been commented out.
+//
+// TODO: possible optimisations
+// 1. In mfReduce_work the construction of zeroone and negtone could be improved
 
 proc mfReduce(matrix A, list #)
 {
@@ -1842,7 +1845,7 @@ proc mfReduce(matrix A, list #)
         
         // There is a constant somewhere, begin looking in b0
         list l = matrixreduce(b0);
-        matrix p = l[2]; matrix q = l[3];
+        matrix p = l[2]; matrix q = l[3]; matrix pinv = l[4]; matrix qinv = l[5];
             
         // The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
         // via the morphism (from the former to the latter) given by the pair
@@ -1853,9 +1856,10 @@ proc mfReduce(matrix A, list #)
         // TODO: In a matrix factorisation each matrix is determined uniquely by the other,
         // so we can probably avoid computing the inverses of p and q here, just deal with
         // b0 and then recover b1 at the end ?
-        matrix qinv = inverse(q);
-        matrix pinv = inverse(p);
         
+        // These inverses are now computed within matrixreduce
+        // matrix qinv = inverse(q);
+        // matrix pinv = inverse(p);
         b0 = l[1];
         b1 = qinv * b1 * pinv;
         f0 = qinv * f0; f1 = p * f1;
@@ -1871,7 +1875,6 @@ proc mfReduce(matrix A, list #)
         
         //current_stage = b0,b1,f0,f1,g0,g1;
         //transform_record = transform_record + list(current_stage);
-                
         kill l, p, q, qinv, pinv, out;
     }
     
@@ -1882,7 +1885,7 @@ proc mfReduce(matrix A, list #)
                 
         // There is a constant somewhere, begin looking in b1
         list l = matrixreduce(b1);
-        matrix p = l[2]; matrix q = l[3];
+        matrix p = l[2]; matrix q = l[3]; matrix pinv = l[4]; matrix qinv = l[5];
             
         // The matrix factorisation (b0,b1) is isomorphic to (q^{-1} * b0 * p^{-1}, p * b1 * q)
         // via the morphism (from the former to the latter) given by the pair
@@ -1890,8 +1893,9 @@ proc mfReduce(matrix A, list #)
         // We remember the transformation by adjusting F and G, so
         // that at each stage F is an isomorphism between X and Y with inverse G
 
-        matrix qinv = inverse(q);
-        matrix pinv = inverse(p);
+        // These inverses are now computed in matrixreduce
+        //matrix qinv = inverse(q);
+        //matrix pinv = inverse(p);
         
         b1 = l[1];
         b0 = qinv * b0 * pinv;
@@ -2017,23 +2021,24 @@ proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
     // and the factorisation (s, e)
 
     if( ncols(b0) == 1 ){ print("[mfReduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
-            
+    
+    int nrowsb0 = nrows(b0);
+    int ncolsb0 = ncols(b0);
+    int nrowsb1 = nrows(b1);
+    int ncolsb1 = ncols(b1);
+    
     // Read off s,e and t from b0 and b1
-    int i,j;
-    matrix S[nrows(b0)-1][ncols(b0)-1];
-    for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ S[j-1,i-1] = b0[j,i]; } }
+    matrix S[nrowsb0-1][ncolsb0-1] = b0[2..nrowsb0,2..ncolsb0];
+    matrix E[nrowsb1-1][ncolsb1-1] = b1[2..nrowsb1,2..ncolsb1];
+    matrix T[1][ncolsb0-1] = b0[1,2..ncolsb0];
     
-    matrix E[nrows(b0)-1][ncols(b0)-1];
-    for(i=2;i<=ncols(b0);i++){ for(j=2;j<=nrows(b0);j++){ E[j-1,i-1] = b1[j,i]; } }
-    
-    matrix T[1][ncols(b0)-1];
-    for(i=2;i<=ncols(b0);i++){ T[1,i-1] = b0[1,i]; }
-            
     // The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
     // ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
     // so we need to stick these on the appropriate side of F, G
     
     // Matrix of (0 1)
+    // TODO: speedup here?
+    int i,j;
     matrix zeroone[nrows(S)][ncols(S)+1];
     for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; }
     
@@ -2185,16 +2190,18 @@ proc isGradingValid(matrix A, intvec g)
 // After some bad experiences with examples I don't trust Singular's gaussian elimination
 // routines, so here is a primitive version which is good enough for our purposes.
 //
-// The input is a square matrix M. The output is a matrix N and two invertible matrices P, Q
-// formatted as a triple (N, P, Q) such that P M Q = N. If no entry of M is a unit then N = M
-// and P = Q = id. Otherwise the top left entry of N is a 1 and the first column of N contains
-// no other nonzero entries.
+// The input is a square matrix M. The output is a matrix N and four invertible matrices P, Q
+// formatted as a triple (N, P, Q, Pinv, Qinv) such that P M Q = N. If no entry of M is a unit
+// then N = M and P = Q = id. Otherwise the top left entry of N is a 1 and the first column
+// of N contains no other nonzero entries. Pinv = P^{-1} and Qinv = Q^{-1}.
 
 proc matrixreduce(matrix M)
 {
     int mrank = ncols(M);
     matrix P = unitmat(mrank);
+    matrix Pinv = unitmat(mrank);
     matrix Q = unitmat(mrank);
+    matrix Qinv = unitmat(mrank);
     matrix N = M;
     
     // Let us find a constant entry in M
@@ -2207,8 +2214,10 @@ proc matrixreduce(matrix M)
             if( deg(M[i,j]) == 0 )
             {
                 // We found our constant term, permute it to (1,1)
-                P = 1/(M[i,j]) * permrow(P, 1,i);
-                Q = permcol(Q, 1,j);
+                P = 1/(M[i,j]) * permrow(unitmat(mrank),1,i);
+                Pinv = M[i,j] * permrow(unitmat(mrank),1,i);
+                Q = permcol(unitmat(mrank), 1,j);
+                Qinv = permcol(unitmat(mrank),1,j);
                 N = P * M * Q;
                 
                 // Go through the first column and transform away everything
@@ -2218,21 +2227,31 @@ proc matrixreduce(matrix M)
                     if(N[k,1] != 0)
                     {
                         matrix Pn = unitmat(mrank);
+                        matrix Pninv = unitmat(mrank);
                         Pn[k,1] = - N[k,1];
+                        Pninv[k,1] = N[k,1];
                         
                         P = Pn * P;
+                        Pinv = Pinv * Pninv;
                         N = Pn * N;
                     }
                 }
                 
-                list l = N,P,Q;
+                // DEBUG REMOVE THIS
+                if( P * Pinv != unitmat(mrank) || Q * Qinv != unitmat(mrank) )
+                {
+                    print("Failure to get good inverses.");
+                    return();
+                }
+                
+                list l = N,P,Q,Pinv,Qinv;
                 return(l);
             }
         }
     }
 
     // We failed to find a constant term, so return M, 1, 1
-    list l = N, P, Q;
+    list l = N, P, Q, Pinv, Qinv;
     return(l);
 }
 
