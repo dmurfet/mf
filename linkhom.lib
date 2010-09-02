@@ -274,6 +274,26 @@ proc mfVertex(int zeroOrOne, list varis, int N)
     }
 }
 
+////////////////////////////////////////////////////////////////////
+// mfVertexGrading
+////////////////////////////////////////////////////////////////////
+
+proc mfVertexGrading(int zeroOrOne, list varis, int N)
+{
+   if( zeroOrOne == 0 )
+   {
+       intvec Aagr = mfIdentityDefectGrading(N+1);
+       intvec Abgr = mfIdentityDefectGrading(N+1);
+       intvec Agr = MFtensorGradings(Aagr,Abgr);
+       return(Agr);
+   }
+   
+   if( zeroOrOne == 1 )
+   {
+       intvec Agr = mfWideEdgeGrading(N);
+       return(Agr);
+   }
+}
 
 ////////////////////////////////////////////////////////////////////
 // mfChi
@@ -324,12 +344,14 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 // given by D1 and D2 as described below, together with a map
 // between the two webs that is a tensor product of identity maps
 // and one chi-map as the chiposition-th tensor factor. The output
-// of mfCompileWeb is a list with two entries: the second entry
+// of mfCompileWeb is a list with four entries: the second entry
 // is the component (0 or 1) of the reduced MFs of zero, i.e. 
 // rational complexes ofvector spaces, that is non-zero, 
 // and the first entry gives the reduced map between these two
 // components. (Of course, we can read off from the number of rows
 // and columns of this map what the two complexes are.)
+// The third and fourth entries are the grading vectors on the
+// source and target vector spaces respectively.
 // NOTE that we should only call mfCompileWeb in a ring defined by
 //     int nx=2; int ny=4; ring rr=0,(x(1..nx),y(1..ny)),dp;.
 // For example, we can run 
@@ -494,6 +516,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix V2(1) = mfVertex( D2[1][1], varis(1), N );
     matrix V2(2) = mfVertex( D2[2][1], varis(2), N );
     
+    intvec V1gr(1) = mfVertexGrading( D1[1][1], varis(1), N );
+    intvec V1gr(2) = mfVertexGrading( D1[2][1], varis(2), N );
+    intvec V2gr(1) = mfVertexGrading( D2[1][1], varis(1), N );
+    intvec V2gr(2) = mfVertexGrading( D2[2][1], varis(2), N );
+    
     // Now start to reduce V1(1) x V1(2), V2(1) x V2(2) and the map between them:
         
     ideal J = x(1)^N, x(2)^N;
@@ -519,6 +546,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix T1blow = mablow(T1,J);
     matrix T2 = MFtensor( V2(1), V2(2) );
     matrix T2blow = mablow(T2,J);
+    
+    intvec T1gr = MFtensorGradings( V1gr(1), V1gr(2) );
+    intvec T1blowgr = mablowGrading( T1gr, J );
+    intvec T2gr = MFtensorGradings( V2gr(1), V2gr(2) );
+    intvec T2blowgr = mablowGrading(T2gr,J);
 
     // Reduce this inflated differential:
     list l1 = mfReduce(T1blow,1);
@@ -529,6 +561,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix RT2 = l2[1];
     matrix F2(1) = l2[2]; // A homotopy equivalence T2blow -> RT2
     matrix G2(1) = l2[3]; // A homotopy equivalence RT2 -> T2blow
+    
+    intvec RT1gr = computeGradingFromInjection(G1(1),T1blowgr);
+    intvec RT2gr = computeGradingFromInjection(G2(1),T2blowgr);
     
     // Define d1(1) to be the product over all outgoing edges labelled by x-variables
     // of the derivatives of V1(1) with respect to these variables, and
@@ -619,11 +654,21 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         return();
     }
 
-    list l1 = mfSplitIdempotent(RT1, epstrict1, 1);   // TODO: swap 1 with intvec here...
-    list l2 = mfSplitIdempotent(RT2, epstrict2, 1);   // TODO: swap 1 with intvec here...
+    list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);
+    list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);
 
     matrix final1 = mfSuspend( l1[1], nx );
     matrix final2 = mfSuspend( l2[1], nx );
+    
+    intvec final1gr = mfSuspendGrading( l1[4], nx );
+    intvec final2gr = mfSuspendGrading( l2[4], nx );
+    
+    // Grading sanity check
+    if( isGradingValid(final1, final1gr) != 1 || isGradingValid(final2,final2gr) != 1 )
+    {
+        print("[mfCompileWeb] Something has gone wrong with the grading, exiting.");
+        return();
+    }
     
     // Determine the outgoing and incoming labels of final1 and final2
     // (in terms of the integer labels in {1,...,2*websize}). 
@@ -670,6 +715,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     
     // Now repeat the above steps analogously and iteratively until all vertices but
     // the last one in the webs are fused:
+    dbprint(printlevel, "[mfCompileWeb] Beginning induction step.");
     
     for( k=3; k<=websize-1; k++ )
     {
@@ -771,6 +817,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
         matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
     
+        intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+        intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+        
         // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
         
         ideal J = x(1)^N, x(2)^N;
@@ -792,6 +841,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         matrix T2 = MFtensor( final2, V2(k) );
         matrix T2blow = mablow(T2,J);
 
+        intvec T1gr = MFtensorGradings( final1gr, V1gr(k) );
+        intvec T1blowgr = mablowGrading(T1gr,J);
+        intvec T2gr = MFtensorGradings( final2gr, V2gr(k) );
+        intvec T2blowgr = mablowGrading(T2gr,J);
+        
         // Reduce this inflated differential:
         list l1 = mfReduce(T1blow,1);
         matrix RT1 = l1[1];
@@ -801,6 +855,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         matrix RT2 = l2[1];
         matrix F2(k-1) = l2[2]; // A homotopy equivalence T2blow -> RT2
         matrix G2(k-1) = l2[3]; // A homotopy equivalence RT2 -> T2blow
+    
+        intvec RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
+        intvec RT2gr = computeGradingFromInjection(G2(k-1),T2blowgr);
     
         // Define d1(1) to be the product over all outgoing edges labelled by x-variables
         // of the derivatives of final1 with respect to these variables, and
@@ -890,12 +947,15 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             return();
         }
 
-        list l1 = mfSplitIdempotent(RT1, epstrict1, 1);   // TODO: swap 1 with intvec here...
-        list l2 = mfSplitIdempotent(RT2, epstrict2, 1);   // TODO: swap 1 with intvec here...
+        list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);   // TODO: swap 1 with intvec here...
+        list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);   // TODO: swap 1 with intvec here...
 
-        matrix final1 = mfSuspend( l1[1], nx );
-        matrix final2 = mfSuspend( l2[1], nx );
+        final1 = mfSuspend( l1[1], nx );
+        final2 = mfSuspend( l2[1], nx );
     
+        final1gr = mfSuspendGrading( l1[4], nx );
+        final2gr = mfSuspendGrading( l2[4], nx );
+        
         // Determine the outgoing and incoming labels of final1 and final2
         // (in terms of the integer labels in {1,...,2*websize}). 
         // As final1 and final2 both depend only on y(1),...,y(4), their incident
@@ -941,6 +1001,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     }//end of k-loop
     
     // Now do the final fusion of the first websize-1 vertices with the last one.
+    dbprint(printlevel, "[mfCompileWeb] Performing final fusion.");
     
     // Rename y(i) to x(i) for all i=1,...,4:
     int k = websize;
@@ -1012,6 +1073,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
     matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
 
+    intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+    intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+    
     // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
 
     ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
@@ -1031,6 +1095,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix T2 = MFtensor( final2, V2(k) );
     matrix T2blow = mablow(T2,J);
     
+    T1gr = MFtensorGradings( final1gr, V1gr(k) );
+    T1blowgr = mablowGrading(T1gr,J);
+    T2gr = MFtensorGradings( final2gr, V2gr(k) );
+    T2blowgr = mablowGrading(T2gr,J);
+    
     // Reduce this inflated differential:
     list l1 = mfReduce(T1blow,1);
     matrix RT1 = l1[1];
@@ -1040,6 +1109,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix RT2 = l2[1];
     matrix F2(k-1) = l2[2]; // A homotopy equivalence T2blow -> RT2
     matrix G2(k-1) = l2[3]; // A homotopy equivalence RT2 -> T2blow
+
+    RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
+    RT2gr = computeGradingFromInjection(G2(k-1),T2blowgr);
 
     webmap = F2(k-1) * mablow( ZZtensor( t2(k-2) * F2(k-2) * webmap * G1(k-2) * s1(k-2), alpha(k) ), J ) * G1(k-1);
     
@@ -1144,6 +1216,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     print("The reduced form of the second web is QQ^"+string(rank0r)+" -> QQ^"+string(rank1r)+" -> QQ^"+string(rank0r)+", where QQ = rationals, and QQ^0=0.");
     int z2degree;
     
+    intvec splitgr, splitgrr;
+    
     // Now compute the non-zero part of the map of the above two complexes:
     if( rank1 != 0 )
     {
@@ -1161,6 +1235,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         {
             matrix g0 = leftInverse(f0) * eq0f; // Solves f0 * g0 = eq0f.
         };
+        
+        // The grading on the odd part of RT1 is given by
+        intvec RT1gr1 = RT1gr[(size(RT1gr)/2+1)..size(RT1gr)];
+        splitgr = computeGradingFromInjection(f0, RT1gr1);
 
         // Now split the idempotent eq0fr by hand:
         module ker0r = rightKernel(unitmat(ncols(eq0fr)) - eq0fr);
@@ -1172,6 +1250,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             matrix g0r = leftInverse(f0r) * eq0fr;
         };
 
+        // The grading on the odd part of RT2 is given by
+        intvec RT2gr1 = RT2gr[(size(RT2gr)/2+1)..size(RT2gr)];
+        splitgrr = computeGradingFromInjection(f0r,RT2gr1);
+        
         // Finally, to get the (non-zero part of the) map from web1 to web2:
 
         webmap = g0r * extractblockmat(webmap)[4] * f0;
@@ -1192,6 +1274,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         {
             matrix g0 = leftInverse(f0) * eq0f; // Solves f0 * g0 = eq0f.
         };
+        
+        // The grading on the even part of RT1 is given by
+        intvec RT1gr0 = RT1gr[1..(size(RT1gr)/2)];
+        splitgr = computeGradingFromInjection(f0, RT1gr0);
 
         // Now split the idempotent eq0fr by hand:
         module ker0r = rightKernel(unitmat(ncols(eq0fr)) - eq0fr);
@@ -1202,6 +1288,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         {
             matrix g0r = leftInverse(f0r) * eq0fr;
         };
+
+        // The grading on the even part of RT2 is given by
+        intvec RT2gr0 = RT2gr[1..(size(RT2gr)/2)];
+        splitgrr = computeGradingFromInjection(f0r, RT2gr0);
 
         // Finally, to get the (non-zero part of the) map from web1 to web2:
 
@@ -1214,6 +1304,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     setring RRR;
     matrix webmap = imap(rr3,webmap);
     
-    list finaloutput = webmap, z2degree;
+    list finaloutput = webmap, z2degree, splitgr, splitgrr;
     return(finaloutput);
 }
