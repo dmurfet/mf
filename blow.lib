@@ -2076,9 +2076,9 @@ proc ismfReduced(matrix A)
 // Given the differentials A, B of two MFs and an even supermatrix F
 // representing a morphism A -> B, together with grading vectors
 // Agr and Bgr making A,B into graded MFs, we return 1 if F represents
-// a degree zero morphism and 0 otherwise.
+// a degree d morphism and 0 otherwise.
 
-proc isMorphismDegreeZero(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F)
+proc checkMorphismDegree(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F, int d)
 {
     // Sanity check
     if( F * A != B * F )
@@ -2099,7 +2099,7 @@ proc isMorphismDegreeZero(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F)
         {
             if( f0[i,j] != 0 )
             {
-                if( Bgr[i] - Agr[j] != -2 * deg(f0[i,j]) )
+                if( d - Bgr[i] + Agr[j] != 2 * deg(f0[i,j]) )
                 {
                     dbprint(printlevel, "[isMorphismDegreeZero] First test failed at (" + string(i) + "," + string(j) + ")");
                     return(0);
@@ -2108,7 +2108,7 @@ proc isMorphismDegreeZero(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F)
             
             if( f1[i,j] != 0 )
             {
-                if( Bgr[blockRows+i] - Agr[blockCols+j] != -2 * deg(f1[i,j]) )
+                if( d - Bgr[blockRows+i] + Agr[blockCols+j] != 2 * deg(f1[i,j]) )
                 {
                     dbprint(printlevel, "[isMorphismDegreeZero] Second test failed at (" + string(i) + "," + string(j) + ")");
                     return(0);
