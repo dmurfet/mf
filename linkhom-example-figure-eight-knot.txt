@@ -20,3 +20,10 @@ int chitype = 1;
 int chiposition = 4;
 
 list L = mfCompileWeb(D1, D2, chitype, chiposition, N);
+print(L[1]);
+L[3]; // Grading on source vector space
+L[4]; // Grading on target
+
+// According to [KR,p.50 and p.51] map should have degree one, and this is
+// therefore a nontrivial check on the grading treatment in mfCompileWeb
+checkMorphismDegree(zeromat(ncols(L[1])), L[3], zeromat(nrows(L[1])), L[4], L[1], 1);
