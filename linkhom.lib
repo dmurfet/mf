@@ -576,11 +576,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix diff2(2) = ZZtensor( unitmat( ncols( V2(1) ) ), d2(2) );
     matrix iddQ2 = mablow( det(C) * diff2(1) * diff2(2), J );
 
-    matrix delta1(1) = mablow_delta(T1, 1, 2, J);
-    matrix delta1(2) = mablow_delta(T1, 2, 2, J);
+    matrix delta1(1) = mablow_delta(T1, 1, N, J);
+    matrix delta1(2) = mablow_delta(T1, 2, N, J);
     matrix delQ1 = delta1(1) * delta1(2);
-    matrix delta2(1) = mablow_delta(T2, 1, 2, J);
-    matrix delta2(2) = mablow_delta(T2, 2, 2, J);
+    matrix delta2(1) = mablow_delta(T2, 1, N, J);
+    matrix delta2(2) = mablow_delta(T2, 2, N, J);
     matrix delQ2 = delta2(1) * delta2(2);
     
     // And finally the idempotents e1,e2 on T1blow,T2blow
@@ -847,11 +847,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         matrix diff2(2) = ZZtensor( unitmat( ncols( final2 ) ), d2(k) );
         matrix iddQ2 = mablow( det(C) * diff2(1) * diff2(2), J );
 
-        matrix delta1(1) = mablow_delta(T1, 1, 2, J);
-        matrix delta1(2) = mablow_delta(T1, 2, 2, J);
+        matrix delta1(1) = mablow_delta(T1, 1, N, J);
+        matrix delta1(2) = mablow_delta(T1, 2, N, J);
         matrix delQ1 = delta1(1) * delta1(2);
-        matrix delta2(1) = mablow_delta(T2, 1, 2, J);
-        matrix delta2(2) = mablow_delta(T2, 2, 2, J);
+        matrix delta2(1) = mablow_delta(T2, 1, N, J);
+        matrix delta2(2) = mablow_delta(T2, 2, N, J);
         matrix delQ2 = delta2(1) * delta2(2);
     
         // And finally the idempotents e1,e2 on T1blow,T2blow:
@@ -1106,15 +1106,15 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix diff2(2) = ZZtensor( unitmat( ncols( final2 ) ), d2(k) );
     matrix iddQ2 = mablow( det(C) * diff2(1) * diff2(2), J );
 
-    matrix delta1(1) = mablow_delta(T1, 1, 2, J);
-    matrix delta1(2) = mablow_delta(T1, 2, 2, J);
-    matrix delta1(3) = mablow_delta(T1, 3, 2, J);
-    matrix delta1(4) = mablow_delta(T1, 4, 2, J);
+    matrix delta1(1) = mablow_delta(T1, 1, N, J);
+    matrix delta1(2) = mablow_delta(T1, 2, N, J);
+    matrix delta1(3) = mablow_delta(T1, 3, N, J);
+    matrix delta1(4) = mablow_delta(T1, 4, N, J);
     matrix delQ1 = delta1(1) * delta1(2) * delta1(3) * delta1(4);
-    matrix delta2(1) = mablow_delta(T2, 1, 2, J);
-    matrix delta2(2) = mablow_delta(T2, 2, 2, J);
-    matrix delta2(3) = mablow_delta(T2, 3, 2, J);
-    matrix delta2(4) = mablow_delta(T2, 4, 2, J);
+    matrix delta2(1) = mablow_delta(T2, 1, N, J);
+    matrix delta2(2) = mablow_delta(T2, 2, N, J);
+    matrix delta2(3) = mablow_delta(T2, 3, N, J);
+    matrix delta2(4) = mablow_delta(T2, 4, N, J);
     matrix delQ2 = delta2(1) * delta2(2) * delta2(3) * delta2(4);
     
     // And finally the idempotents e1,e2 on T1blow,T2blow:

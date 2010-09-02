@@ -1607,12 +1607,12 @@ proc computeGradingFromInjection(matrix F, intvec g)
     // Sanity checks
     
     // Check that F is a monomorphism
-    module kerF = rightKernel(F);
-    if( kerF[1] != 0 )
-    {
-        print("[computeGradingFromInjection] Passed a non-injective map, exiting.");
-        return();
-    }
+    //module kerF = rightKernel(F);
+    //if( kerF[1] != 0 )
+    //{
+    //    print("[computeGradingFromInjection] Passed a non-injective map, exiting.");
+    //    return();
+    //}
     
     // Check that the sizes of g and F are compatible
     if( size(g) != nrows(F) )
@@ -1621,17 +1621,20 @@ proc computeGradingFromInjection(matrix F, intvec g)
         return();
     }
     
-    int i;
+    int i,j;
     intvec r;
-    for(i=1;i<=ncols(F);i++)
+    int ncolsF = ncols(F);
+    int sizeg = size(g);
+    int currentDegree = 0;
+    
+    for(i=1;i<=ncolsF;i++)
     {
-        int j;
-        int currentDegree = 0;
-        for(j=1;j<=size(g);j++)
+        currentDegree = 0;
+        for(j=1;j<=sizeg;j++)
         {
             if( F[j,i] != 0 )
             {
-               //dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
+               //dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ")/(" + string(ncolsF) + "," + string(sizeg) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
                if( currentDegree != 0 && currentDegree != g[j] + 2 * deg(F[j,i]) )
                {
                    print("[computeGradingFromInjection] Encountered multiple nonzero degrees, exiting.");
