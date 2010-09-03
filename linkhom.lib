@@ -158,53 +158,6 @@ proc mfIdentityDefectGrading(int dg)
 }
 
 ////////////////////////////////////////////////////////////////////
-// mfChi0
-//
-// mfChi0(x(1),x(2),x(3),x(4),N) is the map C(Gamma^0) --> C(Gamma^1)
-// from [KR, p.50].
-////////////////////////////////////////////////////////////////////
-
-proc mfChi0(poly p(1), p(2), p(3), p(4), int N)
-{
-    poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
-    poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
-    poly u2 = ( gpoly(p(3)+p(4), p(1)*p(2), N) - gpoly(p(3)+p(4), p(3)*p(4), N) )/( p(1)*p(2)-p(3)*p(4) );
-    poly aa1 = -u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );
-
-    matrix chi0[4][4] = p(4)-p(2), 0, 0,    0,
-                    aa1,        1, 0,    0,
-                    0,         0, p(4), -p(2),
-                    0,         0, -1,   1;            // We set mu=0.
-                    
-    return(chi0);
-}
-
-
-////////////////////////////////////////////////////////////////////
-// mfChi1
-//
-// mfChi1(x(1),x(2),x(3),x(4),N) is the map C(Gamma^1) --> C(Gamma^0)
-// from [KR, p.51].
-////////////////////////////////////////////////////////////////////
-
-proc mfChi1(poly p(1), p(2), p(3), p(4), int N)
-{
-    poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
-    poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
-    poly u2 = ( gpoly(p(3)+p(4), p(1)*p(2), N) - gpoly(p(3)+p(4), p(3)*p(4), N) )/( p(1)*p(2)-p(3)*p(4) );
-    poly aa2 = ( u1 + p(1) * u2 - pi23 )/( p(4)-p(1) );
-    poly aa3 = p(1) - p(3);
-
-    matrix chi1[4][4] = 1, 0, 0,    0,
-                    aa2,        aa3, 0,    0,
-                    0,         0, 1, p(3),
-                    0,         0, 1, p(1);            // We set lambda=0.
-                    
-    return(chi1);
-}
-
-
-////////////////////////////////////////////////////////////////////
 // checklist
 //
 // checklist(l,p) gives 1 if the poly p is an element of the list l,
@@ -335,7 +288,6 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
         return(chi1);
     }
 }
-
 
 ////////////////////////////////////////////////////////////////////
 // mfCompileWeb (TODO: also treat grading)
@@ -535,7 +487,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     {
         if( i == chiposition )
         {
-            alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N)
+            alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N);
         }
     }
     
