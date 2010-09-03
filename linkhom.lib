@@ -875,11 +875,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         intvec T2blowgr = mablowGrading(T2gr,J);
 
         // blown-up version of the map between the first k vertices:
-        print("---------------");
-//        final2 * webmap == webmap * final1;
         webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
-
-//        T2blow * webmap == webmap * T1blow;
         
         // Reduce this inflated differential:
         list l1 = mfReduce(T1blow,1);
@@ -1167,10 +1163,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
 
     RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
     RT2gr = computeGradingFromInjection(G2(k-1),T2blowgr);
-
-    // DEBUG
-    // T2blow * webmap == webmap * T1blow;
-    // END DEBUG
     
     webmap = F2(k-1) * webmap * G1(k-1);
     
