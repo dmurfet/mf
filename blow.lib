@@ -448,6 +448,7 @@ proc mablow(matrix M, ideal J)
     }
     for(i1=1; i1<=s; i1++)
     {
+        dbprint(printlevel,"[mablow] Iteration count " + string(i1) + "/" + string(s));
         for(j1=1; j1<=s; j1++)
         {
             matrix PM = poly2matrix(M[i1,j1], J, variableActions, n);
@@ -460,6 +461,7 @@ proc mablow(matrix M, ideal J)
 
     for(i1=1; i1<=s; i1++)
     {
+        dbprint(printlevel,"[mablow] Assembly count " + string(i1) + "/" + string(s));
         for(j1=1; j1<=n; j1++)
         {
             for(i2=1; i2<=s; i2++)
@@ -1634,7 +1636,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
         {
             if( F[j,i] != 0 )
             {
-               dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ")/(" + string(ncolsF) + "," + string(sizeg) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
+               //dbprint(printlevel, "[computeGradingFromInjection] Nonzero entry (" + string(i) + "," + string(j) + ")/(" + string(ncolsF) + "," + string(sizeg) + ") is " + string(F[j,i]) + " corresponding g entry is " + string(g[j]));
                if( currentDegree != 0 && currentDegree != g[j] + 2 * deg(F[j,i]) )
                {
                    print("[computeGradingFromInjection] Encountered multiple nonzero degrees, exiting.");
@@ -1642,7 +1644,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
                }
                else
                {
-                   dbprint(printlevel, "[computeGradingFromInjection] Assigning degree " + string(g[j] + 2 * deg(F[j,i])));
+                   //dbprint(printlevel, "[computeGradingFromInjection] Assigning degree " + string(g[j] + 2 * deg(F[j,i])));
                    currentDegree = g[j] + 2 * deg(F[j,i]);
                }
             }
@@ -1860,6 +1862,7 @@ proc mfReduce(matrix A, list #)
         // These inverses are now computed within matrixreduce
         // matrix qinv = inverse(q);
         // matrix pinv = inverse(p);
+        //dbprint(prl, "[mfReduce] Multiplications.");
         b0 = l[1];
         b1 = qinv * b1 * pinv;
         f0 = qinv * f0; f1 = p * f1;
@@ -1896,7 +1899,7 @@ proc mfReduce(matrix A, list #)
         // These inverses are now computed in matrixreduce
         //matrix qinv = inverse(q);
         //matrix pinv = inverse(p);
-        
+        //dbprint(prl, "[mfReduce] Multiplications.");
         b1 = l[1];
         b0 = qinv * b0 * pinv;
         f0 = p * f0; f1 = qinv * f1;
@@ -1914,7 +1917,6 @@ proc mfReduce(matrix A, list #)
         
         //current_stage = b0,b1,f0,f1,g0,g1;
         //transform_record = transform_record + list(current_stage);
-                
         kill l, p, q, qinv, pinv, out;
     }
     
@@ -1926,6 +1928,8 @@ proc mfReduce(matrix A, list #)
     int useGaussRow = 0;
     
     // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
+    //dbprint(printlevel, "[mfReduce] Beginning Gaussian elimination.");
+    
     matrix zero_b[nrows(b0)][ncols(b0)];
     if( b0 != zero_b && b1 != zero_b )
     {
@@ -2040,13 +2044,13 @@ proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
     // TODO: speedup here?
     int i,j;
     matrix zeroone[nrows(S)][ncols(S)+1];
-    for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; }
-    
     matrix negtone[nrows(S)+1][ncols(S)];
-    for(i=1;i<=nrows(S);i++){ negtone[i+1,i] = 1; }
+    
+    for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; negtone[i+1,i] = 1; }
     for(i=1;i<=ncols(S);i++){ negtone[1,i] = -T[1,i]; }
     
     // Modify f and g by the appropriate things
+    // TODO: Just construct f0r and f1r directly, it will be faster than matrix mult.
     matrix f0r = zeroone * f0;
     matrix f1r = zeroone * f1;
     matrix g0r = g0 * negtone;
@@ -2216,8 +2220,9 @@ proc matrixreduce(matrix M)
                 // We found our constant term, permute it to (1,1)
                 P = 1/(M[i,j]) * permrow(unitmat(mrank),1,i);
                 Pinv = M[i,j] * permrow(unitmat(mrank),1,i);
-                Q = permcol(unitmat(mrank), 1,j);
+                Q = permcol(unitmat(mrank),1,j);
                 Qinv = permcol(unitmat(mrank),1,j);
+                
                 N = P * M * Q;
                 
                 // Go through the first column and transform away everything
@@ -2235,13 +2240,6 @@ proc matrixreduce(matrix M)
                         Pinv = Pinv * Pninv;
                         N = Pn * N;
                     }
-                }
-                
-                // DEBUG REMOVE THIS
-                if( P * Pinv != unitmat(mrank) || Q * Qinv != unitmat(mrank) )
-                {
-                    print("Failure to get good inverses.");
-                    return();
                 }
                 
                 list l = N,P,Q,Pinv,Qinv;
