@@ -1831,8 +1831,9 @@ proc mfReduce(matrix A, list #)
     matrix b0 = blocks[3]; matrix b1 = blocks[2];
     
     // F and G begin as identity maps
-    matrix f0 = unitmat(ncols(A)/2); matrix f1 = unitmat(ncols(A)/2);
-    matrix g0 = unitmat(ncols(A)/2); matrix g1 = unitmat(ncols(A)/2);
+    int ncolsA = ncols(A);
+    matrix f0 = unitmat(ncolsA/2); matrix f1 = unitmat(ncolsA/2);
+    matrix g0 = unitmat(ncolsA/2); matrix g1 = unitmat(ncolsA/2);
     
     //list transform_record;
     //list current_stage = b0,b1,f0,f1,g0,g1;
@@ -2316,23 +2317,19 @@ proc MFdual(matrix A)
 ////////////////////////////////////////////////////////////////////
 // ZZtensor 
 //
-// Takes as input a pair (A,B) of block 2x2 matrices (square blocks of arbitrary size) which we interpret
-// as a pair of endomaps of Z/2-graded free modules A: X -> X, B: Y -> Y according to the decompositions
-// X = X0 + X1 and Y = Y0 + Y1. We assume that A, B are both homogeneous (i.e. either even or odd).
+// Takes as input a pair (A,B) of block matrices which we interpret as a pair of maps of Z/2-graded
+// free modules A: X -> X', B: Y -> Y' according to the decompositions X = X0 + X1 and Y = Y0 + Y1,
+// similarly for X', Y'. We assume that A, B are both homogeneous (i.e. either even or odd), but we
+// allow X and X' (resp. Y and Y') to have different ranks, so A,B may not be square.
 //
-// Consider the tensor product Z = X x Y of Z/2-graded modules and the map A x B: Z -> Z which sends
-// a homogeneous tensor f x g to (-1)^{|f||B|} A(f) x B(g). We return the matrix of this map with respect
-// to the decomposition Z0 = (X0 x Y0) + (X1 + Y1) and Z1 = (X0 + Y1) x (X1 + Y0) of Z. The basis of
-// X0 x Y0 is ordered in the usual way for a Kronecker product of matrices.
+// Consider the tensor product Z = X x Y (resp. Z' = X' x Y') of Z/2-graded modules and the map
+// A x B: Z -> Z' which sends a homogeneous tensor f x g to (-1)^{|f||B|} A(f) x B(g). We return
+// the matrix of this map with respect to the decomposition Z0 = (X0 x Y0) + (X1 + Y1) and
+// Z1 = (X0 + Y1) x (X1 + Y0) of Z (resp. of Z'). The basis of X0 x Y0 etc. is ordered in the
+// usual way for a Kronecker product of matrices.
 
 proc ZZtensor(matrix A, matrix B)
 {
-    //int arank = ncols(A)/2; // Size of blocks in A
-    //int brank = ncols(B)/2; // Size of blocks in B
-    
-    // The blocks in Z are therefore of size 2 * arank * brank
-    //int zrank = 2 * arank * brank;
-    
     list la = extractblockmat(A);
     list lb = extractblockmat(B);
     
@@ -2343,19 +2340,18 @@ proc ZZtensor(matrix A, matrix B)
     
     int degb = 0; // Default B to degree 0, i.e. even
     
-    int brank = ncols(B)/2;
-    matrix zero[brank][brank];
-    matrix bigzero[ncols(B)][ncols(B)];
+    matrix zero[nrows(B)/2][ncols(B)/2];
+    matrix bigzero[nrows(B)][ncols(B)];
     
     if( B != bigzero && b11 == zero && b22 == zero ){ degb = 1; }
     
     // Define the four corners of Z, then use blockmat
-    matrix z11 = blockmat( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
-    matrix z12 = blockmat( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
-    matrix z21 = blockmat( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
-    matrix z22 = blockmat( tensor(a11,b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
-    
-    matrix Z = blockmat(z11,z12,z21,z22);
+    matrix z11 = blockmat_nsq( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
+    matrix z12 = blockmat_nsq( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
+    matrix z21 = blockmat_nsq( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
+    matrix z22 = blockmat_nsq( tensor(a11,b22), (-1)^(degb) * tensor(a12,b21), tensor(a21,b12), (-1)^(degb) * tensor(a22,b11) );
+        
+    matrix Z = blockmat_nsq(z11,z12,z21,z22);
     
     return(Z);
 }
