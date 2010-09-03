@@ -70,21 +70,16 @@ proc gpoly(poly s1, poly s2, int n)
 //          |
 //         /\
 //       /   \
-//     c       d
+//     d       c
 //
-// where a,b,c,d are variables labelled on the edges as shown (see Figure 5
-// on p.6 of [KR]).
+// where a,b,c,d are variables labelled on the edges as shown. Note that this
+// is the ordering convention of Figure 8 on p.9 of [KR]. With this convention
+// if you call
 //
-// WARNING: Note that in Figure 8 on p.9 of [KR] the variable ordering on the "bottom"
-// two variables is swapped. This becomes relevant when you start reading Section 6
-// which assigns a factorisation to labelling chosen in Figure 8. With our conventions,
-// this means that if you call
-//
-//  matrix D = mfWideEdge(x(1),x(2),x(4),x(3),N);
+// matrix D = mfWideEdge(x(1),x(2),x(3),x(4),N);
 //
 // Then the matrix D you get will be the (Q1,Q2) pair written on p.50 of [KR]. Note however
-// that everything is symmetric for the exchange x(1) <-> x(2) and x(4) <-> x(3), so there
-// is no need to worry about this ordering.
+// that everything is symmetric for the exchange x(1) <-> x(2) and x(4) <-> x(3).
 ////////////////////////////////////////////////////////////////////
 
 proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
@@ -158,6 +153,52 @@ proc mfIdentityDefectGrading(int dg)
 }
 
 ////////////////////////////////////////////////////////////////////
+// mfIdentityEdge
+//
+// We are given four variables a,b,c,d and an integer N, and we return
+// the matrix factorisation of a^(n+1) + b^(n+1) - c^(n+1) - d^(n+1)
+// associated by Khovanov and Rozansky to the Gamma0 diagram of Figure 8
+// Let us include the following picture of a wide edge
+//
+//       a        b
+//         \   /
+//          \/
+//          |
+//          |
+//         /\
+//       /   \
+//     d       c
+//
+// where a,b,c,d are variables labelled on the edges as shown. The return
+// is the tensor product of L^b_c with L^a_d (in KR's notation), in that
+// order. Note that this is not symmetric with respect to the interchange
+// a <-> b or c <-> d, so the ordering of the variables matters.
+////////////////////////////////////////////////////////////////////
+
+proc mfIdentityEdge(poly a, poly b, poly c, poly d, int n)
+{
+    matrix Aa = mfIdentityDefect( a^(n+1), d^(n+1), a, d );
+    matrix Ab = mfIdentityDefect( b^(n+1), c^(n+1), b, c );
+    
+    // Note the order of the tensor factors (this is opposite to what
+    // a first reading of the third line of [KR, p.50] would suggest,
+    // but is necessary to reproduce the matrices P0 and P1 there, and
+    // to make chi0 = (U0,U1) into a morphism of MFs).
+    matrix A = MFtensor(Ab, Aa);
+    
+    return(A);
+}
+
+proc mfIdentityEdgeGrading(int n)
+{
+    intvec Aagr = mfIdentityDefectGrading( n+1 );
+    intvec Abgr = mfIdentityDefectGrading( n+1 );
+    intvec Agr = MFtensorGradings(Abgr, Aagr);
+    
+    return(Agr);
+}
+
+////////////////////////////////////////////////////////////////////
 // checklist
 //
 // checklist(l,p) gives 1 if the poly p is an element of the list l,
@@ -207,16 +248,27 @@ proc removefromlist(list l, poly p)
 //
 // mfVertex(zeroOrOne, varis, N) gives the "KR-vertex" of type 0
 // (tensor product of two identity defects) or of type 1 (wide edge
-// defect) in the list of variables varis. N as in sl(N).
+// defect) in the list of variables varis. N as in sl(N). The ordering
+// of the variables in varis corresponds to 
+//
+//     varis[1]   varis[2]
+//           \   /
+//            \/
+//            |
+//            |
+//           /\
+//         /   \
+//   varis[4]    varis[3]
+//
+// See the comments preceeding mfIdentityEdge for an idea of why the
+// ordering here is significant.
 ////////////////////////////////////////////////////////////////////
 
 proc mfVertex(int zeroOrOne, list varis, int N)
 {
     if( zeroOrOne == 0 )
     {
-        matrix Aa = mfIdentityDefect( varis[1]^(N+1), varis[3]^(N+1), varis[1], varis[3] );
-        matrix Ab = mfIdentityDefect( varis[2]^(N+1), varis[4]^(N+1), varis[2], varis[4] );
-        matrix A = MFtensor(Aa, Ab);
+        matrix A = mfIdentityEdge( varis[1], varis[2], varis[3], varis[4], N );
         return(A);
     }
         
@@ -235,9 +287,7 @@ proc mfVertexGrading(int zeroOrOne, list varis, int N)
 {
    if( zeroOrOne == 0 )
    {
-       intvec Aagr = mfIdentityDefectGrading(N+1);
-       intvec Abgr = mfIdentityDefectGrading(N+1);
-       intvec Agr = MFtensorGradings(Aagr,Abgr);
+       intvec Agr = mfIdentityEdgeGrading(N);
        return(Agr);
    }
    
@@ -290,7 +340,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 }
 
 ////////////////////////////////////////////////////////////////////
-// mfCompileWeb (TODO: also treat grading)
+// mfCompileWeb
 //
 // mfCompileWeb(D1, D2, chitype, chiposition, N) compiles two webs
 // given by D1 and D2 as described below, together with a map
@@ -318,9 +368,19 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 // N=2
 // int chitype = 1;
 // int chiposition = 4;
-// NOTE that we order the entries of the intvecs edgevec(i) such
+// NOTE that we order the entries of the intvecs e = edgevec(i) such
 // that the two outgoing edges at vertex i are labelled by the
-// first two entries of edgevec(i).
+// first two entries of edgevec(i), and so that the labels continue
+// clockwise (orientations being up the page)
+//
+//        e[1]    e[2]
+//           \   /
+//            \/
+//            |
+//            |
+//           /\
+//         /   \
+//      e[4]    e[3]
 //
 // SKETCH of how to compile (certain) webs automatically:
 //
@@ -332,6 +392,8 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 //      edges, that the fusion of vertices 1 and 2 is joined with vertex 3 by precisely two
 //      edges etc.; only the fusion of the first v-1 vertices is joined by precisely four
 //      edges with the final vertex v.
+//      NOTE: We make no assumption that the two edges between 1 and 2 are both oriented
+//      from 1 to 2 (in fact the orientations on the two edges could be opposite).
 //  (3) Hence we can represent such a web by the following data D: D is a list of v elements,
 //      each of which is again a list of two elements: D[i] = list(vertextype(i),edgevec(i)) for
 //      i=1,...,v where vertextype(i) is a string that indicates whether the vertex is the tensor
@@ -348,8 +410,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 //      this (where by reducing we mean both our usual blowing-up and idempotent-splitting).
 //      We start by identifying which of the eight entries in edgevec1(1) and edgevec1(2) 
 //      occur twice and call them int(1) and int(2). The remaining four entries we call 
-//      ext(1),...,ext(4). (The order is not important, as long as we don't forget it.) Then we
-//      make the idenfication (we should use a list to keep track of it):
+//      ext(1),...,ext(4). The ordering is not important. Then we make the idenfication:
 //          x(i) corresponds to int(i) for i=1,2,
 //          y(i) corresponds to ext(i) for i=1,2,3,4.
 //  (6) Using this and the data D1, D2, alpha, we compute the fusions of the first two vertices
@@ -373,6 +434,8 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 //      and edge labels), and do the last fusion as usual. 
 ////////////////////////////////////////////////////////////////////
 
+// TODO: Will mfCompileWeb work when there are only two vertices in the web?
+// TODO: possible signs due to the ordering of internal variables?
 proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
 {
     def RRR = basering;
@@ -423,9 +486,12 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             }
         }
     }
+    // Note that inter(1),inter(2) occur in the same order which these edges
+    // appear in edgevec(1).
     
     // Call the remaining labels of edges incident on either of the two
-    // vertices ext(1),...,ext(4):
+    // vertices ext(1),...,ext(4). The order is to enumerate the external
+    // edges in edgevec(1) and then those in edgevec(2).
     
     L1 = removefromlist(removefromlist( L1, inter(1) ), inter(2) );
     L2 = removefromlist(removefromlist( L2, inter(1) ), inter(2) );     
@@ -442,7 +508,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     list listOfEdgeLabels = inter(1),inter(2),ext(1),ext(2),ext(3),ext(4);
     
     // Find the variable dependence of the first two vertices:
-    
     list varis(1), varis(2);
     for( i1=1; i1<=4; i1++ )
     {
@@ -462,8 +527,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     
     // V1(i) is the MF associated to the i-th vertex in web 1, 
     // V2(i) is the MF associated to the i-th vertex in web 2: 
-    
-    matrix V1(1) = mfVertex( D1[1][1], varis(1), N );
+    matrix V1(1) = mfVertex( D1[1][1], varis(1), N ); 
     matrix V1(2) = mfVertex( D1[2][1], varis(2), N );
     matrix V2(1) = mfVertex( D2[1][1], varis(1), N );
     matrix V2(2) = mfVertex( D2[2][1], varis(2), N );
@@ -491,8 +555,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         }
     }
     
-    matrix webmap = mablow( ZZtensor( alpha(1), alpha(2) ), J );
-    
     // Compute the ordinary tensor product:
     matrix T1 = MFtensor( V1(1), V1(2) );
     matrix T1blow = mablow(T1,J);
@@ -504,6 +566,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     intvec T2gr = MFtensorGradings( V2gr(1), V2gr(2) );
     intvec T2blowgr = mablowGrading(T2gr,J);
 
+    // Inflate the induced morphism between the webs
+    matrix webmap = mablow( ZZtensor( alpha(1), alpha(2) ), J );
+    
     // Reduce this inflated differential:
     list l1 = mfReduce(T1blow,1);
     matrix RT1 = l1[1];
@@ -554,7 +619,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             d1(2) = d1(2) * diff( V1(2), x(2) );
             d2(2) = d2(2) * diff( V2(2), x(2) );
         }
-    }    
+    }
+    // TODO: possible signs?
     
     matrix diff1(1) = ZZtensor( d1(1), unitmat( ncols( V1(2) ) ) );
     matrix diff1(2) = ZZtensor( unitmat( ncols( V1(1) ) ), d1(2) );
@@ -628,7 +694,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     // edges are labelled by ext(1),...,ext(4). We need to determine i1,i2 such
     // that the vertices labelled by ext(i1) and ext(i2) are incoming. 
     // Then we define a list finalvaris whose first two entries are ext(i1),ext(i2),
-    // and whose third and fourth entry is given by the remaning two labellings.
+    // and whose third and fourth entry is given by the remaining two labellings.
     list templist;
     for( i=1; i<=4; i++ )
     {
@@ -658,12 +724,20 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     }
     
     // Compute the transformation matrices:
-
     matrix s1(1) = mfSuspendMorph( l1[2], nx );    // final1 --> RT1
     matrix t1(1) = mfSuspendMorph( l1[3], nx );    // RT1 --> final1
     matrix s2(1) = mfSuspendMorph( l2[2], nx );    // final2 --> RT2
     matrix t2(1) = mfSuspendMorph( l2[3], nx );    // RT2 --> final2
     
+    // Compute the induced map between the reductions
+    webmap = t2(1) * F2(1) * webmap * G1(1) * s1(1);
+    
+    // Sanity check (DEBUG, can be removed)
+    if( final2 * webmap != webmap * final1 )
+    {
+        print("[mfCompileWeb] webmap is not a morphism, exiting.");
+        return();
+    }
     
     // Now repeat the above steps analogously and iteratively until all vertices but
     // the last one in the webs are fused:
@@ -671,6 +745,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     
     for( k=3; k<=websize-1; k++ )
     {
+        // NOTE: the ext(i) will not necessarily be ordered "clockwise" with respect
+        // to the underlying directed graph of the current web.
         // Identify which two numbers in D1[k][2] are not in {ext(i)}_{i=1,...,4}
         // and call them newlabel(1) and newlabel(2):
         int count = 1;
@@ -692,7 +768,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         }
         
         // Determine which of the numbers in {ext(i)}_{i=1,...,4} also appear 
-        // in D1[k][2], and let us define i1,i2 such that these are ext(i1) and ext(i2):
+        // in D1[k][2], and let us define i1,i2 such that these are ext(i1) and ext(i2).
+        // These keep the ordering given in D1[k][2].
         list extlabel;
         for( i1=1; i1<=4; i1++ )
         {
@@ -705,7 +782,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
                 }
             }
         }
-        int i1 = extlabel[1];
+        int i1 = extlabel[1]; // TODO: mondo confusing notation
         int i2 = extlabel[2];
 
         // At this stage, the variable listOfCVariableNames[i] corresponds to 
@@ -741,7 +818,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         list blobvaris, varis(k);
         for( i3=1; i3<=4; i3++ )
         {
-         for( i4=1; i4<=6; i4++ )
+            for( i4=1; i4<=6; i4++ )
             {
                 if( finalvaris[i3] == listOfEdgeLabels[i4] )
                 {
@@ -784,9 +861,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
         }
         
-        // blown-up version of the map between the first k vertices:
-        webmap = mablow( ZZtensor( t2(k-2) * F2(k-2) * webmap * G1(k-2) * s1(k-2), alpha(k) ), J );
-    
         // Compute the ordinary tensor product:
         matrix T1 = MFtensor( final1, V1(k) );
         matrix T1blow = mablow(T1,J);
@@ -797,6 +871,13 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         intvec T1blowgr = mablowGrading(T1gr,J);
         intvec T2gr = MFtensorGradings( final2gr, V2gr(k) );
         intvec T2blowgr = mablowGrading(T2gr,J);
+
+        // blown-up version of the map between the first k vertices:
+        print("---------------");
+        final2 * webmap == webmap * final1;
+        webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+
+        T2blow * webmap == webmap * T1blow;
         
         // Reduce this inflated differential:
         list l1 = mfReduce(T1blow,1);
@@ -957,6 +1038,15 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         matrix s2(k-1) = mfSuspendMorph( l2[2], nx );    // final2 --> RT2
         matrix t2(k-1) = mfSuspendMorph( l2[3], nx );    // RT2 --> final2
 
+        // Compute the induced map between the reductions
+        webmap = t2(k-1) * F2(k-1) * webmap * G1(k-1) * s1(k-1);
+    
+        // Sanity check (DEBUG, can be removed)
+        if( final2 * webmap != webmap * final1 )
+        {
+            print("[mfCompileWeb] inductive webmap is not a morphism, exiting.");
+            return();
+        }
     }//end of k-loop
     
     // Now do the final fusion of the first websize-1 vertices with the last one.
@@ -970,7 +1060,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     int ny=4;
     ring rr2=0,(x(1..nx),y(1..ny)),dp;
 //    def lastvertex = imap(RRR,lastvertex);
-    print(lastvertex);
+    //print(lastvertex);
     matrix final1 = imap(RRR,final1);
     matrix final2 = imap(RRR,final2);
     matrix s1(k-2) = imap(RRR,s1(k-2));
@@ -1042,7 +1132,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     number Nn = N + 1;
     matrix C[4][4] = 1/Nn * unitmat(4);
     
-    matrix alpha(k) = unitmat(4);
+    matrix alpha(k) = unitmat(4); // TODO: this has any point? We define alpha(k) at the beginning.
     if( k == chiposition )
     {
         matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
@@ -1059,6 +1149,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     T2gr = MFtensorGradings( final2gr, V2gr(k) );
     T2blowgr = mablowGrading(T2gr,J);
     
+    // blow up webmap
+    webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
     // Reduce this inflated differential:
     list l1 = mfReduce(T1blow,1);
     matrix RT1 = l1[1];
@@ -1072,7 +1165,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
     RT2gr = computeGradingFromInjection(G2(k-1),T2blowgr);
 
-    webmap = F2(k-1) * mablow( ZZtensor( t2(k-2) * F2(k-2) * webmap * G1(k-2) * s1(k-2), alpha(k) ), J ) * G1(k-1);
+    // DEBUG
+    // T2blow * webmap == webmap * T1blow;
+    // END DEBUG
+    
+    webmap = F2(k-1) * webmap * G1(k-1);
     
     // Define d1(1) to be the product over all outgoing edges labelled by x-variables
     // of the derivatives of final1 with respect to these variables, and
