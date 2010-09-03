@@ -956,6 +956,13 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         final1gr = mfSuspendGrading( l1[4], nx );
         final2gr = mfSuspendGrading( l2[4], nx );
         
+        // Grading sanity check
+        if( isGradingValid(final1, final1gr) != 1 || isGradingValid(final2,final2gr) != 1 )
+        {
+            print("[mfCompileWeb] Something has gone wrong with the grading in induction, exiting.");
+            return();
+        }
+        
         // Determine the outgoing and incoming labels of final1 and final2
         // (in terms of the integer labels in {1,...,2*websize}). 
         // As final1 and final2 both depend only on y(1),...,y(4), their incident
