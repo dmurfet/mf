@@ -552,6 +552,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         if( i == chiposition )
         {
             alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N);
+            break;
         }
     }
     
@@ -692,7 +693,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     // (in terms of the integer labels in {1,...,2*websize}). 
     // As final1 and final2 both depend only on y(1),...,y(4), their incident
     // edges are labelled by ext(1),...,ext(4). We need to determine i1,i2 such
-    // that the vertices labelled by ext(i1) and ext(i2) are incoming. 
+    // that the vertices labelled by ext(i1) and ext(i2) are outgoing. 
     // Then we define a list finalvaris whose first two entries are ext(i1),ext(i2),
     // and whose third and fourth entry is given by the remaining two labellings.
     list templist;
@@ -834,6 +835,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         // Redefine the results of step k-1 according to the new identifications:
         final1 = subst( final1, y(i1), x(1) ); final1 = subst( final1, y(i2), x(2) );
         final2 = subst( final2, y(i1), x(1) ); final2 = subst( final2, y(i2), x(2) );
+        webmap = subst( webmap, y(i1), x(1) ); webmap = subst( webmap, y(i2), x(2) );
         s1(k-2) = subst( s1(k-2), y(i1), x(1) ); s1(k-2) = subst( s1(k-2), y(i2), x(2) );
         t1(k-2) = subst( t1(k-2), y(i1), x(1) ); t1(k-2) = subst( t1(k-2), y(i2), x(2) );
         s2(k-2) = subst( s2(k-2), y(i1), x(1) ); s2(k-2) = subst( s2(k-2), y(i2), x(2) );
@@ -874,10 +876,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
 
         // blown-up version of the map between the first k vertices:
         print("---------------");
-        final2 * webmap == webmap * final1;
+//        final2 * webmap == webmap * final1;
         webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
 
-        T2blow * webmap == webmap * T1blow;
+//        T2blow * webmap == webmap * T1blow;
         
         // Reduce this inflated differential:
         list l1 = mfReduce(T1blow,1);
@@ -1133,6 +1135,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix C[4][4] = 1/Nn * unitmat(4);
     
     matrix alpha(k) = unitmat(4); // TODO: this has any point? We define alpha(k) at the beginning.
+                                  // Yes, but it was only defined in the ring RRR.
     if( k == chiposition )
     {
         matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
@@ -1267,9 +1270,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     int rank1r = mat_rk(ep1r);
 
     print("");
-    print("The reduced form of the first web is QQ^"+string(rank0)+" -> QQ^"+string(rank1)+" -> QQ^"+string(rank0)+", where QQ = rationals, and QQ^0=0.");
+    print("The reduced form of the first web is QQ^"+string(rank0)+" --> QQ^"+string(rank1)+" --> QQ^"+string(rank0)+", where QQ = rationals, and QQ^0=0.");
     print("");
-    print("The reduced form of the second web is QQ^"+string(rank0r)+" -> QQ^"+string(rank1r)+" -> QQ^"+string(rank0r)+", where QQ = rationals, and QQ^0=0.");
+    print("The reduced form of the second web is QQ^"+string(rank0r)+" --> QQ^"+string(rank1r)+" --> QQ^"+string(rank0r)+", where QQ = rationals, and QQ^0=0.");
     int z2degree;
     
     intvec splitgr, splitgrr;
