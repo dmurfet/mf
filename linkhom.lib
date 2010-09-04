@@ -1261,10 +1261,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     int rank0r = mat_rk(ep0r);
     int rank1r = mat_rk(ep1r);
 
-    print("");
-    print("The reduced form of the first web is QQ^"+string(rank0)+" --> QQ^"+string(rank1)+" --> QQ^"+string(rank0)+", where QQ = rationals, and QQ^0=0.");
-    print("");
-    print("The reduced form of the second web is QQ^"+string(rank0r)+" --> QQ^"+string(rank1r)+" --> QQ^"+string(rank0r)+", where QQ = rationals, and QQ^0=0.");
+    //print("");
+    //print("The reduced form of the first web is QQ^"+string(rank0)+" --> QQ^"+string(rank1)+" --> QQ^"+string(rank0)+", where QQ = rationals, and QQ^0=0.");
+    //print("");
+    //print("The reduced form of the second web is QQ^"+string(rank0r)+" --> QQ^"+string(rank1r)+" --> QQ^"+string(rank0r)+", where QQ = rationals, and QQ^0=0.");
     int z2degree;
     
     intvec splitgr, splitgrr;
@@ -1357,4 +1357,200 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     
     list finaloutput = webmap, z2degree, splitgr, splitgrr;
     return(finaloutput);
+}
+
+/////////////////////////////////////////
+// powervec
+//
+// Given an integer m returns a list of all intvecs of length m with entries 0,1.
+
+proc powervec(int m)
+{
+    if( m == 1 )
+    {
+        intvec a = 0;
+        intvec b = 1;
+        list r = a,b;
+        kill a,b;
+        return(r);
+    }
+    
+    list l = powervec(m-1);
+    list r;
+    
+    int i;
+    for(i=1;i<=size(l);i++)
+    {
+       // Prepend either 0 or 1 to each entry of l
+        intvec v = l[i];
+        intvec a = 0,v;
+        intvec b = 1,v;
+        r = r + list(a,b);
+        kill v,a,b;
+    }
+    
+    kill l;
+    return(r):
+}
+
+/////////////////////////////////////////
+// intvecToString
+/////////////////////////////////////////
+
+proc intvecToString(intvec v)
+{
+    string s;
+    int i;
+    for( i = 1; i <= size(v); i++ )
+    {
+        s = s + string(v[i]);
+    }
+    
+    return(s);
+}
+
+/////////////////////////////////////////
+// Link datatype
+//
+// Suppose we are given a link with m crossings, on which we fix a particular ordering.
+// We represent this as a list (X,Y) consisting of an intvec X and a list Y, such that
+//
+// - X is an intvec of size m with X[i] = 1 if the i-th crossing of the link is positive
+// and X[i] = -1 if the crossing is negative.
+// - each entry of Y is an intvec of size 4, and together the entries of Y give a
+// partition of the set 1,2,...,4*m where Y[i] labels the edges incident at the i-th crossing
+// of the link, oriented in the usual clockwise fashion.
+
+////////////////////////////////////////////////////////////////////
+// mfCompileWeb
+//
+// Takes as arguments a link, defined as a pair in the sense explained above, the name
+// of a file to use for storing intermediate results, and a flag useSaveFile specifying
+// whether or not to make use of this datafile. The return is a list of tuples
+//
+//      T = (intvec state1,intvec state2,int chitype,int chiposition,data).
+//
+// Suppose we have m crossings in our link. A "state diagram" is an assignment of integers 0,1
+// (or the letters A,B) to crossings, represented by an intvec with entries 0,1. So the tuple T
+// consists of two state diagrams state1,state2 related by a map of type chitype in position
+// chiposition. The final entry is the result of calling mfCompileWeb on this data. 
+//
+// The return of mfCompileWeb is the list of all such tuples, over all possible pairs
+// (state1,state2) connected by maps.
+//
+// To facilitate the computations we store the results of mfCompileWeb to disk, using writelist.
+// To illustrate the scheme, take the state 010 and state 110, let us say that the underlying
+// link has a positive crossing in the first position so that there is a map 010 -> 110 of
+// chitype 0. Internally to mfCompileWeb we would then run
+//
+//      list map010to110 = mfCompileWeb( suitable params );
+//
+// Then a call to writelist:
+//
+//      writelist("filename","map010to110",map010to110);
+//
+// This will either create "filename" or append to it if it exists, writing a line to the file
+// consisting of a Singular command which will recreate the list map010to110. To read from the
+// file and execute this command one calls 
+//
+//      execute(read("filename"));
+//
+// which will run each line of "filename" in Singular.
+//
+// Before computing a given tuple T we load in the contents of the datafile and see if it has
+// already been computed.
+
+proc mfCompileLink(list linkData, string fileName, int useSaveFile)
+{
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];
+    
+    int webSize = size(vertexParity);
+    
+    list stateDiagrams = powervec(webSize);
+    list returnList;
+    
+    // Read in the save file, if it exists
+    if( status(fileName,"exists") == "yes" && useSaveFile )
+    {
+        dbprint(printlevel, "[mfCompileLink] Reading in savefile.");
+        execute(read(fileName));
+    }
+
+    int i;
+    for( i = 1; i <= size(stateDiagrams); i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        dbprint(printlevel, "[mfCompileLink] Looking at state " + string(v));
+    
+        // Look at each position and the possible maps given by chis
+        int j;
+        for( j = 1; j <= size(v); j++ )
+        {
+            // If either the current position in v is a 0 and the crossing is positive, or
+            // if the current position is 1 and the crossing is negative, then there is a map
+            // originating in this state diagram with a chi in this position
+            intvec w = v;
+            int somethingToDo = 0;
+        
+            if(v[j] == 0 && vertexParity[j] == 1) // chitype is 0
+            {
+                w[j] = w[j]+1;
+                somethingToDo = 1;
+            }
+        
+            if(v[j] == 1 && vertexParity[j] == -1) // chitype is 1
+            {
+                w[j] = w[j]-1;
+                somethingToDo = 1;
+            }
+        
+            if( somethingToDo )
+            {
+                dbprint(printlevel, "[mfCompileLink] Looking at the map to " + string(w));                
+                string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
+            
+                // Populate an integer definedCheck with the result of defined(map???to???)
+                string cmd = "int definedCheck = defined(" + listName + ");";
+                execute(cmd);
+                
+                // See if this list already exists (having been loaded from the file)
+                if( definedCheck && useSaveFile )
+                {
+                    dbprint(printlevel, "[mfCompileLink] Already computed, skipping.");
+                }
+                else
+                {
+                    // Run mfCompileWeb
+                    string cmd = "list " + listName + " = ";
+                    cmd = cmd + "mfCompileWeb(linkweb(" + string(v) + ",edgeList),linkweb(" + string(w) + ",edgeList),";
+                    cmd = cmd + string(v[j]) + "," + string(j) + "," + string(N) + ");";
+                    //print(cmd);
+                    execute(cmd);
+            
+                    // And add the output to our file
+                    string cmd2 = "writelist(\"" + fileName + "\",\"" + listName + "\",";
+                    cmd2 = cmd2 + listName + ");";
+                    //print(cmd2);
+                    execute(cmd2);
+                }
+                
+                // Add the computed list to the end of compiledEntry
+                list compiledEntry = v, w, v[j], j;
+                string cmd = "compiledEntry = compiledEntry + list(" + listName + ");";
+                execute(cmd);
+                
+                returnList = returnList + list(compiledEntry);
+            }
+        }
+    }
+    
+    return(returnList);
+}
+
+proc linkweb(int v1, int v2, int v3, int v4, list edgeList)
+{
+    list output = list( v1, edgeList[1] ), list( v2, edgeList[2] ), list( v3, edgeList[3] ), list( v4, edgeList[4] );
+    return(output);
 }
