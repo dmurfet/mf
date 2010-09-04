@@ -23,3 +23,106 @@ list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgev
 // Call mfCompileLink on our link, using the savefile "figure-eight-data". The last parameter
 // instructs mfCompileLink to use the savefile (use 0 to recompute everything from scratch).
 list h = mfCompileLink(figureEightLink, "figure-eight-data", 1);
+
+// Discover the minimum and maximum degrees
+int webSize = size(vertexParity);
+list stateDiagrams = powervec(webSize);
+
+int minDegree = 0;
+int maxDegree = 0;
+
+int i;
+for(i=1;i<=size(stateDiagrams);i++)
+{
+    intvec web = stateDiagrams[i];
+    int d = externalDegreeOfWeb(web, vertexParity);
+    if( d < minDegree ){ minDegree = d; }
+    if( d > maxDegree ){ maxDegree = d; }
+}
+
+// Now collect into a list websByDegree the webs of each cohomological degree. In fact we store
+// pairs (A,B) consisting of an intvec A describing the state diagram and an integer B giving
+// the dimension of the vector space which is the compilation of the corresponding web.
+//
+// NOTE: websByDegree is offset by minDegree + 1, so that websByDegree[1] = webs of degree minDegree
+
+list websByDegree;
+list e;
+int j;
+for(j=minDegree;j<=maxDegree;j++)
+{
+    websByDegree[j-minDegree+1] = e;
+
+    for(i = 1; i <= size(stateDiagrams); i++)
+    {
+        intvec web = stateDiagrams[i];
+        int d = externalDegreeOfWeb(web, vertexParity);
+        if( d == j )
+        {
+            // Look for this web as the source or target of something in h, so that
+            // we can extract from h the dimension of the compilation
+            int rank;
+            int c;
+            for(c = 1; c <= size(h); c++)
+            {
+                if( h[c][1] == web )
+                {
+                    rank = ncols(h[c][5][1]);
+                }
+                if( h[c][2] == web )
+                {
+                    rank = nrows(h[c][5][1]);
+                }
+            }
+            
+            websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank));
+        }
+    }
+}
+
+// Try computing the differentials in the KR complex
+list KRcomplex;
+for(c=minDegree;c<=maxDegree-1;c++)
+{
+    int sc = c - minDegree + 1; // shifted degree
+    int i,j;
+    list webmaps;
+
+    for(j=1;j<=size(websByDegree[sc+1]);j++)
+    {
+        for(i=1;i<=size(websByDegree[sc]);i++)
+        {
+            list source = websByDegree[sc][i];
+            list target = websByDegree[sc+1][j];
+        
+            // Look for the map between these two webs in h, if it exists
+            matrix A;
+            int s;
+            int found = 0;
+            for(s=1;s<=size(h);s++)
+            {
+                if( h[s][1] == source[1] && h[s][2] == target[1] )
+                {
+                    print("Found map between " + string(source[1]) + " and " + string(target[1]));
+                    list data = h[s][5];
+                    A = data[1];
+                    found = 1;
+                }
+            }
+        
+            if( !found )
+            {
+                print("Found no map.");
+                matrix z[target[2]][source[2]];
+                A = z;
+            }
+        
+            print(A);
+            webmaps = webmaps + list(A);
+        }
+    }
+    
+    matrix final = superblockmat(size(websByDegree[sc]),webmaps);
+    KRcomplex = KRcomplex + list(final);
+}
+

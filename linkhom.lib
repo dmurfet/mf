@@ -201,11 +201,11 @@ proc mfIdentityEdgeGrading(int n)
 ////////////////////////////////////////////////////////////////////
 // checklist
 //
-// checklist(l,p) gives 1 if the poly p is an element of the list l,
+// checklist(l,p) gives 1 if p is an element of the list l,
 // otherwise it gives 0.
 ////////////////////////////////////////////////////////////////////
 
-proc checklist(list l, poly p)
+proc checklist(list l, p)
 {
     int inlist;
     for(int i=1; i<=size(l); i++)
@@ -1478,11 +1478,13 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile)
     }
 
     int i;
-    for( i = 1; i <= size(stateDiagrams); i++ )
+    int numStateDiagrams = size(stateDiagrams);
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
     {
         // Our current state diagram
         intvec v = stateDiagrams[i];
-        dbprint(printlevel, "[mfCompileLink] Looking at state " + string(v));
+        dbprint(printlevel, "[mfCompileLink] Looking at state [" + string(v) + "] number " + string(i) + "/" + string(numStateDiagrams));
     
         // Look at each position and the possible maps given by chis
         int j;
@@ -1508,7 +1510,7 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile)
         
             if( somethingToDo )
             {
-                dbprint(printlevel, "[mfCompileLink] Looking at the map to " + string(w));                
+                dbprint(printlevel, "[mfCompileLink] Looking at the map to [" + string(w) + "]");
                 string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
             
                 // Populate an integer definedCheck with the result of defined(map???to???)
@@ -1533,6 +1535,7 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile)
                     string cmd2 = "writelist(\"" + fileName + "\",\"" + listName + "\",";
                     cmd2 = cmd2 + listName + ");";
                     //print(cmd2);
+                    dbprint(printlevel, "[mfCompileLink] Writing result to disk.");
                     execute(cmd2);
                 }
                 
@@ -1553,4 +1556,71 @@ proc linkweb(int v1, int v2, int v3, int v4, list edgeList)
 {
     list output = list( v1, edgeList[1] ), list( v2, edgeList[2] ), list( v3, edgeList[3] ), list( v4, edgeList[4] );
     return(output);
+}
+
+proc externalDegreeOfWeb(intvec v, intvec vertexParity)
+{
+    // 0 is always degree zero, and 1 is either degree -1 or +1 depending on the crossing type
+    int i;
+    int d;
+    for( i = 1; i <= size(v); i++ )
+    {
+        d = d + v[i] * vertexParity[i];
+    }
+    
+    return(d);
+}
+
+////////////////////////////////////////////////////////////////////
+// superblockmat
+//
+// We are given a list of matrices which are supposed to fit into
+// a block matrix with "numCols" columns, and we return the block matrix.
+// The list is interpreted as a block matrix as follows: the first numCols
+// entries form the first row, the second numCols entries the second row, etc.
+
+proc superblockmat(int numCols, list #)
+{
+    int numRows = size(#)/numCols;
+    
+    // We first collect each row of the block matrix into a list
+    list l;
+    
+    int i,j,k,t,s;
+    for(s = 1;s<=numRows;s++)
+    {
+        // In this row of the block matrix we have the matrices
+        // #[(s-1)*numCols + 1], ...., #[s * numCols]
+        int b = nrows(#[s*numCols]);
+        
+        for(j=1;j<=b;j++)
+        {
+            list thisrow;
+            
+            for(k=1;k<=numCols;k++)
+            {
+                // We are now inside #[(s-1)*numCols + k]
+                matrix cMat = #[(s-1)*numCols +k];
+                for(t=1;t<=ncols(cMat);t++)
+                {
+                    thisrow = thisrow + list(cMat[j,t]);
+                }
+                kill cMat;
+            }
+            
+            l = l + list(thisrow);
+        }
+    }
+    
+    // Convert l to a matrix
+    matrix A[size(l)][size(l[1])];
+    for(i=1;i<=size(l);i++)
+    {
+        for(j=1;j<=size(l[1]);j++)
+        {
+            A[i,j] = l[i][j];
+        }
+    }
+    
+    return(A);
 }
