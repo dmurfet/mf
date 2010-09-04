@@ -8,47 +8,18 @@ ring rr=0,(x(1..nx),y(1..ny)),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
-// Define the underlying web
+// Define the underlying web of the figure-eight knot
 intvec edgevec(1) = 1,7,8,5;
 intvec edgevec(2) = 6,8,7,2;
 intvec edgevec(3) = 3,5,6,4;
 intvec edgevec(4) = 4,2,1,3;
 
-list D1, D2;
-int chitype, chiposition;
+// Define which vertices are overcrossings (+1) and which are undercrossings (-1)
+intvec vertexParity = 1,1,-1,-1;
 
-// Compute the map "AABB --> AABA":
-D1 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
-D2 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 0, edgevec(4) );
-chitype = 1;
-chiposition = 4;
-list mapAABBtoAABA = mfCompileWeb(D1, D2, chitype, chiposition, N);
-rightKernel(mapAABBtoAABA[1]);
+// Define the link as a list (see linkhom.lib preceding mfCompileLink)
+list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
 
-// According to [KR,p.50 and p.51] map should have degree one, and this is
-// therefore a nontrivial check on the grading treatment in mfCompileWeb
-//checkMorphismDegree(zeromat(ncols(L[1])), L[3], zeromat(nrows(L[1])), L[4], L[1], 1);
-
-// Compute the map "AABB --> AAAB"
-D1 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
-D2 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 0, edgevec(3) ), list( 1, edgevec(4) );
-chitype = 1;
-chiposition = 3;
-list mapAABBtoAAAB = mfCompileWeb(D1, D2, chitype, chiposition, N);
-rightKernel(mapAABBtoAAAB[1]);
-
-// Compute the map "AABB --> BABB"
-D1 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
-D2 = list( 1, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
-chitype = 0;
-chiposition = 1;
-list mapAABBtoBABB = mfCompileWeb(D1, D2, chitype, chiposition, N);
-rightKernel(mapAABBtoBABB[1]);
-
-// Compute the map "AABB --> ABBB"
-D1 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
-D2 = list( 0, edgevec(1) ), list( 1, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
-chitype = 0;
-chiposition = 2;
-list mapAABBtoABBB = mfCompileWeb(D1, D2, chitype, chiposition, N);
-rightKernel(mapAABBtoABBB[1]);
+// Call mfCompileLink on our link, using the savefile "figure-eight-data". The last parameter
+// instructs mfCompileLink to use the savefile (use 0 to recompute everything from scratch).
+list h = mfCompileLink(figureEightLink, "figure-eight-data", 1);
