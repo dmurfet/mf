@@ -451,7 +451,7 @@ proc mablow(matrix M, ideal J)
     }
     for(i1=1; i1<=nrowsM; i1++) // row
     {
-        dbprint(printlevel,"[mablow] Iteration count " + string(i1) + "/" + string(nrowsM));
+        //dbprint(printlevel,"[mablow] Iteration count " + string(i1) + "/" + string(nrowsM));
         for(j1=1; j1<=ncolsM; j1++) // column
         {
             matrix PM = poly2matrix(M[i1,j1], J, variableActions, n);
@@ -464,7 +464,7 @@ proc mablow(matrix M, ideal J)
 
     for(i1=1; i1<=nrowsM; i1++)
     {
-        dbprint(printlevel,"[mablow] Assembly count " + string(i1) + "/" + string(nrowsM));
+        //dbprint(printlevel,"[mablow] Assembly count " + string(i1) + "/" + string(nrowsM));
         for(j1=1; j1<=n; j1++)
         {
             for(i2=1; i2<=ncolsM; i2++)
@@ -1829,6 +1829,8 @@ proc mfReduce(matrix A, list #)
     
     int prl = printlevel;
 
+    dbprint(prl, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
+
     // Extract the odd and even part of the differential
     list blocks = extractblockmat(A);
     matrix b0 = blocks[3]; matrix b1 = blocks[2];
@@ -1847,7 +1849,7 @@ proc mfReduce(matrix A, list #)
     // a 1x1 matrix we bail (it must be contractible).
     while( ismfReduced(b0) != 1 && ncols(b0) > 1 )
     {    
-        dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(ncols(b0)));
+        //dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(ncols(b0)));
         
         // There is a constant somewhere, begin looking in b0
         list l = matrixreduce(b0);
@@ -1888,7 +1890,7 @@ proc mfReduce(matrix A, list #)
     // No do the same process to b1 (TODO: unify these two steps)
     while( ismfReduced(b1) != 1 && ncols(b1) > 1 )
     {
-        dbprint(prl, "[mfReduce] Reducing b1, currently size " + string(ncols(b1)));
+        //dbprint(prl, "[mfReduce] Reducing b1, currently size " + string(ncols(b1)));
                 
         // There is a constant somewhere, begin looking in b1
         list l = matrixreduce(b1);
@@ -2009,6 +2011,8 @@ proc mfReduce(matrix A, list #)
     matrix B = blockmat(zb, b1, b0, zb);
     matrix F = blockmat_nsq(f0, zf, zf, f1);
     matrix G = blockmat_nsq(g0, zg, zg, g1);
+
+    dbprint(prl, "[mfReduce]          result is size " + string(ncols(B)) + ".");
     
     if( size(#) != 0 )
     {
