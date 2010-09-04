@@ -44,7 +44,7 @@ for(i=1;i<=size(stateDiagrams);i++)
 // pairs (A,B) consisting of an intvec A describing the state diagram and an integer B giving
 // the dimension of the vector space which is the compilation of the corresponding web.
 //
-// NOTE: websByDegree is offset by minDegree + 1, so that websByDegree[1] = webs of degree minDegree
+// NOTE: websByDegree is offset by minDegree - 1, so that websByDegree[1] = webs of degree minDegree
 
 list websByDegree;
 list e;
@@ -67,11 +67,12 @@ for(j=minDegree;j<=maxDegree;j++)
             {
                 if( h[c][1] == web )
                 {
-                    rank = ncols(h[c][5][1]);
+                    rank = ncols(h[c][5][1]); //TODO: also record the weights from h[c][5][3]
                 }
                 if( h[c][2] == web )
                 {
-                    rank = nrows(h[c][5][1]);
+                    rank = nrows(h[c][5][1]); //TODO: also record the weights from h[c][5][4]
+                    break;
                 }
             }
             
