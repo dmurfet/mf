@@ -2,9 +2,10 @@ option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
+LIB "control.lib";
 int nx=2;
 int ny=4;
-ring rr=0,(x(1..nx),y(1..ny)),dp;
+ring rr=(0,q),(x(1..nx),y(1..ny)),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
@@ -63,40 +64,46 @@ for(j=minDegree;j<=maxDegree;j++)
         if( d == j )
         {
             // Look for this web as the source or target of something in h, so that
-            // we can extract from h the dimension of the compilation and the grading
+            // we can extract from h the dimension and the weights of the compilation:
             int rank;
             int c;
-            intvec grading;
+            intvec weights;
             for(c = 1; c <= size(h); c++)
             {
                 if( h[c][1] == web )
                 {
-                    rank = ncols(h[c][5][1]); //TODO: also record the weights from h[c][5][3]
-                    grading = h[c][5][3];
+                    rank = ncols(h[c][5][1]);
+                    weights = h[c][5][3];
                 }
                 if( h[c][2] == web )
                 {
-                    rank = nrows(h[c][5][1]); //TODO: also record the weights from h[c][5][4]
-                    grading = h[c][5][4];
+                    rank = nrows(h[c][5][1]);
+                    weights = h[c][5][4];
                     break;
                 }
             }
             
-            websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank));
-            
-            if( first )
-            {
-                totalGrading = grading;
-                first = 0;
-            }
-            else
-            {
-                totalGrading = totalGrading, grading;
-            }
+            websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank,weights));
         }
     }
     
     gradingByDegree[j-minDegree+1] = totalGrading;
+}
+
+// Find the weights (="internal degrees") of the individual, total pieces in each
+// cohomological degree:
+
+list weightsPerCohomologicalDegree;
+for( j=minDegree; j<=maxDegree; j++ )
+{
+    weightsPerCohomologicalDegree[j-minDegree+1] = websByDegree[j-minDegree+1][1][3];
+    for( i = 2; i<=size(websByDegree[j-minDegree+1]); i++ )
+    {
+        intvec tempint = weightsPerCohomologicalDegree[j-minDegree+1];
+        tempint = tempint,websByDegree[j-minDegree+1][i][3];
+        weightsPerCohomologicalDegree[j-minDegree+1] = tempint;
+        kill tempint;
+    }
 }
 
 // Try computing the differentials in the KR complex
@@ -159,4 +166,25 @@ for(c=minDegree;c<=maxDegree-1;c++)
 print(KRcomplex[2] * KRcomplex[1]);
 print(KRcomplex[3] * KRcomplex[2]);
 print(KRcomplex[4] * KRcomplex[3]);
+
+
+// Now we want to compute linkInvariant as
+//     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
+// where is the cohomological degree, and j is the weight.
+
+poly linkInvariant;
+def cohom(1) = rightKernel(KRcomplex[1]);
+
+// Contribution to linkInvariant from cohomological degree -2:
+
+for( i=1; i<= size(cohom(1)); i++ )
+{
+    linkInvariant = linkInvariant + (-1)^(-2 mod 2) * q^(weightsPerCohomologicalDegree[1][whichGenerator(cohom(1)[i])]);
+}
+
+linkInvariant;
+
+// To compute the other cohomologies and thus the full linkInvariant, 
+// we should use code similar to the one at beginning of MFco in blow.lib.
+// But now I have to go to the train station. Happy birthday! 
 

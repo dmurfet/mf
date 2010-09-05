@@ -1,0 +1,38 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=2;
+int ny=4;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+int N = 3; // The N in sl(N) link homology
+printlevel = 1;
+
+// Compute the old example "AABB --> AABA":
+
+intvec edgevec(1) = 1,7,5,8;
+intvec edgevec(2) = 6,8,2,7;
+intvec edgevec(3) = 3,5,4,6;
+intvec edgevec(4) = 4,2,3,1;
+list D1 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 1, edgevec(4) );
+list D2 = list( 0, edgevec(1) ), list( 0, edgevec(2) ), list( 1, edgevec(3) ), list( 0, edgevec(4) );
+int chitype = 1;
+int chiposition = 4;
+
+// Ran on haydn for 65613 seconds, i.e. roughly 18 hours:
+
+list L = mfCompileWeb(D1, D2, chitype, chiposition, N);
+print(L[1]);
+L[3]; // Grading on source vector space
+// This gives: 
+// 20,18,18,16,16,16,14,14,14,16,14,18,18,16,12,16,12,14,14,16,10,14,12,22,12,20,20,20,18,18,18,18,16,16,16,14
+
+L[4]; // Grading on target
+// This gives: 15,15,17,19,17,15,21,19,17,19,15,17,13,17,13,15,11,13
+
+LIB "latex.lib";
+string fname="tex-file.tex";
+texobj(fname,L[1]);
+texobj(fname,L[2]);
+texobj(fname,L[3]);
+texobj(fname,L[4]);
