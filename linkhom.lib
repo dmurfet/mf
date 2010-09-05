@@ -1395,6 +1395,10 @@ proc powervec(int m)
 
 /////////////////////////////////////////
 // intvecToString
+//
+// NOTE that in mfCompileLink below we only need to evaluate intvecToString on
+// intvecs that are made up only of 0s and 1s, so there cannot be a problem with
+// the fact that intvecToString maps e.g. both 11,2,3 and 1,2,3,4 to the same string.
 /////////////////////////////////////////
 
 proc intvecToString(intvec v)
@@ -1417,9 +1421,8 @@ proc intvecToString(intvec v)
 //
 // - X is an intvec of size m with X[i] = 1 if the i-th crossing of the link is positive
 // and X[i] = -1 if the crossing is negative.
-// - each entry of Y is an intvec of size 4, and together the entries of Y give a
-// partition of the set 1,2,...,4*m where Y[i] labels the edges incident at the i-th crossing
-// of the link, oriented in the usual clockwise fashion.
+// - each entry of Y is an intvec of size 4 such that Y[i] labels the edges incident at
+//  the i-th crossing of the link, oriented in the usual clockwise fashion.
 
 ////////////////////////////////////////////////////////////////////
 // mfCompileLink
@@ -1435,13 +1438,13 @@ proc intvecToString(intvec v)
 // consists of two state diagrams state1,state2 related by a map of type chitype in position
 // chiposition. The final entry is the result of calling mfCompileWeb on this data. 
 //
-// The return of mfCompileWeb is the list of all such tuples, over all possible pairs
+// The return of mfCompileLink is the list of all such tuples, over all possible pairs
 // (state1,state2) connected by maps.
 //
-// To facilitate the computations we store the results of mfCompileWeb to disk, using writelist.
+// To facilitate the computations we store the results of mfCompileLink to disk, using writelist.
 // To illustrate the scheme, take the state 010 and state 110, let us say that the underlying
 // link has a positive crossing in the first position so that there is a map 010 -> 110 of
-// chitype 0. Internally to mfCompileWeb we would then run
+// chitype 0. Internally to mfCompileLink we would then run
 //
 //      list map010to110 = mfCompileWeb( suitable params );
 //
