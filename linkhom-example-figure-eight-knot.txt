@@ -47,12 +47,15 @@ for(i=1;i<=size(stateDiagrams);i++)
 // NOTE: websByDegree is offset by minDegree - 1, so that websByDegree[1] = webs of degree minDegree
 
 list websByDegree;
+list gradingByDegree;
 list e;
 int j;
 for(j=minDegree;j<=maxDegree;j++)
 {
     websByDegree[j-minDegree+1] = e;
-
+    intvec totalGrading;
+    int first = 1;
+    
     for(i = 1; i <= size(stateDiagrams); i++)
     {
         intvec web = stateDiagrams[i];
@@ -60,25 +63,40 @@ for(j=minDegree;j<=maxDegree;j++)
         if( d == j )
         {
             // Look for this web as the source or target of something in h, so that
-            // we can extract from h the dimension of the compilation
+            // we can extract from h the dimension of the compilation and the grading
             int rank;
             int c;
+            intvec grading;
             for(c = 1; c <= size(h); c++)
             {
                 if( h[c][1] == web )
                 {
                     rank = ncols(h[c][5][1]); //TODO: also record the weights from h[c][5][3]
+                    grading = h[c][5][3];
                 }
                 if( h[c][2] == web )
                 {
                     rank = nrows(h[c][5][1]); //TODO: also record the weights from h[c][5][4]
+                    grading = h[c][5][4];
                     break;
                 }
             }
             
             websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank));
+            
+            if( first )
+            {
+                totalGrading = grading;
+                first = 0;
+            }
+            else
+            {
+                totalGrading = totalGrading, grading;
+            }
         }
     }
+    
+    gradingByDegree[j-minDegree+1] = totalGrading;
 }
 
 // Try computing the differentials in the KR complex
