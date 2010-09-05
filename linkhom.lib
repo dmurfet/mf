@@ -1629,7 +1629,6 @@ proc superblockmat(int numCols, list #)
 }
 
 
-
 proc whichGenerator(vector v)
 {
     int position = 1;
@@ -1643,4 +1642,199 @@ proc whichGenerator(vector v)
         position++;
     }
     return(position-1);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// KRlinkInvariant
+//
+// Uses mfCompileLink to compile linkData (see description of
+// mfCompileLink for details), then computes KR cohomology H to give
+// back the KR link invariant sum_i,j (-1)^i * q^j * dim( H^(i,j) ),
+// see [KR, p.82].
+////////////////////////////////////////////////////////////////////
+
+proc KRlinkInvariant(list linkData, string fileName, int useSaveFile)
+{
+    // Call mfCompileLink on our link, using the savefile fileName. The last parameter
+    // instructs mfCompileLink to use the savefile (use 0 to recompute everything from scratch).
+    list h = mfCompileLink(linkData, fileName, useSaveFile);
+
+    // Discover the minimum and maximum degrees
+    int webSize = size(vertexParity);
+    list stateDiagrams = powervec(webSize);
+
+    int minDegree = 0;
+    int maxDegree = 0;
+
+    int i;
+    for( i=1; i<=size(stateDiagrams); i++ )
+    {
+        intvec web = stateDiagrams[i];
+        int d = externalDegreeOfWeb(web, vertexParity);
+        if( d < minDegree ){ minDegree = d; }
+        if( d > maxDegree ){ maxDegree = d; }
+    }
+
+    // Now collect into a list websByDegree the webs of each cohomological degree. In fact we store
+    // triples (A,B,C) consisting of an intvec A describing the state diagram, an integer B giving
+    // the dimension of the vector space which is the compilation of the corresponding web,
+    // and an intvec C that gives the weights of this vector space.
+    //
+    // NOTE: websByDegree is offset by minDegree-1, so that websByDegree[1] = webs of degree 
+    // minDegree
+
+    list websByDegree;
+    list gradingByDegree;
+    list e;
+    int j;
+    for( j=minDegree; j<=maxDegree; j++ )
+    {
+        websByDegree[j-minDegree+1] = e;
+        intvec totalGrading;
+        int first = 1;
+    
+        for(i = 1; i <= size(stateDiagrams); i++)
+        {
+            intvec web = stateDiagrams[i];
+            int d = externalDegreeOfWeb(web, vertexParity);
+            if( d == j )
+            {
+                // Look for this web as the source or target of something in h, so that
+                // we can extract from h the dimension and the weights of the compilation:
+                int rank;
+                int c;
+                intvec weights;
+                for(c = 1; c <= size(h); c++)
+                {
+                    if( h[c][1] == web )
+                    {
+                        rank = ncols(h[c][5][1]);
+                        weights = h[c][5][3];
+                    }
+                    if( h[c][2] == web )
+                    {
+                        rank = nrows(h[c][5][1]);
+                        weights = h[c][5][4];
+                        break;
+                    }
+                }
+                
+                websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank,weights));
+            }
+        }
+    
+        gradingByDegree[j-minDegree+1] = totalGrading;
+    }
+
+    // Find the weights (="internal degrees") of the individual, total pieces in each
+    // cohomological degree:
+
+    list weightsPerCohomologicalDegree;
+    for( j=minDegree; j<=maxDegree; j++ )
+    {
+        weightsPerCohomologicalDegree[j-minDegree+1] = websByDegree[j-minDegree+1][1][3];
+        for( i = 2; i<=size(websByDegree[j-minDegree+1]); i++ )
+        {
+            intvec tempint = weightsPerCohomologicalDegree[j-minDegree+1];
+            tempint = tempint,websByDegree[j-minDegree+1][i][3];
+            weightsPerCohomologicalDegree[j-minDegree+1] = tempint;
+            kill tempint;
+        }
+    }
+
+    // Try computing the differentials in the KR complex
+    list KRcomplex;
+    for( c=minDegree; c<=maxDegree-1; c++ )
+    {
+        int sc = c - minDegree + 1; // shifted degree
+        int i,j;
+        list webmaps;
+    
+        for(j=1;j<=size(websByDegree[sc+1]);j++)
+        {
+            for(i=1;i<=size(websByDegree[sc]);i++)
+            {
+                list source = websByDegree[sc][i];
+                list target = websByDegree[sc+1][j];
+        
+                // Look for the map between these two webs in h, if it exists
+                matrix A;
+                int s;
+                int found = 0;
+                for(s=1;s<=size(h);s++)
+                {
+                    if( h[s][1] == source[1] && h[s][2] == target[1] )
+                    {
+//                      print("Found map between " + string(source[1]) + " and " + string(target[1]));
+                        list data = h[s][5];
+                    
+                         // Calculate the Koszul sign
+                        int signf;
+                        int chiposition = h[s][4];
+                        int b;
+                        for(b=1;b<=chiposition-1;b++)
+                        {
+                            signf = signf + h[s][1][b];
+                        }
+                    
+                        A = (-1)^(signf) * data[1];
+                        found = 1;
+                    }
+                }
+            
+                if( !found )
+                {
+//                  print("Found no map.");
+                    matrix z[target[2]][source[2]];
+                    A = z;
+                }
+        
+//              print(A);
+                webmaps = webmaps + list(A);
+            }
+        }
+    
+        matrix final = superblockmat(size(websByDegree[sc]),webmaps);
+        KRcomplex = KRcomplex + list(final);
+    }
+
+    // Sanity check:
+    for( i=minDegree; i<=maxDegree-2; i++ )
+    {
+        matrix zerom[nrows(KRcomplex[i+1-minDegree+1])][ncols(KRcomplex[i-minDegree+1])];
+        if( KRcomplex[i+1-minDegree+1] * KRcomplex[i-minDegree+1] != zerom )
+        {
+            print("[KRlinkInvariant] KRcomplex is not a complex at cohomological degree " + string(i) + ", exiting");
+            return();
+        }
+    }
+
+    // Now we want to compute linkInvariant as
+    //     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
+    // where is the cohomological degree, and j is the weight.
+
+    poly linkInvariant;
+    def cohom(1) = rightKernel(KRcomplex[1]);
+    for( i=2; i<=maxDegree-minDegree; i++ )
+    {
+        def ker(i) = rightKernel(KRcomplex[i]);
+        def im(i-1) = module(KRcomplex[i-1]);
+        module coho(i) = reduce(ker(i),std(im(i-1)));
+        def cohom(i) = std( coho(i) );
+    }
+    def ker(maxDegree-minDegree+1) = module( unitmat(size(weightsPerCohomologicalDegree[maxDegree-minDegree+1])));
+    def im(maxDegree-minDegree) = module(KRcomplex[maxDegree-minDegree]);
+    module coho(maxDegree-minDegree+1) = reduce(ker(maxDegree-minDegree+1),std(im(maxDegree-minDegree)));
+    def cohom(maxDegree-minDegree+1) = std( coho(maxDegree-minDegree+1) );
+
+    for( i=1; i<=maxDegree-minDegree+1; i++)
+    {
+        for( j=1; j<=size(cohom(i)); j++ )
+        {
+            linkInvariant = linkInvariant + (-1)^(i+minDegree+1 mod 2) * q^(weightsPerCohomologicalDegree[i][whichGenerator(cohom(i)[j])]);
+        }
+    }
+
+    return(linkInvariant);
 }

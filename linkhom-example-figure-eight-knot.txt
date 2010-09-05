@@ -7,184 +7,19 @@ int nx=2;
 int ny=4;
 ring rr=(0,q),(x(1..nx),y(1..ny)),dp;
 int N = 2; // The N in sl(N) link homology
-printlevel = 1;
+// printlevel = 1;
 
-// Define the underlying web of the figure-eight knot
+// Define the underlying web of the figure-eight knot:
 intvec edgevec(1) = 1,7,8,5;
 intvec edgevec(2) = 6,8,7,2;
 intvec edgevec(3) = 3,5,6,4;
 intvec edgevec(4) = 4,2,1,3;
 
-// Define which vertices are overcrossings (+1) and which are undercrossings (-1)
+// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
 intvec vertexParity = 1,1,-1,-1;
 
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
 
-// Call mfCompileLink on our link, using the savefile "figure-eight-data". The last parameter
-// instructs mfCompileLink to use the savefile (use 0 to recompute everything from scratch).
-list h = mfCompileLink(figureEightLink, "figure-eight-data", 1);
-
-// Discover the minimum and maximum degrees
-int webSize = size(vertexParity);
-list stateDiagrams = powervec(webSize);
-
-int minDegree = 0;
-int maxDegree = 0;
-
-int i;
-for(i=1;i<=size(stateDiagrams);i++)
-{
-    intvec web = stateDiagrams[i];
-    int d = externalDegreeOfWeb(web, vertexParity);
-    if( d < minDegree ){ minDegree = d; }
-    if( d > maxDegree ){ maxDegree = d; }
-}
-
-// Now collect into a list websByDegree the webs of each cohomological degree. In fact we store
-// pairs (A,B) consisting of an intvec A describing the state diagram and an integer B giving
-// the dimension of the vector space which is the compilation of the corresponding web.
-//
-// NOTE: websByDegree is offset by minDegree - 1, so that websByDegree[1] = webs of degree minDegree
-
-list websByDegree;
-list gradingByDegree;
-list e;
-int j;
-for(j=minDegree;j<=maxDegree;j++)
-{
-    websByDegree[j-minDegree+1] = e;
-    intvec totalGrading;
-    int first = 1;
-    
-    for(i = 1; i <= size(stateDiagrams); i++)
-    {
-        intvec web = stateDiagrams[i];
-        int d = externalDegreeOfWeb(web, vertexParity);
-        if( d == j )
-        {
-            // Look for this web as the source or target of something in h, so that
-            // we can extract from h the dimension and the weights of the compilation:
-            int rank;
-            int c;
-            intvec weights;
-            for(c = 1; c <= size(h); c++)
-            {
-                if( h[c][1] == web )
-                {
-                    rank = ncols(h[c][5][1]);
-                    weights = h[c][5][3];
-                }
-                if( h[c][2] == web )
-                {
-                    rank = nrows(h[c][5][1]);
-                    weights = h[c][5][4];
-                    break;
-                }
-            }
-            
-            websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank,weights));
-        }
-    }
-    
-    gradingByDegree[j-minDegree+1] = totalGrading;
-}
-
-// Find the weights (="internal degrees") of the individual, total pieces in each
-// cohomological degree:
-
-list weightsPerCohomologicalDegree;
-for( j=minDegree; j<=maxDegree; j++ )
-{
-    weightsPerCohomologicalDegree[j-minDegree+1] = websByDegree[j-minDegree+1][1][3];
-    for( i = 2; i<=size(websByDegree[j-minDegree+1]); i++ )
-    {
-        intvec tempint = weightsPerCohomologicalDegree[j-minDegree+1];
-        tempint = tempint,websByDegree[j-minDegree+1][i][3];
-        weightsPerCohomologicalDegree[j-minDegree+1] = tempint;
-        kill tempint;
-    }
-}
-
-// Try computing the differentials in the KR complex
-list KRcomplex;
-for(c=minDegree;c<=maxDegree-1;c++)
-{
-    int sc = c - minDegree + 1; // shifted degree
-    int i,j;
-    list webmaps;
-
-    for(j=1;j<=size(websByDegree[sc+1]);j++)
-    {
-        for(i=1;i<=size(websByDegree[sc]);i++)
-        {
-            list source = websByDegree[sc][i];
-            list target = websByDegree[sc+1][j];
-        
-            // Look for the map between these two webs in h, if it exists
-            matrix A;
-            int s;
-            int found = 0;
-            for(s=1;s<=size(h);s++)
-            {
-                if( h[s][1] == source[1] && h[s][2] == target[1] )
-                {
-                    print("Found map between " + string(source[1]) + " and " + string(target[1]));
-                    list data = h[s][5];
-                    
-                    // Calculate the Koszul sign
-                    int signf;
-                    int chiposition = h[s][4];
-                    int b;
-                    for(b=1;b<=chiposition-1;b++)
-                    {
-                        signf = signf + h[s][1][b];
-                    }
-                    
-                    A = (-1)^(signf) * data[1];
-                    found = 1;
-                }
-            }
-        
-            if( !found )
-            {
-                print("Found no map.");
-                matrix z[target[2]][source[2]];
-                A = z;
-            }
-        
-            print(A);
-            webmaps = webmaps + list(A);
-        }
-    }
-    
-    matrix final = superblockmat(size(websByDegree[sc]),webmaps);
-    KRcomplex = KRcomplex + list(final);
-}
-
-// KRcomplex is a complex
-print(KRcomplex[2] * KRcomplex[1]);
-print(KRcomplex[3] * KRcomplex[2]);
-print(KRcomplex[4] * KRcomplex[3]);
-
-
-// Now we want to compute linkInvariant as
-//     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
-// where is the cohomological degree, and j is the weight.
-
-poly linkInvariant;
-def cohom(1) = rightKernel(KRcomplex[1]);
-
-// Contribution to linkInvariant from cohomological degree -2:
-
-for( i=1; i<= size(cohom(1)); i++ )
-{
-    linkInvariant = linkInvariant + (-1)^(-2 mod 2) * q^(weightsPerCohomologicalDegree[1][whichGenerator(cohom(1)[i])]);
-}
-
-linkInvariant;
-
-// To compute the other cohomologies and thus the full linkInvariant, 
-// we should use code similar to the one at beginning of MFco in blow.lib.
-// But now I have to go to the train station. Happy birthday! 
-
+def f8invariant = KRlinkInvariant(figureEightLink, "figure-eight-data", 1);
+f8invariant;
