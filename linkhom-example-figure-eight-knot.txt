@@ -105,7 +105,17 @@ for(c=minDegree;c<=maxDegree-1;c++)
                 {
                     print("Found map between " + string(source[1]) + " and " + string(target[1]));
                     list data = h[s][5];
-                    A = data[1];
+                    
+                    // Calculate the Koszul sign
+                    int signf;
+                    int chiposition = h[s][4];
+                    int b;
+                    for(b=1;b<=chiposition-1;b++)
+                    {
+                        signf = signf + h[s][1][b];
+                    }
+                    
+                    A = (-1)^(signf) * data[1];
                     found = 1;
                 }
             }
@@ -125,4 +135,9 @@ for(c=minDegree;c<=maxDegree-1;c++)
     matrix final = superblockmat(size(websByDegree[sc]),webmaps);
     KRcomplex = KRcomplex + list(final);
 }
+
+// KRcomplex is a complex
+print(KRcomplex[2] * KRcomplex[1]);
+print(KRcomplex[3] * KRcomplex[2]);
+print(KRcomplex[4] * KRcomplex[3]);
 
