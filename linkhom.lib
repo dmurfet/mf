@@ -1519,35 +1519,44 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile)
                 // Populate an integer definedCheck with the result of defined(map???to???)
                 string cmd = "int definedCheck = defined(" + listName + ");";
                 execute(cmd);
+                list Q;
                 
-                // See if this list already exists (having been loaded from the file)
+                // See if this list already exists (having been loaded from the file), and if
+                // it does not, then calculate it (the result being stored in Q in either case).
                 if( definedCheck && useSaveFile )
                 {
                     dbprint(printlevel, "[mfCompileLink] Already computed, skipping.");
+                    string cmd = "Q = " + listName;
+                    execute(cmd);
                 }
                 else
                 {
                     // Run mfCompileWeb
-                    string cmd = "list " + listName + " = ";
-                    cmd = cmd + "mfCompileWeb(linkweb(" + string(v) + ",edgeList),linkweb(" + string(w) + ",edgeList),";
-                    cmd = cmd + string(v[j]) + "," + string(j) + "," + string(N) + ");";
-                    //print(cmd);
-                    execute(cmd);
-            
+                    Q = mfCompileWeb(linkweb(v[1],v[2],v[3],v[4],edgeList),linkweb(w[1],w[2],w[3],w[4],edgeList),v[j],j,N);
+                    
+                    // Perform appropriate grading shifts according to [KR,p.81]
+                    // Note that Q[3] is the grading on the source and Q[4] on the target
+                    
+                    if( v[j] == 0 ) // v[j] is the chitype
+                    {
+                        Q[3] = Q[3] + 1 - N;
+                        Q[4] = Q[4] - N;
+                    }
+                    else
+                    {
+                        Q[3] = Q[3] + N;
+                        Q[4] = Q[4] + N - 1;
+                    }
+                    
                     // And add the output to our file
-                    string cmd2 = "writelist(\"" + fileName + "\",\"" + listName + "\",";
-                    cmd2 = cmd2 + listName + ");";
-                    //print(cmd2);
                     dbprint(printlevel, "[mfCompileLink] Writing result to disk.");
-                    execute(cmd2);
+                    writelist(fileName,listName,Q);
                 }
                 
                 // Add the computed list to the end of compiledEntry
-                list compiledEntry = v, w, v[j], j;
-                string cmd = "compiledEntry = compiledEntry + list(" + listName + ");";
-                execute(cmd);
-                
+                list compiledEntry = v, w, v[j], j, Q;
                 returnList = returnList + list(compiledEntry);
+                kill Q, compiledEntry;
             }
         }
     }
