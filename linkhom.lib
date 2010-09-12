@@ -1804,16 +1804,19 @@ proc computeCohomology(list cpx)
 // tuple (m,V,H) as described as the ouput of computeCohomology. The return
 // is the graded Poincare poly. The second and argument are the parameters
 // to use (i.e., the q and t).
+//
+// Recall that given a bigraded vector space H, the Poincare polynomial is
+//
+//     sum_i,j t^i * q^j * dim( H^(i,j) )
+//
+// Where i, j range over all integers, i is a cohomological degree and j
+// is the weight or internal degree.
 
 proc gradedPoincare(list cohom, number v, number u)
 {
     int minDegree = cohom[1];
     list V = cohom[2]; // Dimensions of cohomologies
     list H = cohom[3]; // Weight vectors of cohomologies
-    
-    // Now we want to compute the Euler char as
-    //     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
-    // where is the cohomological degree, and j is the weight.
 
     number p;
 
