@@ -3,9 +3,7 @@ LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
 LIB "control.lib";
-int nx=2;
-int ny=4;
-ring rr=(0,q),(x(1..nx),y(1..ny)),dp;
+ring rr=(0,q,t),(x),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
@@ -21,8 +19,15 @@ intvec vertexParity = 1,1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
 
-mfCompileLink(figureEightLink, "figure-eight-data-2", 1);
+// Compute the euler characteristic
+list h = mfCompileLink(figureEightLink, "figure-eight-data-newgrading", 1, N);
+list cp = KRcomplex(figureEightLink, h);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+number poincare = gradedPoincare(cohom,q,t);
 
-def f8invariant = KRlinkInvariant(figureEightLink, "figure-eight-data-2", 1);
-f8invariant;
-// q^13+q^10-q^9+q^8-q^6+q^3
+// The Jones polynomial of the figure eight knot is q5 + q^(-5), and
+euler/q^8 == q5 + q^(-5);
+
+// The KR homology is therefore given by
+poincare/q^8;

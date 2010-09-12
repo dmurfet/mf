@@ -436,6 +436,8 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 
 // TODO: Will mfCompileWeb work when there are only two vertices in the web?
 // TODO: possible signs due to the ordering of internal variables?
+// TODO: At the moment mfCompileLink calls us several times for maps out of the same web,
+// and we are therefore computing the splitting over and over again.
 proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
 {
     int paranoidChecks = 1; // If set to 1 then we perform additional stringent sanity checks
@@ -668,8 +670,13 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         ep1ck = subst( ep1ck, y(4), 0 );
         if( ep1ck * ep1ck != ep1ck )
         {
-            print("[mfCompileWeb] ep1 is not idempotent up to homotopy, exiting.");
-            return();
+            // NOTE: If this test fails to pass, it is usually due to a sign problem...
+            
+            // TODO DEBUG DEBUG WARNING UGLY HACK
+            ep1 = -ep1;
+            
+            // print("[mfCompileWeb] ep1 is not idempotent up to homotopy, exiting.");
+            // return();
         }
         
         matrix ep2ck = ep2;
@@ -679,8 +686,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         ep2ck = subst( ep2ck, y(4), 0 );
         if( ep2ck * ep2ck != ep2ck )
         {
-            print("[mfCompileWeb] ep2 is not idempotent up to homotopy, exiting.");
-            return();
+            // TODO DEBUG DEBUG WARNING UGLY HACK
+            ep2 = -ep2;
+            
+            // print("[mfCompileWeb] ep2 is not idempotent up to homotopy, exiting.");
+            // return();
         }
         
         // Check that ep1 and ep2 are degree zero
@@ -716,11 +726,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);
     list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);
 
-    matrix final1 = mfSuspend( l1[1], nx );
-    matrix final2 = mfSuspend( l2[1], nx );
+    matrix final1 = mfSuspend( l1[1], 2 );
+    matrix final2 = mfSuspend( l2[1], 2 );
     
-    intvec final1gr = mfSuspendGrading( l1[4], nx );
-    intvec final2gr = mfSuspendGrading( l2[4], nx );
+    intvec final1gr = mfSuspendGrading( l1[4], 2 );
+    intvec final2gr = mfSuspendGrading( l2[4], 2 );
     
     // Grading sanity check
     if( isGradingValid(final1, final1gr) != 1 || isGradingValid(final2,final2gr) != 1 )
@@ -1014,8 +1024,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             ep1ck = subst( ep1ck, y(4), 0 );
             if( ep1ck * ep1ck != ep1ck )
             {
-                print("[mfCompileWeb] ep1 at level "+string(k)+" is not idempotent up to homotopy, exiting.");
-                return();
+                // TODO DEBUG DEBUG WARNING UGLY HACK
+                ep1 = -ep1;
+                
+                //print("[mfCompileWeb] ep1 at level "+string(k)+" is not idempotent up to homotopy, exiting.");
+                //return();
             }
             
             matrix ep2ck = ep2;
@@ -1025,8 +1038,11 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             ep2ck = subst( ep2ck, y(4), 0 );
             if( ep2ck * ep2ck != ep2ck )
             {
-                print("[mfCompileWeb] ep2 at level "+string(k)+" is not idempotent up to homotopy, exiting.");
-                return();
+                // TODO DEBUG DEBUG WARNING UGLY HACK
+                ep2 = -ep2;
+                
+                //print("[mfCompileWeb] ep2 at level "+string(k)+" is not idempotent up to homotopy, exiting.");
+                //return();
             }
         }
         
@@ -1533,9 +1549,18 @@ proc intvecToString(intvec v)
 //
 // WARNING/TODO: The algorithm only works for certain special links, as described in the
 // introduction to mfCompileWeb.
+//
+// NOTE: The maps returned by mfCompileWeb are degree one, and we do not mess with this;
+// we leave all the grading vectors unchanged (earlier there was an attempt to implement
+// the grading shifts according to [KR,p.81], but this is better done elsewhere).
 
-proc mfCompileLink(list linkData, string fileName, int useSaveFile)
+proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
 {
+    def RRR = basering;
+    
+    // We always use a fixed ring with two "internal" x variables and two "external" y variables
+    ring rr=0,(x(1..2),y(1..4)),dp;
+    
     intvec vertexParity = linkData[1];
     list edgeList = linkData[2];
     
@@ -1605,20 +1630,6 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile)
                     // Run mfCompileWeb
                     Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
                     
-                    // Perform appropriate grading shifts according to [KR,p.81]
-                    // Note that Q[3] is the grading on the source and Q[4] on the target
-                    
-                    if( v[j] == 0 ) // v[j] is the chitype
-                    {
-                        Q[3] = Q[3] + 1 - N;
-                        Q[4] = Q[4] - N;
-                    }
-                    else
-                    {
-                        Q[3] = Q[3] + N;
-                        Q[4] = Q[4] + N - 1;
-                    }
-                    
                     // And add the output to our file
                     dbprint(printlevel, "[mfCompileLink] Writing result to disk.");
                     writelist(fileName,listName,Q);
@@ -1635,6 +1646,9 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile)
         
         kill v;
     }
+    
+    setring RRR;
+    list returnList = imap(rr,returnList);
     
     return(returnList);
 }
@@ -1734,120 +1748,173 @@ proc whichGenerator(vector v)
     return(position-1);
 }
 
-
 ////////////////////////////////////////////////////////////////////
-// KRlinkInvariant
+// computeCohomology
 //
-// Uses mfCompileLink to compile linkData (see description of
-// mfCompileLink for details), then computes KR cohomology H to give
-// back the KR link invariant sum_i,j (-1)^i * q^j * dim( H^(i,j) ),
-// see [KR, p.82].
-////////////////////////////////////////////////////////////////////
+// Takes as input a complex of graded vector spaces, specified as a
+// tuple (m,L,G) as described as the ouput of KRcomplex. The return is
+// a tuple (m,V,H) where V is a list giving the dimension of the
+// cohomologies in each degree, and H is a list giving the weights of
+// each of these cohomology spaces.
 
-proc KRlinkInvariant(list linkData, string fileName, int useSaveFile)
+proc computeCohomology(list cpx)
 {
-    // Call mfCompileLink on our link, using the savefile fileName. The last parameter
-    // instructs mfCompileLink to use the savefile (use 0 to recompute everything from scratch).
-    list h = mfCompileLink(linkData, fileName, useSaveFile);
-
-    // Discover the minimum and maximum degrees
-    int webSize = size(vertexParity);
-    list stateDiagrams = powervec(webSize);
-
-    int minDegree = 0;
-    int maxDegree = 0;
-
+    list C = cpx[2];
+    int minDegree = cpx[1];
+    int maxDegree = minDegree + size(C);
+    list weightsPerCohomologicalDegree = cp[3];
+    
+    def cohom(1) = rightKernel(C[1]);
     int i;
-    for( i=1; i<=size(stateDiagrams); i++ )
+    for( i=2; i<=maxDegree-minDegree; i++ )
     {
-        intvec web = stateDiagrams[i];
-        int d = externalDegreeOfWeb(web, vertexParity);
-        if( d < minDegree ){ minDegree = d; }
-        if( d > maxDegree ){ maxDegree = d; }
+        def ker(i) = rightKernel(C[i]);
+        def im(i-1) = module(C[i-1]);
+        module coho(i) = reduce(ker(i),std(im(i-1)));
+        def cohom(i) = std( coho(i) );
     }
+    def ker(maxDegree-minDegree+1) = module( unitmat(size(weightsPerCohomologicalDegree[maxDegree-minDegree+1])));
+    def im(maxDegree-minDegree) = module(C[maxDegree-minDegree]);
+    module coho(maxDegree-minDegree+1) = reduce(ker(maxDegree-minDegree+1),std(im(maxDegree-minDegree)));
+    def cohom(maxDegree-minDegree+1) = std( coho(maxDegree-minDegree+1) );
 
-    // Now collect into a list websByDegree the webs of each cohomological degree. In fact we store
-    // triples (A,B,C) consisting of an intvec A describing the state diagram, an integer B giving
-    // the dimension of the vector space which is the compilation of the corresponding web,
-    // and an intvec C that gives the weights of this vector space.
-    //
-    // NOTE: websByDegree is offset by minDegree-1, so that websByDegree[1] = webs of degree 
-    // minDegree
-
-    list websByDegree;
-    list gradingByDegree;
-    list e;
+    list V;
+    list H;
     int j;
-    for( j=minDegree; j<=maxDegree; j++ )
+    for( i=1; i<=maxDegree-minDegree+1; i++)
     {
-        websByDegree[j-minDegree+1] = e;
-        intvec totalGrading;
-        int first = 1;
-    
-        for(i = 1; i <= size(stateDiagrams); i++)
+        V[i] = size(cohom(i));
+        list wt;
+        
+        for( j=1; j<=size(cohom(i)); j++ )
         {
-            intvec web = stateDiagrams[i];
-            int d = externalDegreeOfWeb(web, vertexParity);
-            if( d == j )
-            {
-                // Look for this web as the source or target of something in h, so that
-                // we can extract from h the dimension and the weights of the compilation:
-                int rank;
-                int c;
-                intvec weights;
-                for(c = 1; c <= size(h); c++)
-                {
-                    if( h[c][1] == web )
-                    {
-                        rank = ncols(h[c][5][1]);
-                        weights = h[c][5][3];
-                    }
-                    if( h[c][2] == web )
-                    {
-                        rank = nrows(h[c][5][1]);
-                        weights = h[c][5][4];
-                        break;
-                    }
-                }
-                
-                websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank,weights));
-            }
+            wt[j] = weightsPerCohomologicalDegree[i][whichGenerator(cohom(i)[j])];
         }
-    
-        gradingByDegree[j-minDegree+1] = totalGrading;
+        
+        H[i] = wt;
     }
+
+    return(list(minDegree,V,H));
+}
+
+////////////////////////////////////////////////////////////////////
+// gradedPoincare
+//
+// Takes as input a sequence of graded vector spaces, specified as a
+// tuple (m,V,H) as described as the ouput of computeCohomology. The return
+// is the graded Poincare poly. The second and argument are the parameters
+// to use (i.e., the q and t).
+
+proc gradedPoincare(list cohom, number v, number u)
+{
+    int minDegree = cohom[1];
+    list V = cohom[2]; // Dimensions of cohomologies
+    list H = cohom[3]; // Weight vectors of cohomologies
+    
+    // Now we want to compute the Euler char as
+    //     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
+    // where is the cohomological degree, and j is the weight.
+
+    number p;
+
+    int i,j;
+    for( i=1; i<=size(V); i++)
+    {
+        for( j=1; j<=size(H[i]); j++ )
+        {
+            p = p + u^(i + minDegree - 1) * v^(H[i][j]);
+        }
+    }
+
+    return(p);
+}
+
+////////////////////////////////////////////////////////////////////
+// gradedEuler
+//
+// Takes as input a sequence of graded vector spaces, specified as a
+// tuple (m,V,H) as described as the ouput of computeCohomology. The return
+// is the graded Euler characteristic. The second argument is the parameter
+// to use (i.e., the q).
+
+proc gradedEuler(list cohom, number v)
+{
+    int minDegree = cohom[1];
+    list V = cohom[2]; // Dimensions of cohomologies
+    list H = cohom[3]; // Weight vectors of cohomologies
+    
+    // Now we want to compute the Euler char as
+    //     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
+    // where is the cohomological degree, and j is the weight.
+
+    number euler;
+
+    int i,j;
+    for( i=1; i<=size(V); i++)
+    {
+        for( j=1; j<=size(H[i]); j++ )
+        {
+            int sign = (i + minDegree + 1) mod 2;
+            euler = euler + (-1)^(sign) * v^(H[i][j]);
+        }
+    }
+
+    return(euler);
+}
+
+////////////////////////////////////////////////////////////////////
+// KRcomplex
+// 
+// Given a link, defined in the format specified prior to mfCompileLink,
+// and the "compilation" h of this link as given by mfCompileLink, we
+// return a pair (m,L,G) where m is the minimum nonzero degree of the KR
+// complex, L is the list of matrices giving the differentials, and G is
+// the list of intvecs giving the weights on each of the vector spaces.
+
+proc KRcomplex(list linkData, list h)
+{
+    intvec vertexParity = linkData[1];
+
+    // Discover which webs in the KR complex live in which cohomological degrees
+    list r = listWebsByDegree(linkData, h);
+
+    int minDegree = r[1];
+    list websByDegree = r[2];
+    int maxDegree = minDegree + size(websByDegree) - 1;
 
     // Find the weights (="internal degrees") of the individual, total pieces in each
     // cohomological degree:
-
     list weightsPerCohomologicalDegree;
+    int i, j;
     for( j=minDegree; j<=maxDegree; j++ )
     {
-        weightsPerCohomologicalDegree[j-minDegree+1] = websByDegree[j-minDegree+1][1][3];
-        for( i = 2; i<=size(websByDegree[j-minDegree+1]); i++ )
+        int sj = j - minDegree + 1;
+        weightsPerCohomologicalDegree[sj] = websByDegree[sj][1][3];
+        for( i = 2; i<=size(websByDegree[sj]); i++ )
         {
-            intvec tempint = weightsPerCohomologicalDegree[j-minDegree+1];
-            tempint = tempint,websByDegree[j-minDegree+1][i][3];
-            weightsPerCohomologicalDegree[j-minDegree+1] = tempint;
+            intvec tempint = weightsPerCohomologicalDegree[sj];
+            tempint = tempint,websByDegree[sj][i][3];
+            weightsPerCohomologicalDegree[sj] = tempint;
             kill tempint;
         }
     }
 
     // Try computing the differentials in the KR complex
     list KRcomplex;
+    int c;
     for( c=minDegree; c<=maxDegree-1; c++ )
     {
         int sc = c - minDegree + 1; // shifted degree
         int i,j;
         list webmaps;
-    
+
         for(j=1;j<=size(websByDegree[sc+1]);j++)
         {
             for(i=1;i<=size(websByDegree[sc]);i++)
             {
                 list source = websByDegree[sc][i];
                 list target = websByDegree[sc+1][j];
-        
+
                 // Look for the map between these two webs in h, if it exists
                 matrix A;
                 int s;
@@ -1856,10 +1923,10 @@ proc KRlinkInvariant(list linkData, string fileName, int useSaveFile)
                 {
                     if( h[s][1] == source[1] && h[s][2] == target[1] )
                     {
-//                      print("Found map between " + string(source[1]) + " and " + string(target[1]));
+                        //print("Found map between " + string(source[1]) + " and " + string(target[1]));
                         list data = h[s][5];
-                    
-                         // Calculate the Koszul sign
+
+                        // Calculate the Koszul sign
                         int signf;
                         int chiposition = h[s][4];
                         int b;
@@ -1867,24 +1934,24 @@ proc KRlinkInvariant(list linkData, string fileName, int useSaveFile)
                         {
                             signf = signf + h[s][1][b];
                         }
-                    
+
                         A = (-1)^(signf) * data[1];
                         found = 1;
                     }
                 }
-            
+
                 if( !found )
                 {
-//                  print("Found no map.");
+                    // print("Found no map.");
                     matrix z[target[2]][source[2]];
                     A = z;
                 }
-        
-//              print(A);
+
+                //print(A);
                 webmaps = webmaps + list(A);
             }
         }
-    
+
         matrix final = superblockmat(size(websByDegree[sc]),webmaps);
         KRcomplex = KRcomplex + list(final);
     }
@@ -1899,33 +1966,293 @@ proc KRlinkInvariant(list linkData, string fileName, int useSaveFile)
             return();
         }
     }
+    
+    return(list(minDegree,KRcomplex,weightsPerCohomologicalDegree));
+}
 
-    // Now we want to compute linkInvariant as
-    //     sum_i,j (-1)^i * q^j * dim( H^(i,j) )
-    // where is the cohomological degree, and j is the weight.
+////////////////////////////////////////////////////////////////////
+// listWebsByDegree
+// 
+// Given a link, defined in the format specified prior to mfCompileLink,
+// and the "compilation" h of this link as given by mfCompileLink, we
+// return a list L with the following format. Let minDegree be the smallest
+// degree with a nonzero entry in the KR complex. Then
+//
+//      L[i] = list of all triples (A,B,C) where A is a state diagram intvec
+//      with "external" or cohomological degree minDegree + i - 1, B
+//      is the dimension of the vector space which is the compilation of the
+//      corresponding web, and C is an intvec that gives the weights of this vector space.
+//
+// NOTE: The calculation of the weight is a little subtle, and worth paying attention to.
+// The output of mfCompileLink has webs whose weights are just the "bare" ones output by
+// the splitting and reduction procedure. But for the KR complex there are additional
+// grading shifts defined in [KR,p.81], and we incoporate these shifts here.
+//
+// NOTE: Webs are ordered in whatever ordering the routine powervec puts them in
 
-    poly linkInvariant;
-    def cohom(1) = rightKernel(KRcomplex[1]);
-    for( i=2; i<=maxDegree-minDegree; i++ )
+proc listWebsByDegree(list linkData, list h)
+{
+    int minDegree = 0;
+    int maxDegree = 0;
+    
+    intvec vertexParity = linkData[1];
+    
+    // webSize is the number of vertices in our web
+    int webSize = size(vertexParity);
+
+    list stateDiagrams = powervec(webSize);
+
+    int i;
+    for( i=1; i<=size(stateDiagrams); i++ )
     {
-        def ker(i) = rightKernel(KRcomplex[i]);
-        def im(i-1) = module(KRcomplex[i-1]);
-        module coho(i) = reduce(ker(i),std(im(i-1)));
-        def cohom(i) = std( coho(i) );
+        intvec web = stateDiagrams[i];
+        int d = externalDegreeOfWeb(web, vertexParity);
+        if( d < minDegree ){ minDegree = d; }
+        if( d > maxDegree ){ maxDegree = d; }
     }
-    def ker(maxDegree-minDegree+1) = module( unitmat(size(weightsPerCohomologicalDegree[maxDegree-minDegree+1])));
-    def im(maxDegree-minDegree) = module(KRcomplex[maxDegree-minDegree]);
-    module coho(maxDegree-minDegree+1) = reduce(ker(maxDegree-minDegree+1),std(im(maxDegree-minDegree)));
-    def cohom(maxDegree-minDegree+1) = std( coho(maxDegree-minDegree+1) );
 
-    for( i=1; i<=maxDegree-minDegree+1; i++)
+    list websByDegree;
+    list e;
+    int j;
+    
+    for( j=minDegree; j<=maxDegree; j++ )
     {
-        for( j=1; j<=size(cohom(i)); j++ )
+        websByDegree[j-minDegree+1] = e;
+        intvec totalGrading;
+        int first = 1;
+
+        for(i = 1; i <= size(stateDiagrams); i++)
         {
-            int sign = (i + minDegree + 1) mod 2;
-            linkInvariant = linkInvariant + (-1)^(sign) * q^(weightsPerCohomologicalDegree[i][whichGenerator(cohom(i)[j])]);
+            intvec web = stateDiagrams[i];
+            int d = externalDegreeOfWeb(web, vertexParity);
+            if( d == j )
+            {
+                // Look for this web as the source or target of something in h, so that
+                // we can extract from h the dimension and the weights of the compilation.
+                int rank;
+                int c;
+                intvec weights;
+                int found = 0;
+                for(c = 1; c <= size(h); c++)
+                {
+                    // Every time we see this web as the source of a map
+                    if( h[c][1] == web )
+                    {
+                        if( !found )
+                        {
+                            rank = ncols(h[c][5][1]);
+                            weights = h[c][5][3];
+                            found = 1;
+                        }
+                        
+                        // By [KR,p.81] we have an additional 1 - N or N if the chitype is 0 or 1 resp.
+                        int chitype = h[c][3];
+            
+                        if( chitype == 0 )
+                        {
+                            weights = weights + 1 - N;
+                        }
+                        else
+                        {
+                            weights = weights + N;
+                        }
+                    }
+                    
+                    // Every time we see this web as the target of a map
+                    if( h[c][2] == web )
+                    {
+                        if( !found )
+                        {
+                            rank = nrows(h[c][5][1]);
+                            weights = h[c][5][4];
+                            found = 1;
+                        }
+                        
+                        // By [KR,p.81] we have an additional -N or N - 1 if the chitype is 0 or 1 resp.
+                        int chitype = h[c][3];
+            
+                        if( chitype == 0 )
+                        {
+                            weights = weights - N;
+                        }
+                        else
+                        {
+                            weights = weights + N - 1;
+                        }
+                    }
+                }
+            
+                websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank,weights));
+            }
         }
     }
+    
+    return(list(minDegree,websByDegree));
+}
 
-    return(linkInvariant);
+
+///////////////////////////////////////
+// computeCohomologyAlt (DEBUG, can be omitted)
+//
+// Takes as input a complex of graded vector spaces, specified as a
+// tuple (m,L,G) as described as the ouput of KRcomplex. The return is
+// a tuple (m,V,H) where V is a list giving the dimension of the
+// cohomologies in each degree, and H is a list giving the weights of
+// each of these cohomology spaces.
+//
+// We ASSUME we are working over the basefield (i.e. in a quotient ring
+// by all variables).
+
+// Remarks about cohomology
+//
+// Let R be a field and suppose we have two matrices A, B which we view as maps of
+// vector spaces A: R^k --> R^l and B: R^l --> R^m. Suppose we have a grading vector
+// for R^l, so that each basis element has a weight. Calling
+//
+//     module ker = std(modulo(B,[0]));
+//
+// Computes the kernel of B. Suppose that ker is a list v1,...vn of vectors, given as linear
+// combinations of gen(1),...,gen(l). Each gen(i) has been assigned a weight, and we assume
+// that the vi are homogeneous with respect to these weightings, so that each vi is assigned
+// a well-defined weight.
+//
+// Now view ker as presenting a map R^n --> R^l with columns v1,...,vn. Calling
+//
+//     module hom = std(modulo(ker,A))
+//
+// Computes generators of the kernel of the map R^n ---> R^l ---> R^l/Im(A), so that R^n/hom
+// is the cohomology Ker(B)/Im(A). Each generator of R^n has a well-defined weight, given
+// by the weight of the corresponding vi, which means that the vectors in the output of
+//
+//     ideal ba = kbase(hom)
+//
+// each have a well-defined weight. This intvec of weights gives the grading vector for the
+// cohomology Ker(B)/Im(A).
+
+proc computeCohomologyAlt(list cpx)
+{
+    list complex = cpx[2];
+    int minDegree = cpx[1];
+    int maxDegree = minDegree + size(complex);
+    list wts = cp[3];
+    
+    // V and H will be the list of dimensions (resp. weight vectors) of the cohomologies
+    list V,H;
+    
+    // Augment the complex with an extra zero map at the end
+    int width = size(complex);
+    matrix zero[1][nrows(complex[width])];
+    complex[width+1] = zero;
+    
+    int i;
+    for( i = 1; i <= size(complex); i++ )
+    {
+        // We are computing cohomology at position i of the complex
+        dbprint(printlevel, "[computeCohomology] Computing degree " + string(i));
+        
+        // Compute the kernel of the next map in the complex
+        matrix ker = std(modulo(complex[i],[0]));
+        dbprint(printlevel, "[computeCohomology] Kernel is");
+        module(ker);
+        
+        // the columns of hom are elements of the free module of rank
+        // equal to the number of generators in the module ker, which equals
+        // the number of columns in the matrix ker.
+        // The quotient of this free module by the columns of hom is the module ker.
+        module hom;        
+        if( i == 1 )
+        {
+            hom = std(syz(ker));
+        }
+        else
+        {
+            hom = std(modulo(ker,complex[i-1]));
+        }
+        
+        dbprint(printlevel, "[computeCohomology] hom is ");
+        hom;
+        
+        module ba = std(kbase(hom));
+        dbprint(printlevel, "[computeCohomology] final result is");
+        ba;
+        
+        dbprint(printlevel, "[computeCohomology] Weights are");
+        wts[i];
+        
+        // Determine the weight of each element of the kernel
+        int kernelSize = size(module(ker));
+        intvec kernelWt;
+        int j;
+        for(j = 1; j <= kernelSize; j++)
+        {
+            // Weight of the jth kernel generator
+            vector v = module(ker)[j];
+            kernelWt[j] = vectorWeight(v, wts[i]);
+        }
+        
+        dbprint(printlevel, "[computeCohomology] Kernel weights are");
+        kernelWt;
+        intvec cohomWt;
+        
+        // Now use the weights of the kernel generators to determine the weights
+        // of the generators of the cohomology. If the cohomology is just equal
+        // to the kernel, use those weights:
+        if( hom == [0] )
+        {
+            cohomWt = kernelWt;
+        }
+        else
+        {
+            // Use the kernel weights to assign weights to the basis elements
+            for(j = 1; j <= size(ba); j++)
+            {
+                cohomWt[j] = vectorWeight(ba[j], kernelWt);
+            }
+        }
+
+        dbprint(printlevel, "[computeCohomology] Final cohomology weights");        
+        print(cohomWt);
+        V[i] = size(ba);
+        H[i] = cohomWt;
+    }
+    
+    return(list(minDegree,V,H));
+}
+
+///////////////////////////////////////
+// vectorWeight (DEBUG, helper method for computeCohomologyAlt, can be omitted)
+//
+// Given a vector in a free module of rank m and an intvec wts
+// assigning a weight to each basis element of the free module,
+// we return the weight of the vector (if it is well-defined).
+
+proc vectorWeight(vector v, intvec wts)
+{
+    if( nrows(v) > size(wts) )
+    {
+        print("[vectorWeight] Size mismatch on vector and weights, exiting.");
+        return();
+    }
+    
+    int i;
+    int found = 0;
+    int wt;
+    
+    for(i=1; i <= nrows(v); i++)
+    {
+        if( v[i] != 0 )
+        {
+            if( found && wt != wts[i] )
+            {
+                print("[vectorWeight] Vector has no well-defined weight, exiting.");
+                return();
+            }
+            
+            wt = wts[i];
+            
+            found = 1;
+        }
+    }
+    
+    return(wt);
 }

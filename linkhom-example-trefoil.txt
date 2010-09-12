@@ -3,13 +3,9 @@ LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
 LIB "control.lib";
-int nx=2;
-int ny=4;
-ring rr=(0,q),(x(1..nx),y(1..ny)),dp; // Remove the q if you want to do computations
+ring rr=(0,q,t),(x),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
-// TODO: I still don't understand what variables in our ring are doing in mfCompileWeb
-// and why we need them here at all
 
 // Define the underlying web of the trefoil
 intvec edgevec(1) = 2,1,3,4;
@@ -22,8 +18,22 @@ intvec vertexParity = -1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
-mfCompileLink(trefoilLink, "trefoil-data", 1);
+// Compute the euler characteristic
+list h = mfCompileLink(trefoilLink, "trefoil-data", 1, N);
+list cp = KRcomplex(trefoilLink, h);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
 
-def invariant = KRlinkInvariant(trefoilLink, "trefoil-data", 1);
-invariant;
-// Should be q5 + q3 - q9 + q, but is not!
+// The Jones polynomial is -q9 + q5 + q3 + q, and
+-q9 + q5 + q3 + q == euler / q6;
+// so there remains a scaling problem, which should come from the overall grading
+// introduced by the idempotent business.
+
+number poincare = gradedPoincare(cohom, q, t);
+poincare/q6;
+
+// For checking:
+// ideal I = x;
+// qring S = std(I);
+// list cp = imap(rr,cp);
+// list cohomAlt = computeCohomologyAlt(cp);
