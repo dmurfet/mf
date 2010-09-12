@@ -506,12 +506,24 @@ proc mablowGrading(intvec g, ideal J)
         
     intvec r;   
     
+    // DEBUG testing
+    // There is an overall grading shift given by the sum of the degrees of
+    // the generators of J
+    //int k;
+    //int E;
+    //for(k=1;k <= size(J);k++)
+    //{
+    //    E = E + 2 * deg(J[k]);
+    //}
+    // END DEBUG
+    
     int i,j;
     for(i=1;i <= size(g); i++)
     {
         for(j=1;j<=jdim;j++)
         {
-            r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]);
+            r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]); //DEBUG this is the original
+            //r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]) - E; 
         }
     }
     
