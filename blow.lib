@@ -1882,8 +1882,11 @@ proc mfReduce(matrix A, list #)
     int nc = ncols(b0);
     
     while( nc > 1 )
-    {    
-        //dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(ncols(b0)));
+    {   
+        if( ncolsA > 500 && (nc mod 5) == 0)
+        {
+            dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(nc));
+        }
 
         // r[1] is 1 if a nonzero constant was found and 0 otherwise
         // r[2] is an intvec giving the (i,j) coordinate of the constant entry
