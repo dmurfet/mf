@@ -18,22 +18,15 @@ intvec vertexParity = -1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
-// Compute the euler characteristic
-list h = mfCompileLink(trefoilLink, "trefoil-data", 1, N);
+// Compute the euler characteristic, from trefoil-data
+list h = mfCompileLink(trefoilLink, "trefoil-data-newgrading", 1, N);
 list cp = KRcomplex(trefoilLink, h);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
 
 // The Jones polynomial is -q9 + q5 + q3 + q, and
--q9 + q5 + q3 + q == euler / q6;
-// so there remains a scaling problem, which should come from the overall grading
-// introduced by the idempotent business.
+-q9 + q5 + q3 + q == euler;
 
+// The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
-poincare/q6;
-
-// For checking:
-// ideal I = x;
-// qring S = std(I);
-// list cp = imap(rr,cp);
-// list cohomAlt = computeCohomologyAlt(cp);
+poincare;

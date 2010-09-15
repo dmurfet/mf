@@ -513,7 +513,7 @@ proc mablow(matrix M, ideal J)
 // sense if J is a graded ideal.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc mablowGrading(intvec g, ideal J)
+proc mablowGrading(intvec g, ideal J, int N)
 {
     def RRR = basering;
     
@@ -528,24 +528,22 @@ proc mablowGrading(intvec g, ideal J)
         
     intvec r;   
     
-    // DEBUG testing
     // There is an overall grading shift given by the sum of the degrees of
-    // the generators of J
-    //int k;
-    //int E;
-    //for(k=1;k <= size(J);k++)
-    //{
-    //    E = E + 2 * deg(J[k]);
-    //}
-    // END DEBUG
+    // the generators of J, plus an additional N + 1 for each generator
+    int k;
+    int E;
+    for(k=1;k <= size(J);k++)
+    {
+        E = E - 2 * deg(J[k]) + N + 1;
+    }
     
     int i,j;
     for(i=1;i <= size(g); i++)
     {
         for(j=1;j<=jdim;j++)
         {
-            r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]); //DEBUG this is the original
-            //r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]) - E; 
+            //r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]); //DEBUG this is the original
+            r[(i-1)*jdim + j] = g[i] + 2 * deg(BB[j]) + E; 
         }
     }
     
@@ -1590,7 +1588,7 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     
     for( vanishingOrder = 1; vanishingOrder < 1000; vanishingOrder++ )
     {
-        dbprint(printlevel, "[mfStrictifyIdempotent] Looking at order " + string(vanishingOrder));
+        //dbprint(printlevel, "[mfStrictifyIdempotent] Looking at order " + string(vanishingOrder));
         if( powerOfN == z ){ break; }
         
         powerOfN = N * powerOfN;
@@ -1876,16 +1874,14 @@ proc mfReduce(matrix A, list #)
     // a 1x1 matrix we bail (it must be contractible).
     
     // Performance note: this while loop is very tight memory wise, memory usage
-    // is stable across iterations. Most of the time is spent in matrixreduce (and this
-    // seems unavoidable), the rest of the loop is almost immediate (<20ms for matrices <100).
-    // So at the moment I don't see any way to speed this up.
+    // is stable across iterations. Most of the time is spent in findConstant.
     int nc = ncols(b0);
     
     while( nc > 1 )
     {   
         if( ncolsA > 500 && (nc mod 5) == 0)
         {
-            dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(nc));
+            dbprint(prl, "[mfReduce]    reduced to size " + string(2*nc));
         }
 
         // r[1] is 1 if a nonzero constant was found and 0 otherwise
@@ -1997,12 +1993,6 @@ proc mfReduce(matrix A, list #)
         if( det(tr) == 0 )
         {
             print("[mfReduce] Transformation matrix not invertible (first)."); 
-        
-            //print(b0);
-            //print("---");
-            //print(b0r);
-            //print("---");
-            //print(tr);
             return();
         }
         
