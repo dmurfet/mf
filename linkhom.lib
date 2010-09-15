@@ -1068,8 +1068,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             return();
         }
 
-        list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);   // TODO: swap 1 with intvec here...
-        list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);   // TODO: swap 1 with intvec here...
+        list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);
+        list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);
 
         final1 = mfSuspend( l1[1], 2 );
         final2 = mfSuspend( l2[1], 2 );
@@ -1448,23 +1448,31 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     
     setring RRR;
     
-    // Define list of data that can be used for the computation of other maps:
-    list LL;for(i=1; i<=4; i++){LL[i] = list();}
+    // Define lists populated by the transformation maps G1,F2,s1,t1,f0,g0r
+    // (to be used if the alternate versions of mfCompileWeb are called in
+    // mfCompileLink, which happens if D1 and/or D2 has already been compiled):
+    list transformationMaps1;
+    list transformationMaps2;
+    for( i=1; i<=2; i++ )
+    {
+        transformationMaps1[i] = list();
+        transformationMaps2[i] = list();
+    }
     for( i=1; i<=k-2; i++ )
     {
-        LL[1][i] = G1(i);
-        LL[2][i] = F2(i);
-        LL[3][i] = s1(i);
-        LL[4][i] = t2(i);
+        transformationMaps1[1][i] = G1(i);
+        transformationMaps2[1][i] = F2(i);
+        transformationMaps1[2][i] = s1(i);
+        transformationMaps2[2][i] = t2(i);
     }
-    LL[1][k-1] = imap(rr3,G1(k-1));
-    LL[2][k-1] = imap(rr3,F2(k-1));
-    LL[3][k-1] = imap(rr3,f0);
-    LL[4][k-1] = imap(rr3,g0r);
+    transformationMaps1[1][k-1] = imap(rr3,G1(k-1));
+    transformationMaps2[1][k-1] = imap(rr3,F2(k-1));
+    transformationMaps1[2][k-1] = imap(rr3,f0);
+    transformationMaps2[2][k-1] = imap(rr3,g0r);
     
     matrix webmap = imap(rr3,webmap);
     
-    list finaloutput = webmap, z2degree, splitgr, splitgrr, LL;
+    list finaloutput = webmap, z2degree, splitgr, splitgrr, transformationMaps1, transformationMaps2;
     kill webmap, z2degree, splitgr, splitgrr;
     return(finaloutput);
 }
@@ -1658,15 +1666,48 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
                 {
                     dbprint(printlevel, "[mfCompileLink]  Currently used memory: " + string(memory(0) div 1024) + "kb.");
                     
-                    // Run mfCompileWeb
-                    Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
+                    // Run mfCompileWeb. There are four possibilities:
+                    //   (i) v and w have not been compiled previously,
+                    //  (ii) v has not been compiled previously, but w has been,
+                    // (iii) w has not been compiled previously, but v has been,
+                    //  (iv) both v and w have been compiled previously. 
                     
-                    // TODO: store information about compilation, and change mfCompileWeb
-                    //       to handle (partly) precompiled webs.
+                    string webNameV = "web" + intvecToString(v);
+                    string webNameW = "web" + intvecToString(w);
+                    string cmdV = "int definedCheckV = defined(" + webNameV + ");";
+                    string cmdW = "int definedCheckW = defined(" + webNameW + ");";
+                    execute(cmdV);
+                    execute(cmdW);
+
+                    // Case (i):
+                    if( definedCheckV == 0 && definedCheckW == 0 )
+                    {
+                        Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
+                        
+                        // Store transformation data pertaining to v:
+                        string cmd = "list web" + intvecToString(v) + " = Q[5]";
+                        execute(cmd); 
+                        writelist(fileName,webNameV,Q[5]);
+
+                        // Store transformation data pertaining to w:
+                        string cmd = "list web" + intvecToString(w) + " = Q[6]";
+                        execute(cmd); 
+                        writelist(fileName,webNameW,Q[6]);
+                        
+                        // And add the output to our file
+                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
+                        writelist(fileName,listName,Q);
+                                                
+                    }// end case (i).
                     
-                    // And add the output to our file
-                    dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
-                    writelist(fileName,listName,Q);
+                    
+                    // Case (ii) etc.: TODO...
+                    // For this: write three more versions of mfCompileWeb, e.g. one that
+                    // takes the usual D1 as input, but instead of D2 only the data of
+                    // the relevant Q[6] computed earlier. This basically amounts to deleting 
+                    // all the code in mfCompileWeb that involve the second web, and then
+                    // replace F2 and t2 by the Q[6] data. 
+                    
                 }
                 
                 // Add the computed list to the end of compiledEntry
