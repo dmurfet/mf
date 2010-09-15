@@ -480,8 +480,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     list L1,L2;
     for( i=1; i<=4; i++ )
     {
-        L1[i] = edgevec(1)[i];
-        L2[i] = edgevec(2)[i];
+        L1[i] = D1[1][2][i];
+        L2[i] = D1[2][2][i];
     }
     
     int z = 1;
@@ -795,13 +795,13 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         print("[mfCompileWeb] webmap is not a morphism, exiting.");
         return();
     }
+
+    kill T1, T1blow, T2, T2blow, l1, l2, RT1, RT2, d1(1), d1(2), d2(1), d2(2), diff1(1), diff1(2), iddQ1, diff2(1), diff2(2), iddQ2, delta1(1), delta1(2), delta2(1), delta2(2), delQ1, delQ2, e1, e2, ep1, ep2, epstrict1, epstrict2; 
     
     // Now repeat the above steps analogously and iteratively until all vertices but
     // the last one in the webs are fused:
     dbprint(printlevel, "[mfCompileWeb] Beginning induction step.");
     
-    // TODO: This thing runs out of memory for big links (even figure 8) so we
-    // should add some kills
     for( k=3; k<=websize-1; k++ )
     {
         // NOTE: the ext(i) will not necessarily be ordered "clockwise" with respect
@@ -1135,6 +1135,9 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             print("[mfCompileWeb] inductive webmap is not a morphism, exiting.");
             return();
         }
+        
+        kill T1, T1blow, T2, T2blow, l1, l2, RT1, RT2, d1(1), d1(k), d2(1), d2(k), diff1(1), diff1(2), iddQ1, diff2(1), diff2(2), iddQ2, delta1(1), delta1(2), delta2(1), delta2(2), delQ1, delQ2, e1, e2, ep1, ep2, epstrict1, epstrict2; 
+        
     }//end of k-loop
     
     // Now do the final fusion of the first websize-1 vertices with the last one.
@@ -1438,13 +1441,30 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         webmap = g0r * extractblockmat(webmap)[1] * f0;
     }
     
+            kill V1(k), V2(k), J, C, T1, T1blow, T2, T2blow, l1, l2, RT1, RT2, diff1(1), diff1(2), diff2(1), diff2(2), iddQ1, iddQ2, delta1(1), delta1(2), delta1(3), delta1(4), delta2(1), delta2(2), delta2(3), delta2(4), delQ1, delQ2, e1, e2, epstrict1, epstrict2, ep0, ep1, ep0r, ep1r;
+    
     // The reduced MFs of zero are concentrated in Z2-degree z2degree, 
     // and webmap is the non-zero map between them:
-
+    
     setring RRR;
+    
+    // Define list of data that can be used for the computation of other maps:
+    list LL;for(i=1; i<=4; i++){LL[i] = list();}
+    for( i=1; i<=k-2; i++ )
+    {
+        LL[1][i] = G1(i);
+        LL[2][i] = F2(i);
+        LL[3][i] = s1(i);
+        LL[4][i] = t2(i);
+    }
+    LL[1][k-1] = imap(rr3,G1(k-1));
+    LL[2][k-1] = imap(rr3,F2(k-1));
+    LL[3][k-1] = imap(rr3,f0);
+    LL[4][k-1] = imap(rr3,g0r);
+    
     matrix webmap = imap(rr3,webmap);
     
-    list finaloutput = webmap, z2degree, splitgr, splitgrr;
+    list finaloutput = webmap, z2degree, splitgr, splitgrr, LL;
     kill webmap, z2degree, splitgr, splitgrr;
     return(finaloutput);
 }
@@ -1564,7 +1584,7 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
 {
     def RRR = basering;
     
-    // We always use a fixed ring with two "internal" x variables and two "external" y variables
+    // We always use a fixed ring with two "internal" x variables and four "external" y variables
     ring rr=0,(x(1..2),y(1..4)),dp;
     
     intvec vertexParity = linkData[1];
@@ -1640,6 +1660,9 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
                     
                     // Run mfCompileWeb
                     Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
+                    
+                    // TODO: store information about compilation, and change mfCompileWeb
+                    //       to handle (partly) precompiled webs.
                     
                     // And add the output to our file
                     dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
