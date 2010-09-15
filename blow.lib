@@ -433,17 +433,23 @@ proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
 proc mablow(matrix M, ideal J)
 {
     int benchmark = 1; // Set to 1 to output benchmarking data
-
-    if( benchmark )
-    {
-        system("--ticks-per-sec",1000);
-        int timeElapsed = timer;
-    }
     
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
     
-    dbprint(printlevel, "[mablow] Inflating " + string(nrows(M)) + "x" + string(ncols(M)) + " matrix by " + string(n) + "-dim algebra");
+    // Roughly speaking mablow takes difficulty ms to complete. We only give
+    // debugging output if this is likely to take > 10 seconds
+    int difficulty = nrows(M) * ncols(M) * n / 3;
+    if( difficulty > 10000 )
+    {
+        if( benchmark )
+        {
+            system("--ticks-per-sec",1000);
+            int timeElapsed = timer;
+        }
+        
+        dbprint(printlevel, "[mablow] Inflating " + string(nrows(M)) + "x" + string(ncols(M)) + " matrix by " + string(n) + "-dim algebra");
+    }
     
     // Compute the inflation of individual variables
     list variableActions = variableInflationList(J);
@@ -487,7 +493,7 @@ proc mablow(matrix M, ideal J)
         }
     }
     
-    if( benchmark )
+    if( benchmark && difficulty > 10000 )
     {
         timeElapsed = timer - timeElapsed;
         dbprint(printlevel, "[mablow]            elapsed time " + string(timeElapsed) + "ms.");
@@ -1840,9 +1846,6 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
 // If a nonzero second parameter is specified then instead of returning just a matrix we return a list.
 // The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
 // which are mutually inverse in the homotopy category.
-//
-// TODO: possible optimisations
-// 1. In mfReduce_work the construction of zeroone and negtone could be improved
 
 proc mfReduce(matrix A, list #)
 {
@@ -1876,11 +1879,9 @@ proc mfReduce(matrix A, list #)
     // is stable across iterations. Most of the time is spent in matrixreduce (and this
     // seems unavoidable), the rest of the loop is almost immediate (<20ms for matrices <100).
     // So at the moment I don't see any way to speed this up.
+    int nc = ncols(b0);
     
-    // TODO: Note that the slowest part of matrixreduce is just _finding_ a nonzero constant,
-    // and we are doing this twice since we do it already in ismfReduced. Let ismfReduced
-    // return the position which we can then hand off to matrixreduce.
-    while( ncols(b0) > 1 )
+    while( nc > 1 )
     {    
         //dbprint(prl, "[mfReduce] Reducing b0, currently size " + string(ncols(b0)));
 
@@ -1902,10 +1903,6 @@ proc mfReduce(matrix A, list #)
         // so we can probably avoid computing the inverses of p and q here, just deal with
         // b0 and then recover b1 at the end ?
         
-        // These inverses are now computed within matrixreduce
-        // matrix qinv = inverse(q);
-        // matrix pinv = inverse(p);
-        //dbprint(prl, "[mfReduce] Multiplications.");
         b0 = l[1];
         b1 = qinv * b1 * pinv;
         f0 = qinv * f0; f1 = p * f1;
@@ -1918,12 +1915,15 @@ proc mfReduce(matrix A, list #)
         b0 = out[1]; b1 = out[2];
         f0 = out[3]; f1 = out[4];
         g0 = out[5]; g1 = out[6];
-
+        nc = nc - 1;
+        
         kill r, l, p, q, qinv, pinv, out;
     }
-          
+    
+    nc = ncols(b1);
+    
     // No do the same process to b1 (TODO: unify these two steps)
-    while( ncols(b1) > 1 )
+    while( nc > 1 )
     {
         //dbprint(prl, "[mfReduce] Reducing b1, currently size " + string(ncols(b1)));
 
@@ -1941,10 +1941,6 @@ proc mfReduce(matrix A, list #)
         // We remember the transformation by adjusting F and G, so
         // that at each stage F is an isomorphism between X and Y with inverse G
 
-        // These inverses are now computed in matrixreduce
-        //matrix qinv = inverse(q);
-        //matrix pinv = inverse(p);
-        //dbprint(prl, "[mfReduce] Multiplications.");
         b1 = l[1];
         b0 = qinv * b0 * pinv;
         f0 = p * f0; f1 = qinv * f1;
@@ -1959,6 +1955,7 @@ proc mfReduce(matrix A, list #)
         b0 = out[2]; b1 = out[1];
         f0 = out[4]; f1 = out[3];
         g0 = out[6]; g1 = out[5];
+        nc = nc - 1;
         
         //current_stage = b0,b1,f0,f1,g0,g1;
         //transform_record = transform_record + list(current_stage);
@@ -2143,10 +2140,13 @@ proc findConstant(matrix A)
     {
         for(j=1;j<=nc;j++)
         {
-            if( A[i,j] != 0 && deg(A[i,j]) == 0 )
+            if( A[i,j] != 0 )
             {
-                intvec v = i,j;
-                return(list(1,v));
+                if( deg(A[i,j]) == 0 )
+                {
+                    intvec v = i,j;
+                    return(list(1,v));
+                }
             }
         }
     }
