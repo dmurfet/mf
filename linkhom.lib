@@ -1787,16 +1787,16 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
                     // Case (iii):
                     if( definedCheckV != 0 && definedCheckW == 0 )
                     {
-                        string cmd = "list GTransWebW = GTransWeb" + intvecToString(w);
+                        string cmd = "list GTransWebV = GTransWeb" + intvecToString(v);
                         execute(cmd);
-                        string cmd = "list STransWebW = STransWeb" + intvecToString(w);
+                        string cmd = "list STransWebV = STransWeb" + intvecToString(v);
                         execute(cmd);
-                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(w);
+                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(v);
                         execute(cmd);
 
-                        Q = mfCompileWeb3(linkweb(w,edgeList),GTransWebW,STransWebW,weightsOfWeb1,v[j],j,N);
+                        Q = mfCompileWeb3(linkweb(w,edgeList),GTransWebV,STransWebV,weightsOfWeb1,v[j],j,N);
                         
-                        kill GTransWebW,STransWebW,weightsOfWeb1;
+                        kill GTransWebV,STransWebV,weightsOfWeb1;
                         
                         // Store F-transformation data pertaining to w:
                         string FwebNameW = "FTransWeb" + intvecToString(w);
@@ -1829,11 +1829,35 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
                         writelist(fileName,listName,Q);
                                                 
                     }// end case (iii).
-                    
-                    // TODO: case (iv). For this, still need to write mfCompileWeb4, which
-                    //       takes two already compiled webs as input and computes the
-                    //       reduced map between them.
-                    
+
+                    // Case (iv):
+                    if( definedCheckV != 0 && definedCheckW != 0 )
+                    {
+                        string cmd = "list GTransWebV = GTransWeb" + intvecToString(v);
+                        execute(cmd);
+                        string cmd = "list STransWebV = STransWeb" + intvecToString(v);
+                        execute(cmd);
+                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(v);
+                        execute(cmd);
+
+                        string cmd = "list FTransWebW = FTransWeb" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "list TTransWebW = TTransWeb" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "list weightsOfWeb2 = weightsOf" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "int z2deg = z2degreeOf" + intvecToString(w);
+                        execute(cmd);
+
+                        Q = mfCompileWeb4(linkData,GTransWebV,STransWebV,FTransWebW,TTransWebW,weightsOfWeb1,weightsOfWeb2,z2deg,v[j],j,N);
+                        
+                        kill GTransWebV,STransWebV,FTransWebW,TTransWebW,weightsOfWeb1,weightsOfWeb2;
+
+                        // Add the output of Q to our file:
+                        dbprint(printlevel, "[mfCompileLink4]  Writing result to disk.");
+                        writelist(fileName,listName,Q);
+                                                
+                    }// end case (iv).                    
                 }
                 
                 // Add the computed list to the end of compiledEntry
@@ -4807,5 +4831,273 @@ proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, in
     
     list finaloutput = webmap, z2degree, weightsOfWeb1[1], splitgrr, transformationMaps2;
     kill webmap, z2degree, splitgrr;
+    return(finaloutput);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, weightsOfWeb1, weightsOfWeb2, int z2deg, int chitype, int chiposition, int N)
+{
+    dbprint(printlevel, "[mfCompileWeb4] Beginning induction step.");
+    
+    def RRR = basering;
+    int websize = size(GTransWeb) + 1;
+    
+    matrix finalG = GTransWeb[websize-1];
+    matrix finalS = STransWeb[websize-1];    
+    matrix finalF = FTransWeb[websize-1];
+    matrix finalT = TTransWeb[websize-1];    
+    
+    int i,j,k,i1,i2,i3,i4;
+    
+    // Define the morphisms between the unreduced tensor factors to be
+    // identity maps (only later redefine the chipositions-th alpha to
+    // be the appropriate chi map):
+    
+    for( i=1; i<=websize; i++ )
+    {
+        matrix alpha(i) = unitmat(4);
+    }
+        
+    list L1,L2;
+    for( i=1; i<=4; i++ )
+    {
+        L1[i] = linkData[2][1][i]; 
+        L2[i] = linkData[2][2][i];
+    }
+    
+    int z = 1;
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=4; i2++ )
+        {
+            if( L1[i1] == L2[i2] )
+            {
+                int inter(z) = L1[i1];
+                z = z + 1;
+            }
+        }
+    }
+
+    L1 = removefromlist(removefromlist( L1, inter(1) ), inter(2) );
+    L2 = removefromlist(removefromlist( L2, inter(1) ), inter(2) );     
+    for( i=1; i<=2; i++ )
+    {
+        int ext(i) = L1[i];
+        int ext(i+2) = L2[i];
+    }
+    
+    list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+    list listOfEdgeLabels = inter(1),inter(2),ext(1),ext(2),ext(3),ext(4);
+    
+    list varis(1), varis(2);
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=6; i2++ )
+        {
+            if( linkData[2][1][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(1)[i1] = listOfCVariableNames[i2];
+            }
+            if( linkData[2][2][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(2)[i1] = listOfCVariableNames[i2];
+            }
+
+        }
+    }
+    
+    ideal J = x(1)^N, x(2)^N;
+    intvec q = N, N;
+    number Nn = N + 1;
+    matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+    for( i=1; i<=2; i++ )
+    {
+        if( i == chiposition )
+        {
+            alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N);
+            break;
+        }
+    }
+
+    matrix webmap = mablow( ZZtensor( alpha(1), alpha(2) ), J );
+    
+    webmap = TTransWeb[1] * FTransWeb[1] * webmap * GTransWeb[1] * STransWeb[1];
+    
+    for( k=3; k<=websize-1; k++ )
+    {
+        int count = 1;
+        for( i1=1; i1<=4; i1++ )
+        {
+            int z;
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( linkData[2][k][i1] != ext(i2) )
+                {
+                    z = z + 1;
+                }
+            }
+            if( z == 4 )
+            {
+                int newlabel(count) = linkData[2][k][i1];
+                count = count + 1;
+            }
+        }
+        
+        list extlabel;
+        for( i1=1; i1<=4; i1++ )
+        {
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( linkData[2][k][i1] == ext(i2) )
+                {
+                    extlabel = extlabel + list(i2);
+                    break;
+                }
+            }
+        }
+        int i1 = extlabel[1]; // TODO: mondo confusing notation
+        int i2 = extlabel[2];
+
+        int assotox1,assotox2 = ext(i1),ext(i2);
+        list newexternals; int count = 1;
+        for( i=1; i<=4; i++ )
+        {
+            if( i != i1 && i != i2 )
+            {
+                newexternals[i] = ext(i);
+            }
+            else
+            {
+                newexternals[i] = newlabel(count);
+                count = count + 1;
+            }
+        }
+        for( i=1; i<=4; i++ )
+        {
+            ext(i) = newexternals[i];
+        }
+        list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+        list listOfEdgeLabels = assotox1,assotox2,ext(1),ext(2),ext(3),ext(4);
+    
+        list varis(k);
+        for( i3=1; i3<=4; i3++ )
+        {
+            for( i4=1; i4<=6; i4++ )
+            {
+                if( linkData[2][k][i3] == listOfEdgeLabels[i4] )
+                {
+                    varis(k)[i3] = listOfCVariableNames[i4];
+                }
+            }
+        }
+        
+        webmap = subst( webmap, y(i1), x(1) ); webmap = subst( webmap, y(i2), x(2) );
+        
+        ideal J = x(1)^N, x(2)^N;
+        intvec q = N, N;
+        number Nn = N + 1;
+        matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+        
+        if( k == chiposition )
+        {
+            alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+        }
+        
+        webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+        webmap = TTransWeb[k-1] * FTransWeb[k-1] * webmap * GTransWeb[k-1] * STransWeb[k-1];
+        
+    }//end of k-loop
+    
+    int k = websize;
+    int i;
+    def lastvertex = linkData[2][websize];
+    int nx=4;
+    int ny=4;
+    ring rr2=0,(x(1..nx),y(1..ny)),dp;
+    matrix webmap = imap(RRR,webmap);
+    for( i=1; i<=4; i++ )
+    {
+        webmap = subst(webmap,y(i),x(i));
+    }
+    int nx=4;
+    ring rr3=0,(x(1..nx)),dp;
+    int i,j,i1,i2,i3,i4;
+    matrix webmap = imap(rr2,webmap);
+
+    list listOfCVariableNames = x(1),x(2),x(3),x(4);
+    list listOfEdgeLabels = ext(1),ext(2),ext(3),ext(4);
+    
+    list varis(k);
+    for( i3=1; i3<=4; i3++ )
+    {
+        for( i4=1; i4<=4; i4++ )
+        {
+            if( lastvertex[i3] == listOfEdgeLabels[i4] )
+            {
+                varis(k)[i3] = listOfCVariableNames[i4];
+            }
+        }
+    }
+    
+    ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+    intvec q = N, N, N, N;
+    number Nn = N + 1;
+    matrix C[4][4] = 1/Nn * unitmat(4);
+    
+    matrix alpha(k) = unitmat(4);
+    if( k == chiposition )
+    {
+        matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+    }
+
+    dbprint(printlevel, "[mfCompileWeb4] Performing final fusion.");
+
+    webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+    matrix lastG = imap(RRR,finalG);
+    matrix lastF = imap(RRR,finalF);
+    webmap = lastF * webmap * lastG;
+    
+    int z2degree;
+        
+    if( z2deg != 0 )
+    {
+        z2degree = 1;
+
+        matrix lastS = imap(RRR, finalS);
+        matrix lastT = imap(RRR, finalT);
+        webmap = lastT * extractblockmat(webmap)[4] * lastS;
+    }
+    if( z2deg != 0 )
+    {
+        z2degree = 0;
+
+        matrix lastS = imap(RRR, finalS);
+        matrix lastT = imap(RRR, finalT);
+        webmap = lastT * extractblockmat(webmap)[1] * lastS;
+    }
+    
+    // TODOTODO:
+    print(ncols(webmap));
+    print(nrows(webmap));
+    
+    setring RRR;
+        
+    matrix webmap = imap(rr3,webmap);
+    
+    list finaloutput = webmap, z2degree, weightsOfWeb1[1], weightsOfWeb2[1];
+    kill webmap, z2degree;
     return(finaloutput);
 }
