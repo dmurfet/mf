@@ -3224,8 +3224,7 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
     
     def RRR = basering;
     int websize = size(D1);
-    
-    // TODOTODO:
+
     matrix finalF = FTransWeb[websize-1];
     matrix finalT = TTransWeb[websize-1];    
     
@@ -3678,7 +3677,6 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
         matrix e1 = (-1)^k * iddQ1 * delQ1;   // TODO: is the factor (-1)^k correct?
         // Good question... seems to work! You'll have to explain to me why.
         
-        // TODOTODO:
         matrix ep1 = F1(k-1) * e1 * G1(k-1);
         
         // Sanity check:
@@ -3865,8 +3863,6 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
 
     RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
     
-    // TODOTODO: 
-    // DO THE ANALOGOUS THING IN mfCompileWeb3!!!!!!!!!!!!!!!!!!!!!!!!!!
     matrix lastF = imap(RRR,finalF);
     webmap = lastF * webmap * G1(k-1);
     
@@ -3929,7 +3925,6 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
     // Note the sign factor is binom(4,2) = 6 so we ignore it
     matrix e1 = (-1)^k * iddQ1 * delQ1;   // TODO: is the factor (-1)^k correct?
     
-    // TODOTODO:
     matrix ep1 = F1(k-1) * e1 * G1(k-1);
     
     matrix epstrict1 = mfStrictifyIdempotent(RT1, ep1);
@@ -3965,7 +3960,6 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
         
         // Finally, to get the (non-zero part of the) map from web1 to web2:
         
-        // TODOTODO:
         matrix lastT = imap(RRR,finalT);
         webmap = lastT * extractblockmat(webmap)[4] * f0;
     }
@@ -3991,7 +3985,6 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
 
         // Finally, to get the (non-zero part of the) map from web1 to web2:
 
-        // TODOTODO:
         matrix lastT = imap(RRR,finalT);
         webmap = lastT * extractblockmat(webmap)[4] * f0;
     }
@@ -5088,11 +5081,7 @@ proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, we
         matrix lastT = imap(RRR, finalT);
         webmap = lastT * extractblockmat(webmap)[1] * lastS;
     }
-    
-    // TODOTODO:
-    print(ncols(webmap));
-    print(nrows(webmap));
-    
+        
     setring RRR;
         
     matrix webmap = imap(rr3,webmap);
