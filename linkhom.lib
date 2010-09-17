@@ -1068,8 +1068,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
             return();
         }
 
-        list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);   // TODO: swap 1 with intvec here...
-        list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);   // TODO: swap 1 with intvec here...
+        list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);
+        list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);
 
         final1 = mfSuspend( l1[1], 2 );
         final2 = mfSuspend( l2[1], 2 );
@@ -1158,7 +1158,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix t1(k-2) = imap(RRR,t1(k-2));
     matrix s2(k-2) = imap(RRR,s2(k-2));
     matrix t2(k-2) = imap(RRR,t2(k-2));
-    matrix G1(k-2) = imap(RRR,G2(k-2));
+    matrix G1(k-2) = imap(RRR,G1(k-2));
     matrix F2(k-2) = imap(RRR,F2(k-2));
     matrix webmap = imap(RRR,webmap);
     for( i=1; i<=4; i++ )
@@ -1448,23 +1448,31 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     
     setring RRR;
     
-    // Define list of data that can be used for the computation of other maps:
-    list LL;for(i=1; i<=4; i++){LL[i] = list();}
+    // Define lists populated by the transformation maps G1,F2,s1,t1,f0,g0r
+    // (to be used if the alternate versions of mfCompileWeb are called in
+    // mfCompileLink, which happens if D1 and/or D2 has already been compiled):
+    list transformationMaps1;
+    list transformationMaps2;
+    for( i=1; i<=2; i++ )
+    {
+        transformationMaps1[i] = list();
+        transformationMaps2[i] = list();
+    }
     for( i=1; i<=k-2; i++ )
     {
-        LL[1][i] = G1(i);
-        LL[2][i] = F2(i);
-        LL[3][i] = s1(i);
-        LL[4][i] = t2(i);
+        transformationMaps1[1][i] = G1(i);
+        transformationMaps2[1][i] = F2(i);
+        transformationMaps1[2][i] = s1(i);
+        transformationMaps2[2][i] = t2(i);
     }
-    LL[1][k-1] = imap(rr3,G1(k-1));
-    LL[2][k-1] = imap(rr3,F2(k-1));
-    LL[3][k-1] = imap(rr3,f0);
-    LL[4][k-1] = imap(rr3,g0r);
+    transformationMaps1[1][k-1] = imap(rr3,G1(k-1));
+    transformationMaps2[1][k-1] = imap(rr3,F2(k-1));
+    transformationMaps1[2][k-1] = imap(rr3,f0);
+    transformationMaps2[2][k-1] = imap(rr3,g0r);
     
     matrix webmap = imap(rr3,webmap);
     
-    list finaloutput = webmap, z2degree, splitgr, splitgrr, LL;
+    list finaloutput = webmap, z2degree, splitgr, splitgrr, transformationMaps1, transformationMaps2;
     kill webmap, z2degree, splitgr, splitgrr;
     return(finaloutput);
 }
@@ -1658,15 +1666,198 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
                 {
                     dbprint(printlevel, "[mfCompileLink]  Currently used memory: " + string(memory(0) div 1024) + "kb.");
                     
-                    // Run mfCompileWeb
-                    Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
+                    // Run mfCompileWeb. There are four possibilities:
+                    //   (i) v and w have not been compiled previously,
+                    //  (ii) v has not been compiled previously, but w has been,
+                    // (iii) w has not been compiled previously, but v has been,
+                    //  (iv) both v and w have been compiled previously. 
                     
-                    // TODO: store information about compilation, and change mfCompileWeb
-                    //       to handle (partly) precompiled webs.
+                    string GwebNameV = "GTransWeb" + intvecToString(v);
+                    string FwebNameW = "FTransWeb" + intvecToString(w);
+                    string cmdV = "int definedCheckV = defined(" + GwebNameV + ");";
+                    string cmdW = "int definedCheckW = defined(" + FwebNameW + ");";
+                    execute(cmdV);
+                    execute(cmdW);
+
+                    // Case (i):
+                    if( definedCheckV == 0 && definedCheckW == 0 )
+                    {
+                        Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
+                        
+                        // Store G-transformation data pertaining to v:
+                        string GwebNameV = "GTransWeb" + intvecToString(v);
+                        string cmd = "list GTransWeb" + intvecToString(v) + " = Q[5][1]";
+                        execute(cmd); 
+                        writelist(fileName,GwebNameV,Q[5][1]);
+
+                        // Store s-transformation data pertaining to v:
+                        string SwebNameV = "STransWeb" + intvecToString(v);
+                        string cmd = "list STransWeb" + intvecToString(v) + " = Q[5][2]";
+                        execute(cmd); 
+                        writelist(fileName,SwebNameV,Q[5][2]);
+
+                        // Store F-transformation data pertaining to w:
+                        string FwebNameW = "FTransWeb" + intvecToString(w);
+                        string cmd = "list FTransWeb" + intvecToString(w) + " = Q[6][1]";
+                        execute(cmd); 
+                        writelist(fileName,FwebNameW,Q[6][1]);
+
+                        // Store t-transformation data pertaining to w:
+                        string TwebNameW = "TTransWeb" + intvecToString(w);
+                        string cmd = "list TTransWeb" + intvecToString(w) + " = Q[6][2]";
+                        execute(cmd); 
+                        writelist(fileName,TwebNameW,Q[6][2]);
+
+                        // Store weights data pertaining to v:
+                        string gradingV = "weightsOf" + intvecToString(v);
+                        string cmd = "intvec weightsOf" + intvecToString(v) + " = Q[3]";
+                        execute(cmd); 
+                        writelist(fileName,gradingV,Q[3]);
+
+                        // Store weights data pertaining to w:
+                        string gradingW = "weightsOf" + intvecToString(w);
+                        string cmd = "intvec weightsOf" + intvecToString(w) + " = Q[4]";
+                        execute(cmd); 
+                        writelist(fileName,gradingW,Q[4]);
+
+                        // Store Z2 information of v and w:
+                        string z2degreeV = "z2degreeOf" + intvecToString(v);
+                        string cmd = "int z2degreeOf" + intvecToString(v) + " = Q[2]";
+                        execute(cmd); 
+                        writelist(fileName,z2degreeV,Q[2]);
+                        string z2degreeW = "z2degreeOf" + intvecToString(w);
+                        string cmd = "int z2degreeOf" + intvecToString(w) + " = Q[2]";
+                        execute(cmd); 
+                        writelist(fileName,z2degreeW,Q[2]);
+
+
+                        // Add the output of Q to our file (Q[5] and Q[6] are no longer needed):
+                        Q = delete(Q,5); Q = delete(Q,5);
+                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
+                        writelist(fileName,listName,Q);
+                                                
+                    }// end case (i).
                     
-                    // And add the output to our file
-                    dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
-                    writelist(fileName,listName,Q);
+                    // Case (ii):
+                    if( definedCheckV == 0 && definedCheckW != 0 )
+                    {
+                        string cmd = "list FTransWebW = FTransWeb" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "list TTransWebW = TTransWeb" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "list weightsOfWeb2 = weightsOf" + intvecToString(w);
+                        execute(cmd);
+                        
+                        Q = mfCompileWeb2(linkweb(v,edgeList),FTransWebW,TTransWebW,weightsOfWeb2,v[j],j,N);
+                        
+                        kill FTransWebW,TTransWebW,weightsOfWeb2;
+                        
+                        // Store G-transformation data pertaining to v:
+                        string GwebNameV = "GTransWeb" + intvecToString(v);
+                        string cmd = "list GTransWeb" + intvecToString(v) + " = Q[5][1]";
+                        execute(cmd); 
+                        writelist(fileName,GwebNameV,Q[5][1]);
+
+                        // Store s-transformation data pertaining to v:
+                        string SwebNameV = "STransWeb" + intvecToString(v);
+                        string cmd = "list STransWeb" + intvecToString(v) + " = Q[5][2]";
+                        execute(cmd); 
+                        writelist(fileName,SwebNameV,Q[5][2]);
+
+                        // Store weights data pertaining to v:
+                        string gradingV = "weightsOf" + intvecToString(v);
+                        string cmd = "intvec weightsOf" + intvecToString(v) + " = Q[3]";
+                        execute(cmd); 
+                        writelist(fileName,gradingV,Q[3]);
+
+                        // Store Z2 information of v:
+                        string z2degreeV = "z2degreeOf" + intvecToString(v);
+                        string cmd = "int z2degreeOf" + intvecToString(v) + " = Q[2]";
+                        execute(cmd); 
+                        writelist(fileName,z2degreeV,Q[2]);
+
+
+                        // Add the output of Q to our file (Q[5] no longer needed):
+                        Q = delete(Q,5);
+                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
+                        writelist(fileName,listName,Q);
+                                                
+                    }// end case (ii).
+
+                    // Case (iii):
+                    if( definedCheckV != 0 && definedCheckW == 0 )
+                    {
+                        string cmd = "list GTransWebV = GTransWeb" + intvecToString(v);
+                        execute(cmd);
+                        string cmd = "list STransWebV = STransWeb" + intvecToString(v);
+                        execute(cmd);
+                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(v);
+                        execute(cmd);
+
+                        Q = mfCompileWeb3(linkweb(w,edgeList),GTransWebV,STransWebV,weightsOfWeb1,v[j],j,N);
+                        
+                        kill GTransWebV,STransWebV,weightsOfWeb1;
+                        
+                        // Store F-transformation data pertaining to w:
+                        string FwebNameW = "FTransWeb" + intvecToString(w);
+                        string cmd = "list FTransWeb" + intvecToString(w) + " = Q[5][1]";
+                        execute(cmd); 
+                        writelist(fileName,FwebNameW,Q[5][1]);
+
+                        // Store t-transformation data pertaining to w:
+                        string TwebNameW = "TTransWeb" + intvecToString(w);
+                        string cmd = "list TTransWeb" + intvecToString(w) + " = Q[5][2]";
+                        execute(cmd); 
+                        writelist(fileName,TwebNameW,Q[5][2]);
+
+                        // Store weights data pertaining to w:
+                        string gradingW = "weightsOf" + intvecToString(w);
+                        string cmd = "intvec weightsOf" + intvecToString(w) + " = Q[4]";
+                        execute(cmd); 
+                        writelist(fileName,gradingW,Q[4]);
+
+                        // Store Z2 information of w:
+                        string z2degreeW = "z2degreeOf" + intvecToString(w);
+                        string cmd = "int z2degreeOf" + intvecToString(w) + " = Q[2]";
+                        execute(cmd); 
+                        writelist(fileName,z2degreeW,Q[2]);
+
+
+                        // Add the output of Q to our file (Q[5] no longer needed):
+                        Q = delete(Q,5);
+                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
+                        writelist(fileName,listName,Q);
+                                                
+                    }// end case (iii).
+
+                    // Case (iv):
+                    if( definedCheckV != 0 && definedCheckW != 0 )
+                    {
+                        string cmd = "list GTransWebV = GTransWeb" + intvecToString(v);
+                        execute(cmd);
+                        string cmd = "list STransWebV = STransWeb" + intvecToString(v);
+                        execute(cmd);
+                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(v);
+                        execute(cmd);
+
+                        string cmd = "list FTransWebW = FTransWeb" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "list TTransWebW = TTransWeb" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "list weightsOfWeb2 = weightsOf" + intvecToString(w);
+                        execute(cmd);
+                        string cmd = "int z2deg = z2degreeOf" + intvecToString(w);
+                        execute(cmd);
+
+                        Q = mfCompileWeb4(linkData,GTransWebV,STransWebV,FTransWebW,TTransWebW,weightsOfWeb1,weightsOfWeb2,z2deg,v[j],j,N);
+                        
+                        kill GTransWebV,STransWebV,FTransWebW,TTransWebW,weightsOfWeb1,weightsOfWeb2;
+
+                        // Add the output of Q to our file:
+                        dbprint(printlevel, "[mfCompileLink4]  Writing result to disk.");
+                        writelist(fileName,listName,Q);
+                                                
+                    }// end case (iv).                    
                 }
                 
                 // Add the computed list to the end of compiledEntry
@@ -2293,3 +2484,1879 @@ proc vectorWeight(vector v, intvec wts)
     
     return(wt);
 }
+
+// Other versions of mfCompileWeb:
+
+proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, int chiposition, int N)
+{
+    int paranoidChecks = 1; // If set to 1 then we perform additional stringent sanity checks
+    
+    def RRR = basering;
+    int websize = size(D1);
+
+    matrix finalF = FTransWeb[websize-1];
+    matrix finalT = TTransWeb[websize-1];    
+    
+    int i,j,k,i1,i2,i3,i4;
+    
+    // Sanity checks
+    if( chitype != 0 && chitype != 1 || chiposition > websize )
+    {
+        print("[mfCompileWeb2] chitype not in {0,1} or chiposition > web size, exiting.");
+        return();
+    }
+    
+    // Define the morphisms between the unreduced tensor factors to be
+    // identity maps (only later redefine the chipositions-th alpha to
+    // be the appropriate chi map):
+    
+    for( i=1; i<=websize; i++ )
+    {
+        matrix alpha(i) = unitmat(4);
+    }
+    
+    // Fusion of the first two vertices.
+    // Find out which are the two internal variables inter(1) and inter(2)
+    // between vertices 1 and 2:
+    
+    list L1,L2;
+    for( i=1; i<=4; i++ )
+    {
+        L1[i] = D1[1][2][i];
+        L2[i] = D1[2][2][i];
+    }
+    
+    int z = 1;
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=4; i2++ )
+        {
+            if( L1[i1] == L2[i2] )
+            {
+                int inter(z) = L1[i1];
+                z = z + 1;
+            }
+        }
+    }
+    // Note that inter(1),inter(2) occur in the same order which these edges
+    // appear in edgevec(1).
+    
+    // Call the remaining labels of edges incident on either of the two
+    // vertices ext(1),...,ext(4). The order is to enumerate the external
+    // edges in edgevec(1) and then those in edgevec(2).
+    
+    L1 = removefromlist(removefromlist( L1, inter(1) ), inter(2) );
+    L2 = removefromlist(removefromlist( L2, inter(1) ), inter(2) );     
+    for( i=1; i<=2; i++ )
+    {
+        int ext(i) = L1[i];
+        int ext(i+2) = L2[i];
+    }
+    
+    // At this stage, the variable listOfCVariableNames[i] corresponds to 
+    // the edge label listOfEdgeLabels[i] for i=1,...,6:
+    
+    list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+    list listOfEdgeLabels = inter(1),inter(2),ext(1),ext(2),ext(3),ext(4);
+    
+    // Find the variable dependence of the first two vertices:
+    list varis(1), varis(2);
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=6; i2++ )
+        {
+            if( D1[1][2][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(1)[i1] = listOfCVariableNames[i2];
+            }
+            if( D1[2][2][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(2)[i1] = listOfCVariableNames[i2];
+            }
+
+        }
+    }
+    
+    // V1(i) is the MF associated to the i-th vertex in web 1, 
+    matrix V1(1) = mfVertex( D1[1][1], varis(1), N ); 
+    matrix V1(2) = mfVertex( D1[2][1], varis(2), N );
+    
+    intvec V1gr(1) = mfVertexGrading( D1[1][1], varis(1), N );
+    intvec V1gr(2) = mfVertexGrading( D1[2][1], varis(2), N );
+    
+    // Now start to reduce V1(1) x V1(2) and the corresponding map:
+        
+    ideal J = x(1)^N, x(2)^N;
+    intvec q = N, N;
+    number Nn = N + 1;
+    matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+    // The matrix webmap will eventually be the reduced map between the two
+    // webs. At the moment, it is simply the map V1(1) x V1(2) --> V2(1) x V2(2):
+    
+    for( i=1; i<=2; i++ )
+    {
+        if( i == chiposition )
+        {
+            alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N);
+            break;
+        }
+    }
+    
+    // Compute the ordinary tensor product:
+    matrix T1 = MFtensor( V1(1), V1(2) );
+    matrix T1blow = mablow(T1,J);
+    
+    intvec T1gr = MFtensorGradings( V1gr(1), V1gr(2) );
+    intvec T1blowgr = mablowGrading( T1gr, J, N );
+
+    // Inflate the induced morphism between the webs
+    matrix webmap = mablow( ZZtensor( alpha(1), alpha(2) ), J );
+    
+    // Reduce this inflated differential:
+    list l1 = mfReduce(T1blow,1);
+    matrix RT1 = l1[1];
+    matrix F1(1) = l1[2]; // A homotopy equivalence T1blow -> RT1
+    matrix G1(1) = l1[3]; // A homotopy equivalence RT1 -> T1blow
+    
+    intvec RT1gr = computeGradingFromInjection(G1(1),T1blowgr);
+    
+    // Define d1(1) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of V1(1) with respect to these variables, and
+    // define d1(2) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of V1(2) with respect to these variables:
+    
+    matrix d1(1) = unitmat( ncols( V1(1) ) );
+    matrix d1(2) = unitmat( ncols( V1(2) ) );
+    for( i=1; i<=2; i++ )
+    {
+        // vertex V1(1):
+        if( x(1) == varis(1)[i] )
+        {
+            d1(1) = d1(1) * diff( V1(1), x(1) );
+        }
+        
+        if( x(2) == varis(1)[i] )
+        {
+            d1(1) = d1(1) * diff( V1(1), x(2) );
+        }
+        
+        // vertex V1(2):
+        if( x(1) == varis(2)[i] )
+        {
+            d1(2) = d1(2) * diff( V1(2), x(1) );
+        }
+        
+        if( x(2) == varis(2)[i] )
+        {
+            d1(2) = d1(2) * diff( V1(2), x(2) );
+        }
+    }
+    // TODO: possible signs?
+    
+    matrix diff1(1) = ZZtensor( d1(1), unitmat( ncols( V1(2) ) ) );
+    matrix diff1(2) = ZZtensor( unitmat( ncols( V1(1) ) ), d1(2) );
+    matrix iddQ1 = mablow( det(C) * diff1(1) * diff1(2), J );
+
+    matrix delta1(1) = mablow_delta(T1, 1, N, J);
+    matrix delta1(2) = mablow_delta(T1, 2, N, J);
+    matrix delQ1 = delta1(1) * delta1(2);
+    
+    // And finally the idempotent e1 on T1blow:
+    matrix e1 = iddQ1 * delQ1;
+
+    matrix ep1 = F1(1) * e1 * G1(1);
+    
+    // Sanity check:
+    if( ep1 * RT1 != RT1 * ep1 )
+    {
+        print("[mfCompileWeb2] The reduced idempotent (up to homotopy) ep1 is not an endomorphism of RT1, exiting.");
+        return();
+    }
+    
+    if( paranoidChecks )
+    {
+        // Check that ep1 is idempotent up to homotopy
+        matrix ep1ck = ep1;
+        ep1ck = subst( ep1ck, y(1), 0 );
+        ep1ck = subst( ep1ck, y(2), 0 );
+        ep1ck = subst( ep1ck, y(3), 0 );
+        ep1ck = subst( ep1ck, y(4), 0 );
+        if( ep1ck * ep1ck != ep1ck )
+        {
+            // NOTE: If this test fails to pass, it is usually due to a sign problem...
+            
+            // TODO DEBUG DEBUG WARNING UGLY HACK
+            ep1 = -ep1;
+            
+            // print("[mfCompileWeb2] ep1 is not idempotent up to homotopy, exiting.");
+            // return();
+        }
+                
+        // Check that ep1 is degree zero
+        if( !checkMorphismDegree(RT1,RT1gr,RT1,RT1gr,ep1,0) )
+        {
+            print("[mfCompileWeb2] ep1 is not degree zero, exiting.");
+            return();
+        }
+
+    }
+    
+    // Strictify idempotent:
+    matrix epstrict1 = mfStrictifyIdempotent(RT1, ep1);
+    
+    // Sanity check:
+    if( epstrict1 * RT1 != RT1 * epstrict1 || epstrict1 * epstrict1 != epstrict1 )
+    {
+        print("[mfCompileWeb2] The strictified idempotent epstrict1 is not an endomorphism of RT1, or not an idempotent on the nose, exiting.");
+        return();
+    }
+
+    list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);
+
+    matrix final1 = mfSuspend( l1[1], 2 );
+    
+    intvec final1gr = mfSuspendGrading( l1[4], 2 );
+    
+    // Grading sanity check:
+    if( isGradingValid(final1, final1gr) != 1 )
+    {
+        print("[mfCompileWeb2] Something has gone wrong with the grading, exiting.");
+        return();
+    }
+    
+    // Determine the outgoing and incoming labels of final1
+    // (in terms of the integer labels in {1,...,2*websize}). 
+    // As final1 depends only on y(1),...,y(4), its incident
+    // edges are labelled by ext(1),...,ext(4). We need to determine i1,i2 such
+    // that the vertices labelled by ext(i1) and ext(i2) are outgoing. 
+    // Then we define a list finalvaris whose first two entries are ext(i1),ext(i2),
+    // and whose third and fourth entry is given by the remaining two labellings.
+    list templist;
+    for( i=1; i<=4; i++ )
+    {
+        for( i1=1; i1<=2; i1++ )
+        {
+            for( i2=1; i2<=2; i2++ )
+            {
+                if( ext(i) == D1[1][2][i1] || ext(i) == D1[2][2][i2] )
+                {
+                    templist = templist + list(i);
+                    i = i + 1;
+                }
+            }
+        }
+    }    
+    for( i=1; i<=4; i++ )
+    {
+        if( i != templist[1] && i != templist[2] )
+        {
+            templist = templist + list(i);
+        }
+    }
+    list finalvaris;
+    for( i=1; i<=4; i++ )
+    {
+        finalvaris[i] = ext(templist[i]);
+    }
+    
+    // Compute the transformation matrices:
+    matrix s1(1) = mfSuspendMorph( l1[2], 2 );    // final1 --> RT1
+    matrix t1(1) = mfSuspendMorph( l1[3], 2 );    // RT1 --> final1
+    
+    // Compute the induced map between the reductions
+    webmap = TTransWeb[1] * FTransWeb[1] * webmap * G1(1) * s1(1);
+    
+    kill T1, T1blow, l1, RT1, d1(1), d1(2), diff1(1), diff1(2), iddQ1, delta1(1), delta1(2),delQ1, e1, ep1, epstrict1; 
+    
+    // Now repeat the above steps analogously and iteratively until all vertices but
+    // the last one in the webs are fused:
+    dbprint(printlevel, "[mfCompileWeb2] Beginning induction step.");
+    
+    for( k=3; k<=websize-1; k++ )
+    {
+        // NOTE: the ext(i) will not necessarily be ordered "clockwise" with respect
+        // to the underlying directed graph of the current web.
+        // Identify which two numbers in D1[k][2] are not in {ext(i)}_{i=1,...,4}
+        // and call them newlabel(1) and newlabel(2):
+        int count = 1;
+        for( i1=1; i1<=4; i1++ )
+        {
+            int z;
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( D1[k][2][i1] != ext(i2) )
+                {
+                    z = z + 1;
+                }
+            }
+            if( z == 4 )
+            {
+                int newlabel(count) = D1[k][2][i1];
+                count = count + 1;
+            }
+        }
+        
+        // Determine which of the numbers in {ext(i)}_{i=1,...,4} also appear 
+        // in D1[k][2], and let us define i1,i2 such that these are ext(i1) and ext(i2).
+        // These keep the ordering given in D1[k][2].
+        list extlabel;
+        for( i1=1; i1<=4; i1++ )
+        {
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( D1[k][2][i1] == ext(i2) )
+                {
+                    extlabel = extlabel + list(i2);
+                    break;
+                }
+            }
+        }
+        int i1 = extlabel[1]; // TODO: mondo confusing notation
+        int i2 = extlabel[2];
+
+        // At this stage, the variable listOfCVariableNames[i] corresponds to 
+        // the edge label listOfEdgeLabels[i] for i=1,...,6:
+        //          x(1) cooresponds to ext(i1),
+        //          x(2) cooresponds to ext(i2),
+        //          y(k) corresponds to ext(k) for k in {1,2,3,4}\{i1,i2},
+        //          y(i1) cooresponds to n(1),
+        //          y(i2) cooresponds to n(2).
+        int assotox1,assotox2 = ext(i1),ext(i2);
+        list newexternals; int count = 1;
+        for( i=1; i<=4; i++ )
+        {
+            if( i != i1 && i != i2 )
+            {
+                newexternals[i] = ext(i);
+            }
+            else
+            {
+                newexternals[i] = newlabel(count);
+                count = count + 1;
+            }
+        }
+        for( i=1; i<=4; i++ )
+        {
+            ext(i) = newexternals[i];
+        }
+        list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+        list listOfEdgeLabels = assotox1,assotox2,ext(1),ext(2),ext(3),ext(4);
+    
+        // Find the variable dependence of the "blob" MF which is the fusion of the
+        // first k-1 vertices and the k-th MF:    
+        list blobvaris, varis(k);
+        for( i3=1; i3<=4; i3++ )
+        {
+            for( i4=1; i4<=6; i4++ )
+            {
+                if( finalvaris[i3] == listOfEdgeLabels[i4] )
+                {
+                    blobvaris[i3] = listOfCVariableNames[i4];
+                }
+                if( D1[k][2][i3] == listOfEdgeLabels[i4] )
+                {
+                    varis(k)[i3] = listOfCVariableNames[i4];
+                }
+            }
+        }
+        
+        // Redefine the results of step k-1 according to the new identifications:
+        final1 = subst( final1, y(i1), x(1) ); final1 = subst( final1, y(i2), x(2) );
+        webmap = subst( webmap, y(i1), x(1) ); webmap = subst( webmap, y(i2), x(2) );
+        s1(k-2) = subst( s1(k-2), y(i1), x(1) ); s1(k-2) = subst( s1(k-2), y(i2), x(2) );
+        t1(k-2) = subst( t1(k-2), y(i1), x(1) ); t1(k-2) = subst( t1(k-2), y(i2), x(2) );
+        G1(k-2) = subst( G1(k-2), y(i1), x(1) ); G1(k-2) = subst( G1(k-2), y(i2), x(2) );
+        
+        // V1(k) is the MF associated to the k-th vertex in web 1:
+        matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
+    
+        intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+        
+        // Now start to reduce final1 x V1(k) and the associated map:
+        
+        ideal J = x(1)^N, x(2)^N;
+        intvec q = N, N;
+        number Nn = N + 1;
+        matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+        
+        if( k == chiposition )
+        {
+            alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+        }
+        
+        // Compute the ordinary tensor product:
+        matrix T1 = MFtensor( final1, V1(k) );
+        matrix T1blow = mablow(T1,J);
+
+        intvec T1gr = MFtensorGradings( final1gr, V1gr(k) );
+        intvec T1blowgr = mablowGrading(T1gr,J,N);
+
+        // blown-up version of the map between the first k vertices:
+        webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+        // Reduce this inflated differential:
+        list l1 = mfReduce(T1blow,1);
+        matrix RT1 = l1[1];
+        matrix F1(k-1) = l1[2]; // A homotopy equivalence T1blow -> RT1
+        matrix G1(k-1) = l1[3]; // A homotopy equivalence RT1 -> T1blow
+    
+        intvec RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
+    
+        // Define d1(1) to be the product over all outgoing edges labelled by x-variables
+        // of the derivatives of final1 with respect to these variables, and
+        // define d1(k) to be the product over all outgoing edges labelled by x-variables
+        // of the derivatives of V1(k) with respect to these variables:
+        matrix d1(1) = unitmat( ncols( final1 ) );
+        matrix d1(k) = unitmat( ncols( V1(k) ) );
+        for( i=1; i<=2; i++ )
+        {
+            // vertex final1:
+            if( x(1) == blobvaris[i] )
+            {
+                d1(1) = d1(1) * diff( final1, x(1) );
+            }
+        
+            if( x(2) == blobvaris[i] )
+            {
+                d1(1) = d1(1) * diff( final1, x(2) );
+            }
+        
+            // vertex V1(2):
+            if( x(1) == varis(k)[i] )
+            {
+                d1(k) = d1(k) * diff( V1(k), x(1) );
+            }
+        
+            if( x(2) == varis(k)[i] )
+            {
+                d1(k) = d1(k) * diff( V1(k), x(2) );
+            }
+        }
+        
+        matrix diff1(1) = ZZtensor( d1(1), unitmat( ncols( V1(k) ) ) );
+        matrix diff1(2) = ZZtensor( unitmat( ncols( final1 ) ), d1(k) );
+        matrix iddQ1 = mablow( det(C) * diff1(1) * diff1(2), J );
+
+        matrix delta1(1) = mablow_delta(T1, 1, N, J);
+        matrix delta1(2) = mablow_delta(T1, 2, N, J);
+        matrix delQ1 = delta1(1) * delta1(2);
+    
+        // And finally the idempotent e1 on T1blow:
+        matrix e1 = (-1)^k * iddQ1 * delQ1;   // TODO: is the factor (-1)^k correct?
+        // Good question... seems to work! You'll have to explain to me why.
+        
+        matrix ep1 = F1(k-1) * e1 * G1(k-1);
+        
+        // Sanity check:
+        if( ep1 * RT1 != RT1 * ep1 )
+        {
+            print("[mfCompileWeb2] The reduced idempotent (up to homotopy) ep1 at level "+string(k)+" is not an endomorphism of RT1, exiting.");
+            return();
+        }
+    
+        if( paranoidChecks )
+        {
+            // Check that ep1 is idempotent up to homotopy:
+            matrix ep1ck = ep1;
+            ep1ck = subst( ep1ck, y(1), 0 );
+            ep1ck = subst( ep1ck, y(2), 0 );
+            ep1ck = subst( ep1ck, y(3), 0 );
+            ep1ck = subst( ep1ck, y(4), 0 );
+            if( ep1ck * ep1ck != ep1ck )
+            {
+                // TODO DEBUG DEBUG WARNING UGLY HACK
+                ep1 = -ep1;
+                
+                //print("[mfCompileWeb2] ep1 at level "+string(k)+" is not idempotent up to homotopy, exiting.");
+                //return();
+            }
+        }
+        
+        // Strictify idempotent:
+        matrix epstrict1 = mfStrictifyIdempotent(RT1, ep1);
+    
+        // Sanity checks:
+        if( epstrict1 * RT1 != RT1 * epstrict1 || epstrict1 * epstrict1 != epstrict1 )
+        {
+            print("[mfCompileWeb2] The strictified idempotent epstrict1 at level "+string(k)+" is not an endomorphism of RT1, or not an idempotent on the nose, exiting.");
+            return();
+        }
+
+        list l1 = mfSplitIdempotent(RT1, epstrict1, RT1gr);
+
+        final1 = mfSuspend( l1[1], 2 );
+    
+        final1gr = mfSuspendGrading( l1[4], 2 );
+        
+        // Grading sanity check:
+        if( isGradingValid(final1, final1gr) != 1 )
+        {
+            print("[mfCompileWeb2] Something has gone wrong with the grading in induction, exiting.");
+            return();
+        }
+        
+        // Determine the outgoing and incoming labels of final1 and final2
+        // (in terms of the integer labels in {1,...,2*websize}). 
+        // As final1 and final2 both depend only on y(1),...,y(4), their incident
+        // edges are labelled by ext(1),...,ext(4). We need to determine i1,i2 such
+        // that the vertices labelled by ext(i1) and ext(i2) are incoming. 
+        // Then we define a list finalvaris whose first two entries are ext(i1),ext(i2),
+        // and whose third and fourth entry is given by the remaning two labellings.
+        list templist;
+        for( i=1; i<=4; i++ )
+        {
+            for( i1=1; i1<=2; i1++ )
+            {
+                for( i2=1; i2<=2; i2++ )
+                {
+                    if( ext(i) == finalvaris[i1] || ext(i) == D1[k][2][i2] )
+                    {
+                        templist = templist + list(i);
+                        i = i + 1;
+                    }
+                }
+            }
+        }    
+        for( i=1; i<=4; i++ )
+        {
+            if( i != templist[1] && i != templist[2] )
+            {
+                templist = templist + list(i);
+            }
+        }
+        list finalvaris;
+        for( i=1; i<=4; i++ )
+        {
+            finalvaris[i] = ext(templist[i]);
+        }
+    
+        // Compute the transformation matrices:
+
+        matrix s1(k-1) = mfSuspendMorph( l1[2], 2 );    // final1 --> RT1
+        matrix t1(k-1) = mfSuspendMorph( l1[3], 2 );    // RT1 --> final1
+
+        // Compute the induced map between the reductions
+        webmap = TTransWeb[k-1] * FTransWeb[k-1] * webmap * G1(k-1) * s1(k-1);
+            
+        kill T1, T1blow, l1, RT1, d1(1), d1(k), diff1(1), diff1(2), iddQ1, delta1(1), delta1(2), delQ1, e1, ep1, epstrict1;
+        
+    }//end of k-loop
+    
+    // Now do the final fusion of the first websize-1 vertices with the last one.
+    dbprint(printlevel, "[mfCompileWeb2] Performing final fusion.");
+    
+    // Rename y(i) to x(i) for all i=1,...,4:
+    int k = websize;
+    int i;
+    def lastvertex = D1[websize][2];
+    int nx=4;
+    int ny=4;
+    ring rr2=0,(x(1..nx),y(1..ny)),dp;
+    matrix final1 = imap(RRR,final1);
+    matrix s1(k-2) = imap(RRR,s1(k-2));
+    matrix t1(k-2) = imap(RRR,t1(k-2));
+    matrix G1(k-2) = imap(RRR,G1(k-2));
+    matrix webmap = imap(RRR,webmap);
+    for( i=1; i<=4; i++ )
+    {
+        final1 = subst(final1,y(i),x(i));
+        s1(k-2) = subst(s1(k-2),y(i),x(i));
+        t1(k-2) = subst(t1(k-2),y(i),x(i));
+        G1(k-2) = subst(G1(k-2),y(i),x(i));
+        webmap = subst(webmap,y(i),x(i));
+    }
+    int nx=4;
+    ring rr3=0,(x(1..nx)),dp;
+    int i,j,i1,i2,i3,i4;
+    matrix final1 = imap(rr2,final1);
+    matrix s1(k-2) = imap(rr2,s1(k-2));
+    matrix t1(k-2) = imap(rr2,t1(k-2));
+    matrix G1(k-2) = imap(rr2,G1(k-2));
+    matrix webmap = imap(rr2,webmap);
+
+    list listOfCVariableNames = x(1),x(2),x(3),x(4);
+    list listOfEdgeLabels = ext(1),ext(2),ext(3),ext(4);
+    
+    // Find the variable dependence of the "blob" MF which is the fusion of the
+    // first k-1 vertices and the k-th MF:    
+    list blobvaris, varis(k);
+    for( i3=1; i3<=4; i3++ )
+    {
+        for( i4=1; i4<=4; i4++ )
+        {
+            if( finalvaris[i3] == listOfEdgeLabels[i4] )
+            {
+                blobvaris[i3] = listOfCVariableNames[i4];
+            }
+            if( lastvertex[i3] == listOfEdgeLabels[i4] )
+            {
+                varis(k)[i3] = listOfCVariableNames[i4];
+            }
+        }
+    }
+    
+    // V1(k) is the MF associated to the k-th vertex in web 1: 
+    matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
+
+    intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+    
+    // Now start to reduce final1 x V1(k) and the associated map:
+
+    ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+    intvec q = N, N, N, N;
+    number Nn = N + 1;
+    matrix C[4][4] = 1/Nn * unitmat(4);
+    
+    matrix alpha(k) = unitmat(4);
+    if( k == chiposition )
+    {
+        matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+    }
+
+    // Compute the ordinary tensor product:
+    matrix T1 = MFtensor( final1, V1(k) );
+    matrix T1blow = mablow(T1,J);
+    
+    T1gr = MFtensorGradings( final1gr, V1gr(k) );
+    T1blowgr = mablowGrading(T1gr,J,N);
+    
+    // blow up webmap
+    webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+    // Reduce this inflated differential:
+    list l1 = mfReduce(T1blow,1);
+    matrix RT1 = l1[1];
+    matrix F1(k-1) = l1[2]; // A homotopy equivalence T1blow -> RT1
+    matrix G1(k-1) = l1[3]; // A homotopy equivalence RT1 -> T1blow
+
+    RT1gr = computeGradingFromInjection(G1(k-1),T1blowgr);
+    
+    matrix lastF = imap(RRR,finalF);
+    webmap = lastF * webmap * G1(k-1);
+    
+    // Define d1(1) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of final1 with respect to these variables, and
+    // define d1(k) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of V1(k) with respect to these variables:
+    matrix d1(1) = unitmat( ncols( final1 ) );
+    matrix d1(k) = unitmat( ncols( V1(k) ) );
+    for( i=1; i<=2; i++ )
+    {
+        // vertex final1:
+        if( x(1) == blobvaris[i] )
+        {
+            d1(1) = d1(1) * diff( final1, x(1) );
+        }
+        if( x(2) == blobvaris[i] )
+        {
+            d1(1) = d1(1) * diff( final1, x(2) );
+        }
+        if( x(3) == blobvaris[i] )
+        {
+            d1(1) = d1(1) * diff( final1, x(3) );
+        }
+        if( x(4) == blobvaris[i] )
+        {
+            d1(1) = d1(1) * diff( final1, x(4) );
+        }
+            
+        // vertex V1(k):
+        if( x(1) == varis(k)[i] )
+        {
+            d1(k) = d1(k) * diff( V1(k), x(1) );
+        }        
+        if( x(2) == varis(k)[i] )
+        {
+            d1(k) = d1(k) * diff( V1(k), x(2) );
+        }
+        if( x(3) == varis(k)[i] )
+        {
+            d1(k) = d1(k) * diff( V1(k), x(3) );
+        }        
+        if( x(4) == varis(k)[i] )
+        {
+            d1(k) = d1(k) * diff( V1(k), x(4) );
+        }
+    }
+        
+    matrix diff1(1) = ZZtensor( d1(1), unitmat( ncols( V1(k) ) ) );
+    matrix diff1(2) = ZZtensor( unitmat( ncols( final1 ) ), d1(k) );
+    matrix iddQ1 = mablow( det(C) * diff1(1) * diff1(2), J );
+
+    matrix delta1(1) = mablow_delta(T1, 1, N, J);
+    matrix delta1(2) = mablow_delta(T1, 2, N, J);
+    matrix delta1(3) = mablow_delta(T1, 3, N, J);
+    matrix delta1(4) = mablow_delta(T1, 4, N, J);
+    matrix delQ1 = delta1(1) * delta1(2) * delta1(3) * delta1(4);
+    
+    // And finally the idempotent e1 on T1blow:
+    // Note the sign factor is binom(4,2) = 6 so we ignore it
+    matrix e1 = (-1)^k * iddQ1 * delQ1;   // TODO: is the factor (-1)^k correct?
+    
+    matrix ep1 = F1(k-1) * e1 * G1(k-1);
+    
+    matrix epstrict1 = mfStrictifyIdempotent(RT1, ep1);
+
+    matrix ep0 = extractblockmat(epstrict1)[1];
+    matrix ep1 = extractblockmat(epstrict1)[4];
+    int rank0 = mat_rk(ep0);
+    int rank1 = mat_rk(ep1);
+    
+    int z2degree;
+    intvec splitgr;
+    
+    // Now compute the non-zero part of the map of the above two complexes:
+    if( rank1 != 0 )
+    {
+        z2degree = 1;
+        matrix eq0f = ep1;
+
+        // Now split the idempotent eq0f by hand:
+        LIB "control.lib";
+        module ker0 = rightKernel(unitmat(ncols(eq0f)) - eq0f);
+        matrix f0 = ker0;
+        matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+    
+        if( ker0[1] != [0] )
+        {
+            matrix g0 = leftInverse(f0) * eq0f; // Solves f0 * g0 = eq0f.
+        };
+        
+        // The grading on the odd part of RT1 is given by
+        intvec RT1gr1 = RT1gr[(size(RT1gr)/2+1)..size(RT1gr)];
+        splitgr = computeGradingFromInjection(f0, RT1gr1);
+        
+        // Finally, to get the (non-zero part of the) map from web1 to web2:
+        
+        matrix lastT = imap(RRR,finalT);
+        webmap = lastT * extractblockmat(webmap)[4] * f0;
+    }
+    if( rank0 != 0 )
+    {
+        z2degree = 0;
+        matrix eq0f = ep0;
+
+        // Now split the idempotent eq0f by hand:
+        LIB "control.lib";
+        module ker0 = rightKernel(unitmat(ncols(eq0f)) - eq0f);
+        matrix f0 = ker0;
+        matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+    
+        if( ker0[1] != [0] )
+        {
+            matrix g0 = leftInverse(f0) * eq0f; // Solves f0 * g0 = eq0f.
+        };
+        
+        // The grading on the even part of RT1 is given by
+        intvec RT1gr0 = RT1gr[1..(size(RT1gr)/2)];
+        splitgr = computeGradingFromInjection(f0, RT1gr0);
+
+        // Finally, to get the (non-zero part of the) map from web1 to web2:
+
+        matrix lastT = imap(RRR,finalT);
+        webmap = lastT * extractblockmat(webmap)[4] * f0;
+    }
+    
+            kill V1(k), J, C, T1, T1blow, l1, RT1, diff1(1), diff1(2), iddQ1, delta1(1), delta1(2), delta1(3), delta1(4), delQ1, e1, epstrict1, ep0, ep1;
+    
+    // The reduced MFs of zero are concentrated in Z2-degree z2degree, 
+    // and webmap is the non-zero map between them:
+    
+    setring RRR;
+    
+    // Define lists populated by the transformation maps G1,s1,f0 
+    // (to be used if the alternate versions of mfCompileWeb are called in
+    // mfCompileLink, which happens if D1 has already been compiled):
+    list transformationMaps1;
+    for( i=1; i<=2; i++ )
+    {
+        transformationMaps1[i] = list();
+    }
+    for( i=1; i<=k-2; i++ )
+    {
+        transformationMaps1[1][i] = G1(i);
+        transformationMaps1[2][i] = s1(i);
+    }
+    transformationMaps1[1][k-1] = imap(rr3,G1(k-1));
+    transformationMaps1[2][k-1] = imap(rr3,f0);
+    
+    matrix webmap = imap(rr3,webmap);
+    
+    list finaloutput = webmap, z2degree, splitgr, weightsOfWeb2[1], transformationMaps1;
+    kill webmap, z2degree, splitgr;
+    return(finaloutput);
+}
+
+
+
+
+
+
+
+
+
+
+proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, int chiposition, int N)
+{
+    int paranoidChecks = 1; // If set to 1 then we perform additional stringent sanity checks
+    
+    def RRR = basering;
+    int websize = size(D2);
+    
+    matrix finalG = GTransWeb[websize-1];
+    matrix finalS = STransWeb[websize-1];    
+    
+    int i,j,k,i1,i2,i3,i4;
+    
+    // Sanity checks
+    if( chitype != 0 && chitype != 1 || chiposition > websize )
+    {
+        print("[mfCompileWeb3] chitype not in {0,1} or chiposition > web size, exiting.");
+        return();
+    }
+    
+    // Define the morphisms between the unreduced tensor factors to be
+    // identity maps (only later redefine the chipositions-th alpha to
+    // be the appropriate chi map):
+    
+    for( i=1; i<=websize; i++ )
+    {
+        matrix alpha(i) = unitmat(4);
+    }
+    
+    // Fusion of the first two vertices.
+    // Find out which are the two internal variables inter(1) and inter(2)
+    // between vertices 1 and 2:
+    
+    list L1,L2;
+    for( i=1; i<=4; i++ )
+    {
+        L1[i] = D2[1][2][i];
+        L2[i] = D2[2][2][i];
+    }
+    
+    int z = 1;
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=4; i2++ )
+        {
+            if( L1[i1] == L2[i2] )
+            {
+                int inter(z) = L1[i1];
+                z = z + 1;
+            }
+        }
+    }
+    // Note that inter(1),inter(2) occur in the same order which these edges
+    // appear in edgevec(1).
+    
+    // Call the remaining labels of edges incident on either of the two
+    // vertices ext(1),...,ext(4). The order is to enumerate the external
+    // edges in edgevec(1) and then those in edgevec(2).
+    
+    L1 = removefromlist(removefromlist( L1, inter(1) ), inter(2) );
+    L2 = removefromlist(removefromlist( L2, inter(1) ), inter(2) );     
+    for( i=1; i<=2; i++ )
+    {
+        int ext(i) = L1[i];
+        int ext(i+2) = L2[i];
+    }
+    
+    // At this stage, the variable listOfCVariableNames[i] corresponds to 
+    // the edge label listOfEdgeLabels[i] for i=1,...,6:
+    
+    list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+    list listOfEdgeLabels = inter(1),inter(2),ext(1),ext(2),ext(3),ext(4);
+    
+    // Find the variable dependence of the first two vertices:
+    list varis(1), varis(2);
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=6; i2++ )
+        {
+            if( D2[1][2][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(1)[i1] = listOfCVariableNames[i2];
+            }
+            if( D2[2][2][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(2)[i1] = listOfCVariableNames[i2];
+            }
+
+        }
+    }
+    
+    // V2(i) is the MF associated to the i-th vertex in web 2: 
+    matrix V2(1) = mfVertex( D2[1][1], varis(1), N );
+    matrix V2(2) = mfVertex( D2[2][1], varis(2), N );
+    
+    intvec V2gr(1) = mfVertexGrading( D2[1][1], varis(1), N );
+    intvec V2gr(2) = mfVertexGrading( D2[2][1], varis(2), N );
+    
+    // Now start to reduce V2(1) x V2(2) and the associated map:
+        
+    ideal J = x(1)^N, x(2)^N;
+    intvec q = N, N;
+    number Nn = N + 1;
+    matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+    // The matrix webmap will eventually be the reduced map between the two
+    // webs. At the moment, it is simply the map V1(1) x V1(2) --> V2(1) x V2(2):
+    
+    for( i=1; i<=2; i++ )
+    {
+        if( i == chiposition )
+        {
+            alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N);
+            break;
+        }
+    }
+    
+    // Compute the ordinary tensor product:
+    matrix T2 = MFtensor( V2(1), V2(2) );
+    matrix T2blow = mablow(T2,J);
+    
+    intvec T2gr = MFtensorGradings( V2gr(1), V2gr(2) );
+    intvec T2blowgr = mablowGrading(T2gr,J, N);
+
+    // Inflate the induced morphism between the webs
+    matrix webmap = mablow( ZZtensor( alpha(1), alpha(2) ), J );
+    
+    // Reduce this inflated differential:
+    list l2 = mfReduce(T2blow,1);
+    matrix RT2 = l2[1];
+    matrix F2(1) = l2[2]; // A homotopy equivalence T2blow -> RT2
+    matrix G2(1) = l2[3]; // A homotopy equivalence RT2 -> T2blow
+    
+    intvec RT2gr = computeGradingFromInjection(G2(1),T2blowgr);
+    
+    // Define d1(1) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of V1(1) with respect to these variables, and
+    // define d1(2) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of V1(2) with respect to these variables, and
+    // similarly for d2(1) and d2(2):
+    
+    matrix d2(1) = unitmat( ncols( V2(1) ) );
+    matrix d2(2) = unitmat( ncols( V2(2) ) );
+    for( i=1; i<=2; i++ )
+    {
+        // vertex V1(1):
+        if( x(1) == varis(1)[i] )
+        {
+            d2(1) = d2(1) * diff( V2(1), x(1) );
+        }
+        
+        if( x(2) == varis(1)[i] )
+        {
+            d2(1) = d2(1) * diff( V2(1), x(2) );
+        }
+        
+        // vertex V1(2):
+        if( x(1) == varis(2)[i] )
+        {
+            d2(2) = d2(2) * diff( V2(2), x(1) );
+        }
+        
+        if( x(2) == varis(2)[i] )
+        {
+            d2(2) = d2(2) * diff( V2(2), x(2) );
+        }
+    }
+    // TODO: possible signs?
+    
+    matrix diff2(1) = ZZtensor( d2(1), unitmat( ncols( V2(2) ) ) );
+    matrix diff2(2) = ZZtensor( unitmat( ncols( V2(1) ) ), d2(2) );
+    matrix iddQ2 = mablow( det(C) * diff2(1) * diff2(2), J );
+
+    matrix delta2(1) = mablow_delta(T2, 1, N, J);
+    matrix delta2(2) = mablow_delta(T2, 2, N, J);
+    matrix delQ2 = delta2(1) * delta2(2);
+    
+    // And finally the idempotents e1,e2 on T1blow,T2blow
+    matrix e2 = iddQ2 * delQ2;
+
+    matrix ep2 = F2(1) * e2 * G2(1);
+    
+    // Sanity checks:
+    if( ep2 * RT2 != RT2 * ep2 )
+    {
+        print("[mfCompileWeb3] The reduced idempotent (up to homotopy) ep2 is not an endomorphism of RT2, exiting.");
+        return();
+    }
+    
+    if( paranoidChecks )
+    {
+        matrix ep2ck = ep2;
+        ep2ck = subst( ep2ck, y(1), 0 );
+        ep2ck = subst( ep2ck, y(2), 0 );
+        ep2ck = subst( ep2ck, y(3), 0 );
+        ep2ck = subst( ep2ck, y(4), 0 );
+        if( ep2ck * ep2ck != ep2ck )
+        {
+            // TODO DEBUG DEBUG WARNING UGLY HACK
+            ep2 = -ep2;
+            
+            // print("[mfCompileWeb3] ep2 is not idempotent up to homotopy, exiting.");
+            // return();
+        }
+        
+        // Check that ep1 and ep2 are degree zero
+        if( !checkMorphismDegree(RT2,RT2gr,RT2,RT2gr,ep2,0) )
+        {
+            print("[mfCompileWeb3] ep2 is not degree zero, exiting.");
+            return();
+        }
+    }
+    
+    // Strictify these idempotents:
+    matrix epstrict2 = mfStrictifyIdempotent(RT2, ep2);
+    
+    // Sanity checks:
+    if( epstrict2 * RT2 != RT2 * epstrict2 || epstrict2 * epstrict2 != epstrict2 )
+    {
+        print("[mfCompileWeb3] The strictified idempotent epstrict2 is not an endomorphism of RT2, or not an idempotent on the nose, exiting.");
+        return();
+    }
+
+    list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);
+
+    matrix final2 = mfSuspend( l2[1], 2 );
+    
+    intvec final2gr = mfSuspendGrading( l2[4], 2 );
+    
+    // Grading sanity check
+    if( isGradingValid(final2,final2gr) != 1 )
+    {
+        print("[mfCompileWeb3] Something has gone wrong with the grading, exiting.");
+        return();
+    }
+    
+    // Determine the outgoing and incoming labels of final1 and final2
+    // (in terms of the integer labels in {1,...,2*websize}). 
+    // As final1 and final2 both depend only on y(1),...,y(4), their incident
+    // edges are labelled by ext(1),...,ext(4). We need to determine i1,i2 such
+    // that the vertices labelled by ext(i1) and ext(i2) are outgoing. 
+    // Then we define a list finalvaris whose first two entries are ext(i1),ext(i2),
+    // and whose third and fourth entry is given by the remaining two labellings.
+    list templist;
+    for( i=1; i<=4; i++ )
+    {
+        for( i1=1; i1<=2; i1++ )
+        {
+            for( i2=1; i2<=2; i2++ )
+            {
+                if( ext(i) == D2[1][2][i1] || ext(i) == D2[2][2][i2] )
+                {
+                    templist = templist + list(i);
+                    i = i + 1;
+                }
+            }
+        }
+    }    
+    for( i=1; i<=4; i++ )
+    {
+        if( i != templist[1] && i != templist[2] )
+        {
+            templist = templist + list(i);
+        }
+    }
+    list finalvaris;
+    for( i=1; i<=4; i++ )
+    {
+        finalvaris[i] = ext(templist[i]);
+    }
+    
+    // Compute the transformation matrices:
+    matrix s2(1) = mfSuspendMorph( l2[2], 2 );    // final2 --> RT2
+    matrix t2(1) = mfSuspendMorph( l2[3], 2 );    // RT2 --> final2
+    
+    // Compute the induced map between the reductions
+    webmap = t2(1) * F2(1) * webmap * GTransWeb[1] * STransWeb[1];
+    
+    kill T2, T2blow, l2, RT2, d2(1), d2(2), diff2(1), diff2(2), iddQ2, delta2(1), delta2(2), delQ2, e2, ep2, epstrict2; 
+    
+    // Now repeat the above steps analogously and iteratively until all vertices but
+    // the last one in the webs are fused:
+    dbprint(printlevel, "[mfCompileWeb3] Beginning induction step.");
+    
+    for( k=3; k<=websize-1; k++ )
+    {
+        // NOTE: the ext(i) will not necessarily be ordered "clockwise" with respect
+        // to the underlying directed graph of the current web.
+        // Identify which two numbers in D1[k][2] are not in {ext(i)}_{i=1,...,4}
+        // and call them newlabel(1) and newlabel(2):
+        int count = 1;
+        for( i1=1; i1<=4; i1++ )
+        {
+            int z;
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( D2[k][2][i1] != ext(i2) )
+                {
+                    z = z + 1;
+                }
+            }
+            if( z == 4 )
+            {
+                int newlabel(count) = D2[k][2][i1];
+                count = count + 1;
+            }
+        }
+        
+        // Determine which of the numbers in {ext(i)}_{i=1,...,4} also appear 
+        // in D1[k][2], and let us define i1,i2 such that these are ext(i1) and ext(i2).
+        // These keep the ordering given in D1[k][2].
+        list extlabel;
+        for( i1=1; i1<=4; i1++ )
+        {
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( D2[k][2][i1] == ext(i2) )
+                {
+                    extlabel = extlabel + list(i2);
+                    break;
+                }
+            }
+        }
+        int i1 = extlabel[1]; // TODO: mondo confusing notation
+        int i2 = extlabel[2];
+
+        // At this stage, the variable listOfCVariableNames[i] corresponds to 
+        // the edge label listOfEdgeLabels[i] for i=1,...,6:
+        //          x(1) cooresponds to ext(i1),
+        //          x(2) cooresponds to ext(i2),
+        //          y(k) corresponds to ext(k) for k in {1,2,3,4}\{i1,i2},
+        //          y(i1) cooresponds to n(1),
+        //          y(i2) cooresponds to n(2).
+        int assotox1,assotox2 = ext(i1),ext(i2);
+        list newexternals; int count = 1;
+        for( i=1; i<=4; i++ )
+        {
+            if( i != i1 && i != i2 )
+            {
+                newexternals[i] = ext(i);
+            }
+            else
+            {
+                newexternals[i] = newlabel(count);
+                count = count + 1;
+            }
+        }
+        for( i=1; i<=4; i++ )
+        {
+            ext(i) = newexternals[i];
+        }
+        list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+        list listOfEdgeLabels = assotox1,assotox2,ext(1),ext(2),ext(3),ext(4);
+    
+        // Find the variable dependence of the "blob" MF which is the fusion of the
+        // first k-1 vertices and the k-th MF:    
+        list blobvaris, varis(k);
+        for( i3=1; i3<=4; i3++ )
+        {
+            for( i4=1; i4<=6; i4++ )
+            {
+                if( finalvaris[i3] == listOfEdgeLabels[i4] )
+                {
+                    blobvaris[i3] = listOfCVariableNames[i4];
+                }
+                if( D2[k][2][i3] == listOfEdgeLabels[i4] )
+                {
+                    varis(k)[i3] = listOfCVariableNames[i4];
+                }
+            }
+        }
+        
+        // Redefine the results of step k-1 according to the new identifications:
+        final2 = subst( final2, y(i1), x(1) ); final2 = subst( final2, y(i2), x(2) );
+        webmap = subst( webmap, y(i1), x(1) ); webmap = subst( webmap, y(i2), x(2) );
+        s2(k-2) = subst( s2(k-2), y(i1), x(1) ); s2(k-2) = subst( s2(k-2), y(i2), x(2) );
+        t2(k-2) = subst( t2(k-2), y(i1), x(1) ); t2(k-2) = subst( t2(k-2), y(i2), x(2) );
+        F2(k-2) = subst( F2(k-2), y(i1), x(1) ); F2(k-2) = subst( F2(k-2), y(i2), x(2) );
+        
+        // V2(k) is the MF associated to the k-th vertex in web 2: 
+        matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
+    
+        intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+        
+        // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
+        
+        ideal J = x(1)^N, x(2)^N;
+        intvec q = N, N;
+        number Nn = N + 1;
+        matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+        
+        if( k == chiposition )
+        {
+            alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+        }
+        
+        // Compute the ordinary tensor product:
+        matrix T2 = MFtensor( final2, V2(k) );
+        matrix T2blow = mablow(T2,J);
+
+        intvec T2gr = MFtensorGradings( final2gr, V2gr(k) );
+        intvec T2blowgr = mablowGrading(T2gr,J,N);
+
+        // blown-up version of the map between the first k vertices:
+        webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+        // Reduce this inflated differential:
+        list l2 = mfReduce(T2blow,1);
+        matrix RT2 = l2[1];
+        matrix F2(k-1) = l2[2]; // A homotopy equivalence T2blow -> RT2
+        matrix G2(k-1) = l2[3]; // A homotopy equivalence RT2 -> T2blow
+    
+        intvec RT2gr = computeGradingFromInjection(G2(k-1),T2blowgr);
+    
+        // Define d1(1) to be the product over all outgoing edges labelled by x-variables
+        // of the derivatives of final1 with respect to these variables, and
+        // define d1(k) to be the product over all outgoing edges labelled by x-variables
+        // of the derivatives of V1(k) with respect to these variables, and
+        // similarly for d2(1) and d2(2):
+        matrix d2(1) = unitmat( ncols( final2 ) );
+        matrix d2(k) = unitmat( ncols( V2(k) ) );
+        for( i=1; i<=2; i++ )
+        {
+            // vertex final1:
+            if( x(1) == blobvaris[i] )
+            {
+                d2(1) = d2(1) * diff( final2, x(1) );
+            }
+        
+            if( x(2) == blobvaris[i] )
+            {
+                d2(1) = d2(1) * diff( final2, x(2) );
+            }
+        
+            // vertex V1(2):
+            if( x(1) == varis(k)[i] )
+            {
+                d2(k) = d2(k) * diff( V2(k), x(1) );
+            }
+        
+            if( x(2) == varis(k)[i] )
+            {
+                d2(k) = d2(k) * diff( V2(k), x(2) );
+            }
+        }
+        
+        matrix diff2(1) = ZZtensor( d2(1), unitmat( ncols( V2(k) ) ) );
+        matrix diff2(2) = ZZtensor( unitmat( ncols( final2 ) ), d2(k) );
+        matrix iddQ2 = mablow( det(C) * diff2(1) * diff2(2), J );
+
+        matrix delta2(1) = mablow_delta(T2, 1, N, J);
+        matrix delta2(2) = mablow_delta(T2, 2, N, J);
+        matrix delQ2 = delta2(1) * delta2(2);
+    
+        // And finally the idempotents e1,e2 on T1blow,T2blow:
+        matrix e2 = (-1)^k * iddQ2 * delQ2;   // TODO: is the factor (-1)^k correct?
+    
+        matrix ep2 = F2(k-1) * e2 * G2(k-1);
+        
+        // Sanity checks:
+        if( ep2 * RT2 != RT2 * ep2 )
+        {
+            print("[mfCompileWeb3] The reduced idempotent (up to homotopy) ep2 at level "+string(k)+" is not an endomorphism of RT2, exiting.");
+            return();
+        }
+    
+        if( paranoidChecks )
+        {
+            // Check that ep1 and ep2 are idempotent up to homotopy
+            matrix ep2ck = ep2;
+            ep2ck = subst( ep2ck, y(1), 0 );
+            ep2ck = subst( ep2ck, y(2), 0 );
+            ep2ck = subst( ep2ck, y(3), 0 );
+            ep2ck = subst( ep2ck, y(4), 0 );
+            if( ep2ck * ep2ck != ep2ck )
+            {
+                // TODO DEBUG DEBUG WARNING UGLY HACK
+                ep2 = -ep2;
+                
+                //print("[mfCompileWeb3] ep2 at level "+string(k)+" is not idempotent up to homotopy, exiting.");
+                //return();
+            }
+        }
+        
+        // Strictify these idempotents:
+        matrix epstrict2 = mfStrictifyIdempotent(RT2, ep2);
+    
+        // Sanity checks:
+        if( epstrict2 * RT2 != RT2 * epstrict2 || epstrict2 * epstrict2 != epstrict2 )
+        {
+            print("[mfCompileWeb3] The strictified idempotent epstrict2 at level "+string(k)+" is not an endomorphism of RT2, or not an idempotent on the nose, exiting.");
+            return();
+        }
+
+        list l2 = mfSplitIdempotent(RT2, epstrict2, RT2gr);
+
+        final2 = mfSuspend( l2[1], 2 );
+    
+        final2gr = mfSuspendGrading( l2[4], 2 );
+        
+        // Grading sanity check
+        if( isGradingValid(final2,final2gr) != 1 )
+        {
+            print("[mfCompileWeb3] Something has gone wrong with the grading in induction, exiting.");
+            return();
+        }
+        
+        // Determine the outgoing and incoming labels of final1 and final2
+        // (in terms of the integer labels in {1,...,2*websize}). 
+        // As final1 and final2 both depend only on y(1),...,y(4), their incident
+        // edges are labelled by ext(1),...,ext(4). We need to determine i1,i2 such
+        // that the vertices labelled by ext(i1) and ext(i2) are incoming. 
+        // Then we define a list finalvaris whose first two entries are ext(i1),ext(i2),
+        // and whose third and fourth entry is given by the remaning two labellings.
+        list templist;
+        for( i=1; i<=4; i++ )
+        {
+            for( i1=1; i1<=2; i1++ )
+            {
+                for( i2=1; i2<=2; i2++ )
+                {
+                    if( ext(i) == finalvaris[i1] || ext(i) == D2[k][2][i2] )
+                    {
+                        templist = templist + list(i);
+                        i = i + 1;
+                    }
+                }
+            }
+        }    
+        for( i=1; i<=4; i++ )
+        {
+            if( i != templist[1] && i != templist[2] )
+            {
+                templist = templist + list(i);
+            }
+        }
+        list finalvaris;
+        for( i=1; i<=4; i++ )
+        {
+            finalvaris[i] = ext(templist[i]);
+        }
+    
+        // Compute the transformation matrices:
+
+        matrix s2(k-1) = mfSuspendMorph( l2[2], 2 );    // final2 --> RT2
+        matrix t2(k-1) = mfSuspendMorph( l2[3], 2 );    // RT2 --> final2
+
+        // Compute the induced map between the reductions
+        webmap = t2(k-1) * F2(k-1) * webmap * GTransWeb[k-1] * STransWeb[k-1];
+            
+        kill T2, T2blow, l2, RT2, d2(1), d2(k), diff2(1), diff2(2), iddQ2, delta2(1), delta2(2), delQ2, e2, ep2, epstrict2; 
+        
+    }//end of k-loop
+    
+    // Now do the final fusion of the first websize-1 vertices with the last one.
+    dbprint(printlevel, "[mfCompileWeb3] Performing final fusion.");
+    
+    // Rename y(i) to x(i) for all i=1,...,4:
+    int k = websize;
+    int i;
+    def lastvertex = D2[websize][2];
+    int nx=4;
+    int ny=4;
+    ring rr2=0,(x(1..nx),y(1..ny)),dp;
+    matrix final2 = imap(RRR,final2);
+    matrix s2(k-2) = imap(RRR,s2(k-2));
+    matrix t2(k-2) = imap(RRR,t2(k-2));
+    matrix F2(k-2) = imap(RRR,F2(k-2));
+    matrix webmap = imap(RRR,webmap);
+    for( i=1; i<=4; i++ )
+    {
+        final2 = subst(final2,y(i),x(i));    
+        s2(k-2) = subst(s2(k-2),y(i),x(i));
+        t2(k-2) = subst(t2(k-2),y(i),x(i));
+        F2(k-2) = subst(F2(k-2),y(i),x(i));
+        webmap = subst(webmap,y(i),x(i));
+    }
+    int nx=4;
+    ring rr3=0,(x(1..nx)),dp;
+    int i,j,i1,i2,i3,i4;
+    matrix final2 = imap(rr2,final2);
+    matrix s2(k-2) = imap(rr2,s2(k-2));
+    matrix t2(k-2) = imap(rr2,t2(k-2));
+    matrix F2(k-2) = imap(rr2,F2(k-2));
+    matrix webmap = imap(rr2,webmap);
+
+    list listOfCVariableNames = x(1),x(2),x(3),x(4);
+    list listOfEdgeLabels = ext(1),ext(2),ext(3),ext(4);
+    
+    // Find the variable dependence of the "blob" MF which is the fusion of the
+    // first k-1 vertices and the k-th MF:    
+    list blobvaris, varis(k);
+    for( i3=1; i3<=4; i3++ )
+    {
+        for( i4=1; i4<=4; i4++ )
+        {
+            if( finalvaris[i3] == listOfEdgeLabels[i4] )
+            {
+                blobvaris[i3] = listOfCVariableNames[i4];
+            }
+            if( lastvertex[i3] == listOfEdgeLabels[i4] )
+            {
+                varis(k)[i3] = listOfCVariableNames[i4];
+            }
+        }
+    }
+    
+    // V2(k) is the MF associated to the k-th vertex in web 2: 
+    matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
+
+    intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+    
+    // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
+
+    ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+    intvec q = N, N, N, N;
+    number Nn = N + 1;
+    matrix C[4][4] = 1/Nn * unitmat(4);
+    
+    matrix alpha(k) = unitmat(4);
+    if( k == chiposition )
+    {
+        matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+    }
+
+    // Compute the ordinary tensor product:
+    matrix T2 = MFtensor( final2, V2(k) );
+    matrix T2blow = mablow(T2,J);
+    
+    T2gr = MFtensorGradings( final2gr, V2gr(k) );
+    T2blowgr = mablowGrading(T2gr,J,N);
+    
+    // blow up webmap
+    webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+    // Reduce this inflated differential:
+    list l2 = mfReduce(T2blow,1);
+    matrix RT2 = l2[1];
+    matrix F2(k-1) = l2[2]; // A homotopy equivalence T2blow -> RT2
+    matrix G2(k-1) = l2[3]; // A homotopy equivalence RT2 -> T2blow
+
+    RT2gr = computeGradingFromInjection(G2(k-1),T2blowgr);
+    
+    matrix lastG = imap(RRR,finalG);
+    webmap = F2(k-1) * webmap * lastG;
+    
+    // Define d1(1) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of final1 with respect to these variables, and
+    // define d1(k) to be the product over all outgoing edges labelled by x-variables
+    // of the derivatives of V1(k) with respect to these variables, and
+    // similarly for d2(1) and d2(2):
+    matrix d2(1) = unitmat( ncols( final2 ) );
+    matrix d2(k) = unitmat( ncols( V2(k) ) );
+    for( i=1; i<=2; i++ )
+    {
+        // vertex final1:
+        if( x(1) == blobvaris[i] )
+        {
+            d2(1) = d2(1) * diff( final2, x(1) );
+        }
+        if( x(2) == blobvaris[i] )
+        {
+            d2(1) = d2(1) * diff( final2, x(2) );
+        }
+        if( x(3) == blobvaris[i] )
+        {
+            d2(1) = d2(1) * diff( final2, x(3) );
+        }
+        if( x(4) == blobvaris[i] )
+        {
+            d2(1) = d2(1) * diff( final2, x(4) );
+        }
+            
+        // vertex V1(k):
+        if( x(1) == varis(k)[i] )
+        {
+            d2(k) = d2(k) * diff( V2(k), x(1) );
+        }        
+        if( x(2) == varis(k)[i] )
+        {
+            d2(k) = d2(k) * diff( V2(k), x(2) );
+        }
+        if( x(3) == varis(k)[i] )
+        {
+            d2(k) = d2(k) * diff( V2(k), x(3) );
+        }        
+        if( x(4) == varis(k)[i] )
+        {
+            d2(k) = d2(k) * diff( V2(k), x(4) );
+        }
+    }
+        
+    matrix diff2(1) = ZZtensor( d2(1), unitmat( ncols( V2(k) ) ) );
+    matrix diff2(2) = ZZtensor( unitmat( ncols( final2 ) ), d2(k) );
+    matrix iddQ2 = mablow( det(C) * diff2(1) * diff2(2), J );
+
+    matrix delta2(1) = mablow_delta(T2, 1, N, J);
+    matrix delta2(2) = mablow_delta(T2, 2, N, J);
+    matrix delta2(3) = mablow_delta(T2, 3, N, J);
+    matrix delta2(4) = mablow_delta(T2, 4, N, J);
+    matrix delQ2 = delta2(1) * delta2(2) * delta2(3) * delta2(4);
+    
+    // And finally the idempotents e1,e2 on T1blow,T2blow:
+    // Note the sign factor is binom(4,2) = 6 so we ignore it
+    matrix e2 = (-1)^k * iddQ2 * delQ2;   // TODO: is the factor (-1)^k correct?
+    
+    matrix ep2 = F2(k-1) * e2 * G2(k-1);
+    
+    matrix epstrict2 = mfStrictifyIdempotent(RT2, ep2);
+    
+    matrix ep0r = extractblockmat(epstrict2)[1];
+    matrix ep1r = extractblockmat(epstrict2)[4];
+    int rank0r = mat_rk(ep0r);
+    int rank1r = mat_rk(ep1r);
+
+    int z2degree;
+    intvec splitgrr;
+    
+    // Now compute the non-zero part of the map of the above two complexes:
+    if( rank1r != 0 )
+    {
+        z2degree = 1;
+        matrix eq0fr = ep1r;
+
+        // Now split the idempotent eq0fr by hand:
+        LIB "control.lib";
+        module ker0r = rightKernel(unitmat(ncols(eq0fr)) - eq0fr);
+        matrix f0r = ker0r;
+        matrix g0r[ncols(f0r)][nrows(f0r)];
+    
+        if( ker0r[1] != [0] )
+        {
+            matrix g0r = leftInverse(f0r) * eq0fr;
+        };
+
+        // The grading on the odd part of RT2 is given by
+        intvec RT2gr1 = RT2gr[(size(RT2gr)/2+1)..size(RT2gr)];
+        splitgrr = computeGradingFromInjection(f0r,RT2gr1);
+        
+        // Finally, to get the (non-zero part of the) map from web1 to web2:
+        
+        matrix lastS = imap(RRR, finalS);
+        webmap = g0r * extractblockmat(webmap)[4] * lastS;
+    }
+    if( rank0r != 0 )
+    {
+        z2degree = 0;
+        matrix eq0fr = ep0r;
+
+        // Now split the idempotent eq0fr by hand:
+        LIB "control.lib";
+        module ker0r = rightKernel(unitmat(ncols(eq0fr)) - eq0fr);
+        matrix f0r = ker0r;
+        matrix g0r[ncols(f0r)][nrows(f0r)];
+    
+        if( ker0r[1] != [0] )
+        {
+            matrix g0r = leftInverse(f0r) * eq0fr;
+        };
+
+        // The grading on the even part of RT2 is given by
+        intvec RT2gr0 = RT2gr[1..(size(RT2gr)/2)];
+        splitgrr = computeGradingFromInjection(f0r, RT2gr0);
+
+        // Finally, to get the (non-zero part of the) map from web1 to web2:
+
+        matrix lastS = imap(RRR, finalS);
+        webmap = g0r * extractblockmat(webmap)[1] * lastS;
+    }
+    
+            kill V2(k), J, C, T2, T2blow, l2, RT2, diff2(1), diff2(2), iddQ2, delta2(1), delta2(2), delta2(3), delta2(4), delQ2, e2, epstrict2, ep0r, ep1r;
+    
+    // The reduced MFs of zero are concentrated in Z2-degree z2degree, 
+    // and webmap is the non-zero map between them:
+    
+    setring RRR;
+    
+    // Define lists populated by the transformation maps G1,F2,s1,t1,f0,g0r
+    // (to be used if the alternate versions of mfCompileWeb are called in
+    // mfCompileLink, which happens if D1 and/or D2 has already been compiled):
+    list transformationMaps2;
+    for( i=1; i<=2; i++ )
+    {
+        transformationMaps2[i] = list();
+    }
+    for( i=1; i<=k-2; i++ )
+    {
+        transformationMaps2[1][i] = F2(i);
+        transformationMaps2[2][i] = t2(i);
+    }
+    transformationMaps2[1][k-1] = imap(rr3,F2(k-1));
+    transformationMaps2[2][k-1] = imap(rr3,g0r);
+    
+    matrix webmap = imap(rr3,webmap);
+    
+    list finaloutput = webmap, z2degree, weightsOfWeb1[1], splitgrr, transformationMaps2;
+    kill webmap, z2degree, splitgrr;
+    return(finaloutput);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, weightsOfWeb1, weightsOfWeb2, int z2deg, int chitype, int chiposition, int N)
+{
+    dbprint(printlevel, "[mfCompileWeb4] Beginning induction step.");
+    
+    def RRR = basering;
+    int websize = size(GTransWeb) + 1;
+    
+    matrix finalG = GTransWeb[websize-1];
+    matrix finalS = STransWeb[websize-1];    
+    matrix finalF = FTransWeb[websize-1];
+    matrix finalT = TTransWeb[websize-1];    
+    
+    int i,j,k,i1,i2,i3,i4;
+    
+    // Define the morphisms between the unreduced tensor factors to be
+    // identity maps (only later redefine the chipositions-th alpha to
+    // be the appropriate chi map):
+    
+    for( i=1; i<=websize; i++ )
+    {
+        matrix alpha(i) = unitmat(4);
+    }
+        
+    list L1,L2;
+    for( i=1; i<=4; i++ )
+    {
+        L1[i] = linkData[2][1][i]; 
+        L2[i] = linkData[2][2][i];
+    }
+    
+    int z = 1;
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=4; i2++ )
+        {
+            if( L1[i1] == L2[i2] )
+            {
+                int inter(z) = L1[i1];
+                z = z + 1;
+            }
+        }
+    }
+
+    L1 = removefromlist(removefromlist( L1, inter(1) ), inter(2) );
+    L2 = removefromlist(removefromlist( L2, inter(1) ), inter(2) );     
+    for( i=1; i<=2; i++ )
+    {
+        int ext(i) = L1[i];
+        int ext(i+2) = L2[i];
+    }
+    
+    list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+    list listOfEdgeLabels = inter(1),inter(2),ext(1),ext(2),ext(3),ext(4);
+    
+    list varis(1), varis(2);
+    for( i1=1; i1<=4; i1++ )
+    {
+        for( i2=1; i2<=6; i2++ )
+        {
+            if( linkData[2][1][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(1)[i1] = listOfCVariableNames[i2];
+            }
+            if( linkData[2][2][i1] == listOfEdgeLabels[i2] )
+            {
+                varis(2)[i1] = listOfCVariableNames[i2];
+            }
+
+        }
+    }
+    
+    ideal J = x(1)^N, x(2)^N;
+    intvec q = N, N;
+    number Nn = N + 1;
+    matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+
+    for( i=1; i<=2; i++ )
+    {
+        if( i == chiposition )
+        {
+            alpha(i) = mfChi(chitype, varis(i)[1], varis(i)[2], varis(i)[3], varis(i)[4], N);
+            break;
+        }
+    }
+
+    matrix webmap = mablow( ZZtensor( alpha(1), alpha(2) ), J );
+    
+    webmap = TTransWeb[1] * FTransWeb[1] * webmap * GTransWeb[1] * STransWeb[1];
+    
+    for( k=3; k<=websize-1; k++ )
+    {
+        int count = 1;
+        for( i1=1; i1<=4; i1++ )
+        {
+            int z;
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( linkData[2][k][i1] != ext(i2) )
+                {
+                    z = z + 1;
+                }
+            }
+            if( z == 4 )
+            {
+                int newlabel(count) = linkData[2][k][i1];
+                count = count + 1;
+            }
+        }
+        
+        list extlabel;
+        for( i1=1; i1<=4; i1++ )
+        {
+            for( i2=1; i2<=4; i2++ )
+            {
+                if( linkData[2][k][i1] == ext(i2) )
+                {
+                    extlabel = extlabel + list(i2);
+                    break;
+                }
+            }
+        }
+        int i1 = extlabel[1]; // TODO: mondo confusing notation
+        int i2 = extlabel[2];
+
+        int assotox1,assotox2 = ext(i1),ext(i2);
+        list newexternals; int count = 1;
+        for( i=1; i<=4; i++ )
+        {
+            if( i != i1 && i != i2 )
+            {
+                newexternals[i] = ext(i);
+            }
+            else
+            {
+                newexternals[i] = newlabel(count);
+                count = count + 1;
+            }
+        }
+        for( i=1; i<=4; i++ )
+        {
+            ext(i) = newexternals[i];
+        }
+        list listOfCVariableNames = x(1),x(2),y(1),y(2),y(3),y(4);
+        list listOfEdgeLabels = assotox1,assotox2,ext(1),ext(2),ext(3),ext(4);
+    
+        list varis(k);
+        for( i3=1; i3<=4; i3++ )
+        {
+            for( i4=1; i4<=6; i4++ )
+            {
+                if( linkData[2][k][i3] == listOfEdgeLabels[i4] )
+                {
+                    varis(k)[i3] = listOfCVariableNames[i4];
+                }
+            }
+        }
+        
+        webmap = subst( webmap, y(i1), x(1) ); webmap = subst( webmap, y(i2), x(2) );
+        
+        ideal J = x(1)^N, x(2)^N;
+        intvec q = N, N;
+        number Nn = N + 1;
+        matrix C[2][2] = 1/Nn, 0, 0, 1/Nn;
+        
+        if( k == chiposition )
+        {
+            alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+        }
+        
+        webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+        webmap = TTransWeb[k-1] * FTransWeb[k-1] * webmap * GTransWeb[k-1] * STransWeb[k-1];
+        
+    }//end of k-loop
+    
+    int k = websize;
+    int i;
+    def lastvertex = linkData[2][websize];
+    int nx=4;
+    int ny=4;
+    ring rr2=0,(x(1..nx),y(1..ny)),dp;
+    matrix webmap = imap(RRR,webmap);
+    for( i=1; i<=4; i++ )
+    {
+        webmap = subst(webmap,y(i),x(i));
+    }
+    int nx=4;
+    ring rr3=0,(x(1..nx)),dp;
+    int i,j,i1,i2,i3,i4;
+    matrix webmap = imap(rr2,webmap);
+
+    list listOfCVariableNames = x(1),x(2),x(3),x(4);
+    list listOfEdgeLabels = ext(1),ext(2),ext(3),ext(4);
+    
+    list varis(k);
+    for( i3=1; i3<=4; i3++ )
+    {
+        for( i4=1; i4<=4; i4++ )
+        {
+            if( lastvertex[i3] == listOfEdgeLabels[i4] )
+            {
+                varis(k)[i3] = listOfCVariableNames[i4];
+            }
+        }
+    }
+    
+    ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+    intvec q = N, N, N, N;
+    number Nn = N + 1;
+    matrix C[4][4] = 1/Nn * unitmat(4);
+    
+    matrix alpha(k) = unitmat(4);
+    if( k == chiposition )
+    {
+        matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
+    }
+
+    dbprint(printlevel, "[mfCompileWeb4] Performing final fusion.");
+
+    webmap = mablow( ZZtensor( webmap, alpha(k) ), J );
+        
+    matrix lastG = imap(RRR,finalG);
+    matrix lastF = imap(RRR,finalF);
+    webmap = lastF * webmap * lastG;
+    
+    int z2degree;
+        
+    if( z2deg != 0 )
+    {
+        z2degree = 1;
+
+        matrix lastS = imap(RRR, finalS);
+        matrix lastT = imap(RRR, finalT);
+        webmap = lastT * extractblockmat(webmap)[4] * lastS;
+    }
+    if( z2deg != 0 )
+    {
+        z2degree = 0;
+
+        matrix lastS = imap(RRR, finalS);
+        matrix lastT = imap(RRR, finalT);
+        webmap = lastT * extractblockmat(webmap)[1] * lastS;
+    }
+        
+    setring RRR;
+        
+    matrix webmap = imap(rr3,webmap);
+    
+    list finaloutput = webmap, z2degree, weightsOfWeb1[1], weightsOfWeb2[1];
+    kill webmap, z2degree;
+    return(finaloutput);
+}
+>>>>>>> beanstalk/master
