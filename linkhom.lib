@@ -442,8 +442,6 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 
 // TODO: Will mfCompileWeb work when there are only two vertices in the web?
 // TODO: possible signs due to the ordering of internal variables?
-// TODO: At the moment mfCompileLink calls us several times for maps out of the same web,
-// and we are therefore computing the splitting over and over again.
 proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
 {
     int paranoidChecks = 1; // If set to 1 then we perform additional stringent sanity checks
@@ -1150,8 +1148,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     int nx=4;
     int ny=4;
     ring rr2=0,(x(1..nx),y(1..ny)),dp;
-//    def lastvertex = imap(RRR,lastvertex);
-    //print(lastvertex);
     matrix final1 = imap(RRR,final1);
     matrix final2 = imap(RRR,final2);
     matrix s1(k-2) = imap(RRR,s1(k-2));
@@ -1223,8 +1219,7 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     number Nn = N + 1;
     matrix C[4][4] = 1/Nn * unitmat(4);
     
-    matrix alpha(k) = unitmat(4); // TODO: this has any point? We define alpha(k) at the beginning.
-                                  // Yes, but it was only defined in the ring RRR.
+    matrix alpha(k) = unitmat(4);
     if( k == chiposition )
     {
         matrix alpha(k) = mfChi(chitype, varis(k)[1], varis(k)[2], varis(k)[3], varis(k)[4], N);
@@ -1354,10 +1349,6 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     int rank0r = mat_rk(ep0r);
     int rank1r = mat_rk(ep1r);
 
-    //print("");
-    //print("The reduced form of the first web is QQ^"+string(rank0)+" --> QQ^"+string(rank1)+" --> QQ^"+string(rank0)+", where QQ = rationals, and QQ^0=0.");
-    //print("");
-    //print("The reduced form of the second web is QQ^"+string(rank0r)+" --> QQ^"+string(rank1r)+" --> QQ^"+string(rank0r)+", where QQ = rationals, and QQ^0=0.");
     int z2degree;
     intvec splitgr, splitgrr;
     
@@ -3255,7 +3246,7 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
         // Finally, to get the (non-zero part of the) map from web1 to web2:
 
         matrix lastT = imap(RRR,finalT);
-        webmap = lastT * extractblockmat(webmap)[4] * f0;
+        webmap = lastT * extractblockmat(webmap)[1] * f0;
     }
     
             kill V1(k), J, C, T1, T1blow, l1, RT1, diff1(1), diff1(2), iddQ1, delta1(1), delta1(2), delta1(3), delta1(4), delQ1, e1, epstrict1, ep0, ep1;
@@ -3287,14 +3278,6 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
     kill webmap, z2degree, splitgr;
     return(finaloutput);
 }
-
-
-
-
-
-
-
-
 
 
 proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, int chiposition, int N)
@@ -4097,16 +4080,6 @@ proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, in
 }
 
 
-
-
-
-
-
-
-
-
-
-
 proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, weightsOfWeb1, weightsOfWeb2, int z2deg, int chitype, int chiposition, int N)
 {
     dbprint(printlevel, "[mfCompileWeb4] Beginning induction step.");
@@ -4334,13 +4307,13 @@ proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, we
     
     int z2degree;
         
-    if( z2deg != 0 )
+    if( z2deg == 0 )
     {
         z2degree = 1;
 
         matrix lastS = imap(RRR, finalS);
         matrix lastT = imap(RRR, finalT);
-        webmap = lastT * extractblockmat(webmap)[4] * lastS;
+        webmap = lastT * extractblockmat(webmap)[1] * lastS;
     }
     if( z2deg != 0 )
     {
@@ -4348,7 +4321,7 @@ proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, we
 
         matrix lastS = imap(RRR, finalS);
         matrix lastT = imap(RRR, finalT);
-        webmap = lastT * extractblockmat(webmap)[1] * lastS;
+        webmap = lastT * extractblockmat(webmap)[4] * lastS;
     }
         
     setring RRR;
@@ -4359,3 +4332,4 @@ proc mfCompileWeb4(list linkData, GTransWeb, STransWeb, FTransWeb, TTransWeb, we
     kill webmap, z2degree;
     return(finaloutput);
 }
+

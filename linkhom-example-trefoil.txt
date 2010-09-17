@@ -3,6 +3,7 @@ LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
 LIB "control.lib";
+LIB "inout.lib";
 ring rr=(0,q,t),(x),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
@@ -20,6 +21,7 @@ list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
 // Compute the euler characteristic, from trefoil-data
 list h = mfCompileLink(trefoilLink, "trefoil-data-N2", 1, N);
+
 list cp = KRcomplex(trefoilLink, h);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
