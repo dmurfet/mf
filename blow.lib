@@ -2211,6 +2211,9 @@ proc mfReduceSparse_work(list b0sparse, list b1sparse, list f0sparse, list f1spa
 // The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
 // which are mutually inverse in the homotopy category.
 
+// TODO: In large (>2000) matrices the bottlenecks now appear to be matrixreduce and mfReduce_work,
+// not findConstant.
+
 proc mfReduce(matrix A, list #)
 {
     LIB "linalg.lib";
@@ -2255,9 +2258,9 @@ proc mfReduce(matrix A, list #)
         list r = findConstant(b0);
         if( r[1] != 1 ){ break; }
         
-        list l = matrixreduce(b0,r[2]);
-        matrix p = l[2]; matrix q = l[3]; matrix pinv = l[4]; matrix qinv = l[5];
-
+        list l = matrixreduce(b0,r[2]); // p = l[2], q = l[3], pinv = l[4], qinv = l[5]
+        kill r;
+        
         // The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
         // via the morphism (from the former to the latter) given by the pair
         // (q^{-1},p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1}.
@@ -2265,10 +2268,11 @@ proc mfReduce(matrix A, list #)
         // that at each stage F is an isomorphism between X and Y with inverse G
         
         b0 = l[1];
-        b1 = qinv * b1 * pinv;
-        f0 = qinv * f0; f1 = p * f1;
-        g0 = g0 * q; g1 = g1 * pinv;
-
+        b1 = l[5] * b1 * l[4];
+        f0 = l[5] * f0; f1 = l[2] * f1;
+        g0 = g0 * l[3]; g1 = g1 * l[4];
+        kill l;
+        
         // Now that we guarantee b0 has an identity in the top left and zeros in the rest
         // of the first column, call a worker routine to "split" off this contractible
         // piece and return the modified B, F, G
@@ -2276,9 +2280,8 @@ proc mfReduce(matrix A, list #)
         b0 = out[1]; b1 = out[2];
         f0 = out[3]; f1 = out[4];
         g0 = out[5]; g1 = out[6];
+        kill out;
         nc = nc - 1;
-        
-        kill r, l, p, q, qinv, pinv, out;
     }
     
     nc = ncols(b1);
@@ -2286,15 +2289,13 @@ proc mfReduce(matrix A, list #)
     // No do the same process to b1 (TODO: unify these two steps)
     while( nc > 1 )
     {
-        //dbprint(prl, "[mfReduce] Reducing b1, currently size " + string(ncols(b1)));
-
         // r[1] is 1 if a nonzero constant was found and 0 otherwise
         // r[2] is an intvec giving the (i,j) coordinate of the constant entry
         list r = findConstant(b1);
         if( r[1] != 1 ){ break; }
                 
-        list l = matrixreduce(b1,r[2]);
-        matrix p = l[2]; matrix q = l[3]; matrix pinv = l[4]; matrix qinv = l[5];
+        list l = matrixreduce(b1,r[2]); // p = l[2], q = l[3], pinv = l[4], qinv = l[5]
+        kill r;
             
         // The matrix factorisation (b0,b1) is isomorphic to (q^{-1} * b0 * p^{-1}, p * b1 * q)
         // via the morphism (from the former to the latter) given by the pair
@@ -2303,9 +2304,10 @@ proc mfReduce(matrix A, list #)
         // that at each stage F is an isomorphism between X and Y with inverse G
 
         b1 = l[1];
-        b0 = qinv * b0 * pinv;
-        f0 = p * f0; f1 = qinv * f1;
-        g0 = g0 * pinv; g1 = g1 * q;
+        b0 = l[5] * b0 * l[4];
+        f0 = l[2] * f0; f1 = l[5] * f1;
+        g0 = g0 * l[4]; g1 = g1 * l[3];
+        kill l;
 
         // Now that we guarantee b1 has an identity in the top left and zeros in the rest
         // of the first column, call a worker routine to "split" off this contractible
@@ -2316,11 +2318,9 @@ proc mfReduce(matrix A, list #)
         b0 = out[2]; b1 = out[1];
         f0 = out[4]; f1 = out[3];
         g0 = out[6]; g1 = out[5];
-        nc = nc - 1;
+        kill out;
         
-        //current_stage = b0,b1,f0,f1,g0,g1;
-        //transform_record = transform_record + list(current_stage);
-        kill r, l, p, q, qinv, pinv, out;
+        nc = nc - 1;
     }
     
     // Our MF (b0,b1) is now guaranteed to be free of constants. At this point
@@ -2435,36 +2435,33 @@ proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix
     int ncolsb0 = ncols(b0);
     int nrowsb1 = nrows(b1);
     int ncolsb1 = ncols(b1);
-    
-    // Read off s,e and t from b0 and b1
-    // Performance note: this way is (slightly!) faster than submat
-    matrix S[nrowsb0-1][ncolsb0-1] = b0[2..nrowsb0,2..ncolsb0];
-    matrix E[nrowsb1-1][ncolsb1-1] = b1[2..nrowsb1,2..ncolsb1];
-    matrix T[1][ncolsb0-1] = b0[1,2..ncolsb0];
-    
+        
     // The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
     // ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
     // so we need to stick these on the appropriate side of F, G
     
     // Matrix of (0 1)
-    // TODO: speedup here?
-    int i,j;
-    matrix zeroone[nrows(S)][ncols(S)+1];
-    matrix negtone[nrows(S)+1][ncols(S)];
+    int i;
+    matrix zeroone[nrowsb0-1][ncolsb0];
+    matrix negtone[nrowsb0][ncolsb0-1];
     
-    for(i=1;i<=nrows(S);i++){ zeroone[i,i+1] = 1; negtone[i+1,i] = 1; }
-    for(i=1;i<=ncols(S);i++){ negtone[1,i] = -T[1,i]; }
+    for(i=1;i<=nrowsb0-1;i++){ zeroone[i,i+1] = 1; negtone[i+1,i] = 1; }
+    for(i=1;i<=ncolsb0-1;i++){ negtone[1,i] = -b0[1,i+1]; }
     
     // Modify f and g by the appropriate things
-    // TODO: Just construct f0r and f1r directly, it will be faster than matrix mult.
-    matrix f0r = zeroone * f0;
-    matrix f1r = zeroone * f1;
-    matrix g0r = g0 * negtone;
-    matrix g1r = g1 * transpose(zeroone);
+    // NOTE: Constructing f0r,f1r by matrix multiplication is much faster than using submat.
+    f0 = zeroone * f0;
+    f1 = zeroone * f1;
+    g0 = g0 * negtone;
+    g1 = g1 * transpose(zeroone);
+    
+    // Read off s and e from b0 and b1
+    matrix S[nrowsb0-1][ncolsb0-1] = b0[2..nrowsb0,2..ncolsb0];
+    matrix E[nrowsb1-1][ncolsb1-1] = b1[2..nrowsb1,2..ncolsb1];
     
     // Our return list is b0,b1,f0,f1,g0,g1
-    list l = S, E, f0r, f1r, g0r, g1r;
-    kill nrowsb0,ncolsb0,nrowsb1,ncolsb1,S,E,T,zeroone,negtone,f0r,f1r,g0r,g1r;
+    list l = S, E, f0, f1, g0, g1;
+    kill nrowsb0,ncolsb0,nrowsb1,ncolsb1,S,E,zeroone,negtone;
     return (l);
 }
 
@@ -2665,12 +2662,6 @@ proc isGradingValid(matrix A, intvec g)
 proc matrixreduce(matrix M, intvec v)
 {
     int mrank = ncols(M);
-    matrix P = unitmat(mrank);
-    matrix Pinv = unitmat(mrank);
-    matrix Q = unitmat(mrank);
-    matrix Qinv = unitmat(mrank);
-    matrix N = M;
-
     int i = v[1];
     int j = v[2];
 
@@ -2684,34 +2675,33 @@ proc matrixreduce(matrix M, intvec v)
     matrix permc = permcol(unitmat(mrank),1,j);
                 
     // We found our constant term, permute it to (1,1)
-    P = 1/(M[i,j]) * permr;
-    Pinv = M[i,j] * permr;
-    Q = permc;
-    Qinv = permc;
+    matrix P = 1/(M[i,j]) * permr;
+    matrix Pinv = M[i,j] * permr;
+    matrix Q = permc;
+    matrix Qinv = permc;
                 
-    N = P * M * Q;
-                
+    M = P * M * Q;
+
     // Go through the first column and transform away everything
+    matrix Pn = unitmat(mrank);
+    matrix Pninv = Pn;
+    
     int k;
     for(k=2;k<=mrank;k++)
     {
-        if(N[k,1] != 0)
+        if(M[k,1] != 0)
         {
-            matrix Pn = unitmat(mrank);
-            matrix Pninv = Pn;
-            Pn[k,1] = - N[k,1];
-            Pninv[k,1] = N[k,1];
-                        
-            P = Pn * P;
-            Pinv = Pinv * Pninv;
-            N = Pn * N;
-            kill Pn, Pninv;
+            Pn[k,1] = -M[k,1];
+            Pninv[k,1] = M[k,1];
         }
     }
+    
+    M = Pn * M;
+    P = Pn * P;
+    Pinv = Pinv * Pninv;
                 
-    list l = N,P,Q,Pinv,Qinv;
-    kill P, Pinv, Q, Qinv, N;
-    kill permr, permc;
+    list l = M,P,Q,Pinv,Qinv;
+    kill P, Pinv, Q, Qinv, Pn, Pninv, permr, permc;
     return(l);
 }
 
