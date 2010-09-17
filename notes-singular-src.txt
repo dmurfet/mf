@@ -1,0 +1,63 @@
+Notes on Singular codebase
+==========================
+
+The following notes refer to the source for Singular version 3-1-1-5 downloaded from http://www.mathematik.uni-kl.de/ftp/pub/Math/Singular/SOURCES/3-1-1/ on 16/9/2010. Files are found in the directory ./kernel unless specified otherwise.
+
+structs.h tells us that matrix is typedefed to a pointer to an object of class ip_smatrix. ip_smatrix is defined in matpol.h as follows:
+
+class ip_smatrix
+{
+  public:
+
+  poly *m;
+  long rank;
+  int nrows;
+  int ncols;
+
+  inline int& rows() { return nrows; }
+  inline int& cols() { return ncols; }
+
+  #define MATROWS(i) ((i)->nrows)
+  #define MATCOLS(i) ((i)->ncols)
+  #define MATELEM(mat,i,j) ((mat)->m)[MATCOLS((mat)) * ((i)-1) + (j)-1]
+};
+
+The interesting thing is that the entries of the matrix are stored in the pointer m. If we look in matpol.cc at the initialiser for the class (some pieces snipped)
+
+matrix mpNew(int r, int c)
+{
+  ....
+  matrix rc = (matrix)omAllocBin(ip_smatrix_bin);
+  rc->nrows = r;
+  rc->ncols = c;
+  rc->rank = r;
+  if (c != 0)
+  {
+    int s=r*c*sizeof(poly);
+    rc->m = (polyset)omAlloc0(s);
+  }
+  return rc;
+}
+
+So we allocate enough memory to hold r * c polynomials (probably this is very small, as a poly is probably just a pointer) and m is assigned to be a pointer to a "polyset". Again in struct.h we find typedef poly * polyset.
+
+What is a polynomial?
+=====================
+
+This is a bit complicated. It is clear that the fundamental data type in Singular is the polynomial. In structs.h we find
+
+typedef struct spolyrec    polyrec;
+typedef polyrec *          poly;
+typedef poly *             polyset;
+
+So we just need to understand what a spolyrec is. For this we look to polys-impl.h where we find
+
+struct  spolyrec
+{
+  poly      next;           // next needs to be the first field
+  number    coef;           // and coef the second --- do not change this !!!
+  unsigned long exp[VARS];  // make sure that exp is aligned
+};
+
+There are a several additional files with polynomial operations, for example polys.h (polynomials of the current ring) and p_polys.h (polynomial routines independent of the current ring). We learn from the above definition that a polynomial is ultimately a linked list, with each node representing a monomial consisting of a number and an exponent, stored along with a pointer to the "next" node/monomial.
+
