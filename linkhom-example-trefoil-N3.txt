@@ -1,0 +1,45 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "inout.lib";
+ring rr=(0,q,t),(x),dp;
+int N = 3; // The N in sl(N) link homology
+printlevel = 1;
+timer;
+
+// Define the underlying web of the trefoil:
+intvec edgevec(1) = 2,1,3,4;
+intvec edgevec(2) = 4,3,5,6;
+intvec edgevec(3) = 6,5,1,2;
+
+// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
+intvec vertexParity = -1,-1,-1;
+
+// Define the link as a list (see linkhom.lib preceding mfCompileLink):
+list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
+
+// Compile all webs.
+// Ran on haydn:
+mfCompileAllWebs(trefoilLink, "trefoil-data-N3", 1, N, 1, 2); timer;
+// Still running on landi:
+mfCompileAllWebs(trefoilLink, "trefoil-data-N3", 1, N, 3, 4); timer;
+// Ran on lully:
+mfCompileAllWebs(trefoilLink, "trefoil-data-N3", 1, N, 5, 6); timer;
+// Still running on mascagni:
+mfCompileAllWebs(trefoilLink, "trefoil-data-N3", 1, N, 7, 8); timer;
+
+
+// To be done once landi and mascagni have completed their tasks:
+
+// Compute the euler characteristic, from trefoil-data:
+list h = mfCompileLink(trefoilLink, "trefoil-data-N3", 1, N); timer;
+list cp = KRcomplex(trefoilLink, h);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial:
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
