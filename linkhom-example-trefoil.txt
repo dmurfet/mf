@@ -7,6 +7,7 @@ LIB "inout.lib";
 ring rr=(0,q,t),(x),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
+timer;
 
 // Define the underlying web of the trefoil
 intvec edgevec(1) = 2,1,3,4;
@@ -19,9 +20,15 @@ intvec vertexParity = -1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
-// Compute the euler characteristic, from trefoil-data
-list h = mfCompileLink(trefoilLink, "trefoil-data-N2", 1, N);
+// Compile all webs, first the first four, then the last four.
+// Of course, we do not have to do this in the N=2 example, as 
+// mfCompileLink would do it quickly (instead of reading it from
+// the data file), this is just for illustration:
+mfCompileAllWebs(trefoilLink, "trefoil-data-N2", 1, N, 1, 4);
+mfCompileAllWebs(trefoilLink, "trefoil-data-N2", 1, N, 5, 8);
 
+// Compute the euler characteristic, from trefoil-data
+list h = mfCompileLink(trefoilLink, "trefoil-data-N2", 1, N);timer;
 list cp = KRcomplex(trefoilLink, h);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
