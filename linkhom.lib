@@ -1536,9 +1536,8 @@ proc intvecToString(intvec v)
 ////////////////////////////////////////////////////////////////////
 // mfCompileLink
 //
-// Takes as arguments a link, defined as a pair in the sense explained above, the name
-// of a file to use for storing intermediate results, and a flag useSaveFile specifying
-// whether or not to make use of this datafile. The return is a list of tuples
+// Takes as arguments a link, defined as a pair in the sense explained above, and the name
+// of a file to use for storing intermediate results. The return is a list of tuples
 //
 //      T = (intvec state1,intvec state2,int chitype,int chiposition,data).
 //
@@ -1579,15 +1578,9 @@ proc intvecToString(intvec v)
 // we leave all the grading vectors unchanged (earlier there was an attempt to implement
 // the grading shifts according to [KR,p.81], but this is better done elsewhere).
 
-// TODO: useSaveFile is actually not respected anymore, we should either deal with this
-// or remove it. 
-
-proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
+proc mfCompileLink(list linkData, string fileName, int N)
 {
     def RRR = basering;
-    
-    // We always use a fixed ring with two "internal" x variables and four "external" y variables
-    ring rr=0,(x(1..2),y(1..4)),dp;
     
     intvec vertexParity = linkData[1];
     list edgeList = linkData[2];
@@ -1598,10 +1591,18 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
     list returnList;
     
     // Read in the save file, if it exists
-    if( status(fileName,"exists") == "yes" && useSaveFile )
+    link l = "MPfile: " + fileName;
+    
+    if( status(fileName,"exists") == "yes" )
     {
         dbprint(printlevel, "[mfCompileLink] Reading in savefile.");
-        execute(read(fileName));
+        def rr = loadFromMPfile(fileName);
+        setring rr;
+    }
+    else
+    {
+        // We always use a fixed ring with two "internal" x variables and four "external" y variables
+        ring rr=0,(x(1..2),y(1..4)),dp;
     }
 
     int i;
@@ -1625,7 +1626,7 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
 
         // See if this list already exists (having been loaded from the file), and if
         // it does not, then calculate it.
-        if( definedCheck && definedCheck2 && useSaveFile )
+        if( definedCheck && definedCheck2 )
         {
             dbprint(printlevel, "[mfCompileLink] Already computed, skipping.");
         }
@@ -1637,30 +1638,32 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
             Q = mfCompileOnlyOneWebLeft(linkweb(v,edgeList), N);
             
             dbprint(printlevel, "[mfCompileLink] Writing result to disk.");
-            
+
             // Store G-transformation data pertaining to v:
             string GwebNameV = "GTransWeb" + intvecToString(v);
             string cmd = "list GTransWeb" + intvecToString(v) + " = Q[3][1]";
             execute(cmd); 
-            writelist(fileName,GwebNameV,Q[3][1]);
+            write(l,list(GwebNameV,Q[3][1]));
 
             // Store s-transformation data pertaining to v:
             string SwebNameV = "STransWeb" + intvecToString(v);
             string cmd = "list STransWeb" + intvecToString(v) + " = Q[3][2]";
             execute(cmd); 
-            writelist(fileName,SwebNameV,Q[3][2]);
+            write(l,list(SwebNameV,Q[3][2]));
 
             // Store Z2 information of v:
             string z2degreeV = "z2degreeOf" + intvecToString(v);
             string cmd = "int z2degreeOf" + intvecToString(v) + " = Q[1]";
             execute(cmd); 
-            writelist(fileName,z2degreeV,Q[1]);
+            write(l,list(z2degreeV,Q[1]));
 
             // Store weights data pertaining to v:
             string gradingV = "weightsOf" + intvecToString(v);
             string cmd = "intvec weightsOf" + intvecToString(v) + " = Q[2]";
             execute(cmd); 
-            writelist(fileName,gradingV,Q[2]);
+            write(l,list(gradingV,Q[2]));
+            
+            close(l);
                         
             kill Q;
 
@@ -1673,14 +1676,16 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
             string FwebNameW = "FTransWeb" + intvecToString(v);
             string cmd = "list FTransWeb" + intvecToString(v) + " = Q[3][1]";
             execute(cmd); 
-            writelist(fileName,FwebNameW,Q[3][1]);
+            write(l,list(FwebNameW,Q[3][1]));
 
             // Store t-transformation data pertaining to v:
             string TwebNameW = "TTransWeb" + intvecToString(v);
             string cmd = "list TTransWeb" + intvecToString(v) + " = Q[3][2]";
             execute(cmd); 
-            writelist(fileName,TwebNameW,Q[3][2]);        
-
+            write(l,list(TwebNameW,Q[3][2]));
+            
+            close(l);
+            
             kill Q;
         }
         kill v;
@@ -1730,7 +1735,7 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
                 
                 // See if this list already exists (having been loaded from the file), and if
                 // it does not, then calculate it (the result being stored in Q in either case).
-                if( definedCheck && useSaveFile )
+                if( definedCheck )
                 {
                     dbprint(printlevel, "[mfCompileLink] Already computed, skipping.");
                     string cmd = "Q = " + listName;
@@ -1769,7 +1774,8 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
 
                         // Add the output of Q to our file:
                         dbprint(printlevel, "[mfCompileLink] Writing result to disk.");
-                        writelist(fileName,listName,Q);
+                        write(l,list(listName,Q));
+                        close(l);
                                                 
                     }// end case (iv).                    
                 }
@@ -1805,12 +1811,9 @@ proc mfCompileLink(list linkData, string fileName, int useSaveFile, int N)
 // on this file.
 ////////////////////////////////////////////////////////////////////
 
-proc mfCompileAllWebs(list linkData, string fileName, int useSaveFile, N, iStart, iEnd)
+proc mfCompileAllWebs(list linkData, string fileName, N, iStart, iEnd)
 {
     def RRR = basering;
-    
-    // We always use a fixed ring with two "internal" x variables and four "external" y variables
-    ring rr=0,(x(1..2),y(1..4)),dp;
     
     intvec vertexParity = linkData[1];
     list edgeList = linkData[2];
@@ -1821,12 +1824,20 @@ proc mfCompileAllWebs(list linkData, string fileName, int useSaveFile, N, iStart
     list returnList;
     
     // Read in the save file, if it exists
-    if( status(fileName,"exists") == "yes" && useSaveFile )
+    link l = "MPfile: " + fileName;
+    
+    if( status(fileName,"exists") == "yes" )
     {
-        dbprint(printlevel, "[mfCompileLink] Reading in savefile.");
-        execute(read(fileName));
+        dbprint(printlevel, "[mfCompileAllWebs] Reading in savefile.");
+        def rr = loadFromMPfile(fileName);
+        setring rr;
     }
-
+    else
+    {
+        // We always use a fixed ring with two "internal" x variables and four "external" y variables
+        ring rr=0,(x(1..2),y(1..4)),dp;
+    }
+    
     int i;
     int numStateDiagrams = size(stateDiagrams);
 
@@ -1848,7 +1859,7 @@ proc mfCompileAllWebs(list linkData, string fileName, int useSaveFile, N, iStart
 
         // See if this list already exists (having been loaded from the file), and if
         // it does not, then calculate it.
-        if( definedCheck && definedCheck2 && useSaveFile )
+        if( definedCheck && definedCheck2 )
         {
             dbprint(printlevel, "[mfCompileLink] Already computed, skipping.");
         }
@@ -1863,20 +1874,22 @@ proc mfCompileAllWebs(list linkData, string fileName, int useSaveFile, N, iStart
             
             // Store G-transformation data pertaining to v:
             string GwebNameV = "GTransWeb" + intvecToString(v);
-            writelist(fileName,GwebNameV,Q[3][1]);
+            write(l,list(GwebNameV,Q[3][1]));
 
             // Store s-transformation data pertaining to v:
             string SwebNameV = "STransWeb" + intvecToString(v);
-            writelist(fileName,SwebNameV,Q[3][2]);
+            write(l,list(SwebNameV,Q[3][2]));
 
             // Store Z2 information of v:
             string z2degreeV = "z2degreeOf" + intvecToString(v);
-            writelist(fileName,z2degreeV,Q[1]);
+            write(l,list(z2degreeV,Q[1]));
 
             // Store weights data pertaining to v:
             string gradingV = "weightsOf" + intvecToString(v);
-            writelist(fileName,gradingV,Q[2]);
+            write(l,list(gradingV,Q[2]));
                         
+            close(l);
+            
             kill Q;
 
             list Q;
@@ -1886,12 +1899,13 @@ proc mfCompileAllWebs(list linkData, string fileName, int useSaveFile, N, iStart
 
             // Store F-transformation data pertaining to v:
             string FwebNameW = "FTransWeb" + intvecToString(v);
-            writelist(fileName,FwebNameW,Q[3][1]);
+            write(l,list(FwebNameW,Q[3][1]));
 
             // Store t-transformation data pertaining to v:
             string TwebNameW = "TTransWeb" + intvecToString(v);
-            writelist(fileName,TwebNameW,Q[3][2]);        
-
+            write(l,list(TwebNameW,Q[3][2]));
+            close(l);
+            
             kill Q;
         }
         kill v;
@@ -6090,4 +6104,124 @@ proc mfCompileLinkOLD(list linkData, string fileName, int useSaveFile, int N)
     list returnList = imap(rr,returnList);
     
     return(returnList);
+}
+
+////////////////////////////////////////////////////////////////////
+// loadFromMPfile
+//
+// Given the filename of an MP data file, reads in the contents. We require
+// that all writes to the MP file be made in the context of a particular ring R.
+// Then loadFromMPfile will create its own copy of this ring, and the loaded data
+// types will belong to this ring. This ring is the single return value.
+//
+// So loadFromMPfile should be called as follows:
+//
+//   def nR = loadFromMPfile("example.mp");
+//   setring nR;
+//
+// Variables should be written to the MP file in the format ("varname",var), so
+// for example to add a matrix A to the store, you should call
+//
+//   link l = "MPfile: filename";
+//   write(l,list("A",A));
+//   close(l);
+
+proc loadFromMPfile(string filename)
+{
+    if( !status(filename,"exists","yes") )
+    {
+        print("[loadFromMPlink] File does not exist, exiting.");
+        return();
+    }
+    
+    // Open the link
+    link l = "MPfile:r " + filename;
+    open(l);
+    
+    if( !status(l,"open","yes") )
+    {
+        print("[loadFromMPlink] Failed to open link, exiting.");
+        return();
+    }
+    
+    while( status(l,"read","ready") )
+    {
+        // Read the next line
+        def L = read(l);
+        
+        if( typeof(L) == "list" )
+        {
+            // The first position is the variable name, the second the actual object
+            dbprint(printlevel, "[loadFromMPlink]     Reading in variable " + L[1]);
+            string cmd = "def " + L[1] + " = L[2];";
+            execute(cmd);
+
+            cmd = "exportto(Top," + L[1] + ");";
+            execute(cmd);
+            kill cmd;
+        }
+        
+        kill L;
+     }
+     
+     close(l);
+     return(basering);
+}
+
+////////////////////////////////////////////////////////////////////
+// convertToMPfile
+//
+// NOTE: By default this opens the link to "append" mode, so if you call
+// this three times with the same input data, it will just make three copies
+// of the output data in outfileName.
+
+proc convertToMPfile(int webSize, string infileName, string outfileName)
+{
+    def RRR = basering;
+    
+    ring rr=0,(x(1..2),y(1..4)),dp;
+    
+    list stateDiagrams = powervec(webSize);
+    
+    // Read in the save file, if it exists
+    if( status(infileName,"exists") == "yes" )
+    {
+        dbprint(printlevel, "[convertToMPfile] Reading in savefile.");
+        execute(read(infileName));
+    }
+    
+    link l = "MPfile: " + outfileName;
+    
+    int i;
+    int numStateDiagrams = size(stateDiagrams);
+
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+    
+        list prefixList = "GTransWeb", "FTransWeb", "STransWeb","z2degreeOf","weightsOf","TTransWeb";
+        
+        int j;
+        for(j=1;j<=size(prefixList);j++)
+        {
+            string s = prefixList[j];
+            string listName = s + intvecToString(v);
+            
+            string cmd = "int definedCheck = defined(" + listName + ");";
+            execute(cmd);
+
+            if( definedCheck )
+            {
+                dbprint(printlevel,"[convertToMPfile] Converting " + listName);    
+                string cmd = "write(l,list(listName," + listName + "));";
+                execute(cmd);
+            }
+            
+            kill s,listName,cmd;
+        }
+    }
+
+    close(l);
+    setring RRR;
 }
