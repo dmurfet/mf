@@ -958,39 +958,6 @@ M[i,b] = pa;
 return(M);
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////
-// "addrow(M, P, a, b)" adds P * (b-th row) to the a-th row.
-/////////////////////////////////////////////////////////////////////////////////////
-
-proc addrow(matrix M, poly P, int a,b)
-{
-int i;
-int s = ncols(M);
-for(i=1; i<=s; i++)
-{
-M[a,i] = M[a,i] + P * M[b,i];
-}
-return(M);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////////
-// "addcol(M, P, a, b)" adds P * (b-th column) to the a-th column.
-/////////////////////////////////////////////////////////////////////////////////////
-
-proc addcol(matrix M, poly P, int a,b)
-{
-int i;
-int s = nrows(M);
-for(i=1; i<=s; i++)
-{
-M[i,a] = M[i,a] + P * M[i,b];
-}
-return(M);
-}
-
-
 /////////////////////////////////////////////////////////////////////////////////////
 // "rocoreduce(M)" gives a list L with
 // -- L[1] = row & column reduced version M' of M such that M'=diag(A,B), where A is
@@ -2214,7 +2181,7 @@ proc mfReduceSparse_work(list b0sparse, list b1sparse, list f0sparse, list f1spa
 // TODO: In large (>2000) matrices the bottlenecks now appear to be matrixreduce and mfReduce_work,
 // not findConstant.
 
-proc mfReduce(matrix A, list #)
+proc mfReduceOLD(matrix A, list #)
 {
     LIB "linalg.lib";
     
@@ -3259,4 +3226,180 @@ proc MFIm(matrix f, matrix g, matrix fs, matrix gs)
 	
 	module Ker = module(blockmat(-D,B,C,-A)); 
 	return(Ker); 
+}
+
+proc zoomreduce(matrix A)
+{
+    // n is the current size of the top left identity block, begins at zero
+    int n = 0;
+    int nr = nrows(A);
+    int nc = ncols(A);
+    int i;
+    int ncolsOrig = ncols(A);
+    
+    matrix P = unitmat(nr);
+    matrix Q = unitmat(nc);
+    matrix Pinv = unitmat(nr);
+    matrix Qinv = unitmat(nc);
+    
+    // Always the final matrix B will be P * A * Q
+    while( 1 )
+    {
+        if( ncolsOrig > 250 && (n mod 5) == 0 && n > 0 )
+        {
+            dbprint(printlevel, "[zoomreduce]    reduced to size " + string(2*(ncolsOrig - n)));
+        }
+        
+        // Find a unit in the given matrix, transform it to the top left, and eliminate the first
+        // column and first row
+        
+        // r[2][1] is the row and r[2][2] the column our found constant entry of A
+        list r = findConstant(A);
+        if( r[1] != 1 ){ break; }
+    
+        //print(string(nrows(A)) + ", " + string(r[2][1]) + "," + string(r[2][2]));
+    
+        if( r[2][1] != 1 )
+        {
+            A = permrow(A,1,r[2][1]);
+            P = permrow(P,1+n,r[2][1]+n);
+            Pinv = permcol(Pinv,1+n,r[2][1]+n);
+        }
+
+        if( r[2][2] != 1 )
+        {
+            A = permcol(A,1,r[2][2]);
+            Q = permcol(Q,1+n,r[2][2]+n);
+            Qinv = permrow(Qinv,1+n,r[2][2]+n);
+        }
+        kill r;
+
+        // Note you have to do these types of things on P,Q first! Because A will change!
+        if( A[1,1] != 1 )
+        {
+            P = multrow(P,1+n,1/A[1,1]);    
+            Pinv = multcol(Pinv,1+n,A[1,1]);
+            A = multrow(A,1,1/A[1,1]);
+        }
+
+        for(i=2;i<=nc;i++)
+        {
+            if( A[1,i] != 0 )
+            {
+                Q = addcol(Q,1+n,-A[1,i],i+n);
+                Qinv = addrow(Qinv,i+n,A[1,i],1+n);
+                A = addcol(A,1,-A[1,i],i);
+            }
+        }
+
+        for(i=2;i<=nr;i++)
+        {
+            if( A[i,1] != 0 )
+            {
+                P = addrow(P,1+n,-A[i,1],i+n);
+                Pinv = addcol(Pinv,i+n,A[i,1],1+n);
+                A = addrow(A,1,-A[i,1],i);
+            }
+        }
+
+        if( nr == 1 || nc == 1 ){ break; }
+        
+        A = submat(A,2..nr,2..nc);
+        nc = nc - 1;
+        nr = nr - 1;
+        n = n + 1;
+    }
+    
+    // The final reduced matrix is the direct sum of the identity matrix and our final A,
+    // but we just return the interesting bit A
+    return(list(A,n,P,Q,Pinv,Qinv));
+}
+
+////////////////////////////////////////////////////////////////////
+// mfReduceAlt
+//
+// Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X.
+// The output is the differential B of a matrix factorisation Y homotopy equivalent to X which has no
+// constant entries (the "reduced" form of the original matrix factorisation). Note the size of the input
+// and output matrices may differ.
+//
+// If a nonzero second parameter is specified then instead of returning just a matrix we return a list.
+// The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
+// which are mutually inverse in the homotopy category.
+
+proc mfReduce(matrix A, list #)
+{
+    dbprint(printlevel, "[mfReduceAlt] Reducing matrix of size " + string(ncols(A)));
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    // Extract the odd and even part of the differential
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    kill blocks;
+    
+    // Reduce b0. This returns a list b0r,P,Q,n where P,Q are invertible matrices,
+    // b0r is a matrix with no nonzero constant entries, and P * b0 * Q = dsum(unitmat(n),b0r).
+    // The induced differential in degree one is dsum(W * unitmat(n),b1r) = Q^{-1} * b1 * P^{-1}
+    
+    list l = zoomreduce(b0);
+    // n = l[2];
+    // P = l[3];
+    // Q = l[4];
+    // Pinv = l[5];
+    // Qinv = l[6];
+    
+    b0 = l[1];
+    b1 = submat(l[6] * b1 * l[5],(l[2]+1)..nrows(b1),(l[2]+1)..ncols(b1));
+    
+    matrix f0 = submat(l[6],(l[2]+1)..nrows(l[6]),1..ncols(l[6]));
+    matrix f1 = submat(l[3],(l[2]+1)..nrows(l[3]),1..ncols(l[3]));
+    matrix g0 = submat(l[4],1..nrows(l[4]),(l[2]+1)..ncols(l[4]));
+    matrix g1 = submat(l[5],1..nrows(l[5]),(l[2]+1)..ncols(l[5]));
+    kill l;
+    
+    // Now repeat the awesome feat on b1
+    list l = zoomreduce(b1);
+    
+    b1 = l[1];
+    b0 = submat(l[6] * b0 * l[5],(l[2]+1)..nrows(b0),(l[2]+1)..ncols(b0));
+    
+    f0 = submat(l[3] * f0,(l[2]+1)..nrows(l[3]),1..ncols(f0));
+    f1 = submat(l[6] * f1,(l[2]+1)..nrows(l[6]),1..ncols(f1));
+    g0 = submat(g0 * l[5],1..nrows(g0),(l[2]+1)..ncols(l[5]));
+    g1 = submat(g1 * l[4],1..nrows(g1),(l[2]+1)..ncols(l[4]));
+    kill l;
+    
+    // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
+    // the original MF and the reduced MF (b0,b1)
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
+
+    matrix B = blockmat(zb, b1, b0, zb);
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+    kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
+    
+    dbprint(printlevel, "[mfReduceAlt]          result is size " + string(ncols(B)) + ".");
+    dbprint(printlevel, "[mfReduceAlt]          elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    // TODO: We don't do the final gauss_row / rowred step in the old mfReduce, so our
+    // output won't be as pretty, but it is faster to omit this step. In cases where
+    // we actually want to look at the output (e.g. fusion) it is better to use the old
+    // mfReduce.
+    
+    if( size(#) != 0 )
+    {
+        //list ret = B, F, G, transform_record;
+        list ret = B, F, G;
+        kill B,F,G;
+        return(ret);
+    }
+    else
+    {
+        kill F,G;
+        return(B);
+    }
 }

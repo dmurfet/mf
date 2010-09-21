@@ -24,11 +24,11 @@ list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 // Of course, we do not have to do this in the N=2 example, as 
 // mfCompileLink would do it quickly (instead of reading it from
 // the data file), this is just for illustration:
-mfCompileAllWebs(trefoilLink, "./data/trefoil-N2.mp", N, 1, 4);
-mfCompileAllWebs(trefoilLink, "./data/trefoil-N2.mp", N, 5, 8);
+mfCompileAllWebs(trefoilLink, "./data/trefoil-N" + string(N) + ".mp", N, 1, 4);
+mfCompileAllWebs(trefoilLink, "./data/trefoil-N" + string(N) + ".mp", N, 5, 8);
 
 // Compute the euler characteristic, from trefoil-data
-list h = mfCompileLink(trefoilLink, "./data/trefoil-N2.mp", N);timer;
+list h = mfCompileLink(trefoilLink, "./data/trefoil-N" + string(N) + ".mp", N);timer;
 list cp = KRcomplex(trefoilLink, h);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
