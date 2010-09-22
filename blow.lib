@@ -1682,7 +1682,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
 //
 
 proc mfSplitIdempotent(matrix A, matrix E, list #)
-{
+{   
     // Sanity checks
     if( ncols(A) != nrows(A) )
     {
@@ -1782,7 +1782,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     // The differential on the splitting is given by B = G * A * F
     matrix B = G * A * F;
-    
+
     if( size(#) == 0 ){ return(B); }
     
     if( typeof(#[1]) == "intvec" )
@@ -3402,4 +3402,208 @@ proc mfReduce(matrix A, list #)
         kill F,G;
         return(B);
     }
+}
+
+////////////////////////////////////////////////////////////////////
+// mfPushforward
+//
+// We are given a matrix A interpreted as the differential on a matrix factorisation X
+// of a potential W in our ring, together with a ring variable "extvar" and integer N
+// such that extvar^N acts null-homotopically on X, and a matrix H of degree one such that
+// A * H + H * A = extvar^N * unitmat, i.e. the entries of H give a homotopy between
+// extvar^N and the zero map. We assume that, as a polynomial, W does not depend on the
+// variable extvar.
+//
+// Let S denote the ring obtained from our basering by deleting extvar. We can restrict
+// scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
+// The first return value of this routine is the differential of a finite rank MF Y of W over S
+// homotopy equivalent to this pushforward.
+//
+// Let Xblow denote the MF of W over S obtained by "inflation". Then the pushforward is a
+// direct summand of Xblow[1] and the second and third return value are morphisms F: Xblow[1] -> Y
+// and G: Y -> Xblow[1] such that F * G == unitmat and G * F is, up to homotopy, the same
+// idempotent on Xblow[1] determined by its direct summand the pushforward.
+//
+// If we are passed an intvec grading for A as the last parameter, we respect this grading
+// throughout and return as a fourth parameter a grading vector on Y.
+//
+// We assume that our ring is R = 0,(some variables, we don't care),dp.
+//
+// NOTE: Before calling any of the routines of blow.lib we rename extvar to x(1) and all the other
+// variables to y's, so that our active ring is of the form 0,(x(1),y(1),...,y(??)),dp and
+// S is 0,(y(1),...,y(??)),dp. Naturally we convert back to the original ring before returning
+// our results.
+
+proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
+{
+    int useSanityChecks = 1;
+    def RRR = basering;
+    
+    // Check for grading
+    int useGrading;
+    if( size(#) > 0 )
+    {
+        intvec Agr = #[1];
+        int useGrading = 1;
+    }
+    
+    // Sanity check
+    if( useSanityChecks && A * H + H * A != extvar^N * unitmat(ncols(A)) )
+    {
+        print("[mfPushforward] Not passed valid homotopy, exiting.");
+        return();
+    }
+    
+    // Convert everything into a more suitable ring. We go through the original
+    // list of ring variables, rename everything apart from extvar to y(i)'s (in
+    // ascending order) and rename extvar to x(1)
+    list rlist = ringlist(RRR);
+    list varlist = rlist[2];
+    
+    // Create the new list of variables
+    list newvar;
+    int i;
+    int ycount;
+    for(i=1;i<=size(varlist);i++)
+    {
+        if( string(extvar) == varlist[i] )
+        {
+            newvar = newvar + list("x(1)");
+        }
+        else
+        {
+            ycount++;
+            string s = "y(" + string(ycount) + ")";
+            newvar = newvar + list(s);
+            kill s;
+        }
+    }
+    
+    list newringList;
+    newringList[1] = rlist[1];
+    newringList[2] = newvar;
+    newringList[3] = rlist[3];
+    newringList[4] = rlist[4];
+    
+    // Create our new ring
+    def nR = ring(newringList);
+    setring nR;
+    
+    // If we call fetch then the object of RRR is converted to the new renamed variables
+    matrix A = fetch(RRR,A);
+    matrix H = fetch(RRR,H);
+    
+    // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
+    // Compute the inflation
+    ideal J = x(1)^N;
+    matrix Ablow = mablow(A,J);
+    if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
+    
+    // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)])
+    list l = mfReduce(Ablow,1);
+    matrix RT = l[1]; // Differential on reduced MF
+    matrix F = l[2]; // A homotopy equivalence Ablow -> RT
+    matrix G = l[3]; // A homotopy equivalence RT -> Ablow
+    if( useGrading ){ intvec RTgr = computeGradingFromInjection(G,Ablowgr); }
+    kill Ablow,l;
+
+    // The idempotent on Ablow
+    matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J);
+    
+    // The idempotent on the reduction
+    matrix ep = F * e * G;
+    
+    // Sanity checks:
+    if( useSanityChecks && ep * RT != RT * ep )
+    {
+        print("[mfPushforward] The reduced idempotent (up to homotopy) ep is not an endomorphism of RT, exiting.");
+        return();
+    }
+    
+    // Check that ep is idempotent up to homotopy
+    matrix epck = ep;
+    for(i=1;i<=ycount;i++)
+    {
+        epck = subst( epck, y(i), 0 );
+    }
+    
+    if( epck * epck != epck )
+    {
+        // NOTE: If this test fails to pass, it is usually due to a sign problem...
+            
+        // TODO DEBUG DEBUG WARNING UGLY HACK
+        if( epck * epck == -1 * epck )
+        {
+            ep = -ep;
+        }
+    }
+    kill epck;
+        
+    // TODO: Check that ep1 and ep2 are degree zero
+    
+    matrix epstrict = mfStrictifyIdempotent(RT, ep);
+    
+    // Sanity checks:
+    if( useSanityChecks && epstrict * RT != RT * epstrict || epstrict * epstrict != epstrict )
+    {
+        print("[mfPushforward] The strictified idempotent is not an endomorphism of RT, or not an idempotent on the nose, exiting.");
+        return();
+    }
+
+    list l;
+    if( !useGrading )
+    {
+        l = mfSplitIdempotent(RT, epstrict, 1);
+    }
+    else
+    {
+        l = mfSplitIdempotent(RT, epstrict, RTgr);
+    }
+    
+    matrix final = mfSuspend( l[1], 1 );
+    if( useGrading ){ intvec finalgr = mfSuspendGrading( l[4], 1 ); }
+    
+    // Sanity check
+    if( useSanityChecks && useGrading )
+    {
+        if( isGradingValid(final, finalgr) )
+        {
+            print("[mfPushforward] Something has gone wrong with the grading, exiting.");
+            return();
+        }
+    }
+    
+    // mfSplitIdempotent returns not just the splitting of the idempotent, but the
+    // actual maps splitting the idempotent. In the following notation, this means
+    // that s * t == ep and t * s == unitmat
+    
+    matrix s = l[2]; // s: final --> RT
+    matrix t = l[3]; // t: RT --> final
+    
+    // We have now split the original idempotent e on Ablow, and the splittings are
+    matrix mapAblowToFinal = t * F;
+    matrix mapFinalToAblow = G * s;
+    kill s,t,F,G,RT,e,ep,epstrict;
+    
+    // Back to the original ring and return
+    setring RRR;
+    matrix final = fetch(nR,final);
+    matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
+    matrix mapFinalToAblow = fetch(nR,mapFinalToAblow);
+    
+    // Note that we really want a splitting of e[1] on Ablow[1], so let us suspend
+    final = mfSuspend( final );
+    mapAblowToFinal = mfSuspendMorph( mapAblowToFinal );
+    mapFinalToAblow = mfSuspendMorph( mapFinalToAblow );
+    if( useGrading ){ finalgr = mfSuspendGrading( finalgr ); }
+    
+    if( !useGrading )
+    {
+        return(list(final,mapAblowToFinal,mapFinalToAblow));
+    }
+    else
+    {
+        return(list(final,mapAblowToFinal,mapFinalToAblow,finalgr));
+    }
+
 }
