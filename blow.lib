@@ -72,6 +72,25 @@ LIB "ring.lib";
 // NOTE: All operations on graded MFs assume that A is square (i.e. both degrees have
 // the same rank).
 
+//////////////////////////////////////////////////
+// blowFLags
+//
+// Functions as a list of #define's.
+// Change the return value, say of sanity_checks, to turn off sanity checks in all routines.
+//
+// NOTE: Singular's evaluation of a && b does not use shortcuts, it evaluates both a and
+// b before doing the logical AND, so if you are using flags to avoid computation, you have
+// to nest your if's. Bummer.
+
+proc blowFlags(string s)
+{
+    if( s == "sanity_checks" )
+    {
+        return(1); 
+    }
+    
+    return(0);
+}
 
 //////////////////////////////////////////////////////////////////////////////////
 // numXVars - Returns the number of x variables (i.e. "nx")
@@ -1677,31 +1696,32 @@ proc computeGradingFromInjection(matrix F, intvec g)
 //
 // WARNING: If X is a matrix factorisation of a nonzero potential, we return a block matrix with
 // square blocks, but if the potential is zero the blocks may be non-square.
-//
-// TODO: At the moment we do not treat the case of potential zero (we quit with an error).
-//
 
 proc mfSplitIdempotent(matrix A, matrix E, list #)
 {   
-    // Sanity checks
-    if( ncols(A) != nrows(A) )
-    {
-        print("[mfSplitIdempotent] Passed a nonsquare matrix, exiting.");
-        return();
-    }
-    
+    int useSanityChecks = blowFlags("sanity_checks"); 
     int m = ncols(A);
-
-    if( A * E != E * A )
-    {
-        print("[mfSplitIdempotent] Passed a non-morphism, exiting.");
-        return();
-    }
     
-    if( E * E != E )
+    // Sanity checks
+    if( useSanityChecks )
     {
-        print("[mfSplitIdempotent] Passed a non-idempotent endomorphism, exiting.");
-        return();
+        if( ncols(A) != nrows(A) )
+        {
+            print("[mfSplitIdempotent] Passed a nonsquare matrix, exiting.");
+            return();
+        }
+    
+        if( A * E != E * A )
+        {
+            print("[mfSplitIdempotent] Passed a non-morphism, exiting.");
+            return();
+        }
+    
+        if( E * E != E )
+        {
+            print("[mfSplitIdempotent] Passed a non-idempotent endomorphism, exiting.");
+            return();
+        }
     }
     
     // Extract the odd and even part of the differential and morphism
@@ -1731,8 +1751,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // we obtain the map g0 by multiplying the left inverse of f0 by e0.
     // NOTE: If e0 = 0 then ker0 is zero, and we should set f0 = g0 = 0.
     module ker0 = rightKernel(unitmat(m/2) - e0);
-    matrix f0 = minbase(ker0); // TODO: minbase is recent change, requires testing
-    matrix g0[ncols(f0)][nrows(f0)]; // Defaults to zero
+    matrix f0 = minbase(ker0);
+    matrix g0[ncols(f0)][nrows(f0)];
         
     if( ker0[1] != [0] )
     {
@@ -1741,7 +1761,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     // Same in the odd degrees
     module ker1 = rightKernel(unitmat(m/2) - e1);
-    matrix f1 = minbase(ker1); // TODO: minbase is recent change, requires testing
+    matrix f1 = minbase(ker1);
     matrix g1[ncols(f1)][nrows(f1)];
     
     if( ker1[1] != [0] )
@@ -1752,22 +1772,47 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     int n0 = nrows(g0);
     int n1 = nrows(g1);
     
-    // Debug warn if nonsquare 
+    // If we have nonsquare matrices we have to do something special
     if( ker0[1] == [0] || ker1[1] == [0] || n0 != n1 )
     {
-        print("[mfSplitIdempotent] Splitting produced nonsquare matrices, exiting.");
-        return(zeromat(2));
+        // This only makes sense if the potential is zero, so warn and quit otherwise
+        if( useSanityChecks )
+        {
+            if( A * A != matrix(0,nrows(A),ncols(A)) )
+            {
+                print("[mfSplitIdempotent] Found nonsquare matrices for nonzero differential, exiting.");
+                return();
+            }
+        }
+        
+        // The case of zero potential and non-square splitting is special, so our return
+        // values is special. We put a string in the first position of the return list, so
+        // that the receiver knows to interpret the rest of the output in the special manner.
+        
+        dbprint(printlevel,"[mfSplitIdempotent] Splitting produced nonsquare matrices.");
+        
+        list l = "nonsquare",f0,g0,f1,g1;
+        
+        if( typeof(#[1]) == "intvec" )
+        {
+            // We are dealing with graded MFs
+            intvec g = #[1];
+            intvec r1 = computeGradingFromInjection(f0, g[1..m/2]);
+            intvec r2 = computeGradingFromInjection(f1, g[(m/2+1)..m]);
+            l = l + list(r1,r2);
+        }
+        
+        return(l);
     }
     
     // Sanity check
-    if( f0 * g0 != e0 || f1 * g1 != e1 || g0 * f0 != unitmat(n0) || g1 * f1 != unitmat(n1) )
+    if( useSanityChecks )
     {
-        print("[mfSplitIdempotent] Splitting was not successful, exiting.");
-        
-        //dbprint(printlevel, "f0 is "); dbprint(printlevel, f0);
-        //dbprint(printlevel, "g0 is "); dbprint(printlevel, g0);
-        //print( f0 * g0 - e0 );
-        return();
+        if( f0 * g0 != e0 || f1 * g1 != e1 || g0 * f0 != unitmat(n0) || g1 * f1 != unitmat(n1) )
+        {
+            print("[mfSplitIdempotent] Splitting was not successful, exiting.");
+            return();
+        }
     }
     
     // Put the f and g matrices back together
@@ -1782,22 +1827,20 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     // The differential on the splitting is given by B = G * A * F
     matrix B = G * A * F;
-
+    
     if( size(#) == 0 ){ return(B); }
+    
+    list l = B,F,G;
     
     if( typeof(#[1]) == "intvec" )
     {
         // We are dealing with graded MFs
         intvec g = #[1];
         intvec r = computeGradingFromInjection(F, g);
-        list l = B, F, G, r;
-        return(l);
+        l = l + list(r);
     }
-    else
-    {
-        list l = B, F, G;
-        return(l);
-    }
+    
+    return(l);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -3433,10 +3476,19 @@ proc mfReduce(matrix A, list #)
 // variables to y's, so that our active ring is of the form 0,(x(1),y(1),...,y(??)),dp and
 // S is 0,(y(1),...,y(??)),dp. Naturally we convert back to the original ring before returning
 // our results.
+//
+// Note: if the fourth parameter is a _list_ of matrices then we assume that the first is the
+// H described above, and the rest are homotopies on A. We then return an additional list consisting
+// of the homotopies induced on Y by these homotopies in the list.
 
-proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
+proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
 {
-    int useSanityChecks = 1;
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    dbprint(printlevel, "[mfPushforward] Pushing forward matrix of size " + string(ncols(A)) + " with N = " + string(N));
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
     def RRR = basering;
     
     // Check for grading
@@ -3447,11 +3499,31 @@ proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
         int useGrading = 1;
     }
     
-    // Sanity check
-    if( useSanityChecks && A * H + H * A != extvar^N * unitmat(ncols(A)) )
+    // Check for a list of homotopies to track
+    int homotopyList;
+    if( typeof(Hlist) == "list" )
     {
-        print("[mfPushforward] Not passed valid homotopy, exiting.");
-        return();
+        matrix H = Hlist[1];
+        Hlist = delete(Hlist,1);    
+        
+        if( size(Hlist) != 0 )
+        {
+            int homotopyList = 1;
+        }
+    }
+    else
+    {
+        matrix H = Hlist;
+    }
+    
+    // Sanity check
+    if( useSanityChecks )
+    {
+        if( A * H + H * A != extvar^N * unitmat(ncols(A)) )
+        {
+            print("[mfPushforward] Not passed valid homotopy, exiting.");
+            return();
+        }
     }
     
     // Convert everything into a more suitable ring. We go through the original
@@ -3485,26 +3557,47 @@ proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
     newringList[3] = rlist[3];
     newringList[4] = rlist[4];
     
+    // Fix the variable weighting
+    intvec kk = (1..size(newvar));
+    for(i=1; i<=size(newvar); i++)
+    {
+        kk[i] = 1;
+    }
+    newringList[3][1][2] = kk;
+    
     // Create our new ring
     def nR = ring(newringList);
     setring nR;
     
+    dbprint(printlevel, "[mfPushforward] Renaming ring variable(s) to " + varstr(nR));
+    
     // If we call fetch then the object of RRR is converted to the new renamed variables
     matrix A = fetch(RRR,A);
     matrix H = fetch(RRR,H);
-    
+    if( homotopyList )
+    {
+        list Hlist = fetch(RRR,Hlist);
+    }
+        
     // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
     // Compute the inflation
     ideal J = x(1)^N;
     matrix Ablow = mablow(A,J);
     if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
-    
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = mablow(Hlist[i],J);
+        }
+    }
     // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)])
     list l = mfReduce(Ablow,1);
     matrix RT = l[1]; // Differential on reduced MF
     matrix F = l[2]; // A homotopy equivalence Ablow -> RT
     matrix G = l[3]; // A homotopy equivalence RT -> Ablow
     if( useGrading ){ intvec RTgr = computeGradingFromInjection(G,Ablowgr); }
+    
     kill Ablow,l;
 
     // The idempotent on Ablow
@@ -3513,11 +3606,23 @@ proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
     // The idempotent on the reduction
     matrix ep = F * e * G;
     
-    // Sanity checks:
-    if( useSanityChecks && ep * RT != RT * ep )
+    // Move the homotopies over to the reduction RT
+    if( homotopyList )
     {
-        print("[mfPushforward] The reduced idempotent (up to homotopy) ep is not an endomorphism of RT, exiting.");
-        return();
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = F * Hlist[i] * G;
+        }
+    }
+    
+    // Sanity checks:
+    if( useSanityChecks )
+    {
+        if( ep * RT != RT * ep )
+        {
+            print("[mfPushforward] The reduced idempotent (up to homotopy) ep is not an endomorphism of RT, exiting.");
+            return();
+        }
     }
     
     // Check that ep is idempotent up to homotopy
@@ -3544,12 +3649,15 @@ proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
     matrix epstrict = mfStrictifyIdempotent(RT, ep);
     
     // Sanity checks:
-    if( useSanityChecks && epstrict * RT != RT * epstrict || epstrict * epstrict != epstrict )
+    if( useSanityChecks )
     {
-        print("[mfPushforward] The strictified idempotent is not an endomorphism of RT, or not an idempotent on the nose, exiting.");
-        return();
+        if( epstrict * RT != RT * epstrict || epstrict * epstrict != epstrict )
+        {
+            print("[mfPushforward] The strictified idempotent is not an endomorphism of RT, or not an idempotent on the nose, exiting.");
+            return();
+        }
     }
-
+    
     list l;
     if( !useGrading )
     {
@@ -3560,8 +3668,26 @@ proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
         l = mfSplitIdempotent(RT, epstrict, RTgr);
     }
     
-    matrix final = mfSuspend( l[1], 1 );
-    if( useGrading ){ intvec finalgr = mfSuspendGrading( l[4], 1 ); }
+    if( typeof(l[1]) == "string" )
+    {
+        // This can only happen if mfSplitIdempotent found non-square matrices, so
+        // it was trying to split an idempotent on a complex.
+        // TODO
+        
+        setring RRR;
+        list l = imap(nR,l);
+        return(l);
+    }
+    
+    // mfSplitIdempotent returns not just the splitting of the idempotent, but the
+    // actual maps splitting the idempotent. In the following notation, this means
+    // that s * t == ep and t * s == unitmat
+    
+    matrix final = l[1];
+    if( useGrading ){ intvec finalgr = l[4]; }
+    
+    matrix s = l[2]; // s: final --> RT
+    matrix t = l[3]; // t: RT --> final
     
     // Sanity check
     if( useSanityChecks && useGrading )
@@ -3573,37 +3699,216 @@ proc mfPushforward(matrix A, poly extvar, int N, matrix H, list #)
         }
     }
     
-    // mfSplitIdempotent returns not just the splitting of the idempotent, but the
-    // actual maps splitting the idempotent. In the following notation, this means
-    // that s * t == ep and t * s == unitmat
-    
-    matrix s = l[2]; // s: final --> RT
-    matrix t = l[3]; // t: RT --> final
-    
     // We have now split the original idempotent e on Ablow, and the splittings are
     matrix mapAblowToFinal = t * F;
     matrix mapFinalToAblow = G * s;
-    kill s,t,F,G,RT,e,ep,epstrict;
     
+    // Each of the homotopies in our list is a homotopy on RT, let us replace
+    // these by homotopies on final
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = t * Hlist[i] * s;
+        }
+    }
+    
+    kill s,t,F,G,RT,e,ep,epstrict;
+    if( useGrading ){ kill RTgr; }
+        
     // Back to the original ring and return
     setring RRR;
     matrix final = fetch(nR,final);
     matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
     matrix mapFinalToAblow = fetch(nR,mapFinalToAblow);
+    if( homotopyList )
+    {
+        list Hlist = fetch(nR,Hlist);
+    }
     
     // Note that we really want a splitting of e[1] on Ablow[1], so let us suspend
     final = mfSuspend( final );
     mapAblowToFinal = mfSuspendMorph( mapAblowToFinal );
     mapFinalToAblow = mfSuspendMorph( mapFinalToAblow );
     if( useGrading ){ finalgr = mfSuspendGrading( finalgr ); }
-    
-    if( !useGrading )
+    if( homotopyList )
     {
-        return(list(final,mapAblowToFinal,mapFinalToAblow));
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = mfSuspend( Hlist[i] ); // homotopies are suspended just like differentials
+        }
+        
+        // Sanity check, debug
+        //for(i=1;i<=size(Hlist);i++)
+        //{
+        //    matrix F = Hlist[i] * final + final * Hlist[i];
+        //    print("last " + string(F[1,1]));
+            
+        //    if( F != F[1,1] * unitmat(ncols(final)) )
+        //    {
+        //        print("error");
+        //        return();
+        //    }
+        //}
     }
-    else
+    
+    list retlist = list(final,mapAblowToFinal,mapFinalToAblow);
+    
+    // Note that grading (if it exists) goes before homotopy list (if it exists!)
+    if( useGrading )
     {
-        return(list(final,mapAblowToFinal,mapFinalToAblow,finalgr));
+        retlist = retlist + list(finalgr);
     }
 
+    if( homotopyList )
+    {
+        retlist = retlist + list(Hlist);
+    }
+    
+    dbprint(printlevel, "[mfPushforward]        result is size " + string(ncols(final)) + ".");
+    dbprint(printlevel, "[mfPushforward]        elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    return(retlist);
+}
+
+////////////////////////////////////////////////////////////////////
+// mfPushforwardInductive
+//
+// We are given a matrix A interpreted as the differential on a matrix factorisation X
+// of a potential W in our ring, together with a list of ring variables "extvars" and list N
+// such that extvar[i]^N[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
+// A * H[i] + H[i] * A = extvar[i]^N[i] * unitmat, i.e. the entries of H[i] give a homotopy between
+// extvar[i]^N[i] and the zero map. We assume that, as a polynomial, W does not depend on the
+// variables extvar.
+//
+// Let S denote the ring obtained from our basering by deleting the extvars. We can restrict
+// scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
+// The first return value of this routine is the differential of a finite rank MF Y of W over S
+// homotopy equivalent to this pushforward.
+
+proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks"); // Turn off to run faster
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    def RRR = basering;
+    
+    // Check for grading
+    int useGrading;
+    if( size(#) > 0 )
+    {
+        intvec Agr = #[1];
+        int useGrading = 1;
+    }
+    
+    // Sanity check
+    int i;
+    if( useSanityChecks )
+    {
+        for(i=1;i<=size(extvars);i++)
+        {
+            if( A * H[i] + H[i] * A != extvars[i]^(N[i]) * unitmat(ncols(A)) )
+            {
+                print("[mfPushforward] Not passed valid homotopies, exiting.");
+            }
+        }
+    }
+    
+    // Inductively we contract off the action of each of the external variables, using
+    // the given homotopies. During the process we switch rings, killing off the 
+    // external variables that we have used up
+    
+    int count = 1;
+    def nR(1) = basering;
+    
+    while( size(extvars) > 0 )
+    {
+        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count)));
+        
+        // Do the reduction with respect to the first variable and homotopy, and
+        // induce homotopies on this reduction for the action of the rest of the variables
+        if( !useGrading )
+        {
+            list l = mfPushforward(A, extvars[1], N[1], H);
+        }
+        else
+        {
+            list l = mfPushforward(A, extvars[1], N[1], H, Agr);
+        }
+    
+        if( typeof(l[1]) == "string" )
+        {
+            dbprint(printlevel, "[mfPushforwardInductive] Pushing forward produced nonsquare matrices.");
+            
+            // mfSplitIdempotent found, during mfPushforward, that it had to split
+            // an idempotent on a complex
+            l = delete(l,1);
+                        
+            setring RRR;
+            list l = imap(nR(count),l);
+            
+            dbprint(printlevel, "[mfPushforwardInductive]          elapsed time " + string(timer-timeElapsed) + "ms.");
+            
+            return(l);
+        }
+        
+        // Legend
+        // final = l[1] is the MF with extvars[1] excluded which is h.e. to the pushforward
+        // l[2] is a map Ablow[1] --> final
+        // l[3] is a map final --> Ablow[1] (where [1] means suspension)
+        // l[4] is our modified list of homotopies
+    
+        // Remove the variable extvars[1] from our active ring
+        list rlist = ringlist(nR(count));
+        list varlist = rlist[2];
+    
+        // Create the new list of variables
+        int i;
+        for(i=1;i<=size(varlist);i++)
+        {
+            if( varlist[i] == string(extvars[1]) )
+            {
+                varlist = delete(varlist,i);
+                break;
+            }
+        }
+    
+        list newringList;
+        newringList[1] = rlist[1];
+        newringList[2] = varlist;
+        newringList[3] = rlist[3];
+        newringList[4] = rlist[4];
+        // Fix the variable weighting
+        intvec kk = (1..size(varlist));
+        for(i=1; i<=size(varlist); i++)
+        {
+            kk[i] = 1;
+        }
+        newringList[3][1][2] = kk;
+    
+        // Prepare for the next step of the induction
+        A = l[1];
+        extvars = delete(extvars,1);
+        N = delete(N,1);
+        H = l[4];
+    
+        // Create our new ring
+        def nR(count+1) = ring(newringList);
+        setring nR(count+1);
+    
+        matrix A = imap(nR(count),A);
+        list extvars = imap(nR(count),extvars);
+        list H = imap(nR(count),H);
+        
+        count++;
+    }
+    
+    // Return to the original ring
+    setring RRR;
+    matrix B = imap(nR(count),A);
+    
+    
+    return(B);
 }

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE - Tensoring (x,x2) with a factorisation of y^5 - x^3, using mfPushforward
+// EXAMPLE MFP1 - Tensoring (x,x2) with a factorisation of y^5 - x^3, using mfPushforward
 //////////////////////////////////////////////////////////////////////////////////////
 
 // This is the old blow-example-An.txt redone with mfPushforward instead of fuseDefects
@@ -32,3 +32,69 @@ list l = mfPushforward(D, x(1), 2, H);
 print(l[1]);
 
 // We get two copies of (y(1),y(1)^4), which agrees with the earlier calculation in blow-example-An.txt
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE MFP2
+//////////////////////////////////////////////////////////////////////////////////////
+
+//[mfReduceAlt] Reducing matrix of size 512
+//[zoomreduce]    reduced to size 502
+//[zoomreduce]    reduced to size 492
+//[zoomreduce]    reduced to size 482
+//[zoomreduce]    reduced to size 472
+//[zoomreduce]    reduced to size 462
+//[zoomreduce]    reduced to size 452
+//[zoomreduce]    reduced to size 442
+//[zoomreduce]    reduced to size 432
+//[zoomreduce]    reduced to size 422
+//[zoomreduce]    reduced to size 412
+//[zoomreduce]    reduced to size 402
+//[zoomreduce]    reduced to size 392
+//[zoomreduce]    reduced to size 382
+//[zoomreduce]    reduced to size 372
+//[zoomreduce]    reduced to size 362
+//[zoomreduce]    reduced to size 352
+//[zoomreduce]    reduced to size 342
+//[zoomreduce]    reduced to size 332
+//[zoomreduce]    reduced to size 322
+//[zoomreduce]    reduced to size 312
+//[zoomreduce]    reduced to size 302
+//[zoomreduce]    reduced to size 292
+//[mfReduceAlt]          result is size 64.
+//[mfReduceAlt]          elapsed time 36100ms.
+//11
+//24
+//12
+//23
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "inout.lib";
+
+link l = "MPfile:r ./data/pokemon.mp";
+def final1 = read(l);
+def V1 = read(l);
+def T1 = read(l);
+
+// T1 is defined as the following tensor product
+T1 == MFtensor(final1,V1);
+
+// Our basering is now 0,(x(1),x(2),x(3),x(4)),dp
+matrix H(1) = 1/3 * ZZtensor( diff(final1,x(1)), unitmat(ncols(V1)) );
+matrix H(2) = 1/3 * ZZtensor( diff(final1,x(2)), unitmat(ncols(V1)) );
+matrix H(3) = 1/3 * ZZtensor( unitmat(ncols(final1)), diff(V1,x(3)) );
+matrix H(4) = 1/3 * ZZtensor( unitmat(ncols(final1)), diff(V1,x(4)) );
+
+// Check these are homotopies contracting the action of each x(i)^2
+int i;
+for(i=1;i<=4;i++)
+{
+    H(i) * T1 + T1 * H(i) == x(i)^2 * unitmat(32);
+}
+
+list L = mfPushforwardInductive(T1, list(x(1),x(2),x(3),x(4)), list(2,2,2,2), list(H(1),H(2),H(3),H(4)));
+
+// Takes about 7 seconds, as compared to 36 the old way.
