@@ -1789,8 +1789,6 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         // values is special. We put a string in the first position of the return list, so
         // that the receiver knows to interpret the rest of the output in the special manner.
         
-        dbprint(printlevel,"[mfSplitIdempotent] Splitting produced nonsquare matrices.");
-        
         list l = "nonsquare",f0,g0,f1,g1;
         
         if( typeof(#[1]) == "intvec" )
@@ -3359,7 +3357,7 @@ proc zoomreduce(matrix A)
 }
 
 ////////////////////////////////////////////////////////////////////
-// mfReduceAlt
+// mfReduce
 //
 // Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X.
 // The output is the differential B of a matrix factorisation Y homotopy equivalent to X which has no
@@ -3372,7 +3370,7 @@ proc zoomreduce(matrix A)
 
 proc mfReduce(matrix A, list #)
 {
-    dbprint(printlevel, "[mfReduceAlt] Reducing matrix of size " + string(ncols(A)));
+    dbprint(printlevel, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
     
     system("--ticks-per-sec",1000);
     int timeElapsed = timer;
@@ -3425,8 +3423,8 @@ proc mfReduce(matrix A, list #)
     matrix G = blockmat_nsq(g0, zg, zg, g1);
     kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
     
-    dbprint(printlevel, "[mfReduceAlt]          result is size " + string(ncols(B)) + ".");
-    dbprint(printlevel, "[mfReduceAlt]          elapsed time " + string(timer-timeElapsed) + "ms.");
+    dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
+    dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
     
     // TODO: We don't do the final gauss_row / rowred step in the old mfReduce, so our
     // output won't be as pretty, but it is faster to omit this step. In cases where
@@ -3480,6 +3478,16 @@ proc mfReduce(matrix A, list #)
 // Note: if the fourth parameter is a _list_ of matrices then we assume that the first is the
 // H described above, and the rest are homotopies on A. We then return an additional list consisting
 // of the homotopies induced on Y by these homotopies in the list.
+//
+// NOTE: If the potential is zero and splitting an idempotent produces nonsquare matrices, then 
+// the return format is different, because the Z/2-graded module may be zero in one degree: this
+// means we can't write things as block matrices. In this case we return a list 
+//
+//  "nonsquare", f0,g0,f1,g1 [possibly two grading vectors r1,r2]
+//
+// where f0,g0 split the idempotent on Xblow[1] in degree zero and resp. for f1,g1. Hence the
+// differential on Y is implicit (obtained from fi,gi and the differential on Xblow[1]). The
+// grading vectors ri give the degrees on the even and odd part of Y resp.
 
 proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
 {
@@ -3667,15 +3675,21 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
     {
         l = mfSplitIdempotent(RT, epstrict, RTgr);
     }
-    
+
+    // This can only happen if the potential is zero and mfSplitIdempotent found non-square
+    // matrices. In this case our return formatting is different, see the introduction.
     if( typeof(l[1]) == "string" )
     {
-        // This can only happen if mfSplitIdempotent found non-square matrices, so
-        // it was trying to split an idempotent on a complex.
-        // TODO
+        // In this the list l has the format l = "nonsquare",f0,g0,f1,g1 where fi,gi are the
+        // splittings in the respective degrees, and l may have as a final entry a grading
+        // vector for the even and odd parts (separately)
         
         setring RRR;
         list l = imap(nR,l);
+        
+        dbprint(printlevel, "[mfPushforward] splitting produced nonsquare matrices.");
+        dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
+            
         return(l);
     }
     
@@ -3765,8 +3779,8 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
         retlist = retlist + list(Hlist);
     }
     
-    dbprint(printlevel, "[mfPushforward]        result is size " + string(ncols(final)) + ".");
-    dbprint(printlevel, "[mfPushforward]        elapsed time " + string(timer-timeElapsed) + "ms.");
+    dbprint(printlevel, "[mfPushforward] result is size " + string(ncols(final)) + ".");
+    dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
     
     return(retlist);
 }
@@ -3785,6 +3799,12 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
 // scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
 // The first return value of this routine is the differential of a finite rank MF Y of W over S
 // homotopy equivalent to this pushforward.
+//
+// The second return value is the grading vector for A, if we are using gradings.
+//
+// The third (or second, if there is no grading) return value is a list R = (F1,G1),(F2,G2),...
+// of the same length of extvars which records the F and G matrices returned by mfPushforward
+// at each stage of the computation.
 
 proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
 {
@@ -3794,6 +3814,8 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
     int timeElapsed = timer;
     
     def RRR = basering;
+    
+    list R;
     
     // Check for grading
     int useGrading;
@@ -3843,15 +3865,29 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
             dbprint(printlevel, "[mfPushforwardInductive] Pushing forward produced nonsquare matrices.");
             
             // mfSplitIdempotent found, during mfPushforward, that it had to split
-            // an idempotent on a complex
-            l = delete(l,1);
-                        
+            // an idempotent on a complex. Our return value in this situation is
+            // "nonsquare",[r1,r2],R' where r1,r2 are possible gradings. We are given
+            // "nonsquare",f0,g0,f1,g1,[r1,r2] by mfPushforward
             setring RRR;
             list l = imap(nR(count),l);
             
-            dbprint(printlevel, "[mfPushforwardInductive]          elapsed time " + string(timer-timeElapsed) + "ms.");
+            list ll = "nonsquare";
             
-            return(l);
+            if( useGrading )
+            {
+                ll = ll + list(l[6],l[7]); // Add on r1,r2
+            }
+            
+            // Modify the current map list R by adding on the end the list f0,f1,g0,g1.
+            // NOTE: We can't stick these together into block matrices (like the other
+            // entries in R) because we might be rank zero in one component
+            
+            R = R + list(list(l[2],l[4],l[3],l[5]));
+            ll = ll + list(R);
+                        
+            dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
+            
+            return(ll);
         }
         
         // Legend
@@ -3860,6 +3896,21 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
         // l[3] is a map final --> Ablow[1] (where [1] means suspension)
         // l[4] is our modified list of homotopies
     
+        // Return to the original ring and add to R the pair (l[2],l[3]). Note that
+        // we have to return to the original ring because l[2],l[3] may depend on
+        // external variables which we are going to delete in a moment        
+        setring RRR;
+        
+            // The first time through nR(1) = RRR so there is no need for imap
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+            }
+        
+            R = R + list(list(l[2],l[3]));
+            
+        setring nR(count);
+        
         // Remove the variable extvars[1] from our active ring
         list rlist = ringlist(nR(count));
         list varlist = rlist[2];
@@ -3892,6 +3943,12 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
         A = l[1];
         extvars = delete(extvars,1);
         N = delete(N,1);
+        
+        if( size(extvars) == 0 )
+        {
+            break;
+        }
+
         H = l[4];
     
         // Create our new ring
@@ -3907,8 +3964,18 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
     
     // Return to the original ring
     setring RRR;
-    matrix B = imap(nR(count),A);
+    matrix Anew = imap(nR(count),A);
     
+    list retlist = Anew;
     
-    return(B);
+    if( useGrading )
+    {
+        retlist = retlist + list(Agr);
+    }
+    
+    // Add on the maps
+    retlist = retlist + list(R);
+    dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    return(retlist);
 }

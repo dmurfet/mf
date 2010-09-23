@@ -95,6 +95,10 @@ for(i=1;i<=4;i++)
     H(i) * T1 + T1 * H(i) == x(i)^2 * unitmat(32);
 }
 
-list L = mfPushforwardInductive(T1, list(x(1),x(2),x(3),x(4)), list(2,2,2,2), list(H(1),H(2),H(3),H(4)));
+list varlist = x(1),x(2),x(3),x(4);
+list exps = 2,2,2,2;
+list homotopies = H(1),H(2),H(3),H(4);
+
+list L = mfPushforwardInductive(T1, varlist, exps, homotopies);
 
 // Takes about 7 seconds, as compared to 36 the old way.
