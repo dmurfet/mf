@@ -456,7 +456,7 @@ proc mablow(matrix M, ideal J)
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
     
-    // Roughly speaking mablow takes difficulty ms to complete. We only give
+    // Roughly speaking mablow takes "difficulty" ms to complete. We only give
     // debugging output if this is likely to take > 10 seconds
     int difficulty = nrows(M) * ncols(M) * n / 3;
     if( difficulty > 10000 )
@@ -1293,72 +1293,6 @@ proc MFcofull(matrix QQQ,PPP)
     MM[2] = MMf;
 
     return(MM);
-}
-
-
-// MFtensorF(f,g,fs,gs) gives the f-part of the tensor product matrix factorisations of (f,s) and (fs,gs).
-
-proc MFtensorF(matrix f, matrix g, matrix fs, matrix gs)
-{
-LIB "matrix.lib";
-int i,j;
- int r=ncols(f);
- int rs=ncols(fs);
- matrix m[2*r*rs][2*r*rs];
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i,j] = tensor(f,unitmat(rs))[i,j];
-   }
-  }
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i,j + r*rs] = - tensor(unitmat(r),gs)[i,j];
-   }
-  }
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i + r*rs,j] = tensor(unitmat(r),fs)[i,j];
-   }
-  }
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i + r*rs,j + r*rs] = tensor(g,unitmat(rs))[i,j];
-   }
-  }
-return(m);
-}
-
-
-// MFtensorG(f,g,fs,gs) gives the g-part of the tensor product matrix factorisations of (f,s) and (fs,gs).
-
-proc MFtensorG(matrix f, matrix g, matrix fs, matrix gs)
-{
-LIB "matrix.lib";
-int i,j;
- int r=ncols(f);
- int rs=ncols(fs);
- matrix m[2*r*rs][2*r*rs];
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i,j] = tensor(g,unitmat(rs))[i,j];
-   }
-  }
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i,j + r*rs] = tensor(unitmat(r),gs)[i,j];
-   }
-  }
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i + r*rs,j] = - tensor(unitmat(r),fs)[i,j];
-   }
-  }
- for(i=1; i<=r*rs; i++)
-  {for(j=1; j<=r*rs; j++)
-   {m[i + r*rs,j + r*rs] = tensor(f,unitmat(rs))[i,j];
-   }
-  }
-return(m);
 }
 
 // blockmat(A,B,C,D) gives the block-matrix {{A,B},{C,D}} if the square matrices A,B,C,D all have the same size.
@@ -3449,13 +3383,13 @@ proc mfReduce(matrix A, list #)
 // mfPushforward
 //
 // We are given a matrix A interpreted as the differential on a matrix factorisation X
-// of a potential W in our ring, together with a ring variable "extvar" and integer N
-// such that extvar^N acts null-homotopically on X, and a matrix H of degree one such that
-// A * H + H * A = extvar^N * unitmat, i.e. the entries of H give a homotopy between
-// extvar^N and the zero map. We assume that, as a polynomial, W does not depend on the
-// variable extvar.
+// of a potential W in our ring, together with a ring variable "intvar" and integer N
+// such that intvar^N acts null-homotopically on X, and a matrix H of degree one such that
+// A * H + H * A = intvar^N * unitmat, i.e. the entries of H give a homotopy between
+// intvar^N and the zero map. We assume that, as a polynomial, W does not depend on the
+// variable intvar.
 //
-// Let S denote the ring obtained from our basering by deleting extvar. We can restrict
+// Let S denote the ring obtained from our basering by deleting intvar. We can restrict
 // scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
 // The first return value of this routine is the differential of a finite rank MF Y of W over S
 // homotopy equivalent to this pushforward.
@@ -3470,7 +3404,7 @@ proc mfReduce(matrix A, list #)
 //
 // We assume that our ring is R = 0,(some variables, we don't care),dp.
 //
-// NOTE: Before calling any of the routines of blow.lib we rename extvar to x(1) and all the other
+// NOTE: Before calling any of the routines of blow.lib we rename intvar to x(1) and all the other
 // variables to y's, so that our active ring is of the form 0,(x(1),y(1),...,y(??)),dp and
 // S is 0,(y(1),...,y(??)),dp. Naturally we convert back to the original ring before returning
 // our results.
@@ -3489,7 +3423,7 @@ proc mfReduce(matrix A, list #)
 // differential on Y is implicit (obtained from fi,gi and the differential on Xblow[1]). The
 // grading vectors ri give the degrees on the even and odd part of Y resp.
 
-proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
+proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 {
     int useSanityChecks = blowFlags("sanity_checks"); 
     dbprint(printlevel, "[mfPushforward] Pushing forward matrix of size " + string(ncols(A)) + " with N = " + string(N));
@@ -3527,7 +3461,7 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
     // Sanity check
     if( useSanityChecks )
     {
-        if( A * H + H * A != extvar^N * unitmat(ncols(A)) )
+        if( A * H + H * A != intvar^N * unitmat(ncols(A)) )
         {
             print("[mfPushforward] Not passed valid homotopy, exiting.");
             return();
@@ -3535,8 +3469,8 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
     }
     
     // Convert everything into a more suitable ring. We go through the original
-    // list of ring variables, rename everything apart from extvar to y(i)'s (in
-    // ascending order) and rename extvar to x(1)
+    // list of ring variables, rename everything apart from intvar to y(i)'s (in
+    // ascending order) and rename intvar to x(1)
     list rlist = ringlist(RRR);
     list varlist = rlist[2];
     
@@ -3546,7 +3480,7 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
     int ycount;
     for(i=1;i<=size(varlist);i++)
     {
-        if( string(extvar) == varlist[i] )
+        if( string(intvar) == varlist[i] )
         {
             newvar = newvar + list("x(1)");
         }
@@ -3730,7 +3664,9 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
     kill s,t,F,G,RT,e,ep,epstrict;
     if( useGrading ){ kill RTgr; }
         
-    // Back to the original ring and return
+    // Back to the original ring and return. Note that we use fetch and not imap
+    // because we want to replace variables in nR by the variables in RRR in the same
+    // _position_ in ringlist.
     setring RRR;
     matrix final = fetch(nR,final);
     matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
@@ -3789,13 +3725,13 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
 // mfPushforwardInductive
 //
 // We are given a matrix A interpreted as the differential on a matrix factorisation X
-// of a potential W in our ring, together with a list of ring variables "extvars" and list N
-// such that extvar[i]^N[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
-// A * H[i] + H[i] * A = extvar[i]^N[i] * unitmat, i.e. the entries of H[i] give a homotopy between
-// extvar[i]^N[i] and the zero map. We assume that, as a polynomial, W does not depend on the
-// variables extvar.
+// of a potential W in our ring, together with a list of ring variables "intvars" and list N
+// such that intvar[i]^N[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
+// A * H[i] + H[i] * A = intvar[i]^N[i] * unitmat, i.e. the entries of H[i] give a homotopy between
+// intvar[i]^N[i] and the zero map. We assume that, as a polynomial, W does not depend on the
+// variables intvar.
 //
-// Let S denote the ring obtained from our basering by deleting the extvars. We can restrict
+// Let S denote the ring obtained from our basering by deleting the intvars. We can restrict
 // scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
 // The first return value of this routine is the differential of a finite rank MF Y of W over S
 // homotopy equivalent to this pushforward.
@@ -3803,10 +3739,10 @@ proc mfPushforward(matrix A, poly extvar, int N, Hlist, list #)
 // The second return value is the grading vector for A, if we are using gradings.
 //
 // The third (or second, if there is no grading) return value is a list R = (F1,G1),(F2,G2),...
-// of the same length of extvars which records the F and G matrices returned by mfPushforward
+// of the same length of intvars which records the F and G matrices returned by mfPushforward
 // at each stage of the computation.
 
-proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
+proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
 {
     int useSanityChecks = blowFlags("sanity_checks"); // Turn off to run faster
     
@@ -3829,9 +3765,9 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
     int i;
     if( useSanityChecks )
     {
-        for(i=1;i<=size(extvars);i++)
+        for(i=1;i<=size(intvars);i++)
         {
-            if( A * H[i] + H[i] * A != extvars[i]^(N[i]) * unitmat(ncols(A)) )
+            if( A * H[i] + H[i] * A != intvars[i]^(N[i]) * unitmat(ncols(A)) )
             {
                 print("[mfPushforward] Not passed valid homotopies, exiting.");
             }
@@ -3845,7 +3781,7 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
     int count = 1;
     def nR(1) = basering;
     
-    while( size(extvars) > 0 )
+    while( size(intvars) > 0 )
     {
         dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count)));
         
@@ -3853,11 +3789,11 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
         // induce homotopies on this reduction for the action of the rest of the variables
         if( !useGrading )
         {
-            list l = mfPushforward(A, extvars[1], N[1], H);
+            list l = mfPushforward(A, intvars[1], N[1], H);
         }
         else
         {
-            list l = mfPushforward(A, extvars[1], N[1], H, Agr);
+            list l = mfPushforward(A, intvars[1], N[1], H, Agr);
         }
     
         if( typeof(l[1]) == "string" )
@@ -3891,7 +3827,7 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
         }
         
         // Legend
-        // final = l[1] is the MF with extvars[1] excluded which is h.e. to the pushforward
+        // final = l[1] is the MF with intvars[1] excluded which is h.e. to the pushforward
         // l[2] is a map Ablow[1] --> final
         // l[3] is a map final --> Ablow[1] (where [1] means suspension)
         // l[4] is our modified list of homotopies
@@ -3911,7 +3847,7 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
             
         setring nR(count);
         
-        // Remove the variable extvars[1] from our active ring
+        // Remove the variable intvars[1] from our active ring
         list rlist = ringlist(nR(count));
         list varlist = rlist[2];
     
@@ -3919,7 +3855,7 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
         int i;
         for(i=1;i<=size(varlist);i++)
         {
-            if( varlist[i] == string(extvars[1]) )
+            if( varlist[i] == string(intvars[1]) )
             {
                 varlist = delete(varlist,i);
                 break;
@@ -3941,10 +3877,10 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
     
         // Prepare for the next step of the induction
         A = l[1];
-        extvars = delete(extvars,1);
+        intvars = delete(intvars,1);
         N = delete(N,1);
         
-        if( size(extvars) == 0 )
+        if( size(intvars) == 0 )
         {
             break;
         }
@@ -3956,7 +3892,7 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
         setring nR(count+1);
     
         matrix A = imap(nR(count),A);
-        list extvars = imap(nR(count),extvars);
+        list intvars = imap(nR(count),intvars);
         list H = imap(nR(count),H);
         
         count++;
@@ -3978,4 +3914,70 @@ proc mfPushforwardInductive(matrix A, list extvars, list N, list H, list #)
     dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
     
     return(retlist);
+}
+
+////////////////////////////////////////////////////////////////////
+// mfInflate
+//
+// We are given a matrix A interpreted as the differential on a matrix factorisation X
+// of a potential W in our ring, together with a ring variable intvar and a power N.
+// We assume that W is a polynomial in the set of variables with intvar removed, and
+// we return the differential on the tensor product X \otimes Q[intvar]/(intvar^N).
+
+proc mfInflate(matrix A, poly intvar, int N)
+{
+    // Convert everything into a more suitable ring. We go through the original
+    // list of ring variables, rename everything apart from intvar to y(i)'s (in
+    // ascending order) and rename intvar to x(1)
+    def RRR = basering;
+    list rlist = ringlist(RRR);
+    list varlist = rlist[2];
+    
+    // Create the new list of variables, where intvar is renamed to x(1)
+    // and the other variables are enumerated as y(i)'s.
+    list newvar;
+    int i;
+    int ycount;
+    for(i=1;i<=size(varlist);i++)
+    {
+        if( string(intvar) == varlist[i] )
+        {
+            newvar = newvar + list("x(1)");
+        }
+        else
+        {
+            ycount++;
+            string s = "y(" + string(ycount) + ")";
+            newvar = newvar + list(s);
+            kill s;
+        }
+    }
+    
+    list newringList;
+    newringList[1] = rlist[1];
+    newringList[2] = newvar;
+    newringList[3] = rlist[3];
+    newringList[4] = rlist[4];
+    
+    // Fix the variable weighting
+    intvec kk = (1..size(newvar));
+    for(i=1; i<=size(newvar); i++)
+    {
+        kk[i] = 1;
+    }
+    newringList[3][1][2] = kk;
+    
+    // Create our new ring
+    def nR = ring(newringList);
+    setring nR;
+    
+    // Now we can call mablow
+    matrix A = fetch(RRR,A);
+    ideal J = x(1)^N;
+    matrix Ablow = mablow(A,J);
+        
+    setring RRR;
+    matrix final = fetch(nR,A);
+        
+    return(final);
 }

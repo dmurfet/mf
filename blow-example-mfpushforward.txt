@@ -102,3 +102,45 @@ list homotopies = H(1),H(2),H(3),H(4);
 list L = mfPushforwardInductive(T1, varlist, exps, homotopies);
 
 // Takes about 7 seconds, as compared to 36 the old way.
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE MFP3 - Tensoring (x,x2) with a factorisation of y^5 - x^3, using webCompilePair
+//////////////////////////////////////////////////////////////////////////////////////
+
+// This is the old blow-example-An.txt redone with webCompilePair instead of fuseDefects
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+LIB "linkhom.lib";
+ring rr=0,(x(1),y(1)),dp;
+
+// Vertex 1 has one outgoing edge labelled with x(1)^3
+list vertex1 = list(list(),list(),list(x(1)),list(3));
+
+// Vertex 2 has one incoming edge labelled with x(1)^3 and one outgoing edge labelled with y(1)^5.
+list vertex2 = list(list(x(1)),list(3),list(y(1)),list(5));
+
+list vertices = list(vertex1,vertex2);
+
+// Now define the mfs to be placed at each vertex 
+matrix X[2][2] = 0, x(1)^2, x(1), 0;
+
+// Y is a factorisation of V, which we consider as a functor between MF(W) and MF(y(1)^5).
+matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
+matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
+matrix z[2][2];
+matrix Y = blockmat(z,Y1,Y0,z);
+
+list mfs = X, Y;
+
+list web = list(vertices,mfs);
+
+webVerify(web);
+
+// The compilation strategy is to write Y x X
+list compStrat = list(list(2,1),list(x(1)));
+
+list L = webCompilePair(web, compStrat);
+print(L[1]); // Answer is the same as before.

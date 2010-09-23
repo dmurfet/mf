@@ -1,0 +1,487 @@
+version="0.1";
+category="Miscellaneous";
+// summary description of the library
+info="
+LIBRARY:   mfweb.lib  Compilation of defect webs
+AUTHOR:    Nils Carqueville, Daniel Murfet
+KEYWORDS:  matrix factorization
+
+PROCEDURES:
+";
+
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+LIB "blow.lib";
+LIB "linkhom.lib";
+
+////////////////////////////////////////////////////////////////////
+// USAGE GUIDE
+//
+// In principle everything in here should (eventually) be made to work
+// for an arbitrary ring, but if there is something exotic (e.g. parameters
+// or unusual orderings) then there are no guarantees. It should definitely
+// work for 0,(some vars),dp.
+//
+// A web is an oriented graph where edges are allowed to begin or end, but not
+// both, on some unspecified "boundary". All edges are labelled with a single
+// ring variable and an integer, and every vertex is assigned a matrix factorisation
+// of the sum of all the "outgoing" variables (to their respective powers) minus
+// the sum of all the incoming variables (again to their respective powers).
+
+/////////////////////////////////////////////////
+// DATA TYPE: vertex
+//
+// A vertex is a tuple (L1,P1,L2,P2) of four lists, where each Li
+// is a list of ring variables (possibly empty). The first list
+// L1 denotes the incoming variables and the second list the outgoing variables.
+// The Pi are lists of integers, with P1 giving the exponents on the L1 variables
+// and P2 giving the exponents on the L2 variables.
+//
+// NOTE: All exponents should be > 1 otherwise the picture is trivial.
+//
+// WARNING: We do not allow isolated vertices, with no incoming or outgoing vertices.
+// The ordering of the variables in L1 and L2 may matter.
+//
+// A ring variable is allowed to appear in both L1 and L2 (i.e. a loop) but then
+// of course it should be assigned the same exponent in P1 and P2.
+
+/////////////////////////////////////////////////
+// DATA TYPE: web
+//
+// A web is represented by a tuple (L1,L2[,L3]) of two or three lists, where
+//
+//  1. L1 is a list of vertices, say of size v.
+//  2. L2 is a list of matrices, also of size v, with each matrix
+//  being the differential of a matrix factorisation defined in the 
+//  set of variables associated with the corresponding vertex in L1,
+//  factorising the potential explained in the Usage Guide.
+//  3. L3 is an optional list of intvecs, also of size v, making each
+//  of the MFs into a graded MF.
+//
+// NOTE: This is different to the format for webs explained in mfCompileWeb of linkhom.lib
+//
+// We say that a ring variable occurs in a web if it occurs in some vertex
+// of the web. Such a variable is "external" if does not occur as a
+// incoming and outgoing variable in some vertex, and "internal" otherwise.
+//
+// The total potential of a web is the sum of the potentials associated with
+// each vertex of the web.
+//
+// If a ring variable appears in two vertices of a web, it should be assigned
+// the same exponent in each.
+
+/////////////////////////////////////////////////
+// DATA TYPE: compilation strategy
+//
+// Compilation of a web means taking the tensor product over all MFs in the
+// web and pushing forward to the ring with all internal variables in the web
+// deleted. A compilation strategy represents one way of effecting this pushforward
+// in practice.
+//
+// Precisely, a compilation strategy consists of a pair (L1,L2), where
+// L1 is a permutation of the set {1,...,v} and L2 is a list
+// containing each internal variable in the web precisely once. The idea is that L1 tells
+// us the order in which to tensor the MFs in the web together (for example, if
+// L1 were 3,1,2 we should first tensor the MF at vertex 3 with the one at vertex 1,
+// and then tensor the result with the MF at vertex 2) and L2 tells us the ordering
+// on the variables to use in the reduction/pushforward procedure.
+
+/////////////////////////////////////////////////
+// webVerify
+//
+// Verify that the given list satisfies (some of) the conditions to be a web.
+
+proc webVerify(list web)
+{
+    list vertices = web[1];
+    list mfs = web[2];
+    
+    if( size(vertices) != size(mfs) )
+    {
+        return(0); // Size mismatch
+    }
+    
+    int i;
+    for(i=1;i<=size(vertices);i++)
+    {
+        list v_in = vertices[i][1];
+        list p_in = vertices[i][2];
+        list v_out = vertices[i][3];
+        list p_out = vertices[i][4];
+        matrix A = mfs[i];
+        
+        if( size(v_in) + size(v_out) == 0 )
+        {
+            return(0); // Isolated vertices are not allowed
+        }
+        
+        // Figure out the potential at this vertex
+        poly W;
+        int j;
+        for(j=1;j<=size(v_in);j++)
+        {
+            W = W - v_in[j]^(p_in[j]);
+        }
+        
+        for(j=1;j<=size(v_out);j++)
+        {
+            W = W + v_out[j]^(p_out[j]);
+        }
+        
+        // Is A a MF of this potential?
+        if( A * A != W * unitmat(ncols(A)) )
+        {
+            return(0);
+        }
+    }
+    
+    return(1);
+}
+
+/////////////////////////////////////////////////
+// webCompilePair
+//
+// The backbone of our compilation routines. We are given a
+// web with only two vertices and a compilation strategy. Next we
+// describe the output in the standard case, but be aware there is
+// an important special case to be explained at the end.
+//
+// We first return a matrix factorisation in the set of external variables
+// of the total potential of the given web. Let X denote the tensor product
+// over all vertices of the associated MFs, defined in the ordering determined
+// by our compilation strategy. Let pX denote the pushforward/restriction of
+// scalars to the ring with all internal variables in the web deleted. Our
+// first return value is the differential of a MF Y homotopy equivalent to pX.
+//
+// The second return value is the grading vector for Y, if we are using gradings.
+//
+// The third (or second, if there is no grading) return value is a list
+// R = (F1,G1),(F1,G2),... whose length is equal to the number of internal variables
+// in the web. These are the maps returned by mfPushforwardInductive applied to
+// the set of internal variables ordered according to our compilation strategy.
+//
+// In more detail: let p1X denote the pushforward of X just to the ring without the
+// "first" internal variable, where "first" means first in the compilation strategy.
+// This is a direct summand of Xblow[1], and (F1,G1) is a pair splitting, in the
+// homotopy category of finite rank MFs, the corresponding idempotent. Say the
+// splitting is Y1. Then F1: Xblow[1] -> Y1 and G1: Y1 -> Xblow[1] with F1 * G1 = 1
+// and G1 * Y1 the idempotent corresponding to p1X.
+//
+// Next, we push forward Y1 to the ring without the first and second internal variables,
+// and the same yoga produces maps (F2,G2) splitting an idempotent on Y1blow[1], etc.
+//
+// This list R is referred to as a "splitting record".
+//
+// NOTE: Special case
+//
+// If the total potential of the web is zero, and if in the last step of the compilation
+// process we end up with non-square matrices (may not happen) then it is not safe to
+// return the differential on Y (it will not be square) so our return list looks like
+//
+// "nonsquare", [r1,r2,] R
+//
+// where r1,r2 are grading vectors on the even and odd parts of Y resp. (if we are
+// using the grading) and R is as described above, but where the last (F,G) pair is
+// a tuple f0,f1,g0,g1 with f0,g0 splitting the even part of the very last idempotent
+// and similarly for f1,g1.
+
+
+proc webCompilePair(list web, list compStrat)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    int useGrading = (size(web) > 2);
+    
+    if( useSanityChecks )
+    {
+        if( !webVerify(web) )
+        {
+            print("[webCompilePair] Given web is not valid, exiting.");
+            return();
+        }
+        
+        if( size(web[1]) != 2 )
+        {
+            print("[webCompilePair] We only compile pairs. Duh. Exiting.");
+            return();
+        }
+    }
+    
+    // Extract the content of the web
+    list vertices = web[1];
+    list mfs = web[2];
+    if( useGrading ){ list mfGradings = web[3]; }
+    
+    // And the compilation strategy
+    list vertexOrder = compStrat[1];
+    list varOrder = compStrat[2];
+    
+    // Order the vertices according to the compilation strategy
+    int i;
+    for(i=1;i<=2;i++)
+    {
+        list vertex(i) = vertices[vertexOrder[i]];
+        matrix mf(i) = mfs[vertexOrder[i]];
+        if( useGrading ){ intvec mfgr(i) = mfGradings[vertexOrder[i]]; }
+    }
+    
+    // Our task is to build up the input to mfPushforwardInductive and
+    // then interpret its output.
+    matrix A = MFtensor( mf(1), mf(2) );
+    if( useGrading ){ intvec Agr = MFtensorGradings( mfgr(1), mfgr(2) ); }
+    
+    print(mf(1)); // debug
+    print("---"); // debug
+    print(mf(2));
+    print("---"); // debug
+    
+    // Build up a list of the internal variables, ordered accoring to the
+    // compilation strategy, a list of powers and a list of homotopies. The
+    // powers we collect are the powers of the variables which act null-homotopically
+    // on A, with associated homotopies stored in H.
+    list intvars;
+    list varPowers;
+    list Hlist;
+    for(i=1;i<=size(varOrder);i++)
+    {
+        poly u = varOrder[i];
+        print("First internal variable is " + string(u)); // debug
+        
+        // See if this variable is internal
+        if( checklist(vertex(1)[1],u) && checklist(vertex(2)[3],u))
+        {
+            print("From 2 to 1"); //debug
+            // Variable is internal, goes from vertex(2) to vertex(1)
+            intvars = intvars + list(u);
+             
+            // Find out the exponent on this variable
+            int j;
+            int N;
+            for(j=1;j<=size(vertex(1)[1]);j++)
+            {
+                if( vertex(1)[1][j] == u )
+                {
+                    N = vertex(1)[2][j];
+                    break;
+                }
+            }
+             
+            // Note that mf(2) * mf(2) is a sum of powers of variables,
+            // including u^N as a summand. Hence
+            // 
+            // diff(mf(2),u) * mf(2) + mf(2) * diff(mf(2),u) = N * u^(N-1).
+            //
+            // That is, to say, if we set h = 1/N * diff(mf(2),u) then
+            // h * mf(2) + mf(2) * h = u^(N-1). Actually we set H[i] to be
+            // the tensor product of this h with 1_{mf(1)}.
+            
+            print("Power is " + string(N)); // debug
+            
+            varPowers = varPowers + list(N-1);
+            number Nn = N;
+            matrix H = 1/Nn * ZZtensor( unitmat(ncols(mf(1))), diff(mf(2),u) );
+            print(H); // debug
+            print("--");
+            print(H * A + A * H); // debug
+            
+            // Check H is a homotopy
+            if( useSanityChecks )
+            {
+                if( H * A + A * H != u^(N-1) * unitmat(ncols(A)) )
+                {
+                    print("[mfCompilePair] Homotopy does not work, exiting.");
+                    return();
+                }
+             }
+             
+             Hlist = Hlist + list(H);
+             
+             break;
+        }
+         
+        if( checklist(vertex(1)[3],u) && checklist(vertex(2)[1],u) )
+        {
+            print("From 1 to 2"); // debug
+            // Variable is internal, goes from vertex(1) to vertex(2)
+            intvars = intvars + list(u);
+            
+            // Find out the exponent on this variable
+             int j;
+             for(j=1;j<=size(vertex(1)[3]);j++)
+             {
+                 if( vertex(1)[3][j] == u )
+                 {
+                    N = vertex(1)[4][j];
+                    break;
+                 }
+             }
+             
+            // Note that mf(1) * mf(1) is a sum of powers of variables,
+            // including u^N as a summand. Hence
+            // 
+            // diff(mf(1),u) * mf(1) + mf(1) * diff(mf(1),u) = N * u^(N-1).
+            //
+            // That is, to say, if we set h = 1/N * diff(mf(1),u) then
+            // h * mf(1) + mf(1) * h = u^(N-1). Actually we set H[i] to be
+            // the tensor product of this h with 1_{mf(2)}.
+            
+             varPowers = varPowers + list(N-1);
+             number Nn = N;
+             matrix H = 1/Nn * ZZtensor( diff(mf(1),u), unitmat(ncols(mf(2))) );
+             
+             // Check H is a homotopy
+             if( useSanityChecks )
+             {
+                if( H * A + A * H != u * unitmat(ncols(A)) )
+                {
+                    print("[mfCompilePair] Homotopy for " + string(u) + " does not work, exiting.");
+                    return();
+                }
+             }
+             
+             Hlist = Hlist + list(H);
+            break;
+        }
+    }
+        
+    // Now we feed all this to mfPushforwardInductive
+    if( !useGrading )
+    {
+        list L = mfPushforwardInductive(A, intvars, varPowers, Hlist);
+    }
+    else
+    {
+        list L = mfPushforwardInductive(A, intvars, varPowers, Hlist, Agr);
+    }
+        
+    return(L);
+}
+
+/////////////////////////////////////////////////
+// webCompile
+//
+// Given a web and compilation strategy we crawl the web, fusing
+// vertices in the order dictated by the strategy using mfCompilePair.
+// Our first output is the differential on the compiled MF Y, h.e. to the pushforward
+// of the tensor product of all the MFs in the web to the ring without any of the internal
+// variables.
+//
+// If grading is in use, then the second return is the grading vector on this Y.
+//
+// The third (or second, if grading is not in use) return value is a list Q, which we
+// refer to as the "splitting record". Suppose that we write X1, .., Xv for the MFs lying
+// at the vertices in our web, ordered according to the compilation strategy. Let
+// X1 # X2 denote the result of tensoring X1,X2 and replacing this by a finite rank MF
+// homotopy equivalent to the pushforward which eliminates the variables lying between
+// vertices 1,2. This reduction generates a splitting record R1 (as defined above) and the
+// pair (X1 # X2, R1) is the first entry in the list Q (or (X1 # X2, gr, R1) if we are 
+// in the graded setting, gr being the grading vector on X1 # X2).
+//
+// The second entry in Q is ((X1 # X2) # X3, R2) where R2 is the splitting record of the
+// second fusion. All fusions being conducted according to the given compilation strategy.
+
+proc webCompile(list web, list compStrat)
+{
+    def RRR = basering;
+    int count = 1;
+    def nR(1) = basering;
+    
+    // Continue fusing until there are no internal variables left. Each time through the
+    // loop we will have deleted some internal variables from our current ring and have
+    // changed the web and strategy to reflect the fusion of two vertices in the old web.
+    while( size(compStrat[2]) > 0 )
+    {
+        // Our current ring is nR(count)
+        print("In round " + string(count)); // debug
+        print( nR(count) ); // debug
+        
+        list vertices = web[1];
+        list mfs = web[2];
+        if( useGrading ){ list mfGradings = web[3]; }
+
+        // And the compilation strategy
+        list vertexOrder = compStrat[1];
+        list varOrder = compStrat[2];
+
+        // Construct a subweb and substrategy consisting of the first two vertices to be fused
+        list adjacent_var; // All variables adjacent to these two vertices
+        list adjacent_varStr;
+        int i;
+        for(i=1;i<=2;i++)
+        {
+            list vertex(i) = vertices[vertexOrder[i]];
+            matrix mf(i) = mfs[vertexOrder[i]];
+            if( useGrading ){ intvec mfgr(i) = mfGradings[vertexOrder[i]]; }
+            
+            int j;
+            for(j=1;j<=size(vertex(i)[1]);j++)
+            {
+                if( !checklist(adjacent_var, vertex(i)[1][j]) )
+                {
+                    adjacent_var = adjacent_var + list(vertex(i)[1][j]);
+                    adjacent_varStr = adjacent_varStr + list(string(vertex(i)[1][j]));
+                }
+            }
+            
+            for(j=1;j<=size(vertex(i)[3]);j++)
+            {
+                if( !checklist(adjacent_var, vertex(i)[3][j]) )
+                {
+                    adjacent_var = adjacent_var + list(vertex(i)[3][j]);
+                    adjacent_varStr = adjacent_varStr + list(string(vertex(i)[3][j]));
+                }
+            }
+        }
+        
+        print("Adjacent variables are "); // debug
+        print(adjacent_varStr); // debug
+
+        list subweb_vertices = vertex(1), vertex(2);
+        list subweb_mfs = mf(1), mf(2);
+        if( useGrading ){ list subweb_gr = mfgr(1), mfgr(2); }
+        list substrat_order = 1, 2;
+        list substrat_var;
+        
+        // Find the internal variables lying on edges adjacent to our two vertices
+        for(i=1;i<=size(varOrder);i++)
+        {
+            if( checklist(adjacent_var, varOrder[i]) )
+            {
+                substrat_var = substrat_var + list(u);
+            }
+        }
+        
+        // Define the subweb and strategy
+        list subweb = list(subweb_vertices, subweb_mfs);
+        if( useGrading ){ subweb = subweb + list(subweb_gr); }
+        list substrat = list(substrat_order, substrat_var);
+        
+        // Change to the ring containing only those variables involved in this fusion
+        // This is NOT nR(count+1), it is just a temp ring
+        list rlist = ringlist(nR(count));
+
+        list newringList;
+        newringList[1] = rlist[1];
+        newringList[2] = adjacent_varStr;
+        newringList[3] = rlist[3];
+        newringList[4] = rlist[4];
+
+        // Fix the variable weighting
+        intvec kk = (1..size(adjacent_varStr));
+        for(i=1; i<=size(adjacent_varStr); i++)
+        {
+            kk[i] = 1;
+        }
+        newringList[3][1][2] = kk;
+
+        // Create our new ring
+        def tempring = ring(newringList);
+        setring tempring;
+        
+        list subweb = imap(nR(count),subweb);
+        list substrat = imap(nR(count),substrat);
+        list L = webCompilePair(subweb, substrat);
+        
+        // .... blah blah blah ....
+    }
+}
