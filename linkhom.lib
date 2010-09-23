@@ -37,12 +37,6 @@ LIB "blow.lib";
 // Note this shift is the opposite direction to the one given in (see [KR,p.45]), but
 // actual calculations seem to suggest that this is an error in [KR]. See blow-example-grading.
 
-////////////////////////////////////////////////////////////////////
-// Notes on optimisation
-//
-// Currently mfCompileWeb compiles maps between webs. It would be better to compile
-// webs and store the compilation together with the necessary maps.
-
 /////////////////////////////////////////////////////////////////////////////////////
 // g - returns the polynomial g of [KR] p.48.
 /////////////////////////////////////////////////////////////////////////////////////
@@ -213,16 +207,15 @@ proc mfIdentityEdgeGrading(int n)
 
 proc checklist(list l, p)
 {
-    int inlist;
+    int i;
     for(int i=1; i<=size(l); i++)
     {
-        def li = l[i];
-        if(p==li)
+        if(p==l[i])
         {
-            inlist=1;
+            return(1);
         }
     }
-    return(inlist);
+    return(0);
 }
 
 
@@ -442,6 +435,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 
 // TODO: Will mfCompileWeb work when there are only two vertices in the web?
 // TODO: possible signs due to the ordering of internal variables?
+// TODO: Are any of these sanity checks too slow in the big computations? Can omit them
 proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
 {
     int paranoidChecks = 1; // If set to 1 then we perform additional stringent sanity checks
@@ -4958,7 +4952,7 @@ proc mfCompileOnlyOneWebLeft(list D1, int N)
     matrix C[4][4] = 1/Nn * unitmat(4);
     
     // Compute the ordinary tensor product:
-    matrix T1 = MFtensor( final1, V1(k) );
+    matrix T1 = MFtensor( final1, V1(k) );    
     matrix T1blow = mablow(T1,J);
     
     T1gr = MFtensorGradings( final1gr, V1gr(k) );
@@ -5042,7 +5036,7 @@ proc mfCompileOnlyOneWebLeft(list D1, int N)
     kill F1(k-1), e1;
     
     matrix epstrict1 = mfStrictifyIdempotent(RT1, ep1);
-
+    
     matrix ep0 = extractblockmat(epstrict1)[1];
     matrix ep1 = extractblockmat(epstrict1)[4];
     int rank0 = mat_rk(ep0);
@@ -5958,198 +5952,13 @@ proc mfCompileLinkOLD(list linkData, string fileName, int useSaveFile, int N)
                 {
                     dbprint(printlevel, "[mfCompileLink]  Currently used memory: " + string(memory(0) div 1024) + "kb.");
                     
-                    // Run mfCompileWeb. There are four possibilities:
-                    //   (i) v and w have not been compiled previously,
-                    //  (ii) v has not been compiled previously, but w has been,
-                    // (iii) w has not been compiled previously, but v has been,
-                    //  (iv) both v and w have been compiled previously. 
-                    
-                    string GwebNameV = "GTransWeb" + intvecToString(v);
-                    string FwebNameW = "FTransWeb" + intvecToString(w);
-                    string cmdV = "int definedCheckV = defined(" + GwebNameV + ");";
-                    string cmdW = "int definedCheckW = defined(" + FwebNameW + ");";
-                    execute(cmdV);
-                    execute(cmdW);
+                    // Run mfCompileWeb.
+                    Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
 
-                    // Case (i):
-                    if( definedCheckV == 0 && definedCheckW == 0 )
-                    {
-                        Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
-                        
-                        // Store G-transformation data pertaining to v:
-                        string GwebNameV = "GTransWeb" + intvecToString(v);
-                        string cmd = "list GTransWeb" + intvecToString(v) + " = Q[5][1]";
-                        execute(cmd); 
-                        writelist(fileName,GwebNameV,Q[5][1]);
-
-                        // Store s-transformation data pertaining to v:
-                        string SwebNameV = "STransWeb" + intvecToString(v);
-                        string cmd = "list STransWeb" + intvecToString(v) + " = Q[5][2]";
-                        execute(cmd); 
-                        writelist(fileName,SwebNameV,Q[5][2]);
-
-                        // Store F-transformation data pertaining to w:
-                        string FwebNameW = "FTransWeb" + intvecToString(w);
-                        string cmd = "list FTransWeb" + intvecToString(w) + " = Q[6][1]";
-                        execute(cmd); 
-                        writelist(fileName,FwebNameW,Q[6][1]);
-
-                        // Store t-transformation data pertaining to w:
-                        string TwebNameW = "TTransWeb" + intvecToString(w);
-                        string cmd = "list TTransWeb" + intvecToString(w) + " = Q[6][2]";
-                        execute(cmd); 
-                        writelist(fileName,TwebNameW,Q[6][2]);
-
-                        // Store weights data pertaining to v:
-                        string gradingV = "weightsOf" + intvecToString(v);
-                        string cmd = "intvec weightsOf" + intvecToString(v) + " = Q[3]";
-                        execute(cmd); 
-                        writelist(fileName,gradingV,Q[3]);
-
-                        // Store weights data pertaining to w:
-                        string gradingW = "weightsOf" + intvecToString(w);
-                        string cmd = "intvec weightsOf" + intvecToString(w) + " = Q[4]";
-                        execute(cmd); 
-                        writelist(fileName,gradingW,Q[4]);
-
-                        // Store Z2 information of v and w:
-                        string z2degreeV = "z2degreeOf" + intvecToString(v);
-                        string cmd = "int z2degreeOf" + intvecToString(v) + " = Q[2]";
-                        execute(cmd); 
-                        writelist(fileName,z2degreeV,Q[2]);
-                        string z2degreeW = "z2degreeOf" + intvecToString(w);
-                        string cmd = "int z2degreeOf" + intvecToString(w) + " = Q[2]";
-                        execute(cmd); 
-                        writelist(fileName,z2degreeW,Q[2]);
-
-
-                        // Add the output of Q to our file (Q[5] and Q[6] are no longer needed):
-                        Q = delete(Q,5); Q = delete(Q,5);
-                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
-                        writelist(fileName,listName,Q);
-                                                
-                    }// end case (i).
-                    
-                    // Case (ii):
-                    if( definedCheckV == 0 && definedCheckW != 0 )
-                    {
-                        string cmd = "list FTransWebW = FTransWeb" + intvecToString(w);
-                        execute(cmd);
-                        string cmd = "list TTransWebW = TTransWeb" + intvecToString(w);
-                        execute(cmd);
-                        string cmd = "list weightsOfWeb2 = weightsOf" + intvecToString(w);
-                        execute(cmd);
-                        
-                        Q = mfCompileWeb2(linkweb(v,edgeList),FTransWebW,TTransWebW,weightsOfWeb2,v[j],j,N);
-                        
-                        kill FTransWebW,TTransWebW,weightsOfWeb2;
-                        
-                        // Store G-transformation data pertaining to v:
-                        string GwebNameV = "GTransWeb" + intvecToString(v);
-                        string cmd = "list GTransWeb" + intvecToString(v) + " = Q[5][1]";
-                        execute(cmd); 
-                        writelist(fileName,GwebNameV,Q[5][1]);
-
-                        // Store s-transformation data pertaining to v:
-                        string SwebNameV = "STransWeb" + intvecToString(v);
-                        string cmd = "list STransWeb" + intvecToString(v) + " = Q[5][2]";
-                        execute(cmd); 
-                        writelist(fileName,SwebNameV,Q[5][2]);
-
-                        // Store weights data pertaining to v:
-                        string gradingV = "weightsOf" + intvecToString(v);
-                        string cmd = "intvec weightsOf" + intvecToString(v) + " = Q[3]";
-                        execute(cmd); 
-                        writelist(fileName,gradingV,Q[3]);
-
-                        // Store Z2 information of v:
-                        string z2degreeV = "z2degreeOf" + intvecToString(v);
-                        string cmd = "int z2degreeOf" + intvecToString(v) + " = Q[2]";
-                        execute(cmd); 
-                        writelist(fileName,z2degreeV,Q[2]);
-
-
-                        // Add the output of Q to our file (Q[5] no longer needed):
-                        Q = delete(Q,5);
-                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
-                        writelist(fileName,listName,Q);
-                                                
-                    }// end case (ii).
-
-                    // Case (iii):
-                    if( definedCheckV != 0 && definedCheckW == 0 )
-                    {
-                        string cmd = "list GTransWebV = GTransWeb" + intvecToString(v);
-                        execute(cmd);
-                        string cmd = "list STransWebV = STransWeb" + intvecToString(v);
-                        execute(cmd);
-                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(v);
-                        execute(cmd);
-
-                        Q = mfCompileWeb3(linkweb(w,edgeList),GTransWebV,STransWebV,weightsOfWeb1,v[j],j,N);
-                        
-                        kill GTransWebV,STransWebV,weightsOfWeb1;
-                        
-                        // Store F-transformation data pertaining to w:
-                        string FwebNameW = "FTransWeb" + intvecToString(w);
-                        string cmd = "list FTransWeb" + intvecToString(w) + " = Q[5][1]";
-                        execute(cmd); 
-                        writelist(fileName,FwebNameW,Q[5][1]);
-
-                        // Store t-transformation data pertaining to w:
-                        string TwebNameW = "TTransWeb" + intvecToString(w);
-                        string cmd = "list TTransWeb" + intvecToString(w) + " = Q[5][2]";
-                        execute(cmd); 
-                        writelist(fileName,TwebNameW,Q[5][2]);
-
-                        // Store weights data pertaining to w:
-                        string gradingW = "weightsOf" + intvecToString(w);
-                        string cmd = "intvec weightsOf" + intvecToString(w) + " = Q[4]";
-                        execute(cmd); 
-                        writelist(fileName,gradingW,Q[4]);
-
-                        // Store Z2 information of w:
-                        string z2degreeW = "z2degreeOf" + intvecToString(w);
-                        string cmd = "int z2degreeOf" + intvecToString(w) + " = Q[2]";
-                        execute(cmd); 
-                        writelist(fileName,z2degreeW,Q[2]);
-
-
-                        // Add the output of Q to our file (Q[5] no longer needed):
-                        Q = delete(Q,5);
-                        dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
-                        writelist(fileName,listName,Q);
-                                                
-                    }// end case (iii).
-
-                    // Case (iv):
-                    if( definedCheckV != 0 && definedCheckW != 0 )
-                    {
-                        string cmd = "list GTransWebV = GTransWeb" + intvecToString(v);
-                        execute(cmd);
-                        string cmd = "list STransWebV = STransWeb" + intvecToString(v);
-                        execute(cmd);
-                        string cmd = "list weightsOfWeb1 = weightsOf" + intvecToString(v);
-                        execute(cmd);
-
-                        string cmd = "list FTransWebW = FTransWeb" + intvecToString(w);
-                        execute(cmd);
-                        string cmd = "list TTransWebW = TTransWeb" + intvecToString(w);
-                        execute(cmd);
-                        string cmd = "list weightsOfWeb2 = weightsOf" + intvecToString(w);
-                        execute(cmd);
-                        string cmd = "int z2deg = z2degreeOf" + intvecToString(w);
-                        execute(cmd);
-
-                        Q = mfCompileWeb4(linkData,GTransWebV,STransWebV,FTransWebW,TTransWebW,weightsOfWeb1,weightsOfWeb2,z2deg,v[j],j,N);
-                        
-                        kill GTransWebV,STransWebV,FTransWebW,TTransWebW,weightsOfWeb1,weightsOfWeb2;
-
-                        // Add the output of Q to our file:
-                        dbprint(printlevel, "[mfCompileLink4]  Writing result to disk.");
-                        writelist(fileName,listName,Q);
-                                                
-                    }// end case (iv).                    
+                    // Add the output of Q to our file (Q[5] and Q[6] are no longer needed):
+                    Q = delete(Q,5); Q = delete(Q,5); // ???
+                    dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
+                    writelist(fileName,listName,Q);                 
                 }
                 
                 // Add the computed list to the end of compiledEntry

@@ -88,6 +88,22 @@ LIB "linkhom.lib";
 // on the variables to use in the reduction/pushforward procedure.
 
 /////////////////////////////////////////////////
+// varLiesBetweenVertices
+
+proc varLiesBetweenVertices(poly u, list v1, list v2)
+{
+    // Return 1 if this variable lies between these two vertices, 0 otherwise
+    
+    if( checklist(v1[3],u) && checklist(v2[1],u) ||
+        checklist(v1[1],u) && checklist(v2[3],u) )
+    {
+        return(1);
+    }
+    
+    return(0);
+}
+
+/////////////////////////////////////////////////
 // webVerify
 //
 // Verify that the given list satisfies (some of) the conditions to be a web.
@@ -382,17 +398,23 @@ proc webCompilePair(list web, list compStrat)
 
 proc webCompile(list web, list compStrat)
 {
+    int useSanityChecks = blowFlags("sanity_checks");
+    int useGrading = (size(web) > 2);
+    
     def RRR = basering;
     int count = 1;
     def nR(1) = basering;
+    list splittingRecord;
+    int numInternalVar = size(compStrat[2]);
     
     // Continue fusing until there are no internal variables left. Each time through the
     // loop we will have deleted some internal variables from our current ring and have
     // changed the web and strategy to reflect the fusion of two vertices in the old web.
-    while( size(compStrat[2]) > 0 )
+    // Recall that compStrat[2] is an ordered list of the internal variables.
+    while( numInternalVar > 0 )
     {
         // Our current ring is nR(count)
-        print("In round " + string(count)); // debug
+        print("[webCompile} Entering round " + string(count)); // debug
         print( nR(count) ); // debug
         
         list vertices = web[1];
@@ -413,6 +435,7 @@ proc webCompile(list web, list compStrat)
             matrix mf(i) = mfs[vertexOrder[i]];
             if( useGrading ){ intvec mfgr(i) = mfGradings[vertexOrder[i]]; }
             
+            // Populate the list of adjacent variables
             int j;
             for(j=1;j<=size(vertex(i)[1]);j++)
             {
@@ -434,22 +457,29 @@ proc webCompile(list web, list compStrat)
         }
         
         print("Adjacent variables are "); // debug
-        print(adjacent_varStr); // debug
+        print(adjacent_var); // debug
 
         list subweb_vertices = vertex(1), vertex(2);
         list subweb_mfs = mf(1), mf(2);
         if( useGrading ){ list subweb_gr = mfgr(1), mfgr(2); }
         list substrat_order = 1, 2;
         list substrat_var;
+        list substrat_varStr;
         
-        // Find the internal variables lying on edges adjacent to our two vertices
-        for(i=1;i<=size(varOrder);i++)
+        // Find the variables lying between our two vertices
+        for(i=1;i<=size(adjacent_var);i++)
         {
-            if( checklist(adjacent_var, varOrder[i]) )
+            poly u = adjacent_var[i];
+            
+            if( varLiesBetweenVertices(u,vertex(1),vertex(2)) )
             {
                 substrat_var = substrat_var + list(u);
+                substrat_varStr = substrat_varStr + list(string(u));
             }
         }
+        
+        print("Variables between vertices"); // debug
+        print(substrat_var);
         
         // Define the subweb and strategy
         list subweb = list(subweb_vertices, subweb_mfs);
@@ -476,12 +506,179 @@ proc webCompile(list web, list compStrat)
 
         // Create our new ring
         def tempring = ring(newringList);
-        setring tempring;
+        kill rlist, newringList;
         
+        ///////// BEGIN tempring //////////
+        setring tempring;
         list subweb = imap(nR(count),subweb);
         list substrat = imap(nR(count),substrat);
-        list L = webCompilePair(subweb, substrat);
+        list l = webCompilePair(subweb, substrat);
+        setring nR(count);
+        ///////// END tempring ///////////
         
-        // .... blah blah blah ....
+        list l = imap(tempring, l);
+        kill tempring;
+        
+        if( typeof(l[1]) == "string" )
+        {
+            // This is the case where webCompilePair produced non-square matrices
+            print("Oh dear, nonsquare matrices...");
+            
+            setring RRR;
+            return(l);
+        }
+        
+        // The return from webCompilePair is newvertex [,g], R where newvertex is the
+        // differential on a MF and g is a possible grading vector, R is the splitting record.
+        // First we return to RRR and adjoin R to the global splitting record
+        setring RRR;
+        
+            // The first time through nR(1) = RRR so there is no need for imap
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+            }
+        
+            splittingRecord = splittingRecord + list(l);
+            
+        setring nR(count);
+        
+        // Now do some engineering on our web. We need to replace the first two vertices
+        // by their fusion, and rearrange variables and the compilation strategy accordingly
+        
+        // 1. Fused vertices
+        // The set of incoming (resp. outgoing) variables to the fused vertex is the union of
+        // the set of incoming (resp. outgoing) variables at the two vertices, with the same
+        // exponents. We put the variables at the first vertex in the strategy first.
+        list fusedVertex_in = vertex(1)[1] + vertex(2)[1];
+        list fusedVertex_out = vertex(1)[3] + vertex(2)[3];
+        
+        list fusedVertex_pin = vertex(1)[2] + vertex(2)[2];
+        list fusedVertex_pout = vertex(1)[4] + vertex(2)[4];
+        
+        list fusedVertex = (fusedVertex_in, fusedVertex_pin, fusedVertex_out, fusedVertex_pout);
+        
+        // In the web and elsewhere we delete the second vertex and replace the first
+        // by the fusion
+        list fusedWebVertices = vertices;
+        fusedWebVertices[vertexOrder[1]] = fusedVertex;
+        fusedWebVertices = delete(fusedWebVertices,vertexOrder[2]);
+        
+        // 2. List of matrices
+        list fusedWebMfs = mfs;
+        fusedWebMfs[vertexOrder[1]] = l[1];
+        fusedWebMfs = delete(fusedWebMfs,vertexOrder[2]);
+        
+        // 3. Gradings
+        if( useGrading )
+        {
+            list fusedWebMfGr = mfGradings;
+            fusedWebMfGr[vertexOrder[1]] = l[2];
+            fusedWebMfGr = delete(fusedWebMfGr,vertexOrder[2]);
+        }
+        
+        list fusedWeb = list(fusedWebVertices, fusedWebMfs);
+        
+        if( useGrading ){ fusedWeb = fusedWeb + list(fusedWebMfGr); }
+        
+        if( useSanityChecks )
+        {
+            if( !webVerify( fusedWeb ) )
+            {
+                print("[webCompile] Fused web is not valid, exiting.");
+                return();
+            }
+        }
+        
+        // Next we rearrange the compilation strategy. The vertices is simple: we have
+        // replaced the first vertex in the strategy by the fusion, so we just drop the
+        // second entry of vertexOrder
+        list fusedVertexOrder = delete(vertexOrder,2);
+        list fusedVarOrder;
+        
+        // Our new set of internal variables is the old one with all the variables we
+        // squeezed out removed. Note that here is where we update numInternalVar
+        int i;
+        for(i=1;i<=size(varOrder);i++)
+        {
+            poly u = varOrder[i];
+
+            if( !checklist(substrat_var,u) )
+            {
+                fusedVarOrder = fusedVarOrder + list(u);
+            }
+            else
+            {
+                // u is an internal variable which was squeezed out, so
+                // reduce our internal variable count appropriately
+                numInternalVar--;
+            }
+        }
+        
+        list fusedStrat = list(fusedVertexOrder, fusedVarOrder);
+        
+        // Now we go to the ring nR(count+1), which is nR(count) with the internal
+        // variables that we just squeezed out removed. Recall that substrat_var
+        // contains a list of these variables
+        list rlist = ringlist(nR(count));
+        
+        list newvar;
+        for(i=1;i<=size(rlist[2]);i++)
+        {
+            if( !checklist(substrat_varStr, rlist[2][i]) )
+            {
+                newvar = newvar + list(rlist[2][i]);
+            }
+        }
+
+        list newringList;
+        newringList[1] = rlist[1];
+        newringList[2] = newvar;
+        newringList[3] = rlist[3];
+        newringList[4] = rlist[4];
+
+        // Fix the variable weighting
+        intvec kk = (1..size(newvar));
+        for(i=1; i<=size(newvar); i++)
+        {
+            kk[i] = 1;
+        }
+        newringList[3][1][2] = kk;
+        
+        // Create our new ring
+        def nR(count+1) = ring(newringList);
+        setring nR(count+1);
+        
+        list web = imap(nR(count),fusedWeb);
+        
+        // If the number of internal variables is zero, then fusedStrat is not defined
+        // in nR(count) but rather is just a global, since it contains no ring variables
+        if( numInternalVar > 0 )
+        {
+            list compStrat = imap(nR(count),fusedStrat);
+        }
+        else
+        {
+            list compStrat = fusedStrat;
+        }
+        kill nR(count);
+        
+        // Increment the counter, get ready to go again!
+        count++;
     }
+    
+    // We exited after exhausting our internal variables, with valid web and compStrat.
+    // So the first entry in the mfs list of web is our final answer
+    setring RRR;
+    list web = imap(nR(count),web);
+    kill nR(count);
+    
+    matrix A = web[2][1];
+    list retlist = A;
+        
+    if( useGrading ){ intvec Agr = web[3][1]; retlist = retlist + list(Agr); }
+    
+    retlist = retlist + list(splittingRecord);
+    
+    return(retlist);
 }
