@@ -5,7 +5,7 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
 // Define the underlying web of the trefoil
@@ -20,17 +20,42 @@ intvec vertexParity = -1,-1,-1;
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
 // Compute the euler characteristic, from trefoil-data
-list L = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
-
-
+list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(trefoilLink, h);
+
+ring ss=(0,q,t),(x),dp;
+list cp = imap(rr,cp);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
-
-// The Jones polynomial is -q9 + q5 + q3 + q, and
--q9 + q5 + q3 + q == euler;
+euler;
 
 // The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
+
+// Running the above code with the state of things on 24/9/10 yields
+// the following.
+
+// N = 2 invariants of the trefoil
+//
+// Jones polynomial: -q9 + q5 + q3 + q
+// KR polynomial: (q9+q5t+q3t3+qt3)/(t3) 
+//
+// The Jones polynomial agrees with what I calculated by hand, and
+// the KR polynomial agrees with the data on the Knot Atlas.
+
+// N = 3 invariants of the trefoil
+// 
+// P_3: -q14-q12+q8+2q6+q4+q2
+// KR polynomial: (q14+q12+q8t+q6t3+q6t+q4t3+q2t3)/(t3)
+//
+// The KR polynomial (and hence P_3) agree with the ones computed
+// by Gukov-Schwarz-Vafa (GSV).
+
+// N = 4 invariants
+//
+// P_4: 
+// KR polynomial: 
+//
+// Note that here the main holdup seems to be several calls to minbase.
