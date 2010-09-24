@@ -2777,6 +2777,7 @@ proc extractblockmat(matrix block)
     }
     
     list l = a,b,c,d;
+    kill a,b,c,d,nr,nc,i,j;
     return(l);
 }
 
@@ -3492,12 +3493,14 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
             kill s;
         }
     }
+    kill varlist;
     
     list newringList;
     newringList[1] = rlist[1];
     newringList[2] = newvar;
     newringList[3] = rlist[3];
     newringList[4] = rlist[4];
+    kill rlist;
     
     // Fix the variable weighting
     intvec kk = (1..size(newvar));
@@ -3506,12 +3509,13 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         kk[i] = 1;
     }
     newringList[3][1][2] = kk;
+    kill kk;
     
     // Create our new ring
     def nR = ring(newringList);
     setring nR;
     
-    dbprint(printlevel, "[mfPushforward] Renaming ring variable(s) to " + varstr(nR));
+    //dbprint(printlevel, "[mfPushforward] Renaming ring variable(s) to " + varstr(nR));
     
     // If we call fetch then the object of RRR is converted to the new renamed variables
     matrix A = fetch(RRR,A);
@@ -3687,19 +3691,6 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         {
             Hlist[i] = mfSuspend( Hlist[i] ); // homotopies are suspended just like differentials
         }
-        
-        // Sanity check, debug
-        //for(i=1;i<=size(Hlist);i++)
-        //{
-        //    matrix F = Hlist[i] * final + final * Hlist[i];
-        //    print("last " + string(F[1,1]));
-            
-        //    if( F != F[1,1] * unitmat(ncols(final)) )
-        //    {
-        //        print("error");
-        //        return();
-        //    }
-        //}
     }
     
     list retlist = list(final,mapAblowToFinal,mapFinalToAblow);
@@ -3713,11 +3704,13 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     if( homotopyList )
     {
         retlist = retlist + list(Hlist);
+        kill Hlist;
     }
     
     dbprint(printlevel, "[mfPushforward] result is size " + string(ncols(final)) + ".");
     dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
-    
+    kill final, mapAblowToFinal, mapFinalToAblow;
+        
     return(retlist);
 }
 
@@ -3770,6 +3763,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
             if( A * H[i] + H[i] * A != intvars[i]^(N[i]) * unitmat(ncols(A)) )
             {
                 print("[mfPushforward] Not passed valid homotopies, exiting.");
+                return();
             }
         }
     }
@@ -3783,7 +3777,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
     
     while( size(intvars) > 0 )
     {
-        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count)));
+        //dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count)));
         
         // Do the reduction with respect to the first variable and homotopy, and
         // induce homotopies on this reduction for the action of the rest of the variables
