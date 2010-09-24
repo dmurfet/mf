@@ -282,7 +282,7 @@ proc mfVertex(int zeroOrOne, list varis, int N)
 // mfVertexGrading
 ////////////////////////////////////////////////////////////////////
 
-proc mfVertexGrading(int zeroOrOne, list varis, int N)
+proc mfVertexGrading(int zeroOrOne, int N)
 {
    if( zeroOrOne == 0 )
    {
@@ -534,10 +534,10 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix V2(1) = mfVertex( D2[1][1], varis(1), N );
     matrix V2(2) = mfVertex( D2[2][1], varis(2), N );
     
-    intvec V1gr(1) = mfVertexGrading( D1[1][1], varis(1), N );
-    intvec V1gr(2) = mfVertexGrading( D1[2][1], varis(2), N );
-    intvec V2gr(1) = mfVertexGrading( D2[1][1], varis(1), N );
-    intvec V2gr(2) = mfVertexGrading( D2[2][1], varis(2), N );
+    intvec V1gr(1) = mfVertexGrading( D1[1][1], N );
+    intvec V1gr(2) = mfVertexGrading( D1[2][1], N );
+    intvec V2gr(1) = mfVertexGrading( D2[1][1], N );
+    intvec V2gr(2) = mfVertexGrading( D2[2][1], N );
     
     // Now start to reduce V1(1) x V1(2), V2(1) x V2(2) and the map between them:
         
@@ -898,8 +898,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
         matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
         matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
     
-        intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
-        intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+        intvec V1gr(k) = mfVertexGrading( D1[k][1], N );
+        intvec V2gr(k) = mfVertexGrading( D2[k][1], N );
         
         // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
         
@@ -1203,8 +1203,8 @@ proc mfCompileWeb(list D1, D2, int chitype, int chiposition, int N)
     matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
     matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
 
-    intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
-    intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+    intvec V1gr(k) = mfVertexGrading( D1[k][1],  N );
+    intvec V2gr(k) = mfVertexGrading( D2[k][1], N );
     
     // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
 
@@ -1516,16 +1516,6 @@ proc intvecToString(intvec v)
     return(s);
 }
 
-/////////////////////////////////////////
-// Link datatype
-//
-// Suppose we are given a link with m crossings, on which we fix a particular ordering.
-// We represent this as a list (X,Y) consisting of an intvec X and a list Y, such that
-//
-// - X is an intvec of size m with X[i] = 1 if the i-th crossing of the link is positive
-// and X[i] = -1 if the crossing is negative.
-// - each entry of Y is an intvec of size 4 such that Y[i] labels the edges incident at
-//  the i-th crossing of the link, oriented in the usual clockwise fashion.
 
 ////////////////////////////////////////////////////////////////////
 // mfCompileLink
@@ -2616,8 +2606,8 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
     matrix V1(1) = mfVertex( D1[1][1], varis(1), N ); 
     matrix V1(2) = mfVertex( D1[2][1], varis(2), N );
     
-    intvec V1gr(1) = mfVertexGrading( D1[1][1], varis(1), N );
-    intvec V1gr(2) = mfVertexGrading( D1[2][1], varis(2), N );
+    intvec V1gr(1) = mfVertexGrading( D1[1][1], N );
+    intvec V1gr(2) = mfVertexGrading( D1[2][1], N );
     
     // Now start to reduce V1(1) x V1(2) and the corresponding map:
         
@@ -2906,7 +2896,7 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
         // V1(k) is the MF associated to the k-th vertex in web 1:
         matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
     
-        intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+        intvec V1gr(k) = mfVertexGrading( D1[k][1], N );
         
         // Now start to reduce final1 x V1(k) and the associated map:
         
@@ -3134,7 +3124,7 @@ proc mfCompileWeb2(list D1, FTransWeb, TTransWeb, weightsOfWeb2, int chitype, in
     // V1(k) is the MF associated to the k-th vertex in web 1: 
     matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
 
-    intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+    intvec V1gr(k) = mfVertexGrading( D1[k][1], N );
     
     // Now start to reduce final1 x V1(k) and the associated map:
 
@@ -3418,8 +3408,8 @@ proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, in
     matrix V2(1) = mfVertex( D2[1][1], varis(1), N );
     matrix V2(2) = mfVertex( D2[2][1], varis(2), N );
     
-    intvec V2gr(1) = mfVertexGrading( D2[1][1], varis(1), N );
-    intvec V2gr(2) = mfVertexGrading( D2[2][1], varis(2), N );
+    intvec V2gr(1) = mfVertexGrading( D2[1][1], N );
+    intvec V2gr(2) = mfVertexGrading( D2[2][1], N );
     
     // Now start to reduce V2(1) x V2(2) and the associated map:
         
@@ -3705,7 +3695,7 @@ proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, in
         // V2(k) is the MF associated to the k-th vertex in web 2: 
         matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
     
-        intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+        intvec V2gr(k) = mfVertexGrading( D2[k][1], N );
         
         // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
         
@@ -3933,7 +3923,7 @@ proc mfCompileWeb3(list D2, GTransWeb, STransWeb, weightsOfWeb1, int chitype, in
     // V2(k) is the MF associated to the k-th vertex in web 2: 
     matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
 
-    intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+    intvec V2gr(k) = mfVertexGrading( D2[k][1], N );
     
     // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
 
@@ -4454,8 +4444,8 @@ proc mfCompileOnlyOneWebLeft(list D1, int N)
     matrix V1(1) = mfVertex( D1[1][1], varis(1), N ); 
     matrix V1(2) = mfVertex( D1[2][1], varis(2), N );
     
-    intvec V1gr(1) = mfVertexGrading( D1[1][1], varis(1), N );
-    intvec V1gr(2) = mfVertexGrading( D1[2][1], varis(2), N );
+    intvec V1gr(1) = mfVertexGrading( D1[1][1], N );
+    intvec V1gr(2) = mfVertexGrading( D1[2][1], N );
     
     // Now start to reduce V1(1) x V1(2):
         
@@ -4727,7 +4717,7 @@ proc mfCompileOnlyOneWebLeft(list D1, int N)
         // V1(k) is the MF associated to the k-th vertex in web 1, 
         matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
     
-        intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+        intvec V1gr(k) = mfVertexGrading( D1[k][1], N );
         
         // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
         
@@ -4942,7 +4932,7 @@ proc mfCompileOnlyOneWebLeft(list D1, int N)
     // V1(k) is the MF associated to the k-th vertex in web 1, 
     matrix V1(k) = mfVertex( D1[k][1], varis(k), N );
 
-    intvec V1gr(k) = mfVertexGrading( D1[k][1], varis(k), N );
+    intvec V1gr(k) = mfVertexGrading( D1[k][1], N );
     
     // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
 
@@ -5201,8 +5191,8 @@ proc mfCompileOnlyOneWebRight(list D2, int N)
     matrix V2(1) = mfVertex( D2[1][1], varis(1), N );
     matrix V2(2) = mfVertex( D2[2][1], varis(2), N );
     
-    intvec V2gr(1) = mfVertexGrading( D2[1][1], varis(1), N );
-    intvec V2gr(2) = mfVertexGrading( D2[2][1], varis(2), N );
+    intvec V2gr(1) = mfVertexGrading( D2[1][1], N );
+    intvec V2gr(2) = mfVertexGrading( D2[2][1], N );
     
     // Now start to reduce V2(1) x V2(2) and the map between them:
         
@@ -5477,7 +5467,7 @@ proc mfCompileOnlyOneWebRight(list D2, int N)
         // V2(k) is the MF associated to the k-th vertex in web 2: 
         matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
     
-        intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+        intvec V2gr(k) = mfVertexGrading( D2[k][1], N );
         
         // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
         
@@ -5698,7 +5688,7 @@ proc mfCompileOnlyOneWebRight(list D2, int N)
     // V2(k) is the MF associated to the k-th vertex in web 2: 
     matrix V2(k) = mfVertex( D2[k][1], varis(k), N );
 
-    intvec V2gr(k) = mfVertexGrading( D2[k][1], varis(k), N );
+    intvec V2gr(k) = mfVertexGrading( D2[k][1], N );
     
     // Now start to reduce final1 x V1(k), final2 x V2(k) and the map between them:
 
@@ -5873,32 +5863,167 @@ proc mfCompileOnlyOneWebRight(list D2, int N)
     return(finaloutput);
 }
 
+/////////////////////////////////////////
+// Link datatype
+//
+// Suppose we are given a link with m crossings, on which we fix a particular ordering.
+// We represent this as a list (X,Y) consisting of an intvec X and a list Y, such that
+//
+// - X is an intvec of size m with X[i] = 1 if the i-th crossing of the link is positive
+// and X[i] = -1 if the crossing is negative.
+// - each entry of Y is an intvec of size 4 such that Y[i] labels the edges incident at
+//  the i-th crossing of the link, oriented in the usual clockwise fashion.
 
-proc mfCompileLinkOLD(list linkData, string fileName, int useSaveFile, int N)
+////////////////////////////////////////////////////////////////////
+// mfCompileLinkAlt
+//
+// Takes as arguments a link, defined as a pair in the sense explained above, and the name
+// of a file to use for storing intermediate results. The return is a list of tuples
+//
+//      T = (intvec state1,intvec state2,int chitype,int chiposition,data).
+//
+// Suppose we have m crossings in our link. A "state diagram" is an assignment of integers 0,1
+// (or the letters A,B) to crossings, represented by an intvec with entries 0,1. So the tuple T
+// consists of two state diagrams state1,state2 related by a map of type chitype in position
+// chiposition. The final entry is the result of calling mfCompileWeb on this data. 
+//
+// The return of mfCompileLink is the list of all such tuples, over all possible pairs
+// (state1,state2) connected by maps.
+//
+// To facilitate the computations we store the results of mfCompileWeb to disk.
+// To illustrate the scheme, take the state 010 and state 110, let us say that the underlying
+// link has a positive crossing in the first position so that there is a map 010 -> 110 of
+// chitype 0. Internally to mfCompileLink we would then run
+//
+//      list map010to110 = mfCompileWeb( suitable params );
+//
+// This list is then stored to the given file using MPfile.
+//
+// Before computing a given tuple T we load in the contents of the datafile and see if it has
+// already been computed.
+//
+// NOTE: The maps returned by mfCompileWeb are degree one, and we do not mess with this;
+// we leave all the grading vectors unchanged (earlier there was an attempt to implement
+// the grading shifts according to [KR,p.81], but this is better done elsewhere).
+//
+// The novelty is that we use the new routines of mfweb.lib.
+
+proc mfCompileLinkAlt(list linkData, string fileName, int N)
 {
-    def RRR = basering;
+    // We do not change rings: we assume that the ambient ring has the same number of variables
+    // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
+    // if there is a save file, then loading this save file will set the ring.
     
-    // We always use a fixed ring with two "internal" x variables and four "external" y variables
-    ring rr=0,(x(1..2),y(1..4)),dp;
+    def RRR = basering;
     
     intvec vertexParity = linkData[1];
     list edgeList = linkData[2];
-    
     int webSize = size(vertexParity);
     
-    list stateDiagrams = powervec(webSize);
-    list returnList;
-    
     // Read in the save file, if it exists
-    if( status(fileName,"exists") == "yes" && useSaveFile )
+    link l = "MPfile: " + fileName;
+    if( status(fileName,"exists") == "yes" )
     {
-        dbprint(printlevel, "[mfCompileLink] Reading in savefile.");
-        execute(read(fileName));
+        dbprint(printlevel, "[mfCompileLinkAlt] Reading in savefile.");
+        def nR = loadFromMPfile(fileName);
+        setring nR;
     }
 
+    list returnList;
+    
+    // A web is defined by two lists: a list of vertices and a list of mfs (plus gradings).
+    // In what follows all our webs will have the same underlying graph, which we now construct
+    int j;
+    list webVertices;
+    for(j=1; j<=size(edgeList); j++)
+    {
+        intvec e = edgeList[j];
+        
+        // The first two variables in e are the outgoing variables, and the second two
+        // are the incoming variables
+        list vertex = list(list(var(e[3]),var(e[4])),list(N+1,N+1),list(var(e[1]),var(e[2])),list(N+1,N+1));
+        webVertices = webVertices + list(vertex);
+        kill e, vertex;
+    }
+    
+    // The compilation strategy will not change either: we simply compile from the 1st
+    // vertex to the last one, and enumerate the variables in the given order.
+    list compStratVert;
+    list compStratVar;
+    for(j=1;j<=size(edgeList); j++)
+    {
+        compStratVert[j] = j;
+        compStratVar[j] = var(j);
+    }
+    list compStrat = compStratVert,compStratVar;
+    
+    // STEP 1. Go through each state of the link and compile the corresponding web
+    // The compilation of a state 1101 is stored in web1101
     int i;
+    list stateDiagrams = powervec(webSize);
     int numStateDiagrams = size(stateDiagrams);
     
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        dbprint(printlevel, "[mfCompileLinkAlt] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+        
+        string listName = "compiled" + intvecToString(v); // compilation product
+        string listName2 = "web" + intvecToString(v); // web
+        
+        string cmd = "int definedCheck = defined(" + listName + ") && defined(" + listName2 + ");";
+        execute(cmd);
+        
+        if( definedCheck )
+        {
+            dbprint(printlevel, "[mfCompileLinkAlt] Already compiled, skipping.");
+            // We have already compiled this web
+            i++;
+            continue;
+        }
+        
+        // Build a web suitable for calling webCompile
+        int j;
+        list webMfs;
+        list webMfsGrading;
+
+        for(j=1; j<=size(edgeList); j++)
+        {
+            intvec e = edgeList[j];
+            
+            matrix X = mfVertex(v[j], list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+            intvec Xgr = mfVertexGrading(v[j], N);
+            
+            webMfs = webMfs + list(X);
+            webMfsGrading = webMfsGrading + list(Xgr);
+            kill X,e;
+        }
+        
+        // Define the web
+        list web = webVertices, webMfs, webMfsGrading;
+        kill webMfs, webMfsGrading;
+        
+        string cmd = "list " + listName2 + " = web;";
+        execute(cmd);
+        
+        // Call webCompile
+        string cmd = "list " + listName + " = webCompile(web, compStrat);";
+        execute(cmd);
+        
+        // Save the results to the savefile
+        dbprint(printlevel, "[mfCompileLinkAlt] Saving to disk.");
+        string cmd = "write(l,list(\"" + listName + "\"," + listName + "));";
+        execute(cmd);
+        string cmd = "write(l,list(\"" + listName2 + "\"," + listName2 + "));";
+        execute(cmd);
+        
+        kill web, v;
+    }
+    
+    close(l);
+    
+    // STEP 2. Compile the maps
     for( i = 1; i <= numStateDiagrams; i++ )
     {
         // Our current state diagram
@@ -5914,57 +6039,135 @@ proc mfCompileLinkOLD(list linkData, string fileName, int useSaveFile, int N)
             // originating in this state diagram with a chi in this position
             intvec w = v;
             int somethingToDo = 0;
+            int chitype;
         
             if(v[j] == 0 && vertexParity[j] == 1) // chitype is 0
             {
                 w[j] = w[j]+1;
                 somethingToDo = 1;
+                chitype = 0;
             }
         
             if(v[j] == 1 && vertexParity[j] == -1) // chitype is 1
             {
                 w[j] = w[j]-1;
                 somethingToDo = 1;
+                chitype = 1;
             }
         
             if( somethingToDo )
             {
-                dbprint(printlevel, "[mfCompileLink]  Looking at the map to [" + string(w) + "].");
-                
-                // Currently memory usage is so bad that in the first cycle we go from 273192 bytes to 23478000.
-                
+                dbprint(printlevel, "[mfCompileLinkAlt]  Looking at the map to [" + string(w) + "].");
                 string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
-            
-                // Populate an integer definedCheck with the result of defined(map???to???)
+
                 string cmd = "int definedCheck = defined(" + listName + ");";
                 execute(cmd);
-                list Q;
                 
-                // See if this list already exists (having been loaded from the file), and if
-                // it does not, then calculate it (the result being stored in Q in either case).
-                if( definedCheck && useSaveFile )
+                if( definedCheck )
                 {
-                    dbprint(printlevel, "[mfCompileLink]  Already computed, skipping.");
-                    string cmd = "Q = " + listName;
-                    execute(cmd);
-                }
-                else
-                {
-                    dbprint(printlevel, "[mfCompileLink]  Currently used memory: " + string(memory(0) div 1024) + "kb.");
+                    dbprint(printlevel, "[mfCompileLinkAlt]  Already compiled, skipping.");
                     
-                    // Run mfCompileWeb.
-                    Q = mfCompileWeb(linkweb(v,edgeList),linkweb(w,edgeList),v[j],j,N);
+                    string cmd = "list D = " + listName + ";";
+                    execute(cmd);
+                    
+                    //print(D[1]); //debug
+                    //print("---");
+                    //print(D[2]);
+                    
+                    // The webs and webmaps are concentrated in some degree, which
+                    // we can deduce from looking at the maps
+                    int concentrateDegree = 0;
+                    
+                    if( D[1] == matrix(0,nrows(D[1]),ncols(D[1])) )
+                    {
+                        concentrateDegree = 1;
+                    }
+                    
+                    cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";";
+                    execute(cmd);
+                    cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";";
+                    execute(cmd);
 
-                    // Add the output of Q to our file (Q[5] and Q[6] are no longer needed):
-                    Q = delete(Q,5); Q = delete(Q,5); // ???
-                    dbprint(printlevel, "[mfCompileLink]  Writing result to disk.");
-                    writelist(fileName,listName,Q);                 
+                    // Extract the grading from the compiled web. The grading on
+                    // degree zero lives in the second position, and the grading
+                    // on degree one lives in the third.
+                    intvec leftgr = leftCompiledWeb[concentrateDegree+2];
+                    intvec rightgr = rightCompiledWeb[concentrateDegree+2];
+
+                    // Build the list Q from all of the above
+                    list Q = D[concentrateDegree+1], concentrateDegree, leftgr, rightgr;
+
+                    // Add the computed list to the end of compiledEntry
+                    list compiledEntry = v, w, v[j], j, Q;
+                    returnList = returnList + list(compiledEntry);
+                    kill listName, cmd, D, Q, compiledEntry, leftCompiledWeb, rightCompiledWeb, leftgr, rightgr;
+                    
+                    j++;
+                    continue;
                 }
+                
+                string cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";";
+                execute(cmd);
+                cmd = "list leftWeb = web" + intvecToString(v) + ";";
+                execute(cmd);
+                cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";";
+                execute(cmd);
+                cmd = "list rightWeb = web" + intvecToString(w) + ";";
+                execute(cmd);
+                
+                // NOTE: Grading is not turned on right now
+                
+                intvec e = edgeList[j];
+                matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
+                kill e;
+                
+                list D = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+                string cmd = "list " + listName + " = D;";
+                execute(cmd);
+                kill M;
+                
+                //print("Collating data -----");
+                //print(D[1]); //debug
+                //print("---");
+                //print(D[2]);
+                
+                // Save the results to the savefile
+                dbprint(printlevel, "[mfCompileLinkAlt] Saving to disk.");
+                string cmd = "write(l,list(\"" + listName + "\",D));";
+                execute(cmd);
+                
+                // The webs and webmaps are concentrated in some degree, which
+                // we can deduce from looking at the maps
+                int concentrateDegree = 0;
+                
+                if( D[1] == matrix(0,nrows(D[1]),ncols(D[1])) )
+                {
+                    concentrateDegree = 1;
+                }
+                
+                // Extract the grading from the compiled web. The grading on
+                // degree zero lives in the second position, and the grading
+                // on degree one lives in the third.
+                intvec leftgr = leftCompiledWeb[concentrateDegree+2];
+                intvec rightgr = rightCompiledWeb[concentrateDegree+2];
+                
+                // We need to form the list Q which has the format D, component(0 or 1),srcgr,targetgr
+                list Q = D[concentrateDegree+1], concentrateDegree, leftgr, rightgr;
+                print("Summarising Q");
+                print(Q[1]);
+                print("--");
+                print(Q[2]);
+                print("--");
+                print(Q[3]);
+                print("--");
+                print(Q[4]);
+                print("--done");
                 
                 // Add the computed list to the end of compiledEntry
                 list compiledEntry = v, w, v[j], j, Q;
                 returnList = returnList + list(compiledEntry);
-                kill listName, cmd, Q, compiledEntry;
+                kill listName, cmd, D, Q, compiledEntry, leftWeb, rightWeb, leftCompiledWeb, rightCompiledWeb;
+                kill leftgr, rightgr;
             }
             
             kill w, somethingToDo;
@@ -5973,8 +6176,8 @@ proc mfCompileLinkOLD(list linkData, string fileName, int useSaveFile, int N)
         kill v;
     }
     
+    
     setring RRR;
-    list returnList = imap(rr,returnList);
     
     return(returnList);
 }
@@ -6003,7 +6206,7 @@ proc loadFromMPfile(string filename)
 {
     if( !status(filename,"exists","yes") )
     {
-        print("[loadFromMPlink] File does not exist, exiting.");
+        print("[loadFromMPfile] File does not exist, exiting.");
         return();
     }
     
@@ -6013,7 +6216,7 @@ proc loadFromMPfile(string filename)
     
     if( !status(l,"open","yes") )
     {
-        print("[loadFromMPlink] Failed to open link, exiting.");
+        print("[loadFromMPfile] Failed to open link, exiting.");
         return();
     }
     
@@ -6025,7 +6228,7 @@ proc loadFromMPfile(string filename)
         if( typeof(L) == "list" )
         {
             // The first position is the variable name, the second the actual object
-            dbprint(printlevel, "[loadFromMPlink]     Reading in variable " + L[1]);
+            dbprint(printlevel, "[loadFromMPfile]     Reading in variable " + L[1]);
             string cmd = "def " + L[1] + " = L[2];";
             execute(cmd);
 
