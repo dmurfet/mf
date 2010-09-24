@@ -2556,7 +2556,7 @@ proc isGradingValid(matrix A, intvec g)
     int m = ncols(A)/2;
     poly W = (A * A)[1,1];
     
-    if( W == 0 ){ print("[isGradingValid] Potential is zero, default pass."); return(1); }
+    if( W == 0 ){ return(1); }
         
     // In R this W has degree 2 * (n+1) where n is given by
     int n = deg(W) - 1;
@@ -3646,7 +3646,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         retlist[4] = l[2];
         retlist[5] = l[4];
         kill l;
-        
+
         //dbprint(printlevel, "[mfPushforward] splitting produced nonsquare matrices.");
         dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
             

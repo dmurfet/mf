@@ -5913,7 +5913,10 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
     // We do not change rings: we assume that the ambient ring has the same number of variables
     // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
     // if there is a save file, then loading this save file will set the ring.
-    
+   
+    system("--ticks-per-sec",1000);
+    int timeLink = timer;
+ 
     def RRR = basering;
     
     intvec vertexParity = linkData[1];
@@ -5967,6 +5970,7 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
     {
         // Our current state diagram
         intvec v = stateDiagrams[i];
+	dbprint(printlevel, "");
         dbprint(printlevel, "[mfCompileLinkAlt] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
         
         string listName = "compiled" + intvecToString(v); // compilation product
@@ -5982,8 +5986,9 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
             i++;
             continue;
         }
+        dbprint(printlevel, "[mfCompileLinkAlt] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
-        // Build a web suitable for calling webCompile
+	// Build a web suitable for calling webCompile
         int j;
         list webMfs;
         list webMfsGrading;
@@ -6153,15 +6158,15 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
                 
                 // We need to form the list Q which has the format D, component(0 or 1),srcgr,targetgr
                 list Q = D[concentrateDegree+1], concentrateDegree, leftgr, rightgr;
-                print("Summarising Q");
-                print(Q[1]);
-                print("--");
-                print(Q[2]);
-                print("--");
-                print(Q[3]);
-                print("--");
-                print(Q[4]);
-                print("--done");
+                //print("Summarising Q"); //debug
+                //print(Q[1]);
+                //print("--");
+                //print(Q[2]);
+                //print("--");
+                //print(Q[3]);
+                //print("--");
+                //print(Q[4]);
+                //print("--done");
                 
                 // Add the computed list to the end of compiledEntry
                 list compiledEntry = v, w, v[j], j, Q;
@@ -6178,7 +6183,8 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
     
     
     setring RRR;
-    
+   
+    dbprint(printlevel, "[mfCompileLinkAlt] total elapsed time " + string(timer-timeLink) + "ms."); 
     return(returnList);
 }
 
@@ -6228,7 +6234,7 @@ proc loadFromMPfile(string filename)
         if( typeof(L) == "list" )
         {
             // The first position is the variable name, the second the actual object
-            dbprint(printlevel, "[loadFromMPfile]     Reading in variable " + L[1]);
+            //dbprint(printlevel, "[loadFromMPfile]     Reading in variable " + L[1]);
             string cmd = "def " + L[1] + " = L[2];";
             execute(cmd);
 

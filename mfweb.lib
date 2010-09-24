@@ -1036,9 +1036,9 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                     return();
                 }
                                         
-                matrix f0 = R(1)[j][1];
-                matrix f1 = R(1)[j][2];
-                matrix g0 = R(1)[j][3];
+                matrix f0 = R(2)[j][1]; // Note the F must come from the second web
+                matrix f1 = R(2)[j][2];
+                matrix g0 = R(1)[j][3]; // and the G from the first
                 matrix g1 = R(1)[j][4];
                 poly u = R(1)[j][5];
                 int expo = R(1)[j][6];
@@ -1049,6 +1049,31 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                 list mblock = extractblockmat(M);
                 matrix m0 = mblock[1];
                 matrix m1 = mblock[4];
+
+		//intvec rleft0 = splitRec(1)[i][2]; //debug
+		//intvec rleft1 = splitRec(1)[i][3];
+		//intvec rright0 = splitRec(2)[i][2];
+		//intvec rright1 = splitRec(2)[i][3];
+		//print("Gradings");
+		//print(rleft0);
+		//print("//");
+		//print(rleft1);
+		//print(" and ");
+		//print(rright0);
+		//print("//");
+		//print(rright1);
+		//print("maps");
+		//print(f0);
+		//print("---");
+		//print(f1);
+		//print("---");
+		//print(g0);
+		//print("---");
+		//print(g1);
+		//print(" and M ");
+		//print(m0);
+		//print("---");
+		//print(m1);
 
                 // Premultiply by G and postmultiply by F
                 m0 = f0 * m0 * g0;
@@ -1062,7 +1087,7 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                 
             poly u = R(1)[j][3];
             int expo = R(1)[j][4];
-            matrix F = R(1)[j][1];
+            matrix F = R(2)[j][1];
             matrix G = R(1)[j][2];
             
             // First we need to inflate and suspend. u = R(1)[3], N = R(1)[4]
