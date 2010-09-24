@@ -18,10 +18,7 @@ LIB "linkhom.lib";
 ////////////////////////////////////////////////////////////////////
 // USAGE GUIDE
 //
-// In principle everything in here should (eventually) be made to work
-// for an arbitrary ring, but if there is something exotic (e.g. parameters
-// or unusual orderings) then there are no guarantees. It should definitely
-// work for 0,(some vars),dp.
+// In principle everything in here should work for an arbitrary ring. Maybe.
 //
 // A web is an oriented graph where edges are allowed to begin or end, but not
 // both, on some unspecified "boundary". All edges are labelled with a single
@@ -38,7 +35,7 @@ LIB "linkhom.lib";
 // The Pi are lists of integers, with P1 giving the exponents on the L1 variables
 // and P2 giving the exponents on the L2 variables.
 //
-// NOTE: All exponents should be > 1 otherwise the picture is trivial.
+// NOTE: All exponents should be > 1 otherwise the results are trivial.
 //
 // WARNING: We do not allow isolated vertices, with no incoming or outgoing vertices.
 // The ordering of the variables in L1 and L2 may matter.
@@ -61,7 +58,7 @@ LIB "linkhom.lib";
 //
 // NOTE: This is different to the format for webs explained in mfCompileWeb of linkhom.lib
 //
-// We say that a ring variable occurs in a web if it occurs in some vertex
+// We say that a ring variable "occurs" in a web if it occurs in some vertex
 // of the web. Such a variable is "external" if does not occur as a
 // incoming and outgoing variable in some vertex, and "internal" otherwise.
 //
@@ -91,10 +88,11 @@ LIB "linkhom.lib";
 
 /////////////////////////////////////////////////
 // varLiesBetweenVertices
+// 
+// Return 1 if the variable u lies between these two vertices, 0 otherwise.
 
 proc varLiesBetweenVertices(poly u, list v1, list v2)
 {
-    // Return 1 if this variable lies between these two vertices, 0 otherwise
     if( (checklist(v1[3],u) && checklist(v2[1],u)) || (checklist(v1[1],u) && checklist(v2[3],u)) )
     {
         return(1);
@@ -110,13 +108,15 @@ proc varLiesBetweenVertices(poly u, list v1, list v2)
 
 proc webVerify(list web)
 {
+    int useGrading = (size(web) > 2 );
     list vertices = web[1];
     list mfs = web[2];
+    if( useGrading ){ list mfsGrading = web[3]; }
     
     if( size(vertices) != size(mfs) )
     {
         print("[webVerify] There is size mismatch between vertices and MFs, failed.");
-        return(0); // Size mismatch
+        return(0);
     }
     
     int i;
@@ -127,11 +127,12 @@ proc webVerify(list web)
         list v_out = vertices[i][3];
         list p_out = vertices[i][4];
         matrix A = mfs[i];
+        if( useGrading ){ intvec Agr = mfsGrading[i]; }
         
         if( size(v_in) + size(v_out) == 0 )
         {
             print("[webVerify] There is an isolated vertex, failed.");
-            return(0); // Isolated vertices are not allowed
+            return(0);
         }
         
         // Figure out the potential at this vertex
@@ -152,6 +153,16 @@ proc webVerify(list web)
         {
             print("[webVerify] At vertex " + string(i) + " the MF does not factorise the local potential W=" + string(W) + ", failed.");
             return(0);
+        }
+        
+        // Is A a graded MF?
+        if( size(web) > 2 )
+        {
+            if( !isGradingValid(A, Agr) )
+            {
+                print("[webVerify] At vertex " + string(i) + " the grading is not valid, failed.");
+                return(0);
+            }
         }
     }
     
@@ -234,9 +245,6 @@ proc webCompilePair(list web, list compStrat)
     // And the compilation strategy
     list vertexOrder = compStrat[1];
     list varOrder = compStrat[2];
-    
-    //print("[webCompilePair] The internal variables to be squeezed are");
-    //print(varOrder); // debug
     
     // Order the vertices according to the compilation strategy
     int i;
@@ -403,7 +411,7 @@ proc webCompilePair(list web, list compStrat)
 //
 // where r1,r2 are grading vectors on the even and odd parts of Y resp. (if we are
 // using the grading) and Q is the global splitting record. The last entry in Q is
-// a tuple ("nonsquare",[r1,r2,],R) with the last entry of R a tuple (f0,f1,g0,g1)
+// a tuple ("nonsquare",[r1,r2,],R) with the last entry of R a tuple (f0,f1,g0,g1,u,N)
 // with f0,g0 splitting the even part of the very last idempotent and similarly for f1,g1.
 
 proc webCompile(list web, list compStrat)
@@ -527,7 +535,9 @@ proc webCompile(list web, list compStrat)
         setring tempring;
         list subweb = imap(nR(count),subweb);
         list substrat = imap(nR(count),substrat);
-        list l = webCompilePair(subweb, substrat);
+            ////// IMPORTANT
+            list l = webCompilePair(subweb, substrat);
+            ////////////////
         kill subweb, substrat;
         setring nR(count);
         kill subweb, substrat;
@@ -548,7 +558,7 @@ proc webCompile(list web, list compStrat)
             // a tuple (f0,f1,g0,g1) with f0,g0 splitting the even part of the very last idempotent
             // and similarly for f1,g1.
             
-            dbprint(printlevel, "[webCompile] Hit nonsquare matrices, wrapping it up.");
+            //dbprint(printlevel, "[webCompile] Hit nonsquare matrices, wrapping it up.");
             
             kill vertices, mfs, vertexOrder, varOrder, adjacent_var, adjacent_varStr;
             kill vertex(1), vertex(2), mf(1), mf(2), substrat_var, substrat_varStr;
@@ -798,4 +808,276 @@ proc webCompile(list web, list compStrat)
     dbprint(printlevel, "[webCompile] total elapsed time " + string(timer-timeElapsed) + "ms.");
     
     return(retlist);
+}
+
+/////////////////////////////////////////////////
+// webCompileMorphism
+//
+// Given a pair of webs, which we assume only differ with regards to the matrix factorisations
+// (and possibly their gradings) assigned to the vertices (i.e. we assume that the vertices are
+// the same and in the same order), a compilation strategy, and a morphism F from the matrix
+// factorisation at vertex mapPos in the first web to the matrix factorisation at the same
+// vertex in the second web, we return the induced morphism between the compilations of the
+// two webs. We assume that the matrix factorisations in the web agree except possibly at
+// the specified vertex mapPos.
+//
+// NOTE: mapPos is an index into the ordering of the vertices determined by the compilation
+// strategy. This is important.
+//
+// Recall that the first output of webCompile is the differential on the "compilation" MF,
+// which we earlier referred to as Y. Let Y1 denote the compilation of web1 and Y2 the
+// compilation of web2. Our first return value here is a even block matrix C representing
+// the morphism Y1 --> Y2 compiling F.
+//
+// In the special case where the potential is zero and we end up with nonsquare matrices,
+// we return not a block matrix but a pair (c0,c1) which give the compiled map in each
+// degree.
+//
+// You can distinguish the two cases by the fact that typeof( ) in the first case is matrix
+// and in the second case is list.
+
+proc webCompileMorphism(list web1, list web2, list compStrat, matrix M, int mapPos)
+{
+    list compile(1) = webCompile(web1, compStrat);
+    list compile(2) = webCompile(web2, compStrat);
+    
+    matrix A = webCompileMorphismFromData( web1, compile(1), web2, compile(2), compStrat, M, mapPos );
+    return(A);
+}
+
+proc webCompileMorphismFromData(list web1, list compile(1), list web2, list compile(2), list compStrat, matrix M, int mapPos)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    int useGrading = (size(web1) > 2);
+    
+    list stratVertices = compStrat[1];
+    
+    list vertices = web1[1];
+    list mfs(1) = web1[2];
+    list mfs(2) = web2[2];
+    if( useGrading )
+    {
+        list mfsgr(1) = web1[3];
+        list mfsgr(2) = web2[3];
+    }
+    
+    // Now we walk through the compilation strategy. Here's roughly what's going to happen.
+    // Suppose our mfs are mf(1), ..., mf(v), ordered according to the compilation strategy.
+    // This means that, somewhat confusingly, mf(i) is mfs(1)[stratVertices[i]].
+    // What the compilation process does is tensor mf(1) with mf(2), tensor this with a 
+    // finite-dimensional algebra to cut down to the ring without any of the variables that
+    // lie between the vertices at which mf(1), mf(2) sit (we call this "inflation") reduce this 
+    // inflation, and split an idempotent on this reduction. Let us call the result of this
+    // splitting mf(1,2). Note the three steps
+    //
+    //  1. Inflate, using mablow (let us call this B for blow)
+    //  2. Reduce (giving a homotopy equivalence between B and its reduction)
+    //  3. Split an idempotent (gives a pair of maps splitting the idempotent).
+    //
+    // In the end we have a pair F: B[1] --> mf(1,2) and G: mf(1,2) --> B[1] such that
+    // F * G = 1 and G * F is the idempotent splitting to give the pushforward of mf(1) * mf(2)
+    // (in the infinite category) (these equalities are up to homotopy).
+    //
+    // It is this pair (F,G) which is recorded in the so-called "splitting records" which
+    // are returned by webCompile (see mfPushforward, mfPushforwardInductive and webCompilePair
+    // for how these things are put together).
+    //
+    // These steps are then repeated, to obtain mf(1,2,3) from mf(1,2) * mf(3), and so on.
+    //
+    // Suppose for the sake of simplicity that mapPos = 3, and write mf'(i) for the MFs occurring
+    // in web2. Hence M is a map mf(3) --> mf'(3). Then we have an induced map
+    //
+    // mf(1,2) * mf(3) --> mf(1,2) * mf'(3).
+    //
+    // Inflating this using mablow, suspending, and precomposing with the appropriate G and
+    // postcomposing with the appropriate F we get a map
+    //
+    // mf(1,2,3) --> mf'(1,2,3)
+    //
+    // Tensoring with mf(4) = mf'(4) and inflating, pre and post-composing, etc. we continue
+    // to keep track of this map until at the end we have the desired map
+    //
+    // C: mf(1,..,v) --> mf'(1,..,v).
+        
+    if( useSanityChecks )
+    {
+        // First check that apart from mapPos the mfs agre
+        int i;
+        for(i=1; i<=size(vertices); i++)
+        {
+            if( i != mapPos && mfs(1)[stratVertices[i]] != mfs(2)[stratVertices[i]] )
+            {
+                print("[webCompileMorphism] Matrix factorisations in position " + string(stratVertices[i]) + " differ, exiting.");
+                return();
+            }
+        }
+        
+        // Check that M is actually a morphism
+        if( M * mfs(1)[stratVertices[mapPos]] != mfs(2)[stratVertices[mapPos]] * M )
+        {
+            print("[webCompileMorphism] Given matrix is not a morphism, exiting.");
+            return();
+        }
+    }
+    
+    // The first task is to fastforward to the mapPos - 1 position in the compilation
+    // by looking up the differential on mf(1,2,...,mapPos - 1).
+    int nonsquare = (typeof(compile(1)[1]) == "string");
+    
+    // For nonsquare matrices compile looks like string, [intvec,intvec,] list and for
+    // square matrices it looks like matrix, [intvec,] list, with the list being the
+    // global splitting record.
+    
+    list splitRec(1) = compile(1)[2 + (nonsquare + 1)*useGrading];
+    list splitRec(2) = compile(2)[2 + (nonsquare + 1)*useGrading];
+    
+    // See webCompile's introduction for the full details on the format of the things
+    // in the splitting record. We just recall here that entries are tuples (Z, [gr,] R)
+    // where Z is the differential on some mf(1,..,i) and R is the splitting record for
+    // the production of Z from mf(1,..,i-1) * mf(i). Note the white lie above; actually
+    // we have the inflate-reduce-split triumvirate for _each_ internal variable, and hence
+    // a list R of pairs of F,G maps.
+    //
+    // Note that the ith position in the split record speaks about the fusion of
+    // mf(1,...,i) with mf(i+1).
+    
+    int startPoint;
+    if( mapPos > 2 )
+    {
+        list record = splitRec(1)[mapPos - 2];
+        
+        // The compilations of web1 and web2 should agree up to this point
+        if( useSanityChecks )
+        {
+            if( record[1] != splitRec(2)[mapPos - 2][1] )
+            {
+                print("[webCompileMorphism] Expected equal compilations, but this was not true. Exiting.");
+                return();
+            }
+        }
+        
+        // Replace M by mf(1,..,mapPos-1) * mf(mapPos) --> mf(1,..,mapPos-1) * mf'(mapPos)
+        M = ZZtensor( unitmat(ncols(record[1])), M );
+        startPoint = mapPos - 1;
+    }
+    
+    if( mapPos == 2 )
+    {
+        // Replace M by mf(1) * mf(2) --> mf(1) * mf'(2).
+        M = ZZtensor( unitmat(ncols(mfs(1)[stratVertices[1]])), M );
+        startPoint = 1;
+    }
+    
+    if( mapPos == 1 )
+    {
+        // Replace M by mf(1) * mf(2) --> mf'(1) * mf(2)
+        M = ZZtensor( M, unitmat(ncols(mfs(1)[stratVertices[2]])) );
+        startPoint = 1;
+    }
+    
+    // Now we're ready to step through the splitting record
+    int i;
+    for(i=startPoint;i<=size(splitRec(1));i++)
+    {
+        // Currently M is a map mf(1,...i) * mf(i+1) --> mf'(1,...,i) * mf'(i+1).
+        
+        // Check whether we are in the step with nonsquare matrices
+        if( typeof(splitRec(1)[i][1]) == "string" )
+        {
+            // This should be the last splitting in the splitting record
+            if( i != size(splitRec(1)) )
+            {
+                print("[webCompileMorphism] Found nonsquare matrices before the end of the splitting record, exiting.");
+                return();
+            }
+            
+            // If the second web is not also in this state, something is wrong
+            if( typeof(splitRec(2)[i][1]) != "string" )
+            {
+                print("[webCompileMorphism] Found nonsquare matrices in only one splitting record, exiting.");
+                return();
+            }
+            
+            // In this case the local splitting record lives in a different position, as splitRec(1)[i]
+            // is a tuple ("nonsquare",[r1,r2,],R) with the last entry of R a tuple (f0,f1,g0,g1,u,N)
+            // with f0,g0 splitting the even part of the very last idempotent and similarly for f1,g1.
+            
+            list R(1) = splitRec(1)[i][2 + 2*useGrading];
+            list R(2) = splitRec(2)[i][2 + 2*useGrading];
+        }
+        else
+        {
+            // This is the standard case of square matrices
+            
+            // Extract the R lists for web1 and web2 mentioned above
+            list R(1) = splitRec(1)[i][2 + useGrading];
+            list R(2) = splitRec(2)[i][2 + useGrading];    
+        }
+        
+        //displaySplittingRecord(R(1)); //debug
+        
+        // A splitting record R looks like a list of tuples (F,G,u,N) where
+        // F is a map Ablow[1] --> final, G is a map final --> Ablow[1] and
+        // u is the internal variable being squeezed out, N is the power such that
+        // u^N acts null-homotopically.    
+            
+        // Unless it is the last step where we get nonsquare matrices, in which case
+        // there is a tuple (f0,f1,g0,g1,u,N).
+    
+        int j;
+        for(j=1;j<=size(R(1));j++)
+        {
+            if( size(R(1)[j]) > 4 )
+            {
+                // This is a step with nonsquare matrices, hence it must be the last
+                if( j != size(R(1)) )
+                {
+                    print("[webCompileMorphism] Found nonsquare matrices in local splitting record before the end, exiting.");
+                    return();
+                }
+                                        
+                matrix f0 = R(1)[j][1];
+                matrix f1 = R(1)[j][2];
+                matrix g0 = R(1)[j][3];
+                matrix g1 = R(1)[j][4];
+                poly u = R(1)[j][5];
+                int expo = R(1)[j][6];
+
+                // Inflate and suspend
+                M = mfSuspendMorph( mfInflate(M, u, expo) );
+                    
+                list mblock = extractblockmat(M);
+                matrix m0 = mblock[1];
+                matrix m1 = mblock[4];
+
+                // Premultiply by G and postmultiply by F
+                m0 = f0 * m0 * g0;
+                m1 = f1 * m1 * g1;
+                    
+                list retlist = list(m0,m1);
+                kill mblock, m0, m1, f0, f1, g0, g1, u, expo;
+                    
+                return(retlist);
+            }
+                
+            poly u = R(1)[j][3];
+            int expo = R(1)[j][4];
+            matrix F = R(1)[j][1];
+            matrix G = R(1)[j][2];
+            
+            // First we need to inflate and suspend. u = R(1)[3], N = R(1)[4]
+            M = mfSuspendMorph( mfInflate(M,u,expo) );
+                        
+            // Now premultiply by G and postmultiply by F
+            M = F * M * G;
+            
+            kill u, expo, F, G;
+        }
+        
+        // Now M is a map mf(1,...,i+1) --> mf'(1,...,i+1). It remains to tensor
+        // with the next MF and then we can start again
+        M = ZZtensor( M, unitmat(ncols(mfs(1)[stratVertices[i+2]])) );
+    }
+    
+    return(M);
 }

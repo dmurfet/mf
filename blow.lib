@@ -1561,16 +1561,6 @@ proc computeGradingFromInjection(matrix F, intvec g)
 {
     LIB "control.lib";
     
-    // Sanity checks
-    
-    // Check that F is a monomorphism
-    //module kerF = rightKernel(F);
-    //if( kerF[1] != 0 )
-    //{
-    //    print("[computeGradingFromInjection] Passed a non-injective map, exiting.");
-    //    return();
-    //}
-    
     // Check that the sizes of g and F are compatible
     if( size(g) != nrows(F) )
     {
@@ -1723,15 +1713,27 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         // values is special. We put a string in the first position of the return list, so
         // that the receiver knows to interpret the rest of the output in the special manner.
         
-        list l = "nonsquare",f0,g0,f1,g1;
+        list l = "nonsquare",f0,g0,f1,g1; // f0 g0 = e0, g0 f1 = 1
         
         if( typeof(#[1]) == "intvec" )
         {
             // We are dealing with graded MFs
             intvec g = #[1];
-            intvec r1 = computeGradingFromInjection(f0, g[1..m/2]);
-            intvec r2 = computeGradingFromInjection(f1, g[(m/2+1)..m]);
+            
+            if( m != size(g) )
+            {
+                print("[mfSplitIdempotent] Encountered bad grading vector, exiting.");
+                return();
+            }
+            
+            intvec gr1 = g[1..(m/2)];
+            intvec gr2 = g[(m/2+1)..m];
+            
+            intvec r1 = computeGradingFromInjection(f0, gr1);
+            intvec r2 = computeGradingFromInjection(f1, gr2);
+            
             l = l + list(r1,r2);
+            kill g,r1,r2,gr1,gr2;
         }
         
         return(l);
@@ -1768,8 +1770,16 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     {
         // We are dealing with graded MFs
         intvec g = #[1];
+        
+        if( m != size(g) )
+        {
+            print("[mfSplitIdempotent] Encountered bad grading vector, exiting.");
+            return();
+        }
+        
         intvec r = computeGradingFromInjection(F, g);
         l = l + list(r);
+        kill g, r;
     }
     
     return(l);
@@ -2480,7 +2490,7 @@ proc findConstant(matrix A)
 }
 
 ////////////////////////////////////////////////////////////////////
-// isMorphismDegreeZero
+// checkMorphismDegree
 //
 // Given the differentials A, B of two MFs and an even supermatrix F
 // representing a morphism A -> B, together with grading vectors
@@ -2534,7 +2544,8 @@ proc checkMorphismDegree(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F, i
 //
 // Given the differential of a MF and a grading vector, checks whether
 // the pair defines a graded MF in the sense explained in "Usage Guide" above.
-// Returns 1 if the input is a valid graded MF, 0 otherwise.
+// Returns 1 if the input is a valid graded MF, 0 otherwise. Note that we
+// do not test MFs of 0, we just return 1.
 
 proc isGradingValid(matrix A, intvec g)
 {
@@ -2545,7 +2556,7 @@ proc isGradingValid(matrix A, intvec g)
     int m = ncols(A)/2;
     poly W = (A * A)[1,1];
     
-    if( W == 0 ){ print("[isGradingValid] Potential is zero, exiting."); return(); }
+    if( W == 0 ){ print("[isGradingValid] Potential is zero, default pass."); return(1); }
         
     // In R this W has degree 2 * (n+1) where n is given by
     int n = deg(W) - 1;
@@ -3542,6 +3553,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     matrix RT = l[1]; // Differential on reduced MF
     matrix F = l[2]; // A homotopy equivalence Ablow -> RT
     matrix G = l[3]; // A homotopy equivalence RT -> Ablow
+
     if( useGrading ){ intvec RTgr = computeGradingFromInjection(G,Ablowgr); }
     
     kill Ablow,l;
@@ -3620,15 +3632,25 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     {
         // In this the list l has the format l = "nonsquare",f0,g0,f1,g1 where fi,gi are the
         // splittings in the respective degrees, and l may have as a final entry a grading
-        // vector for the even and odd parts (separately)
+        // vector for the even and odd parts (separately). Note that mfSplitIdempotent has
+        // different conventions for what f and g mean. I.e. f0 g0 = e0, g0 f1 = 1, so
+        // we need to rearrange (since here we want F to be the projection, not the injection)
+        // and we want to group g0 with g1, f0 with g1. I.e. in the notation of mfSplitIdempotent
+        // we want to return the list "nonsquare",g0,g1,f0,f1.
         
         setring RRR;
         list l = imap(nR,l);
+        list retlist = l;
+        retlist[2] = l[3];
+        retlist[3] = l[5];
+        retlist[4] = l[2];
+        retlist[5] = l[4];
+        kill l;
         
-        dbprint(printlevel, "[mfPushforward] splitting produced nonsquare matrices.");
+        //dbprint(printlevel, "[mfPushforward] splitting produced nonsquare matrices.");
         dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
             
-        return(l);
+        return(retlist);
     }
     
     // mfSplitIdempotent returns not just the splitting of the idempotent, but the
@@ -3644,7 +3666,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     // Sanity check
     if( useSanityChecks && useGrading )
     {
-        if( isGradingValid(final, finalgr) )
+        if( !isGradingValid(final, finalgr) )
         {
             print("[mfPushforward] Something has gone wrong with the grading, exiting.");
             return();
@@ -3731,9 +3753,10 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 //
 // The second return value is the grading vector for A, if we are using gradings.
 //
-// The third (or second, if there is no grading) return value is a list R = (F1,G1),(F2,G2),...
+// The third (or second, if there is no grading) return value is a list R = (F1,G1,x1,N),(F2,G2,x2,N),...
 // of the same length of intvars which records the F and G matrices returned by mfPushforward
-// at each stage of the computation.
+// at each stage of the computation, along with the internal variable in question and the
+// exponent it is associated with.
 
 proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
 {
@@ -3792,14 +3815,20 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
     
         if( typeof(l[1]) == "string" )
         {
-            dbprint(printlevel, "[mfPushforwardInductive] Pushing forward produced nonsquare matrices.");
+            //dbprint(printlevel, "[mfPushforwardInductive] Pushing forward produced nonsquare matrices.");
             
             // mfSplitIdempotent found, during mfPushforward, that it had to split
             // an idempotent on a complex. Our return value in this situation is
             // "nonsquare",[r1,r2],R' where r1,r2 are possible gradings. We are given
-            // "nonsquare",f0,g0,f1,g1,[r1,r2] by mfPushforward
+            // "nonsquare",f0,f1,g0,g1,[r1,r2] by mfPushforward
+            poly ivar = intvars[1];
             setring RRR;
-            list l = imap(nR(count),l);
+            
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+                poly ivar = imap(nR(count),ivar);
+            }
             
             list ll = "nonsquare";
             
@@ -3808,14 +3837,15 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
                 ll = ll + list(l[6],l[7]); // Add on r1,r2
             }
             
-            // Modify the current map list R by adding on the end the list f0,f1,g0,g1.
+            // Modify the current map list R by adding on the end the list f0,f1,g0,g1,intvars[1],N[1]
             // NOTE: We can't stick these together into block matrices (like the other
             // entries in R) because we might be rank zero in one component
             
-            R = R + list(list(l[2],l[4],l[3],l[5]));
+            R = R + list(list(l[2],l[3],l[4],l[5],ivar,N[1]));
             ll = ll + list(R);
                         
             dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
+            //displaySplittingRecord(R); //debug
             
             return(ll);
         }
@@ -3824,20 +3854,24 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
         // final = l[1] is the MF with intvars[1] excluded which is h.e. to the pushforward
         // l[2] is a map Ablow[1] --> final
         // l[3] is a map final --> Ablow[1] (where [1] means suspension)
-        // l[4] is our modified list of homotopies
+        // l[4] is the grading (if we are using gradings) or our modified list of homotopies
+        // l[5] is our homotopies if we are using the grading, and undefined otherwise
     
-        // Return to the original ring and add to R the pair (l[2],l[3]). Note that
+        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],N[1]). Note
         // we have to return to the original ring because l[2],l[3] may depend on
-        // external variables which we are going to delete in a moment        
+        // external variables which we are going to delete in a moment
+        poly ivar = intvars[1];
+        
         setring RRR;
         
             // The first time through nR(1) = RRR so there is no need for imap
             if( count > 1 )
             {
                 list l = imap(nR(count),l);
+                poly ivar = imap(nR(count),ivar);
             }
         
-            R = R + list(list(l[2],l[3]));
+            R = R + list(list(l[2],l[3],ivar,N[1]));
             
         setring nR(count);
         
@@ -3871,6 +3905,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
     
         // Prepare for the next step of the induction
         A = l[1];
+        if( useGrading ){ Agr = l[4]; }
         intvars = delete(intvars,1);
         N = delete(N,1);
         
@@ -3879,7 +3914,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
             break;
         }
 
-        H = l[4];
+        H = l[4 + useGrading];
     
         // Create our new ring
         def nR(count+1) = ring(newringList);
@@ -3908,6 +3943,34 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
     dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
     
     return(retlist);
+}
+
+proc displaySplittingRecord(list R)
+{
+    print("[displaySplittingRecord] Given a splitting record of length " + string(size(R)));
+    
+    int i;
+    for(i=1;i<=size(R);i++)
+    {
+        if( size(R[i]) == 4 )
+        {
+            string out = "[displaySplittingRecord]    Variable: ";
+            out = out + string(R[i][3]) + " exponent: " + string(R[i][4]);
+            out = out + " F: " + string(nrows(R[i][1])) + "x" + string(ncols(R[i][1])) + " G: ";
+            out = out + string(nrows(R[i][2])) + "x" + string(ncols(R[i][2]));
+            print(out);
+        }
+        else
+        {
+            string out = "[displaySplittingRecord]    Nonsquare, variable: ";
+            out = out + string(R[i][5]) + " exponent: ";
+            out = out + string(R[i][6]) + " f0: " + string(nrows(R[i][1])) + "x" + string(ncols(R[i][1]));
+            out = out + " f1: " + string(nrows(R[i][2])) + "x" + string(ncols(R[i][2]));
+            out = out + " g0: " + string(nrows(R[i][3])) + "x" + string(ncols(R[i][3]));
+            out = out + " g1: " + string(nrows(R[i][4])) + "x" + string(ncols(R[i][4]));
+            print(out);
+        }// f0,f1,g0,g1,intvars[1],N[1]
+    }
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -3952,6 +4015,7 @@ proc mfInflate(matrix A, poly intvar, int N)
     newringList[2] = newvar;
     newringList[3] = rlist[3];
     newringList[4] = rlist[4];
+    kill rlist;
     
     // Fix the variable weighting
     intvec kk = (1..size(newvar));
@@ -3960,18 +4024,20 @@ proc mfInflate(matrix A, poly intvar, int N)
         kk[i] = 1;
     }
     newringList[3][1][2] = kk;
+    kill newvar, kk;
     
     // Create our new ring
     def nR = ring(newringList);
+    kill newringList;
     setring nR;
     
     // Now we can call mablow
     matrix A = fetch(RRR,A);
     ideal J = x(1)^N;
     matrix Ablow = mablow(A,J);
-        
+    
     setring RRR;
-    matrix final = fetch(nR,A);
+    matrix final = fetch(nR,Ablow);
         
     return(final);
 }
