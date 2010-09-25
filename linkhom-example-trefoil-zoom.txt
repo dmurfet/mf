@@ -5,7 +5,7 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 4; // The N in sl(N) link homology
+int N = 5; // The N in sl(N) link homology
 printlevel = 1;
 
 // Define the underlying web of the trefoil
@@ -59,4 +59,38 @@ poincare;
 // KR polynomial: (q19+q17+q15+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3)
 //
 // Note that here the main holdup seems to be several calls to minbase.
-// In total the calculation took around 23 minutes.
+// In total the calculation took around 23 minutes. I think the problem
+// is a baby version of what makes the N = 5 so slow.
+
+// N = 5 doesn't go through. The first three states are very fast, 
+// then in state 4/8 we get bogged down. Every matrix operation takes
+// forever, and the mfReduce runs are huge. I think the problem is not
+// that the matrices are big, but that their _entries_ are big numbers.
+// This can be seen already in N = 4, try printing out the KR complex.
+[mfCompileLinkAlt] Looking at state [1,1,0] which is number [[ 4/8 ]].
+[mfCompileLinkAlt] Currently used memory: 1174kb.
+[webCompile] Entering round 1 of compilation.
+[mfPushforward] Pushing forward matrix of size 16 with N = 5
+[mfReduce] Reducing matrix of size 80
+[mfReduce]          result is size 16.
+[mfReduce]          elapsed time 3740ms.
+[mfPushforward] result is size 8.
+[mfPushforward] elapsed time 5590ms.
+[mfPushforward] Pushing forward matrix of size 8 with N = 5
+[mfReduce] Reducing matrix of size 40
+[mfReduce]          result is size 16.
+[mfReduce]          elapsed time 2490ms.
+[mfPushforward] result is size 8.
+[mfPushforward] elapsed time 5720ms.
+[mfPushforwardInductive] total elapsed time 11360ms.
+[webCompile] Entering round 2 of compilation.
+[mfPushforward] Pushing forward matrix of size 32 with N = 5
+[mfReduce] Reducing matrix of size 160
+[mfReduce]          result is size 32.
+[mfReduce]          elapsed time 608050ms.
+[mfPushforward] result is size 16.
+[mfPushforward] elapsed time 3228920ms.
+[mfPushforward] Pushing forward matrix of size 16 with N = 5
+[mfReduce] Reducing matrix of size 80
+[mfReduce]          result is size 16.
+[mfReduce]          elapsed time 14768090ms. // Bit over four hours!
