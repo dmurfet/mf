@@ -5,7 +5,7 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 4; // The N in sl(N) link homology
+int N = 5; // The N in sl(N) link homology
 printlevel = 1;
 
 // Define the underlying web of the trefoil
@@ -19,6 +19,7 @@ intvec vertexParity = -1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
+// RUNNING ON LANDI SINCE 2010-09-25--08:20:
 // Compute the euler characteristic, from trefoil-data
 list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
 
