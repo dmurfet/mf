@@ -1,0 +1,1056 @@
+//////////////////////////////
+// This is the old findConstant, preserved for reference
+
+proc findConstantOld(matrix A)
+{
+    int i,j;
+    int nc = ncols(A);
+    int nr = nrows(A);
+    for(i=1;i<=nr;i++)
+    {
+        for(j=1;j<=nc;j++)
+        {
+            if( A[i,j] != 0 )
+            {
+                if( deg(A[i,j]) == 0 )
+                {
+                    intvec v = i,j;
+                    return(list(1,v));
+                }
+            }
+        }
+    }
+    
+    return(list(0,"na"));
+}
+
+////////////////////////////////////////////////////////////////////
+// mfReduceSparse
+//
+// NOTE: There is no guarantee that the output of mfReduceSparse must
+// match with mfReduce, because we may choose different nonzero constant
+// entries at each stage, leading to a different sequence of b0s.
+
+proc mfReduceSparse(matrix A, list #)
+{
+    LIB "sparse.lib";
+    int prl = printlevel;
+    int benchmark = 1; // Set to 1 to output benchmarking data
+
+    dbprint(prl, "[mfReduceSparse] Reducing matrix of size " + string(ncols(A)));
+
+    if( benchmark )
+    {
+        system("--ticks-per-sec",1000);
+        int timeElapsed = timer;
+    }
+    
+    // Extract the odd and even part of the differential
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    
+    // F and G begin as identity maps
+    int ncolsA = ncols(A);
+    matrix f0 = unitmat(ncolsA/2); matrix f1 = unitmat(ncolsA/2);
+    matrix g0 = unitmat(ncolsA/2); matrix g1 = unitmat(ncolsA/2);
+
+    list b0sparse = normalToSparse(b0);
+    list b1sparse = normalToSparse(b1);
+    list f0sparse = normalToSparse(f0);
+    list f1sparse = normalToSparse(f1);
+    list g0sparse = normalToSparse(g0);
+    list g1sparse = normalToSparse(g1);
+    
+    // Run the reduction on b0
+    list g = mfReduceSparse_work(b0sparse,b1sparse,f0sparse,f1sparse,g0sparse,g1sparse);
+    
+    b0sparse = g[1];
+    b1sparse = g[2];
+    f0sparse = g[3];
+    f1sparse = g[4];
+    g0sparse = g[5];
+    g1sparse = g[6];
+    
+    // Run the reduction on b1
+    list g = mfReduceSparse_work(b1sparse,b0sparse,f1sparse,f0sparse,g1sparse,g0sparse);
+    
+    b0sparse = g[2];
+    b1sparse = g[1];
+    f0sparse = g[4];
+    f1sparse = g[3];
+    g0sparse = g[6];
+    g1sparse = g[5];
+    
+    // Now package the results
+    matrix b0 = sparseToNormal(b0sparse);
+    matrix b1 = sparseToNormal(b1sparse);
+    matrix f0 = sparseToNormal(f0sparse);
+    matrix f1 = sparseToNormal(f1sparse);
+    matrix g0 = sparseToNormal(g0sparse);
+    matrix g1 = sparseToNormal(g1sparse);
+    
+    // Our MF (b0,b1) is now guaranteed to be free of constants. At this point
+    // we just apply usual Guassian elimination.
+    
+    // DEBUG. If set to 0, we use rowred rather than gauss_row in the following
+    int useGaussRow = 0;
+    
+    // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
+    //dbprint(printlevel, "[mfReduce] Beginning Gaussian elimination.");
+    
+    matrix zero_b[nrows(b0)][ncols(b0)];
+    if( b0 != zero_b && b1 != zero_b )
+    {
+        matrix tr, b0r;
+        
+        if( useGaussRow )
+        {
+            list gau = gauss_row(b0,1);
+            tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
+            b0r = transpose(gau[1]); // The reduced form
+        }
+        else
+        {
+            list gau = rowred(b0,1);
+            tr = gau[2];
+            b0r = gau[1];
+        }
+        
+        if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
+        if( det(tr) == 0 )
+        {
+            print("[mfReduce] Transformation matrix not invertible (first)."); 
+            return();
+        }
+        
+        matrix trinv = inverse(tr);
+        
+        b0 = b0r;
+        b1 = b1 * trinv;
+        
+        f1 = tr * f1;
+        g1 = g1 * trinv;
+    
+        matrix tr2;
+        
+        // Try a second time on the transpose
+        if( useGaussRow )
+        {
+            list gau = gauss_row(transpose(b0),1);
+            tr2 = gau[2];
+            b0r = gau[1];
+        }
+        else
+        {
+            list gau = rowred(transpose(b0),1);
+            tr2 = transpose(gau[2]);
+            b0r = transpose(gau[1]);
+        }
+        
+        if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
+        if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
+        
+        matrix tr2inv = inverse(tr2);
+        
+        b0 = b0r;
+        b1 = tr2inv * b1;
+        f0 = tr2inv * f0;
+        g0 = g0 * tr2;
+        /////// END GAUSS ////////
+    }
+    
+    // Pack everything into block matrices
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
+
+    matrix B = blockmat(zb, b1, b0, zb);
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+
+    dbprint(prl, "[mfReduceSparse]          result is size " + string(ncols(B)) + ".");
+    
+    if( benchmark )
+    {
+        timeElapsed = timer - timeElapsed;
+        dbprint(prl, "[mfReduceSparse]          elapsed time " + string(timeElapsed) + "ms.");
+    }
+    
+    if( size(#) != 0 )
+    {
+        //list ret = B, F, G, transform_record;
+        list ret = B, F, G;
+        return(ret);
+    }
+    else
+    {
+        return(B);
+    }
+}
+
+proc mfReduceSparse_work(list b0sparse, list b1sparse, list f0sparse, list f1sparse, list g0sparse, list g1sparse)
+{
+    int nc = b0sparse[2]; // ncols(b0)
+    int prl = printlevel;
+    
+    while( nc > 1 )
+    {   
+        if( (nc mod 5) == 0)
+        {
+            dbprint(prl, "[mfReduceSparse]    reduced to size " + string(2*nc));
+        }
+        
+        // Find the first constant in the sparse matrix
+        int c; // will become index into b0sparse[3] of first nonzero constant
+        int i,j;
+    
+        for(c=1;c<=size(b0sparse[3]);c++)
+        {
+            if( deg(b0sparse[3][c][3]) == 0 )
+            {
+                i = b0sparse[3][c][1];
+                j = b0sparse[3][c][2];
+                break;
+            }
+        }
+    
+        // If we cannot find a nonzero constant, it's time to finish
+        if( i == 0 || j == 0 )
+        {
+            break;
+        }
+    
+        //dbprint(prl,"[mfReduceSparse] Step 1");
+        poly scalar = b0sparse[3][c][3];
+            
+        // We found our constant term, permute it to (1,1) and do the inverse to b1
+        b0sparse = sparseMultByPoly(b0sparse,1/scalar);
+        b0sparse = sparsePermRow(b0sparse,1,i);
+        b0sparse = sparsePermCol(b0sparse,1,j);
+    
+        b1sparse = sparseMultByPoly(b1sparse,scalar);
+        b1sparse = sparsePermCol(b1sparse,1,i);
+        b1sparse = sparsePermRow(b1sparse,1,j);
+    
+        f0sparse = sparsePermRow(f0sparse,1,j);
+    
+        f1sparse = sparseMultByPoly(f1sparse,1/scalar);
+        f1sparse = sparsePermRow(f1sparse,1,i);
+    
+        g0sparse = sparsePermCol(g0sparse,1,j);
+    
+        g1sparse = sparseMultByPoly(g1sparse,scalar);
+        g1sparse = sparsePermCol(g1sparse,1,i);
+        
+        //dbprint(prl,"[mfReduceSparse] step 2");
+        
+        // Go through the first column and transform away everything
+        // This seems to be the performance bottleneck
+        int k;
+        for(k=1;k<=size(b0sparse[3]);k++)
+        {
+            if( b0sparse[3][k][2] == 1 && b0sparse[3][k][1] > 1 && b0sparse[3][k][3] != 0 )
+            {
+                poly f = b0sparse[3][k][3];
+                int row = b0sparse[3][k][1];
+                                
+                b0sparse = sparseAddRowMultToRow(b0sparse,1,row,-f);
+                b1sparse = sparseAddColMultToCol(b1sparse,row,1,f);
+                f1sparse = sparseAddRowMultToRow(f1sparse,1,row,-f);
+                g1sparse = sparseAddColMultToCol(g1sparse,row,1,f);
+                
+                kill f, row;
+            }
+        }
+                
+        //dbprint(prl,"[mfReduceSparse] step 3");
+        // By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
+        // where W is the potential. There is a homotopy equivalence between this matrix factorisation
+        // and the factorisation (s, e)
+    
+        // Define a sparse matrix T which is the first row of b0 with the first col deleted
+        list lookupTableT;
+        for(k=1;k<=size(b0sparse[3]);k++)
+        {
+            if( b0sparse[3][k][2] > 1 && b0sparse[3][k][1] == 1 )
+            {
+                lookupTableT[b0sparse[3][k][2]-1] = b0sparse[3][k][3];
+            }
+        }
+        
+        // The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
+        // ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
+        // so we need to stick these on the appropriate side of F, G
+        f0sparse = sparseDeleteRow(f0sparse,1);
+        f1sparse = sparseDeleteRow(f1sparse,1);
+        
+        //dbprint(prl,"[mfReduceSparse] step 4");
+        // The operation we need to do to g0 is the following: the ith column
+        // of the result is -T[1,i] * 1st column of g0 + the (i+1)st column of g0.
+        // The result has the same number of rows as g0 but one less column.
+    
+        list g0rsparse, e;
+        g0rsparse[1] = g0sparse[1];
+        g0rsparse[2] = g0sparse[2] - 1;
+        g0rsparse[3] = e;
+        
+        // Form a lookup table for the first column of g0
+        list lookupFirstCol;
+        list lookupFirstColIndices;
+        int i;
+        for(i=1;i<=size(g0sparse[3]);i++)
+        {
+            if( g0sparse[3][i][2] == 1 )
+            {
+                lookupFirstCol[g0sparse[3][i][1]] = g0sparse[3][i][3];
+                
+                // Add to the indices list pairs consisting of coords of everything in this row
+                int j;
+                for(j=2;j<=g0sparse[2];j++)
+                {
+                    lookupFirstColIndices = lookupFirstColIndices + list(list(g0sparse[3][i][1],j));
+                }
+            }
+        }
+        
+        int k;
+        for(k=1;k<=size(g0sparse[3]);k++)
+        {
+            if( g0sparse[3][k][2] > 1 )
+            {
+                // We are creating an entry for the result matrix in
+                // the same row as this entry but the column one to the left
+                //print("Looking at entry (" + string(g0sparse[3][k][1]) + "," + string(g0sparse[3][k][2]) + ") which is " + string(g0sparse[3][k][3]));
+                list entry = g0sparse[3][k];
+                list ne;
+                ne[1] = entry[1];
+                ne[2] = entry[2] - 1;
+
+                poly f;
+                
+                if( typeof(lookupTableT[entry[2]-1]) == "poly" && typeof(lookupFirstCol[entry[1]]) == "poly" )
+                {
+                    f = lookupTableT[entry[2]-1] * lookupFirstCol[entry[1]];
+                }
+                
+                ne[3] = entry[3] - f;
+                g0rsparse[3] = g0rsparse[3] + list(ne);
+                
+                // Remove us from the lookupFirstColIndices
+                int l;
+                for(l=1;l<=size(lookupFirstColIndices);l++)
+                {
+                    if( lookupFirstColIndices[l][1] == entry[1] && lookupFirstColIndices[l][2] == entry[2] )
+                    {
+                        lookupFirstColIndices = delete(lookupFirstColIndices,l);
+                        break;
+                    }
+                }
+                
+                kill entry,ne;
+            }
+        }
+        
+        // Now take care of anything left in lookupfirstColIndices
+        int l;
+        for(l=1;l<=size(lookupFirstColIndices);l++)
+        {
+            list v = lookupFirstColIndices[l];
+            list ne;
+            ne[1] = v[1];
+            ne[2] = v[2] - 1;
+
+            poly f;
+            
+            if( typeof(lookupTableT[v[2]-1]) == "poly" )
+            {
+                f = lookupTableT[v[2]-1] * lookupFirstCol[v[1]];
+            }
+            
+            ne[3] = -f;
+            g0rsparse[3] = g0rsparse[3] + list(ne);
+            kill ne, v;
+        }
+        
+        g0sparse = g0rsparse;
+        
+        g1sparse = sparseDeleteCol(g1sparse,1);
+    
+        // This should happen here, not before the business with T
+        b0sparse = sparseDeleteRow(b0sparse,1);
+        b0sparse = sparseDeleteCol(b0sparse,1);
+    
+        b1sparse = sparseDeleteRow(b1sparse,1);
+        b1sparse = sparseDeleteCol(b1sparse,1);
+    
+        nc = nc - 1;
+    }
+    
+    list g = b0sparse, b1sparse, f0sparse, f1sparse, g0sparse, g1sparse;
+    return(g);
+}
+
+////////////////////////////////////////////////////////////////////
+// mfReduce
+//
+// Takes as input an odd block matrix A interpreted as the differential on a Z/2-graded free module X.
+// The output is the differential B of a matrix factorisation Y homotopy equivalent to X which has no
+// constant entries (the "reduced" form of the original matrix factorisation). Note the size of the input
+// and output matrices may differ.
+//
+// If a nonzero second parameter is specified then instead of returning just a matrix we return a list.
+// The second and third outputs are matrices F,G representing morphisms F: X -> Y and G: Y -> X resp.
+// which are mutually inverse in the homotopy category.
+
+proc mfReduceOLD(matrix A, list #)
+{
+    LIB "linalg.lib";
+    
+    int prl = printlevel;
+    int benchmark = 1; // Set to 1 to output benchmarking data
+
+    dbprint(prl, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
+
+    if( benchmark )
+    {
+        system("--ticks-per-sec",1000);
+        int timeElapsed = timer;
+    }
+    
+    // Extract the odd and even part of the differential
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    
+    // F and G begin as identity maps
+    int ncolsA = ncols(A);
+    matrix f0 = unitmat(ncolsA/2); matrix f1 = unitmat(ncolsA/2);
+    matrix g0 = unitmat(ncolsA/2); matrix g1 = unitmat(ncolsA/2);
+        
+    // A remains fixed, we work steadily on B and F, G until B has the desired form
+    // Begin by looking inside b0 for nonzero constants. If at some point b0 becomes
+    // a 1x1 matrix we bail (it must be contractible).
+    
+    // Performance note: this while loop is very tight memory wise, memory usage
+    // is stable across iterations.
+    int nc = ncols(b0);
+    
+    while( nc > 1 )
+    {   
+        if( ncolsA > 500 && (nc mod 5) == 0)
+        {
+            dbprint(prl, "[mfReduce]    reduced to size " + string(2*nc));
+        }
+
+        // r[1] is 1 if a nonzero constant was found and 0 otherwise
+        // r[2] is an intvec giving the (i,j) coordinate of the constant entry
+        list r = findConstant(b0);
+        if( r[1] != 1 ){ break; }
+        
+        list l = matrixreduce(b0,r[2]); // p = l[2], q = l[3], pinv = l[4], qinv = l[5]
+        kill r;
+        
+        // The matrix factorisation (b0,b1) is isomorphic to (p * b0 * q, q^{-1} * b1 * p^{-1})
+        // via the morphism (from the former to the latter) given by the pair
+        // (q^{-1},p). We now transform b1 to b1 = q^{-1} * b1 * p^{-1}.
+        // We remember the transformation by adjusting F and G, so
+        // that at each stage F is an isomorphism between X and Y with inverse G
+        
+        b0 = l[1];
+        b1 = l[5] * b1 * l[4];
+        f0 = l[5] * f0; f1 = l[2] * f1;
+        g0 = g0 * l[3]; g1 = g1 * l[4];
+        kill l;
+        
+        // Now that we guarantee b0 has an identity in the top left and zeros in the rest
+        // of the first column, call a worker routine to "split" off this contractible
+        // piece and return the modified B, F, G
+        list out = mfReduce_work(b0,b1,f0,f1,g0,g1);
+        b0 = out[1]; b1 = out[2];
+        f0 = out[3]; f1 = out[4];
+        g0 = out[5]; g1 = out[6];
+        kill out;
+        nc = nc - 1;
+    }
+    
+    nc = ncols(b1);
+    
+    // No do the same process to b1 (TODO: unify these two steps)
+    while( nc > 1 )
+    {
+        // r[1] is 1 if a nonzero constant was found and 0 otherwise
+        // r[2] is an intvec giving the (i,j) coordinate of the constant entry
+        list r = findConstant(b1);
+        if( r[1] != 1 ){ break; }
+                
+        list l = matrixreduce(b1,r[2]); // p = l[2], q = l[3], pinv = l[4], qinv = l[5]
+        kill r;
+            
+        // The matrix factorisation (b0,b1) is isomorphic to (q^{-1} * b0 * p^{-1}, p * b1 * q)
+        // via the morphism (from the former to the latter) given by the pair
+        // (p,q^{-1}). We now transform b0 to b0 = q^{-1} * b0 * p^{-1}.
+        // We remember the transformation by adjusting F and G, so
+        // that at each stage F is an isomorphism between X and Y with inverse G
+
+        b1 = l[1];
+        b0 = l[5] * b0 * l[4];
+        f0 = l[2] * f0; f1 = l[5] * f1;
+        g0 = g0 * l[4]; g1 = g1 * l[3];
+        kill l;
+
+        // Now that we guarantee b1 has an identity in the top left and zeros in the rest
+        // of the first column, call a worker routine to "split" off this contractible
+        // piece and return the modified B, F, G
+        list out = mfReduce_work(b1,b0,f1,f0,g1,g0);
+        
+        // Note the orders are interchanged relative to the b0 case!
+        b0 = out[2]; b1 = out[1];
+        f0 = out[4]; f1 = out[3];
+        g0 = out[6]; g1 = out[5];
+        kill out;
+        
+        nc = nc - 1;
+    }
+    
+    // Our MF (b0,b1) is now guaranteed to be free of constants. At this point
+    // we just apply usual Guassian elimination: TODO it only looks for lower triangular
+    // reduced forms...
+    
+    // DEBUG. If set to 0, we use rowred rather than gauss_row in the following
+    int useGaussRow = 0;
+    
+    // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
+    //dbprint(printlevel, "[mfReduce] Beginning Gaussian elimination.");
+    
+    matrix zero_b[nrows(b0)][ncols(b0)];
+    if( b0 != zero_b && b1 != zero_b )
+    {
+        matrix tr, b0r;
+        
+        if( useGaussRow )
+        {
+            list gau = gauss_row(b0,1);
+            tr = transpose(gau[2]); // The transformation matrix, so tr * b0 = reduced form
+            b0r = transpose(gau[1]); // The reduced form
+        }
+        else
+        {
+            list gau = rowred(b0,1);
+            tr = gau[2];
+            b0r = gau[1];
+        }
+        
+        if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
+        if( det(tr) == 0 )
+        {
+            print("[mfReduce] Transformation matrix not invertible (first)."); 
+            return();
+        }
+        
+        matrix trinv = inverse(tr);
+        
+        b0 = b0r;
+        b1 = b1 * trinv;
+        
+        f1 = tr * f1;
+        g1 = g1 * trinv;
+    
+        matrix tr2;
+        
+        // Try a second time on the transpose
+        if( useGaussRow )
+        {
+            list gau = gauss_row(transpose(b0),1);
+            tr2 = gau[2];
+            b0r = gau[1];
+        }
+        else
+        {
+            list gau = rowred(transpose(b0),1);
+            tr2 = transpose(gau[2]);
+            b0r = transpose(gau[1]);
+        }
+        
+        if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
+        if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
+        
+        matrix tr2inv = inverse(tr2);
+        
+        b0 = b0r;
+        b1 = tr2inv * b1;
+        f0 = tr2inv * f0;
+        g0 = g0 * tr2;
+        /////// END GAUSS ////////
+    }
+    
+    // Pack everything into block matrices
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
+
+    matrix B = blockmat(zb, b1, b0, zb);
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+
+    dbprint(prl, "[mfReduce]          result is size " + string(ncols(B)) + ".");
+    
+    if( benchmark )
+    {
+        timeElapsed = timer - timeElapsed;
+        dbprint(prl, "[mfReduce]          elapsed time " + string(timeElapsed) + "ms.");
+    }
+    
+    if( size(#) != 0 )
+    {
+        //list ret = B, F, G, transform_record;
+        list ret = B, F, G;
+        return(ret);
+    }
+    else
+    {
+        return(B);
+    }
+}
+
+proc mfReduce_work(matrix b0, matrix b1, matrix f0, matrix f1, matrix g0, matrix g1)
+{
+    // By assumption b0 has the form (1 t \\ 0 s) and hence b1 is of the form (W d \\ 0 e)
+    // where W is the potential. There is a homotopy equivalence between this matrix factorisation
+    // and the factorisation (s, e)
+
+    if( ncols(b0) == 1 ){ print("[mfReduce_work] Called with 1x1 matrices, exiting"); return(b0,b1,f0,f1,g0,g1); }
+    
+    int nrowsb0 = nrows(b0);
+    int ncolsb0 = ncols(b0);
+    int nrowsb1 = nrows(b1);
+    int ncolsb1 = ncols(b1);
+        
+    // The homotopy equivalence between (b0, b1) and (s,e) is given by the morphism
+    // ((0 1), (0 1)): (b0,b1) -> (s,e) and ((-t 1)^t, (0 1)^t): (s,e) -> (b0,b1)
+    // so we need to stick these on the appropriate side of F, G
+    
+    // Matrix of (0 1)
+    int i;
+    matrix zeroone[nrowsb0-1][ncolsb0];
+    matrix negtone[nrowsb0][ncolsb0-1];
+    
+    for(i=1;i<=nrowsb0-1;i++){ zeroone[i,i+1] = 1; negtone[i+1,i] = 1; }
+    for(i=1;i<=ncolsb0-1;i++){ negtone[1,i] = -b0[1,i+1]; }
+    
+    // Modify f and g by the appropriate things
+    // NOTE: Constructing f0r,f1r by matrix multiplication is much faster than using submat.
+    f0 = zeroone * f0;
+    f1 = zeroone * f1;
+    g0 = g0 * negtone;
+    g1 = g1 * transpose(zeroone);
+    
+    // Read off s and e from b0 and b1
+    matrix S[nrowsb0-1][ncolsb0-1] = b0[2..nrowsb0,2..ncolsb0];
+    matrix E[nrowsb1-1][ncolsb1-1] = b1[2..nrowsb1,2..ncolsb1];
+    
+    // Our return list is b0,b1,f0,f1,g0,g1
+    list l = S, E, f0, f1, g0, g1;
+    kill nrowsb0,ncolsb0,nrowsb1,ncolsb1,S,E,zeroone,negtone;
+    return (l);
+}
+
+// Returns 1 if there are no constant terms in A (other than zero), and zero otherwise
+proc ismfReduced(matrix A)
+{
+    int i,j;
+    for(i=1;i<=ncols(A);i++)
+    {
+        for(j=1;j<=ncols(A);j++)
+        {
+            if( A[i,j] != 0 && deg(A[i,j]) == 0 )
+            {
+                return(0);
+            }
+        }
+    }
+    
+    return(1);
+}
+
+//-----------------------------------------------------------------------------
+proc dminus(matrix f,g,f',g')
+{
+int r=nrows(f);
+int r'=nrows(f');
+matrix P1=concat(tensor(f',unitmat(r)), rdsum(-transpose(f),r'));
+matrix P2=concat(rdsum(transpose(-g),r'),tensor(g',unitmat(r)));
+matrix P[2*r*r'][2*r*r']=P2,P1;
+return(P);
+}
+//-----------------------------------------------------------------------------
+proc dplus(matrix f,g,f',g')
+{ 
+int r=nrows(f);
+int r'=nrows(f');
+matrix P1=concat(rdsum(transpose(f),r'),tensor(g',unitmat(r)));
+matrix P2=concat(tensor(f',unitmat(r)),rdsum(transpose(g),r'));
+matrix P[2*r*r'][2*r*r']=P1,P2;
+return(P);
+}
+//-----------------------------------------------------------------------------
+proc vector2matrix(list V, int r, int r')
+{
+int i,j,k;
+list M;
+matrix ma[2*r'][2*r];
+for(i=1; i<=size(V); i++){M = M + list(ma);}
+for(i=1; i<=size(V); i++)
+ {for(j=1; j<=r; j++)
+  {for(k=1; k<=r'; k++)
+   {M[i][k,j] = V[i][(k-1)*r + j, 1];
+    M[i][k+r',j+r] = V[i][(r'-1+k)*r + j, 1];
+   }
+  }
+ }
+return(M);
+}
+//-----------------------------------------------------------------------------
+proc vector2matrixFerm(list V, int r, int r')
+{
+int i,j,k;
+list M;
+matrix ma[2*r'][2*r];
+for(i=1; i<=size(V); i++){M = M + list(ma);}
+for(i=1; i<=size(V); i++)
+ {for(j=1; j<=r; j++)
+  {for(k=1; k<=r'; k++)
+   {M[i][k,j+r] = V[i][(k-1)*r + j, 1];
+    M[i][k+r',j] = V[i][(r'-1+k)*r + j, 1];
+   }
+  }
+ }
+return(M);
+}
+//-----------------------------------------------------------------------------
+proc matrix2vector(matrix M)
+{
+int r1 = ncols(M)/2;
+int r2 = nrows(M)/2;
+int i,ii,j,k;
+vector v;
+// bosonic part:
+for(ii=1; ii<= r2; ii++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen((ii-1)*r1 + j)*M[ii,j];
+}}
+for(ii=1; ii<= r2; ii++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen(r1*r2 + (ii-1)*r1 + j)*M[ii+r2,j+r1];
+}}
+// fermionic part:
+for(i=1; i<= r2; i++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen(2*r1*r2 + (i-1)*r1 + j)*M[i,j+r1];
+}}
+for(i=1; i<= r2; i++)
+{
+for(j=1; j<= r1; j++)
+{
+v = v + gen(2*r1*r2 + r1*r2 + (i-1)*r1 + j)*M[i+r2,j];
+}}
+
+return(v);
+}
+//-----------------------------------------------------------------------------
+proc MFco(matrix f,g,f',g')
+{
+module M=syz(dminus(f,g,f',g'));
+matrix Mker=M;
+module Q=modulo(M,module(dplus(f,g,f',g')));
+matrix base=kbase(std(Q));
+matrix m = Mker*base;
+
+module Mf=syz(dplus(f,g,f',g'));
+matrix Mkerf=Mf;
+module Qf=modulo(Mf,module(dminus(f,g,f',g')));
+matrix basef=kbase(std(Qf));
+matrix mf = Mkerf*basef;
+
+int i;
+int r = ncols(f);
+int r' = ncols(f');
+matrix ma[2*r'][2*r];
+list L;
+for(i=1; i<=ncols(m); i++){L = L + list(ma);}
+intvec v1 = 1..nrows(m);
+intvec v2;
+
+list Lf;
+for(i=1; i<=ncols(mf); i++){Lf = Lf + list(ma);}
+intvec vf1 = 1..nrows(mf);
+intvec vf2;
+
+for(i=1; i<=ncols(m); i++)
+{
+intvec v2 = i;
+L[i] = submat(m,v1,v2);
+}
+
+for(i=1; i<=ncols(mf); i++)
+{
+intvec vf2 = i;
+Lf[i] = submat(mf,vf1,vf2);
+}
+
+
+list MMb = vector2matrix(L, r, r');
+list MMf = vector2matrixFerm(Lf, r, r');
+
+matrix null[2*r'][2*r];
+list leer;
+if(MMb[1] == null)
+{MMb = leer;}
+if(MMf[1] == null)
+{MMf = leer;}
+
+
+list MM;
+MM[1] = MMb;
+MM[2] = MMf;
+
+return(MM);
+}
+
+
+//-----------------------------------------------------------------------------
+proc MFcofull(matrix QQQ,PPP)
+{
+    matrix f = blocksq(QQQ)[3];
+    matrix g = blocksq(QQQ)[2];
+    matrix f' = blocksq(PPP)[3];
+    matrix g' = blocksq(PPP)[2];
+
+    module M=syz(dminus(f,g,f',g'));
+    matrix Mker=M;
+    module Q=modulo(M,module(dplus(f,g,f',g')));
+    matrix base=kbase(std(Q));
+    matrix m = Mker*base;
+
+    module Mf=syz(dplus(f,g,f',g'));
+    matrix Mkerf=Mf;
+    module Qf=modulo(Mf,module(dminus(f,g,f',g')));
+    matrix basef=kbase(std(Qf));
+    matrix mf = Mkerf*basef;
+
+    int i;
+    int r = ncols(f);
+    int r' = ncols(f');
+    matrix ma[2*r'][2*r];
+    list L;
+    for(i=1; i<=ncols(m); i++){L = L + list(ma);}
+    intvec v1 = 1..nrows(m);
+    intvec v2;
+
+    list Lf;
+    for(i=1; i<=ncols(mf); i++){Lf = Lf + list(ma);}
+    intvec vf1 = 1..nrows(mf);
+    intvec vf2;
+
+    for(i=1; i<=ncols(m); i++)
+    {
+        intvec v2 = i;
+        L[i] = submat(m,v1,v2);
+    }
+
+    for(i=1; i<=ncols(mf); i++)
+    {
+        intvec vf2 = i;
+        Lf[i] = submat(mf,vf1,vf2);
+    }
+
+    list MMb = vector2matrix(L, r, r');
+    list MMf = vector2matrixFerm(Lf, r, r');
+
+    matrix null[2*r'][2*r];
+    list leer;
+    if(MMb[1] == null)
+        {MMb = leer;}
+    if(MMf[1] == null)
+        {MMf = leer;}
+
+    list MM;
+    MM[1] = MMb;
+    MM[2] = MMf;
+
+    return(MM);
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+// "rocoreduce(M)" gives a list L with
+// -- L[1] = row & column reduced version M' of M such that M'=diag(A,B), where A is
+//    a diagonal matrix with only constant entries, and B is a block matrix without
+//    nonzero constant entries,
+// -- L[2] = UL (invertible over the polynomial ring),
+// -- L[3] = UR (invertible over the polynomial ring) such that M' = UL * M * UR.
+//
+// NOTE: There must be some typos or other mistakes somewhere, as the similarity
+//       transformations constructed do not reproduce the reduced matrix. Don't try
+//       to fix this for the moment but use Dan's mfReduce instead (but leave don't
+//       delete this code, it might be useful at some later point.)
+/////////////////////////////////////////////////////////////////////////////////////
+
+proc rocoreduce(matrix M)
+{
+int i,j,k,r;
+int s = ncols(M);
+
+// These will become the similarity matrices that describe the isomorphism 
+// between M and its reduced form:
+matrix UL = unitmat(s);
+matrix UR = unitmat(s);
+
+// z is a counter (in the end, z will be the number of trivial MFs that we can split off):
+
+int z;
+for(i=1; i<=s; i++)
+{
+
+for(j=1; j<=s; j++)
+{
+if(constantpart(M[i,j]) == M[i,j] and M[i,j] != 0)
+{
+// Bring the constant to the diagonal entry (z+1,z+1), and implement effect on UL,UR:
+M = permutecols(M, j, z+1);
+matrix U = unitmat(s); U[j,j]=0; U[z+1,z+1]; U[j,z+1]=1; U[z+1,j]=1;
+UR = UR * U;
+M = permuterows(M, i, z+1);
+matrix U = unitmat(s); U[i,i]=0; U[z+1,z+1]; U[i,z+1]=1; U[z+1,i]=1;
+UL = U * UL;
+
+z = z+1;
+
+// Use column manipulations to kill all (k,z)-entries of M for k>z:
+for(k=z+1; k<=s; k++)
+{
+int s = nrows(M);
+poly P = M[z,k]/M[z,z];
+
+// effect on similarity matrix UR:
+matrix U = unitmat(s);
+U[z,k] = - P;
+UR = UR * U;
+
+for(r=1; r<=s; r++)
+{
+M[r,k] = M[r,k] - P * M[r,z];
+}
+}// end k-loop
+
+// Use row manipulations to kill all (z,k)-entries of M for k>z:
+for(k=z+1; k<=s; k++)
+{
+int s = ncols(M);
+poly P = M[k,z]/M[z,z];
+
+// effect on similarity matrix UL:
+matrix U = unitmat(s);
+U[k,z] = - P;
+UL = U * UL;
+
+for(r=1; r<=s; r++)
+{
+M[k,r] = M[k,r] - P * M[z,r];
+}
+}// end k-loop
+
+break;
+}
+}// end j-loop
+
+}// end i-loop
+
+list L = M,UL,UR;
+return(L);
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// old stuff to compute cohomologies:
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+proc rdsum(matrix A, int r)
+{
+list B;
+B[1]=A;
+for (int i=2; i<=r; i++)
+{
+B[i]=dsum(B[i-1],A);
+}
+return(B[r]);
+}
+
+///////////// TESTS ///////////////
+
+proc test_matrixreduce()
+{
+    int passed = 1;
+    
+    ring RR = 0,(x,y),dp;
+    
+    // Test 1
+    matrix M[2][2] = x,5,x,1;
+    list l = matrixreduce(M);
+    matrix N[2][2] = 1,1/5*x,0,4/25*x;    
+    if( l[1] != N || l[2] * M * l[3] != l[1] ){ passed = 0; }
+    
+    // Test 2
+    matrix A[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+    list b = matrixreduce(A);
+    matrix B[4][4] = 1,0,0,-y,0,0,0,-y2,0,0,-y2,0,0,-y2,-y,y;
+    
+    if( b[1] != B || b[2] * A * b[3] != b[1] ){ passed = 0; }
+    
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
+
+proc test_ZZtensor()
+{
+    int passed = 1;
+    
+    // Test 1
+    matrix A[2][2] = 1,0,0,1;
+    matrix B[2][2] = 0,1,1,0;
+    
+    // The tensor product A x B should be the following matrix
+    matrix AB[4][4] = 0, 0, 1, 0, 0, 0, 0, -1, 1, 0, 0, 0, 0, -1, 0, 0;
+    
+    if( AB != ZZtensor(A,B) ){ passed = 0; }
+        
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
+
+proc test_mfReduce()
+{
+    int passed = 1;
+    
+    // Test 1
+    ring RR = 0,(x,y),dp;
+    
+    matrix d0[4][4] = 0,0,y,0,0,0,-1,y,y2,0,0,0,y,y2,-1,0;
+    matrix d1[4][4] = 0,0,y,0,1,0,-1,y,y2,0,0,0,y,y2,0,0;
+    matrix z[4][4];
+
+    matrix d = blockmat(z,d1,d0,z);
+    list l = mfReduce(d,1);
+    
+    matrix b = l[1];
+    matrix f = l[2];
+    matrix g = l[3];
+    
+    // B should be reduced and f: d -> b and g: b -> d should be morphisms
+    if( f * d != b * f ){ passed = 0; }
+    if( g * b != d * g ){ passed = 0; }
+    
+    if( passed == 1 ){ print("All tests passed."); } else { print("Some tests failed."); }
+}
