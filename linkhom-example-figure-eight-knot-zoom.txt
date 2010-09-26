@@ -1,0 +1,56 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..8)),dp;
+int N = 3; // The N in sl(N) link homology
+printlevel = 1;
+
+// Define the underlying web of the figure-eight knot:
+intvec edgevec(1) = 1,7,8,5;
+intvec edgevec(2) = 6,8,7,2;
+intvec edgevec(3) = 3,5,6,4;
+intvec edgevec(4) = 4,2,1,3;
+
+// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
+intvec vertexParity = 1,1,-1,-1;
+
+// Define the link as a list:
+list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
+
+// RUNNING ON HAYDN SINCE 2010-09-25--08:16:
+// Compute the euler characteristic, from trefoil-data
+list h = mfCompileLinkAlt(figureEightLink, "./data/figure-eight-N" + string(N) + "-zoom.mp", N);
+
+list cp = KRcomplex(figureEightLink, h);
+
+ring ss=(0,q,t),(x),dp;
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+
+// Running the above code with the state of things on 24/9/10 yields
+// the following.
+
+// N = 2 invariants of the figure-eight knot
+//
+// P_2: (q8+1)/(q5)
+// KR polynomial: (q8+q6t2+q6t+q4t3+q4t2+t4)/(q5t2)
+
+// N = 3 invariants of the figure-eight knot
+// 
+// P_3: 
+// KR polynomial: 
+
+// N = 4 invariants
+//
+// P_4: 
+// KR polynomial: 
