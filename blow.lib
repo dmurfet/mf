@@ -1397,9 +1397,24 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         int i;
         for(i=0; i<=1; i++)
         {
-            // Compute the image of the idempotent. Note that the minbase is important!
-            module im = minbase(e(i));
-        
+            // M is the image of the idempotent
+            module M = e(i);
+            
+            if( useSanityChecks )
+            {
+                // minbase can only work on a homogeneous module
+                // TODO: No idea how slow homog is, seems OK, but this test could be a holdup.
+                if( !homog(M) )
+                {
+                    print("[mfSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
+                    return();
+                }
+            }
+            
+            // Compute a minimal generating set for the image
+            module im = minbase(M);
+            kill M;
+            
             // If the image is zero, our splitting is just a pair of zero matrices.
             // Otherwise, we use lift to compute the map factorising e(i) through
             // its image.
