@@ -146,3 +146,32 @@ list L = webCompilePair(web, compStrat);
 print(L[1]); // Answer is the same as before.
 
 list L = webCompile(web, compStrat);
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE MFP4 - The AAA web from the trefoil
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+LIB "linkhom.lib";
+ring rr=0,(x(1..6)),dp;
+int N = 3;
+printlevel = 1;
+
+list vertex(1) = list(list(x(4),x(3)),list(N+1,N+1),list(x(1),x(2)),list(N+1,N+1));
+list vertex(2) = list(list(x(5),x(6)),list(N+1,N+1),list(x(3),x(4)),list(N+1,N+1));
+list vertex(3) = list(list(x(1),x(2)),list(N+1,N+1),list(x(5),x(6)),list(N+1,N+1));
+list vertices = vertex(1),vertex(2),vertex(3);
+
+matrix mf(1) = mfIdentityEdge(x(2),x(1),x(3),x(4),N);
+matrix mf(2) = mfIdentityEdge(x(4),x(3),x(5),x(6),N);
+matrix mf(3) = mfIdentityEdge(x(6),x(5),x(1),x(2),N);
+list mfs = mf(1),mf(2),mf(3);
+
+list web = vertices,mfs;
+
+list compStrat = list(list(1,2,3),list(x(1),x(2),x(3),x(4),x(5),x(6)));
+
+list L = webCompile(web, compStrat);
