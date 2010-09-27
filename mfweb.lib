@@ -557,6 +557,13 @@ proc webCompile(list web, list compStrat)
             // using the grading) and R is the splitting record, but where the last (F,G) pair in R is
             // a tuple (f0,f1,g0,g1) with f0,g0 splitting the even part of the very last idempotent
             // and similarly for f1,g1.
+            //
+            // NOTE: Implicitly we are trying to describe a Z/2-graded free module. It may be
+            // zero in one (or both) degrees, in which case the grading vectors (if we are using
+            // gradings) will just be an intvec with a single 0. But this is indistinguishable
+            // from a free module of rank one with degree zero. The way you tell whether the
+            // module is zero in degree i is to look at fi * gi. This is a zero matrix iff
+            // the module is zero in degree i.
             
             //dbprint(printlevel, "[webCompile] Hit nonsquare matrices, wrapping it up.");
             
