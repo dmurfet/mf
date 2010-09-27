@@ -1,0 +1,62 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..10)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+// Define the underlying web of the trefoil
+intvec edgevec(1) = 10,3,2,1;
+intvec edgevec(2) = 2,1,9,4;
+intvec edgevec(3) = 6,4,5,3;
+intvec edgevec(4) = 5,7,6,8;
+intvec edgevec(5) = 9,8,10,7;
+
+// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
+intvec vertexParity = -1,-1,-1,-1,-1;
+
+// Define the link as a list (see linkhom.lib preceding mfCompileLink)
+list threeTwist = vertexParity, list( edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5) );
+
+// Compute the euler characteristic:
+list h = mfCompileLinkAlt(threeTwist, "three-Twist-N" + string(N) + "-zoom.mp", N);
+
+// When we run this, all the webs seem to compile nicely within minutes. But then, 
+// when the webmaps are computed, there is a problem when looking at state [0,0,1,0,0] 
+// which is number [[ 5/32 ]]. The problem seems to occur in line 6129 of linkhom.lib: 
+// 
+// list D = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+//
+// I checked that the arguments of webCompileMorphismFromData all "make sense", but the list
+// D has only one entry which is the zero 16 x 16 matrix. I don't understand why D does not have
+// two entries. 
+
+
+
+// TODO:
+list cp = KRcomplex(threeTwist, h);
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+// Running the above code with the state of things on 26/9/10 yields
+// the following.
+
+// N = 2 invariants:
+//
+// P_2: 
+// KR polynomial: 
+
+// N = 3 invariants:
+// 
+// P_3: 
+// KR polynomial: 
