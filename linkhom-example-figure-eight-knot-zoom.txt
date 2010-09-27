@@ -5,7 +5,7 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..8)),dp;
-int N = 3; // The N in sl(N) link homology
+int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
 // Define the underlying web of the figure-eight knot:
@@ -20,10 +20,52 @@ intvec vertexParity = 1,1,-1,-1;
 // Define the link as a list:
 list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
 
-// RUNNING ON HAYDN SINCE 2010-09-25--08:16:
-// Compute the euler characteristic, from trefoil-data
-list h = mfCompileLinkAlt(figureEightLink, "./data/figure-eight-N" + string(N) + "-zoom.mp", N);
+// Compute the euler characteristic:
+list h = mfCompileLinkAlt(figureEightLink, "figure-eight-N" + string(N) + "-zoom.mp", N);
 
+// After an hour or so (since I am using screen, I can only see one screen which in this
+// case does not have any information on how far exactly the computation got), there is an
+// error message: 
+...
+[webCompile] Entering round 2 of compilation.
+[mfPushforward] Pushing forward matrix of size 48 with N = 4
+[mfPushforward] Worst input coeff: -180
+[mfReduce] Reducing matrix of size 192
+[mfReduce]          worst input coeff: -180
+[mfReduce]          worst output coeff: -1600
+[mfReduce]          result is size 48.
+[mfReduce]          elapsed time 10890ms.
+[mfSplitIdempotent] Worst coeff in E: -289/5
+[mfSplitIdempotent] Splitting was not successful, as g * f != 1 in degree 0, exiting.
+0,   0,0,0,0,0,0,0,_[1,9],_[1,10],_[1,11],_[1,12],_[1,13],
+0,   1,0,0,0,0,0,0,0,     0,      0,      0,      0,
+y(2),0,1,0,0,0,0,0,_[3,9],_[3,10],_[3,11],_[3,12],_[3,13],
+0,   0,0,1,0,0,0,0,0,     0,      0,      0,      0,
+0,   0,0,0,1,0,0,0,0,     0,      0,      0,      0,
+0,   0,0,0,0,1,0,0,0,     0,      0,      0,      0,
+0,   0,0,0,0,0,1,0,0,     0,      0,      0,      0,
+0,   0,0,0,0,0,0,1,0,     0,      0,      0,      0,
+0,   0,0,0,0,0,0,0,1,     0,      0,      0,      0,
+0,   0,0,0,0,0,0,0,0,     1,      0,      0,      0,
+0,   0,0,0,0,0,0,0,0,     0,      1,      0,      0,
+0,   0,0,0,0,0,0,0,0,     0,      0,      1,      0,
+0,   0,0,0,0,0,0,0,0,     0,      0,      0,      1
+[mfSplitIdempotent] The above is the matrix that should be 1, it has been exported as errMat.
+   ? `exportTo` is not defined
+   ? error occurred in or before blow.lib::mfSplitIdempotent line 1502: `                exportTo(Top,errMat);`
+   ? leaving blow.lib::mfSplitIdempotent
+   skipping text from `;` error at token `)`
+   ? leaving blow.lib::mfPushforward
+   ? leaving blow.lib::mfPushforwardInductive
+   ? leaving mfweb.lib::webCompilePair
+   ? leaving mfweb.lib::webCompile
+   ? leaving linkhom.lib::mfCompileLinkAlt
+
+
+
+
+
+// TODO:
 list cp = KRcomplex(figureEightLink, h);
 
 ring ss=(0,q,t),(x),dp;
@@ -36,21 +78,20 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-
-// Running the above code with the state of things on 24/9/10 yields
+// Running the above code with the state of things on 26/9/10 yields
 // the following.
 
-// N = 2 invariants of the figure-eight knot
+// N = 2 invariants:
 //
 // P_2: (q8+1)/(q5)
 // KR polynomial: (q8+q6t2+q6t+q4t3+q4t2+t4)/(q5t2)
 
-// N = 3 invariants of the figure-eight knot
+// N = 3 invariants (this took 1283 seconds on haydn):
 // 
-// P_3: 
-// KR polynomial: 
+// P_3: (2q14+q10-2q8+q2+1)/(q8)
+// KR polynomial: (2q14+q10t2+q8t3+q8t2+2q8t+q6t3+q6t2+q2t4+t4)/(q8t2)
 
-// N = 4 invariants
+// N = 4 invariants:
 //
 // P_4: 
 // KR polynomial: 

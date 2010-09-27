@@ -1,11 +1,11 @@
 option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
+LIB "blow.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 4; // The N in sl(N) link homology
+int N = 6; // The N in sl(N) link homology
 printlevel = 1;
 
 // Define the underlying web of the trefoil
@@ -19,9 +19,33 @@ intvec vertexParity = -1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
-// RUNNING ON LANDI SINCE 2010-09-25--08:20:
-// Compute the euler characteristic, from trefoil-data
+// Compute the euler characteristic:
 list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom2.mp", N);
+
+// After roughly half an hour, all the webs are compiled, but then the output is:
+...
+[webCompile] total elapsed time 1720400ms.
+[mfCompileLinkAlt] Saving to disk.
+[mfCompileLink] Looking at state [0,0,0] which is number [[ 1/8 ]].
+[mfCompileLink] Looking at state [1,0,0] which is number [[ 2/8 ]].
+[mfCompileLinkAlt]  Looking at the map to [0,0,0].
+[mfCompileLinkAlt] Saving to disk.
+[mfCompileLink] Looking at state [0,1,0] which is number [[ 3/8 ]].
+[mfCompileLinkAlt]  Looking at the map to [0,0,0].
+[mfCompileLinkAlt] Saving to disk.
+[mfCompileLink] Looking at state [1,1,0] which is number [[ 4/8 ]].
+[mfCompileLinkAlt]  Looking at the map to [0,1,0].
+   ? matrix size not compatible(8x96, 48x96)
+   ? error occurred in or before mfweb.lib::webCompileMorphismFromData line 1078: `                m0 = f0 * m0 * g0;`
+   ? leaving mfweb.lib::webCompileMorphismFromData
+   skipping text from `;` error at token `)`
+   ? leaving linkhom.lib::mfCompileLinkAlt
+
+// How can this be? 
+
+
+
+
 
 list cp = KRcomplex(trefoilLink, h);
 
@@ -35,10 +59,9 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// Running the above code with the state of things on 24/9/10 yields
-// the following.
+// Running the above code with the state of things on 26/9/10 yields the following.
 
-// N = 2 invariants of the trefoil
+// N = 2 invariants:
 //
 // Jones polynomial: -q9 + q5 + q3 + q
 // KR polynomial: (q9+q5t+q3t3+qt3)/(t3) 
@@ -46,7 +69,7 @@ poincare;
 // The Jones polynomial agrees with what I calculated by hand, and
 // the KR polynomial agrees with the data on the Knot Atlas.
 
-// N = 3 invariants of the trefoil
+// N = 3 invariants:
 // 
 // P_3: -q14-q12+q8+2q6+q4+q2
 // KR polynomial: (q14+q12+q8t+q6t3+q6t+q4t3+q2t3)/(t3)
@@ -54,18 +77,15 @@ poincare;
 // The KR polynomial (and hence P_3) agree with the ones computed
 // by Gukov-Schwarz-Vafa (GSV).
 
-// N = 4 invariants
+// N = 4 invariants:
 //
 // P_4: -q19-q17-q15+q11+2q9+2q7+q5+q3
 // KR polynomial: (q19+q17+q15+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3)
 //
 // With the code as of 26/9/10 this goes through in just under three minutes.
 
-// N = 5 invariants
+// N = 5 invariants:
 //
 // P_4: -q24-q20-q18-q16+2q12+2q10+2q8+2q6+q4
 // KR polynomial: (q24+q20+q18+q16+q12t3+q12t+q10t3+q10t+q8t3+q8t+q6t3+q6t+q4t3)/(t3)
-//
-// With the code as of 26/9/10 this goes through in about 8.5 minutes
-
 
