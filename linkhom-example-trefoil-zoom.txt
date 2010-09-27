@@ -6,7 +6,7 @@ LIB "control.lib";
 LIB "mfweb.lib";
 LIB "blow.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 6; // The N in sl(N) link homology
+int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
 // Define the underlying web of the trefoil
@@ -21,7 +21,7 @@ intvec vertexParity = -1,-1,-1;
 list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
 
 // Compute the euler characteristic:
-list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom2.mp", N);
+list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
 
 // After roughly half an hour, all the webs are compiled, but then the output is:
 ...
@@ -43,7 +43,6 @@ list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom2.
    ? leaving linkhom.lib::mfCompileLinkAlt
 
 // How can this be? 
-
 
 
 

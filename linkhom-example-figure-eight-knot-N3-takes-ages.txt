@@ -1,4 +1,4 @@
-option(noredefine);option(noloadLib);option(redSB);
+option(noredefine);option(noloadLib);option(redSB);option(prot);
 LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
@@ -19,6 +19,13 @@ intvec vertexParity = 1,1,-1,-1;
 
 // Define the link as a list:
 list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
+list h = mfCompileLinkAlt(figureEightLink, "./data/figure-eight-N3.mp", N);
+
+// N = 3
+//
+// P_3: (2q14+q10-2q8+q2+1)/(q8)
+// KR:(2q14+q10t2+q8t3+q8t2+2q8t+q6t3+q6t2+q2t4+t4)/(q8t2)
+// Total time: 32 minutes.
 
 // If we now try to compute
 //
