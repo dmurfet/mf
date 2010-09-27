@@ -1435,6 +1435,28 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
 
+    // Sanity check
+    if( useSanityChecks )
+    {
+        int i;
+        for(i=0; i<=1; i++)
+        {
+            if( f(i) * g(i) != e(i) )
+            {
+                print("[mfSplitIdempotent] Splitting was not successful, as f * g != e in degree " + string(i) + ", exiting.");
+                return();
+            }
+            
+            // g(i) * f(i) should be a unitmat, or a 1x1 zero matrix
+            if( nrows(g(i)) != ncols(f(i)) || nrows(f(i)) != ncols(g(i)) )
+            {
+                print("[mfSplitIdempotent] Splitting was not successful due to size mismatch in degree " + string(i) + ", exiting.");
+                print("[mfSplitIdempotent] f: " + string(nrows(f(i))) + "x" + string(ncols(f(i))) + " and g: " + string(nrows(g(i))) + "x" + string(ncols(g(i))));
+                return();
+            }
+        }
+    }
+    
     // If we have nonsquare matrices we have to do something special
     if( hitZeros || nrows(g(0)) != nrows(g(1)) )
     {
@@ -1448,8 +1470,24 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         {
             if( A * A != matrix(0,nrows(A),ncols(A)) )
             {
-                print("[mfSplitIdempotent] Found nonsquare matrices for nonzero differential, exiting.");
+                print("[mfSplitIdempotent] Found nonsquare matrices for nonzero potential, exiting.");
                 return();
+            }
+            
+            // g(i) * f(i) should be an identity matrix, the only exception is if
+            // the splitting was "zero" in which case we allow g * f to be 1x1 zeromat
+            int i;
+            for(i=0; i<=1; i++)
+            {
+                if( g(i) * f(i) != unitmat(nrows(g(i))) && g(i) * f(i) != matrix(0,1,1) )
+                {
+                    print("[mfSplitIdempotent] Splitting was not successful, ended with nonsquare matrices and g * f != [0] in degree  " + string(i) + ", exiting.");
+                    print("[mfSplitIdempotent] f: " + string(nrows(f(i))) + "x" + string(ncols(f(i))) + " and g: " + string(nrows(g(i))) + "x" + string(ncols(g(i))));
+                    print(f(i));
+                    print("--");
+                    print(g(i));
+                    return();
+                }
             }
         }
         
@@ -1489,19 +1527,13 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         int i;
         for(i=0; i<=1; i++)
         {
-            if( f(i) * g(i) != e(i) )
-            {
-                print("[mfSplitIdempotent] Splitting was not successful, as f * g != e in degree " + string(i) + ", exiting.");
-                return();
-            }
-            
             if( g(i) * f(i) != unitmat(nrows(g(i))) )
             {
                 print("[mfSplitIdempotent] Splitting was not successful, as g * f != 1 in degree " + string(i) + ", exiting.");
                 print( g(i) * f(i) );
                 print("[mfSplitIdempotent] The above is the matrix that should be 1, it has been exported as errMat.");
                 matrix errMat = g(i) * f(i);
-                exportTo(Top,errMat);
+                exportto(Top,errMat);
                 
                 return();
             }
@@ -2496,7 +2528,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 {
     int useSanityChecks = blowFlags("sanity_checks"); 
     dbprint(printlevel, "[mfPushforward] Pushing forward matrix of size " + string(ncols(A)) + " with N = " + string(N));
-    dbprint(printlevel, "[mfPushforward] Worst input coeff: " + string(worstMonomialCoeff(A)));
+    //dbprint(printlevel, "[mfPushforward] Worst input coeff: " + string(worstMonomialCoeff(A)));
     
     system("--ticks-per-sec",1000);
     int timeElapsed = timer;

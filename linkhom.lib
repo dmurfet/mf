@@ -2195,7 +2195,7 @@ proc KRcomplex(list linkData, list h)
 
                 if( !found )
                 {
-                    // print("Found no map.");
+                    print("Found no map between web " + string(i) + " and web " + string(j));//debug
                     matrix z[target[2]][source[2]];
                     A = z;
                 }
@@ -5950,16 +5950,20 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
     }
     
     // The compilation strategy will not change either: we simply compile from the 1st
-    // vertex to the last one, and enumerate the variables in the given order.
+    // vertex to the last one, and enumerate the variables in the given order (note that
+    // all the ring variables are taken as internal variables)
     list compStratVert;
     list compStratVar;
     for(j=1;j<=size(edgeList); j++)
     {
         compStratVert[j] = j;
+    }
+    for(j=1;j<=nvars(basering);j++)
+    {
         compStratVar[j] = var(j);
     }
     list compStrat = compStratVert,compStratVar;
-    
+        
     // STEP 1. Go through each state of the link and compile the corresponding web
     // The compilation of a state 1101 is stored in web1101
     int i;
@@ -5970,7 +5974,7 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
     {
         // Our current state diagram
         intvec v = stateDiagrams[i];
-	dbprint(printlevel, "");
+        dbprint(printlevel, "");
         dbprint(printlevel, "[mfCompileLinkAlt] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
         
         string listName = "compiled" + intvecToString(v); // compilation product
@@ -5981,14 +5985,15 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
         
         if( definedCheck )
         {
-            dbprint(printlevel, "[mfCompileLinkAlt] Already compiled, skipping.");
             // We have already compiled this web
+            dbprint(printlevel, "[mfCompileLinkAlt] Already compiled, skipping.");
+
             i++;
             continue;
         }
         dbprint(printlevel, "[mfCompileLinkAlt] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
-	// Build a web suitable for calling webCompile
+        // Build a web suitable for calling webCompile
         int j;
         list webMfs;
         list webMfsGrading;
@@ -6029,11 +6034,13 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
     close(l);
     
     // STEP 2. Compile the maps
+    dbprint(printlevel, "[mfCompileLinkAlt] Compiling maps.");
+    
     for( i = 1; i <= numStateDiagrams; i++ )
     {
         // Our current state diagram
         intvec v = stateDiagrams[i];
-        dbprint(printlevel, "[mfCompileLink] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+        dbprint(printlevel, "[mfCompileLinkAlt] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
     
         // Look at each position and the possible maps given by chis
         int j;
@@ -6075,6 +6082,14 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
                     string cmd = "list D = " + listName + ";";
                     execute(cmd);
                     
+                    // We should end up with a zero potential, so the output of webCompileMorphism
+                    // should be a pair
+                    if( typeof(D) != "list" || size(D) != 2 )
+                    {
+                        print("[mfCompileLinkAlt] webCompileMorphism did not return a pair, exiting.");
+                        return();
+                    }
+                    
                     //print(D[1]); //debug
                     //print("---");
                     //print(D[2]);
@@ -6083,8 +6098,15 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
                     // we can deduce from looking at the maps
                     int concentrateDegree = 0;
                     
-                    if( D[1] == matrix(0,nrows(D[1]),ncols(D[1])) )
+                    if( D[2] != matrix(0,nrows(D[2]),ncols(D[2])) )
                     {
+                        // If both maps are nonzero then something is wrong
+                        if( D[1] != matrix(0,nrows(D[1]),ncols(D[1])) )
+                        {
+                            print("[mfCompileLinkAlt] Produced nonzero maps in both degrees, exiting.");
+                            return();
+                        }
+                        
                         concentrateDegree = 1;
                     }
                     
@@ -6131,7 +6153,14 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
                 execute(cmd);
                 kill M;
                 
-                //print("Collating data -----");
+                // We should end up with a zero potential, so the output of webCompileMorphism
+                // should be a pair
+                if( typeof(D) != "list" || size(D) != 2 )
+                {
+                    print("[mfCompileLinkAlt] webCompileMorphism did not return a pair, exiting.");
+                    return();
+                } 
+                //print("Collating data -----");//debug
                 //print(D[1]); //debug
                 //print("---");
                 //print(D[2]);
@@ -6145,8 +6174,15 @@ proc mfCompileLinkAlt(list linkData, string fileName, int N)
                 // we can deduce from looking at the maps
                 int concentrateDegree = 0;
                 
-                if( D[1] == matrix(0,nrows(D[1]),ncols(D[1])) )
+                if( D[2] != matrix(0,nrows(D[2]),ncols(D[2])) )
                 {
+                    // If both maps are nonzero then something is wrong
+                    if( D[1] != matrix(0,nrows(D[1]),ncols(D[1])) )
+                    {
+                        print("[mfCompileLinkAlt] Produced nonzero maps in both degrees, exiting.");
+                        return();
+                    }
+                    
                     concentrateDegree = 1;
                 }
                 
