@@ -1462,8 +1462,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     {
         print("[mfSplitIdempotent] Worst coeff in f0: " + string(worstMonomialCoeff(f(0)))); //debug
         print("[mfSplitIdempotent] Worst coeff in f1: " + string(worstMonomialCoeff(f(1)))); //debug
-        print("[mfSplitIdempotent] Worst coeff in g0: " + string(worstMonomialCoeff(g(0)))); //debug
-        print("[mfSplitIdempotent] Worst coeff in g1: " + string(worstMonomialCoeff(g(1)))); //debug
+        //print("[mfSplitIdempotent] Worst coeff in g0: " + string(worstMonomialCoeff(g(0)))); //debug
+        //print("[mfSplitIdempotent] Worst coeff in g1: " + string(worstMonomialCoeff(g(1)))); //debug
         
         // This only makes sense if the potential is zero, so warn and quit otherwise
         if( useSanityChecks )
@@ -1550,9 +1550,9 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     matrix F = blockmat_nsq(f(0), zf1, zf2, f(1));
     matrix G = blockmat_nsq(g(0), zg1, zg2, g(1));
     
-    print("[mfSplitIdempotent] Worst coeff in F: " + string(worstMonomialCoeff(F))); //debug
-    print("[mfSplitIdempotent] Worst coeff in G: " + string(worstMonomialCoeff(G))); //debug
-    print("[mfSplitIdempotent] Worst coeff in original A: " + string(worstMonomialCoeff(A))); //debug
+    //print("[mfSplitIdempotent] Worst coeff in F: " + string(worstMonomialCoeff(F))); //debug
+    //print("[mfSplitIdempotent] Worst coeff in G: " + string(worstMonomialCoeff(G))); //debug
+    //print("[mfSplitIdempotent] Worst coeff in original A: " + string(worstMonomialCoeff(A))); //debug
     
     // The differential on the splitting is given by B = G * A * F
     matrix B = G * A * F;
@@ -2355,7 +2355,7 @@ proc zoomreduce(matrix A)
 proc mfReduce(matrix A, list #)
 {
     dbprint(printlevel, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
-    dbprint(printlevel, "[mfReduce]          worst input coeff: " + string(worstMonomialCoeff(A))); //debug
+    //dbprint(printlevel, "[mfReduce]          worst input coeff: " + string(worstMonomialCoeff(A))); //debug
         
     system("--ticks-per-sec",1000);
     int timeElapsed = timer;
@@ -2456,7 +2456,7 @@ proc mfReduce(matrix A, list #)
     matrix G = blockmat_nsq(g0, zg, zg, g1);
     kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
     
-    dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
+    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
     dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
     dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
     
