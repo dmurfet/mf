@@ -557,13 +557,6 @@ proc webCompile(list web, list compStrat)
             // using the grading) and R is the splitting record, but where the last (F,G) pair in R is
             // a tuple (f0,f1,g0,g1) with f0,g0 splitting the even part of the very last idempotent
             // and similarly for f1,g1.
-            //
-            // NOTE: Implicitly we are trying to describe a Z/2-graded free module. It may be
-            // zero in one (or both) degrees, in which case the grading vectors (if we are using
-            // gradings) will just be an intvec with a single 0. But this is indistinguishable
-            // from a free module of rank one with degree zero. The way you tell whether the
-            // module is zero in degree i is to look at fi * gi. This is a zero matrix iff
-            // the module is zero in degree i.
             
             //dbprint(printlevel, "[webCompile] Hit nonsquare matrices, wrapping it up.");
             
@@ -1044,8 +1037,15 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                 }
                                         
                 matrix f0 = R(2)[j][1]; // Note the F must come from the second web
+                // TODONils: Maybe f1 and g0 have to be swapped in the sense that
                 matrix f1 = R(2)[j][2];
                 matrix g0 = R(1)[j][3]; // and the G from the first
+                // has to be replaced by:
+//                matrix f1 = R(2)[j][3];
+//                matrix g0 = R(1)[j][2]; // and the G from the first
+               // But this is not true! 
+
+
                 matrix g1 = R(1)[j][4];
                 poly u = R(1)[j][5];
                 int expo = R(1)[j][6];
@@ -1071,12 +1071,8 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
 		//print(rright1);
 		//print("maps");
 		//print(f0);
-        //print("f0: " + string(nrows(f0)) + "x" + string(ncols(f0)));
-        //print("    " + string(nrows(R(2)[j][3])) + "x" + string(ncols(R(2)[j][3])));
-        //print(f0 * R(2)[j][3]);
 		//print("---");
 		//print(f1);
-		//print("f1: " + string(nrows(f1)) + "x" + string(ncols(f1)));
 		//print("---");
 		//print(g0);
 		//print("---");
@@ -1085,7 +1081,6 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
 		//print(m0);
 		//print("---");
 		//print(m1);
-        //print("---");
 
                 // Premultiply by G and postmultiply by F
                 m0 = f0 * m0 * g0;
