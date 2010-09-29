@@ -93,12 +93,20 @@ proc blowFlags(string s)
     // rather than speed, in for example mfReduce.
     if( s == "small_coeffs" )
     {
-        return(1);
+        return(0);
     }
     
     if( s == "old_splitting_construction" )
     {
-        return(0);
+        return(1);
+    }
+    
+    // Enables some checks only relevant if the calculations involved
+    // are for link homology (e.g. maps in webCompileMorphism should
+    // be degree +1)
+    if( s == "link_homology_checks" )
+    {
+        return(1);
     }
     
     return(0);
@@ -1406,19 +1414,14 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         intvec Agr = #[1];
         int useGrading = 1;
         
-        if( useSanityChecks )
-        {
-            if( !isGradingValid(A,Agr) ) //debug remove
-            {
-                print("[mfSplitIdempotent] Given an invalid grading, exiting.");
-                return();
-            }
-            
-            if( !checkMorphismDegree(A,Agr,A,Agr,E,0) ) // debug remove
-            {
-                print("[mfSplitIdempotent] Given map is not degree zero, exiting.");
-            }
-        }
+        //if( useSanityChecks )
+        //{
+        //    if( !isGradingValid(A,Agr) )
+        //    {
+        //        print("[mfSplitIdempotent] Given an invalid grading, exiting.");
+        //        return();
+        //    }
+        //}
     }
     
     // Sanity checks
@@ -1637,7 +1640,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         intvec Bgr = Bgr(0), Bgr(1);
         l = l + list(Bgr);
         
-        if( useSanityChecks && useGrading )
+        if( useSanityChecks && useGrading ) // debug can probably comment out (but keep)
         {
             if( !isGradingValid(B, Bgr) )
             {
@@ -2958,13 +2961,28 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         // splittings in the respective degrees, and l may have as a final entry a grading
         // vector for the even and odd parts (separately).
         
+        // IMPORTANT: We need to "suspend" this answer in order to get the splitting
+        // which is equal to Y
+        
         setring RRR;
         list l = imap(nR,l);
+        list retlist = l;
+        retlist[2] = l[3]; // suspend by replacing f0 by f1
+        retlist[3] = l[2]; // and f1 by f0
+        retlist[4] = l[5];
+        retlist[5] = l[4];
+        
+        if( useGrading )
+        {
+            retlist[6] = l[7]; // also suspend the gradings
+            retlist[7] = l[6];
+        }
+        kill l;
         
         //dbprint(printlevel, "[mfPushforward] splitting produced nonsquare matrices.");
         dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
             
-        return(l);
+        return(retlist);
     }
     
     // mfSplitIdempotent returns not just the splitting of the idempotent, but the
@@ -3057,10 +3075,18 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 //
 // The second return value is the grading vector for A, if we are using gradings.
 //
-// The third (or second, if there is no grading) return value is a list R = (F1,G1,x1,N),(F2,G2,x2,N),...
-// of the same length of intvars which records the F and G matrices returned by mfPushforward
-// at each stage of the computation, along with the internal variable in question and the
-// exponent it is associated with.
+// The third (or second, if there is no grading) return value is a list R (of the same length
+// as intvars) whose entries are tuples
+//
+//       (F,G,u,N,D[,r])
+//
+// which records the F and G matrices returned by mfPushforward at each stage of the computation,
+// along with the internal variable u in question and the exponent N it is associated with. The D
+// is the differential of the pushforward, and r is its optional grading vector. Note that if in
+// the splitting we encounter non-square matrices the format is slightly different; see the code.
+//
+// TODO: When we are happy that everything is working correctly, there is no need to store
+// D and r here; they are only used for sanity checks.
 
 proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
 {
@@ -3141,11 +3167,18 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
                 ll = ll + list(l[6],l[7]); // Add on r1,r2
             }
             
-            // Modify the current map list R by adding on the end the list f0,f1,g0,g1,intvars[1],N[1]
+            // Modify the current map list R by adding on the end the list
+            //
+            //    ("nonsquare",f0,f1,g0,g1,intvars[1],N[1][,r1,r2])
+            //
             // NOTE: We can't stick these together into block matrices (like the other
             // entries in R) because we might be rank zero in one component
             
-            R = R + list(list(l[2],l[3],l[4],l[5],ivar,N[1]));
+            list tempp = "nonsquare",l[2],l[3],l[4],l[5],ivar,N[1];
+            if( useGrading ){ tempp = tempp + list(l[6],l[7]); }
+            R = R + list(tempp);
+            kill tempp;
+            
             ll = ll + list(R);
                         
             dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
@@ -3165,6 +3198,8 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
         // external variables which we are going to delete in a moment
         poly ivar = intvars[1];
         
+        // debug: use the format (l[2],l[3],intvar[1],N[1],l[1],l[4])
+        
         setring RRR;
         
             // The first time through nR(1) = RRR so there is no need for imap
@@ -3173,8 +3208,12 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
                 list l = imap(nR(count),l);
                 poly ivar = imap(nR(count),ivar);
             }
-        
-            R = R + list(list(l[2],l[3],ivar,N[1]));
+
+            // Add the tuple (F,G,u,N,D[,r])
+            list tempp = l[2], l[3], ivar, N[1], l[1];
+            if( useGrading ){ tempp = tempp + list(l[4]); }
+            R = R + list(tempp);
+            kill tempp;
             
         setring nR(count);
         

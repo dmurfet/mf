@@ -1091,10 +1091,10 @@ proc linkCompile(list linkData, string fileName, int N)
         list R = Z[4][size(Z[4])][4];
         list lastEntry = R[size(R)];
         
-        matrix f(0) = lastEntry[1];
-        matrix f(1) = lastEntry[2];
-        matrix g(0) = lastEntry[3];
-        matrix g(1) = lastEntry[4];
+        matrix f(0) = lastEntry[2];
+        matrix f(1) = lastEntry[3];
+        matrix g(0) = lastEntry[4];
+        matrix g(1) = lastEntry[5];
         
         // First compute the dimension of the compilation in each degree
         int j;
@@ -1295,8 +1295,8 @@ proc linkCompile(list linkData, string fileName, int N)
                                     if( 1 - bright[4][i2] + bleft[4][j2] != 2 * deg(Dc[i2,j2]) )
                                     {
                                         print("[linkCompile] !!!WARNING!!! Map is not degree +1.");
-                                        print("[linkCompile] In position (" + string(i2) + "," + string(j2) + ") there is " + string(Dc[i2,j2]) + ".");
-                                        print("[linkCompile] while the source has degree " + string(bleft[4][j2]) + " and the target " + string(bright[4][i2]) + ".");
+                                        print("[linkCompile] In position (" + string(i2) + "," + string(j2) + ") there is " + string(Dc[i2,j2]) + "." +
+                                                "The source has degree " + string(bleft[4][j2]) + " and the target " + string(bright[4][i2]) + ".");
                                         //return(); debug
                                     }
                                 }
