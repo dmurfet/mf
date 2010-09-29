@@ -98,7 +98,7 @@ proc blowFlags(string s)
     
     if( s == "old_splitting_construction" )
     {
-        return(1);
+        return(0);
     }
     
     // Enables some checks only relevant if the calculations involved
@@ -2962,7 +2962,8 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         // vector for the even and odd parts (separately).
         
         // IMPORTANT: We need to "suspend" this answer in order to get the splitting
-        // which is equal to Y
+        // which is equal to Y. DO NOT SCREW WITH the ordering of retlist unless you
+        // are THINKING VERY CAREFULLY.
         
         setring RRR;
         list l = imap(nR,l);
