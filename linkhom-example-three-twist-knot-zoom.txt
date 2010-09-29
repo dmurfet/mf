@@ -21,10 +21,47 @@ intvec vertexParity = -1,-1,-1,-1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list threeTwist = vertexParity, list( edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5) );
 
-// Compute the euler characteristic:
+// Compute the euler characteristic (this takes a few minutes):
 list h = linkCompile(threeTwist, "./data/three-Twist-N" + string(N) + "-zoom.mp", N);
 
+// Now when  
 list cp = KRcomplex(threeTwist, h);
+// is ran "by hand", we find that at c=-2 in the c-loop
+//     superblockmat(size(websByDegree[sc]),webmaps);
+// cannot be computed. The reason is that the 50 matrices in webmaps do not fit into a
+// big block matrix; for example, the 26-th matrix is 1x2, while other matrices in the 
+// third block-row are 2x4, but they all should have the same number of rows. 
+// The reason that matrix 26 is 1x2 is that h[22][5], which is a map [0,0,1,1,0] --> [0,0,1,0,0],
+// is the 1x2 zero matrix. But both [0,0,1,1,0] and [0,0,1,0,0] have rank 2. 
+
+// One checks that there are no compiled webs of rank 1, hence there cannot be a map
+// of size 1x2 in between them. However, e.g. for i=2,j=1 in STEP 2 of linkCompile, 
+// webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+// produces this:
+// [1]:
+//    _[1,1]=0
+//    _[2,1]=0
+// [2]:
+//    _[1,1]=0
+//    _[1,2]=0
+// How can this be? Maybe f1 and g0 have to be swapped at the end of webCompileMorphismFromData. 
+// If this is done as indicated in webCompileMorphismFromData, the N=2 three-twist example _can_
+// compute the first three webmaps in STEP 2 of linkCompile, but then it says: 
+
+[linkCompile] Looking at state [1,1,0,0,0] which is number [[ 4/32 ]].
+[linkCompile]  Looking at the map to [0,1,0,0,0].
+   ? matrix size not compatible(2x1, 2x4)
+   ? error occurred in mfweb.lib::webCompileMorphismFromData line 1085: `m1 = f1 * m1 * g1;`
+   ? leaving mfweb.lib::webCompileMorphismFromData
+   skipping text from `;` error at token `)`
+   ? leaving linkhom.lib::linkCompile
+
+// With this swapping similar error messages appear also in the N=2 trefoil example. So this
+// cannot be the reason for the appearance of the incorrect 2x1 and 1x2 zero matrices above. 
+// So we have to look elsewhere to find the source of the problem. 
+
+
+
 
 ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
@@ -35,15 +72,6 @@ euler;
 // The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
-
-// N = 2 invariants
-//
-// Jones: 
-
-
-
-// Running the above code with the state of things on 26/9/10 yields
-// the following.
 
 // N = 2 invariants:
 //

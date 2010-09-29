@@ -719,9 +719,12 @@ proc KRcomplex(list linkData, list linkComp)
 
                         A = (-1)^(signf) * h[s][5];
                         found = 1;
+                        
+                        // There can only be one map between source and target. Hence:
+                        break;
                     }
                 }
-
+                
                 if( !found )
                 {
                     //print("Found no map between web " + string(i) + " and web " + string(j));//debug
@@ -1171,12 +1174,31 @@ proc linkCompile(list linkData, string fileName, int N)
                 
                 int concentrateDegree = bleft[3];
                 
-                if( concentrateDegree == -1 )
+                // Check whether the target web w compiles to zero (in the sense that
+                // its differential is zero, not necessarily its rank):
+                for( int aa=1; aa<=size(returnListWebs); aa++ )
                 {
-                    // The source web compiles to zero, so we can just put some
+                    if( returnListWebs[aa][1] == w )
+                    {
+                        int wPosition = aa;
+                        break;
+                    }
+                }
+                int concentrateDegreeW = returnListWebs[aa][3];
+                
+                if( concentrateDegree == -1 || concentrateDegreeW == -1 )
+                {
+                    // The source web compiles to zero (in the sense that its differential 
+                    // is zero, not necessarily its rank), so we can just put some
                     // zero matrix onto the return list and skip
-                    list compiledEntry = v, w, v[j], j, zeromat(0,1,1);
-                    returnListMaps = returnListMaps + list(compiledEntry);
+                    
+                    // In listWebsByDegree (and then in KRcomplex) we discard
+                    // webs compiling to zero, so we should also not include zero maps
+                    // from or to zero modules.
+                    // NOTE that in the three-twist example this case does NOT come up.
+                    //
+                    // list compiledEntry = v, w, v[j], j, zeromat(0,1,1);
+                    // returnListMaps = returnListMaps + list(compiledEntry);
                     kill cmd, compiledEntry, leftCompiledWeb, rightCompiledWeb, leftWeb, rightWeb;
 
                     j++;
@@ -1232,7 +1254,8 @@ proc linkCompile(list linkData, string fileName, int N)
                 }
                 
                 // Add the computed list to the end of compiledEntry
-                list compiledEntry = v, w, v[j], j, D[concentrateDegree+1];
+                list compiledEntry = v, w, v[j], j, D[concentrateDegree+1];                
+                
                 returnListMaps = returnListMaps + list(compiledEntry);
                 kill listName, cmd, D, compiledEntry, leftWeb, rightWeb, leftCompiledWeb, rightCompiledWeb;
             }
