@@ -505,7 +505,7 @@ proc superblockmat(int numCols, list #)
 // whichGenerators
 //
 // Takes a vector in some module and returns a list of those generators
-// having nonzero coefficients toad
+// having nonzero coefficients
 
 proc whichGenerator(vector v) // todo now redundant
 {
@@ -952,7 +952,8 @@ proc linkCompile(list linkData, string fileName, int N)
     // We do not change rings: we assume that the ambient ring has the same number of variables
     // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
     // if there is a save file, then loading this save file will set the ring.
-   
+    int useSanityChecks = blowFlags("sanity_checks"); 
+
     system("--ticks-per-sec",1000);
     int timeLink = timer;
  
@@ -1228,7 +1229,9 @@ proc linkCompile(list linkData, string fileName, int N)
                         break;
                     }
                 }
-                int concentrateDegreeW = returnListWebs[aa][3];
+                
+                list bright = returnListWebs[wPosition];
+                int concentrateDegreeW = bright[3];
                 
                 if( concentrateDegree == -1 || concentrateDegreeW == -1 )
                 {
@@ -1277,6 +1280,30 @@ proc linkCompile(list linkData, string fileName, int N)
                     list D = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
                     string cmd = "list " + listName + " = D;"; execute(cmd);
                     kill M;
+                    
+                    // Check that D is degree +1
+                    if( useSanityChecks )
+                    {
+                        matrix Dc = D[concentrateDegree+1];
+                        int i2, j2;
+                        for(i2 = 1; i2 <= nrows(Dc); i2++) // row
+                        {
+                            for(j2 = 1; j2 <= ncols(Dc); j2++) // column
+                            {
+                                if( Dc[i2,j2] != 0 )
+                                {
+                                    if( 1 - bright[4][i2] + bleft[4][j2] != 2 * deg(Dc[i2,j2]) )
+                                    {
+                                        print("[linkCompile] !!!WARNING!!! Map is not degree +1.");
+                                        print("[linkCompile] In position (" + string(i2) + "," + string(j2) + ") there is " + string(Dc[i2,j2]) + ".");
+                                        print("[linkCompile] while the source has degree " + string(bleft[4][j2]) + " and the target " + string(bright[4][i2]) + ".");
+                                        //return(); debug
+                                    }
+                                }
+                            }
+                        }
+                        kill Dc;
+                    }
                     
                     // Save the results to the savefile
                     dbprint(printlevel, "[linkCompile] Saving to disk.");
