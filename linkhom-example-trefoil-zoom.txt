@@ -4,52 +4,16 @@ LIB "linkhom.lib";
 LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
-LIB "blow.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 3; // The N in sl(N) link homology
 printlevel = 1;
 
-// Define the underlying web of the trefoil
-intvec edgevec(1) = 2,1,3,4;
-intvec edgevec(2) = 4,3,5,6;
-intvec edgevec(3) = 6,5,1,2;
-
-// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
-intvec vertexParity = -1,-1,-1;
-
-// Define the link as a list (see linkhom.lib preceding mfCompileLink)
-list trefoilLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3));
-
-// Compute the euler characteristic:
-list h = mfCompileLinkAlt(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
-
-// After roughly half an hour, all the webs are compiled, but then the output is:
-...
-[webCompile] total elapsed time 1720400ms.
-[mfCompileLinkAlt] Saving to disk.
-[mfCompileLink] Looking at state [0,0,0] which is number [[ 1/8 ]].
-[mfCompileLink] Looking at state [1,0,0] which is number [[ 2/8 ]].
-[mfCompileLinkAlt]  Looking at the map to [0,0,0].
-[mfCompileLinkAlt] Saving to disk.
-[mfCompileLink] Looking at state [0,1,0] which is number [[ 3/8 ]].
-[mfCompileLinkAlt]  Looking at the map to [0,0,0].
-[mfCompileLinkAlt] Saving to disk.
-[mfCompileLink] Looking at state [1,1,0] which is number [[ 4/8 ]].
-[mfCompileLinkAlt]  Looking at the map to [0,1,0].
-   ? matrix size not compatible(8x96, 48x96)
-   ? error occurred in or before mfweb.lib::webCompileMorphismFromData line 1078: `                m0 = f0 * m0 * g0;`
-   ? leaving mfweb.lib::webCompileMorphismFromData
-   skipping text from `;` error at token `)`
-   ? leaving linkhom.lib::mfCompileLinkAlt
-
-// How can this be? 
-
-
-
-
-list cp = KRcomplexAlt(trefoilLink, h);
+list trefoilLink = linkLibrary("trefoil");
+list h = linkCompile(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom2.mp", N);
+list cp = KRcomplex(trefoilLink, h);
 
 ring ss=(0,q,t),(x),dp;
+
 list cp = imap(rr,cp);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
@@ -58,8 +22,6 @@ euler;
 // The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
-
-// Running the above code with the state of things on 26/9/10 yields the following.
 
 // N = 2 invariants:
 //
@@ -83,6 +45,9 @@ poincare;
 // KR polynomial: (q19+q17+q15+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3)
 //
 // With the code as of 26/9/10 this goes through in just under three minutes.
+
+// Strange, with the code on 27/9/10 we get
+// KR: (q19+q17+q13+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3)
 
 // N = 5 invariants:
 //
