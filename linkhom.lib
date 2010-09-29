@@ -501,8 +501,13 @@ proc superblockmat(int numCols, list #)
     return(A);
 }
 
+////////////////////////////////////////////////////////////////////
+// whichGenerators
+//
+// Takes a vector in some module and returns a list of those generators
+// having nonzero coefficients toad
 
-proc whichGenerator(vector v)
+proc whichGenerator(vector v) // todo now redundant
 {
     int position = 1;
     int z;
@@ -549,7 +554,7 @@ proc computeCohomology(list cpx)
 
     list V;
     list H;
-    int j;
+    int j, k;
     for( i=1; i<=maxDegree-minDegree+1; i++)
     {
         V[i] = size(cohom(i));
@@ -557,7 +562,46 @@ proc computeCohomology(list cpx)
         
         for( j=1; j<=size(cohom(i)); j++ )
         {
-            wt[j] = weightsPerCohomologicalDegree[i][whichGenerator(cohom(i)[j])];
+            vector v = cohom(i)[j];
+            
+            if( v == [0] )
+            {
+                print("[computeCohomology] Zero generator in cohomology, exiting.");
+                return();
+            }
+            
+            int vwt;
+            int found = 0;
+            
+            // Look at which generators occur with nonzero coefficients
+            // in v, and from this deduce deg(v). Note that each generator
+            // occurring with a nonzero coeff should have the same degree,
+            // otherwise v has no well-defined degree.
+            for( k=1; k<=nrows(v); k++ )
+            {
+                if( v[k] != 0 )
+                {
+                    if( found == 0 )
+                    {
+                        found = 1;
+                        vwt = weightsPerCohomologicalDegree[i][k];
+                    }
+                    else
+                    {
+                        if( vwt != weightsPerCohomologicalDegree[i][k] )
+                        {
+                            print("[computeCohomology] Generator " + string(j) +
+                                " of cohom(" + string(i) + ") has no well-defined degree, exiting.");
+                            print("Generator: " + string(v) );
+                            print("Grading:   " + string(weightsPerCohomologicalDegree[i]));
+                            return();
+                        }
+                    }
+                }
+            }
+            
+            // If we are still here, we found a consistent degree
+            wt[j] = vwt;
         }
         
         H[i] = wt;
