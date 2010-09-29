@@ -817,10 +817,11 @@ proc listWebsByDegree(list linkData, list linkComp)
             int rank = webComp[i][2];
 
             // We do not include webs compiling to zero
-            if( rank == 0 ){ print("Skipping zero web"); i++; continue; }
+            if( rank == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; } //debug
 
             // Look for this web as the source or target of something in h
             intvec weights = webComp[i][4];
+            intvec inWeight = weights;
             int c;
             for(c = 1; c <= size(h); c++)
             {
@@ -967,6 +968,7 @@ proc linkCompile(list linkData, string fileName, int N)
     {
         // Our current state diagram
         intvec v = stateDiagrams[i];
+        
         dbprint(printlevel, "");
         dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
         
@@ -1013,7 +1015,7 @@ proc linkCompile(list linkData, string fileName, int N)
             // Call webCompile
             string cmd = "list " + listName + " = webCompile(web, compStrat);";
             execute(cmd);
-        
+            
             // Save the results to the savefile
             dbprint(printlevel, "[linkCompile] Saving to disk.");
             string cmd = "write(l,list(\"" + listName + "\"," + listName + "));";

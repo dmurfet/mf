@@ -259,7 +259,7 @@ proc webCompilePair(list web, list compStrat)
     // then interpret its output.
     matrix A = MFtensor( mf(1), mf(2) );
     if( useGrading ){ intvec Agr = MFtensorGradings( mfgr(1), mfgr(2) ); }
-        
+    
     // Build up a list of the internal variables, ordered accoring to the
     // compilation strategy, a list of powers and a list of homotopies. The
     // powers we collect are the powers of the variables which act null-homotopically
@@ -571,7 +571,13 @@ proc webCompile(list web, list compStrat)
             kill vertex(1), vertex(2), mf(1), mf(2), substrat_var, substrat_varStr;
             
             setring RRR;
-            list l = imap(nR(count),l);
+            
+            // The first time through nR(1) = RRR so there is no need for imap
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+            }
+            
             kill nR(count);
 
             list retlist;
@@ -808,7 +814,17 @@ proc webCompile(list web, list compStrat)
     list retlist = A;
     kill A;
     
-    if( useGrading ){ intvec Agr = web[3][1]; retlist = retlist + list(Agr); }
+    if( useGrading )
+    {
+        //print(size(web[3])); //debug
+        //defined(Agr);
+        
+        intvec Agr = web[3][1]; 
+        retlist = retlist + list(Agr);
+        //print(Agr);
+        //print("---");
+        //print(retlist[size(retlist)]);
+    }
     
     retlist = retlist + list(splittingRecord);
     kill splittingRecord;
@@ -1051,41 +1067,13 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                 int expo = R(1)[j][6];
 
                 // Inflate and suspend
-                M = mfSuspendMorph( mfInflate(M, u, expo) );
+                matrix Minf = mfInflate(M,u,expo);
+                M = mfSuspendMorph( Minf );
+                kill Minf;
                     
                 list mblock = extractblockmat(M);
                 matrix m0 = mblock[1];
                 matrix m1 = mblock[4];
-
-		//intvec rleft0 = splitRec(1)[i][2]; //debug
-		//intvec rleft1 = splitRec(1)[i][3];
-		//intvec rright0 = splitRec(2)[i][2];
-		//intvec rright1 = splitRec(2)[i][3];
-		//print("Gradings");
-		//print(rleft0);
-		//print("//");
-		//print(rleft1);
-		//print(" and ");
-		//print(rright0);
-		//print("//");
-		//print(rright1);
-		//print("maps");
-		//print(f0);
-        //print("f0: " + string(nrows(f0)) + "x" + string(ncols(f0)));
-        //print("    " + string(nrows(R(2)[j][3])) + "x" + string(ncols(R(2)[j][3])));
-        //print(f0 * R(2)[j][3]);
-		//print("---");
-		//print(f1);
-		//print("f1: " + string(nrows(f1)) + "x" + string(ncols(f1)));
-		//print("---");
-		//print(g0);
-		//print("---");
-		//print(g1);
-		//print(" and M ");
-		//print(m0);
-		//print("---");
-		//print(m1);
-        //print("---");
 
                 // Premultiply by G and postmultiply by F
                 m0 = f0 * m0 * g0;
