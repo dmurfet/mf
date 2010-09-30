@@ -1506,7 +1506,12 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 }
             }
             
-            // Compute a minimal generating set for the image
+            // Catch the idempotent debug debug
+            //link l = "MPfile:w ./data/idempotent.mp";
+            //write(l,"M",M);
+            //close(l);
+            
+            // Compute a minimal generating set for the image.
             module im = minbase(M);
             kill M;
             
@@ -1518,6 +1523,22 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 matrix g(i) = matrix(im,ncols(e(i)),size(im));
                 matrix f(i) = matrix(n,size(im),ncols(e(i)));
                 kill n;
+                
+                // We are now guaranteed that g(i) * f(i) = e(i), and by construction
+                // the image of g(i) is equal to the image of e(i) (the module M).
+                // Moreover, the columns of g(i) are supposed to be a minimal generating
+                // set (at least this is the claim of minbase). 
+                //
+                // The splitting of e(i) is free (it is projective, and projective modules
+                // over polynomial rings are free) and is isomorphic to the image of e(i),
+                // so the image of g(i) is a free module. But then any generating set of
+                // this image must contain a basis, so a minimal generating set _is_ a
+                // basis. That is, the columns of g(i) must be a basis for the image.
+                // Equivalently, the map g(i) is a monomorphism. Since it's image is
+                // equal to the image of e(i), it follows that f(i) is an epimorphism.
+                // Then in the usual way we deduce that f(i) * g(i) = 1.
+                
+                // So: failure of f(i) * g(i) = 1 seems impossible!
             }
             else
             {
@@ -1632,13 +1653,13 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B))); //debug
     
-    list l = B,F,G;
+    list retll = B,F,G;
     
     if( useGrading )
     {
         // We are dealing with graded MFs
         intvec Bgr = Bgr(0), Bgr(1);
-        l = l + list(Bgr);
+        retll = retll + list(Bgr);
         
         if( useSanityChecks && useGrading ) // debug can probably comment out (but keep)
         {
@@ -1657,7 +1678,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
     
-    return(l);
+    return(retll);
 }
 
 proc findConstant(matrix A)

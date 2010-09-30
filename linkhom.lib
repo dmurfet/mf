@@ -75,6 +75,17 @@ proc linkLibrary(string s)
         intvec vertexParity = 1,1,-1,-1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
     }
+    
+    if( s == "three-twist" )
+    {
+        intvec edgevec(1) = 1,2,3,4;
+        intvec edgevec(2) = 5,6,2,1;
+        intvec edgevec(3) = 4,10,9,5;
+        intvec edgevec(4) = 7,9,10,8;
+        intvec edgevec(5) = 8,3,6,7;
+        intvec vertexParity = 1,1,1,1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
+    }
 
     return(retLink);
 }
@@ -457,6 +468,12 @@ proc externalDegreeOfWeb(intvec v, intvec vertexParity)
 
 proc superblockmat(int numCols, list #)
 {
+    if( size(#) mod numCols != 0 )
+    {
+        print("[superblockmat] The number of given matrices is not divisble by the number of columns, exiting.");
+        return();
+    }
+    
     int numRows = size(#)/numCols;
     
     // We first collect each row of the block matrix into a list
@@ -751,7 +768,6 @@ proc KRcomplex(list linkData, list linkComp)
                 {
                     if( h[s][1] == source[1] && h[s][2] == target[1] )
                     {
-                        //print("Found map between " + string(source[1]) + " and " + string(target[1]));
                         // Calculate the Koszul sign
                         int signf;
                         int chiposition = h[s][4];
@@ -771,7 +787,6 @@ proc KRcomplex(list linkData, list linkComp)
                 
                 if( !found )
                 {
-                    //print("Found no map between web " + string(i) + " and web " + string(j));//debug
                     A = matrix(0,target[2],source[2]);
                 }
 
@@ -1011,6 +1026,8 @@ proc linkCompile(list linkData, string fileName, int N)
     list stateDiagrams = powervec(webSize);
     int numStateDiagrams = size(stateDiagrams);
     
+    int globalZ2Degree = -1;
+    
     for( i = 1; i <= numStateDiagrams; i++ )
     {
         // Our current state diagram
@@ -1149,6 +1166,22 @@ proc linkCompile(list linkData, string fileName, int N)
             rank = 0;
         }
         
+        // All webs compilations should be living in one of the Z2 degrees
+        if( compDegree != -1 )
+        {
+            if( globalZ2Degree != -1 && globalZ2Degree != compDegree )
+            {
+                print("[linkCompile] The compilation of " + intvecToString(v) + " is in Z2 degree " + string(compDegree));
+                print("[linkCompile] whereas an earlier web was in degree " + string(globalZ2Degree) + ", exiting.");
+                return();
+            }
+            
+            if( globalZ2Degree == -1 )
+            {
+                globalZ2Degree = compDegree;
+            }
+        }
+        
         // Add the compilation products to the return list
         // Recall that tuples in this list have the format
         // (intvec state, int rank, int degree, intvec grading)
@@ -1238,6 +1271,11 @@ proc linkCompile(list linkData, string fileName, int N)
                     // is zero, not necessarily its rank), so we can just put some
                     // zero matrix onto the return list and skip
                     
+                    // NOTE to Nils: remove this if you feel confident that we
+                    // can handle zeros, I'm not going to vouch for it...
+                    print("[linkCompile] One of the compilations was zero, not sure we handle this well, exiting.");
+                    return();
+                    
                     // In listWebsByDegree (and then in KRcomplex) we discard
                     // webs compiling to zero, so we should also not include zero maps
                     // from or to zero modules.
@@ -1260,7 +1298,7 @@ proc linkCompile(list linkData, string fileName, int N)
 
                 string cmd = "int definedCheck = defined(" + listName + ");";
                 execute(cmd);
-                
+                                
                 if( definedCheck )
                 {
                     // We have already compiled this morphism
