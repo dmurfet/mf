@@ -578,10 +578,16 @@ proc webCompile(list web, list compStrat)
             if( useGrading ){ retlist = retlist + list(l[2],l[3]); }
             splittingRecord = splittingRecord + list(l);
             retlist = retlist + list(splittingRecord);
-            kill l, splittingRecord;
 
             dbprint(printlevel, "[webCompile] total elapsed time " + string(timer-timeElapsed) + "ms.");
-    
+            
+            if( useGrading )
+            {
+                dbprint(printlevel, "[webCompile] even grading: " + string(l[2]));
+                dbprint(printlevel, "[webCompile]  odd grading: " + string(l[3]));
+            }
+            kill l, splittingRecord;
+            
             return(retlist);
         }
         
@@ -1135,7 +1141,6 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                     for(z=0; z<=1; z++)
                     {
                         // Check that this grading agrees with the last step of the global splitting record
-                        // debug this is a bit paranoid.
                         if( leftwebgr(z) != splitRec(1)[size(splitRec(1))][2 + z]
                             || rightwebgr(z) != splitRec(2)[size(splitRec(2))][2 + z] )
                         {
