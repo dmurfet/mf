@@ -80,25 +80,25 @@ LIB "ring.lib";
 //
 // NOTE: Singular's evaluation of a && b does not use shortcuts, it evaluates both a and
 // b before doing the logical AND, so if you are using flags to avoid computation, you have
-// to nest your if's. Bummer.
+// to nest your ifs. Bummer.
 
 proc blowFlags(string s)
 {
     if( s == "sanity_checks" )
     {
-        return(1); 
+        return(1); // default is 1
     }
     
     // Turn on this flag if you want to optimise for small coefficients (of monomials)
     // rather than speed, in for example mfReduce.
     if( s == "small_coeffs" )
     {
-        return(0);
+        return(1); // default is 1
     }
     
     if( s == "old_splitting_construction" )
     {
-        return(0);
+        return(0); // default is 0
     }
     
     // Enables some checks only relevant if the calculations involved
@@ -106,7 +106,7 @@ proc blowFlags(string s)
     // be degree +1)
     if( s == "link_homology_checks" )
     {
-        return(1);
+        return(1); // default is 0
     }
     
     return(0);
@@ -3194,12 +3194,10 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
         // l[4] is the grading (if we are using gradings) or our modified list of homotopies
         // l[5] is our homotopies if we are using the grading, and undefined otherwise
     
-        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],N[1]). Note
+        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],N[1],l[1][,l[4]]). Note
         // we have to return to the original ring because l[2],l[3] may depend on
         // external variables which we are going to delete in a moment
         poly ivar = intvars[1];
-        
-        // debug: use the format (l[2],l[3],intvar[1],N[1],l[1],l[4])
         
         setring RRR;
         
