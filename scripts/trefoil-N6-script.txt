@@ -1,0 +1,54 @@
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..6)),dp;
+int N = 6; // The N in sl(N) link homology
+printlevel = 1;
+
+print("");
+print("[[ Trefoil sl(" + string(N) + ") Khovanov-Rozansky homology ]]");
+
+list trefoilLink = linkLibrary("trefoil");
+list h = linkCompile(trefoilLink, "./trefoil-N" + string(N) + ".mp", N);
+list cp = KRcomplex(trefoilLink, h);
+
+ring ss=(0,q,t),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+exit;
+
+// N = 2 invariants (49 seconds):
+//
+// Jones polynomial: -q9 + q5 + q3 + q
+// KR polynomial: (q9+q5t+q3t3+qt3)/(t3) 
+//
+// The Jones polynomial agrees with what I calculated by hand, and
+// the KR polynomial agrees with the data on the Knot Atlas.
+
+// N = 3 invariants (69 seconds):
+// 
+// KR polynomial: (q14+q12+q8t+q6t3+q6t+q4t3+q2t3)/(t3)
+//
+// The KR polynomial agrees with Gukov-Schwarz-Vafa (GSV).
+
+// N = 4 invariants (103 seconds):
+//
+// KR polynomial: (q19+q17+q15+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3)
+
+// N = 5 invariants (176 seconds):
+//
+// KR polynomial: (q24+q22+q20+q18+q14t+q12t3+q12t+q10t3+q10t+q8t3+q8t+q6t3+q4t3)/(t3)
+//
+// Again in agreement with GSV. Note that after computing all the webs,
+// I have to quit and restart Singular to avoid some strange error message.
