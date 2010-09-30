@@ -5,8 +5,11 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 5; // The N in sl(N) link homology
+int N = 6; // The N in sl(N) link homology
 printlevel = 1;
+
+print("");
+print("[[ Trefoil sl(" + string(N) + ") Khovanov-Rozansky homology ]]");
 
 list trefoilLink = linkLibrary("trefoil");
 list h = linkCompile(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
@@ -22,6 +25,8 @@ euler;
 // The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
+
+exit;
 
 // N = 2 invariants (49 seconds):
 //
@@ -47,3 +52,8 @@ poincare;
 //
 // Again in agreement with GSV. Note that after computing all the webs,
 // I have to quit and restart Singular to avoid some strange error message.
+
+// N = 6 computations. When I run this at some point in web 4/8 I get the f * g != 1 error.
+// This really pisses me off. See line 1527 of blow.lib for the details, but provided minbase
+// does what it is supposed to do it seems impossible for f * g to not be 1. So I can only
+// conclude that minbase is bugged, I'm running checks now.
