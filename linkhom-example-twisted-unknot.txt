@@ -31,6 +31,13 @@ matrix D2 = mfIdentityDefect( x(3)^(N+1), x(2)^(N+1), x(3), x(2) );
 matrix D3 = mfIdentityDefect( x(4)^(N+1), x(1)^(N+1), x(4), x(1) );
 ////////// END SECTION A /////////
 
+// Gradings
+intvec D1a_gr = mfIdentityDefectGrading( x(1)^(N+1) );
+intvec D1b_gr = mfIdentityDefectGrading( x(2)^(N+1) );
+intvec D1_gr = MFtensorGradings(D1b_gr, D1a_gr);
+intvec D2_gr = mfIdentityDefectGrading( x(3)^(N+1) );
+intvec D3_gr = mfIdentityDefectGrading( x(4)^(N+1) );
+
 // The internal algebra is defined by the ideal J
 ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
 intvec q = N, N, N, N;
@@ -44,10 +51,14 @@ matrix C = 1/Nn * unitmat(4);
 // This bracketing must be consistent with the choice of bracketing used
 // for the computation of diff1,diff2 etc. below
 matrix D = MFtensor(D1, MFtensor(D2,D3));
+intvec D_gr = MFtensorGradings(D1_gr, MFtensorGradings(D2_gr,D3_gr));
 print(D*D);
 
 // Inflate the differential on this tensor product
 matrix Dblow = mablow(D,J);
+intvec Dblow_gr = mablowGrading(D_gr,J);
+// Dblow is a 256-dimensional QQ-vector space. It has both a Z/2 and Z-grading, and the latter
+// is described by the intvec q = Dblow_gr, so that Dblow = QQ{q[1]} + QQ{q[2]} + ... 
 
 // Reduce this inflated differential:
 list l = mfReduce(Dblow,1);
@@ -88,7 +99,7 @@ print(mat_rk(ep1));       // Gives 0
 
 // Hence the reduced form of C(Gamma0) is QQ^(N*N) -> 0 -> QQ^(N*N), where QQ = rationals.
 
-// OPTIONAL: Computing the Chern character of the web
+// OPTIONAL: Computing the Chern character of the web ////////////////////
 
 poly c1 = supertrace( diff(D1,x(1)) * diff(D1,x(2)) * diff(D1,x(3)) * diff(D1,x(4)) );
 poly c2 = supertrace( diff(D2,x(2)) * diff(D2,x(3)) );
@@ -100,6 +111,57 @@ poly total_chern = reduce( c1 * c2 * c3, std(J) );
 // by (N+1)^4 * x(1)^N x(2)^N x(3)^N x(4)^N, and looking at the coefficient
 // of x(1)^{-1} x(2)^{-1} x(3)^{-1} x(4)^{-1}. In this case, it is 324/81 = 4,
 // giving an independent check of the above calculation.
+
+// OPTIONAL: Splitting ep0 by hand ///////////////////////////////////////
+
+// Now split the idempotent by hand:
+LIB "control.lib";
+module ker0 = rightKernel(unitmat(ncols(ep0)) - ep0);
+matrix f0 = ker0;
+matrix g0[ncols(f0)][nrows(f0)];
+    
+if( ker0[1] != [0] )
+{
+    matrix g0 = leftInverse(f0) * ep0; // Solves f0 * g0 = ep0
+};
+
+// Check that (f0,g0) is a splitting of ep0:
+f0 * g0 == ep0;
+g0 * f0 == unitmat(ncols(g0 * f0));
+
+// Let Z denote the vector space splitting the idempotent ep0 on RD0. Then the map
+// Gv = G0 * f0: Z -> RD0 -> Dblow0 = D0 x J should be homogeneous of degree zero. Here
+// D0 is (as a free module, not the differential) of rank 8 and J is of dimension 16,
+// so D0 x J is a vector space of rank 128. Order the basis of D0 xi1,...,xi8, then
+// we have a basis xi1 x j1, xi1 x j2, ...., xi2 x j1, ... where j1,...,j16 is a k-basis
+// of J (the one produced by kbase(std(J))). The degree of each of these basis elements
+// is recorded in Dblow_gr (i.e. the nth integer in Dblow_gr is the degree of the nth
+// basis element of D0 x J, thus enumerated).
+
+matrix G0 = extractblockmat(G)[1];
+matrix Gv = G0 * f0;
+
+int s = 1;
+
+int i;
+for(i=0;i<8;i++)
+{
+    int j;
+    for(j=1;j<=16;j++)
+    {
+        if( Gv[i*16 + j,s] != 0 )
+        {
+            print("Found nonzero term, of degree " + string(Dblow_gr[i*16 + j]));
+        }
+    }
+}
+
+s = 4 deg 3
+s = 3 deg 2
+s = 2 deg 3
+s = 1 deg 4
+
+matrix G0 = extractblockmat(G)[1];
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Part TK1: Treat the Gamma1-resolution of the crossing. This means compiling a closed 

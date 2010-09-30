@@ -1,0 +1,150 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1038\cocoasubrtf320
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11500\viewh15040\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\ql\qnatural\pardirnatural
+
+\f0\fs24 \cf0 Notes on Singular codebase\
+==========================\
+\
+The following notes refer to the source for Singular version 3-1-1-5 downloaded from http://www.mathematik.uni-kl.de/ftp/pub/Math/Singular/SOURCES/3-1-1/ on 16/9/2010. Files are found in the directory ./kernel unless specified otherwise.\
+\
+structs.h tells us that matrix is typedefed to a pointer to an object of class ip_smatrix. ip_smatrix is defined in matpol.h as follows:\
+\
+class ip_smatrix\
+\{\
+  public:\
+\
+  poly *m;\
+  long rank;\
+  int nrows;\
+  int ncols;\
+\
+  inline int& rows() \{ return nrows; \}\
+  inline int& cols() \{ return ncols; \}\
+\
+  #define MATROWS(i) ((i)->nrows)\
+  #define MATCOLS(i) ((i)->ncols)\
+  #define MATELEM(mat,i,j) ((mat)->m)[MATCOLS((mat)) * ((i)-1) + (j)-1]\
+\};\
+\
+The interesting thing is that the entries of the matrix are stored in the pointer m. If we look in matpol.cc at the initialiser for the class (some pieces snipped)\
+\
+matrix mpNew(int r, int c)\
+\{\
+  ....\
+  matrix rc = (matrix)omAllocBin(ip_smatrix_bin);\
+  rc->nrows = r;\
+  rc->ncols = c;\
+  rc->rank = r;\
+  if (c != 0)\
+  \{\
+    int s=r*c*sizeof(poly);\
+    rc->m = (polyset)omAlloc0(s);\
+  \}\
+  return rc;\
+\}\
+\
+So we allocate enough memory to hold r * c polynomials (probably this is very small, as a poly is probably just a pointer) and m is assigned to be a pointer to a "polyset". Again in struct.h we find typedef poly * polyset.\
+\
+What is a polynomial?\
+=====================\
+\
+This is a bit complicated. It is clear that the fundamental data type in Singular is the polynomial. In structs.h we find\
+\
+typedef struct spolyrec    polyrec;\
+typedef polyrec *          poly;\
+typedef poly *             polyset;\
+\
+So we just need to understand what a spolyrec is. For this we look to polys-impl.h where we find\
+\
+struct  spolyrec\
+\{\
+  poly      next;           // next needs to be the first field\
+  number    coef;           // and coef the second --- do not change this !!!\
+  unsigned long exp[VARS];  // make sure that exp is aligned\
+\};\
+\
+There are a several additional files with polynomial operations, for example polys.h (polynomials of the current ring) and p_polys.h (polynomial routines independent of the current ring). We learn from the above definition that a polynomial is ultimately a linked list, with each node representing a monomial consisting of a number and an exponent, stored along with a pointer to the "next" node/monomial.\
+\
+The fancy C++ class Poly can be found in Poly.h, complete with overloaded operators, etc. Probably this is the contact point with the interpreter. See testpoly.cc for how to use this class. Although from grep we learn that only Number and Poly seem to have such class wrappers around the base structs with == operators, etc. Probably in the interpreter every == or + boils down to one between Polys or Numbers.\
+\
+When we look at some of the functions in matpol.cc we see things like\
+\
+matrix b = mpNew(m, n);\
+b->m[i] = ??;\
+\
+Recall that b is a pointer to a class of type ip_smatrix, and b->m is a pointer to a class of type poly. But more than that, in mpNew we allocate storage for a poly for every entry of the matrix, so b->m[i] simply moves the pointer to the ith polynomial stored in this block of memory, that is, it is a pointer to the ith polynomial entry in the matrix.\
+\
+Note that using grep "operator\\[\\]" * we find that only Ideal.h and some things to do with intvec have overloaded array operators, so there is no confusion.\
+\
+Polynomials are intialised with pNew and pInit (see polys.h, pInline1.h for pInit = p_Init and pInline2.h for pNew = p_New). If you look in pInline1.h probably the real initialisation takes place in the following three lines (line 116-119)\
+\
+p_ExpVectorCopy(np, p, r);\
+pNext(np) = NULL;\
+pSetCoeff0(np, NULL);\
+\
+So when a polynomial is initialised (to zero) we get a zero exponent vector, a NULL pointer for the next monomial, and a zero coefficient.\
+\
+So what about sparse matrices?\
+==============================\
+\
+Singular's storage strategy for matrices is pretty cool, but there does not seem to anything in the standard matrix source files that deals with sparseness. The sparsmat.h header is included in matpol.cc, but is only used in \
+\
+mp_permmatrix::mpElimBareiss\
+mpElimBar\
+\
+where SM_MULT and SM_DIV show up. So the few sparse matrix methods that appear are probably used for this one algorithm (bareiss??). The conclusion is that there is no automatic use of sparse matrix techniques within Singular for e.g. multiplication of large (sparse) matrices.\
+\
+Main entry to Singular: tesths.cc\
+\
+Minbase\
+=======\
+\
+The Singular interpreter seems to go through iparith.cc, and minbase maps to jjidMinBase, which may be the same as idMinBase. ideals.cc contains idMinBase which does ideals.\
+\
+syMinBase in syz.cc does something.\
+\
+\
+\
+\
+Monomial orderings\
+==================\
+\
+In a Singular polynomial the "greatest" monomial, the leading one, goes first both in the data structure and in the output.\
+\
+(Wikipedia) Degree reverse lexicographic order typically provides for the fastest Gr\'f6bner basis computations. In this order monomials are compared first by total degree, with ties broken by taking the smallest monomial with respect to lexicographic ordering with the variables reversed.\
+(also called graded reverse lexicographic order or simply total degree order)\
+\
+Graded reverse lexicographic order (grevlex) compares the total degree first, then compares exponents of the last indeterminate xn but reversing the outcome (so the monomial with smaller exponent is larger in the ordering), followed (as always only in case of a tie) by a similar comparison of xn\uc0\u8722 1, and so forth ending with x1. \
+\
+i.e. x2y > xy2 because they have the same total degree, but y "beats" y2.\
+\
+See file:///usr/local/Singular/3-1-1/html/sing_650.htm#SEC703\
+\
+Note that the orderings C and c control ordering on the generators of free modules.\
+Under C we have gen(2) > gen(1) whereas under c we have gen(2) < gen(1).\
+\
+So for example\
+\
+ring r = 0,(x,y),(dp,c);\
+vector v = [1,2];\
+lead(v) = gen(1), i.e. gen(1) > 2 * gen(2).\
+\
+whereas if we chose (dp,C) then lead(v) would be 2 * gen(2), i.e. 2 * gen(2) > gen(1).\
+See file:///usr/local/Singular/3-1-1/html/sing_31.htm#SEC43\
+\
+(dp,c) is ordering by the monomial ordering first, so for example x2 * gen(1) > x * gen(1), but moreover x2 * gen(2) > x * gen(1).\
+\
+Note that applied to a vector lead(-) takes the leading term in the full sum, e.g.\
+\
+lead([1+x,2]) = x * gen(1) not (1+x)*gen(1).\
+\
+> ring r = 0,(x,y),(c,dp);\
+// ** redefining r **\
+> matrix A[3][3] = 1,0,x,x^2,1,1,0,1,y;\
+> print(interred(A));\
+0,     0,1, \
+0,     1,x2,\
+x3+y-1,1,0  \
+}
