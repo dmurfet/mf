@@ -22,63 +22,14 @@ intvec vertexParity = -1,1,-1,1,1,-1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list borromeanRings = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
 
-// Compute the euler characteristic:
-list h = mfCompileLinkAlt(borromeanRings, "borromeanRings-N" + string(N) + "-zoom.mp", N);
-
-// After less than an hour the last screen shows: 
-...
-[mfCompileLink] Looking at state [1,1,1,1,1,1] which is number [[ 64/64 ]].
-[mfCompileLinkAlt]  Looking at the map to [0,1,1,1,1,1].
-[mfCompileLinkAlt] Saving to disk.
-[1]:
-   _[1,1]=0
-   _[1,2]=0
-[2]:
-   _[1,1]=0
-   _[2,1]=0
-1
-list
-4
-[mfCompileLinkAlt]  Looking at the map to [1,1,0,1,1,1].
-[mfCompileLinkAlt] Saving to disk.
-[1]:
-   _[1,1]=0
-   _[1,2]=0
-[2]:
-   _[1,1]=0
-   _[2,1]=0
-1
-list
-4
-[mfCompileLinkAlt]  Looking at the map to [1,1,1,1,1,0].
-[mfCompileLinkAlt] Saving to disk.
-[1]:
-   _[1,1]=0
-   _[1,2]=0
-[2]:
-   _[1,1]=0
-   _[2,1]=0
-1
-list
-4
-[mfCompileLinkAlt] total elapsed time 3719080ms.
-> list cp = KRcomplex(borromeanRings, h);
-// ** right side is not a datum, assignment ignored
-// ** right side is not a datum, assignment ignored
-// ** right side is not a datum, assignment ignored
-// ** right side is not a datum, assignment ignored
-// ** right side is not a datum, assignment ignored
-// ** right side is not a datum, assignment ignored
-   ? wrong range[2,1] in matrix cMat(1 x 2)
-   ? error occurred in or before linkhom.lib::superblockmat line 1963: `                    thisrow = thisrow + list(cMat[j,t]);`
-   ? leaving linkhom.lib::superblockmat
-   skipping text from `;` error at token `)`
-   ? leaving linkhom.lib::KRcomplex
+// This:
+list h = linkCompile(borromeanRings, "borromeanRings-bla-N" + string(N) + "-zoom.mp", N);
+// gives the error:
+// [linkCompile] The compilation of 111000 is in Z2 degree 0
+// [linkCompile] whereas an earlier web was in degree 1, exiting.
 
 
 
-
-// TODO:
 list cp = KRcomplex(borromeanRings, h);
 
 ring ss=(0,q,t),(x),dp;
