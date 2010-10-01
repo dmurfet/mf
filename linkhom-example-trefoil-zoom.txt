@@ -1,4 +1,5 @@
-option(noredefine);option(noloadLib);option(redSB);option(prot);
+// Trefoil ///////////////////////////////////////////
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
 LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
@@ -7,9 +8,6 @@ LIB "mfweb.lib";
 ring rr=0,(x(1..6)),dp;
 int N = 6; // The N in sl(N) link homology
 printlevel = 1;
-
-print("");
-print("[[ Trefoil sl(" + string(N) + ") Khovanov-Rozansky homology ]]");
 
 list trefoilLink = linkLibrary("trefoil");
 list h = linkCompile(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom.mp", N);
@@ -26,17 +24,15 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-exit;
-
 // Jones polynomial: -q9 + q5 + q3 + q
 
 // KR invariants /////////////////////
 
 // N = 2 (q9+q5t+q3t3+qt3)/(t3)
-// (49 seconds) agrees with the data on the Knot Atlas.
+// agrees with the data on the Knot Atlas.
 
 // N = 3 (q14+q12+q8t+q6t3+q6t+q4t3+q2t3)/(t3)
-// (69 seconds) agrees with Gukov-Schwarz-Vafa (GSV).
+// agrees with Gukov-Schwarz-Vafa (GSV).
 
 // N = 4 (q19+q17+q15+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3) 
 // (103 seconds) agrees with GSV.
@@ -44,7 +40,5 @@ exit;
 // N = 5 (q24+q22+q20+q18+q14t+q12t3+q12t+q10t3+q10t+q8t3+q8t+q6t3+q4t3)/(t3)
 // (176 seconds) agrees with GSV.
 
-// N = 6 computations. When I run this at some point in web 4/8 I get the f * g != 1 error.
-// This really pisses me off. See line 1527 of blow.lib for the details, but provided minbase
-// does what it is supposed to do it seems impossible for f * g to not be 1. So I can only
-// conclude that minbase is bugged, I'm running checks now.
+// N = 6 (t3q15+t3q13+t3q11+t3q9+t3q7+t3q5+tq17+tq15+tq13+tq11+tq9+q29+q27+q25+q23+q21)/(t3)
+// (state 8 took 3325 seconds).
