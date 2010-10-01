@@ -6320,3 +6320,82 @@ proc listWebsByDegree(list linkData, list h)
     
     return(list(minDegree,websByDegree));
 }
+
+////////////////////////////////////////////////////////////////////
+// convertToMPfile
+//
+// NOTE: By default this opens the link to "append" mode, so if you call
+// this three times with the same input data, it will just make three copies
+// of the output data in outfileName.
+
+proc convertToMPfile(int webSize, string infileName, string outfileName)
+{
+    def RRR = basering;
+    
+    ring rr=0,(x(1..2),y(1..4)),dp;
+    
+    list stateDiagrams = powervec(webSize);
+    
+    // Read in the save file, if it exists
+    if( status(infileName,"exists") == "yes" )
+    {
+        dbprint(printlevel, "[convertToMPfile] Reading in savefile.");
+        execute(read(infileName));
+    }
+    
+    link l = "MPfile: " + outfileName;
+    
+    int i;
+    int numStateDiagrams = size(stateDiagrams);
+
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+    
+        list prefixList = "GTransWeb", "FTransWeb", "STransWeb","z2degreeOf","weightsOf","TTransWeb";
+        
+        int j;
+        for(j=1;j<=size(prefixList);j++)
+        {
+            string s = prefixList[j];
+            string listName = s + intvecToString(v);
+            
+            string cmd = "int definedCheck = defined(" + listName + ");";
+            execute(cmd);
+
+            if( definedCheck )
+            {
+                dbprint(printlevel,"[convertToMPfile] Converting " + listName);    
+                string cmd = "write(l,list(listName," + listName + "));";
+                execute(cmd);
+            }
+            
+            kill s,listName,cmd;
+        }
+    }
+
+    close(l);
+    setring RRR;
+}
+
+////////////////////////////////////////////////////////////////////
+// whichGenerators
+//
+// Takes a vector in some module and returns a list of those generators
+// having nonzero coefficients
+
+proc whichGenerator(vector v) // todo now redundant
+{
+    int position = 1;
+    int z;
+    while( z == 0 )
+    {
+        if( v[position] != 0 )
+        {
+            z = 1;
+        }
+        position++;
+    }
+    return(position-1);
+}

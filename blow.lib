@@ -1459,21 +1459,12 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // We produce morphisms f0, f1, g0, g1 where fi, gi is a splitting of ei, in the
     // sense that gi * fi = ei and fi * gi = 1.
     
-    // We know that Ker(1-ei) is a free module (Quillen-Suslin!) and that the output of
-    // rightKernel(unitmat(m/2) - e0) gives a presentation of the kernel. But this may not
-    // be minimal, in the sense that interpreted as a morphism of free modules it may not
-    // actually a monomorphism. We fix this by calling minbase.
-    
-    LIB "control.lib";
-    
     int useOldConstruction = blowFlags("old_splitting_construction"); 
-        
-    // WARNING WARNING this is the culprit
-    
     int hitZeros(0), hitZeros(1);
             
     if( useOldConstruction )
     {
+        LIB "control.lib";
         int i;
         for(i=0; i<=1; i++)
         {
@@ -1576,7 +1567,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         int i;
         for(i=0; i<=1; i++)
         {
-            // This should always be true
+            // Do g and f factorise the idempotent?
             if( g(i) * f(i) != e(i) )
             {
                 print("[mfSplitIdempotent] Splitting was not successful, as g * f != e in degree " + string(i) + ", exiting.");

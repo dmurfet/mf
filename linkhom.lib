@@ -17,12 +17,10 @@ LIB "blow.lib";
 ////////////////////////////////////////////////////////////////////
 // USAGE GUIDE
 //
-// We expect our ambient ring to be of the type
+// We expect the ambient ring to have the same number of variables as edges
+// in the link under consideration. In principle parameters should be OK, but
+// this has not been checked.
 //
-//     0,(x(1..nx),y(1..ny)),dp
-// 
-// where nx, ny are integer variables that we expect to be defined before calling
-// any of the routines in this library. The x variables are the "internal" variables.
 // The references to [KR] are to Khovanov and Rozansky "Matrix factorizations and
 // link homology" arXiv:math/0401268v2.
 
@@ -31,11 +29,6 @@ LIB "blow.lib";
 //
 // In [KR, p.47] all variables are assigned degree two. The conventions for graded
 // matrix factorisations are explained in [KR, p.44]
-//
-// Note that the Jacobi algebra A = QQ[x]/(x^n) (notation of [KR]) is naturally graded,
-// but this grading is shifted up by n - 1 so that |1| = n - 1 and |x^i| = 2i + n - 1.
-// Note this shift is the opposite direction to the one given in (see [KR,p.45]), but
-// actual calculations seem to suggest that this is an error in [KR]. See blow-example-grading.
 
 /////////////////////////////////////////
 // Link datatype
@@ -524,27 +517,6 @@ proc superblockmat(int numCols, list #)
     }
     
     return(A);
-}
-
-////////////////////////////////////////////////////////////////////
-// whichGenerators
-//
-// Takes a vector in some module and returns a list of those generators
-// having nonzero coefficients
-
-proc whichGenerator(vector v) // todo now redundant
-{
-    int position = 1;
-    int z;
-    while( z == 0 )
-    {
-        if( v[position] != 0 )
-        {
-            z = 1;
-        }
-        position++;
-    }
-    return(position-1);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -1449,62 +1421,4 @@ proc loadFromMPfile(string filename)
      
      close(l);
      return(basering);
-}
-
-////////////////////////////////////////////////////////////////////
-// convertToMPfile
-//
-// NOTE: By default this opens the link to "append" mode, so if you call
-// this three times with the same input data, it will just make three copies
-// of the output data in outfileName.
-
-proc convertToMPfile(int webSize, string infileName, string outfileName)
-{
-    def RRR = basering;
-    
-    ring rr=0,(x(1..2),y(1..4)),dp;
-    
-    list stateDiagrams = powervec(webSize);
-    
-    // Read in the save file, if it exists
-    if( status(infileName,"exists") == "yes" )
-    {
-        dbprint(printlevel, "[convertToMPfile] Reading in savefile.");
-        execute(read(infileName));
-    }
-    
-    link l = "MPfile: " + outfileName;
-    
-    int i;
-    int numStateDiagrams = size(stateDiagrams);
-
-    for( i = 1; i <= numStateDiagrams; i++ )
-    {
-        // Our current state diagram
-        intvec v = stateDiagrams[i];
-    
-        list prefixList = "GTransWeb", "FTransWeb", "STransWeb","z2degreeOf","weightsOf","TTransWeb";
-        
-        int j;
-        for(j=1;j<=size(prefixList);j++)
-        {
-            string s = prefixList[j];
-            string listName = s + intvecToString(v);
-            
-            string cmd = "int definedCheck = defined(" + listName + ");";
-            execute(cmd);
-
-            if( definedCheck )
-            {
-                dbprint(printlevel,"[convertToMPfile] Converting " + listName);    
-                string cmd = "write(l,list(listName," + listName + "));";
-                execute(cmd);
-            }
-            
-            kill s,listName,cmd;
-        }
-    }
-
-    close(l);
-    setring RRR;
 }
