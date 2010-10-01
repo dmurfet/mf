@@ -8,24 +8,21 @@ ring rr=0,(x(1..10)),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
-// Define the underlying web of the trefoil
-intvec edgevec(1) = 1,2,9,10;
-intvec edgevec(2) = 3,4,1,2;
-intvec edgevec(3) = 6,5,3,4;
-intvec edgevec(4) = 8,7,6,5;
-intvec edgevec(5) = 9,10,8,7;
+// Edges corrected (entries 3 an 4 had to be swapped in each edgevec; for some reason I
+// had thought that this would not make a difference):
+intvec edgevec(1) = 1,2,10,9;
+intvec edgevec(2) = 3,4,2,1;
+intvec edgevec(3) = 6,5,4,3;
+intvec edgevec(4) = 8,7,5,6;
+intvec edgevec(5) = 9,10,7,8;
 
 // Define which vertices are overcrossings (+1) and which are undercrossings (-1):
-intvec vertexParity = -1,-1,-1,-1,-1;
+intvec vertexParity = 1,1,1,1,1;
 
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list cinquefoil = vertexParity, list( edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5) );
 
-// RUNNING ON LULLY SINCE 2010-09-27--08:59:
-// Compute the euler characteristic:
-list h = mfCompileLinkAlt(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
-
-list cp = KRcomplex(cinquefoil, h);
+list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
 
 ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
