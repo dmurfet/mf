@@ -109,6 +109,11 @@ proc blowFlags(string s)
         return(1); // default is 0
     }
     
+    if( s == "minbase_cutoff" )
+    {
+        return(5); // default is 5
+    }
+    
     return(0);
 }
 
@@ -1406,6 +1411,8 @@ proc computeGradingFromInjection(matrix F, intvec g)
 proc mfSplitIdempotent(matrix A, matrix E, list #)
 {   
     int useSanityChecks = blowFlags("sanity_checks"); 
+    int minbaseCutoff = blowFlags("minbase_cutoff");
+    
     int m = ncols(A);
     
     int useGrading;
@@ -1505,13 +1512,11 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                     return();
                 }
             }
-            
-            // Catch the idempotent debug debug
-            //link l = "MPfile:w ./data/idempotent.mp";
-            //write(l,"M",M);
-            //close(l);
-            
-            // Compute a minimal generating set for the image.
+                        
+            // Compute a minimal generating set for the image. Note that minbase
+            // is currently bugged (Singular 3-1-1) and may not create a linearly
+            // independent generating set on the run through. So we try reapplying
+            // minbase a certain number of times (set by the flag minbaseCutoff)
             module im = minbase(M);
             kill M;
             
@@ -1522,12 +1527,11 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 module n = lift(im,e(i));
                 matrix g(i) = matrix(im,ncols(e(i)),size(im));
                 matrix f(i) = matrix(n,size(im),ncols(e(i)));
-                kill n;
                 
                 // We are now guaranteed that g(i) * f(i) = e(i), and by construction
                 // the image of g(i) is equal to the image of e(i) (the module M).
-                // Moreover, the columns of g(i) are supposed to be a minimal generating
-                // set (at least this is the claim of minbase). 
+                // Minbase is supposed to guarantee that the columns of g(i) are a minimal
+                // generating set for this image (suppose this is the case).
                 //
                 // The splitting of e(i) is free (it is projective, and projective modules
                 // over polynomial rings are free) and is isomorphic to the image of e(i),
@@ -1538,7 +1542,23 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 // equal to the image of e(i), it follows that f(i) is an epimorphism.
                 // Then in the usual way we deduce that f(i) * g(i) = 1.
                 
-                // So: failure of f(i) * g(i) = 1 seems impossible!
+                // So: failure of f(i) * g(i) = 1 (which does happen!) shows us that in
+                // fact the columns of g(i) are not a minimal generating set. This is a
+                // bug in minbase, and the workaround is as follows:
+                
+                int minbaseCount = 1;
+                while( f(i) * g(i) != unitmat(nrows(f(i))) && minbaseCount < minbaseCutoff )
+                {
+                    // Try running minbase again
+                    dbprint(printlevel, "[mfSplitIdempotent] WARNING: Encountered minbase bug, running it again...");
+                    im = minbase(im);
+                    n = lift(im,e(i));
+                    g(i) = matrix(im,ncols(e(i)),size(im));
+                    f(i) = matrix(n,size(im),ncols(e(i)));
+                    
+                    minbaseCount++;
+                }
+                kill n;
             }
             else
             {
@@ -1567,7 +1587,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
             if( !hitZeros(i) && f(i) * g(i) != unitmat(nrows(f(i))) )
             {
                 print("[mfSplitIdempotent] Splitting was not successful, as f * g != 1 in degree " + string(i) + ", exiting.");
-                //print( g(i) * f(i) );
+                print( g(i) * f(i) );
                 //print("[mfSplitIdempotent] The above is the matrix that should be 1, it has been exported as errMat.");
                 //matrix errMat = g(i) * f(i);
                 //exportto(Top,errMat);
@@ -1624,14 +1644,15 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         // values is special. We put a string in the first position of the return list, so
         // that the receiver knows to interpret the rest of the output in the special manner.
         
-        list l = "nonsquare",f(0),f(1),g(0),g(1);
+        list rls = "nonsquare",f(0),f(1),g(0),g(1);
+        kill f(0), f(1), g(0), g(1);
         
         if( useGrading )
         {   
-            l = l + list(Bgr(0),Bgr(1));
+            rls = rls + list(Bgr(0),Bgr(1));
         }
         
-        return(l);
+        return(rls);
     }
 
     // Put the f and g matrices back together
@@ -1643,7 +1664,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     matrix F = blockmat_nsq(f(0), zf1, zf2, f(1));
     matrix G = blockmat_nsq(g(0), zg1, zg2, g(1));
-
+    kill f(0), f(1), g(0), g(1), zf1, zf2, zg1, zg2;
+    
     // The differential on the splitting is given by B = F * A * G
     matrix B = F * A * G;
     
