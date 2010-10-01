@@ -1,3 +1,4 @@
+// Three twist ///////////////////////////////////////////
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
 LIB "linkhom.lib";
@@ -20,7 +21,7 @@ list h = linkCompile(threeTwist, "./data/three-Twist-N" + string(N) + "-zoom.mp"
 
 list cp = KRcomplex(threeTwist, h);
 
-ring ss=(0,q,t),(x),dp;
+ring ss=(0,t,q),(x),dp;
 list cp = imap(rr,cp);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
@@ -30,12 +31,11 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// N = 2 invariants:
-//
 // Jones polynomial: (q12+q8+q6-1)/(q18)
-// KR polynomial: (q12+q10t+q10+q8t2+q6t2+q4t4+q4t3+t5)/(q18)
+
+// KR invariants /////////////////////
+
+// N = 2 (q12+q10t+q10+q8t2+q6t2+q4t4+q4t3+t5)/(q18)
+// This seems to disagree with the knot atlas!
 
 // N = 3 invariants:
-// 
-// P_3: 
-// KR polynomial: 
