@@ -86,6 +86,14 @@ proc linkLibrary(string s)
         intvec vertexParity = 1,1,1,1,1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
     }
+    
+    if( s == "hopf" )
+    {
+        intvec edgevec(1) = 1,2,3,4;
+        intvec edgevec(2) = 4,3,2,1;
+        intvec vertexParity = -1,-1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2));
+    }
 
     return(retLink);
 }
