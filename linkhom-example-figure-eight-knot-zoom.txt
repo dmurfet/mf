@@ -1,4 +1,5 @@
-option(noredefine);option(noloadLib);option(redSB);
+// Figure eight ///////////////////////////////////////////
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
 LIB "blow.lib";
 LIB "linkhom.lib";
 LIB "matrix.lib";
@@ -8,67 +9,12 @@ ring rr=0,(x(1..8)),dp;
 int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
-// Define the underlying web of the figure-eight knot:
-intvec edgevec(1) = 1,7,8,5;
-intvec edgevec(2) = 6,8,7,2;
-intvec edgevec(3) = 3,5,6,4;
-intvec edgevec(4) = 4,2,1,3;
+list figureEightLink = linkLibrary("figure-eight");
+list h = linkCompile(figureEightLink, "./data/figure-eight-N" + string(N) + "-zoom.mp", N);
 
-// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
-intvec vertexParity = 1,1,-1,-1;
-
-// Define the link as a list:
-list figureEightLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
-
-// Compute the euler characteristic:
-list h = mfCompileLinkAlt(figureEightLink, "figure-eight-N" + string(N) + "-zoom.mp", N);
-
-// After an hour or so (since I am using screen, I can only see one screen which in this
-// case does not have any information on how far exactly the computation got), there is an
-// error message: 
-...
-[webCompile] Entering round 2 of compilation.
-[mfPushforward] Pushing forward matrix of size 48 with N = 4
-[mfPushforward] Worst input coeff: -180
-[mfReduce] Reducing matrix of size 192
-[mfReduce]          worst input coeff: -180
-[mfReduce]          worst output coeff: -1600
-[mfReduce]          result is size 48.
-[mfReduce]          elapsed time 10890ms.
-[mfSplitIdempotent] Worst coeff in E: -289/5
-[mfSplitIdempotent] Splitting was not successful, as g * f != 1 in degree 0, exiting.
-0,   0,0,0,0,0,0,0,_[1,9],_[1,10],_[1,11],_[1,12],_[1,13],
-0,   1,0,0,0,0,0,0,0,     0,      0,      0,      0,
-y(2),0,1,0,0,0,0,0,_[3,9],_[3,10],_[3,11],_[3,12],_[3,13],
-0,   0,0,1,0,0,0,0,0,     0,      0,      0,      0,
-0,   0,0,0,1,0,0,0,0,     0,      0,      0,      0,
-0,   0,0,0,0,1,0,0,0,     0,      0,      0,      0,
-0,   0,0,0,0,0,1,0,0,     0,      0,      0,      0,
-0,   0,0,0,0,0,0,1,0,     0,      0,      0,      0,
-0,   0,0,0,0,0,0,0,1,     0,      0,      0,      0,
-0,   0,0,0,0,0,0,0,0,     1,      0,      0,      0,
-0,   0,0,0,0,0,0,0,0,     0,      1,      0,      0,
-0,   0,0,0,0,0,0,0,0,     0,      0,      1,      0,
-0,   0,0,0,0,0,0,0,0,     0,      0,      0,      1
-[mfSplitIdempotent] The above is the matrix that should be 1, it has been exported as errMat.
-   ? `exportTo` is not defined
-   ? error occurred in or before blow.lib::mfSplitIdempotent line 1502: `                exportTo(Top,errMat);`
-   ? leaving blow.lib::mfSplitIdempotent
-   skipping text from `;` error at token `)`
-   ? leaving blow.lib::mfPushforward
-   ? leaving blow.lib::mfPushforwardInductive
-   ? leaving mfweb.lib::webCompilePair
-   ? leaving mfweb.lib::webCompile
-   ? leaving linkhom.lib::mfCompileLinkAlt
-
-
-
-
-
-// TODO:
 list cp = KRcomplex(figureEightLink, h);
 
-ring ss=(0,q,t),(x),dp;
+ring ss=(0,t,q),(x),dp;
 list cp = imap(rr,cp);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
@@ -78,20 +24,17 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// Running the above code with the state of things on 26/9/10 yields
-// the following.
+// Jones polynomial: (q8+1)/(q5)
 
-// N = 2 invariants:
-//
-// P_2: (q8+1)/(q5)
-// KR polynomial: (q8+q6t2+q6t+q4t3+q4t2+t4)/(q5t2)
+// KR invariants /////////////////////
 
-// N = 3 invariants (this took 1283 seconds on haydn):
-// 
-// P_3: (2q14+q10-2q8+q2+1)/(q8)
-// KR polynomial: (2q14+q10t2+q8t3+q8t2+2q8t+q6t3+q6t2+q2t4+t4)/(q8t2)
+// N = 2 (q10+q6t2+q6t+q4t3+q4t2+t4)/(q5t2)
+// Agrees with Khovanov homology on Knot atlas (with q = 1/q).
 
-// N = 4 invariants:
-//
-// P_4: 
-// KR polynomial: 
+// N = 3 (q16+q14+q10t2+q10t+q8t3+q8t2+q8t+q6t3+q6t2+q2t4+t4)/(q8t2)
+// Courtesy of nemo01 in 1478 seconds, agrees with our earlier calculation.
+
+// N = 4 ran overnight on nemo and when I reattached with "screen" this morning
+// the session was timed out, still stuck on a minbase/lift calculation. It certainly
+// hit the minbase bug (the code now outputs a warning in this case) and was running
+// minbase the second time when it got stuck.
