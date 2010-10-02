@@ -9,11 +9,9 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 3; // The N in sl(N) link homology
 printlevel = 1;
 
-// Edges corrected (entries 3 an 4 had to be swapped in each edgevec; for some reason I
-// had thought that this would not make a difference):
 intvec edgevec(1) = 1,2,10,9;
 intvec edgevec(2) = 3,4,2,1;
 intvec edgevec(3) = 6,5,4,3;
@@ -26,7 +24,10 @@ intvec vertexParity = 1,1,1,1,1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list cinquefoil = vertexParity, list( edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5) );
 
+// RUNNING on haydn since 2010-10-02--09:46:
 list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
+
+list cp = KRcomplex(cinquefoil, h);
 
 ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
@@ -38,13 +39,10 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// Running the above code with the state of things on 26/9/10 yields
-// the following.
-
-// N = 2 invariants:
+// N = 2 invariants (this took 47394560ms or roughly 13 hours on haydn):
 //
-// P_2: 
-// KR polynomial: 
+// P_2: (q12+q10+q8-1)/(q20)
+// KR polynomial: (q12+q10+q8t2+q4t4+q4t3+t5)/(q20)
 
 // N = 3 invariants:
 // 
