@@ -9,7 +9,7 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 3; // The N in sl(N) link homology
+int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
 intvec edgevec(1) = 1,2,10,9;
@@ -24,7 +24,7 @@ intvec vertexParity = 1,1,1,1,1;
 // Define the link as a list (see linkhom.lib preceding mfCompileLink)
 list cinquefoil = vertexParity, list( edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5) );
 
-// RUNNING on haydn since 2010-10-02--09:46:
+// RUNNING on haydn since 2010-10-02--13:03:
 list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(cinquefoil, h);
@@ -44,8 +44,10 @@ poincare;
 // P_2: (q12+q10+q8-1)/(q20)
 // KR polynomial: (q12+q10+q8t2+q4t4+q4t3+t5)/(q20)
 
-// N = 3 invariants:
+// N = 3 invariants (This only took 3292320ms on haydn which is less than one hour!!!
+// I ran the computation twice, both times with the same result.):
 // 
-// KR polynomial: 
+// KR polynomial: (q16+q14+q12t2+q12+q10t2+q8t4+q6t4+q6t3+q4t3+q2t5+t5)/(q27)
 //
-// Note that GSV predict q6+q8+q10+q10t2+q12t2+q16t3+q18t3+q14t4+q16t4+q20t5+q22t5
+// Note that GSV predict q6+q8+q10+q10t2+q12t2+q16t3+q18t3+q14t4+q16t4+q20t5+q22t5, 
+// which (after q |-> 1/q) is far from agreement with our result.
