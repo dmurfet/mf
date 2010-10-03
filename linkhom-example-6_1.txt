@@ -1,0 +1,35 @@
+// Knot 6_1 ///////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..12)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list linkL = linkLibrary("6_1");
+list h = linkCompile(linkL, "./data/61-N" + string(N) + "-zoom.mp", N);
+list cp = KRcomplex(linkL, h);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+
+
+// Jones polynomial: 
+
+// KR invariants /////////////////////
+
+// N = 2 
+// Knot atlas says t2q5 + tq + 2q + q(-1) + q(-1)t(-1) + q(-3)t(-1) + q(-5)t(-2) + q(-5)t(-3) + q(-9)t(-4)
