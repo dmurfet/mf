@@ -71,6 +71,13 @@ LIB "ring.lib";
 //
 // NOTE: All operations on graded MFs assume that A is square (i.e. both degrees have
 // the same rank).
+//
+// NOTE: Bigradings
+//
+// In the case of bigradings (for HOMFLY homology) the first ring variable (call it "a")
+// has bidegree (2,0) and the rest have bidegree (0,2). The grading shift on a free module of
+// rank M is described by a list of size M (even if M = 1) whose entries are intvecs of size
+// 2. So R{a,b} + R{c,d} is described by list(invec(a,b),intvec(c,d)).
 
 //////////////////////////////////////////////////
 // blowFLags
@@ -112,6 +119,11 @@ proc blowFlags(string s)
     if( s == "minbase_cutoff" )
     {
         return(5); // default is 5
+    }
+    
+    if( s == "use_mpfile" )
+    {
+        return(0); // default is 1
     }
     
     return(0);
@@ -2007,6 +2019,36 @@ proc MFtensorGradings(intvec g, intvec h)
     int rankProduct = sizeX * sizeY;
     
     intvec r;
+    
+    int i, j;
+    for(i=1;i<=sizeX;i++)
+    {
+        for(j=1;j<=sizeY;j++)
+        {
+            r[(i-1)*sizeY + j] = g[i] + h[j]; // Gradings on X0 x Y0
+            r[rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[sizeY + j]; // Grading on X1 x Y1
+            r[2*rankProduct + (i-1)*sizeY + j] = g[i] + h[sizeY + j]; // X0 x Y1
+            r[3*rankProduct + (i-1)*sizeY + j] = g[sizeX + i] + h[j]; // X1 x Y0
+        }
+    }
+    
+    return(r);
+}
+
+proc MFtensorBigradings(list g, list h)
+{
+    // With the notation of MFtensor, X x Y is, as a Z/2-graded free module
+    // (X x Y)0 = (X0 x Y0) + (X1 x Y1)
+    // (X x Y)1 = (X0 x Y1) + (X1 x Y0)
+    // with the basis ordered in the usual way. If X,Y are bigraded free modules
+    // with the bigradings described by lists g, h resp. then the list describing
+    // the shifts on the free modules in X x Y is
+   
+    int sizeX = size(g)/2;
+    int sizeY = size(h)/2;
+    int rankProduct = sizeX * sizeY;
+    
+    list r;
     
     int i, j;
     for(i=1;i<=sizeX;i++)
