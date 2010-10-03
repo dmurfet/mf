@@ -2,7 +2,7 @@ version="0.1";
 category="Miscellaneous";
 // summary description of the library
 info="
-LIBRARY:   linkhom.lib  Computation of link homology using foam compilation
+LIBRARY:   linkhom.lib  Computation of link homology using web compilation
 AUTHOR:    Nils Carqueville, Daniel Murfet
 KEYWORDS:  matrix factorization, link homology
 
@@ -948,7 +948,8 @@ proc linkCompile(list linkData, string fileName, int N)
     // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
     // if there is a save file, then loading this save file will set the ring.
     int useSanityChecks = blowFlags("sanity_checks"); 
-
+    int useMPfile = blowFlags("use_mpfile");
+    
     system("--ticks-per-sec",1000);
     int timeLink = timer;
  
@@ -959,11 +960,17 @@ proc linkCompile(list linkData, string fileName, int N)
     int webSize = size(vertexParity);
     
     // Read in the save file, if it exists
-    link l = "MPfile: " + fileName;
     if( status(fileName,"exists") == "yes" )
     {
-        def nR = loadFromMPfile(fileName);
-        setring nR;
+        if( useMPfile )
+        {
+            def nR = loadSaveFile(fileName);
+            setring nR;
+        }
+        else
+        {
+            execute(loadSaveFile(fileName));
+        }
     }
 
     list returnListWebs;
@@ -1053,20 +1060,17 @@ proc linkCompile(list linkData, string fileName, int N)
             list web = webVertices, webMfs, webMfsGrading;
             kill webMfs, webMfsGrading;
         
-            string cmd = "list " + listName2 + " = web;";
-            execute(cmd);
+            execute("list " + listName2 + " = web;");
         
             // Call webCompile
-            string cmd = "list " + listName + " = webCompile(web, compStrat);";
-            execute(cmd);
+            execute("list " + listName + " = webCompile(web, compStrat);");
             
             // Save the results to the savefile
             dbprint(printlevel, "[linkCompile] Saving to disk.");
-            string cmd = "write(l,list(\"" + listName + "\"," + listName + "));";
-            execute(cmd);
-            string cmd = "write(l,list(\"" + listName2 + "\"," + listName2 + "));";
-            execute(cmd);
-        
+
+            execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
+            execute("writeObjectToFile(fileName,\"" + listName2 + "\"," + listName2 + ");");
+            
             kill web;
         }
         
@@ -1170,7 +1174,6 @@ proc linkCompile(list linkData, string fileName, int N)
         kill compiledEntry, v, Z, R, lastEntry, rank, compDegree, grading;
         kill dimComp(0), dimComp(1);
     }
-    close(l);
     
     dbprint(printlevel, "[linkCompile] time to compile webs " + string(timer-timeLink) + "ms."); 
     
@@ -1325,7 +1328,7 @@ proc linkCompile(list linkData, string fileName, int N)
                     
                     // Save the results to the savefile
                     dbprint(printlevel, "[linkCompile] Saving to disk.");
-                    string cmd = "write(l,list(\"" + listName + "\",D));"; execute(cmd);
+                    execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
                 }
                 
                 // We should end up with a zero potential, so the output of webCompileMorphism
@@ -1355,7 +1358,6 @@ proc linkCompile(list linkData, string fileName, int N)
         kill v;
     }
     
-    
     setring RRR;
    
     dbprint(printlevel, "[linkCompile] total elapsed time " + string(timer-timeLink) + "ms."); 
@@ -1363,34 +1365,42 @@ proc linkCompile(list linkData, string fileName, int N)
 }
 
 ////////////////////////////////////////////////////////////////////
-// loadFromMPfile
+// loadSaveFile
 //
-// Given the filename of an MP data file, reads in the contents. We require
+// Given the filename of an MP or ASCII data file, reads in the contents. We require
 // that all writes to the MP file be made in the context of a particular ring R.
 // Then loadFromMPfile will create its own copy of this ring, and the loaded data
-// types will belong to this ring. This ring is the single return value.
+// types will belong to this ring. This ring is the single return value, in the case
+// where MPfile is being used.
 //
-// So loadFromMPfile should be called as follows:
+// So in this case loadSaveFile should be called as follows:
 //
 //   def nR = loadFromMPfile("example.mp");
 //   setring nR;
 //
-// Variables should be written to the MP file in the format ("varname",var), so
-// for example to add a matrix A to the store, you should call
+// If we are in ASCII mode then we simply rturn the contents of the given
+// file, so that running execute should recreate the needed objects in memory, and we
+// use the current basering (there is no return value in this case).
 //
-//   link l = "MPfile: filename";
-//   write(l,list("A",A));
-//   close(l);
+// In either case objects should be written to the store using writeObjectToFile.
 
-proc loadFromMPfile(string filename)
+proc loadSaveFile(string filename)
 {
+    int useMPfile = blowFlags("use_mpfile");
+
     if( !status(filename,"exists","yes") )
     {
-        print("[loadFromMPfile] File does not exist, exiting.");
+        print("[loadSaveFile] File does not exist, exiting.");
         return();
     }
     
-    // Open the link
+    if( !useMPfile )
+    {
+        // ASCII mode
+        return(read(filename));
+    }
+    
+    // Now we are in MP mode. First open the link
     link l = "MPfile:r " + filename;
     open(l);
     
@@ -1422,4 +1432,104 @@ proc loadFromMPfile(string filename)
      
      close(l);
      return(basering);
+}
+    
+////////////////////////////////////////////////////////////////////
+// writeObject
+//
+// Given an object and its name, we write it out to the given link.
+
+proc writeObjectToFile(string fileName, string nam, def L)
+{
+    int useMPfile = blowFlags("use_mpfile");
+    
+    if( useMPfile )
+    {
+        // If we are using MPfile then we write out the list (nam, L)
+        link l = "MPfile: " + fileName;
+        execute("write(l,list(\"" + nam + "\"," + L + "));");
+        close(l);
+    }
+    else
+    {
+        // If we are using ASCII, write out to the file the lines
+        // list nam = ???; (or matrix nam = ??, etc) 
+        // where ?? is the output of archiveListToString
+        string s = typeof(L) + " " + nam + " = " + archiveObjectToString(L) + ";";
+        write(":a " + fileName, s);
+    }
+}
+
+////////////////////////////////////////////////////////////////////
+// archiveListToString
+//
+// Given an object, creates a string representation which allows us to
+// reconstruct the list in memory exactly as it was before. There is
+// a limitation to the kinds of lists that we allow.
+//
+// Kudos: this is inspired by writelist, part of inout.lib in the
+// Singular standard libraries.
+
+proc archiveObjectToString(def L)
+{
+    string ent;
+    int foundType;
+    
+    if( typeof(L) == "int" )
+    {
+        ent = "int(" + string(L) + ")";
+        foundType = 1;
+    }
+    
+    if( typeof(L) == "number" )
+    {
+        ent = "number(" + string(L) + ")";
+        foundType = 1;
+    }
+    
+    if( typeof(L) == "string" )
+    {
+        ent = "string(\"" + L + "\")";
+        foundType = 1;
+    }
+    
+    if( typeof(L) == "intvec" )
+    {
+        ent = "intvec(" + string(L) + ")";
+        foundType = 1;
+    }
+        
+    if( typeof(L) == "matrix" )
+    {
+        ent = "matrix(ideal(" + string(L) + ")," + string(nrows(L)) + "," + string(ncols(L)) + ")";
+        foundType = 1;
+    }
+        
+    if( typeof(L) == "poly" )
+    {
+        ent = "poly(" + string(L) + ")";
+        foundType = 1;
+    }
+        
+    if( typeof(L) == "list" )
+    {
+        ent = "list(";
+        int j;
+        for(j=1;j<=size(L);j++)
+        {
+            if( j != 1 ){ ent = ent + ","; }
+                
+            ent = ent + archiveObjectToString(L[j]);
+        }
+            
+        ent = ent + ")";
+        foundType = 1;
+    }
+        
+    if( !foundType )
+    {
+        print("[archiveObjectToString] Found unsupported type \"" + typeof(L) + "\" in list, skipping!");
+    }
+    
+    return(ent);
 }
