@@ -9,13 +9,12 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
 list cinquefoil = linkLibrary("cinquefoil");
 
-// RUNNING on haydn since 2010-10-02--13:03 (computing state 8/32 on 
-// 2010-10-04--14:38 while using 89.6% memory):
+// I killed this while it was still working on state 8/32 after 60 hours:
 list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(cinquefoil, h);
