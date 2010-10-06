@@ -1,3 +1,5 @@
+// Knot 6_2 ///////////////////////////////////////////
+
 option(noredefine);option(noloadLib);option(redSB);//option(prot);
 LIB "blow.lib";
 LIB "linkhom.lib";
@@ -8,16 +10,14 @@ ring rr=0,(x(1..12)),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
-list borromeanRings = linkLibrary("borromeanRings");
+list linkL = linkLibrary("6_2");
+list h = linkCompile(linkL, "./data/62-N" + string(N) + "-zoom.mp", N);
+if( N != 2 ){ print("N++ bug encountered."); N = 2; } //debug
 
-// N=2 RUNNING on LRZ cluster.
-// N=3 RUNNING on haydn since 2010-10-05--12:05:
-// N=4 RUNNING on ligeti since 2010-10-05--12:06:
-list h = linkCompile(borromeanRings, "borromeanRings----N" + string(N) + "-zoom.mp", N);
+list cp = KRcomplex(linkL, h);
 
-list cp = KRcomplex(borromeanRings, h);
+ring ss=(0,t,q),(x),dp;
 
-ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
 list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
@@ -27,7 +27,10 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// N = 2 invariants:
-//
-// P_2: 
-// KR polynomial: 
+
+
+// Jones polynomial: 
+
+// KR invariants /////////////////////
+
+// N = 2 

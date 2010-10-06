@@ -10,12 +10,11 @@ printlevel = 1;
 
 list borromeanRings = linkLibrary("borromeanRings");
 
-// N=2 RUNNING on LRZ cluster.
-// N=3 RUNNING on haydn since 2010-10-05--12:05:
-// N=4 RUNNING on ligeti since 2010-10-05--12:06:
-list h = linkCompile(borromeanRings, "borromeanRings----N" + string(N) + "-zoom.mp", N);
+list h = linkCompile(borromeanRings, "data-borromeanRings-N" + string(N) + "-zoom.mp", N);
 
-list cp = KRcomplex(borromeanRings, h);
+N = 2;
+
+list cp = KRcomplex(borromeanRings, h, N);
 
 ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
@@ -23,11 +22,9 @@ list cohom = computeCohomology(cp);
 number euler = gradedEuler(cohom,q);
 euler;
 
-// The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
-poincare;
+print("");print("The graded Poincare polynomial is given by " + string(poincare));
 
-// N = 2 invariants:
-//
-// P_2: 
-// KR polynomial: 
+print("");
+
+N;

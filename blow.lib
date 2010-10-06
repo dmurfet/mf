@@ -1288,10 +1288,10 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     
     int m = ncols(A);
     
-    matrix N = U * U - U;
+    matrix NN = U * U - U;
     matrix z[m][m];
     
-    matrix powerOfN = N;
+    matrix powerOfN = NN;
     int vanishingOrder;
     
     for( vanishingOrder = 1; vanishingOrder < 1000; vanishingOrder++ )
@@ -1299,7 +1299,7 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
         //dbprint(printlevel, "[mfStrictifyIdempotent] Looking at order " + string(vanishingOrder));
         if( powerOfN == z ){ break; }
         
-        powerOfN = N * powerOfN;
+        powerOfN = NN * powerOfN;
     }
     
     if( powerOfN != z )
@@ -1316,7 +1316,7 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     
     for(i = 1; i < vanishingOrder; i++)
     {
-        X = X + (-1)^(i+1) * int(binomial(2 * i, i)) * power(N,i);
+        X = X + (-1)^(i+1) * int(binomial(2 * i, i)) * power(NN,i);
     }
     
     X = 1/2 * X;
@@ -2339,7 +2339,7 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
             // in only the y-variables.
 
             matrix koffer = coef(M[i1,j1], xprod);
-            matrix N[n][n];
+            matrix NN[n][n];
 
             for(k=1; k<=ncols(koffer); k++)
             {
@@ -2353,11 +2353,11 @@ proc deltaImablow(matrix M, int i, int exponent, ideal J)
                 
                 if( koffer[2,k] != 0 && monom != 0 && p > 0 )
                 {
-                    N = N + koffer[2,k] * deltaInflation(monom, i, exponent, J);
+                    NN = NN + koffer[2,k] * deltaInflation(monom, i, exponent, J);
                 }
             }
 
-            L[i1] = insert(L[i1], N, j1-1);
+            L[i1] = insert(L[i1], NN, j1-1);
             ///////////////////////////////////////////////////
         }
     }
@@ -3139,10 +3139,10 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 // mfPushforwardInductive
 //
 // We are given a matrix A interpreted as the differential on a matrix factorisation X
-// of a potential W in our ring, together with a list of ring variables "intvars" and list N
-// such that intvar[i]^N[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
-// A * H[i] + H[i] * A = intvar[i]^N[i] * unitmat, i.e. the entries of H[i] give a homotopy between
-// intvar[i]^N[i] and the zero map. We assume that, as a polynomial, W does not depend on the
+// of a potential W in our ring, together with a list of ring variables "intvars" and list NN
+// such that intvar[i]^NN[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
+// A * H[i] + H[i] * A = intvar[i]^NN[i] * unitmat, i.e. the entries of H[i] give a homotopy between
+// intvar[i]^NN[i] and the zero map. We assume that, as a polynomial, W does not depend on the
 // variables intvar.
 //
 // Let S denote the ring obtained from our basering by deleting the intvars. We can restrict
@@ -3155,17 +3155,17 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 // The third (or second, if there is no grading) return value is a list R (of the same length
 // as intvars) whose entries are tuples
 //
-//       (F,G,u,N,D[,r])
+//       (F,G,u,NN,D[,r])
 //
 // which records the F and G matrices returned by mfPushforward at each stage of the computation,
-// along with the internal variable u in question and the exponent N it is associated with. The D
+// along with the internal variable u in question and the exponent NN it is associated with. The D
 // is the differential of the pushforward, and r is its optional grading vector. Note that if in
 // the splitting we encounter non-square matrices the format is slightly different; see the code.
 //
 // TODO: When we are happy that everything is working correctly, there is no need to store
 // D and r here; they are only used for sanity checks.
 
-proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
+proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
 {
     int useSanityChecks = blowFlags("sanity_checks"); // Turn off to run faster
     
@@ -3190,7 +3190,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
     {
         for(i=1;i<=size(intvars);i++)
         {
-            if( A * H[i] + H[i] * A != intvars[i]^(N[i]) * unitmat(ncols(A)) )
+            if( A * H[i] + H[i] * A != intvars[i]^(NN[i]) * unitmat(ncols(A)) )
             {
                 print("[mfPushforward] Not passed valid homotopies, exiting.");
                 return();
@@ -3213,11 +3213,11 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
         // induce homotopies on this reduction for the action of the rest of the variables
         if( !useGrading )
         {
-            list l = mfPushforward(A, intvars[1], N[1], H);
+            list l = mfPushforward(A, intvars[1], NN[1], H);
         }
         else
         {
-            list l = mfPushforward(A, intvars[1], N[1], H, Agr);
+            list l = mfPushforward(A, intvars[1], NN[1], H, Agr);
         }
         
         if( typeof(l[1]) == "string" )
@@ -3246,12 +3246,12 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
             
             // Modify the current map list R by adding on the end the list
             //
-            //    ("nonsquare",f0,f1,g0,g1,intvars[1],N[1][,r1,r2])
+            //    ("nonsquare",f0,f1,g0,g1,intvars[1],NN[1][,r1,r2])
             //
             // NOTE: We can't stick these together into block matrices (like the other
             // entries in R) because we might be rank zero in one component
             
-            list tempp = "nonsquare",l[2],l[3],l[4],l[5],ivar,N[1];
+            list tempp = "nonsquare",l[2],l[3],l[4],l[5],ivar,NN[1];
             if( useGrading ){ tempp = tempp + list(l[6],l[7]); }
             R = R + list(tempp);
             kill tempp;
@@ -3270,7 +3270,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
         // l[4] is the grading (if we are using gradings) or our modified list of homotopies
         // l[5] is our homotopies if we are using the grading, and undefined otherwise
     
-        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],N[1],l[1][,l[4]]). Note
+        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],NN[1],l[1][,l[4]]). Note
         // we have to return to the original ring because l[2],l[3] may depend on
         // external variables which we are going to delete in a moment
         poly ivar = intvars[1];
@@ -3284,8 +3284,8 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
                 poly ivar = imap(nR(count),ivar);
             }
 
-            // Add the tuple (F,G,u,N,D[,r])
-            list tempp = l[2], l[3], ivar, N[1], l[1];
+            // Add the tuple (F,G,u,NN,D[,r])
+            list tempp = l[2], l[3], ivar, NN[1], l[1];
             if( useGrading ){ tempp = tempp + list(l[4]); }
             R = R + list(tempp);
             kill tempp;
@@ -3325,7 +3325,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list N, list H, list #)
         if( useGrading ){ Agr = l[4]; }
         
         intvars = delete(intvars,1);
-        N = delete(N,1);
+        NN = delete(NN,1);
         
         if( size(intvars) == 0 )
         {
