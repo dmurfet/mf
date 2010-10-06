@@ -14,10 +14,9 @@ printlevel = 1;
 
 list threeTwist = linkLibrary("three-twist");
 
-list h = linkCompile(threeTwist, "./data/three-Twist-N" + string(N) + "-zoom3.mp", N);
-N == 3; // weird!
+list h = linkCompile(threeTwist, "./data/three-Twist-N" + string(N) + "-zoom.mp", N);
+if( N != 2 ){ print("N++ bug encountered."); N = 2; } //debug
 
-N = 2;
 list cp = KRcomplex(threeTwist, h, N);
 
 ring ss=(0,t,q),(x),dp;
@@ -45,5 +44,7 @@ poincare;
 
 // N = 3 invariants:
 //
+
+// Old and probably incorrect:
 // P_3: (q18+q14+q12+q10+q8-q2-1)/(q25)
 // KR polynomial: (q18+q16t+q16+q14t2+q14t+q14+q12t2+q10t2+q8t4+q8t3+q8t2+q6t4+q6t3+q2t5+t5)/(q25)
