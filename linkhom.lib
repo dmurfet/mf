@@ -723,16 +723,17 @@ proc gradedEuler(list cohom, number v)
 // This routine uses the "new" output style of linkCompile and the
 // new listWebsByDegree.
 
-proc KRcomplex(list linkData, list linkComp)
+proc KRcomplex(list linkData, list linkComp, int N)
 {
     // linkComp[1] is a list of tuples (intvec state, int rank, int degree, intvec grading)
     // limkComp[2] is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
-
+    dbprint(printlevel, "[KRcomplex] Computing KR complex for N = " + string(N)); //debug
+    
     list h = linkComp[2];
     intvec vertexParity = linkData[1];
     
     // Discover which webs in the KR complex live in which cohomological degrees
-    list r = listWebsByDegree(linkData, linkComp);
+    list r = listWebsByDegree(linkData, linkComp, N);
     
     int minDegree = r[1];
     list websByDegree = r[2];
@@ -850,7 +851,7 @@ proc KRcomplex(list linkData, list linkComp)
 //
 // NOTE: We ignore webs that compile to zero dimensional vector spaces
 
-proc listWebsByDegree(list linkData, list linkComp)
+proc listWebsByDegree(list linkData, list linkComp, int N)
 {
     list webComp = linkComp[1];
     list h = linkComp[2];
