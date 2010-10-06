@@ -12,19 +12,9 @@ ring rr=0,(x(1..10)),dp;
 int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
-intvec edgevec(1) = 1,2,10,9;
-intvec edgevec(2) = 3,4,2,1;
-intvec edgevec(3) = 6,5,4,3;
-intvec edgevec(4) = 8,7,5,6;
-intvec edgevec(5) = 9,10,7,8;
+list cinquefoil = linkLibrary("cinquefoil");
 
-// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
-intvec vertexParity = 1,1,1,1,1;
-
-// Define the link as a list (see linkhom.lib preceding mfCompileLink)
-list cinquefoil = vertexParity, list( edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5) );
-
-// RUNNING on haydn since 2010-10-02--13:03:
+// I killed this while it was still working on state 8/32 after 60 hours:
 list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(cinquefoil, h);

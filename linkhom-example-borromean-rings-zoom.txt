@@ -8,19 +8,7 @@ ring rr=0,(x(1..12)),dp;
 int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
-// Define the underlying web of the trefoil
-intvec edgevec(1) = 1,2,3,7;
-intvec edgevec(2) = 3,4,5,6;
-intvec edgevec(3) = 7,6,8,9;
-intvec edgevec(4) = 11,10,4,2;
-intvec edgevec(5) = 8,5,10,12;
-intvec edgevec(6) = 9,12,11,1;
-
-// Define which vertices are overcrossings (+1) and which are undercrossings (-1):
-intvec vertexParity = -1,1,-1,1,1,-1;
-
-// Define the link as a list (see linkhom.lib preceding mfCompileLink)
-list borromeanRings = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+list borromeanRings = linkLibrary("borromeanRings");
 
 list h = linkCompile(borromeanRings, "borromeanRings-N" + string(N) + "-zoom.mp", N);
 
