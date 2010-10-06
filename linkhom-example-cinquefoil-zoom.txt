@@ -9,13 +9,14 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 4; // The N in sl(N) link homology
+int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
 list cinquefoil = linkLibrary("cinquefoil");
 
-// I killed this while it was still working on state 8/32 after 60 hours:
+// RUNNING on lully since 2010-10-06--10:29:
 list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
+N;
 
 list cp = KRcomplex(cinquefoil, h);
 
@@ -29,15 +30,13 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// N = 2 invariants (this took 47394560ms or roughly 13 hours on haydn):
+// N = 2 invariants (probably wrong due to N++ bug):
 //
 // P_2: (q12+q10+q8-1)/(q20)
 // KR polynomial: (q12+q10+q8t2+q4t4+q4t3+t5)/(q20)
 
-// N = 3 invariants (This only took 3292320ms on haydn which is less than one hour!!!
-// I ran the computation twice, both times with the same result.):
+// N = 3 invariants AFTER resetting N=3 (This only took 2347060ms on lully):
 // 
-// KR polynomial: (q16+q14+q12t2+q12+q10t2+q8t4+q6t4+q6t3+q4t3+q2t5+t5)/(q27)
+// KR polynomial: (q16+q14+q12t2+q12+q10t2+q8t4+q6t4+q6t3+q4t3+q2t5+t5)/(q22)  
 //
-// Note that GSV predict q6+q8+q10+q10t2+q12t2+q16t3+q18t3+q14t4+q16t4+q20t5+q22t5, 
-// which (after q |-> 1/q) is far from agreement with our result.
+// This agrees with GSV after replacing q by 1/q. 

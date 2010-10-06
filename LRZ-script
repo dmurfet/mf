@@ -1,0 +1,15 @@
+#!/bin/bash
+#$-o $HOME/myjob.$JOB_ID.out -j y
+#$-N KR_comp
+#$-S /bin/bash
+# Execute the job from the current working directory:
+#$ -cwd
+#$-M Nils.Carqueville@physik.uni-muenchen.de
+#$ -m beas
+#$-l h_rt=05:00:00
+#$-l march=x86_64
+. /etc/profile
+
+module load singular
+
+Singular < LRZ-input > OUTPUT
