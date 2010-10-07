@@ -1,0 +1,17 @@
+option(noredefine);option(noloadLib);option(redSB);option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..6)),dp;
+
+link l = "MPfile: ./data/idempotent1.mp";
+read(l);
+read(l);
+module M = _;
+close(l);
+
+ring ss=0,(x(1),y(1..5)),(C,dp);
+module M = imap(mpsr_r0,M);
+module Mstd = std(M);
