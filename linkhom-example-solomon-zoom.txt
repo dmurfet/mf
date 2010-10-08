@@ -1,0 +1,35 @@
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..12)),dp;
+int N = 4; // The N in sl(N) link homology
+printlevel = 1;
+
+list solomon = linkLibrary("solomon");
+
+// RUNNING on LRZ:
+list h = linkCompile(solomon, "solomon--N" + string(N) + "-zoom.mp", N);
+N=4;
+
+list cp = KRcomplex(solomon, h, N);
+
+ring ss=(0,q,t),(x),dp;
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+// N = 2 (took 284140ms):
+// (q10+q8+q6t2+q2t4+q2t3+t4)/(q12)
+// Computing the Jones polynomial by hand is consistent with this UP TO A FACTOR OF q^12.
+
+// N = 3 (took 391120ms):
+// (q14+q12+q10t2+q10+q8t2+q6t4+2q4t4+q4t3+2q2t4+q2t3+t4)/(q18)
+
