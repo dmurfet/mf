@@ -1,0 +1,31 @@
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..10)),dp;
+int N = 3; // The N in sl(N) link homology
+printlevel = 1;
+
+list whitehead = linkLibrary("whitehead");
+
+list h = linkCompile(whitehead, "whitehead-N" + string(N) + "-zoom.mp", N);
+
+list cp = KRcomplex(whitehead, h, N);
+
+ring ss=(0,q,t),(x),dp;
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+// N = 2 (took 632810ms):
+// (q12+2q8t2+q8t+q6t3+2q6t2+q4t4+q2t4+t5)/(q8t2)
+
+// N = 3 (took ):
+// 
