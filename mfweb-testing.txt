@@ -1,0 +1,27 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "ring.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+LIB "mfweb-general.lib";
+int nx=1;
+int ny=2;
+ring RRRR=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly = rootofUnity(3);
+poly minpolyblow = x(1)^2 + x(1) + 1;
+printlevel=1;
+
+matrix defect1[2][2] = 0,x(1)-r*y(1),(x(1)^3-y(1)^3)/(x(1)-r*y(1)),0;
+matrix defect2[2][2] = 0,y(2)-r*x(1),(y(2)^3-x(1)^3)/(y(2)-r*x(1)),0;
+
+// Define a web with two vertices and three edges, i.e. a defect fusion
+//
+//    --- y(1) ---> defect1 ---- x(1) ----> defect2 --- y(2) --->
+
+list e1 = list(0,1,list(x(1),y(1)),x(1)*y(1)^2 + x(1)^(5));
+list e2 = list(1,2,list(x(1)),x(1)^3);
+list e3 = list(2,0,list(y(2)),y(2)^3);
+list web = list(2, list(e1,e2,e3), list(defect1,defect2));
+
+xy2 + x2N+1
