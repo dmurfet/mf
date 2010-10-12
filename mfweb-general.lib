@@ -50,7 +50,7 @@ LIB "mfweb.lib";
 /////////////////////////////////////////////////
 // DATA TYPE: augmented edge
 //
-// An augmented edge is a list (S,T,L,W,B,C) where (S,T,L,W) is an edge, B is an intvec
+// An augmented edge is a list (S,T,L,W,B,C) where (S,T,L,W) is an edge, B is a list
 // of size n = size(L), and C is a nxn matrix of polynomials such that for each i
 // between 1 and n = |L|, we have
 //
@@ -112,6 +112,8 @@ proc edgeSource(list edge){ return(edge[1]); }
 proc edgeTarget(list edge){ return(edge[2]); }
 proc edgeVariables(list edge){ return(edge[3]); }
 proc edgePotential(list edge){ return(edge[4]); }
+proc augedgePowers(list augedge){ return(augedge[5]); }
+proc augedgeTransform(list augedge){ return(augedge[6]); }
 proc setEdgeSource(list edge, int src){ edge[1] = src; return(edge); }
 proc setEdgeTarget(list edge, int tar){ edge[2] = tar; return(edge); }
 proc setEdgeVariables(list edge, list var){ edge[3] = var; return(edge); }
@@ -132,7 +134,7 @@ proc webIsGraded(list web){ int t = (size(web) == 4); return(t); }
 /////////////////////////////////////////////////
 // Basic methods for vertices
 
-proc variablesAtVertex(list web, int vertex)
+proc vertexVariables(list web, int vertex)
 {
     list vars;
     list edgeList = webEdges(web);
@@ -317,7 +319,7 @@ proc ringWithoutVars(list vars)
 proc augmentedEdgeForEdge(list edge)
 {
     int powerCutoff = blowFlags("power_cutoff_jacobi"); 
-    int useSanityCheck = blowFlags("sanity_checks");
+    int useSanityChecks = blowFlags("sanity_checks");
     
     // Recall that an edge has the format (S,T,L,W) and an augmented edge has the format
     // (S,T,L,W,B,C) where B is an intvec and C a matrix.
@@ -344,7 +346,7 @@ proc augmentedEdgeForEdge(list edge)
     }
     ideal Jstd = std(J);
     
-    intvec B;
+    list B;
     matrix C;
     for(i=1; i <= size(L); i++)
     {
@@ -395,7 +397,7 @@ proc augmentedEdgeForEdge(list edge)
     ideal J = imap(nR,J);
     
     // Perform sanity check
-    if( useSanityCheck )
+    if( useSanityChecks )
     {
         matrix Q = matrix(J) * augEdge[6];
         list edgeVar = edgeVariables(edge);
@@ -405,13 +407,164 @@ proc augmentedEdgeForEdge(list edge)
         {
             if( Q[1,i] != edgeVar[i]^(augEdge[5][i]) )
             {
-                print("[augmentedEdgeForEdge] Failed to correct compute augmented edge, exiting.");
+                print("[augmentedEdgeForEdge] Failed to correct compute augmented edge correctly, exiting.");
                 return(0);
             }
         }
     }
     
     return(augEdge);
+}
+
+/////////////////////////////////////////////////
+// isEdgeInternal
+
+proc isEdgeInternal(list edge)
+{
+    if( edgeSource(edge) != 0 && edgeTarget(edge) != 0 )
+    {
+        return(1); 
+    }
+    
+    return(0);
+}
+
+/////////////////////////////////////////////////
+// webVariables
+//
+// Returns the list consisting of all variables lying
+// on all edges in the web.
+
+proc webVariables(list web)
+{
+    list edgeList = webEdges(web);
+    list vars;
+    
+    int i;
+    for(i=1; i<=size(edgeList); i++)
+    {
+        list edge = edgeList[i];
+        vars = vars + edgeVariables(edge);
+        kill edge;
+    }
+    
+    return(vars);
+}
+
+/////////////////////////////////////////////////
+// subwebWithVertices
+//
+// Returns the subweb consisting of the given vertices in the original web
+// together with all edges adjacent to those vertices, EVEN THOSE ENDING ON
+// VERTICES NOT IN THE LIST. If an edge begins or ends on a vertex in our
+// list, but does not end (resp. begin) on a vertex in our list (or 0, which
+// is implicitly in every subweb) then we consider it to have begun or ended
+// on the boundary; so that in forming the subweb we "shrink" the boundary until
+// it cuts across all edges going outside our set of vertices.
+//
+// NOTE: You should not pass 0 as a vertex to any routines.
+
+proc subwebWithVertices(list web, list vertices)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    
+    if( size(vertices) == 0 )
+    {
+        print("[subwebWithVertices] Given no vertices in list, exiting.");
+        return();
+    }
+    
+    int useGrading = webIsGraded(web);
+    
+    // The easy part is building the list of MFs and gradings, so let us do that first
+    list MFlist = webMFs(web);
+    if( useGrading ){ list MFgrlist = webMFgr(web); }
+    list subMFlist;
+    if( useGrading ){ list subMFgrlist; }
+    
+    int i;
+    for(i=1; i<=size(vertices); i++)
+    {
+        subMFlist = subMFlist + list(MFlist[vertices[i]]);
+        if( useGrading ){ subMFgrlist = subMFgrlist + list(MFgrlist[vertices[i]]); }
+    }
+    
+    // Now we need to build up the edges. First of all we discard any edges not
+    // beginning or ending at one of the vertices in our list.
+    // Then in each of these edges replace the integer vertices[i] by i.
+    
+    list edgeList = webEdges(web);
+    list subEdgeList;
+    
+    for(i=1; i<=size(edgeList); i++)
+    {
+        list edge = edgeList[i];
+        if( checklist(vertices,edgeSource(edge)) || checklist(vertices,edgeTarget(edge)) )
+        {
+            // Add this edge to our list. The only modification we make is to set 
+            // the source or target to 0 if it was previously a vertex not in our list
+            if( !checklist(vertices,edgeSource(edge)) )
+            {
+                edge = setEdgeSource(edge, 0);
+            }
+            
+            if( !checklist(vertices,edgeTarget(edge)) )
+            {
+                edge = setEdgeTarget(edge, 0);
+            }
+            
+            subEdgeList = subEdgeList + list(edge);
+        }
+        kill edge;
+    }
+    
+    list finalEdgeList;
+    
+    // Now go through and modify all the edges in subEdgeList.
+    int j;
+    for(j=1; j<=size(subEdgeList); j++)
+    {
+        list edge = subEdgeList[j];
+        int fixedSource;
+        int fixedTarget;
+        for(i=1; i<=size(vertices); i++)
+        {
+            
+            if( edgeSource(edge) == vertices[i] && !fixedSource )
+            {
+                edge = setEdgeSource(edge, i);
+                
+                // After we change the source, in a later i iteration a
+                // vertex could recognise us as having them as the source,
+                // so to avoid this we use a flag.
+                fixedSource = 1;
+            }
+            
+            if( edgeTarget(edge) == vertices[i] && !fixedTarget )
+            {
+                edge = setEdgeTarget(edge, i);
+                fixedTarget = 1;
+            }
+            
+        }
+        finalEdgeList = finalEdgeList + list(edge);
+        kill edge;    
+    }
+    kill subEdgeList;
+    
+    list subweb = size(vertices), finalEdgeList, subMFlist;
+    if( useGrading ){ subweb = subweb + list(subMFgrlist); }
+    
+    if( useSanityChecks )
+    {
+        if( !webVerifyGeneral(subweb) )
+        {
+            print("[subwebWithVertices] Produced invalid subweb, exiting.");
+            return();
+        }
+    }
+    
+    return(subweb);
 }
 
 /////////////////////////////////////////////////
@@ -464,3 +617,237 @@ proc webVerifyGeneral(list web)
     return(1);
 }
 
+/////////////////////////////////////////////////
+// webCompilePair
+//
+// The backbone of our compilation routines. We are given a web with only
+// two vertices and a compilation strategy. Next we describe the output in
+// the standard case, but be aware there is an important special case to be
+// explained at the end.
+//
+// We first return a matrix factorisation in the set of external variables
+// of the total potential of the given web. Let X denote the tensor product
+// over all vertices of the associated MFs, defined in the ordering determined
+// by our compilation strategy. Let pX denote the pushforward/restriction of
+// scalars to the ring with all internal variables in the web deleted. Our
+// first return value is the differential of a MF Y homotopy equivalent to pX.
+//
+// The second return value is the grading vector for Y, if we are using gradings.
+//
+// The third (or second, if there is no grading) return value is a list
+// R = (F1,G1,x1,exp1),(F1,G2,x2,exp2),... whose length is equal to the number of
+// internal variables in the web. These are the maps returned by mfPushforwardInductive
+// applied to the set of internal variables ordered according to our compilation strategy.
+//
+// In more detail: let p1X denote the pushforward of X just to the ring without the
+// "first" internal variable, where "first" means first in the compilation strategy.
+// This is a direct summand of Xblow[1], and (F1,G1) is a pair splitting, in the
+// homotopy category of finite rank MFs, the corresponding idempotent. Say the
+// splitting is Y1. Then F1: Xblow[1] -> Y1 and G1: Y1 -> Xblow[1] with F1 * G1 = 1
+// and G1 * Y1 the idempotent corresponding to p1X.
+//
+// Next, we push forward Y1 to the ring without the first and second internal variables,
+// and the same yoga produces maps (F2,G2) splitting an idempotent on Y1blow[1], etc.
+//
+// This list R is referred to as a "splitting record".
+//
+// NOTE: Special case
+//
+// If the total potential of the web is zero, and if in the last step of the compilation
+// process we end up with non-square matrices (may not happen) then it is not safe to
+// return the differential on Y (it will not be square) so our return list looks like
+//
+// "nonsquare", [r1,r2,] R
+//
+// where r1,r2 are grading vectors on the even and odd parts of Y resp. (if we are
+// using the grading) and R is as described above, but where the last (F,G,x,exp) pair is
+// a tuple f0,f1,g0,g1,x,exp with f0,g0 splitting the even part of the very last idempotent
+// and similarly for f1,g1.
+
+proc webCompilePairGeneral(list web, list compStrat)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    int useGrading = webIsGraded(web);
+    
+    if( useSanityChecks )
+    {
+        if( !webVerifyGeneral(web) )
+        {
+            print("[webCompilePairGeneral] Given web is not valid, exiting.");
+            return();
+        }
+        
+        if( webSize(web) != 2 )
+        {
+            print("[webCompilePairGeneral] We only compile pairs. Duh. Exiting.");
+            return();
+        }
+    }
+    
+    // Extract the content of the web
+    int numVertices = webSize(web);
+    list edgeList = webEdges(web);
+    list mfList = webMFs(web);
+    if( useGrading ){ list mfGradings = webMFgr(web); }
+    
+    // And the compilation strategy
+    list vertexOrder = compStrat[1];
+    list varOrder = compStrat[2];
+    
+    if( size(vertexOrder) != 2 )
+    {
+        print("[webCompilePairGeneral] We only compile pairs, exiting.");
+        return();
+    }
+    
+    // Order the vertices according to the compilation strategy
+    int i;
+    for(i=1;i<=2;i++)
+    {
+        matrix mf(i) = mfList[vertexOrder[i]];
+        if( useGrading ){ intvec mfgr(i) = mfGradings[vertexOrder[i]]; }
+    }
+    
+    // Our task is to build up the input to mfPushforwardInductive and
+    // then interpret its output.
+    matrix A = MFtensor( mf(1), mf(2) );
+    if( useGrading ){ intvec Agr = MFtensorGradings( mfgr(1), mfgr(2) ); }
+    
+    // Build up a list of the internal variables, ordered according to the
+    // compilation strategy, a list of powers and a list of homotopies. The
+    // powers we collect are the powers of the variables which act null-homotopically
+    // on A, with associated homotopies stored in H.
+    
+    // NOTE: As opposed to the original webCompile, we have to work a little harder
+    // to get our homotopies, since a priori we only know that certain partial
+    // derivatives of the potentials on edges annihilate, via partial derivatives of
+    // suitable differentials, and we have to convert these to null-homotopies of 
+    // powers of the internal variables using augmentedEdgeForEdge, which tells us 
+    // which powers of the variables on an edge can be written in terms of the partial
+    // derivatives of the potential on the edge.
+    
+    list augEdgeList;
+    for(i=1; i<=size(edgeList); i++)
+    {
+        list edge = edgeList[i];
+        list augEdge = augmentedEdgeForEdge(edge);
+        augEdgeList = augEdgeList + list(augEdge);
+        kill augEdge, edge;
+    }
+    
+    list intvars;
+    list varPowers;
+    list Hlist;
+    
+    for(i=1;i<=size(varOrder);i++)
+    {
+        poly u = varOrder[i];
+        dbprint(printlevel, "[webCompilePairGeneral] Integrating out internal variable " + string(u)); // debug
+        
+        // Find out which edge this variable lies on
+        int j;
+        for(j=1; j<=size(edgeList); j++)
+        {
+            list edge = edgeList[j];
+            list augEdge = augEdgeList[j];
+            
+            if( checklist(edgeVariables(edge), u) )
+            {
+                // Yes, u does lie on this edge
+                if( !isEdgeInternal(edge) )
+                {
+                    print("[webCompilePairGeneral] Internal variable lying on external edge, exiting.");
+                    return();
+                }
+                
+                intvars = intvars + list(u);
+                
+                poly W = edgePotential(edge);
+                int src = edgeSource(edge);
+                list varList = edgeVariables(edge);
+                list B = augedgePowers(augEdge);
+                matrix C = augedgeTransform(augEdge);
+                matrix D = mfList[src];
+                
+                // Find out where in varList u occurs
+                int k;
+                int uPos;
+                for(k=1; k<=size(varList); k++)
+                {
+                    if( varList[k] == u )
+                    {
+                        uPos = k;
+                        break;
+                    }
+                }
+                
+                // Note that D factorises some potential W' with W as a summand, and that
+                // for any variable x in the list varList, i.e. a variable on edge, the
+                // variable x only occurs in W' as part of W. Hence if we take the
+                // partial derivative of D * D = W' we find that
+                //
+                //   diff(D,x) * D + D * diff(D,x) = diff(W,x).
+                //
+                // If we sum over the different variables and multiply by the appropriate
+                // factors in C, then on the right hand side we have a power of u.
+                
+                // Recall that by construction
+                //
+                // u^B[uPos] = C[uPos,1] * diff(W,varList[1]) + ... + C[uPos,n] * diff(W,varList[n]).
+                
+                matrix H[nrows(D)][ncols(D)];
+                for(k=1; k<=size(varList); k++)
+                {
+                    matrix h = diff(D,varList[k]);
+                    
+                    if( h * D + D * h != diff(W,varList[k]) * unitmat(ncols(D)) )
+                    {
+                        print("[webCompilePairGeneral] Inner homotopy construction failure, exiting.");
+                        return();
+                    }
+                    
+                    H = H + C[uPos,k] * h;
+                    kill h;
+                }
+                
+                // Convert this from a homotopy on D to a homotopy on A
+                if( vertexOrder[1] == src )
+                {
+                    H = ZZtensor( H, unitmat(ncols(mf(2))) );
+                }
+                else
+                {
+                    H = ZZtensor( unitmat(ncols(mf(1))), H );
+                }
+                
+                if( useSanityChecks )
+                {
+                    if( H * A + A * H != u^(B[uPos]) * unitmat(ncols(A)) )
+                    {
+                        print("[webCompilePairGeneral] Homotopy construction failure, exiting.");
+                        return();
+                    }
+                }
+                
+                varPowers = varPowers + list(B[uPos]);
+                Hlist = Hlist + list(H);
+                kill W, src, B, H, varList;
+            }
+            
+            kill edge, augEdge;
+        }
+    }
+    
+    // Now we feed all this to mfPushforwardInductive
+    if( !useGrading )
+    {
+        list L = mfPushforwardInductive(A, intvars, varPowers, Hlist);
+    }
+    else
+    {
+        list L = mfPushforwardInductive(A, intvars, varPowers, Hlist, Agr);
+    }
+    kill A, intvars, varPowers, Hlist;
+    
+    return(L);
+}
