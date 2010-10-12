@@ -126,6 +126,13 @@ proc blowFlags(string s)
         return(1); // default is 1
     }
     
+    // Cutoff for how high to look for a power of ring variables belonging
+    // to the Jacobi ideal
+    if( s == "power_cutoff_jacobi" )
+    {
+        return(1000); // default is 1000
+    }
+    
     return(0);
 }
 
@@ -214,8 +221,9 @@ proc ringWithoutYVars()
         if( defined(minpolyblow) && defined(r) )
         {
             setring nR;
-            poly P = imap(RRR,minpolyblow);
-            poly z = subst(P,x(1),r);
+            poly minpolyblow = imap(RRR,minpolyblow);
+            export(minpolyblow);
+            poly z = subst(minpolyblow,x(1),r);
             number nu = leadcoef(z);
             minpoly = nu;
         }
@@ -274,8 +282,9 @@ proc ringWithoutXVars()
         {
             poly K = subst(minpolyblow,x(1),y(1));
             setring nR;
-            poly P = imap(RRR,K);
-            poly z = subst(P,y(1),r);
+            poly minpolyblow = imap(RRR,K);
+            export(minpolyblow);
+            poly z = subst(minpolyblow,y(1),r);
             number nu = leadcoef(z);
             minpoly = nu;
         }
@@ -559,7 +568,7 @@ proc mfInflate(matrix A, poly intvar, int N)
 proc mablow(matrix M, ideal J)
 {
     int benchmark = 1; // Set to 1 to output benchmarking data
-    
+
     // Compute dimension of the algebra k[x-vars]/J
     int n = dimAlgebraOverInternalVariables(J);
     
@@ -642,7 +651,6 @@ proc mablow(matrix M, ideal J)
 proc mablowGrading(intvec g, ideal J, int N)
 {
     def RRR = basering;
-    
     def nR = ringWithoutYVars();
     setring nR;
         
@@ -2886,9 +2894,29 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     newringList[3][1][2] = kk;
     kill kk;
     
+    int useParameter;
+    if( defined(minpolyblow) && defined(r) ) // deal with minpoly
+    { 
+        newringList[1][4][1] = 0;
+        useParameter = 1;
+    }
+    
     // Create our new ring
     def nR = ring(newringList);
     setring nR;
+    
+    // Now complete the correct definition of nR by specifying the right minpoly: 
+    if( useParameter )
+    {
+        // Note that fetch uses the position of the ring variables, not the name, so 
+        // that fetch(var(1)) is always var(1).
+        poly minpolyblow = fetch(RRR,minpolyblow); 
+        export(minpolyblow);
+        poly zz = subst(minpolyblow,var(1),r);
+        number nu = leadcoef(zz);
+        minpoly = nu;
+        kill zz, nu;
+    }    
     
     // If we call fetch then the object of RRR is converted to the new renamed variables
     matrix A = fetch(RRR,A);
@@ -2902,7 +2930,6 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     // Compute the inflation
     ideal J = x(1)^N;
     matrix Ablow = mablow(A,J);
-    
     if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
 
     if( homotopyList )
@@ -3173,7 +3200,6 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
     int timeElapsed = timer;
     
     def RRR = basering;
-    
     list R;
     
     // Check for grading
@@ -3204,6 +3230,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
     
     int count = 1;
     def nR(1) = basering;
+    int useParameter;
     
     while( size(intvars) > 0 )
     {
@@ -3319,7 +3346,13 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
             kk[i] = 1;
         }
         newringList[3][1][2] = kk;
-    
+        
+        if( defined(minpolyblow) && defined(r) ) // deal with minpoly
+        { 
+            newringList[1][4][1] = 0;
+            useParameter = 1;
+        } 
+        
         // Prepare for the next step of the induction
         A = l[1];
         if( useGrading ){ Agr = l[4]; }
@@ -3338,6 +3371,19 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
         def nR(count+1) = ring(newringList);
         setring nR(count+1);
     
+        // Now complete the correct definition of nR by specifying the right minpoly: 
+        if( useParameter )
+        {
+            // Note that fetch uses the position of the ring variables, not the name, so 
+            // that fetch(var(1)) is always var(1).
+            poly minpolyblow = fetch(nR(count),minpolyblow); 
+            export(minpolyblow);
+            poly zz = subst(minpolyblow,var(1),r);
+            number nu = leadcoef(zz);
+            minpoly = nu;
+            kill zz, nu;
+        }
+        
         matrix A = imap(nR(count),A);
         list intvars = imap(nR(count),intvars);
         list H = imap(nR(count),H);
