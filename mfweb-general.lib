@@ -248,7 +248,7 @@ proc ringWithOnlyVars(list vars)
 
 proc ringWithoutVars(list vars)
 {
-    if( size(vars) == 0 )
+    if( size(vars) == nvars(basering) )
     {
         print("[ringWithoutVars] Asked to create a ring with no variables, exiting.");
         return(0);
@@ -448,6 +448,8 @@ proc webVariables(list web)
         kill edge;
     }
     
+    kill edgeList;
+    
     return(vars);
 }
 
@@ -458,7 +460,7 @@ proc webVariables(list web)
 // together with all edges adjacent to those vertices, EVEN THOSE ENDING ON
 // VERTICES NOT IN THE LIST. If an edge begins or ends on a vertex in our
 // list, but does not end (resp. begin) on a vertex in our list (or 0, which
-// is implicitly in every subweb) then we consider it to have begun or ended
+// is implicitly in every subweb) then we consider it to have ended or begun
 // on the boundary; so that in forming the subweb we "shrink" the boundary until
 // it cuts across all edges going outside our set of vertices.
 //
@@ -553,7 +555,8 @@ proc subwebWithVertices(list web, list vertices)
     kill subEdgeList;
     
     list subweb = size(vertices), finalEdgeList, subMFlist;
-    if( useGrading ){ subweb = subweb + list(subMFgrlist); }
+    kill finalEdgeList, subMFlist;    
+    if( useGrading ){ subweb = subweb + list(subMFgrlist); kill subMFgrlist; }
     
     if( useSanityChecks )
     {
@@ -584,7 +587,7 @@ proc webVerifyGeneral(list web)
     }
     
     int i;
-    for(i=1;i<=size(numVertices);i++)
+    for( i=1; i<=numVertices; i++ )
     {
         matrix A = webMFatVertex(web, i);
         poly W = vertexPotential(web, i);
