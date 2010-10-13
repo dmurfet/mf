@@ -5,11 +5,12 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..8)),dp;
-int N = 4; // The N in sl(N) link homology
+int N = 3; // The N in sl(N) link homology
 printlevel = 1;
 
 list solomon = linkLibrary("solomon");
 
+// N=3 RUNNING on haydn since 2010-10-12--10:39:
 list h = linkCompile(solomon, "solomon-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(solomon, h, N);
@@ -25,10 +26,10 @@ number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
 // N = 2 (took 284140ms):
-// (q10+q8+q6t2+q2t4+q2t3+t4)/(q12)
-// Computing the Jones polynomial by hand is consistent with this UP TO A FACTOR OF q^12.
-// Note that in a previous version of this file there were not 8 but 12 variables; 
-// we get the exact same (wrong) result with 8 variables.
+// (q10+q8t+q8+q4t2+q2t4+t4)/(q10)
+// Agrees with by-hand Jones polynomial calculation, and with integral Khovanov homology
+// tensor Q (from the Knot atlas) after q <--> 1/q.
 
 // N = 3 (took 391120ms):
 // (q14+q12+q10t2+q10+q8t2+q6t4+2q4t4+q4t3+2q2t4+q2t3+t4)/(q18)
+// This was done with the old implementation of the link; now rerunning...
