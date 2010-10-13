@@ -869,7 +869,7 @@ proc webCompilePairGeneral(list web, list compStrat)
 }
 
 /////////////////////////////////////////////////
-// webCompile
+// webCompileGeneral
 //
 // Given a web and compilation strategy we crawl the web, fusing
 // vertices in the order dictated by the strategy using mfCompilePairGeneral.
@@ -1310,4 +1310,841 @@ proc webFromLink(list linkData, intvec state, int N)
     }
     
     return(web);
+}
+
+
+
+
+/////////////////////////////////////////////////
+// webCompileMorphismGeneral
+//
+// Given a pair of webs, which we assume only differ with regards to the matrix factorisations
+// (and possibly their gradings) assigned to the vertices (i.e. we assume that the vertices are
+// the same and in the same order), a compilation strategy, and a morphism F from the matrix
+// factorisation at vertex mapPos in the first web to the matrix factorisation at the same
+// vertex in the second web, we return the induced morphism between the compilations of the
+// two webs. We assume that the matrix factorisations in the web agree except possibly at
+// the specified vertex mapPos.
+//
+// NOTE: mapPos is an index into the ordering of the vertices determined by the compilation
+// strategy. This is important.
+//
+// Recall that the first output of webCompile is the differential on the "compilation" MF,
+// which we earlier referred to as Y. Let Y1 denote the compilation of web1 and Y2 the
+// compilation of web2. Our first return value here is a even block matrix C representing
+// the morphism Y1 --> Y2 compiling F.
+//
+// In the special case where the potential is zero and we end up with nonsquare matrices,
+// we return not a block matrix but a pair (c0,c1) which give the compiled map in each
+// degree.
+//
+// You can distinguish the two cases by the fact that typeof( ) in the first case is matrix
+// and in the second case is list.
+
+proc webCompileMorphismGeneral(list web1, list web2, list compStrat, matrix M, int mapPos)
+{
+    list compile(1) = webCompile(web1, compStrat);
+    list compile(2) = webCompile(web2, compStrat);
+    
+    matrix A = webCompileMorphismFromDataGeneral(web1, compile(1), web2, compile(2), compStrat, M, mapPos);
+    
+    kill compile(1), compile(2);
+    
+    return(A);
+}
+
+proc webCompileMorphismFromDataGeneral(list web1, list compile(1), list web2, list compile(2), list compStrat, matrix M, int mapPos)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    int linkHomologyChecks = blowFlags("link_homology_checks");
+    
+    int useGrading = webIsGraded(web1);
+    
+    list stratVertices = compStrat[1];
+    
+    int numVertices = webSize(web1);
+    
+    list mfs(1) = webMFs(web1);
+    list mfs(2) = webMFs(web2);
+    if( useGrading )
+    {
+        list mfsgr(1) = webMFgr(web1);
+        list mfsgr(2) = webMFgr(web2);
+    }
+    
+    // Now we walk through the compilation strategy. Here's roughly what's going to happen.
+    // Suppose our mfs are mf(1), ..., mf(v), ordered according to the compilation strategy.
+    // This means that, somewhat confusingly, mf(i) is mfs(1)[stratVertices[i]].
+    // What the compilation process does is tensor mf(1) with mf(2), tensor this with a 
+    // finite-dimensional algebra to cut down to the ring without any of the variables that
+    // lie between the vertices at which mf(1), mf(2) sit (we call this "inflation") reduce this 
+    // inflation, and split an idempotent on this reduction. Let us call the result of this
+    // splitting mf(1,2). Note the three steps
+    //
+    //  1. Inflate, using mablow (let us call this B for blow)
+    //  2. Reduce (giving a homotopy equivalence between B and its reduction)
+    //  3. Split an idempotent (gives a pair of maps splitting the idempotent).
+    //
+    // In the end we have a pair F: B[1] --> mf(1,2) and G: mf(1,2) --> B[1] such that
+    // F * G = 1 and G * F is the idempotent splitting to give the pushforward of mf(1) * mf(2)
+    // (in the infinite category) (these equalities are up to homotopy).
+    //
+    // It is this pair (F,G) which is recorded in the so-called "splitting records" which
+    // are returned by webCompile (see mfPushforward, mfPushforwardInductive and webCompilePair
+    // for how these things are put together).
+    //
+    // These steps are then repeated, to obtain mf(1,2,3) from mf(1,2) * mf(3), and so on.
+    //
+    // Suppose for the sake of simplicity that mapPos = 3, and write mf'(i) for the MFs occurring
+    // in web2. Hence M is a map mf(3) --> mf'(3). Then we have an induced map
+    //
+    // mf(1,2) * mf(3) --> mf(1,2) * mf'(3).
+    //
+    // Inflating this using mablow, suspending, and precomposing with the appropriate G and
+    // postcomposing with the appropriate F we get a map
+    //
+    // mf(1,2,3) --> mf'(1,2,3)
+    //
+    // Tensoring with mf(4) = mf'(4) and inflating, pre and post-composing, etc. we continue
+    // to keep track of this map until at the end we have the desired map
+    //
+    // C: mf(1,..,v) --> mf'(1,..,v).
+        
+    if( useSanityChecks )
+    {
+        // First check that apart from mapPos the mfs agree.
+        int i;
+        for(i=1; i<=numVertices; i++)
+        {
+            if( i != mapPos && mfs(1)[stratVertices[i]] != mfs(2)[stratVertices[i]] )
+            {
+                print("[webCompileMorphism] Matrix factorisations in position " + string(stratVertices[i]) + " differ, exiting.");
+                return();
+            }
+        }
+        
+        // Check that M is actually a morphism
+        if( M * mfs(1)[stratVertices[mapPos]] != mfs(2)[stratVertices[mapPos]] * M )
+        {
+            print("[webCompileMorphism] Given matrix is not a morphism, exiting.");
+            return();
+        }
+    }
+    
+    // The first task is to fastforward to the mapPos - 1 position in the compilation
+    // by looking up the differential on mf(1,2,...,mapPos - 1).
+    int nonsquare = (typeof(compile(1)[1]) == "string");
+    
+    // For nonsquare matrices compile looks like string, [intvec,intvec,] list and for
+    // square matrices it looks like matrix, [intvec,] list, with the list being the
+    // global splitting record.
+    
+    list splitRec(1) = compile(1)[2 + (nonsquare + 1)*useGrading];
+    list splitRec(2) = compile(2)[2 + (nonsquare + 1)*useGrading];
+    
+    // See webCompile's introduction for the full details on the format of the things
+    // in the splitting record. We just recall here that entries are tuples (Z, [gr,] R)
+    // where Z is the differential on some mf(1,..,i) and R is the splitting record for
+    // the production of Z from mf(1,..,i-1) * mf(i). Note the white lie above; actually
+    // we have the inflate-reduce-split triumvirate for _each_ internal variable, and hence
+    // a list R of pairs of F,G maps.
+    //
+    // Note that the ith position in the splitting record speaks about the fusion of
+    // mf(1,...,i) with mf(i+1).
+    
+    int startPoint;
+    if( mapPos > 2 )
+    {
+        list record = splitRec(1)[mapPos - 2];
+        
+        // The compilations of web1 and web2 should agree up to this point
+        if( useSanityChecks )
+        {
+            if( record[1] != splitRec(2)[mapPos - 2][1] )
+            {
+                print("[webCompileMorphism] Expected equal compilations, but this was not true. Exiting.");
+                return();
+            }
+        }
+        
+        // Replace M by mf(1,..,mapPos-1) * mf(mapPos) --> mf(1,..,mapPos-1) * mf'(mapPos)
+        M = ZZtensor( unitmat(ncols(record[1])), M );
+        startPoint = mapPos - 1;
+    }
+    
+    if( mapPos == 2 )
+    {
+        // Replace M by mf(1) * mf(2) --> mf(1) * mf'(2).
+        M = ZZtensor( unitmat(ncols(mfs(1)[stratVertices[1]])), M );
+        startPoint = 1;
+    }
+    
+    if( mapPos == 1 )
+    {
+        // Replace M by mf(1) * mf(2) --> mf'(1) * mf(2)
+        M = ZZtensor( M, unitmat(ncols(mfs(1)[stratVertices[2]])) );
+        startPoint = 1;
+    }
+    
+    // Now we're ready to step through the splitting record
+    int i;
+    for(i=startPoint;i<=size(splitRec(1));i++)
+    {
+        // Currently M is a map mf(1,...i) * mf(i+1) --> mf'(1,...,i) * mf'(i+1).
+        
+        // Check whether we are in the step with nonsquare matrices
+        if( typeof(splitRec(1)[i][1]) == "string" )
+        {
+            // This should be the last splitting in the splitting record
+            if( i != size(splitRec(1)) )
+            {
+                print("[webCompileMorphism] Found nonsquare matrices before the end of the splitting record, exiting.");
+                return();
+            }
+            
+            // If the second web is not also in this state, something is wrong
+            if( typeof(splitRec(2)[i][1]) != "string" )
+            {
+                print("[webCompileMorphism] Found nonsquare matrices in only one splitting record, exiting.");
+                return();
+            }
+            
+            // In this case the local splitting record lives in a different position, as splitRec(1)[i]
+            // is a tuple ("nonsquare",[r1,r2,],R) with the last entry of R a tuple (f0,f1,g0,g1,u,N)
+            // with f0,g0 splitting the even part of the very last idempotent and similarly for f1,g1.
+            
+            list R(1) = splitRec(1)[i][2 + 2*useGrading];
+            list R(2) = splitRec(2)[i][2 + 2*useGrading];
+        }
+        else
+        {
+            // This is the standard case of square matrices
+            
+            // Extract the R lists for web1 and web2 mentioned above
+            list R(1) = splitRec(1)[i][2 + useGrading];
+            list R(2) = splitRec(2)[i][2 + useGrading];    
+        }
+        
+        //displaySplittingRecord(R(1)); //debug
+        
+        // A splitting record R looks like a list of tuples (F,G,u,N) where
+        // F is a map Ablow[1] --> final, G is a map final --> Ablow[1] and
+        // u is the internal variable being squeezed out, NN is the power such that
+        // u^NN acts null-homotopically.    
+            
+        // Unless it is the last step where we get nonsquare matrices, in which case
+        // there is a tuple (f0,f1,g0,g1,u,NN).
+    
+        int j;
+        for(j=1;j<=size(R(1));j++)
+        {
+            // There are two cases: we are either in the main body of the routine,
+            // in which the splittings are square, or we are at the last step and
+            // we may have nonsquare splittings
+            
+            if( typeof(R(1)[j][1]) != "string" )
+            {
+                // Main case. The format of R(1)[j] is (F,G,u,N,D[,r]).
+                matrix F = R(2)[j][1];
+                matrix G = R(1)[j][2];
+                poly u = R(1)[j][3];
+                int expo = R(1)[j][4];
+
+                matrix dl = R(1)[j][5]; // differential on the source MF
+                matrix dr = R(2)[j][5]; // and the target MF
+                
+                if( useGrading )
+                {
+                    intvec grl = R(1)[j][6]; // grading on the source
+                    intvec grr = R(2)[j][6]; // and on the target
+                }
+
+                // First we need to inflate and suspend.
+                M = mfSuspendMorph( mfInflate(M,u,expo) );
+
+                // Now premultiply by G and postmultiply by F
+                M = F * M * G;
+
+                // Check that M remains a morphism
+                if( useSanityChecks )
+                {
+                    if( dr * M != M * dl )
+                    {
+                        print("[webCompileMorphismFromData] M is not a morphism in step j = " + string(j) + " and i = " + string(i));
+                        return();
+                    }
+                }
+
+                // Check that M is degree + 1 (this is link homology specific)
+                if( linkHomologyChecks )
+                {
+                    if( !checkMorphismDegree( dl, grl, dr, grr, M, 1 ) )
+                    {
+                        print("[webCompileMorphismFromData] M is not degree +1 in i = " + string(i) + " j = " + string(j));
+                        return();
+                    }
+                }
+
+                kill u, expo, F, G, dl, dr;  
+            }
+            else
+            {
+                // Special case of nonsquare matrices. The format of R(1)[j] is
+                // ("nonsquare",f0,f1,g0,g1,intvars[1],N[1][,r1,r2])
+                
+                // First check this is the last step
+                if( j != size(R(1)) || i != size(splitRec(1)) || typeof(splitRec(1)[i][1]) != "string" )
+                {
+                    print("[webCompileMorphism] Found nonsquare matrices in local splitting record before the end, exiting.");
+                    return();
+                }
+                                        
+                matrix f0 = R(2)[j][2]; // Note the F must come from the second web
+                matrix f1 = R(2)[j][3];
+                matrix g0 = R(1)[j][4]; // and the G from the first
+                matrix g1 = R(1)[j][5];
+                poly u = R(1)[j][6];
+                int expo = R(1)[j][7];
+                
+                // Inflate and suspend
+                matrix Minf = mfInflate(M,u,expo);
+                M = mfSuspendMorph( Minf );
+                kill Minf;
+                    
+                list mblock = extractblockmat(M);
+                matrix m(0) = mblock[1];
+                matrix m(1) = mblock[4];
+                
+                // Premultiply by G and postmultiply by F
+                m(0) = f0 * m(0) * g0;
+                m(1) = f1 * m(1) * g1;
+                    
+                // Check that M has the right dimensions
+                if( useSanityChecks && useGrading )
+                {
+                    // The fact that we are here means that compile(1) = "nonsquare", r1,r2, Q
+                    // and compile(2) = "nonsquare", s1,s2, Q' and our maps m0, m1 should therefore
+                    // be of size s1xr1 and s2xr2 respectively
+                    intvec leftwebgr(0) = compile(1)[2];
+                    intvec leftwebgr(1) = compile(1)[3];
+                    intvec rightwebgr(0) = compile(2)[2];
+                    intvec rightwebgr(1) = compile(2)[3];
+                    
+                    int z;
+                    for(z=0; z<=1; z++)
+                    {
+                        // Check that this grading agrees with the last step of the global splitting record
+                        if( leftwebgr(z) != splitRec(1)[size(splitRec(1))][2 + z]
+                            || rightwebgr(z) != splitRec(2)[size(splitRec(2))][2 + z] )
+                        {
+                            print("[webCompileMorphism] Unexpected grading disagreement, exiting.");
+                            return();
+                        }
+                                                
+                        if( nrows(m(z)) != size(rightwebgr(z)) || ncols(m(z)) != size(leftwebgr(z)) )
+                        {
+                            print("[webCompileMorphism] Size mismatch in nonsquare step, exiting.");
+                            print("[webCompileMorphism] m" + string(z) + ": " + string(nrows(m(z))) + "x" + string(ncols(m(z))));
+                            print("[webCompileMorphism] Source grading, degree " + string(z) + ": " + string(leftwebgr(z)));
+                            print("[webCompileMorphism] Target grading, degree " + string(z) + ": " + string(rightwebgr(z)));
+                            return();
+                        }
+                    }
+                }
+                    
+                list retlist = list(m(0),m(1));
+                kill mblock, m(0), m(1), f0, f1, g0, g1, u, expo;
+                    
+                return(retlist);
+            }
+        }
+        
+        // Check that M remains a morphism, after all these splittings
+        if( useSanityChecks && typeof(splitRec(1)[i][1]) == "matrix" )
+        {
+            matrix mfleft = splitRec(1)[i][1];
+            matrix mfright = splitRec(2)[i][1];
+            
+            if( nrows(mfleft) != ncols(M) || nrows(M) != ncols(mfright) )
+            {
+                print("[webCompileMorphismFromData] Size mismatch in stage " + string(i) + " of the compilation, exiting.");
+                print("[webCompileMorphismFromData] mfleft: " + string(nrows(mfleft)) + "x" + string(ncols(mfleft)));
+                print("[webCompileMorphismFromData] mfright: " + string(nrows(mfright)) + "x" + string(ncols(mfright)));
+                print("[webCompileMorphismFromData] M: " + string(nrows(M)) + "x" + string(ncols(M)));
+                return();
+            }
+            
+            if( M * mfleft != mfright * M )
+            {
+                print("[webCompileMorphismFromData] In stage " + string(i) + " of the compilation M fails to be a morphism, exiting.");
+                return();
+            }
+            
+            // Check that M is degree +1 (this is link specific)
+            if( linkHomologyChecks )
+            {
+                intvec mfleftgr = splitRec(1)[i][2];
+                intvec mfrightgr = splitRec(2)[i][2];
+                
+                if( !checkMorphismDegree(mfleft,mfleftgr,mfright,mfrightgr,M,1) )
+                {
+                    print("[webCompileMorphismFromData] M is not degree +1 in global check for i = " + string(i) + ", exiting.");
+                    return();
+                }
+                
+                kill mfleftgr, mfrightgr;
+            } 
+            
+            kill mfleft, mfright;
+        }
+        
+        // Now M is a map mf(1,...,i+1) --> mf'(1,...,i+1). It remains to tensor
+        // with the next MF and then we can start again.
+        if( i < size(splitRec(1)) )
+        {
+            M = ZZtensor( M, unitmat(ncols(mfs(1)[stratVertices[i+2]])) );
+        }
+    }
+    
+    return(M);
+}
+
+////////////////////////////////////////////////////////////////////
+// linkCompileGeneral
+//
+// Takes as arguments a link, defined as a pair in the sense explained above, and the name
+// of a file to use for storing intermediate results. The return is a pair (X,Y) of lists.
+// Suppose we have m crossings in our link. A "state diagram" is an assignment of integers 0,1
+// to crossings, represented by an intvec with entries 0,1. With this terminology:
+//
+//   1. X is a list of tuples (intvec state, int rank, int degree, intvec grading) where
+//   state ranges over all state diagrams, rank is the dimension of the compilation of the
+//   corresponding web, degree is the cohomological degree in which the compilation sits,
+//   and grading is the grading vector. NOTE: if we are zero in both degrees then we set
+//   degree to -1.
+//
+//   2. Y is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
+//   where state1, state2 range over all state diagrams, chitype is 0 or 1 resp. if the map
+//   is a \chi0 or \chi1 map, and chipos gives the position in the state diagram where the
+//   map is inserted. Finally, F is the matrix of the map, the result of calling
+//   webCompileMorphism.
+//
+// To facilitate the computations we store the results of mfCompileWeb to disk.
+// To illustrate the scheme, take the state 010 and state 110, let us say that the underlying
+// link has a positive crossing in the first position so that there is a map 010 -> 110 of
+// chitype 0. Internally to mfCompileLink we would then run
+//
+//      list map010to110 = mfCompileWeb( suitable params );
+//
+// This list is then stored to the given file using MPfile.
+//
+// Before computing a given tuple we load in the contents of the datafile and see if it has
+// already been computed.
+//
+// NOTE: The maps returned by webCompileMorphism are degree one, and we do not mess with this;
+// we leave all the grading vectors unchanged.
+
+proc linkCompileGeneral(list linkData, string fileName, int N)
+{
+    // We do not change rings: we assume that the ambient ring has the same number of variables
+    // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
+    // if there is a save file, then loading this save file will set the ring.
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    int useMPfile = blowFlags("use_mpfile");
+    
+    system("--ticks-per-sec",1000);
+    int timeLink = timer;
+ 
+    def RRR = basering;
+    
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];
+    int webSize = size(vertexParity);
+    
+    // Read in the save file, if it exists
+    if( status(fileName,"exists") == "yes" )
+    {
+        if( useMPfile )
+        {
+            def nR = loadSaveFile(fileName);
+            setring nR;
+        }
+        else
+        {
+            execute(loadSaveFile(fileName));
+        }
+    }
+
+    list returnListWebs;
+    list returnListMaps;
+    
+    // A web is defined by two lists: a list of vertices and a list of mfs (plus gradings).
+    // In what follows all our webs will have the same underlying graph, which we now construct
+    int j;
+    list webVertices;
+    for(j=1; j<=size(edgeList); j++)
+    {
+        intvec e = edgeList[j];
+        
+        // The first two variables in e are the outgoing variables, and the second two
+        // are the incoming variables
+        list vertex = list(list(var(e[3]),var(e[4])),list(N+1,N+1),list(var(e[1]),var(e[2])),list(N+1,N+1));
+        webVertices = webVertices + list(vertex);
+        kill e, vertex;
+    }
+    
+    // The compilation strategy will not change either: we simply compile from the 1st
+    // vertex to the last one, and enumerate the variables in the given order (note that
+    // all the ring variables are taken as internal variables)
+    list compStratVert;
+    list compStratVar;
+    for(j=1;j<=size(edgeList); j++)
+    {
+        compStratVert[j] = j;
+    }
+    for(j=1;j<=nvars(basering);j++)
+    {
+        compStratVar[j] = var(j);
+    }
+    list compStrat = compStratVert,compStratVar;
+        
+    // STEP 1. Go through each state of the link and compile the corresponding web. Then
+    // add the data to returnListWebs. 
+    // The compilation of a state 1101 is stored in web1101
+    int i;
+    list stateDiagrams = powervec(webSize);
+    int numStateDiagrams = size(stateDiagrams);
+    
+    int globalZ2Degree = -1;
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        
+        dbprint(printlevel, "");
+        dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+        
+        string listName = "compiled" + intvecToString(v); // compilation product
+        string listName2 = "web" + intvecToString(v); // web
+        
+        string cmd = "int definedCheck = defined(" + listName + ") && defined(" + listName2 + ");";
+        execute(cmd);
+        
+        if( definedCheck )
+        {
+            // We have already compiled this web /////////////
+            dbprint(printlevel, "[linkCompile] Already compiled, skipping.");
+        }
+        else
+        {
+            // We have not already compiled this web ///////////
+            dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
+        
+            // Build a web suitable for calling webCompile
+            int j;
+            list web = webFromLink(linkData, v, N);
+            
+            execute("list " + listName2 + " = web;");
+        
+            // Call webCompile
+            execute("list " + listName + " = webCompileGeneral(web, compStrat);");
+            
+            // Save the results to the savefile
+            dbprint(printlevel, "[linkCompile] Saving to disk.");
+
+            execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
+            execute("writeObjectToFile(fileName,\"" + listName2 + "\"," + listName2 + ");");
+            
+            kill web;
+        }
+        
+        string cmd = "list Z = " + listName + ";";
+        execute(cmd);
+        
+        // The return value of webCompile should look like "nonsquare", r1,r2, Q
+        // and the last entry of Q should be ("nonsquare",r1,r2,R) with the last entry of R
+        // a tuple (f0,f1,g0,g1,u,N) with f0,g0 splitting the even part of the very last
+        // idempotent and similarly for f1,g1.
+        if( typeof(Z[1]) != "string" || size(Z) != 4 || typeof(Z[4]) != "list" || typeof(Z[4][size(Z[4])]) != "list" )
+        {
+            print("[linkCompile] Return of webCompile is not of the expected format, exiting.");
+            return();
+        }
+        
+        // Q = Z[4], Q[size(Q)] is ("nonsquare",r1,r2,R) so R is
+        list R = Z[4][size(Z[4])][4];
+        list lastEntry = R[size(R)];
+        
+        matrix f(0) = lastEntry[2];
+        matrix f(1) = lastEntry[3];
+        matrix g(0) = lastEntry[4];
+        matrix g(1) = lastEntry[5];
+        
+        // First compute the dimension of the compilation in each degree
+        int j;
+        for(j=0; j<=1; j++)
+        {
+            // The compilation of the current web is a Z/2-graded Q-vector space Y = Y0 + Y1.
+            // The product f(i) * g(i) will either be a unitmatrix of size k if dim(Yi) = k > 0
+            // or a 1x1 zero matrix if Yi = 0.
+            int dimComp(j);
+            if( f(j) * g(j) != matrix(0,1,1) && f(j) * g(j) != unitmat(nrows(f(j))) )
+            {
+                print("[linkCompile] Unexpected output from webCompile, exiting.");
+                return();
+            }
+            
+            // Y is zero in this degree
+            if( f(j) * g(j) == matrix(0,1,1) )
+            {
+                dimComp(j) = 0;
+            }
+            
+            // Y is nonzero in this degree
+            if( f(j) * g(j) == unitmat(nrows(f(j))) )
+            {
+                dimComp(j) = nrows(f(j));
+            }
+            
+            kill f(j), g(j);
+        }
+        
+        // Decide on the degree in which we are nonzero and set the rank in that degree
+        int rank, compDegree;
+        intvec grading;
+        if( dimComp(0) == 0 && dimComp(1) != 0 )
+        {
+            // We are concentrated in degree 1
+            compDegree = 1;
+            rank = dimComp(1);
+            grading = Z[3];
+        }
+        
+        if( dimComp(0) != 0 && dimComp(1) == 0 )
+        {
+            compDegree = 0;
+            rank = dimComp(0);
+            grading = Z[2];
+        }
+        
+        if( dimComp(0) == 0 && dimComp(1) == 0 )
+        {
+            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero."); //debug
+            compDegree = -1;
+            rank = 0;
+        }
+        
+        // All webs compilations should be living in one of the Z2 degrees
+        if( compDegree != -1 )
+        {
+            if( globalZ2Degree != -1 && globalZ2Degree != compDegree )
+            {
+                print("[linkCompile] The compilation of " + intvecToString(v) + " is in Z2 degree " + string(compDegree));
+                print("[linkCompile] whereas an earlier web was in degree " + string(globalZ2Degree) + ", exiting.");
+                return();
+            }
+            
+            if( globalZ2Degree == -1 )
+            {
+                globalZ2Degree = compDegree;
+            }
+        }
+        
+        // Add the compilation products to the return list
+        // Recall that tuples in this list have the format
+        // (intvec state, int rank, int degree, intvec grading)
+        list compiledEntry = v, rank, compDegree, grading;
+        returnListWebs = returnListWebs + list(compiledEntry);
+        kill compiledEntry, v, Z, R, lastEntry, rank, compDegree, grading;
+        kill dimComp(0), dimComp(1);
+    }
+    
+    dbprint(printlevel, "[linkCompile] Time taken to compile webs: " + string(timer-timeLink) + "ms."); 
+    
+    // STEP 2. Compile the maps
+    dbprint(printlevel, "");
+    dbprint(printlevel, "[linkCompile] Now compiling maps.");
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+    
+        // Look at each position and the possible maps given by chis
+        int j;
+        for( j = 1; j <= size(v); j++ )
+        {
+            // If either the current position in v is a 0 and the crossing is positive, or
+            // if the current position is 1 and the crossing is negative, then there is a map
+            // originating in this state diagram with a chi in this position
+            intvec w = v;
+            int somethingToDo = 0;
+            int chitype;
+        
+            if(v[j] == 0 && vertexParity[j] == 1) // chitype is 0
+            {
+                w[j] = w[j]+1;
+                somethingToDo = 1;
+                chitype = 0;
+            }
+        
+            if(v[j] == 1 && vertexParity[j] == -1) // chitype is 1
+            {
+                w[j] = w[j]-1;
+                somethingToDo = 1;
+                chitype = 1;
+            }
+        
+            if( somethingToDo )
+            {
+                dbprint(printlevel, "[linkCompile]  Looking at the map to [" + string(w) + "].");
+                
+                // Load up the appropriate webs
+                string cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";"; execute(cmd);
+                cmd = "list leftWeb = web" + intvecToString(v) + ";"; execute(cmd);
+                cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";"; execute(cmd);
+                cmd = "list rightWeb = web" + intvecToString(w) + ";"; execute(cmd);
+                
+                // Lookup the degree in which these compilation products are nonzero
+                // At position i in returnListWebs is various information about the
+                // compilation of the "left" web.
+                list bleft = returnListWebs[i];
+                
+                if( bleft[1] != v )
+                {
+                    print("[linkCompile] Unexpected data format, exiting.");
+                    return();
+                }
+                
+                int concentrateDegree = bleft[3];
+                
+                // Check whether the target web w compiles to zero (in the sense that
+                // its differential is zero, not necessarily its rank):
+                for( int aa=1; aa<=size(returnListWebs); aa++ )
+                {
+                    if( returnListWebs[aa][1] == w )
+                    {
+                        int wPosition = aa;
+                        break;
+                    }
+                }
+                
+                list bright = returnListWebs[wPosition];
+                int concentrateDegreeW = bright[3];
+                
+                if( concentrateDegree == -1 || concentrateDegreeW == -1 )
+                {
+                    // The source web compiles to zero (in the sense that its differential 
+                    // is zero, not necessarily its rank), so we can just put some
+                    // zero matrix onto the return list and skip
+                    
+                    // NOTE to Nils: remove this if you feel confident that we
+                    // can handle zeros, I'm not going to vouch for it...
+                    print("[linkCompile] One of the compilations was zero, not sure we handle this well, exiting.");
+                    return();
+                    
+                    // In listWebsByDegree (and then in KRcomplex) we discard
+                    // webs compiling to zero, so we should also not include zero maps
+                    // from or to zero modules.
+                    // NOTE that in the three-twist example this case does NOT come up.
+                    //
+                    // list compiledEntry = v, w, v[j], j, zeromat(0,1,1);
+                    // returnListMaps = returnListMaps + list(compiledEntry);
+                    kill cmd, compiledEntry, leftCompiledWeb, rightCompiledWeb, leftWeb, rightWeb;
+
+                    j++;
+                    continue;
+                }
+                
+                // Otherwise we have a well defined degree, and a well defined vector space
+                // of the following rank in the source web
+                int rankSource = bleft[2];
+                
+                // Now check to see if we have already compiled this map
+                string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
+
+                string cmd = "int definedCheck = defined(" + listName + ");";
+                execute(cmd);
+                                
+                if( definedCheck )
+                {
+                    // We have already compiled this morphism
+                    dbprint(printlevel, "[linkCompile]  Already compiled, skipping.");
+                    
+                    string cmd = "list D = " + listName + ";";
+                    execute(cmd);
+                }
+                else
+                {
+                    // We have not already compiled this morphism
+                    intvec e = edgeList[j];
+                    matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
+                    kill e;
+                
+                    list D = webCompileMorphismFromDataGeneral( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+                    string cmd = "list " + listName + " = D;"; execute(cmd);
+                    kill M;
+                    
+                    // Check that D is degree +1
+                    if( useSanityChecks )
+                    {
+                        matrix Dc = D[concentrateDegree+1];
+                        int i2, j2;
+                        for(i2 = 1; i2 <= nrows(Dc); i2++) // row
+                        {
+                            for(j2 = 1; j2 <= ncols(Dc); j2++) // column
+                            {
+                                if( Dc[i2,j2] != 0 )
+                                {
+                                    if( 1 - bright[4][i2] + bleft[4][j2] != 2 * deg(Dc[i2,j2]) )
+                                    {
+                                        print("[linkCompile] !!!WARNING!!! Map is not degree +1.");
+                                        print("[linkCompile] In position (" + string(i2) + "," + string(j2) + ") there is " + string(Dc[i2,j2]) + "." +
+                                                "The source has degree " + string(bleft[4][j2]) + " and the target " + string(bright[4][i2]) + ".");
+                                        //return(); debug
+                                    }
+                                }
+                            }
+                        }
+                        kill Dc;
+                    }
+                    
+                    // Save the results to the savefile
+                    dbprint(printlevel, "[linkCompile] Saving to disk.");
+                    execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
+                }
+                
+                // We should end up with a zero potential, so the output of webCompileMorphism
+                // should be a pair
+                if( typeof(D) != "list" || size(D) != 2 )
+                {
+                    print("[linkCompile] webCompileMorphism did not return a pair, exiting.");
+                    return();
+                }
+                
+                if( ncols(D[concentrateDegree+1]) != rankSource )
+                {
+                    print("[linkCompile] Size is mismatch between map (" + string(nrows(D[concentrateDegree+1])) + "x" + string(ncols(D[concentrateDegree+1])) + ") and its source vector space (dim " + string(rankSource) + "), exiting.");
+                    return();
+                }
+                
+                // Add the computed list to the end of compiledEntry
+                list compiledEntry = v, w, v[j], j, D[concentrateDegree+1];                
+                
+                returnListMaps = returnListMaps + list(compiledEntry);
+                kill listName, cmd, D, compiledEntry, leftWeb, rightWeb, leftCompiledWeb, rightCompiledWeb;
+            }
+            
+            kill w, somethingToDo;
+        }
+        
+        kill v;
+    }
+    
+    setring RRR;
+   
+    dbprint(printlevel, "[linkCompile] total elapsed time " + string(timer-timeLink) + "ms."); 
+    return(list(returnListWebs,returnListMaps));
 }
