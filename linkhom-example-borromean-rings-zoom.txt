@@ -10,9 +10,10 @@ printlevel = 1;
 
 list borromeanRings = linkLibrary("borromeanRings");
 
-// N=2 RUNNING on lully since 2010-10-07--00:58:
-// N=3 RUNNING on haydn since 2010-10-05--12:05:
-// N=4 RUNNING on ligeti since 2010-10-05--12:06:
+// N=2 RUNNING on lully since 2010-10-07--00:58 ([mfSplitIdempotent] Worst coeff in E: 281/9).
+// N=3 Ran on haydn from 2010-10-05--12:05 to 2010-10-12--??:?? (killed by Singular: "Bus error").
+// N=4 Ran on ligeti from 2010-10-05--12:06 to 2010-10-11--09:23 (killed by hand
+// while still working on state 8/64 with very high memory usage and low CPU).
 list h = linkCompile(borromeanRings, "borromeanRings----N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(borromeanRings, h);
