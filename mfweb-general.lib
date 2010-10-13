@@ -118,6 +118,13 @@ proc setEdgeSource(list edge, int src){ edge[1] = src; return(edge); }
 proc setEdgeTarget(list edge, int tar){ edge[2] = tar; return(edge); }
 proc setEdgeVariables(list edge, list var){ edge[3] = var; return(edge); }
 proc setEdgePotential(list edge, poly W){ edge[4] = W; return(edge); }
+proc isEdgeBetweenVertices(list edge, int v1, int v2)
+{
+    if( edgeSource(edge) == v1 && edgeTarget(edge) == v2 ){ return(1); }
+    if( edgeSource(edge) == v2 && edgeTarget(edge) == v1 ){ return(1); }
+    return(0);
+}
+
 // NOTE: augmentedEdgeForEdge breaks the setter/getter barrier.
 
 /////////////////////////////////////////////////
@@ -288,14 +295,19 @@ proc ringWithoutVars(list vars)
     newringList[3][1][2] = kk;
     kill kk;
     
-    newringList[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+    int useParameter;
+    if( defined(minpolyblow) && defined(r) )
+    {
+        newringList[1][4][1] = 0;     // set minpoly to zero, put it back to the right value below...
+        useParameter = 1;
+    }
     
     // Create our new ring
     def nR = ring(newringList);
     kill rlist, newringList;
     
     // Now complete the correct definition of nR by specifying the right minpoly: 
-    if( defined(minpolyblow) && defined(r) )
+    if( useParameter )
     {
         setring nR;
         
@@ -595,7 +607,7 @@ proc webVerifyGeneral(list web)
         
         if( size(vertexIncomingEdges(web,i)) + size(vertexOutgoingEdges(web,i)) == 0 )
         {
-            print("[webVerify] There is an isolated vertex, failed.");
+            print("[webVerify] Vertex " + string(i) + " is isolated, failed.");
             return(0);
         }
         
@@ -621,7 +633,7 @@ proc webVerifyGeneral(list web)
 }
 
 /////////////////////////////////////////////////
-// webCompilePair
+// webCompilePairGeneral
 //
 // The backbone of our compilation routines. We are given a web with only
 // two vertices and a compilation strategy. Next we describe the output in
@@ -745,7 +757,7 @@ proc webCompilePairGeneral(list web, list compStrat)
     for(i=1;i<=size(varOrder);i++)
     {
         poly u = varOrder[i];
-        dbprint(printlevel, "[webCompilePairGeneral] Integrating out internal variable " + string(u)); // debug
+        //dbprint(printlevel, "[webCompilePairGeneral] Integrating out internal variable " + string(u)); // debug
         
         // Find out which edge this variable lies on
         int j;
@@ -760,6 +772,7 @@ proc webCompilePairGeneral(list web, list compStrat)
                 if( !isEdgeInternal(edge) )
                 {
                     print("[webCompilePairGeneral] Internal variable lying on external edge, exiting.");
+                    print(edge);
                     return();
                 }
                 
@@ -853,4 +866,448 @@ proc webCompilePairGeneral(list web, list compStrat)
     kill A, intvars, varPowers, Hlist;
     
     return(L);
+}
+
+/////////////////////////////////////////////////
+// webCompile
+//
+// Given a web and compilation strategy we crawl the web, fusing
+// vertices in the order dictated by the strategy using mfCompilePairGeneral.
+// Our first output is the differential on the compiled MF Y, h.e. to the pushforward
+// of the tensor product of all the MFs in the web to the ring without any of the internal
+// variables.
+//
+// If grading is in use, then the second return is the grading vector on this Y.
+//
+// The third (or second, if grading is not in use) return value is a list Q, which we
+// refer to as the "splitting record". Suppose that we write X1, .., Xv for the MFs lying
+// at the vertices in our web, ordered according to the compilation strategy. Let
+// X1 # X2 denote the result of tensoring X1,X2 and replacing this by a finite rank MF
+// homotopy equivalent to the pushforward which eliminates the variables lying between
+// vertices 1,2. This reduction generates a splitting record R1 (as defined above) and the
+// pair (X1 # X2, R1) is the first entry in the list Q (or (X1 # X2, gr, R1) if we are 
+// in the graded setting, gr being the grading vector on X1 # X2).
+//
+// The second entry in Q is ((X1 # X2) # X3, R2) where R2 is the splitting record of the
+// second fusion. All fusions being conducted according to the given compilation strategy.
+// The last entry in Q is (Y,Ygr,R?), i.e. we repeat the differential, grading of Y but
+// in addition there is the splitting record of the reduction which produced Y.
+//
+// NOTE: Special case
+//
+// If the total potential of the web is zero, and if in the last step of the compilation
+// process we end up with non-square matrices (may not happen) then it is not safe to
+// return the differential on Y (it will not be square) so our return list looks like
+//
+// "nonsquare", [r1,r2,]  Q
+//
+// where r1,r2 are grading vectors on the even and odd parts of Y resp. (if we are
+// using the grading) and Q is the global splitting record. The last entry in Q is
+// a tuple ("nonsquare",[r1,r2,],R) with the last entry of R a tuple (f0,f1,g0,g1,u,NN)
+// with f0,g0 splitting the even part of the very last idempotent and similarly for f1,g1.
+
+proc webCompileGeneral(list web, list compStrat)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    int useGrading = webIsGraded(web);
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    if( useSanityChecks )
+    {
+        if( !webVerifyGeneral(web) )
+        {
+            print("[webCompileGeneral] Given web is not valid, exiting.");
+            return();
+        }
+    }
+    
+    def RRR = basering;
+    int count = 1;
+    def nR(1) = basering;
+    list splittingRecord;
+    int numInternalVar = size(compStrat[2]);
+    
+    // Continue fusing until there are no internal variables left. Each time through the
+    // loop we will have deleted some internal variables from our current ring and have
+    // changed the web and strategy to reflect the fusion of two vertices in the old web.
+    // Recall that compStrat[2] is an ordered list of the internal variables.
+    int numVertices;
+    
+    while( numInternalVar > 0 )
+    {
+        // Our current ring is nR(count)
+        dbprint(printlevel, "[webCompileGeneral] Entering round " + string(count) + " of compilation.");
+        
+        // web is being modified each time through the loop, so update our "pointers"
+        numVertices = webSize(web);
+        list edges = webEdges(web);
+        list mfs = webMFs(web);
+        if( useGrading ){ list webGr = webMFgr(web); }
+                
+        // compStrat is also modified at each step
+        list vertexOrder = compStrat[1];
+        list varOrder = compStrat[2];
+        
+        if( size(vertexOrder) < 2 )
+        {
+            print("[webCompileGeneral] vertexOrder has impossible size, exiting.");
+            return();
+        }
+        
+        // Construct a subweb and substrategy consisting of the first two vertices to be fused
+        list subweb = subwebWithVertices(web, list(vertexOrder[1],vertexOrder[2]));
+        list subwebVar = webVariables(subweb);
+        list substrat_var;
+        
+        // Intersect the variables in varOrder with the list of internal vars in the subweb
+        int i;
+        for(i=1; i<=size(varOrder); i++) 
+        {
+            poly u = varOrder[i];
+            
+            int j;
+            for(j=1; j<=size(edges); j++)
+            {
+                list e = edges[j];
+                if( checklist(edgeVariables(e),u) && isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[2]) )
+                {
+                    substrat_var = substrat_var + list(varOrder[i]);
+                    break;
+                }
+                kill e;
+            }
+            kill u;
+        }
+        
+        list substrat = list(list(1,2), substrat_var);
+        
+        // Change to the ring containing only those variables involved in this fusion
+        def tempring = ringWithOnlyVars(subwebVar);
+        kill subwebVar;
+        
+        ///////// BEGIN tempring //////////
+        setring tempring;
+        list subweb = imap(nR(count),subweb);
+        list substrat = imap(nR(count),substrat);
+            ////// IMPORTANT
+            list l = webCompilePairGeneral(subweb, substrat);
+            ////////////////
+        kill subweb, substrat;
+        setring nR(count);
+        kill subweb, substrat;
+        ///////// END tempring ///////////
+        
+        list l = imap(tempring, l);
+        kill tempring;
+        
+        if( typeof(l[1]) == "string" )
+        {
+            // This is the case where webCompilePairGeneral produced non-square matrices. This
+            // must be our last step, and l looks like
+            //
+            // "nonsquare", [r1,r2,] R
+            //
+            // where r1,r2 are grading vectors on the even and odd parts of Y resp. (if we are
+            // using the grading) and R is the splitting record, but where the last (F,G) pair in R is
+            // a tuple (f0,f1,g0,g1) with f0,g0 splitting the even part of the very last idempotent
+            // and similarly for f1,g1.
+        
+            //dbprint(printlevel, "[webCompile] Hit nonsquare matrices, wrapping it up.");
+        
+            kill numVertices, edges, mfs, vertexOrder, varOrder;
+            if( useGrading ){ kill webGr; }
+        
+            setring RRR;
+            
+            // The first time through nR(1) = RRR so there is no need for imap
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+            }
+            
+            kill nR(count);
+            list retlist;
+            retlist[1] = "nonsquare";
+            if( useGrading ){ retlist = retlist + list(l[2],l[3]); }
+            splittingRecord = splittingRecord + list(l);
+            retlist = retlist + list(splittingRecord);
+
+            dbprint(printlevel, "[webCompile] total elapsed time " + string(timer-timeElapsed) + "ms.");
+
+            if( useGrading )
+            {
+                dbprint(printlevel, "[webCompile] even grading: " + string(l[2]));
+                dbprint(printlevel, "[webCompile]  odd grading: " + string(l[3]));
+            }
+            kill l, splittingRecord;
+
+            return(retlist);
+        }
+        
+        // The return from webCompilePair is (newvertex [,g], R) where newvertex is the
+        // differential on a MF and g is a possible grading vector, R is the splitting record.
+        // First we return to RRR and adjoin R to the global splitting record
+        setring RRR;
+        
+            // The first time through nR(1) = RRR so there is no need for imap
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+            }
+        
+            splittingRecord = splittingRecord + list(l);
+            
+        setring nR(count);
+        
+        // Now do some engineering on our web. We need to replace the first two vertices
+        // by their fusion, and rearrange variables and the compilation strategy accordingly
+        // Making the new list of MFs and gradings is easy, so we do that first
+        
+        // 1. List of matrices
+        list fusedWebMfs = mfs;
+        fusedWebMfs[vertexOrder[1]] = l[1];
+        fusedWebMfs = delete(fusedWebMfs,vertexOrder[2]);
+        
+        // 2. Gradings
+        if( useGrading )
+        {
+            list fusedWebGr = webGr;
+            fusedWebGr[vertexOrder[1]] = l[2];
+            fusedWebGr = delete(fusedWebGr,vertexOrder[2]);
+        }
+        
+        // 3. Edges. Remove all squeezed out internal edges, and redirect
+        // other edges which end or begin at vertexOrder[2] so that they
+        // now end or begin resp. at vertexOrder[1].
+
+        int i;
+        list fusedEdges;
+        for(i=1; i<=size(edges); i++)
+        {
+            list e = edges[i];
+            
+            // Exclude edges which where squeezed out
+            if( !isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[2]) )
+            {
+                list newEdge = e;
+                
+                if( edgeSource(newEdge) == vertexOrder[2] )
+                {
+                    newEdge = setEdgeSource(newEdge, vertexOrder[1]);
+                }
+                
+                if( edgeTarget(newEdge) == vertexOrder[2] )
+                {
+                    newEdge = setEdgeTarget(newEdge, vertexOrder[1]);
+                }
+            
+                // Finally, if the edge begins or ends on a vertex appearing after
+                // vertexOrder[2] we need to decrement the index, as the fused web
+                // has one less vertex and all indices shifted
+                if( edgeSource(newEdge) > vertexOrder[2] )
+                {
+                    newEdge = setEdgeSource(newEdge, edgeSource(newEdge) - 1);
+                }
+                
+                if( edgeTarget(newEdge) > vertexOrder[2] )
+                {
+                    newEdge = setEdgeTarget(newEdge, edgeTarget(newEdge) - 1);
+                }
+                
+                fusedEdges = fusedEdges + list(newEdge);
+                kill newEdge;
+            }
+        }
+        
+        list fusedWeb = numVertices - 1, fusedEdges, fusedWebMfs;
+        kill fusedEdges, fusedWebMfs;
+        if( useGrading ){ fusedWeb = fusedWeb + list(fusedWebGr); kill fusedWebGr; }
+        
+        if( useSanityChecks )
+        {
+            if( !webVerifyGeneral( fusedWeb ) )
+            {
+                print("[webCompileGeneral] Fused web is not valid, exiting.");
+                return();
+            }
+        }
+        
+        // Next we rearrange the compilation strategy. The vertices is simple: we have
+        // replaced the first vertex in the strategy by the fusion, so we just drop the
+        // second entry of vertexOrder
+        list fusedVertexOrder = delete(vertexOrder,2);
+        
+        for(i=1;i<=size(fusedVertexOrder);i++)
+        {
+            if( fusedVertexOrder[i] > vertexOrder[2] )
+            {
+                fusedVertexOrder[i] = fusedVertexOrder[i] - 1;
+            }
+        }
+        
+        list fusedVarOrder;
+        
+        // Our new set of internal variables is the old one with all the variables we
+        // squeezed out removed. Note that here is where we update numInternalVar
+        int i;
+        for(i=1;i<=size(varOrder);i++)
+        {
+            poly u = varOrder[i];
+
+            if( !checklist(substrat_var,u) )
+            {
+                fusedVarOrder = fusedVarOrder + list(u);
+            }
+            else
+            {
+                // u is an internal variable which was squeezed out, so
+                // reduce our internal variable count appropriately
+                numInternalVar--;
+            }
+            
+            kill u;
+        }
+        
+        list fusedStrat = list(fusedVertexOrder, fusedVarOrder);
+        kill fusedVertexOrder, fusedVarOrder;
+        
+        // Now we go to the ring nR(count+1), which is nR(count) with the internal
+        // variables that we just squeezed out removed. Recall that substrat_var
+        // contains a list of these variables.
+        def nR(count+1) = ringWithoutVars(substrat_var);
+
+        // Do some kills before switching rings. All we need to keep are fusedWeb
+        // and fusedStrat
+        kill substrat_var;        
+        kill edges, mfs, vertexOrder, varOrder;
+        if( useGrading ){ kill webGr; }
+        
+        setring nR(count+1);
+        
+        list web = imap(nR(count),fusedWeb);
+        
+        // If the number of internal variables is zero, then fusedStrat is not defined
+        // in nR(count) but rather is just a global, since it contains no ring variables
+        if( numInternalVar > 0 )
+        {
+            list compStrat = imap(nR(count),fusedStrat);
+        }
+        else
+        {
+            list compStrat = fusedStrat;
+        }
+        kill nR(count);
+        
+        // Increment the counter, get ready to go again!
+        count++;
+    }
+    
+    // We exited after exhausting our internal variables, with valid web and compStrat.
+    // So the first entry in the mfs list of web is our final answer
+    setring RRR;
+    list web = imap(nR(count),web);
+    kill nR(count);
+    
+    matrix A = webMFatVertex(web,1);
+    list retlist = A;
+    kill A;
+    
+    if( useGrading )
+    {
+        intvec Agr = webMFgratVertex(web,1);
+        retlist = retlist + list(Agr);
+        kill Agr;
+    }
+    
+    retlist = retlist + list(splittingRecord);
+    kill splittingRecord;
+    dbprint(printlevel, "[webCompileGeneral] total elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    return(retlist);
+}
+
+/////////////////////////////////////////////////
+// webFromLink
+//
+// Given a link in the format described in linkhom.lib, and an intvec
+// giving a "state', i.e. assigning 0 or 1 to every vertex, we return
+// the corresponding web (in the general format of this file).
+
+proc webFromLink(list linkData, intvec state, int N)
+{
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];
+    
+    int numVertices = size(edgeList);
+    
+    // Each edge in the link is a list of four integers. The first two are incoming,
+    // and the second two are outgoing. Every edge in a web coming from a link has
+    // a single variable with exponent N+1, so we can already populate some of the
+    // information on each edge
+    int i,j;
+    list edges;
+    
+    // Loop through vertices
+    for(j=1; j<=numVertices; j++)
+    {
+        // Loop through entries of vertex
+        intvec v = edgeList[j];
+        for(i=1; i<=4; i++)
+        {
+            list edge;
+            if( typeof(edges[v[i]]) == "none" )
+            {
+                // This edge hasn't been created yet
+                edge = 0,0,list(var(v[i])),var(v[i])^(N+1);
+            }
+            else
+            {
+                edge = edges[v[i]];
+            }
+            
+            if( i <= 2 )
+            {
+                // This edge begins at this vertex, set the source
+                edge = setEdgeSource(edge, j);
+            }
+            else
+            {
+                // This edge ends at this vertex, set the target
+                edge = setEdgeTarget(edge, j);
+            }
+            
+            edges[v[i]] = edge;
+            kill edge;
+        }
+        kill v;
+    }
+    
+    // Now build the list of MFs and gradings
+    list webMfs;
+    list webMfsGrading;
+
+    for(j=1; j<=numVertices; j++)
+    {
+        intvec e = edgeList[j];
+    
+        matrix X = mfVertex(state[j], list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+        intvec Xgr = mfVertexGrading(state[j], N);
+    
+        webMfs = webMfs + list(X);
+        webMfsGrading = webMfsGrading + list(Xgr);
+        kill X,e,Xgr;
+    }
+
+    // Define the web
+    list web = numVertices, edges, webMfs, webMfsGrading;
+    
+    if( !webVerifyGeneral(web) )
+    {
+        print("[webFromLink] Failed to construct valid web, exiting.");
+        return();
+    }
+    
+    return(web);
 }
