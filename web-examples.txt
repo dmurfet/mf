@@ -1,0 +1,79 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// web-examples.txt - Examples of web compilation using mfweb.lib
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE W1 - Computing the endomorphism space of a certain MF over the E6 singularity
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb-general.lib";
+int nx=2;
+int ny=1;
+ring rr=0,(x(1..nx),y(1..ny)),dp;
+poly W = x(1)^3 + x(2)^4;
+printlevel = 1;
+
+matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2,-x(1) * x(2),-x(2)^3;
+matrix psi[3][3] = x(2),0,x(1),x(1),-x(2)^2,0,0,x(1),-x(2);
+matrix X = blockmat(matrix(0,3,3),phi,psi,matrix(0,3,3));
+
+// Define a web with two vertices and one edge
+//
+//    X ---- x(1),x(2) ----> MFdual(X)
+//
+// The compilation is Hom(X,X) as a Z/2-graded Q-vector space
+
+list e1 = list(1,2,list(x(1),x(2)),W);
+list web = list(2, list(e1), list(X,MFdual(X)));
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePairGeneral(web, compStrat);
+print(L[1]);
+
+// The output is that Hom(X,X) is six dimensional, and Hom(X,X[1]) is six dimensional. We can
+// check this using Exts as follows
+
+LIB "homolog.lib";
+ring S = 0,(x(1),x(2)),ds;
+poly W = x(1)^3 + x(2)^4;
+
+ideal I = W;
+qring A = std(I);
+
+matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2,-x(1) * x(2),-x(2)^3;
+matrix psi[3][3] = x(2),0,x(1),x(1),-x(2)^2,0,0,x(1),-x(2);
+matrix z[3][3];
+matrix X = blockmat(z,phi,psi,z);
+
+module M = phi;
+module Msusp = psi;
+
+isCM(M); isCM(Msusp);
+
+// We have one dimensions worth of morphisms M -> N and M -> N[1] in the stable cat of CMs
+Ext(2,M,M,1); Ext(2,M,Msusp,1);
+
+// We find that both spaces have dimension six, which corroborates what we calculated above.
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE W2 - One of the trefoil webs
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "ring.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+LIB "mfweb-general.lib";
+ring rr=0,(x(1..6)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list linkL = linkLibrary("trefoil");
+list web = webFromLink(linkL,intvec(0,1,1),N);
+list compStrat = list(1,2,3), list(x(1),x(2),x(3),x(4),x(5),x(6));
+
+list L = webCompileGeneral(web, compStrat);
