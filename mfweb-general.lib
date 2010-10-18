@@ -1343,8 +1343,8 @@ proc webFromLink(list linkData, intvec state, int N)
 
 proc webCompileMorphismGeneral(list web1, list web2, list compStrat, matrix M, int mapPos)
 {
-    list compile(1) = webCompile(web1, compStrat);
-    list compile(2) = webCompile(web2, compStrat);
+    list compile(1) = webCompileGeneral(web1, compStrat);
+    list compile(2) = webCompileGeneral(web2, compStrat);
     
     matrix A = webCompileMorphismFromDataGeneral(web1, compile(1), web2, compile(2), compStrat, M, mapPos);
     
@@ -1778,26 +1778,12 @@ proc linkCompileGeneral(list linkData, string fileName, int N)
     list returnListWebs;
     list returnListMaps;
     
-    // A web is defined by two lists: a list of vertices and a list of mfs (plus gradings).
-    // In what follows all our webs will have the same underlying graph, which we now construct
-    int j;
-    list webVertices;
-    for(j=1; j<=size(edgeList); j++)
-    {
-        intvec e = edgeList[j];
-        
-        // The first two variables in e are the outgoing variables, and the second two
-        // are the incoming variables
-        list vertex = list(list(var(e[3]),var(e[4])),list(N+1,N+1),list(var(e[1]),var(e[2])),list(N+1,N+1));
-        webVertices = webVertices + list(vertex);
-        kill e, vertex;
-    }
-    
-    // The compilation strategy will not change either: we simply compile from the 1st
+    // The compilation strategy is the same for all webs: we simply compile from the 1st
     // vertex to the last one, and enumerate the variables in the given order (note that
     // all the ring variables are taken as internal variables)
     list compStratVert;
     list compStratVar;
+    int j;
     for(j=1;j<=size(edgeList); j++)
     {
         compStratVert[j] = j;
