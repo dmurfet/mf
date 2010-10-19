@@ -1222,35 +1222,33 @@ proc webCompile(list web, list compStrat)
         list fusedStrat = list(fusedVertexOrder, fusedVarOrder);
         kill fusedVertexOrder, fusedVarOrder;
         
-        // Now we go to the ring nR(count+1), which is nR(count) with the internal
-        // variables that we just squeezed out removed. Recall that substrat_var
-        // contains a list of these variables.
-        def nR(count+1) = ringWithoutVars(substrat_var);
-
-        // Do some kills before switching rings. All we need to keep are fusedWeb
-        // and fusedStrat
-        kill substrat_var;        
+        // Replace web by fusedWeb and compStrat by fusedStrat
+        web = fusedWeb;
+        compStrat = fusedStrat;
+        
+        // Do some kills before switching rings.
+        kill fusedWeb, fusedStrat;
         kill edges, mfs, vertexOrder, varOrder;
         if( useGrading ){ kill webGr; }
         
-        setring nR(count+1);
+        // Now we go to the ring nR(count+1), which is nR(count) with the internal
+        // variables that we just squeezed out removed. Recall that substrat_var
+        // contains a list of these variables. Note we only change rings if there
+        // are internal variables left, otherwise ringWithoutVars might try to create
+        // a ring with no variables
         
-        list web = imap(nR(count),fusedWeb);
-        
-        // If the number of internal variables is zero, then fusedStrat is not defined
-        // in nR(count) but rather is just a global, since it contains no ring variables
         if( numInternalVar > 0 )
         {
-            list compStrat = imap(nR(count),fusedStrat);
-        }
-        else
-        {
-            list compStrat = fusedStrat;
-        }
-        kill nR(count);
+            def nR(count+1) = ringWithoutVars(substrat_var);
+            setring nR(count+1);
         
-        // Increment the counter, get ready to go again!
-        count++;
+            list web = imap(nR(count),web);
+            list compStrat = imap(nR(count),compStrat);
+            kill nR(count);
+        
+            // Increment the counter, get ready to go again!
+            count++;
+        }
     }
     
     // We exited after exhausting our internal variables, with valid web and compStrat.
