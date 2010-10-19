@@ -1,0 +1,48 @@
+///////////////////////////////////////////////////
+// Testing cpxTensor
+///////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "ring.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+ring rr=0,(x),dp;
+printlevel=1;
+
+// Tensoring two Koszul complexes
+// k1: R -- x --> R
+// k2: R -- 1 --> R
+
+list k1 = 0,list(1,1),list(matrix(x,1,1));
+list k2 = 0,list(1,1),list(matrix(1,1,1));
+cpxTensor(k1,k2);
+
+// A more complicated example
+// k1: R -- (0,1)^t --> R2 -- (1,0) --> R
+matrix A[2][1] = 0,1;
+matrix B[1][2] = 1,0;
+list k1 = 0,list(1,2,1),list(A,B);
+cpxTensor(k1,k1);
+
+// Tensor products giving suspension
+list k1 = 0,list(0,1),list(matrix(0,1,1));
+list k2 = 0,list(1,1),list(matrix(x,1,1));
+cpxTensor(k1,k2);
+cpxTensor(k2,k1);
+
+list k1 = -1,list(1,0),list(matrix(0,1,1));
+cpxTensor(k2,k1);
+
+// Graded tensor product example
+list k1 = 0,list(0,1),list(matrix(0,1,1)),list(intvec(0),intvec(1));
+list k2 = 0,list(1,1),list(matrix(x,1,1)),list(intvec(1),intvec(0));
+cpxTensor(k1,k2);
+
+// A more complicated graded example
+// k1: R -- (0,1)^t --> R2 -- (1,0) --> R
+matrix A[2][1] = 0,1;
+matrix B[1][2] = 1,0;
+list k1 = 0,list(1,2,1),list(A,B),list(intvec(1),intvec(3,1),intvec(0));
+cpxTensor(k1,k1);

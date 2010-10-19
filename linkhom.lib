@@ -1599,3 +1599,318 @@ proc archiveObjectToString(def L)
     
     return(ent);
 }
+
+/////////////////////////////////////////////////
+// DATA TYPE: complex
+//
+// Let X be a complex of free modules (possibly of zero rank). We represent this
+// as a pair (m, R, L[,G]) consisting of an integer m, a list R of non-negative integers
+// and a list L of matrices. We should have size(R) = size(L) + 1.
+//
+// Here the rank of X^i should be zero for i < m. For i >= m either X^i is rank zero
+// or it has positive rank. R[1] should be the rank of X^m, R[2] the rank of X^(m+1), and so on.
+// L should be a list of matrices giving the differentials in X, L[1] the map X^m --> X^(m+1)
+// and so on. In case a differential ends or begins on a free module of rank zero, the entry
+// in L should be a 1x1 zero matrix.
+//
+// Optionally a third list G can be given, with G[1] an intvec giving the grading vector
+// on the complex in degree m, and so on. If X^i is rank zero, then the corresponding entry
+// of G is just intvec(0).
+//
+// Complexes should be accessed using the setter/getter methods below.
+//
+// EXAMPLE:
+//
+// The list (0,(1,1,1),(x,y)) describes the cpx R -- x --> R -- y --> R (say over R = k[x,y]/xy!)
+// beginning in degree zero, whereas (0,(1,0,1),(0,0)) is R ---> 0 ---> R.
+
+proc cpxMinDegree(list cpx){ return(cpx[1]); }
+
+// Degree where the last differential ends
+proc cpxMaxDegree(list cpx){ return(cpx[1] + size(cpx[3])); }
+
+proc cpxDifferentialInDegree(list cpx, int degr)
+{
+    int mind = cpxMinDegree(cpx);
+    int maxd = cpxMaxDegree(cpx);
+    
+    if( degr < mind || degr > maxd - 1 )
+    {
+        print("[cpxDifferentialInDegree] Degree outside bounds, exiting.");
+        return();
+    }
+    
+    return(cpx[3][degr-mind+1]);
+}
+
+proc cpxRankInDegree(list cpx, int degr)
+{
+    // We deduce the rank from the number of rols/cols in the differential
+    int mind = cpxMinDegree(cpx);
+    int maxd = cpxMaxDegree(cpx);
+    
+    if( degr < mind || degr > maxd ){ return(0); }
+
+    return(cpx[2][degr-mind+1]);
+}
+
+proc cpxGradingInDegree(list cpx, int degr)
+{
+    if( !cpxIsGraded(cpx) )
+    {
+        print("[cpxGradingInDegree] Complex is not graded, exiting.");
+        return();
+    }
+    
+    int mind = cpxMinDegree(cpx);
+    int maxd = cpxMaxDegree(cpx);
+    
+    if( degr < mind || degr > maxd )
+    {
+        print("[cpxGradingInDegree] Degree is outside bounds, exiting.");
+        return();
+    }
+    
+    return(cpx[4][degr-mind+1]);
+}
+
+proc cpxIsGraded(list cpx){ return (size(cpx) > 3); }
+
+////////////////////////////////////////////////////////////////////
+// cpxIsValid
+//
+
+proc cpxIsValid(list cpx)
+{
+    if( size(cpx[2]) != size(cpx[3]) + 1)
+    {
+        print("[cpxIsValid] Relative size of rank and differential lists is wrong, failed.");
+        return(0);
+    }
+    
+    int mind = cpxMinDegree(cpx);
+    int maxd = cpxMaxDegree(cpx);
+    
+    int i;
+    for(i=mind; i<maxd; i++)
+    {
+        matrix D = cpxDifferentialInDegree(cpx,i);
+        if( ncols(D) != cpxRankInDegree(cpx,i) && cpxRankInDegree(cpx,i) != 0 )
+        {
+            print("[cpxIsValid] Wrong column number in differential " + string(i));
+            return(0);
+        }
+        
+        if( nrows(D) != cpxRankInDegree(cpx,i+1) && cpxRankInDegree(cpx,i+1) != 0 )
+        {
+            print("[cpxIsValid] Wrong row number in differential " + string(i));
+            return(0);
+        }
+    }
+    
+    int i;
+    for(i=mind+1; i<maxd; i++)
+    {
+        matrix D = cpxDifferentialInDegree(cpx,i);
+        matrix E = cpxDifferentialInDegree(cpx,i-1);
+        
+        if( D * E != matrix(0,nrows(D),ncols(E)) )
+        {
+            print("[cpxIsValid] The composition d[" + string(i) + "] d[" + string(i-1) + "] is nonzero, failed.");
+            return(0);
+        }
+    }
+    
+    // If grading is on, check the number of grades matches the rank
+    if( cpxIsGraded(cpx) )
+    {
+        for(i=mind; i<=maxd; i++)
+        {
+            if( cpxRankInDegree(cpx,i) != 0 && size(cpxGradingInDegree(cpx,i)) != cpxRankInDegree(cpx,i) )
+            {
+                print("[cpxIsValid] Rank does not match size of grading vector, failed.");
+                return(0);
+            }
+        }
+    }
+    
+    return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// complexTensor
+//
+// Given two complexes (possibly graded) return the tensor product
+//
+// NOTE: If we are given gradings, we do not check that the differentials
+// are degree zero.
+
+proc cpxTensor(list cpx(1), list cpx(2))
+{
+    if( !cpxIsValid(cpx(1)) || !cpxIsValid(cpx(2)) )
+    {
+        print("[cpxTensor] Passed invalid complexes, exiting.");
+        return();
+    }
+
+    int useGrading;
+    if( cpxIsGraded(cpx(1)) ){ int useGrading = 1; }
+    
+    int i,j;
+    for(i=1; i<=2; i++)
+    {
+        int minDegree(i) = cpxMinDegree(cpx(i));
+        int maxDegree(i) = cpxMaxDegree(cpx(i));
+    }
+    
+    int minDegreeTensor = minDegree(1) + minDegree(2);
+    int maxDegreeTensor = maxDegree(1) + maxDegree(2);
+    
+    // Decide on the ranks of the free modules in the tensor product, and at
+    // the same time record which tensors contribute to each degree of the product
+    list tensorRanks;
+    list nonzeroTensors;
+    if( useGrading ){ list nonzeroTensorsGrading; }
+    
+    for(i=1;i<=maxDegreeTensor-minDegreeTensor+1;i++)
+    {
+        tensorRanks[i] = 0;
+        nonzeroTensors[i] = list();
+        if( useGrading ){ nonzeroTensorsGrading[i] = list(); }
+    }
+    
+    for(i=minDegree(1);i<=maxDegree(1);i++)
+    {
+        for(j=minDegree(2);j<=maxDegree(2);j++)
+        {
+            int delta = cpxRankInDegree(cpx(1),i) * cpxRankInDegree(cpx(2),j);
+            
+            if( delta != 0 )
+            {
+                nonzeroTensors[i+j-minDegreeTensor+1] = nonzeroTensors[i+j-minDegreeTensor+1] + list(intvec(i,j));
+                
+                if( useGrading )
+                {
+                    intvec gr(1) = cpxGradingInDegree(cpx(1),i);
+                    intvec gr(2) = cpxGradingInDegree(cpx(2),j);
+                    
+                    intvec tensorgr;
+                    int k,l;
+                    int count;
+                    for(k=1;k<=size(gr(1));k++)
+                    {
+                        for(l=1;l<=size(gr(2));l++)
+                        {
+                            count++;
+                            tensorgr[count] = gr(1)[k] + gr(2)[l];
+                        }
+                    }
+                    nonzeroTensorsGrading[i+j-minDegreeTensor+1] = nonzeroTensorsGrading[i+j-minDegreeTensor+1] + list(tensorgr);
+                }
+            }
+            
+            tensorRanks[i+j-minDegreeTensor+1] = tensorRanks[i+j-minDegreeTensor+1] + delta;
+        }
+    }
+    
+    // Next construct the differentials. Note that in the matrices we ignore free modules
+    // of rank zero. Suppose we have free modules X of rank r and Y of rank s, and index
+    // the summands of X as X1,...,Xr and of Y as Y1,...,Ys. Then the tensor product X x Y
+    // is a direct sum of Xi x Yj, and we order these according to the lexicographic ordering
+    // on pairs (i,j). I.e. (X1 + X2) x (Y1 + Y2) = X1 x Y1 + X1 x Y2 + X2 x Y1 + X2 x Y2.
+    int k;
+    list finalDiffs;
+    for(k=minDegreeTensor; k<maxDegreeTensor; k++)
+    {
+        matrix D;
+        int sk = k - minDegreeTensor + 1;
+        
+        //print("Constructing differential in degree " + string(k));
+        
+        // We are trying to construct the differential in degree k of the tensor product
+        if( size(nonzeroTensors[sk]) == 0 || size(nonzeroTensors[sk+1]) == 0 )
+        {
+            // The source or target has rank zero
+            D = matrix(0,1,1);
+        }
+        else
+        {
+            list maps;
+            for(j=1; j<=size(nonzeroTensors[sk+1]); j++)
+            {
+                for(i=1; i<=size(nonzeroTensors[sk]); i++)
+                {
+                    intvec a = nonzeroTensors[sk][i];
+                    intvec b = nonzeroTensors[sk+1][j];
+                 
+                    //print("Looking at map from " + string(a) + " to " + string(b));
+                    
+                    // say a = (a1,a2) and b = (b1,b2). Then the "a summand" of the tensor
+                    // product in degree a1 + a2 = k has rank
+                    int rk_src = cpxRankInDegree(cpx(1),a[1]) * cpxRankInDegree(cpx(2),a[2]);
+                    int rk_tar = cpxRankInDegree(cpx(1),b[1]) * cpxRankInDegree(cpx(2),b[2]);
+                    
+                    matrix Z[rk_tar][rk_src];
+                    
+                    if( b[1] == a[1] + 1 && a[2] == b[2] )
+                    {
+                        // The map (a[1],a[2]) --> (a[1] + 1, a[2])
+                        Z = tensor(cpxDifferentialInDegree(cpx(1),a[1]), unitmat(cpxRankInDegree(cpx(2),b[2])));
+                    }
+                    if( b[1] == a[1] && b[2] == a[2] + 1 )
+                    {
+                        // The map (a[1],a[2]) --> (a[1], a[2]+1)
+                        Z = (-1)^(a[1]) * tensor(unitmat(cpxRankInDegree(cpx(1),a[1])), cpxDifferentialInDegree(cpx(2),a[2]));
+                    }
+                    
+                    //print(Z);
+                    //print("----");
+                    maps = maps + list(Z);
+                }
+            }
+            
+            // Assemble all the maps
+            D = superblockmat(size(nonzeroTensors[sk]),maps);
+        }
+        
+        finalDiffs[sk] = D;
+    }
+    
+    if( useGrading )
+    {
+        // Construct the grading vectors
+        list finalGr;
+        for(k=minDegreeTensor; k<=maxDegreeTensor; k++)
+        {
+            intvec grade;
+            int sk = k - minDegreeTensor + 1;
+            
+            if( size(nonzeroTensorsGrading[sk]) > 0 )
+            {
+                grade = nonzeroTensorsGrading[sk][1];
+                
+                for(j=2; j<=size(nonzeroTensorsGrading[sk]); j++)
+                {
+                    grade = grade, nonzeroTensorsGrading[sk][j];
+                }
+            }
+            finalGr = finalGr + list(grade);
+            kill grade;
+        }
+    }
+    
+    list tensorCpx = minDegreeTensor, tensorRanks, finalDiffs;
+    
+    if( useGrading )
+    {
+        tensorCpx = tensorCpx + list(finalGr);
+    }
+    
+    if( !cpxIsValid(tensorCpx) )
+    {
+        print("[cpxTensor] Failed to construct valid complex, exiting.");
+        return();
+    }
+    
+    return(tensorCpx);
+}
