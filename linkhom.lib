@@ -13,6 +13,7 @@ LIB "linalg.lib";
 LIB "matrix.lib";
 LIB "ring.lib";
 LIB "blow.lib";
+LIB "mfweb.lib";
 
 ////////////////////////////////////////////////////////////////////
 // USAGE GUIDE
@@ -978,7 +979,7 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
 }
 
 ////////////////////////////////////////////////////////////////////
-// linkCompile (was mfCompileLinkAlt)
+// linkCompile
 //
 // Takes as arguments a link, defined as a pair in the sense explained above, and the name
 // of a file to use for storing intermediate results. The return is a pair (X,Y) of lists.
@@ -1011,14 +1012,26 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
 //
 // NOTE: The maps returned by webCompileMorphism are degree one, and we do not mess with this;
 // we leave all the grading vectors unchanged.
+//
+// NOTE: If we are passed in addition (as a fifth parameter) a variable, we compute the
+// reduced KR sl(N) homology using this "mark".
 
-proc linkCompile(list linkData, string fileName, int N)
+proc linkCompile(list linkData, string fileName, int N, list #)
 {
     // We do not change rings: we assume that the ambient ring has the same number of variables
     // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
     // if there is a save file, then loading this save file will set the ring.
     int useSanityChecks = blowFlags("sanity_checks"); 
     int useMPfile = blowFlags("use_mpfile");
+    
+    int useReduced;
+    poly reductionMark = 1;
+    if( size(#) > 0 )
+    {
+        useReduced = 1;
+        reductionMark = #[1];
+        print("[linkCompile] Computing reduced homology with mark " + string(reductionMark));
+    }
     
     system("--ticks-per-sec",1000);
     int timeLink = timer;
@@ -1036,43 +1049,35 @@ proc linkCompile(list linkData, string fileName, int N)
         {
             def nR = loadSaveFile(fileName);
             setring nR;
+            if( useReduced ){ poly reductionMark = imap(RRR,reductionMark); }
         }
         else
         {
             execute(loadSaveFile(fileName));
         }
     }
-
+        
     list returnListWebs;
     list returnListMaps;
     
-    // A web is defined by two lists: a list of vertices and a list of mfs (plus gradings).
-    // In what follows all our webs will have the same underlying graph, which we now construct
-    int j;
-    list webVertices;
-    for(j=1; j<=size(edgeList); j++)
-    {
-        intvec e = edgeList[j];
-        
-        // The first two variables in e are the outgoing variables, and the second two
-        // are the incoming variables
-        list vertex = list(list(var(e[3]),var(e[4])),list(N+1,N+1),list(var(e[1]),var(e[2])),list(N+1,N+1));
-        webVertices = webVertices + list(vertex);
-        kill e, vertex;
-    }
-    
-    // The compilation strategy will not change either: we simply compile from the 1st
+    // The compilation strategy is the same for all webs: we simply compile from the 1st
     // vertex to the last one, and enumerate the variables in the given order (note that
     // all the ring variables are taken as internal variables)
     list compStratVert;
     list compStratVar;
+    int j;
     for(j=1;j<=size(edgeList); j++)
     {
         compStratVert[j] = j;
     }
     for(j=1;j<=nvars(basering);j++)
     {
-        compStratVar[j] = var(j);
+        // If we are using reduced homology, do not add reductionMark
+        // as an internal variable
+        if( !useReduced || reductionMark != var(j) )
+        {
+            compStratVar = compStratVar + list(var(j));
+        }
     }
     list compStrat = compStratVert,compStratVar;
         
@@ -1110,26 +1115,15 @@ proc linkCompile(list linkData, string fileName, int N)
             dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
             // Build a web suitable for calling webCompile
-            int j;
-            list webMfs;
-            list webMfsGrading;
-
-            for(j=1; j<=size(edgeList); j++)
+            if( !useReduced )
             {
-                intvec e = edgeList[j];
-            
-                matrix X = mfVertex(v[j], list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
-                intvec Xgr = mfVertexGrading(v[j], N);
-            
-                webMfs = webMfs + list(X);
-                webMfsGrading = webMfsGrading + list(Xgr);
-                kill X,e;
+                list web = webFromLink(linkData, v, N);
             }
-        
-            // Define the web
-            list web = webVertices, webMfs, webMfsGrading;
-            kill webMfs, webMfsGrading;
-        
+            else
+            {
+                list web = webFromLink(linkData, v, N, reductionMark);
+            }
+            
             execute("list " + listName2 + " = web;");
         
             // Call webCompile
@@ -1245,7 +1239,7 @@ proc linkCompile(list linkData, string fileName, int N)
         kill dimComp(0), dimComp(1);
     }
     
-    dbprint(printlevel, "[linkCompile] time to compile webs " + string(timer-timeLink) + "ms."); 
+    dbprint(printlevel, "[linkCompile] Time taken to compile webs: " + string(timer-timeLink) + "ms."); 
     
     // STEP 2. Compile the maps
     dbprint(printlevel, "");
