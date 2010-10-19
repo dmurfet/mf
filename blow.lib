@@ -3210,6 +3210,17 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
         int useGrading = 1;
     }
     
+    // If we are not passed any internal variables, we perform no pushforward
+    if( size(intvars) == 0 )
+    {
+        list retlist = A;
+        if( useGrading )
+        {
+            retlist = retlist + list(Agr);
+        }
+        return(retlist);
+    }
+    
     // Sanity check
     int i;
     if( useSanityChecks )
