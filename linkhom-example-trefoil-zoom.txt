@@ -60,18 +60,18 @@ int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
 list trefoilLink = linkLibrary("trefoil");
-list compStrat = list(1,2,3),list(x(1),x(2),x(3),x(4),x(5),x(6));
+// The usual compilation:
+//list compStrat = list(1,2,3),list(x(1),x(2),x(3),x(4),x(5),x(6));
+// list web111 = webFromLink(trefoilLink, intvec(1,1,1), N);
+//list D = webCompile(web111,compStrat); // dim 4 in degree zero
 
-list web000 = webFromLink(trefoilLink, intvec(0,0,0), N);
-//list D = webCompile(web000,compStrat); // dim 4 in degree zero
-
-// Now do the same computation by hand
-matrix X(1) = web000[3][1];
-intvec Xgr(1) = web000[4][1];
-matrix X(2) = web000[3][2];
-intvec Xgr(2) = web000[4][2];
-matrix X(3) = web000[3][3];
-intvec Xgr(3) = web000[4][3];
+// Now do the same compilation (the usual one) by hand
+matrix X(1) = web111[3][1];
+intvec Xgr(1) = web111[4][1];
+matrix X(2) = web111[3][2];
+intvec Xgr(2) = web111[4][2];
+matrix X(3) = web111[3][3];
+intvec Xgr(3) = web111[4][3];
 matrix X = MFtensor(MFtensor(X(1),X(2)),X(3));
 intvec Xgr = MFtensorGradings(MFtensorGradings(Xgr(1),Xgr(2)),Xgr(3));
 
@@ -93,10 +93,11 @@ for(i=1; i<=6; i++)
     H(i) * X + X * H(i) == x(i)^2 * unitmat(ncols(X));
 }
 
-list D = mfPushforwardInductive(X, list(x(1),x(2),x(3),x(4),x(5),x(6)), list(2,2,2,2,2,2), list(H(1),H(2),H(3),H(4),H(5),H(6)), Xgr);
+// list D = mfPushforwardInductive(X, list(x(1),x(2),x(3),x(4),x(5),x(6)), list(2,2,2,2,2,2), list(H(1),H(2),H(3),H(4),H(5),H(6)), Xgr);
 // If you print D[2],D[3] you see that we get the same results as from webCompile
 
-// Now substitute x(1) = 0 in all the MFs and try again
+// Now we do the compilation of the 000 state in the reduced homology,
+// by substituting x(1) = 0 in all the MFs and eliminating only x(2),...,x(6)
 for(i=1; i<=3; i++)
 {
     matrix Y(i) = subst(X(i),x(1),0);
@@ -120,5 +121,53 @@ for(i=2; i<=6; i++)
 list D = mfPushforwardInductive(Y, list(x(2),x(3),x(4),x(5),x(6)), list(2,2,2,2,2), list(G(2),G(3),G(4),G(5),G(6)), Ygr);
 print(D[1]);
 
+// Should be the same as using webFromLink with the reduction parameter
+list compStratR = list(1,2,3),list(x(2),x(3),x(4),x(5),x(6));
+list web111alt = webFromLink(trefoilLink, intvec(1,1,1), N, x(1));
+list Dalt = webCompile(web111alt, compStratR);
+// And indeed it is (compare Dalt[1] with D[1]).
+
 // The compilation is a MF of zero, rank two in each degree, with zero differentials.
 // We get the same result if we switch to the ring 0,(x(2..6)),dp beforehand
+
+// So now we trust webCompile and do not need to do the reduced compilations by hand...
+
+// Now compile the three states to which 111 maps (in reduced homology). Note that we can do this
+// calculation by hand (as above) or with webCompile. The latter is better because then
+// we can use webCompileMorphism
+
+list web011 = webFromLink(trefoilLink, intvec(0,1,1), N, x(1));
+list D011 = webCompile(web011,compStratR);
+
+list web101 = webFromLink(trefoilLink,intvec(1,0,1), N, x(1));
+list D101 = webCompile(web101,compStratR);
+
+list web110 = webFromLink(trefoilLink,intvec(1,1,0), N, x(1));
+list D110 = webCompile(web110,compStratR);
+
+matrix F011 = subst(mfChi(1,x(2),x(1),x(3),x(4),N),x(1),0);
+matrix map1 = webCompileMorphismFromData(web111alt, Dalt, web011, D011, compStratR, F011, 1);
+
+matrix F101 = subst(mfChi(1,x(4),x(3),x(5),x(6),N),x(1),0);
+matrix map2 = webCompileMorphismFromData(web111alt, Dalt, web101, D101, compStratR, F101, 2);
+
+matrix F110 = subst(mfChi(1,x(6),x(5),x(1),x(2),N),x(1),0);
+matrix map3 = webCompileMorphismFromData(web111alt, Dalt, web110, D110, compStratR, F110, 3);
+
+// Compute the cohomology in position -3 which is the intersection of the kernels of
+// map1, map2, map3
+module h = intersect(rightKernel(map1),rightKernel(map2),rightKernel(map3));
+print(Dalt[1]);
+
+// We get that h = gen(3),gen(7), but gen(3) is in degree zero and gen(7) is in degree 1.
+// Note the symmetry though.
+
+// Note that the Euler characteristic of the reduced KR homology for N = 2 should be
+// the Jones polynomial divided by (q+1/q), which is q2 + q6 - q8 (I think). Note that
+// the grading assigned to the 111 reduced compilation web is
+Dalt[2] + 6;
+// which is 5,3,7,5,6,4,8,6
+// so our generators lie in degrees 7 and 8. It is at least possible that if we ignore
+// the Z2 grading and just define the Euler char in the usual way, this q7 will cancel
+// with something in degree -1 (the q7s cancel in a similar way when you compute the 
+// normalised jones poly, so this seems plausible).
