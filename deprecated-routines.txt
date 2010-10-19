@@ -1,28 +1,429 @@
 //////////////////////////////
-// This is the old findConstant, preserved for reference
+// This is the old linkCompile, using the "non general" webCompile
 
-proc findConstantOld(matrix A)
+proc linkCompile(list linkData, string fileName, int N)
 {
-    int i,j;
-    int nc = ncols(A);
-    int nr = nrows(A);
-    for(i=1;i<=nr;i++)
+    // We do not change rings: we assume that the ambient ring has the same number of variables
+    // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
+    // if there is a save file, then loading this save file will set the ring.
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    int useMPfile = blowFlags("use_mpfile");
+    
+    system("--ticks-per-sec",1000);
+    int timeLink = timer;
+ 
+    def RRR = basering;
+    
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];
+    int webSize = size(vertexParity);
+    
+    // Read in the save file, if it exists
+    if( status(fileName,"exists") == "yes" )
     {
-        for(j=1;j<=nc;j++)
+        if( useMPfile )
         {
-            if( A[i,j] != 0 )
-            {
-                if( deg(A[i,j]) == 0 )
-                {
-                    intvec v = i,j;
-                    return(list(1,v));
-                }
-            }
+            def nR = loadSaveFile(fileName);
+            setring nR;
+        }
+        else
+        {
+            execute(loadSaveFile(fileName));
         }
     }
+
+    list returnListWebs;
+    list returnListMaps;
     
-    return(list(0,"na"));
+    // A web is defined by two lists: a list of vertices and a list of mfs (plus gradings).
+    // In what follows all our webs will have the same underlying graph, which we now construct
+    int j;
+    list webVertices;
+    for(j=1; j<=size(edgeList); j++)
+    {
+        intvec e = edgeList[j];
+        
+        // The first two variables in e are the outgoing variables, and the second two
+        // are the incoming variables
+        list vertex = list(list(var(e[3]),var(e[4])),list(N+1,N+1),list(var(e[1]),var(e[2])),list(N+1,N+1));
+        webVertices = webVertices + list(vertex);
+        kill e, vertex;
+    }
+    
+    // The compilation strategy will not change either: we simply compile from the 1st
+    // vertex to the last one, and enumerate the variables in the given order (note that
+    // all the ring variables are taken as internal variables)
+    list compStratVert;
+    list compStratVar;
+    for(j=1;j<=size(edgeList); j++)
+    {
+        compStratVert[j] = j;
+    }
+    for(j=1;j<=nvars(basering);j++)
+    {
+        compStratVar[j] = var(j);
+    }
+    list compStrat = compStratVert,compStratVar;
+        
+    // STEP 1. Go through each state of the link and compile the corresponding web. Then
+    // add the data to returnListWebs. 
+    // The compilation of a state 1101 is stored in web1101
+    int i;
+    list stateDiagrams = powervec(webSize);
+    int numStateDiagrams = size(stateDiagrams);
+    
+    int globalZ2Degree = -1;
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        
+        dbprint(printlevel, "");
+        dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+        
+        string listName = "compiled" + intvecToString(v); // compilation product
+        string listName2 = "web" + intvecToString(v); // web
+        
+        string cmd = "int definedCheck = defined(" + listName + ") && defined(" + listName2 + ");";
+        execute(cmd);
+        
+        if( definedCheck )
+        {
+            // We have already compiled this web /////////////
+            dbprint(printlevel, "[linkCompile] Already compiled, skipping.");
+        }
+        else
+        {
+            // We have not already compiled this web ///////////
+            dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
+        
+            // Build a web suitable for calling webCompile
+            int j;
+            list webMfs;
+            list webMfsGrading;
+
+            for(j=1; j<=size(edgeList); j++)
+            {
+                intvec e = edgeList[j];
+            
+                matrix X = mfVertex(v[j], list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+                intvec Xgr = mfVertexGrading(v[j], N);
+            
+                webMfs = webMfs + list(X);
+                webMfsGrading = webMfsGrading + list(Xgr);
+                kill X,e;
+            }
+        
+            // Define the web
+            list web = webVertices, webMfs, webMfsGrading;
+            kill webMfs, webMfsGrading;
+        
+            execute("list " + listName2 + " = web;");
+        
+            // Call webCompile
+            execute("list " + listName + " = webCompile(web, compStrat);");
+            
+            // Save the results to the savefile
+            dbprint(printlevel, "[linkCompile] Saving to disk.");
+
+            execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
+            execute("writeObjectToFile(fileName,\"" + listName2 + "\"," + listName2 + ");");
+            
+            kill web;
+        }
+        
+        string cmd = "list Z = " + listName + ";";
+        execute(cmd);
+        
+        // The return value of webCompile should look like "nonsquare", r1,r2, Q
+        // and the last entry of Q should be ("nonsquare",r1,r2,R) with the last entry of R
+        // a tuple (f0,f1,g0,g1,u,N) with f0,g0 splitting the even part of the very last
+        // idempotent and similarly for f1,g1.
+        if( typeof(Z[1]) != "string" || size(Z) != 4 || typeof(Z[4]) != "list" || typeof(Z[4][size(Z[4])]) != "list" )
+        {
+            print("[linkCompile] Return of webCompile is not of the expected format, exiting.");
+            return();
+        }
+        
+        // Q = Z[4], Q[size(Q)] is ("nonsquare",r1,r2,R) so R is
+        list R = Z[4][size(Z[4])][4];
+        list lastEntry = R[size(R)];
+        
+        matrix f(0) = lastEntry[2];
+        matrix f(1) = lastEntry[3];
+        matrix g(0) = lastEntry[4];
+        matrix g(1) = lastEntry[5];
+        
+        // First compute the dimension of the compilation in each degree
+        int j;
+        for(j=0; j<=1; j++)
+        {
+            // The compilation of the current web is a Z/2-graded Q-vector space Y = Y0 + Y1.
+            // The product f(i) * g(i) will either be a unitmatrix of size k if dim(Yi) = k > 0
+            // or a 1x1 zero matrix if Yi = 0.
+            int dimComp(j);
+            if( f(j) * g(j) != matrix(0,1,1) && f(j) * g(j) != unitmat(nrows(f(j))) )
+            {
+                print("[linkCompile] Unexpected output from webCompile, exiting.");
+                return();
+            }
+            
+            // Y is zero in this degree
+            if( f(j) * g(j) == matrix(0,1,1) )
+            {
+                dimComp(j) = 0;
+            }
+            
+            // Y is nonzero in this degree
+            if( f(j) * g(j) == unitmat(nrows(f(j))) )
+            {
+                dimComp(j) = nrows(f(j));
+            }
+            
+            kill f(j), g(j);
+        }
+        
+        // Decide on the degree in which we are nonzero and set the rank in that degree
+        int rank, compDegree;
+        intvec grading;
+        if( dimComp(0) == 0 && dimComp(1) != 0 )
+        {
+            // We are concentrated in degree 1
+            compDegree = 1;
+            rank = dimComp(1);
+            grading = Z[3];
+        }
+        
+        if( dimComp(0) != 0 && dimComp(1) == 0 )
+        {
+            compDegree = 0;
+            rank = dimComp(0);
+            grading = Z[2];
+        }
+        
+        if( dimComp(0) == 0 && dimComp(1) == 0 )
+        {
+            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero."); //debug
+            compDegree = -1;
+            rank = 0;
+        }
+        
+        // All webs compilations should be living in one of the Z2 degrees
+        if( compDegree != -1 )
+        {
+            if( globalZ2Degree != -1 && globalZ2Degree != compDegree )
+            {
+                print("[linkCompile] The compilation of " + intvecToString(v) + " is in Z2 degree " + string(compDegree));
+                print("[linkCompile] whereas an earlier web was in degree " + string(globalZ2Degree) + ", exiting.");
+                return();
+            }
+            
+            if( globalZ2Degree == -1 )
+            {
+                globalZ2Degree = compDegree;
+            }
+        }
+        
+        // Add the compilation products to the return list
+        // Recall that tuples in this list have the format
+        // (intvec state, int rank, int degree, intvec grading)
+        list compiledEntry = v, rank, compDegree, grading;
+        returnListWebs = returnListWebs + list(compiledEntry);
+        kill compiledEntry, v, Z, R, lastEntry, rank, compDegree, grading;
+        kill dimComp(0), dimComp(1);
+    }
+    
+    dbprint(printlevel, "[linkCompile] time to compile webs " + string(timer-timeLink) + "ms."); 
+    
+    // STEP 2. Compile the maps
+    dbprint(printlevel, "");
+    dbprint(printlevel, "[linkCompile] Now compiling maps.");
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+    
+        // Look at each position and the possible maps given by chis
+        int j;
+        for( j = 1; j <= size(v); j++ )
+        {
+            // If either the current position in v is a 0 and the crossing is positive, or
+            // if the current position is 1 and the crossing is negative, then there is a map
+            // originating in this state diagram with a chi in this position
+            intvec w = v;
+            int somethingToDo = 0;
+            int chitype;
+        
+            if(v[j] == 0 && vertexParity[j] == 1) // chitype is 0
+            {
+                w[j] = w[j]+1;
+                somethingToDo = 1;
+                chitype = 0;
+            }
+        
+            if(v[j] == 1 && vertexParity[j] == -1) // chitype is 1
+            {
+                w[j] = w[j]-1;
+                somethingToDo = 1;
+                chitype = 1;
+            }
+        
+            if( somethingToDo )
+            {
+                dbprint(printlevel, "[linkCompile]  Looking at the map to [" + string(w) + "].");
+                
+                // Load up the appropriate webs
+                string cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";"; execute(cmd);
+                cmd = "list leftWeb = web" + intvecToString(v) + ";"; execute(cmd);
+                cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";"; execute(cmd);
+                cmd = "list rightWeb = web" + intvecToString(w) + ";"; execute(cmd);
+                
+                // Lookup the degree in which these compilation products are nonzero
+                // At position i in returnListWebs is various information about the
+                // compilation of the "left" web.
+                list bleft = returnListWebs[i];
+                
+                if( bleft[1] != v )
+                {
+                    print("[linkCompile] Unexpected data format, exiting.");
+                    return();
+                }
+                
+                int concentrateDegree = bleft[3];
+                
+                // Check whether the target web w compiles to zero (in the sense that
+                // its differential is zero, not necessarily its rank):
+                for( int aa=1; aa<=size(returnListWebs); aa++ )
+                {
+                    if( returnListWebs[aa][1] == w )
+                    {
+                        int wPosition = aa;
+                        break;
+                    }
+                }
+                
+                list bright = returnListWebs[wPosition];
+                int concentrateDegreeW = bright[3];
+                
+                if( concentrateDegree == -1 || concentrateDegreeW == -1 )
+                {
+                    // The source web compiles to zero (in the sense that its differential 
+                    // is zero, not necessarily its rank), so we can just put some
+                    // zero matrix onto the return list and skip
+                    
+                    // NOTE to Nils: remove this if you feel confident that we
+                    // can handle zeros, I'm not going to vouch for it...
+                    print("[linkCompile] One of the compilations was zero, not sure we handle this well, exiting.");
+                    return();
+                    
+                    // In listWebsByDegree (and then in KRcomplex) we discard
+                    // webs compiling to zero, so we should also not include zero maps
+                    // from or to zero modules.
+                    // NOTE that in the three-twist example this case does NOT come up.
+                    //
+                    // list compiledEntry = v, w, v[j], j, zeromat(0,1,1);
+                    // returnListMaps = returnListMaps + list(compiledEntry);
+                    kill cmd, compiledEntry, leftCompiledWeb, rightCompiledWeb, leftWeb, rightWeb;
+
+                    j++;
+                    continue;
+                }
+                
+                // Otherwise we have a well defined degree, and a well defined vector space
+                // of the following rank in the source web
+                int rankSource = bleft[2];
+                
+                // Now check to see if we have already compiled this map
+                string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
+
+                string cmd = "int definedCheck = defined(" + listName + ");";
+                execute(cmd);
+                                
+                if( definedCheck )
+                {
+                    // We have already compiled this morphism
+                    dbprint(printlevel, "[linkCompile]  Already compiled, skipping.");
+                    
+                    string cmd = "list D = " + listName + ";";
+                    execute(cmd);
+                }
+                else
+                {
+                    // We have not already compiled this morphism
+                    intvec e = edgeList[j];
+                    matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
+                    kill e;
+                
+                    list D = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+                    string cmd = "list " + listName + " = D;"; execute(cmd);
+                    kill M;
+                    
+                    // Check that D is degree +1
+                    if( useSanityChecks )
+                    {
+                        matrix Dc = D[concentrateDegree+1];
+                        int i2, j2;
+                        for(i2 = 1; i2 <= nrows(Dc); i2++) // row
+                        {
+                            for(j2 = 1; j2 <= ncols(Dc); j2++) // column
+                            {
+                                if( Dc[i2,j2] != 0 )
+                                {
+                                    if( 1 - bright[4][i2] + bleft[4][j2] != 2 * deg(Dc[i2,j2]) )
+                                    {
+                                        print("[linkCompile] !!!WARNING!!! Map is not degree +1.");
+                                        print("[linkCompile] In position (" + string(i2) + "," + string(j2) + ") there is " + string(Dc[i2,j2]) + "." +
+                                                "The source has degree " + string(bleft[4][j2]) + " and the target " + string(bright[4][i2]) + ".");
+                                        //return(); debug
+                                    }
+                                }
+                            }
+                        }
+                        kill Dc;
+                    }
+                    
+                    // Save the results to the savefile
+                    dbprint(printlevel, "[linkCompile] Saving to disk.");
+                    execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
+                }
+                
+                // We should end up with a zero potential, so the output of webCompileMorphism
+                // should be a pair
+                if( typeof(D) != "list" || size(D) != 2 )
+                {
+                    print("[linkCompile] webCompileMorphism did not return a pair, exiting.");
+                    return();
+                }
+                
+                if( ncols(D[concentrateDegree+1]) != rankSource )
+                {
+                    print("[linkCompile] Size is mismatch between map (" + string(nrows(D[concentrateDegree+1])) + "x" + string(ncols(D[concentrateDegree+1])) + ") and its source vector space (dim " + string(rankSource) + "), exiting.");
+                    return();
+                }
+                
+                // Add the computed list to the end of compiledEntry
+                list compiledEntry = v, w, v[j], j, D[concentrateDegree+1];                
+                
+                returnListMaps = returnListMaps + list(compiledEntry);
+                kill listName, cmd, D, compiledEntry, leftWeb, rightWeb, leftCompiledWeb, rightCompiledWeb;
+            }
+            
+            kill w, somethingToDo;
+        }
+        
+        kill v;
+    }
+    
+    setring RRR;
+   
+    dbprint(printlevel, "[linkCompile] total elapsed time " + string(timer-timeLink) + "ms."); 
+    return(list(returnListWebs,returnListMaps));
 }
+
+
 
 ////////////////////////////////////////////////////////////////////
 // mfReduceSparse
