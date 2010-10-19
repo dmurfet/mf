@@ -981,6 +981,8 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
 ////////////////////////////////////////////////////////////////////
 // linkCompile
 //
+// Calculates the bigraded unreduced sl(N) Khovanov-Rozansky link homology.
+//
 // Takes as arguments a link, defined as a pair in the sense explained above, and the name
 // of a file to use for storing intermediate results. The return is a pair (X,Y) of lists.
 // Suppose we have m crossings in our link. A "state diagram" is an assignment of integers 0,1
@@ -1013,8 +1015,8 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
 // NOTE: The maps returned by webCompileMorphism are degree one, and we do not mess with this;
 // we leave all the grading vectors unchanged.
 //
-// NOTE: If we are passed in addition (as a fifth parameter) a variable, we compute the
-// reduced KR sl(N) homology using this "mark".
+// REDUCED HOMOLOGY: If we are passed in addition (as a fifth parameter) a variable, we compute
+// the bigraded reduced sl(N) link homology using this variable as our "mark".
 
 proc linkCompile(list linkData, string fileName, int N, list #)
 {
@@ -1125,7 +1127,7 @@ proc linkCompile(list linkData, string fileName, int N, list #)
             }
             
             execute("list " + listName2 + " = web;");
-        
+            
             // Call webCompile
             execute("list " + listName + " = webCompile(web, compStrat);");
             
@@ -1145,7 +1147,7 @@ proc linkCompile(list linkData, string fileName, int N, list #)
         // and the last entry of Q should be ("nonsquare",r1,r2,R) with the last entry of R
         // a tuple (f0,f1,g0,g1,u,N) with f0,g0 splitting the even part of the very last
         // idempotent and similarly for f1,g1.
-        if( typeof(Z[1]) != "string" || size(Z) != 4 || typeof(Z[4]) != "list" || typeof(Z[4][size(Z[4])]) != "list" )
+        if( typeof(Z[1]) != "string" || size(Z) != 4 || typeof(Z[4]) != "list" )
         {
             print("[linkCompile] Return of webCompile is not of the expected format, exiting.");
             return();
