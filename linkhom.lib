@@ -754,8 +754,8 @@ proc gradedEuler(list cohom, number v)
 // complex, L is the list of matrices giving the differentials, and G is
 // the list of intvecs giving the weights on each of the vector spaces.
 //
-// This routine uses the "new" output style of linkCompile and the
-// new listWebsByDegree.
+// NOTE: The complex we produce here is not a complex is in the "new"
+// sense introduced just before cpxTensor.
 
 proc KRcomplex(list linkData, list linkComp, int N)
 {
@@ -841,7 +841,6 @@ proc KRcomplex(list linkData, list linkComp, int N)
                     A = matrix(0,target[2],source[2]);
                 }
 
-                //print(A);
                 webmaps = webmaps + list(A);
             }
         }
@@ -1014,26 +1013,14 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
 //
 // NOTE: The maps returned by webCompileMorphism are degree one, and we do not mess with this;
 // we leave all the grading vectors unchanged.
-//
-// REDUCED HOMOLOGY: If we are passed in addition (as a fifth parameter) a variable, we compute
-// the bigraded reduced sl(N) link homology using this variable as our "mark".
 
-proc linkCompile(list linkData, string fileName, int N, list #)
+proc linkCompile(list linkData, string fileName, int N)
 {
     // We do not change rings: we assume that the ambient ring has the same number of variables
     // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
     // if there is a save file, then loading this save file will set the ring.
     int useSanityChecks = blowFlags("sanity_checks"); 
     int useMPfile = blowFlags("use_mpfile");
-    
-    int useReduced;
-    poly reductionMark = 1;
-    if( size(#) > 0 )
-    {
-        useReduced = 1;
-        reductionMark = #[1];
-        print("[linkCompile] Computing reduced homology with mark " + string(reductionMark));
-    }
     
     system("--ticks-per-sec",1000);
     int timeLink = timer;
@@ -1051,7 +1038,6 @@ proc linkCompile(list linkData, string fileName, int N, list #)
         {
             def nR = loadSaveFile(fileName);
             setring nR;
-            if( useReduced ){ poly reductionMark = imap(RRR,reductionMark); }
         }
         else
         {
@@ -1074,12 +1060,7 @@ proc linkCompile(list linkData, string fileName, int N, list #)
     }
     for(j=1;j<=nvars(basering);j++)
     {
-        // If we are using reduced homology, do not add reductionMark
-        // as an internal variable
-        if( !useReduced || reductionMark != var(j) )
-        {
-            compStratVar = compStratVar + list(var(j));
-        }
+        compStratVar = compStratVar + list(var(j));
     }
     list compStrat = compStratVert,compStratVar;
         
@@ -1117,14 +1098,7 @@ proc linkCompile(list linkData, string fileName, int N, list #)
             dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
             // Build a web suitable for calling webCompile
-            if( !useReduced )
-            {
-                list web = webFromLink(linkData, v, N);
-            }
-            else
-            {
-                list web = webFromLink(linkData, v, N, reductionMark);
-            }
+            list web = webFromLink(linkData, v, N);
             
             execute("list " + listName2 + " = web;");
             
@@ -1364,7 +1338,17 @@ proc linkCompile(list linkData, string fileName, int N, list #)
                     matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
                     kill e;
                 
-                    list D = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+                    def Dp = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+                    
+                    // We should end up with a zero potential, so the output of webCompileMorphism should be a pair
+                    if( typeof(Dp) != "list" )
+                    {
+                        print("[linkCompile] webCompileMorphism did not return a pair, exiting.");
+                        return();
+                    }
+                    list D = Dp;
+                    kill Dp;
+                    
                     string cmd = "list " + listName + " = D;"; execute(cmd);
                     kill M;
                     
@@ -1397,14 +1381,6 @@ proc linkCompile(list linkData, string fileName, int N, list #)
                     execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
                 }
                 
-                // We should end up with a zero potential, so the output of webCompileMorphism
-                // should be a pair
-                if( typeof(D) != "list" || size(D) != 2 )
-                {
-                    print("[linkCompile] webCompileMorphism did not return a pair, exiting.");
-                    return();
-                }
-                
                 if( ncols(D[concentrateDegree+1]) != rankSource )
                 {
                     print("[linkCompile] Size is mismatch between map (" + string(nrows(D[concentrateDegree+1])) + "x" + string(ncols(D[concentrateDegree+1])) + ") and its source vector space (dim " + string(rankSource) + "), exiting.");
@@ -1427,6 +1403,340 @@ proc linkCompile(list linkData, string fileName, int N, list #)
     setring RRR;
    
     dbprint(printlevel, "[linkCompile] total elapsed time " + string(timer-timeLink) + "ms."); 
+    return(list(returnListWebs,returnListMaps));
+}
+
+////////////////////////////////////////////////////////////////////
+// linkCompileReduced
+//
+// Almost identical to linkCompile, except that we take an additional
+// parameter (a ring variable reductionMark) and use it to compute the reduced
+// bigraded sl(N) Khovanov-Rozansky homology. Essentially we take the webs from
+// the usual calculation, drop the edge with reductionMark on it, and substitute
+// reductionMark = 0 in all MFs.
+//
+// The return is a pair (X,Y) of lists:
+//
+//   1. X is a list of tuples (intvec state, int rank, -1, intvec grading) where state ranges
+//   over all state diagrams, and grading is the grading vector, rank = size(grading).
+//
+//   2. Y is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
+//   where state1, state2 range over all state diagrams, chitype is 0 or 1 resp. if the map
+//   is a \chi0 or \chi1 map, and chipos gives the position in the state diagram where the
+//   map is inserted. Finally, F is the matrix of the map, the result of calling
+//   webCompileMorphism.
+//
+// NOTE: The final parameter tells us which part of the Z/2-grading to use (0 for even, 1 for
+// odd, and -1 for both). We do not get the "right answers" for -1, and probably not unless
+// you choose the same degree in which the unreduced homology lives, but this means that the
+// correct value needs to be passed in by hand (for now).
+
+proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMark, int useDegree)
+{
+    // We do not change rings: we assume that the ambient ring has the same number of variables
+    // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
+    // if there is a save file, then loading this save file will set the ring.
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    int useMPfile = blowFlags("use_mpfile");
+    
+    system("--ticks-per-sec",1000);
+    int timeLink = timer;
+ 
+    def RRR = basering;
+    
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];
+    int webSize = size(vertexParity);
+    
+    // Read in the save file, if it exists
+    if( status(fileName,"exists") == "yes" )
+    {
+        if( useMPfile )
+        {
+            def nR = loadSaveFile(fileName);
+            setring nR;
+            poly reductionMark = imap(RRR,reductionMark);
+        }
+        else
+        {
+            execute(loadSaveFile(fileName));
+        }
+    }
+        
+    list returnListWebs;
+    list returnListMaps;
+    
+    // The compilation strategy is the same for all webs: we simply compile from the 1st
+    // vertex to the last one, and enumerate the variables in the given order (note that
+    // all the ring variables are taken as internal variables)
+    list compStratVert;
+    list compStratVar;
+    int j;
+    for(j=1;j<=size(edgeList); j++)
+    {
+        compStratVert[j] = j;
+    }
+    for(j=1;j<=nvars(basering);j++)
+    {
+        // Do not add reductionMark as an internal variable
+        if( reductionMark != var(j) )
+        {
+            compStratVar = compStratVar + list(var(j));
+        }
+    }
+    list compStrat = compStratVert,compStratVar;
+        
+    // STEP 1. Go through each state of the link and compile the corresponding web. Then
+    // add the data to returnListWebs. 
+    // The compilation of a state 1101 is stored in web1101
+    int i;
+    list stateDiagrams = powervec(webSize);
+    int numStateDiagrams = size(stateDiagrams);
+    
+    int globalZ2Degree = -1;
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        
+        dbprint(printlevel, "");
+        dbprint(printlevel, "[linkCompileReduced] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+        
+        string listName = "compiled" + intvecToString(v); // compilation product
+        string listName2 = "web" + intvecToString(v); // web
+        
+        string cmd = "int definedCheck = defined(" + listName + ") && defined(" + listName2 + ");";
+        execute(cmd);
+        
+        if( definedCheck )
+        {
+            // We have already compiled this web /////////////
+            dbprint(printlevel, "[linkCompileReduced] Already compiled, skipping.");
+        }
+        else
+        {
+            // We have not already compiled this web ///////////
+            dbprint(printlevel, "[linkCompileReduced] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
+        
+            // Build a web suitable for calling webCompile
+            list web = webFromLink(linkData, v, N, reductionMark);
+            
+            execute("list " + listName2 + " = web;");
+            
+            // Call webCompile
+            execute("list " + listName + " = webCompile(web, compStrat);");
+            
+            // Save the results to the savefile
+            dbprint(printlevel, "[linkCompileReduced] Saving to disk.");
+
+            execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
+            execute("writeObjectToFile(fileName,\"" + listName2 + "\"," + listName2 + ");");
+            
+            kill web;
+        }
+        
+        string cmd = "list Z = " + listName + ";";
+        execute(cmd);
+        
+        // In contrast to the nonreduced homology, the return value of webCompile may live
+        // in more than one Z2 degree. In fact we assume that it does
+        
+        if( typeof(Z[1]) != "matrix" || typeof(Z[2]) != "intvec" || size(Z[2]) != ncols(Z[1]) )
+        {
+            print("[linkCompileReduced] Return of webCompile is not of the expected format, exiting.");
+            return();
+        }
+        
+        // We also assume that Z[1] is a zero matrix
+        if( Z[1] != matrix(0,nrows(Z[1]),ncols(Z[1])) )
+        {
+            print("[linkCompileReduced] Return of webCompile not a zero matrix, exiting.");
+            return();
+        }
+        
+        // Add the compilation products to the return list
+        // Recall that tuples in this list have the format
+        // (intvec state, int rank, int concdegree, intvec grading)
+        // We match the format of linkCompile just for convenience, although of
+        // course the concentration degree isn't relevant here
+        
+        if( useDegree == -1 )
+        {
+            list compiledEntry = v, size(Z[2]), -1, Z[2];
+        }
+        
+        if( useDegree == 1 )
+        {
+            intvec b = Z[2];
+            intvec Zodd = b[(size(Z[2])/2+1)..size(Z[2])];
+            list compiledEntry = v, size(Zodd), -1, Zodd;
+            kill b, Zodd;
+        }
+        
+        if( useDegree == 0 )
+        {
+            intvec b = Z[2];
+            intvec Zeven = b[1..(size(Z[2])/2)];
+            list compiledEntry = v, size(Zeven), -1, Zeven;
+            kill b, Zeven;
+        }
+        
+        returnListWebs = returnListWebs + list(compiledEntry);
+        kill compiledEntry, v, Z;
+    }
+    
+    dbprint(printlevel, "[linkCompileReduced] Time taken to compile webs: " + string(timer-timeLink) + "ms."); 
+    
+    // STEP 2. Compile the maps
+    dbprint(printlevel, "");
+    dbprint(printlevel, "[linkCompileReduced] Now compiling maps.");
+    
+    for( i = 1; i <= numStateDiagrams; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        dbprint(printlevel, "[linkCompileReduced] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+    
+        // Look at each position and the possible maps given by chis
+        int j;
+        for( j = 1; j <= size(v); j++ )
+        {
+            // If either the current position in v is a 0 and the crossing is positive, or
+            // if the current position is 1 and the crossing is negative, then there is a map
+            // originating in this state diagram with a chi in this position
+            intvec w = v;
+            int somethingToDo = 0;
+            int chitype;
+        
+            if(v[j] == 0 && vertexParity[j] == 1) // chitype is 0
+            {
+                w[j] = w[j]+1;
+                somethingToDo = 1;
+                chitype = 0;
+            }
+        
+            if(v[j] == 1 && vertexParity[j] == -1) // chitype is 1
+            {
+                w[j] = w[j]-1;
+                somethingToDo = 1;
+                chitype = 1;
+            }
+        
+            if( somethingToDo )
+            {
+                dbprint(printlevel, "[linkCompileReduced]  Looking at the map to [" + string(w) + "].");
+                
+                // Load up the appropriate webs
+                string cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";"; execute(cmd);
+                cmd = "list leftWeb = web" + intvecToString(v) + ";"; execute(cmd);
+                cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";"; execute(cmd);
+                cmd = "list rightWeb = web" + intvecToString(w) + ";"; execute(cmd);
+                
+                // Lookup the degree in which these compilation products are nonzero
+                // At position i in returnListWebs is various information about the
+                // compilation of the "left" web.
+                //list bleft = returnListWebs[i];
+                
+                //if( bleft[1] != v )
+                //{
+                //    print("[linkCompile] Unexpected data format, exiting.");
+                //    return();
+                //}
+                
+                // Locate the target web
+                //for( int aa=1; aa<=size(returnListWebs); aa++ )
+                //{
+                //    if( returnListWebs[aa][1] == w )
+                //    {
+                //        int wPosition = aa;
+                //        break;
+                //    }
+                //}
+                
+                //list bright = returnListWebs[wPosition];
+                
+                // Now check to see if we have already compiled this map
+                string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
+
+                string cmd = "int definedCheck = defined(" + listName + ");";
+                execute(cmd);
+                                
+                if( definedCheck )
+                {
+                    // We have already compiled this morphism
+                    dbprint(printlevel, "[linkCompileReduced]  Already compiled, skipping.");
+                    
+                    string cmd = "list D = " + listName + ";";
+                    execute(cmd);
+                }
+                else
+                {
+                    // We have not already compiled this morphism
+                    intvec e = edgeList[j];
+                    matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
+                    M = subst(M,reductionMark,0);
+                    kill e;
+
+                    def Dp = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
+                    
+                    // The output of webCompileMorphism should be a matrix
+                    if( typeof(Dp) != "matrix" )
+                    {
+                        print("[linkCompileReduced] webCompileMorphism did not return a matrix.");
+                        return();
+                    }
+                    matrix D = Dp;
+                    kill Dp;
+                    
+                    // Other sanity checks
+                    if( ncols(D) != ncols(leftCompiledWeb[1]) || nrows(D) != ncols(rightCompiledWeb[1]) )
+                    {
+                        print("[linkCompileReduced] Size is mismatch, exiting.");
+                        return();
+                    }
+                    
+                    string cmd = "list " + listName + " = D;"; execute(cmd);
+                    kill M;
+                    
+                    // TODO: Implement check of D's grade
+                    
+                    // Save the results to the savefile
+                    dbprint(printlevel, "[linkCompileReduced] Saving to disk.");
+                    execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
+                }
+                
+                // Add the computed list to the end of compiledEntry
+                //list compiledEntry = v, w, v[j], j, D;
+                
+                if( useDegree == -1 )
+                {
+                    list compiledEntry = v, w, v[j], j, D;
+                }
+                
+                if( useDegree == 1 )
+                {
+                    list compiledEntry = v, w, v[j], j, extractblockmat(D)[4];
+                }
+                
+                if( useDegree == 0 )
+                {
+                    list compiledEntry = v, w, v[j], j, extractblockmat(D)[1];
+                }
+                
+                returnListMaps = returnListMaps + list(compiledEntry);
+                kill listName, cmd, D, compiledEntry, leftWeb, rightWeb, leftCompiledWeb, rightCompiledWeb;
+            }
+            
+            kill w, somethingToDo;
+        }
+        
+        kill v;
+    }
+    
+    setring RRR;
+   
+    dbprint(printlevel, "[linkCompileReduced] total elapsed time " + string(timer-timeLink) + "ms."); 
     return(list(returnListWebs,returnListMaps));
 }
 

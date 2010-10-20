@@ -47,8 +47,51 @@ poincare;
 // (state 8 took 3325 seconds).
 
 
+// Trefoil - reduced ///////////////////////////////////////////
 
-// Reduced KR homology computations
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..6)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list trefoilLink = linkLibrary("trefoil");
+list h = linkCompileReduced(trefoilLink, "./data/trefoil-N" + string(N) + "-reduced.mp", N, x(1), 1);
+list cp = KRcomplex(trefoilLink, h, N);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+// Note that the web compilations actually produce Z/2-graded Q spaces living in both Z2
+// degrees, but apparently we should only use on degree to get the right euler char...
+
+// If useDegree = 1 in linkCompileReduced, the reduced N = 2 euler characteristic is
+// q2 + q6 - q8, which is what it should be, since
+(q2 + q6 - q8)*(q+1/q) == -q9 + q5 + q3 + q;
+
+// If useDegree = 0 then you get (-q7+q5+q), i.e. 1/q * the correct answer.
+// If useDegree = -1 (i.e. use all of the Z2-graded module) you get (-q8-q7+q6+q5+q2+q)
+// i.e. the sum of the two
+
+
+
+
+
+
+
+// Now redundant ranting on reduced KR homology computations
 
 option(noredefine);option(noloadLib);option(redSB);//option(prot);
 LIB "blow.lib";
