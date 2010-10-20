@@ -57,33 +57,7 @@ int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
 list hopfLink = linkLibrary("hopf");
-list h = linkCompileReduced(hopfLink, "hopf-N" + string(N) + "-zoom-reduced.mp", N, x(1), 1);
-// Towards the end of state 1/4 this gives:
-[mfPushforward] elapsed time 240ms.
-[mfPushforwardInductive] total elapsed time 1880ms.
-   ? identifier web not found in nR(1)
-   ? error occurred in mfweb.lib::webCompile line 1261: `    list web = imap(nR(count),web);`
-   ? leaving mfweb.lib::webCompile
-   skipping text from `;` error at token `)`
-   ? leaving linkhom.lib::linkCompileReduced
-// However, if I run through the code of linkCompileReduced manually, this error does not occur, 
-// and webCompile goes through. There is another problem, though: we get the error message
-// "[linkCompileReduced] Return of webCompile not a zero matrix, exiting." since the matrix Z[1]
-// defined in line 1539 of linkhom.lib, which is supposed to be the compilation of the web, is
-// a MF of x(2)^3-x(3)^3-x(4)^3. This will have to be looked into more closely. 
-
-
-
-
-
-
-
-
-
-
-
-
-
+list h = linkCompileReduced(hopfLink, "hopf-N" + string(N) + "-zoom-reduced.mp", N, x(1), 0);
 list cp = KRcomplex(hopfLink, h, N);
 
 ring ss=(0,t,q),(x),dp;
@@ -97,10 +71,10 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// N = 2 and useDegree = 0:
+// N = 2 and useDegree = 0: (q4+1)
 euler * ( (q^N - 1/q^N)/(q - 1/q) );
-// = 
+// off by a factor of q
 
-// N = 2 and useDegree = 1:
+// N = 2 and useDegree = 1: (q5+q)
 euler * ( (q^N - 1/q^N)/(q - 1/q) );
-// = 
+// = (q6+q4+q2+1), the Jones poly
