@@ -56,11 +56,11 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..6)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 5; // The N in sl(N) link homology
 printlevel = 1;
 
 list trefoilLink = linkLibrary("trefoil");
-list h = linkCompileReduced(trefoilLink, "./data/trefoil-N" + string(N) + "-reduced.mp", N, x(1), 1);
+list h = linkCompileReduced(trefoilLink, "./data/trefoil-N" + string(N) + "-zoom-reduced.mp", N, x(1), 1);
 list cp = KRcomplex(trefoilLink, h, N);
 
 ring ss=(0,t,q),(x),dp;
@@ -74,6 +74,8 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
+// N = 2:
+
 // Note that the web compilations actually produce Z/2-graded Q spaces living in both Z2
 // degrees, but apparently we should only use on degree to get the right euler char...
 
@@ -85,10 +87,25 @@ poincare;
 // If useDegree = -1 (i.e. use all of the Z2-graded module) you get (-q8-q7+q6+q5+q2+q)
 // i.e. the sum of the two
 
+// N = 3 and useDegree = 0:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (-q12-q10+q6+2q4+q2+1)
 
+// N = 3 and useDegree = 1:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (-q14-q12+q8+2q6+q4+q2)                        // As it should be.
 
+// N = 4 and useDegree = 0:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (-q16-q14-q12+q8+2q6+2q4+q2+1)
 
+// N = 4 and useDegree = 1:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// (-q19-q17-q15+q11+2q9+2q7+q5+q3)                 // As it should be.
 
+// N = 5 and useDegree = 1:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// (-q24-q22-q20-q18+q14+2q12+2q10+2q8+q6+q4)       // As it should be.
 
 
 // Now redundant ranting on reduced KR homology computations

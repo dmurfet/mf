@@ -15,10 +15,10 @@ printlevel = 1;
 list figureEightLink = linkLibrary("figure-eight");
 
 // RUNNING on landi since 2010-10-01--12:22 (still computing state 8/16 on 
-// 2010-10-07--14:39 while using 91.0% memory):
+// 2010-10-20--10:22 while using 96.2% memory and 95% CPU):
 list h = linkCompile(figureEightLink, "./data/figure-eight-N" + string(N) + "-zoom.mp", N);
 
-list cp = KRcomplex(figureEightLink, h);
+list cp = KRcomplex(figureEightLink, h, N);
 
 ring ss=(0,t,q),(x),dp;
 list cp = imap(rr,cp);
@@ -29,8 +29,6 @@ euler;
 // The KR homology is described by its Poincare polynomial
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
-
-// Jones polynomial: (q8+1)/(q5)
 
 // KR invariants /////////////////////
 
@@ -44,3 +42,40 @@ poincare;
 // N = 4 
 //
 // GDR prediction: 1/q^3 + 1/q + q + q^3 + 1/(q^11 t^2) + 1/(q^9 t^2) + 1/(q^7 t^2) + 1/(q^3 t) + 1/(q t) + q/t + t/q + q t + q^3 t + q^7 t^2 + q^9 t^2 + q^11 t^2
+
+
+// Figure-eight knot - reduced ///////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..8)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list figureEightLink = linkLibrary("figure-eight");
+list h = linkCompileReduced(figureEightLink, "zzsdz-N" + string(N) + "-zoom-reduced.mp", N, x(1), 0);
+list cp = KRcomplex(figureEightLink, h, N);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+
+// N = 2 and useDegree = 0:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (q10+1)/(q5)                         // As it should be.
+
+// N = 2 and useDegree = 1:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (q10+1)/(q6)

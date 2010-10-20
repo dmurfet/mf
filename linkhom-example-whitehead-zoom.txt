@@ -5,11 +5,13 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 3; // The N in sl(N) link homology
+int N = 2; // The N in sl(N) link homology
 printlevel = 1;
 
 list whitehead = linkLibrary("whitehead");
 
+// RUNNING on ligeti since 2010-10-11--09:25 (still computing state 8/32 on 
+// 2010-10-20--10:23 while using 78.6% memory and 2% CPU):
 list h = linkCompile(whitehead, "whitehead-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(whitehead, h, N);
@@ -30,5 +32,38 @@ poincare;
 // N = 3 (took 10.5 hours):
 // (q18+q16+q14t2+3q12t2+q12t+q10t3+3q10t2+q10t+q8t4+q8t3+2q8t2+q6t4+q4t4+q2t5+q2t4+t5)/(q12t2)
 
+// Whitehead link - reduced ///////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..10)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list whitehead = linkLibrary("whitehead");
+list h = linkCompileReduced(whitehead, "whitehead-N" + string(N) + "-zoom-reduced.mp", N, x(1), 1);
+list cp = KRcomplex(whitehead, h, N);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+euler;
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
+
+// N = 2 and useDegree = 0:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (q10-q8+2q6-q4+2q2-1)/(q7)
 // N = 2 reduced euler char is (q10-q8+2q6-q4+2q2-1)/(q7). Times q + 1/q gives the Jones poly,
-// using useDegree = 0
+
+// N = 2 and useDegree = 1:
+euler * ( (q^N - 1/q^N)/(q - 1/q) );
+// = (q12+q8+q6+q4+q2-1)/(q9)              // Gives correct result up to a factor of q. 
