@@ -15,9 +15,8 @@ printlevel = 1;
 list cinquefoil = linkLibrary("cinquefoil");
 
 list h = linkCompile(cinquefoil, "cinquefoil-knot-N" + string(N) + "-zoom.mp", N);
-N;
 
-list cp = KRcomplex(cinquefoil, h);
+list cp = KRcomplex(cinquefoil, h, N);
 
 ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
@@ -29,13 +28,17 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// N = 2 invariants (probably wrong due to N++ bug):
+// N = 2
 //
 // P_2: (q12+q10+q8-1)/(q20)
-// KR polynomial: (q12+q10+q8t2+q4t4+q4t3+t5)/(q20)
+// KR polynomial: (q12+q10+q8t2+q4t4+q4t3+t5)/(q15)
 
-// N = 3 invariants AFTER resetting N=3 (This only took 2347060ms on lully):
+// N = 3 invariants (This only took 2347060ms on lully):
 // 
 // KR polynomial: (q16+q14+q12t2+q12+q10t2+q8t4+q6t4+q6t3+q4t3+q2t5+t5)/(q22)  
+// Agrees with GSV after replacing q by 1/q. 
+
+// N = 4  5236910ms
 //
-// This agrees with GSV after replacing q by 1/q. 
+// (q20+q18+q16t2+q16+q14t2+q14+q12t4+q12t2+q10t4+q8t4+q8t3+q6t3+q4t5+q4t3+q2t5+t5)/(q29)
+// Took 5237 seconds with new splitting code.
