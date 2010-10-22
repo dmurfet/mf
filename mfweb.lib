@@ -1258,8 +1258,12 @@ proc webCompile(list web, list compStrat)
     
     // So the first entry in the mfs list of web is our final answer
     setring RRR;
-    list web = imap(nR(count),web);
-    kill nR(count);
+    
+    // The first time through nR(1) = RRR so there is no need for imap
+    if( count > 1 )
+    {
+        list web = imap(nR(count),web);
+    }
     
     matrix A = webMFatVertex(web,1);
     list retlist = A;

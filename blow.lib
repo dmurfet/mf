@@ -1404,6 +1404,153 @@ proc computeGradingFromInjection(matrix F, intvec g)
     return(r);
 }
 
+////////////////////////////////////////////////////////////////////
+// mathomoglist
+//
+// Given a matrix, returns a list with the homogeneous components,
+// the first entry in the list being the degree zero elements.
+
+proc mathomoglist(matrix A)
+{
+    int i = 0;
+    matrix Apart[nrows(A)][ncols(A)];
+    list L = Apart;
+    while(A != Apart)
+    {
+        matrix B[nrows(A)][ncols(A)] = jet(A,i) - jet(A,i-1); // components of degree i
+        L[i+1] = B;
+        Apart = Apart + B;
+        kill B;
+        i++;
+    }
+    
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// matrixSplitIdempotent
+//
+// Given an idempotent matrix of polynomials, provides a splitting, i.e.
+// we return a pair (F,G) such that F * G = 1 and G * F = E.
+
+proc matrixSplitIdempotent(matrix E)
+{
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    
+    if( useSanityChecks )
+    {
+        if( E == matrix(0,nrows(E),ncols(E)) )
+        {
+            print("[matrixSplitIdempotent] Passed a zero matrix, exiting.");
+            return();
+        }
+        
+        if( E * E != E )
+        {
+            print("[matrixSplitIdempotent] Passed a non-idempotent matrix, exiting.");
+            return();
+        }
+    }
+    
+    list Elist = mathomoglist(E);
+    //print(Elist); //debug
+    //print("----");
+    
+    // First we split the scalar matrix Elist[1] in the usual way (this is the degree zero part of E)
+    module M = Elist[1];
+    
+    if( useSanityChecks )
+    {
+        // minbase can only work on a homogeneous module
+        // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
+        if( !homog(M) )
+        {
+            print("[matrixSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
+            return();
+        }
+    }
+                
+    // Compute a minimal generating set for the image. Note that minbase
+    // is currently bugged (Singular 3-1-1) and may not create a linearly
+    // independent generating set on the run through.
+    module im = minbase(M);
+    kill M;
+    
+    // If the image is zero, our splitting is just a pair of zero matrices.
+    // Otherwise, we use lift to compute the map factorising e(i) through its image.
+    if( im[1] == [0] )
+    {
+        print("[matrixSplitIdempotent] Failed to split idempotent, unexpected zeros, exiting.");
+        return();
+    }
+    
+    module n = lift(im,Elist[1]);
+    matrix g(0) = matrix(im,ncols(Elist[1]),size(im));
+    matrix f(0) = matrix(n,size(im),ncols(Elist[1]));
+    
+    if( f(0) * g(0) != unitmat(nrows(f(0))) || g(0) * f(0) != Elist[1] )
+    {
+        print("[matrixSplitIdempotent] minbase and lift splitting failed, exiting.");
+        return();
+    }
+    
+    // The final F and G will have the same dimensions as f0 and g0
+    matrix F[nrows(f(0))][ncols(f(0))] = f(0);
+    matrix G[nrows(g(0))][ncols(f(0))] = g(0);
+    list prefixList = unitmat(nrows(g(0)));
+    
+    // The prefixes are for example (writing e(i) = Elist[i+1] for the degree i part of e)
+    // prefixList[1] = 1
+    // prefixList[2] = e(1)^2 + e(2)
+    // prefixList[3] = e(3) + e(2)e(1) + e(1)e(2) + e(1)^3.
+    
+    //print(f(0)); //debug
+    //print("---");
+    //print(g(0));
+    //print("---");
+    
+    // We keep modifying F and G until they work! (or we hit a cutoff)
+    int i = 1;
+    while( (F * G != unitmat(nrows(F)) || G * F != E) && i < 1000 )
+    {
+        //print("In loop step " + string(i)); //debug
+        if( size(Elist) <= i ){ Elist[i+1] = matrix(0,nrows(Elist[1]),ncols(Elist[1])); }
+        
+        matrix f(i) = f(0) * Elist[i+1];
+        matrix prefix[nrows(Elist[1])][ncols(Elist[1])];
+        
+        int j;
+        for(j=1;j<=i;j++)
+        {
+            prefix = prefix + Elist[i-j+2] * prefixList[j];
+        } 
+        prefixList = prefixList + list(prefix);
+        
+        matrix g(i) = prefix * g(0);
+        kill prefix, j;
+        
+        //print(f(i)); //debug
+        //print("---");
+        //print(g(i));
+        //print("---");
+        
+        // Update F and G in preparation for the while check
+        F = F + f(i);
+        G = G + g(i);
+        kill f(i), g(i);
+        i++;
+    }
+    
+    if( F * G != unitmat(nrows(F)) || G * F != E )
+    {
+        print("[matrixSplitIdempotent] Failed to split the idempotent in the end, exiting.");
+        return();
+    }
+    
+    print("[matrixSplitIdempotent] Totally awesome success in " + string(i-1) + " steps.");
+    
+    return(list(F,G));
+}
 
 ////////////////////////////////////////////////////////////////////
 // mfSplitIdempotent
@@ -1451,6 +1598,11 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         //}
     }
     
+    // debug
+    //writeObjectToFile("./data/idem-test.mp","A",A);
+    //writeObjectToFile("./data/idem-test.mp","E",E);
+    //return();
+                
     // Sanity checks
     if( useSanityChecks )
     {
@@ -1510,66 +1662,89 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         int i;
         for(i=0; i<=1; i++)
         {
-            // M is the image of the idempotent
-            module M = e(i);
-            
-            if( useSanityChecks )
+            if( e(i) != matrix(0,nrows(e(i)),ncols(e(i))) )
             {
-                // minbase can only work on a homogeneous module
-                // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
-                if( !homog(M) )
+                // First try the most awesome splitting method
+                def trySplit = matrixSplitIdempotent(e(i));
+                
+                if( typeof(trySplit) == "list" )
                 {
-                    print("[mfSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
-                    return();
+                    // We succeeded!
+                    matrix f(i) = trySplit[1];
+                    matrix g(i) = trySplit[2];
                 }
-            }
-                        
-            // Compute a minimal generating set for the image. Note that minbase
-            // is currently bugged (Singular 3-1-1) and may not create a linearly
-            // independent generating set on the run through. So we try reapplying
-            // minbase a certain number of times (set by the flag minbaseCutoff)
-            module im = minbase(M);
-            kill M;
-            
-            // If the image is zero, our splitting is just a pair of zero matrices.
-            // Otherwise, we use lift to compute the map factorising e(i) through its image.
-            if( im[1] != [0] )
-            {
-                module n = lift(im,e(i));
-                matrix g(i) = matrix(im,ncols(e(i)),size(im));
-                matrix f(i) = matrix(n,size(im),ncols(e(i)));
-                
-                // We are now guaranteed that g(i) * f(i) = e(i), and by construction
-                // the image of g(i) is equal to the image of e(i) (the module M).
-                // Minbase is supposed to guarantee that the columns of g(i) are a minimal
-                // generating set for this image (suppose this is the case).
-                //
-                // The splitting of e(i) is free (it is projective, and projective modules
-                // over polynomial rings are free) and is isomorphic to the image of e(i),
-                // so the image of g(i) is a free module. But then any generating set of
-                // this image must contain a basis, so a minimal generating set _is_ a
-                // basis. That is, the columns of g(i) must be a basis for the image.
-                // Equivalently, the map g(i) is a monomorphism. Since it's image is
-                // equal to the image of e(i), it follows that f(i) is an epimorphism.
-                // Then in the usual way we deduce that f(i) * g(i) = 1.
-                
-                // So: failure of f(i) * g(i) = 1 (which does happen!) shows us that in
-                // fact the columns of g(i) are not a minimal generating set. This is a
-                // bug in minbase, and the workaround is as follows:
-                
-                int minbaseCount = 1;
-                while( f(i) * g(i) != unitmat(nrows(f(i))) && minbaseCount < minbaseCutoff )
+                else
                 {
-                    // Try running minbase again
-                    dbprint(printlevel, "[mfSplitIdempotent] WARNING: Encountered minbase bug, running it again...");
-                    im = minbase(im);
-                    n = lift(im,e(i));
-                    g(i) = matrix(im,ncols(e(i)),size(im));
-                    f(i) = matrix(n,size(im),ncols(e(i)));
+                    // The new way failed, try the old way
+                    print(""); //debug
+                    print("[mfSplitIdempotent] New method failed [!######################!]");
+                    print("");
                     
-                    minbaseCount++;
+                    // M is the image of the idempotent
+                    module M = e(i);
+
+                    if( useSanityChecks )
+                    {
+                        // minbase can only work on a homogeneous module
+                        // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
+                        if( !homog(M) )
+                        {
+                            print("[mfSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
+                            return();
+                        }
+                    }
+
+                    // Compute a minimal generating set for the image. Note that minbase
+                    // is currently bugged (Singular 3-1-1) and may not create a linearly
+                    // independent generating set on the run through. So we try reapplying
+                    // minbase a certain number of times (set by the flag minbaseCutoff)
+                    module im = minbase(M);
+                    kill M;
+
+                    // If the image is zero, our splitting is just a pair of zero matrices.
+                    // Otherwise, we use lift to compute the map factorising e(i) through its image.
+                    if( im[1] == [0] )
+                    {
+                        print("[mfSplitIdempotent] Image of idempotent was zero, impossible, exiting.");
+                        return();
+                    }
+
+                    module n = lift(im,e(i));
+                    matrix g(i) = matrix(im,ncols(e(i)),size(im));
+                    matrix f(i) = matrix(n,size(im),ncols(e(i)));
+
+                    // We are now guaranteed that g(i) * f(i) = e(i), and by construction
+                    // the image of g(i) is equal to the image of e(i) (the module M).
+                    // Minbase is supposed to guarantee that the columns of g(i) are a minimal
+                    // generating set for this image (suppose this is the case).
+                    //
+                    // The splitting of e(i) is free (it is projective, and projective modules
+                    // over polynomial rings are free) and is isomorphic to the image of e(i),
+                    // so the image of g(i) is a free module. But then any generating set of
+                    // this image must contain a basis, so a minimal generating set _is_ a
+                    // basis. That is, the columns of g(i) must be a basis for the image.
+                    // Equivalently, the map g(i) is a monomorphism. Since it's image is
+                    // equal to the image of e(i), it follows that f(i) is an epimorphism.
+                    // Then in the usual way we deduce that f(i) * g(i) = 1.
+
+                    // So: failure of f(i) * g(i) = 1 (which does happen!) shows us that in
+                    // fact the columns of g(i) are not a minimal generating set. This is a
+                    // bug in minbase, and the workaround is as follows:
+
+                    int minbaseCount = 1;
+                    while( f(i) * g(i) != unitmat(nrows(f(i))) && minbaseCount < minbaseCutoff )
+                    {
+                        // Try running minbase again
+                        dbprint(printlevel, "[mfSplitIdempotent] WARNING: Encountered minbase bug, running it again...");
+                        im = minbase(im);
+                        n = lift(im,e(i));
+                        g(i) = matrix(im,ncols(e(i)),size(im));
+                        f(i) = matrix(n,size(im),ncols(e(i)));
+
+                        minbaseCount++;
+                    }
+                    kill n, im;
                 }
-                kill n;
             }
             else
             {
@@ -1577,7 +1752,6 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 matrix g(i) = matrix(0,ncols(e(i)),1);
                 matrix f(i) = matrix(0,1,ncols(e(i)));
             }
-            kill im;
         }
     }
     

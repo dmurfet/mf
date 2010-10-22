@@ -1439,6 +1439,12 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     int useSanityChecks = blowFlags("sanity_checks"); 
     int useMPfile = blowFlags("use_mpfile");
     
+    if( useDegree != 0 && useDegree != 1 && useDegree != -1 )
+    {
+        print("[linkCompileReduced] useDegree should be in {0,1,-1}, exiting.");
+        return();
+    }
+    
     system("--ticks-per-sec",1000);
     int timeLink = timer;
  
@@ -1813,7 +1819,7 @@ proc loadSaveFile(string filename)
 ////////////////////////////////////////////////////////////////////
 // writeObject
 //
-// Given an object and its name, we write it out to the given link.
+// Given an object and its name, we write it out to the given file.
 
 proc writeObjectToFile(string fileName, string nam, def L)
 {
