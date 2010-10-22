@@ -5,14 +5,13 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 4; // The N in sl(N) link homology
 printlevel = 1;
 
 list whitehead = linkLibrary("whitehead");
 
-// RUNNING on ligeti since 2010-10-11--09:25 (still computing state 8/32 on 
-// 2010-10-20--10:23 while using 78.6% memory and 2% CPU):
-list h = linkCompile(whitehead, "whitehead-N" + string(N) + "-zoom.mp", N);
+// RUNNING on ligeti since 12:50 (state 16/32 on 14:26):
+list h = linkCompile(whitehead, "./data/whitehead-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(whitehead, h, N);
 
