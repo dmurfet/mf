@@ -7,12 +7,13 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..12)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 3; // The N in sl(N) link homology
 printlevel = 1;
 
 list linkL = linkLibrary("6_1");
+
+// RUNNING on haydn since 2010-10-20--20:26:
 list h = linkCompile(linkL, "./data/61-N" + string(N) + "-zoom.mp", N);
-N = 2;
 
 list cp = KRcomplex(linkL, h, N);
 
