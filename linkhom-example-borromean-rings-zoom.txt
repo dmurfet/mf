@@ -5,18 +5,20 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..12)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 3; // The N in sl(N) link homology
 printlevel = 1;
 
 list borromeanRings = linkLibrary("borromeanRings");
 
-// N=2 RUNNING on lully since 2010-10-07--00:58 ([mfSplitIdempotent] Worst coeff in E: 281/9).
-// N=3 Ran on haydn from 2010-10-05--12:05 to 2010-10-12--??:?? (killed by Singular: "Bus error").
-// N=4 Ran on ligeti from 2010-10-05--12:06 to 2010-10-11--09:23 (killed by hand
+// RUNNING on lully since 2010-10-22--12:40:
+// N=2 ran on lully (with old splitting code) from 2010-10-07--00:58 until 2010-10-22 
+// and did not get past state 30/42; then killed by hand.
+// N=3 ran on haydn from 2010-10-05--12:05 to 2010-10-12--??:?? (killed by Singular: "Bus error").
+// N=4 ran on ligeti from 2010-10-05--12:06 to 2010-10-11--09:23 (killed by hand
 // while still working on state 8/64 with very high memory usage and low CPU).
-list h = linkCompile(borromeanRings, "borromeanRings----N" + string(N) + "-zoom.mp", N);
+list h = linkCompile(borromeanRings, "./data/borromeanRings-N" + string(N) + "-zoom.mp", N);
 
-list cp = KRcomplex(borromeanRings, h);
+list cp = KRcomplex(borromeanRings, h, N);
 
 ring ss=(0,q,t),(x),dp;
 list cp = imap(rr,cp);
@@ -30,5 +32,6 @@ poincare;
 
 // N = 2 invariants:
 //
-// P_2: 
-// KR polynomial: 
+// P_2: (-q14+2q12+q10+2q8+2q6+q4+2q2-1)/(q7)
+// KR polynomial: (q14+2q12t+q10t+4q8t3+2q8t2+2q6t4+4q6t3+q4t5+2q2t5+t6)/(q7t3)
+// Took 2226 seconds with new splitting code.

@@ -9,13 +9,13 @@ LIB "matrix.lib";
 LIB "control.lib";
 LIB "mfweb.lib";
 ring rr=0,(x(1..10)),dp;
-int N = 2; // The N in sl(N) link homology
+int N = 3; // The N in sl(N) link homology
 printlevel = 1;
 
 list threeTwist = linkLibrary("three-twist");
 
+// RUNNING on landi since 11:07:
 list h = linkCompile(threeTwist, "./data/three-Twist-N" + string(N) + "-zoom.mp", N);
-if( N != 2 ){ print("N++ bug encountered."); N = 2; } //debug
 
 list cp = KRcomplex(threeTwist, h, N);
 
@@ -29,22 +29,11 @@ euler;
 number poincare = gradedPoincare(cohom, q, t);
 poincare;
 
-// Jones polynomial: (q12+q8+q6-1)/(q13) (this is correct)
-
-// Note that the old, incorrect, answer was (q12+q8+q6-1)/(q18). This is
-// the result if you run all lines from "list cp = ??" onwards with N = 3.
-// Similarly the answer you get for the Poincare poly, using h above calculated
-// for N = 2 but with N set to 3, is what we had previously written, i.e.
-// (q12+q10t+q10+q8t2+q6t2+q4t4+q4t3+t5)/(q18).
-
 // KR invariants /////////////////////
 //
 // N = 2 (t5+t4q4+t3q4+t2q8+t2q6+tq10+q12+q10)/(q13) (new corrected result)
-// Now agrees with Knot atlas.
+// Agrees with Knot atlas.
 
 // N = 3 invariants:
-//
-
-// Old and probably incorrect:
-// P_3: (q18+q14+q12+q10+q8-q2-1)/(q25)
-// KR polynomial: (q18+q16t+q16+q14t2+q14t+q14+q12t2+q10t2+q8t4+q8t3+q8t2+q6t4+q6t3+q2t5+t5)/(q25)
+// (t5q2+t5+t4q8+t4q6+t3q8+t3q6+t2q14+t2q12+t2q10+t2q8+tq16+tq14+q18+q16+q14)/(q20)
+// Took 5302 seconds with new splitting code.
