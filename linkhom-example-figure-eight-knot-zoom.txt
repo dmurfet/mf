@@ -14,8 +14,8 @@ printlevel = 1;
 
 list figureEightLink = linkLibrary("figure-eight");
 
-// RUNNING on landi since 2010-10-01--12:22 (still computing state 8/16 on 
-// 2010-10-20--10:22 while using 96.2% memory and 95% CPU):
+// Ran on landi from 2010-10-01--12:22 until 2010-10-22--10:42 without getting past 
+// state 8/16 while using 96.2% memory and 100% CPU; then killed by hand.
 list h = linkCompile(figureEightLink, "./data/figure-eight-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(figureEightLink, h, N);
@@ -40,8 +40,10 @@ poincare;
 // Agreement with Gukov-Dunfield-Rasmussen (GDR) eq. (64) if we replace q by 1/q.
 
 // N = 4 (t4q4+t4q2+t4+t3q12+t3q10+t3q8+t2q14+t2q12+t2q10+t2q8+tq14+tq12+tq10+q22+q20+q18)/(t2q11)
-// 3440 seconds. Not sure if it agrees with GDR or not.
+// Took 3440 seconds. 
 // GDR prediction: 1/(q3)+1/q+q+q3+1/(q11t2)+1/(q9t2)+1/(q7t2)+1/(q3t)+1/(qt)+q/t+t/q+qt+q3t+q7t2+q9t2+q11t2
+// No agreement as Laurent polynomials in q,t (replacing q by 1/q does not help). 
+// But we do have agreement for t = -1.
 
 
 // Figure-eight knot - reduced ///////////////////////////////////////////
