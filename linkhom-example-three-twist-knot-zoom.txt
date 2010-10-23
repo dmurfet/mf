@@ -14,7 +14,8 @@ printlevel = 1;
 
 list threeTwist = linkLibrary("three-twist");
 
-// RUNNING on landi since 12:45:
+// RUNNING on landi since 2010-10-23--08:35, starting from state 17/32. 
+// working on state 32/32 on 2010-10-23--18:05:
 list h = linkCompile(threeTwist, "./data/three-Twist-N" + string(N) + "-zoom.mp", N);
 
 list cp = KRcomplex(threeTwist, h, N);
@@ -37,26 +38,3 @@ poincare;
 // N = 3 invariants:
 // (t5q2+t5+t4q8+t4q6+t3q8+t3q6+t2q14+t2q12+t2q10+t2q8+tq16+tq14+q18+q16+q14)/(q20)
 // Took 5302 seconds with new splitting code.
-
-
-
-// N = 4: After running for 11 hours, it says: 
-...
-[linkCompile] Looking at state [0,0,0,0,1] which is number [[ 17/32 ]].
-[linkCompile] Currently used memory: 2107979kb.
-[webCompile] Entering round 1 of compilation.
-[mfPushforwardInductive] In step 1 with ring vars x(1),x(2),x(3),x(4),x(5),x(6)
-[mfPushforward] Pushing forward matrix of size 16 with N = 4
-[mfReduce] Reducing matrix of size 64
-[zoomreduce] Error in reduction, exiting.
-   ? `_` is undefined
-   ? error occurred in or before blow.lib::mfReduce line 2747: `            return();`
-   ? leaving blow.lib::mfReduce
-   skipping text from `;` error at token `)`
-   ? leaving blow.lib::mfPushforward
-   ? leaving blow.lib::mfPushforwardInductive
-   ? leaving mfweb.lib::webCompilePair
-   ? leaving mfweb.lib::webCompile
-   ? leaving linkhom.lib::linkCompile
-
-Luckily this is at the beginning of a state compilation, so tomorrow I can take a detailed look at it.
