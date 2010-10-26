@@ -1,3 +1,31 @@
+Old splitting construction
+
+if( useOldConstruction )
+    {
+        LIB "control.lib";
+        int i;
+        for(i=0; i<=1; i++)
+        {
+            module ker = rightKernel(unitmat(m/2) - e(i));
+            matrix g(i) = minbase(ker);
+            matrix f(i)[ncols(g(i))][nrows(g(i))];
+    
+            if( ker[1] != [0] )
+            {
+                matrix f(i) = leftInverse(g(i)) * e(i); // Solves g0 * f0 = e0.
+            }
+            else
+            {
+                g(i) = matrix(0,ncols(e(i)),1);
+                f(i) = matrix(0,1,ncols(e(i)));
+                hitZeros(i) = 1;
+            }
+            kill ker;
+        }
+    }
+
+
+
 //////////////////////////////
 // This is the old linkCompile, using the "non general" webCompile
 

@@ -93,7 +93,7 @@ proc blowFlags(string s)
 {
     if( s == "sanity_checks" )
     {
-        return(1); // default is 1
+        return(0); // default is 1
     }
     
     // Turn on this flag if you want to optimise for small coefficients (of monomials)
@@ -101,11 +101,6 @@ proc blowFlags(string s)
     if( s == "small_coeffs" )
     {
         return(1); // default is 1
-    }
-    
-    if( s == "old_splitting_construction" )
-    {
-        return(0); // default is 0
     }
     
     // Enables some checks only relevant if the calculations involved
@@ -131,6 +126,11 @@ proc blowFlags(string s)
     if( s == "power_cutoff_jacobi" )
     {
         return(1000); // default is 1000
+    }
+    
+    if( s == "factor_out_content" )
+    {
+        return(0); // default is 0
     }
     
     return(0);
@@ -1291,6 +1291,8 @@ proc mfSuspendMorph(matrix A, list #)
 
 proc mfStrictifyIdempotent(matrix A, matrix U)
 {
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    
     // If U is already strictly idempotent, return it
     if( U * U == U ){ return(U); }
     
@@ -1332,16 +1334,19 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
     matrix E = U + X * (unitmat(m) - 2 * U);
     
     // Sanity check
-    if( A * E != E * A )
+    if( useSanityChecks )
     {
-        print("[mfStrictifyIdempotent] E is not a morphism.");
-        return();
-    }
+        if( A * E != E * A )
+        {
+            print("[mfStrictifyIdempotent] E is not a morphism.");
+            return();
+        }
     
-    if( E * E != E )
-    {
-        print("[mfStrictifyIdempotent] Failed to strictify idempotent.");
-        return();
+        if( E * E != E )
+        {
+            print("[mfStrictifyIdempotent] Failed to strictify idempotent.");
+            return();
+        }
     }
     
     return(E);
@@ -1453,8 +1458,6 @@ proc matrixSplitIdempotent(matrix E)
     }
     
     list Elist = mathomoglist(E);
-    //print(Elist); //debug
-    //print("----");
     
     // First we split the scalar matrix Elist[1] in the usual way (this is the degree zero part of E)
     module M = Elist[1];
@@ -1462,7 +1465,6 @@ proc matrixSplitIdempotent(matrix E)
     if( useSanityChecks )
     {
         // minbase can only work on a homogeneous module
-        // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
         if( !homog(M) )
         {
             print("[matrixSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
@@ -1504,16 +1506,10 @@ proc matrixSplitIdempotent(matrix E)
     // prefixList[2] = e(1)^2 + e(2)
     // prefixList[3] = e(3) + e(2)e(1) + e(1)e(2) + e(1)^3.
     
-    //print(f(0)); //debug
-    //print("---");
-    //print(g(0));
-    //print("---");
-    
     // We keep modifying F and G until they work! (or we hit a cutoff)
     int i = 1;
     while( (F * G != unitmat(nrows(F)) || G * F != E) && i < 1000 )
     {
-        //print("In loop step " + string(i)); //debug
         if( size(Elist) <= i ){ Elist[i+1] = matrix(0,nrows(Elist[1]),ncols(Elist[1])); }
         
         matrix f(i) = f(0) * Elist[i+1];
@@ -1529,11 +1525,6 @@ proc matrixSplitIdempotent(matrix E)
         matrix g(i) = prefix * g(0);
         kill prefix, j;
         
-        //print(f(i)); //debug
-        //print("---");
-        //print(g(i));
-        //print("---");
-        
         // Update F and G in preparation for the while check
         F = F + f(i);
         G = G + g(i);
@@ -1547,7 +1538,7 @@ proc matrixSplitIdempotent(matrix E)
         return();
     }
     
-    print("[matrixSplitIdempotent] Totally awesome success in " + string(i-1) + " steps.");
+    print("[matrixSplitIdempotent] Split idempotent matrix in " + string(i-1) + " steps.");
     
     return(list(F,G));
 }
@@ -1619,7 +1610,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
     
-    print("[mfSplitIdempotent] Worst coeff in E: " + string(worstMonomialCoeff(E))); //debug
+    print("[mfSplitIdempotent] Badness of worst coeff in E: " + string(size(string(worstMonomialCoeff(E))))); //debug
         
     // Extract the odd and even part of the differential and morphism
     list blocks = extractblockmat(A);
@@ -1630,128 +1621,100 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     // We produce morphisms f0, f1, g0, g1 where fi, gi is a splitting of ei, in the
     // sense that gi * fi = ei and fi * gi = 1.
-    
-    int useOldConstruction = blowFlags("old_splitting_construction"); 
     int hitZeros(0), hitZeros(1);
-            
-    if( useOldConstruction )
-    {
-        LIB "control.lib";
-        int i;
-        for(i=0; i<=1; i++)
-        {
-            module ker = rightKernel(unitmat(m/2) - e(i));
-            matrix g(i) = minbase(ker);
-            matrix f(i)[ncols(g(i))][nrows(g(i))];
     
-            if( ker[1] != [0] )
+    int i;
+    for(i=0; i<=1; i++)
+    {
+        if( e(i) != matrix(0,nrows(e(i)),ncols(e(i))) )
+        {
+            // First try the most awesome splitting method
+            def trySplit = matrixSplitIdempotent(e(i));
+            
+            if( typeof(trySplit) == "list" )
             {
-                matrix f(i) = leftInverse(g(i)) * e(i); // Solves g0 * f0 = e0.
+                // We succeeded!
+                matrix f(i) = trySplit[1];
+                matrix g(i) = trySplit[2];
             }
             else
             {
-                g(i) = matrix(0,ncols(e(i)),1);
-                f(i) = matrix(0,1,ncols(e(i)));
-                hitZeros(i) = 1;
-            }
-            kill ker;
-        }
-    }
-    else
-    {   
-        int i;
-        for(i=0; i<=1; i++)
-        {
-            if( e(i) != matrix(0,nrows(e(i)),ncols(e(i))) )
-            {
-                // First try the most awesome splitting method
-                def trySplit = matrixSplitIdempotent(e(i));
+                // The new way failed, try the old way
+                print(""); //debug
+                print("[mfSplitIdempotent] New method failed [!######################!]");
+                print("");
                 
-                if( typeof(trySplit) == "list" )
+                // M is the image of the idempotent
+                module M = e(i);
+
+                if( useSanityChecks )
                 {
-                    // We succeeded!
-                    matrix f(i) = trySplit[1];
-                    matrix g(i) = trySplit[2];
-                }
-                else
-                {
-                    // The new way failed, try the old way
-                    print(""); //debug
-                    print("[mfSplitIdempotent] New method failed [!######################!]");
-                    print("");
-                    
-                    // M is the image of the idempotent
-                    module M = e(i);
-
-                    if( useSanityChecks )
+                    // minbase can only work on a homogeneous module
+                    // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
+                    if( !homog(M) )
                     {
-                        // minbase can only work on a homogeneous module
-                        // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
-                        if( !homog(M) )
-                        {
-                            print("[mfSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
-                            return();
-                        }
-                    }
-
-                    // Compute a minimal generating set for the image. Note that minbase
-                    // is currently bugged (Singular 3-1-1) and may not create a linearly
-                    // independent generating set on the run through. So we try reapplying
-                    // minbase a certain number of times (set by the flag minbaseCutoff)
-                    module im = minbase(M);
-                    kill M;
-
-                    // If the image is zero, our splitting is just a pair of zero matrices.
-                    // Otherwise, we use lift to compute the map factorising e(i) through its image.
-                    if( im[1] == [0] )
-                    {
-                        print("[mfSplitIdempotent] Image of idempotent was zero, impossible, exiting.");
+                        print("[mfSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
                         return();
                     }
-
-                    module n = lift(im,e(i));
-                    matrix g(i) = matrix(im,ncols(e(i)),size(im));
-                    matrix f(i) = matrix(n,size(im),ncols(e(i)));
-
-                    // We are now guaranteed that g(i) * f(i) = e(i), and by construction
-                    // the image of g(i) is equal to the image of e(i) (the module M).
-                    // Minbase is supposed to guarantee that the columns of g(i) are a minimal
-                    // generating set for this image (suppose this is the case).
-                    //
-                    // The splitting of e(i) is free (it is projective, and projective modules
-                    // over polynomial rings are free) and is isomorphic to the image of e(i),
-                    // so the image of g(i) is a free module. But then any generating set of
-                    // this image must contain a basis, so a minimal generating set _is_ a
-                    // basis. That is, the columns of g(i) must be a basis for the image.
-                    // Equivalently, the map g(i) is a monomorphism. Since it's image is
-                    // equal to the image of e(i), it follows that f(i) is an epimorphism.
-                    // Then in the usual way we deduce that f(i) * g(i) = 1.
-
-                    // So: failure of f(i) * g(i) = 1 (which does happen!) shows us that in
-                    // fact the columns of g(i) are not a minimal generating set. This is a
-                    // bug in minbase, and the workaround is as follows:
-
-                    int minbaseCount = 1;
-                    while( f(i) * g(i) != unitmat(nrows(f(i))) && minbaseCount < minbaseCutoff )
-                    {
-                        // Try running minbase again
-                        dbprint(printlevel, "[mfSplitIdempotent] WARNING: Encountered minbase bug, running it again...");
-                        im = minbase(im);
-                        n = lift(im,e(i));
-                        g(i) = matrix(im,ncols(e(i)),size(im));
-                        f(i) = matrix(n,size(im),ncols(e(i)));
-
-                        minbaseCount++;
-                    }
-                    kill n, im;
                 }
+
+                // Compute a minimal generating set for the image. Note that minbase
+                // is currently bugged (Singular 3-1-1) and may not create a linearly
+                // independent generating set on the run through. So we try reapplying
+                // minbase a certain number of times (set by the flag minbaseCutoff)
+                module im = minbase(M);
+                kill M;
+
+                // If the image is zero, our splitting is just a pair of zero matrices.
+                // Otherwise, we use lift to compute the map factorising e(i) through its image.
+                if( im[1] == [0] )
+                {
+                    print("[mfSplitIdempotent] Image of idempotent was zero, impossible, exiting.");
+                    return();
+                }
+
+                module n = lift(im,e(i));
+                matrix g(i) = matrix(im,ncols(e(i)),size(im));
+                matrix f(i) = matrix(n,size(im),ncols(e(i)));
+
+                // We are now guaranteed that g(i) * f(i) = e(i), and by construction
+                // the image of g(i) is equal to the image of e(i) (the module M).
+                // Minbase is supposed to guarantee that the columns of g(i) are a minimal
+                // generating set for this image (suppose this is the case).
+                //
+                // The splitting of e(i) is free (it is projective, and projective modules
+                // over polynomial rings are free) and is isomorphic to the image of e(i),
+                // so the image of g(i) is a free module. But then any generating set of
+                // this image must contain a basis, so a minimal generating set _is_ a
+                // basis. That is, the columns of g(i) must be a basis for the image.
+                // Equivalently, the map g(i) is a monomorphism. Since it's image is
+                // equal to the image of e(i), it follows that f(i) is an epimorphism.
+                // Then in the usual way we deduce that f(i) * g(i) = 1.
+
+                // So: failure of f(i) * g(i) = 1 (which does happen!) shows us that in
+                // fact the columns of g(i) are not a minimal generating set. This is a
+                // bug in minbase, and the workaround is as follows:
+
+                int minbaseCount = 1;
+                while( f(i) * g(i) != unitmat(nrows(f(i))) && minbaseCount < minbaseCutoff )
+                {
+                    // Try running minbase again
+                    dbprint(printlevel, "[mfSplitIdempotent] WARNING: Encountered minbase bug, running it again...");
+                    im = minbase(im);
+                    n = lift(im,e(i));
+                    g(i) = matrix(im,ncols(e(i)),size(im));
+                    f(i) = matrix(n,size(im),ncols(e(i)));
+
+                    minbaseCount++;
+                }
+                kill n, im;
             }
-            else
-            {
-                hitZeros(i) = 1;
-                matrix g(i) = matrix(0,ncols(e(i)),1);
-                matrix f(i) = matrix(0,1,ncols(e(i)));
-            }
+        }
+        else
+        {
+            hitZeros(i) = 1;
+            matrix g(i) = matrix(0,ncols(e(i)),1);
+            matrix f(i) = matrix(0,1,ncols(e(i)));
         }
     }
     
@@ -1810,8 +1773,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // If we have nonsquare matrices we have to do something special
     if( hitZeros(0) || hitZeros(1) || nrows(f(0)) != nrows(f(1)) )
     {
-        dbprint(printlevel, "[mfSplitIdempotent] Worst coeff in f0: " + string(worstMonomialCoeff(f(0)))); //debug
-        dbprint(printlevel, "[mfSplitIdempotent] Worst coeff in f1: " + string(worstMonomialCoeff(f(1)))); //debug
+        //dbprint(printlevel, "[mfSplitIdempotent] Worst coeff in f0: " + string(worstMonomialCoeff(f(0)))); //debug
+        //dbprint(printlevel, "[mfSplitIdempotent] Worst coeff in f1: " + string(worstMonomialCoeff(f(1)))); //debug
         //print("[mfSplitIdempotent] Worst coeff in g0: " + string(worstMonomialCoeff(g(0)))); //debug
         //print("[mfSplitIdempotent] Worst coeff in g1: " + string(worstMonomialCoeff(g(1)))); //debug
         
@@ -1858,7 +1821,14 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     //print("[mfSplitIdempotent] Worst coeff in G: " + string(worstMonomialCoeff(G))); //debug
     //print("[mfSplitIdempotent] Worst coeff in original A: " + string(worstMonomialCoeff(A))); //debug
     
+    print("[mfSplitIdempotent] Badness of worst coeff in final B: " + string(size(string(worstMonomialCoeff(B))))); //debug
     print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B))); //debug
+    //print("[mfSplitIdempotent] Content of b0: " + string(contentMat(extractblockmat(B)[3])));
+    //print("[mfSplitIdempotent] Content of b1: " + string(contentMat(extractblockmat(B)[2])));
+    //number Bcont = contentMat(B);
+    //matrix C = B * 1/Bcont;
+    //print("[mfSplitIdempotent] Content of B: " + string(Bcont));
+    //print("[mfSplitIdempotent] Worst coeff in alter B: " + string(worstMonomialCoeff(C))); //debug
     
     list retll = B,F,G;
     
@@ -1920,6 +1890,7 @@ proc findConstant(matrix A)
 proc findConstantMin(matrix A)
 {
     number small;
+    number sizz;
     intvec v;
     
     int i,j;
@@ -1936,10 +1907,11 @@ proc findConstantMin(matrix A)
                 {
                     number c = number(A[i,j]);
 
-                    if( small == 0 || absValue(numerator(c)) * absValue(denominator(c)) < absValue(numerator(small)) * absValue(denominator(small)) )
+                    if( small == 0 || absValue(numerator(c)) * absValue(denominator(c)) < sizz )
                     {
                         v = i,j;
                         small = c;
+                        sizz = absValue(numerator(small)) * absValue(denominator(small));
                     }
                     kill c;
                 }
@@ -1955,6 +1927,23 @@ proc findConstantMin(matrix A)
     {
         return(list(1,v));
     }
+}
+
+////////////////////////////////////////////////////////////////////
+// contentMat
+//
+
+proc contentMat(matrix A)
+{
+    module M = A;
+    int i;
+    vector v;
+    for(i=1;i<=size(M);i++)
+    {
+        v = v + content(M[i])*gen(i);
+    }
+    
+    return(content(v));
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -2708,12 +2697,309 @@ proc zoomreduce(matrix A)
 // If we are optionally passed a grading intvec, then we return a list B, F, G, Bgr where Bgr
 // is the grading vector on Y such that F, G are morphisms of degree zero.
 
+proc mfReduceAlt(matrix A, matrix e, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    dbprint(printlevel, "[mfReduceAlt] Reducing matrix of size " + string(ncols(A)));
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    int useGrading;
+    if( size(#) > 0 )
+    {
+        intvec Agr = #[1];
+        intvec Agr0 = Agr[1..(ncols(A)/2)];
+        intvec Agr1 = Agr[(ncols(A)/2+1)..ncols(A)];
+        int useGrading = 1;
+    }
+    
+    // Extract the odd and even part of the differential
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    kill blocks;
+    
+    matrix f0 = unitmat(ncols(b0));
+    matrix f1 = unitmat(ncols(b1));
+    matrix g0 = unitmat(ncols(b0));
+    matrix g1 = unitmat(ncols(b0));
+    matrix e0 = extractblockmat(e)[1];
+    matrix e1 = extractblockmat(e)[4];
+    
+    // Throughout this whole process b0, b1 is a MF of W,
+    // and (f0,f1) is a map A --> B, and (g0,g1) is a map B --> A,
+    // and indeed these maps are homotopy inverse to one another.
+    // Step by step we reduce the size of the matrices b0,b1 by peeling
+    // off contractible summands. At each stage F is a split epi and G
+    // is a split mono in each degree.
+    
+    // Find a unit in b1, transform it to the top left, and eliminate the first
+    // column and first row using mfReduce_splitworker
+    
+    // r[2][1] is the row and r[2][2] the column our found constant entry of A
+    // r[1] is 1 if we found a constant, and zero otherwise
+    list r = findConstantMin(b1);
+    int madeStrictIdempotent = 0;
+    
+    while( r[1] == 1 && !madeStrictIdempotent )
+    {
+        // First permute this constant to row 1 and column 1 of b1, and do
+        // the corresponding transformation on b0 and the F,G maps.
+        if( r[2][1] != 1 )
+        {
+            b1 = permrow(b1,1,r[2][1]);
+            b0 = permcol(b0,1,r[2][1]);
+            f0 = permrow(f0,1,r[2][1]);
+            g0 = permcol(g0,1,r[2][1]);
+            e0 = permrow(e0,1,r[2][1]);
+            e0 = permcol(e0,1,r[2][1]);
+        }
+
+        if( r[2][2] != 1 )
+        {
+            b1 = permcol(b1,1,r[2][2]);
+            b0 = permrow(b0,1,r[2][2]);
+            f1 = permrow(f1,1,r[2][2]);
+            g1 = permcol(g1,1,r[2][2]);
+            e1 = permrow(e1,1,r[2][2]);
+            e1 = permcol(e1,1,r[2][2]);
+        }
+        
+        // Now the pair b0, b1 is suitable for feeding into mfReduce_splitworker
+        list spL = mfReduce_splitworker(b0, b1);
+        
+        // The return list from this is p0,p1,u0,u1,v0,v1
+        b0 = spL[1];
+        b1 = spL[2];
+        f0 = spL[3] * f0;
+        f1 = spL[4] * f1;
+        g0 = g0 * spL[5];
+        g1 = g1 * spL[6];
+        e0 = spL[3] * e0 * spL[5];
+        e1 = spL[4] * e1 * spL[6];
+        
+        if( e0 * e0 == e0 && e1 * e1 == e1 )
+        {
+            madeStrictIdempotent = 1;
+        }
+        //else
+        //{
+        //    if( (isHomotopyIdempotent(e0) || isHomotopyIdempotent(-e0) ) &&
+        //        (isHomotopyIdempotent(e1) || isHomotopyIdempotent(-e1) ) )
+        //    {
+        //        dbprint(printlevel, "[mfReduceAlt] Found early idempotent up to homotopy...");
+        //        madeStrictIdempotent = 1;
+        //    }
+        //}
+        
+        kill spL;
+        
+        // This completes the step, now look for another constant
+        if( !madeStrictIdempotent ){ r = findConstantMin(b1); }
+    }
+    
+    // Now perform the same feat on b0
+    if( !madeStrictIdempotent )
+    {
+        list r = findConstantMin(b0);
+
+        while( r[1] == 1 && !madeStrictIdempotent )
+        {
+            if( r[2][1] != 1 )
+            {
+                b0 = permrow(b0,1,r[2][1]);
+                b1 = permcol(b1,1,r[2][1]);
+                f1 = permrow(f1,1,r[2][1]);
+                g1 = permcol(g1,1,r[2][1]);
+                e1 = permrow(e1,1,r[2][1]);
+                e1 = permcol(e1,1,r[2][1]);
+            }
+
+            if( r[2][2] != 1 )
+            {
+                b0 = permcol(b0,1,r[2][2]);
+                b1 = permrow(b1,1,r[2][2]);
+                f0 = permrow(f0,1,r[2][2]);
+                g0 = permcol(g0,1,r[2][2]);
+                e0 = permrow(e0,1,r[2][2]);
+                e0 = permcol(e0,1,r[2][2]);
+            }
+
+            // Now the pair b1, b0 is suitable for feeding into mfReduce_splitworker
+            list spL = mfReduce_splitworker(b1, b0);
+
+            // The return list from this is p1,p0,u1,u0,v1,v0
+            b0 = spL[2];
+            b1 = spL[1];
+            f0 = spL[4] * f0;
+            f1 = spL[3] * f1;
+            g0 = g0 * spL[6];
+            g1 = g1 * spL[5];
+            e0 = spL[4] * e0 * spL[6];
+            e1 = spL[3] * e1 * spL[5];
+
+            if( e0 * e0 == e0 && e1 * e1 == e1 )
+            {
+                madeStrictIdempotent = 1;
+            }
+            //else
+            //{
+            //    if( (isHomotopyIdempotent(e0) || isHomotopyIdempotent(-e0) ) &&
+            //        (isHomotopyIdempotent(e1) || isHomotopyIdempotent(-e1) ) )
+            //    {
+            //        dbprint(printlevel, "[mfReduceAlt] Found early idempotent up to homotopy...");
+            //        madeStrictIdempotent = 1;
+            //    }
+            //}
+
+            kill spL;
+
+            // This completes the step, now look for another constant
+            if( !madeStrictIdempotent ){ r = findConstantMin(b0); }
+        }
+    }
+
+    // The final F and G are split epi and split mono resp., so we can use G
+    // to determine the grading on B from the grading on A.
+    if( useGrading )
+    {
+        intvec Bgr0 = computeGradingFromInjection(g0, Agr0);
+        intvec Bgr1 = computeGradingFromInjection(g1, Agr1);
+    }
+    
+    // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
+    // the original MF and the reduced MF (b0,b1)
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
+
+    matrix B = blockmat(zb, b1, b0, zb);
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+    matrix E = F * e * G;
+    
+    if( useGrading ){ intvec Bgr = Bgr0, Bgr1; }
+    kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
+    
+    // Partial check that F * G is homotopic to 1. Note that the
+    // check we use won't work to check G * F \simeq 1 because we
+    // need the MF in question to be reduced.
+    if( useSanityChecks && 0 ) //debug
+    {
+        // Check that F and G are morphisms
+        if( F * A != B * F || G * B != A * G )
+        {
+            print("[mfReduceAlt] Either F or G is not a morphism, exiting.");
+            return();
+        }
+        
+        if( useGrading )
+        {
+            if( !isGradingValid(B, Bgr) )
+            {
+                print("[mfReduceAlt] Produced a non-valid grading on reduction, exiting.");
+                return();
+            }
+        }
+        
+        if( 0 ) // debug additional checks
+        {
+            matrix shouldBeZero = F * G - unitmat(nrows(F));
+            matrix Bc = B;
+            
+            int j;
+            for(j=1; j<=nvars(basering); j++)
+            {
+                shouldBeZero = subst(shouldBeZero,var(j),0);
+                Bc = subst(Bc,var(j),0);
+            }
+        
+            if( shouldBeZero != matrix(0,nrows(shouldBeZero),ncols(shouldBeZero)) )
+            {
+                print("[mfReduceAlt] F * G is not homotopic to the identity, exiting.");
+                return();
+            }
+            
+            // Check that B is actually reduced debug
+            if( Bc != matrix(0,nrows(Bc),ncols(Bc)) )
+            {
+                print("[mfReduceAlt] Error, the return matrix is not reduced, exiting.");
+                return();
+            }
+        }
+    }
+    
+    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
+    dbprint(printlevel, "[mfReduceAlt]          result is size " + string(ncols(B)) + ".");
+    dbprint(printlevel, "[mfReduceAlt]          elapsed time " + string(timer-timeElapsed) + "ms.");
+        
+    list ret = B, F, G;
+    kill B, F, G;
+    
+    if( useGrading )
+    {
+        ret = ret + list(Bgr);
+    }
+    
+    ret = ret + list(E);
+    
+    return(ret);
+}
+
+proc mfReduce_splitworker(matrix q0, matrix q1)
+{
+    // We are given two matrices q0, q1 of the same dimensions
+    if( ncols(q0) < 2 || nrows(q0) < 2 || ncols(q1) != ncols(q0) || nrows(q1) != nrows(q0) || ncols(q0) != nrows(q0) )
+    {
+        print("[mfReduce_splitworker] Incorrect data, exiting.");
+        return();
+    }
+    
+    // We break q0 as (a,b\\c,d) and q1 as (e, f \\ g,h ) and we assume
+    // that q0 * q1 = q1 * q0 = W for some potential W, and that e is a
+    // scalar.
+    
+    int n = ncols(q0);
+    
+    if( q1[1,1] == 0 || deg(q1[1,1]) != 0 )
+    {
+        print("[mfReduce_splitworker] e failed to be a unit, exiting.");
+        return();
+    }
+    
+    number e = number(q1[1,1]);
+    
+    matrix d = submat(q0,2..nrows(q0),2..ncols(q0));
+    matrix h = submat(q1,2..nrows(q1),2..ncols(q1));
+    matrix f = submat(q1,1,2..ncols(q1));
+    matrix g = submat(q1,2..nrows(q1),1);
+    
+    // Then the pair (d, h - 1/egf) is a matrix factorisation of W and
+    // it is homotopy equivalent to (q0,q1) via the maps
+    //
+    //    U = (u0,u1): (q0,q1) --> (d, h - 1/e gf)
+    //    V = (v0,v1): (d, h - 1/egf) --> (q0,q1)
+    // 
+    // defined by u0 = (-1/eg, 1), u1 = (0 1), v0 = (0 1)^t, v1 = (-1/e f, 1)^t
+    
+    matrix p0 = d;
+    matrix p1 = h - 1/e * (g * f);
+    matrix u0 = concat(-1/e * g, unitmat(n-1));
+    matrix u1 = concat(matrix(0,n-1,1),unitmat(n-1));
+    matrix v0 = transpose(u1);
+    matrix v1 = transpose(concat(-1/e * transpose(f),unitmat(n-1)));
+
+    list retlist = p0,p1,u0,u1,v0,v1;
+    kill e, d, h, f, g, p0, p1, u0, u1, v0, v1;
+    return(retlist);
+}
+
 proc mfReduce(matrix A, list #)
 {
     int useSanityChecks = blowFlags("sanity_checks");
+    int factorOutContent = blowFlags("factor_out_content");
     
-    dbprint(printlevel, "[mfReduce] Reducing matrix of size " + string(ncols(A))); //debug
-    //dbprint(printlevel, "[mfReduce]          worst input coeff: " + string(worstMonomialCoeff(A))); //debug
+    dbprint(printlevel, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
         
     system("--ticks-per-sec",1000);
     int timeElapsed = timer;
@@ -2723,15 +3009,14 @@ proc mfReduce(matrix A, list #)
     {
         intvec Agr = #[1];
         int useGrading = 1;
-        
-        if( useSanityChecks )
-        {
-            if( !isGradingValid(A,Agr) ) //debug remove
-            {
-                print("[mfReduce] Given an invalid grading, exiting.");
-                return();
-            }
-        }
+    }
+    
+    if( factorOutContent )
+    {
+        // Pull out the content of the matrix, to reduce to the size of coeffs being multiplied
+        number Acont = contentMat(A);
+        //print("[mfReduce] Content of A: " + string(Acont)); //debug
+        A = A * 1/Acont;
     }
     
     // Extract the odd and even part of the differential
@@ -2806,50 +3091,53 @@ proc mfReduce(matrix A, list #)
     // WARNING: At the moment this creates subtle errors in grading, because
     // the matrix G has some problem
     // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
-    //matrix zero_b[nrows(b0)][ncols(b0)];
-    //if( b0 != zero_b && b1 != zero_b )
-    //{
-    //    matrix tr, b0r;
-    //    
-    //    list gau = rowred(b0,1);
-    //    tr = gau[2];
-    //    b0r = gau[1];
-        
-    //    if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
-    //    if( det(tr) == 0 )
-    //    {
-    //        print("[mfReduce] Transformation matrix not invertible (first)."); 
-    //        return();
-    //    }
-        
-    //    matrix trinv = inverse(tr);
-        
-    //    b0 = b0r;
-    //    b1 = b1 * trinv;
-        
-    //    f1 = tr * f1;
-    //    g1 = g1 * trinv;
-    
-    //    matrix tr2;
-        
-        // Try a second time on the transpose
-    //    list gau = rowred(transpose(b0),1);
-    //    tr2 = transpose(gau[2]);
-    //    b0r = transpose(gau[1]);
-        
-    //    if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
-    //    if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
-        
-    //    matrix tr2inv = inverse(tr2);
-        
-    //    b0 = b0r;
-    //    b1 = tr2inv * b1;
-    //    f0 = tr2inv * f0;
-    //    g0 = g0 * tr2;
+    if( 0 )
+    {
+        matrix zero_b[nrows(b0)][ncols(b0)];
+        if( b0 != zero_b && b1 != zero_b )
+        {
+            matrix tr, b0r;
 
-    //    kill tr, b0r, gau, trinv, tr2, tr2inv;
-    //}
-    //kill zero_b;
+            list gau = rowred(b0,1);
+            tr = gau[2];
+            b0r = gau[1];
+
+            if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
+            if( det(tr) == 0 )
+            {
+                print("[mfReduce] Transformation matrix not invertible (first)."); 
+                return();
+            }
+
+            matrix trinv = inverse(tr);
+
+            b0 = b0r;
+            b1 = b1 * trinv;
+
+            f1 = tr * f1;
+            g1 = g1 * trinv;
+
+            matrix tr2;
+
+            // Try a second time on the transpose
+            list gau = rowred(transpose(b0),1);
+            tr2 = transpose(gau[2]);
+            b0r = transpose(gau[1]);
+
+            if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
+            if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
+
+            matrix tr2inv = inverse(tr2);
+
+            b0 = b0r;
+            b1 = tr2inv * b1;
+            f0 = tr2inv * f0;
+            g0 = g0 * tr2;
+
+            kill tr, b0r, gau, trinv, tr2, tr2inv;
+        }
+        kill zero_b;
+    }
     /////// END GAUSS ////////
     
     // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
@@ -2916,6 +3204,11 @@ proc mfReduce(matrix A, list #)
     dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
     dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
     
+    if( factorOutContent )
+    {
+        B = B * Acont; //debug
+    }
+    
     list ret = B, F, G;
     kill B, F, G;
     
@@ -2925,6 +3218,30 @@ proc mfReduce(matrix A, list #)
     }
     
     return(ret);
+}
+
+////////////////////////////////////////////////////////////////////
+// isHomotopyIdempotent
+//
+// Partial check whether the given matrix is an idempotent up to htpy
+// TODO: we only check the y variables since the usage we have in mind
+// is for endomorphisms of MFs over the external variables.
+
+proc isHomotopyIdempotent(matrix E)
+{
+    int ycount = numYVars();
+    int i;
+    for(i=1;i<=ycount;i++)
+    {
+        E = subst( E, y(i), 0 );
+    }
+    
+    if( E * E != E )
+    {
+        return(0);
+    }
+    
+    return(1);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -3113,18 +3430,28 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
             Hlist[i] = mablow(Hlist[i],J);
         }
     }
+    
+    // Compute the idempotent on the inflation
+    ideal J = x(1)^N; 
+    matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J);
+    
     // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)])
     if( !useGrading )
     {
+        // for mfReduceAlt use list l = mfReduceAlt(Ablow,e)
         list l = mfReduce(Ablow);
     }
     else
     {
+        // For mfReduceAlt use list l = mfReduceAlt(Ablow, e, Ablowgr)
         list l = mfReduce(Ablow, Ablowgr);
     }
     matrix RT = l[1]; // Differential on reduced MF
     matrix F = l[2]; // A homotopy equivalence Ablow -> RT
     matrix G = l[3]; // A homotopy equivalence RT -> Ablow
+    
+    // For mfReduceAlt use matrix ep = l[useGrading + 4]
+    matrix ep = F * e * G;
     
     if( useGrading )
     {
@@ -3132,13 +3459,13 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         
         // This should agree with the old way of calculating
         // debug, this test can be removed later
-        if( RTgr != computeGradingFromInjection(G,Ablowgr) )
-        {
-            print("[mfPushforward] Unexpected disagreement on grading, exiting.");
-            return();
-        }
+        //if( RTgr != computeGradingFromInjection(G,Ablowgr) )
+        //{
+        //    print("[mfPushforward] Unexpected disagreement on grading, exiting.");
+        //    return();
+        //}
         
-        if( useSanityChecks ) // debug
+        if( 0 && useSanityChecks ) // debug unnecessary checks
         {
             // Check that F and G are degree zero
             if( !checkMorphismDegree(Ablow, Ablowgr, RT, RTgr, F, 0) )
@@ -3157,10 +3484,6 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     
     kill Ablow,l;
 
-    ideal J = x(1)^N;
-    matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J); // The idempotent on Ablow
-    matrix ep = F * e * G; // The idempotent on the reduction
-    
     // Move the homotopies over to the reduction RT
     if( homotopyList )
     {
@@ -3180,26 +3503,34 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         }
     }
     
-    // Check that ep is idempotent up to homotopy
-    matrix epck = ep;
-    for(i=1;i<=ycount;i++)
+    // Check that ep is idempotent up to homotopy, and strictify it
+    matrix epstrict;
+    if( ep * ep != ep )
     {
-        epck = subst( epck, y(i), 0 );
-    }
-    
-    if( epck * epck != epck )
-    {
-        // NOTE: If this test fails to pass, it is usually due to a sign problem...
-            
-        // TODO DEBUG DEBUG WARNING UGLY HACK
-        if( epck * epck == -1 * epck )
+        matrix epck = ep;
+        for(i=1;i<=ycount;i++)
         {
-            ep = -ep;
+            epck = subst( epck, y(i), 0 );
         }
+
+        if( epck * epck != epck )
+        {
+            // NOTE: If this test fails to pass, it is usually due to a sign problem...
+
+            // TODO DEBUG DEBUG WARNING UGLY HACK
+            if( epck * epck == -1 * epck )
+            {
+                ep = -ep;
+            }
+        }
+        kill epck;
+
+        epstrict = mfStrictifyIdempotent(RT, ep);
     }
-    kill epck;
-        
-    matrix epstrict = mfStrictifyIdempotent(RT, ep);
+    else
+    {
+        epstrict = ep;
+    }
     
     // Sanity checks:
     if( useSanityChecks )
