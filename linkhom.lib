@@ -975,8 +975,8 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
     
     intvec vertexParity = linkData[1];
     
-    int webSize = size(vertexParity); // number of vertices in our web
-    list stateDiagrams = powervec(webSize);
+    int webSiz = size(vertexParity); // number of vertices in our web
+    list stateDiagrams = powervec(webSiz);
 
     int i;
     for( i=1; i<=size(stateDiagrams); i++ )
@@ -1107,7 +1107,7 @@ proc linkCompile(list linkData, string fileName, int N)
     
     intvec vertexParity = linkData[1];
     list edgeList = linkData[2];
-    int webSize = size(vertexParity);
+    int webSiz = size(vertexParity);
     
     // Read in the save file, if it exists
     if( status(fileName,"exists") == "yes" )
@@ -1146,7 +1146,7 @@ proc linkCompile(list linkData, string fileName, int N)
     // add the data to returnListWebs. 
     // The compilation of a state 1101 is stored in web1101
     int i;
-    list stateDiagrams = powervec(webSize);
+    list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
     
     int globalZ2Degree = -1;
@@ -1530,7 +1530,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     
     intvec vertexParity = linkData[1];
     list edgeList = linkData[2];
-    int webSize = size(vertexParity);
+    int webSiz = size(vertexParity);
     
     // Read in the save file, if it exists
     if( status(fileName,"exists") == "yes" )
@@ -1574,7 +1574,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     // add the data to returnListWebs. 
     // The compilation of a state 1101 is stored in web1101
     int i;
-    list stateDiagrams = powervec(webSize);
+    list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
     
     int globalZ2Degree = -1;
