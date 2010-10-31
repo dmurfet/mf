@@ -1244,20 +1244,20 @@ proc linkCompile(list linkData, string fileName, int N)
         }
         
         // Decide on the degree in which we are nonzero and set the rank in that degree
-        int rank, compDegree;
+        int rankk, compDegree;
         intvec grading;
         if( dimComp(0) == 0 && dimComp(1) != 0 )
         {
             // We are concentrated in degree 1
             compDegree = 1;
-            rank = dimComp(1);
+            rankk = dimComp(1);
             grading = Z[3];
         }
         
         if( dimComp(0) != 0 && dimComp(1) == 0 )
         {
             compDegree = 0;
-            rank = dimComp(0);
+            rankk = dimComp(0);
             grading = Z[2];
         }
         
@@ -1265,7 +1265,7 @@ proc linkCompile(list linkData, string fileName, int N)
         {
             dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero."); //debug
             compDegree = -1;
-            rank = 0;
+            rankk = 0;
         }
         
         // All webs compilations should be living in one of the Z2 degrees
@@ -1286,10 +1286,10 @@ proc linkCompile(list linkData, string fileName, int N)
         
         // Add the compilation products to the return list
         // Recall that tuples in this list have the format
-        // (intvec state, int rank, int degree, intvec grading)
-        list compiledEntry = v, rank, compDegree, grading;
+        // (intvec state, int rankk, int degree, intvec grading)
+        list compiledEntry = v, rankk, compDegree, grading;
         returnListWebs = returnListWebs + list(compiledEntry);
-        kill compiledEntry, v, Z, R, lastEntry, rank, compDegree, grading;
+        kill compiledEntry, v, Z, R, lastEntry, rankk, compDegree, grading;
         kill dimComp(0), dimComp(1);
     }
     
