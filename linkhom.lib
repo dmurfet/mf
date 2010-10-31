@@ -1004,10 +1004,10 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
             
             if( d != j ){ i++; continue; }
             
-            int rank = webComp[i][2];
+            int rankk = webComp[i][2];
 
             // We do not include webs compiling to zero
-            if( rank == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; } //debug
+            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; } //debug
 
             // Look for this web as the source or target of something in h
             intvec weights = webComp[i][4];
@@ -1048,7 +1048,7 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
                 }
             }
             
-            websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rank,weights));
+            websByDegree[j-minDegree+1] = websByDegree[j-minDegree+1] + list(list(web,rankk,weights));
         }
     }
     
