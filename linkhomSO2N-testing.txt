@@ -1,0 +1,43 @@
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib"; 
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+LIB "linkhomSO2N.lib";
+ring rr=0,(x(1..8)),dp;
+int N = 4;
+printlevel = 1;
+
+poly W4 = -x(1)^9-x(3)^9+x(5)^9+x(7)^9-x(1)*x(2)^2-x(3)*x(4)^2+x(5)*x(6)^2+x(7)*x(8)^2;
+
+
+// verticalArcs, horizontalArcs, virtualCrossing, F and G do what they are supposed to:
+
+matrix ve = verticalArcs(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ve*ve == W4 * unitmat(16);
+
+matrix ho = horizontalArcs(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ho*ho == W4 * unitmat(16);
+
+matrix vi = virtualCrossing(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+vi*vi == W4 * unitmat(16);
+
+matrix F = Fmap(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+vi*F - F*ve == 0 * unitmat(16);
+
+matrix G = Gmap(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ho*G - G*vi == 0 * unitmat(16);
+
+
+// But X is not the preimage of -G*F (as it should be, see [KR07, (5.56)]:
+
+matrix X = Xmap(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ho*X + X*ve == -G * F;
+
+// Maybe we should just choose any X that solves this equation.
+
+
+// Anyway, with the current X, the matrix associated to the 4-vertex is not a MF:
+
+matrix C = ConvFourVertex(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+C*C;
