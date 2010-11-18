@@ -150,11 +150,14 @@ proc verticalArcs(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
     poly r2 = -y1 + y4;
     poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
     
-    matrix K1[2][2] = 0, p1, q2*r2 + q1*r1*C, 0;
-    matrix K2[2][2] = 0, p2, q2*r1 + q1*r2, 0;
-
-    matrix K = MFtensor(K1,K2);
-    kill p1,p2,q1,q2,r1,r2,C,K1,K2;
+    // Vertical non-crossing before tensoring with commonKoszul, see [KR07, (4.2)]:
+    matrix Pve[2][2] = p2,                      p1,
+                       q2*r2+q1*r1*C, -q2*r1-q1*r2;
+    matrix Qve[2][2] = q1*r2 + q2*r1,    p1,
+                       q2*r2 + q1*r1*C, -p2;
+    matrix K = blockmat( zeromat(2), Pve, Qve, zeromat(2) );    
+                         
+    kill p1,p2,q1,q2,r1,r2,C,Pve,Qve;
 
     matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
     matrix mfVertical = MFtensor(commonFactor,K);
@@ -186,11 +189,14 @@ proc horizontalArcs(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
     poly r2 = -y1 + y4;
     poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
     
-    matrix K1[2][2] = 0, q1, p2*r2 + p1*r1*C, 0;
-    matrix K2[2][2] = 0, q2, p1*r2 + p2*r1, 0;
+    // Horizontal non-crossing before tensoring with commonKoszul, see [KR07, (4.2)]:
+    matrix Pho[2][2] = q2,                      q1,
+                       p2*r2+p1*r1*C, -p1*r2-p2*r1;
+    matrix Qho[2][2] = p1*r2+p2*r1,    q1,
+                       p2*r2+p1*r1*C, -q2;
+    matrix K = blockmat( zeromat(2), Pho, Qho, zeromat(2) );
 
-    matrix K = MFtensor(K1,K2);
-    kill p1,p2,q1,q2,r1,r2,C,K1,K2;
+    kill p1,p2,q1,q2,r1,r2,C,Pho,Qho;
     
     matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
     matrix mfHorizontal = MFtensor(commonFactor,K);
@@ -226,11 +232,14 @@ proc virtualCrossing(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
     poly r2 = -y1 + y4;
     poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
     
-    matrix K1[2][2] = 0, r1, p2*q2 + p1*q1*C, 0;
-    matrix K2[2][2] = 0, r2, p1*q2 + p2*q1, 0;
+    // Virtual crossing before tensoring with commonKoszul, see [KR07, (4.3)]:
+    matrix Pvi[2][2] = r2,                      r1,
+                       p2*q2+p1*q1*C, -p1*q2-p2*q1;
+    matrix Qvi[2][2] = p1*q2+p2*q1,    r1,
+                       p2*q2+p1*q1*C, -r2;
+    matrix K = blockmat( zeromat(2), Pvi, Qvi, zeromat(2) );
 
-    matrix K = MFtensor(K1,K2);
-    kill p1,p2,q1,q2,r1,r2,C,K1,K2;
+    kill p1,p2,q1,q2,r1,r2,C,Pvi,Qvi;
     
     matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
     matrix mfVirtualCrossing = MFtensor(commonFactor,K);
@@ -374,7 +383,7 @@ proc ConvFourVertex(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
     matrix F = Fmap( x1,y1,x2,y2,x3,y3,x4,y4, N );
     matrix G = Gmap( x1,y1,x2,y2,x3,y3,x4,y4, N );
     matrix X = Xmap( x1,y1,x2,y2,x3,y3,x4,y4, N );
-
+    
     list veBlocks = extractblockmat(ve);
     list hoBlocks = extractblockmat(ho);
     list viBlocks = extractblockmat(vi);
@@ -387,14 +396,14 @@ proc ConvFourVertex(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
     matrix Pvi = viBlocks[2];
     matrix F0 = FBlocks[1];
     matrix G0 = GBlocks[1];
-    matrix X0 = veBlocks[3];
+    matrix X0 = XBlocks[3];
 
     matrix Qve = veBlocks[3];
     matrix Qho = hoBlocks[3];
     matrix Qvi = viBlocks[3];
     matrix F1 = FBlocks[4];
     matrix G1 = GBlocks[4];
-    matrix X1 = veBlocks[2];
+    matrix X1 = XBlocks[2];
     
     matrix Pconv[24][24];
     int i,j;
@@ -431,148 +440,3 @@ proc ConvFourVertex(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
     
     return(Conv);
 }
-
-
-////////////////////////////////////////////////////////////////////
-// ConvFourVertexAlternate (does not work...)
-//
-// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
-// an integer N, and we return the matrix factorisation which is the
-// convolution
-//
-//                  \   /
-//                   \ /
-//     ) (  --F-->    o    --G-->  ) (  (rotated by 90 degrees)
-//                   / \
-//                  /   \
-//
-// (see [KR2, (5.57-59) & (6.10) & (6.25)]) with x1,y1,x2,y2 replaced
-// by -x1,-y1,-x2,-y2.
-
-proc ConvFourVertexAlternate(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
-{
-    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
-    poly p1 = -x2 + x4;
-    poly p2 = -y2 + y4;
-    poly q1 = x3 + x4;
-    poly q2 = y3 + y4;
-    poly r1 = -x1 + x4;
-    poly r2 = -y1 + y4;
-    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
-
-    // Vertical non-crossing before tensoring with commonKoszul, see [KR07, (4.2)]:
-    matrix Pve[2][2] = p2,                      p1,
-                       q2*r2+q1*r1*C, -q2*r1-q1*r2;
-    matrix Qve[2][2] = q1*r2 + q2*r1,    p1,
-                       q2*r2 + q1*r1*C, -p2;
-    matrix ve = blockmat( zeromat(2), Pve, Qve, zeromat(2) );    
-    
-    // Virtual crossing before tensoring with commonKoszul, see [KR07, (4.3)]:
-    matrix Pvi[2][2] = r2,                      r1,
-                       p2*q2+p1*q1*C, -p1*q2-p2*q1;
-    matrix Qvi[2][2] = p1*q2+p2*q1,    r1,
-                       p2*q2+p1*q1*C, -r2;
-    matrix vi = blockmat( zeromat(2), Pvi, Qvi, zeromat(2) );
-    
-    // Horizontal non-crossing before tensoring with commonKoszul, see [KR07, (4.2)]:
-    matrix Pho[2][2] = q2,                      q1,
-                       p2*r2+p1*r1*C, -p1*r2-p2*r1;
-    matrix Qho[2][2] = p1*r2+p2*r1,    q1,
-                       p2*r2+p1*r1*C, -q2;
-    matrix ho = blockmat( zeromat(2), Pho, Qho, zeromat(2) );
-                       
-    matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
-        
-    // The actual MFs associated to the three kinds of "crossings":
-    matrix mfVertical = MFtensor( commonFactor, ve );
-    matrix mfVirtual = MFtensor( commonFactor, vi );
-    matrix mfHorizontal = MFtensor( commonFactor, ho );    
-    
-    // Extract the Z2-degree 0 (or Q) and Z2-degree 1 (or P) parts of these matrices:
-    list mfVerticalBlocks = extractblockmat(mfVertical);
-    matrix Pvert = mfVerticalBlocks[2];
-    matrix Qvert = mfVerticalBlocks[3];
-
-    list mfVirtualBlocks = extractblockmat(mfVirtual);    
-    matrix Pvirt = mfVirtualBlocks[2];
-    matrix Qvirt = mfVirtualBlocks[3];
-
-    list mfHorizontalBlocks = extractblockmat(mfHorizontal);
-    matrix Phori = mfHorizontalBlocks[2];
-    matrix Qhori = mfHorizontalBlocks[3];
-    
-    
-    // Define the maps F,G,X from [KR07, (4.6) & (4.24) & (4.27) & tensor with id]:
-    matrix F0[2][2] = 0, 1, q2^2 - q1^2 * C, 0;
-    matrix F1[2][2] = q2, -q1, q1 * C, -q2;
-    matrix Fsmall = blockmat( F0, zeromat(2), zeromat(2), F1 );
-    matrix F = ZZtensor( unitmat(4), Fsmall );
-    
-    matrix G0[2][2] = 0, 1, p2^2 - p1^2 * C, 0;
-    matrix G1[2][2] = p2, -p1, p1 * C, -p2;
-    matrix Gsmall = blockmat( G0, zeromat(2), zeromat(2), G1 );
-    matrix G = ZZtensor( unitmat(4), Gsmall );
-    
-    matrix X0[2][2] = -q2, 0, q1 * C, 0;
-    matrix X1[2][2] = 0, 0, p1 * C, p2;
-    matrix Xsmall = blockmat( X0, zeromat(2), zeromat(2), X1 );
-    matrix X = ZZtensor( unitmat(4), Xsmall );
-    
-    // Extract the homogeneous Z2-degree pieces (they are all 8x8 matrices):
-    list Fblocks = extractblockmat(F);
-    matrix F0 = Fblocks[1];
-    matrix F1 = Fblocks[4];
-
-    list Gblocks = extractblockmat(G);
-    matrix G0 = Gblocks[1];
-    matrix G1 = Gblocks[4];
-
-    list Xblocks = extractblockmat(X);
-    matrix X0 = Xblocks[1];
-    matrix X1 = Xblocks[4];
-
-
-    // Use (the structure of, as we have already tensored with the common factor)
-    // [KR07, (6.10)] to define Pconv and Qconv:
-    
-    // TODO: THIS DOES NOT GIVE A MATRIX FACTORISATION, so there must be a mistake here
-    //       or a misprint in [KR07]. I don't know what it is.
-    
-    matrix Pconv[24][24];
-    int i,j;
-    for( i=1; i<=8; i++ )
-    {
-        for( j=1; j<=8; j++ )
-        {
-            Pconv[i,j] = Pvert[i,j];
-            Pconv[i+8,j] = F1[i,j];
-            Pconv[i+8,j+8] = -Qvirt[i,j];
-            Pconv[i+16,j] = X1[i,j];
-            Pconv[i+16,j+8] = G0[i,j];
-            Pconv[i+16,j+16] = Phori[i,j];
-        }
-    }
-
-    matrix Qconv[24][24];
-    for( i=1; i<=8; i++ )
-    {
-        for( j=1; j<=8; j++ )
-        {
-            Qconv[i,j] = Qvert[i,j];
-            Qconv[i+8,j] = F0[i,j];
-            Qconv[i+8,j+8] = -Pvirt[i,j];
-            Qconv[i+16,j] = X0[i,j];
-            Qconv[i+16,j+8] = G1[i,j];
-            Qconv[i+16,j+16] = Qhori[i,j];
-        }
-    }
-
-    matrix Conv = blockmat( zeromat(24), Pconv, Qconv, zeromat(24) );
-    
-    // kill A,B,C,X,F,G,Fblocks,Gblocks,Fodd,Godd,AZero,CZero,FBXG;
-    
-    return(Conv);
-}
-
-    
-    
