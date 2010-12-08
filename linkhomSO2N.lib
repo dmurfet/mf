@@ -1,0 +1,442 @@
+version="0.1";
+category="Miscellaneous";
+// summary description of the library
+info="
+LIBRARY:   linkhomSO2N.lib  Computation of link homology using web compilation
+AUTHOR:    Nils Carqueville, Daniel Murfet
+KEYWORDS:  matrix factorization, link homology
+
+PROCEDURES:
+";
+
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+LIB "blow.lib";
+LIB "mfweb.lib";
+
+////////////////////////////////////////////////////////////////////
+// USAGE GUIDE
+//
+// We expect the ambient ring to have twice the number of variables as edges
+// in the link under consideration. In principle parameters should be OK, but
+// this has not been checked.
+//
+// The references to [KR07] are to Khovanov and Rozansky "Virtual crossings, 
+// convolutions and a categorification of the SO(2N) Kauffman polynomial", 
+// arXiv:math/0701333v1.
+
+////////////////////////////////////////////////////////////////////
+// NOTES ON GRADING
+//
+// In [KR07, p.21] x-variables are assigned degree 2 and y-variables have
+// degree 2N. 
+
+////////////////////////////////////////////////////////////////////
+// NOTES ON MFs ASSIGNED TO VERTICES
+// 
+// We follow the convention of [KR07, (3.37)] (which differs from the
+// one in arXiv:math/0401268v2) and label the edges of a vertex as in 
+// the picture
+//
+//      3       4
+//        \   /
+//         \/
+//         /\
+//       /   \
+//     1       2
+// 
+// where i=1,2,3,4 really means the pair of variables xi,yi.
+//
+// Note that the convention of [KR07] (see page 21 there) is that all
+// edges of the 4-vertices considered are oriented outwards, and hence
+// the associated MFs, factorise the polynomial
+//     W1 + W2 + W3 + W4
+// (see [KR07, (3.38)]) with only plus signs. We however want to have
+// a MF of 
+//     - W1 - W2 + W3 + W4
+// and hence we always replace x1,y1,x2,y2 by -x1,-y1,-x2,-y2 in the
+// formulas for MFs of [KR07].
+
+
+////////////////////////////////////////////////////////////////////
+// w2poly
+//
+// Given two variables a,b, we return the polynomial w(a,b) of [KR07, (3.9)].
+
+proc w2poly(poly a, poly b, int N)
+{
+    poly wa = a^(2*N + 1);
+    poly wb = b^(2*N + 1);
+    poly w2 = ( wa - wb )/( a - b );
+    kill wa, wb;
+    return(w2);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// w3poly
+//
+// Given three variables a,b,c, we return the polynomial w(a,b,c) of [KR07, (3.9)].
+
+proc w3poly(poly a, poly b, poly c, int N)
+{
+    poly w1 = w2poly(a,b,N);
+    poly w2 = w2poly(a,c,N);
+    poly w3 = ( w1 - w2 )/( b - c );
+    kill w1, w2;
+    return(w3);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// w4poly
+//
+// Given three variables a,b,c,d, we return the polynomial w(a,b,c,d) of [KR07, (3.8)].
+
+proc w4poly(poly a, poly b, poly c, poly d, int N)
+{
+    poly w1 = w3poly(a,b,c,N);
+    poly w2 = w3poly(a,b,d,N);
+    poly w4 = ( w1 - w2 )/( c - d );
+    kill w1, w2;
+    return(w4);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// commonKoszul
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the matrix factorisation [KR2, (3.59)]
+// with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc commonKoszul(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials A,B in [KR07, (3.60-61)]:
+    poly A = - (y3+y4)*(-y1-y2+y4) - y1*y2 + w2poly(x1,x3,N) + (-x2+x4) * w3poly(-x1,-x2,-x3,N)
+             - (-x2+x4)*(-x1+x4)*( w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N) );
+    poly B = x1*y1 + x2*y2 + x3*y3 - x4*y4;
+    
+    matrix K1[2][2] = 0, A, -x1-x2+x3+x4, 0;
+    matrix K2[2][2] = 0, B, -y1-y2+y3+y4, 0;
+    
+    matrix K = MFtensor(K1,K2);
+    kill A,B,K1,K2;
+        
+    return(K);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// verticalArcs
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the matrix factorisation associated to
+// the "crossing" 
+//
+//     ) (
+//
+// (see [KR2, (3.53,58)]) with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc verticalArcs(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
+    poly p1 = -x2 + x4;
+    poly p2 = -y2 + y4;
+    poly q1 = x3 + x4;
+    poly q2 = y3 + y4;
+    poly r1 = -x1 + x4;
+    poly r2 = -y1 + y4;
+    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
+    
+    // Vertical non-crossing before tensoring with commonKoszul, see [KR07, (4.2)]:
+    matrix Pve[2][2] = p2,                      p1,
+                       q2*r2+q1*r1*C, -q2*r1-q1*r2;
+    matrix Qve[2][2] = q1*r2 + q2*r1,    p1,
+                       q2*r2 + q1*r1*C, -p2;
+    matrix K = blockmat( zeromat(2), Pve, Qve, zeromat(2) );    
+                         
+    kill p1,p2,q1,q2,r1,r2,C,Pve,Qve;
+
+    matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
+    matrix mfVertical = MFtensor(commonFactor,K);
+    kill K,commonFactor;
+        
+    return(mfVertical);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// horizontalArcs
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the matrix factorisation associated to
+// the "crossing" 
+//
+//     ) (  (rotated by 90 degrees)
+//
+// (see [KR2, (3.55,58)]) with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc horizontalArcs(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
+    poly p1 = -x2 + x4;
+    poly p2 = -y2 + y4;
+    poly q1 = x3 + x4;
+    poly q2 = y3 + y4;
+    poly r1 = -x1 + x4;
+    poly r2 = -y1 + y4;
+    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
+    
+    // Horizontal non-crossing before tensoring with commonKoszul, see [KR07, (4.2)]:
+    matrix Pho[2][2] = q2,                      q1,
+                       p2*r2+p1*r1*C, -p1*r2-p2*r1;
+    matrix Qho[2][2] = p1*r2+p2*r1,    q1,
+                       p2*r2+p1*r1*C, -q2;
+    matrix K = blockmat( zeromat(2), Pho, Qho, zeromat(2) );
+
+    kill p1,p2,q1,q2,r1,r2,C,Pho,Qho;
+    
+    matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
+    matrix mfHorizontal = MFtensor(commonFactor,K);
+    kill K,commonFactor;
+        
+    return(mfHorizontal);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// virtualCrossing
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the matrix factorisation associated to
+// the virtual crossing
+//
+//     \   /
+//      \ /
+//       o
+//      / \
+//     /   \
+//
+// (see [KR2, (3.54,58)]) with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc virtualCrossing(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
+    poly p1 = -x2 + x4;
+    poly p2 = -y2 + y4;
+    poly q1 = x3 + x4;
+    poly q2 = y3 + y4;
+    poly r1 = -x1 + x4;
+    poly r2 = -y1 + y4;
+    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
+    
+    // Virtual crossing before tensoring with commonKoszul, see [KR07, (4.3)]:
+    matrix Pvi[2][2] = r2,                      r1,
+                       p2*q2+p1*q1*C, -p1*q2-p2*q1;
+    matrix Qvi[2][2] = p1*q2+p2*q1,    r1,
+                       p2*q2+p1*q1*C, -r2;
+    matrix K = blockmat( zeromat(2), Pvi, Qvi, zeromat(2) );
+
+    kill p1,p2,q1,q2,r1,r2,C,Pvi,Qvi;
+    
+    matrix commonFactor = commonKoszul(x1,y1,x2,y2,x3,y3,x4,y4,N);
+    matrix mfVirtualCrossing = MFtensor(commonFactor,K);
+    kill K,commonFactor;
+        
+    return(mfVirtualCrossing);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// Fmap
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the morphism of matrix factorisations
+//
+//                \   /
+//                 \ /
+//      ) (  -->    o
+//                 / \
+//                /   \
+//
+// (see [KR2, (4.6-7)]) with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc Fmap(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
+    poly p1 = -x2 + x4;
+    poly p2 = -y2 + y4;
+    poly q1 = x3 + x4;
+    poly q2 = y3 + y4;
+    poly r1 = -x1 + x4;
+    poly r2 = -y1 + y4;
+    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
+    
+    matrix F[4][4] = 0,               1, 0,      0,
+                     q2^2 - (q1^2)*C, 0, 0,      0,
+                     0,               0, q2,   -q1,
+                     0,               0, q1*C, -q2;    
+
+    F = ZZtensor( unitmat(4), F );
+    
+    kill p1,p2,q1,q2,r1,r2,C;
+        
+    return(F);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// Gmap
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the morphism of matrix factorisations
+//
+//     \   /
+//      \ /
+//       o    -->  ) (  (rotated by 90 degrees)
+//      / \
+//     /   \
+//
+// (see [KR2, (4.24)]) with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc Gmap(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
+    poly p1 = -x2 + x4;
+    poly p2 = -y2 + y4;
+    poly q1 = x3 + x4;
+    poly q2 = y3 + y4;
+    poly r1 = -x1 + x4;
+    poly r2 = -y1 + y4;
+    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
+    
+    matrix G[4][4] = 0,               1, 0,      0,
+                     p2^2 - (p1^2)*C, 0, 0,      0,
+                     0,               0, p2,   -p1,
+                     0,               0, p1*C, -p2;
+
+    G = ZZtensor( unitmat(4), G );
+    
+    kill p1,p2,q1,q2,r1,r2,C;
+        
+    return(G);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// Xmap
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the morphism of matrix factorisations
+//
+//     ) (  -->  ) (  (rotated by 90 degrees)
+//
+// (see [KR2, (4.27,30)]) with x1,y1,x2,y2 replaced by -x1,-y1,-x2,-y2.
+
+proc Xmap(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    // First define the polynomials p1,p2,q1,q2,r1,r2,C in [KR07, (3.50-52)]:
+    poly p1 = -x2 + x4;
+    poly p2 = -y2 + y4;
+    poly q1 = x3 + x4;
+    poly q2 = y3 + y4;
+    poly r1 = -x1 + x4;
+    poly r2 = -y1 + y4;
+    poly C = w4poly(-x1,-x2,-x3,x4,N) + w4poly(-x1,x1,-x2,x4,N) + w4poly(-x1,x1,x2,x4,N);
+    
+    matrix X[4][4] = 0, 0, 0,     0,
+                     0, 0, p1*C, p2,
+                    -q2,  0, 0,  0, 
+                     q1*C, 0, 0,  0;
+    
+    X = ZZtensor( unitmat(4), X );
+    
+    kill p1,p2,q1,q2,r1,r2,C;
+        
+    return(X);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// ConvFourVertex
+//
+// We are given four pairs of variables x1,y1,x2,y2,x3,y3,x4,y4 and 
+// an integer N, and we return the matrix factorisation which is the
+// convolution
+//
+//                  \   /
+//                   \ /
+//     ) (  --F-->    o    --G-->  ) (  (rotated by 90 degrees)
+//                   / \
+//                  /   \
+//
+// (see [KR2, (5.57-59) & (6.10) & (6.25)]) with x1,y1,x2,y2 replaced
+// by -x1,-y1,-x2,-y2.
+
+proc ConvFourVertex(poly x1,y1,x2,y2,x3,y3,x4,y4, int N)
+{
+    matrix ve = verticalArcs( x1,y1,x2,y2,x3,y3,x4,y4, N );
+    matrix ho = horizontalArcs( x1,y1,x2,y2,x3,y3,x4,y4, N );
+    matrix vi = virtualCrossing( x1,y1,x2,y2,x3,y3,x4,y4, N );
+    matrix F = Fmap( x1,y1,x2,y2,x3,y3,x4,y4, N );
+    matrix G = Gmap( x1,y1,x2,y2,x3,y3,x4,y4, N );
+    matrix X = Xmap( x1,y1,x2,y2,x3,y3,x4,y4, N );
+    
+    list veBlocks = extractblockmat(ve);
+    list hoBlocks = extractblockmat(ho);
+    list viBlocks = extractblockmat(vi);
+    list FBlocks = extractblockmat(F);
+    list GBlocks = extractblockmat(G);
+    list XBlocks = extractblockmat(X);
+    
+    matrix Pve = veBlocks[2];
+    matrix Pho = hoBlocks[2];
+    matrix Pvi = viBlocks[2];
+    matrix F0 = FBlocks[1];
+    matrix G0 = GBlocks[1];
+    matrix X0 = XBlocks[3];
+
+    matrix Qve = veBlocks[3];
+    matrix Qho = hoBlocks[3];
+    matrix Qvi = viBlocks[3];
+    matrix F1 = FBlocks[4];
+    matrix G1 = GBlocks[4];
+    matrix X1 = XBlocks[2];
+    
+    matrix Pconv[24][24];
+    int i,j;
+    for( i=1; i<=8; i++ )
+    {
+        for( j=1; j<=8; j++ )
+        {
+            Pconv[i,j] = Pve[i,j];
+            Pconv[i+8,j] = F1[i,j];
+            Pconv[i+8,j+8] = -Qvi[i,j];
+            Pconv[i+16,j] = X1[i,j];
+            Pconv[i+16,j+8] = G0[i,j];
+            Pconv[i+16,j+16] = Pho[i,j];
+        }
+    }
+
+    matrix Qconv[24][24];
+    for( i=1; i<=8; i++ )
+    {
+        for( j=1; j<=8; j++ )
+        {
+            Qconv[i,j] = Qve[i,j];
+            Qconv[i+8,j] = F0[i,j];
+            Qconv[i+8,j+8] = -Pvi[i,j];
+            Qconv[i+16,j] = X0[i,j];
+            Qconv[i+16,j+8] = G1[i,j];
+            Qconv[i+16,j+16] = Qho[i,j];
+        }
+    }
+
+    matrix Conv = blockmat( zeromat(24), Pconv, Qconv, zeromat(24) );
+    
+    // kill A,B,C,X,F,G,Fblocks,Gblocks,Fodd,Godd,AZero,CZero,FBXG;
+    
+    return(Conv);
+}

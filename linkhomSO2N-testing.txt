@@ -1,0 +1,57 @@
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib"; 
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+LIB "linkhomSO2N.lib";
+ring rr=0,(x(1..8)),dp;
+int N = 4;
+printlevel = 1;
+
+poly W4 = -x(1)^9-x(3)^9+x(5)^9+x(7)^9-x(1)*x(2)^2-x(3)*x(4)^2+x(5)*x(6)^2+x(7)*x(8)^2;
+
+// All is well with the definitions from linkhomSO2N.lib:
+
+matrix ve = verticalArcs(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ve*ve == W4 * unitmat(16);
+matrix ho = horizontalArcs(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ho*ho == W4 * unitmat(16);
+matrix vi = virtualCrossing(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+vi*vi == W4 * unitmat(16);
+matrix F = Fmap(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+vi*F - F*ve == 0 * unitmat(16);
+matrix G = Gmap(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ho*G - G*vi == 0 * unitmat(16);
+matrix X = Xmap(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+ho*X + X*ve == -G * F;
+matrix C = ConvFourVertex(x(1),x(2),x(3),x(4),x(5),x(6),x(7),x(8),N);
+C*C == W4 * unitmat(48);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Try compiling the worst state of the Hopf link, i.e. the fusion of two (48x48)-matrices:
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "mfweb.lib";
+LIB "linkhomSO2N.lib";
+int nx=4;
+int ny=4;
+ring RRRR=(0,r),(x(1..nx),y(1..ny)),dp;
+int N = 2;
+printlevel = 1;
+
+matrix defect1 = ConvFourVertex(x(3),y(3),x(4),y(4),x(2),y(2),x(1),y(1),N);
+matrix defect2 = ConvFourVertex(x(1),y(1),x(2),y(2),x(4),y(4),x(3),y(3),N);
+
+list e1 = list( 1, 2, list(x(1),y(1)), x(1)*y(1)^2 + x(1)^(2*N + 1) );
+list e2 = list( 2, 1, list(x(2),y(2)), x(2)*y(2)^2 + x(2)^(2*N + 1) );
+list e3 = list( 1, 2, list(x(3),y(3)), x(3)*y(3)^2 + x(3)^(2*N + 1) );
+list e4 = list( 2, 1, list(x(4),y(4)), x(4)*y(4)^2 + x(4)^(2*N + 1) );
+
+list web = list( 2, list(e1,e2,e3,e4), list(defect1,defect2) );
+
+list compStrat = list(1,2), list(x(1),y(1),x(2),y(2),x(3),y(3),x(4),y(4));
+list L = webCompilePair(web, compStrat);
+// "[webCompilePair] Homotopy construction failure, exiting."
