@@ -178,6 +178,14 @@ proc linkLibrary(string s)
         intvec vertexParity = -1,-1;
         retLink = vertexParity, list(edgevec(1),edgevec(2));
     }
+
+    if( s == "hopf_version_2" )
+    {
+        intvec edgevec(1) = 3,2,1,4;
+        intvec edgevec(2) = 4,1,2,3;
+        intvec vertexParity = -1,-1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2));
+    }
     
     if( s == "solomon" )
     {    
@@ -185,6 +193,16 @@ proc linkLibrary(string s)
         intvec edgevec(2) = 8,3,2,7;
         intvec edgevec(3) = 4,5,6,1;
         intvec edgevec(4) = 7,6,5,8;
+        intvec vertexParity = 1,1,1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
+    }
+
+    if( s == "solomon_version_2" )
+    {    
+        intvec edgevec(1) = 2,3,4,1;
+        intvec edgevec(2) = 7,8,3,2;
+        intvec edgevec(3) = 1,4,5,6;
+        intvec edgevec(4) = 6,5,8,7;
         intvec vertexParity = 1,1,1,1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
     }
@@ -199,6 +217,33 @@ proc linkLibrary(string s)
         intvec vertexParity = 1,1,1,-1,-1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
     }
+
+    // NOTE: Either "whitehead_version_2" or "whitehead_version_2_alternate" below
+    //       are equivalent to "whitehead" above; all three of them give the same KR invariant
+    //       for N=2, but either "whitehead_version_2" or "whitehead_version_2_alternate" has 
+    //       a different relative orientation than "whitehead".
+
+    if( s == "whitehead_version_2" )
+    {
+        intvec edgevec(1) = 2,4,3,1;
+        intvec edgevec(2) = 8,7,5,4;
+        intvec edgevec(3) = 9,6,7,8;
+        intvec edgevec(4) = 1,10,9,2;
+        intvec edgevec(5) = 3,5,6,10;
+        intvec vertexParity = -1,1,1,-1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
+    }
+
+    if( s == "whitehead_version_2_alternate" )
+    {
+        intvec edgevec(1) = 4,3,1,2;
+        intvec edgevec(2) = 7,5,4,8;
+        intvec edgevec(3) = 8,9,6,7;
+        intvec edgevec(4) = 2,1,10,9;
+        intvec edgevec(5) = 6,10,3,5;
+        intvec vertexParity = 1,-1,-1,1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
+    }
     
     if( s == "borromeanRings" )
     {    
@@ -209,6 +254,42 @@ proc linkLibrary(string s)
         intvec edgevec(5) = 8,5,10,12;
         intvec edgevec(6) = 9,12,11,1;
         intvec vertexParity = -1,1,-1,1,1,-1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+
+    if( s == "borromeanRings_version_2" )
+    {    
+        intvec edgevec(1) = 1,2,3,7;
+        intvec edgevec(2) = 6,3,4,5;
+        intvec edgevec(3) = 9,7,6,8;
+        intvec edgevec(4) = 10,4,2,11;
+        intvec edgevec(5) = 8,5,10,12;
+        intvec edgevec(6) = 12,11,1,9;
+        intvec vertexParity = -1,-1,1,1-1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+
+    if( s == "borromeanRings_version_3" )
+    {    
+        intvec edgevec(1) = 2,3,7,1;
+        intvec edgevec(2) = 5,6,3,4;
+        intvec edgevec(3) = 9,7,6,8;
+        intvec edgevec(4) = 10,4,2,11;
+        intvec edgevec(5) = 12,8,5,10;
+        intvec edgevec(6) = 11,1,9,12;
+        intvec vertexParity = 1,1,1,-1,-1,-1,
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+
+    if( s == "borromeanRings_version_4" )
+    {    
+        intvec edgevec(1) = 2,3,7,1;
+        intvec edgevec(2) = 4,5,6,3;
+        intvec edgevec(3) = 7,6,8,9;
+        intvec edgevec(4) = 11,10,4,2;
+        intvec edgevec(5) = 12,8,5,10;
+        intvec edgevec(6) = 1,9,12,11;
+        intvec vertexParity = 1,-1,-1,1,-1,1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
@@ -244,7 +325,19 @@ proc linkLibrary(string s)
         intvec edgevec(4) = 10,12,11,9;
         intvec edgevec(5) = 8,9,6,7;
         intvec edgevec(6) = 7,5,10,8;
-        intvec vertexParity = 1,1,1,1,1,1;
+        intvec vertexParity = 1,1,-1,-1,1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+
+    if( s == "L6a1_version_2" )
+    {    
+        intvec edgevec(1) = 1,5,4,3;
+        intvec edgevec(2) = 3,4,6,2;
+        intvec edgevec(3) = 2,11,12,1;
+        intvec edgevec(4) = 10,12,11,9;
+        intvec edgevec(5) = 9,6,7,8;
+        intvec edgevec(6) = 8,7,5,10;
+        intvec vertexParity = -1,-1,-1,-1,-1,-1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
@@ -260,6 +353,18 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
+    if( s == "L6a2_version_2" )
+    {    
+        intvec edgevec(1) = 3,4,2,1;
+        intvec edgevec(2) = 1,2,5,11;
+        intvec edgevec(3) = 12,6,4,3;
+        intvec edgevec(4) = 7,5,6,8;
+        intvec edgevec(5) = 8,10,9,7;
+        intvec edgevec(6) = 11,9,10,12;
+        intvec vertexParity = -1,-1,-1,-1,-1,-1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+
     if( s == "L6a3" )
     {    
         intvec edgevec(1) = 1,2,12,11;
@@ -268,6 +373,18 @@ proc linkLibrary(string s)
         intvec edgevec(4) = 7,8,6,5;
         intvec edgevec(5) = 9,10,8,7;
         intvec edgevec(6) = 11,12,10,9;
+        intvec vertexParity = 1,1,1,1,1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+
+    if( s == "L6a3_version_2" )
+    {    
+        intvec edgevec(1) = 11,1,2,12;
+        intvec edgevec(2) = 4,2,1,3;
+        intvec edgevec(3) = 3,5,6,4;
+        intvec edgevec(4) = 8,6,5,7;
+        intvec edgevec(5) = 7,9,10,8;
+        intvec edgevec(6) = 12,10,9,11;
         intvec vertexParity = 1,1,1,1,1,1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
