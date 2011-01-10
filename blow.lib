@@ -3954,110 +3954,145 @@ proc displaySplittingRecord(list R)
 }
 
 ////////////////////////////////////////////////////////////////////
-//
 // Old routines for computing cohomology
 //
+// The notation is given in Nils Carqueville "Computing BRST cohomology
+// algorithmically". Here is an overview. Let Q = (0 g \\ f 0) and
+// Q' = (0 g' \\ f' 0) be matrix factorisations of a common potential.
+// 
+// We define the operator dminus on even elements of Hom(Q,Q') (the Z2
+// graded Hom, before taking cohomology) and dplus on odd elements, by
+//
+// dminus(a) = Q' a - a Q    and   dplus(a) = Q' a + a Q.
+//
+// i.e. the differential on Hom(Q,Q'). To compute cohomology we want to
+// find the kernel and images of these maps, but first we convert them
+// into matrices. We do this by writing dminus (resp. dplus) as 2rr' x 2rr'
+// matrices which act on maps a represented as column vectors (in the natural
+// way, see the preprint). This is done in the routines dminus and dplus
+// below. Then we can take Ker and Im and, using matrix2vector and vector2matrix,
+// convert between the representations.
+
 ////////////////////////////////////////////////////////////////////
+// rdsum
+//
+// Returns the matrix A^{\oplus r}
 
 proc rdsum(matrix A, int r)
 {
-list B;
-B[1]=A;
-for (int i=2; i<=r; i++)
-{
-B[i]=dsum(B[i-1],A);
+    list B;
+    B[1]=A;
+    for (int i=2; i<=r; i++)
+    {
+        B[i]=dsum(B[i-1],A);
+    }
+    return(B[r]);
 }
-return(B[r]);
-}
-//-----------------------------------------------------------------------------
+
 proc dminus(matrix f,g,f',g')
 {
-int r=nrows(f);
-int r'=nrows(f');
-matrix P1=concat(tensor(f',unitmat(r)), rdsum(-transpose(f),r'));
-matrix P2=concat(rdsum(transpose(-g),r'),tensor(g',unitmat(r)));
-matrix P[2*r*r'][2*r*r']=P2,P1;
-return(P);
+    int r=nrows(f);
+    int r'=nrows(f');
+    matrix P1=concat(tensor(f',unitmat(r)), rdsum(-transpose(f),r'));
+    matrix P2=concat(rdsum(transpose(-g),r'),tensor(g',unitmat(r)));
+    matrix P[2*r*r'][2*r*r']=P2,P1;
+    return(P);
 }
-//-----------------------------------------------------------------------------
+
 proc dplus(matrix f,g,f',g')
 { 
-int r=nrows(f);
-int r'=nrows(f');
-matrix P1=concat(rdsum(transpose(f),r'),tensor(g',unitmat(r)));
-matrix P2=concat(tensor(f',unitmat(r)),rdsum(transpose(g),r'));
-matrix P[2*r*r'][2*r*r']=P1,P2;
-return(P);
+    int r=nrows(f);
+    int r'=nrows(f');
+    matrix P1=concat(rdsum(transpose(f),r'),tensor(g',unitmat(r)));
+    matrix P2=concat(tensor(f',unitmat(r)),rdsum(transpose(g),r'));
+    matrix P[2*r*r'][2*r*r']=P1,P2;
+    return(P);
 }
-//-----------------------------------------------------------------------------
+
 proc vector2matrix(list V, int r, int r')
 {
-int i,j,k;
-list M;
-matrix ma[2*r'][2*r];
-for(i=1; i<=size(V); i++){M = M + list(ma);}
-for(i=1; i<=size(V); i++)
- {for(j=1; j<=r; j++)
-  {for(k=1; k<=r'; k++)
-   {M[i][k,j] = V[i][(k-1)*r + j, 1];
-    M[i][k+r',j+r] = V[i][(r'-1+k)*r + j, 1];
-   }
-  }
- }
-return(M);
+    int i,j,k;
+    list M;
+    matrix ma[2*r'][2*r];
+    for(i=1; i<=size(V); i++){M = M + list(ma);}
+    for(i=1; i<=size(V); i++)
+    {
+        for(j=1; j<=r; j++)
+        {
+            for(k=1; k<=r'; k++)
+            {
+                M[i][k,j] = V[i][(k-1)*r + j, 1];
+                M[i][k+r',j+r] = V[i][(r'-1+k)*r + j, 1];
+            }
+        }
+    }
+
+    return(M);
 }
-//-----------------------------------------------------------------------------
+
 proc vector2matrixFerm(list V, int r, int r')
 {
-int i,j,k;
-list M;
-matrix ma[2*r'][2*r];
-for(i=1; i<=size(V); i++){M = M + list(ma);}
-for(i=1; i<=size(V); i++)
- {for(j=1; j<=r; j++)
-  {for(k=1; k<=r'; k++)
-   {M[i][k,j+r] = V[i][(k-1)*r + j, 1];
-    M[i][k+r',j] = V[i][(r'-1+k)*r + j, 1];
-   }
-  }
- }
-return(M);
+    int i,j,k;
+    list M;
+    matrix ma[2*r'][2*r];
+    for(i=1; i<=size(V); i++){M = M + list(ma);}
+    for(i=1; i<=size(V); i++)
+    {
+        for(j=1; j<=r; j++)
+        {
+            for(k=1; k<=r'; k++)
+            {
+                M[i][k,j+r] = V[i][(k-1)*r + j, 1];
+                M[i][k+r',j] = V[i][(r'-1+k)*r + j, 1];
+            }
+        }
+    }
+    
+    return(M);
 }
-//-----------------------------------------------------------------------------
+
 proc matrix2vector(matrix M)
 {
-int r1 = ncols(M)/2;
-int r2 = nrows(M)/2;
-int i,ii,j,k;
-vector v;
-// bosonic part:
-for(ii=1; ii<= r2; ii++)
-{
-for(j=1; j<= r1; j++)
-{
-v = v + gen((ii-1)*r1 + j)*M[ii,j];
-}}
-for(ii=1; ii<= r2; ii++)
-{
-for(j=1; j<= r1; j++)
-{
-v = v + gen(r1*r2 + (ii-1)*r1 + j)*M[ii+r2,j+r1];
-}}
-// fermionic part:
-for(i=1; i<= r2; i++)
-{
-for(j=1; j<= r1; j++)
-{
-v = v + gen(2*r1*r2 + (i-1)*r1 + j)*M[i,j+r1];
-}}
-for(i=1; i<= r2; i++)
-{
-for(j=1; j<= r1; j++)
-{
-v = v + gen(2*r1*r2 + r1*r2 + (i-1)*r1 + j)*M[i+r2,j];
-}}
+    int r1 = ncols(M)/2;
+    int r2 = nrows(M)/2;
+    int i,ii,j,k;
+    vector v;
+    
+    // bosonic part:
+    for(ii=1; ii<= r2; ii++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen((ii-1)*r1 + j)*M[ii,j];
+        }
+    }
 
-return(v);
+    for(ii=1; ii<= r2; ii++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen(r1*r2 + (ii-1)*r1 + j)*M[ii+r2,j+r1];
+        }
+    }
+
+    // fermionic part:
+    for(i=1; i<= r2; i++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen(2*r1*r2 + (i-1)*r1 + j)*M[i,j+r1];
+        }
+    }
+
+    for(i=1; i<= r2; i++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen(2*r1*r2 + r1*r2 + (i-1)*r1 + j)*M[i+r2,j];
+        }
+    }
+
+    return(v);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -4125,8 +4160,6 @@ proc MFco(matrix f,g,f',g')
     return(MM);
 }
 
-
-//-----------------------------------------------------------------------------
 proc MFcofull(matrix QQQ,PPP)
 {
     matrix f = blocksq(QQQ)[3];
@@ -4136,4 +4169,48 @@ proc MFcofull(matrix QQQ,PPP)
 
     list MM = MFco(f,g,f',g');
     return(MM);
+}
+
+////////////////////////////////////////////////////////////////////
+// isMorphismNull
+//
+// Given two MFs QQQ, PPP (in block format) and a morphism F: QQQ --> PPP
+// returns 1 if the map is null-homotopic and zero otherwise
+
+proc isMorphismNull(matrix QQQ, matrix PPP, matrix F)
+{
+    if( PPP * F != F * QQQ )
+    {
+        print("[isMorphismNull] Given matrix is not a morphism, exiting.");
+        return();
+    }
+    
+    vector B = matrix2vector(F);
+    
+    matrix f = blocksq(QQQ)[3];
+    matrix g = blocksq(QQQ)[2];
+    matrix fp = blocksq(PPP)[3];
+    matrix gp = blocksq(PPP)[2];
+    
+    module M=syz(dminus(f,g,fp,gp));
+    matrix Mker=M;
+    
+    // Test that B (= F as a vector) actually belongs to the kernel of dminus
+    if( reduce(B, std(Mker)) != [0] )
+    {
+        print("[isMorphismNull] Strange error, exiting.");
+        return();
+    }
+    
+    // Test whether B is in the image of dplus
+    module im = module(dplus(f,g,fp,gp));
+    
+    if( reduce(B, std(im)) == [0] )
+    {
+        return(1);
+    }
+    else
+    {
+        return(0);
+    }
 }
