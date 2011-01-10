@@ -1,0 +1,105 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE - Fusing two defects and seeing if the idempotent depends on the
+// choices of homotopy or not. See the note (idnc) for background.
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+ring rr=0,(x,y,z),dp;
+printlevel = 1;
+
+matrix E[2][2] = 0, y - x, y + x, 0;
+matrix F[2][2] = 0, z - y, z + y, 0;
+
+// Define a web with two vertices and three edges
+//
+//    ---- x^2 ----> E ---- y^2 ----> F ---- z^2 ---->
+//
+// The compilation the fusion of F and E
+
+list e1 = list(0,1,list(x),x^2);
+list e2 = list(1,2,list(y),y^2);
+list e3 = list(2,0,list(z),z^2);
+list web = list(2, list(e1,e2,e3), list(E,F));
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePair(web, compStrat);
+print(L[1]);
+
+// Now we can do the same thing by calling mfPushforwardInductive directly; this
+// way we have control over the homotopies that get used
+
+matrix A = MFtensor( E, F );
+matrix H = 1/2*ZZtensor( diff(E,y), unitmat(ncols(F)) );
+matrix H_alt = -1/2*ZZtensor( unitmat(ncols(E)), diff(F,y) );
+
+// Compute the pushforward using two different homotopies
+list L = mfPushforward(A, y, 1, H); 
+list L_alt = mfPushforward(A, y, 1, H_alt);
+
+print(L[1]);
+print(L_alt[1]);
+
+matrix e = L[3] * L[2];
+matrix e_alt = L_alt[3] * L_alt[2];
+
+e == e_alt; // These are the same, on the nose.
+
+
+
+
+////////// second example /////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+int nx=1;
+int ny=1;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
+
+int d = 5;
+poly W = x(1)^d;
+
+int m = 1;
+int a = 2;
+
+// Define T and P
+matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
+matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
+
+// Define a web with two vertices and two
+//
+//    T ---- x(1)^d ----> P ---- y(1)^d ---->
+//
+// The compilation the fusion of P and T
+
+list e1 = list(1,2,list(x(1)),x(1)^d);
+list e2 = list(2,0,list(y(1)),y(1)^d);
+list web = list(2, list(e1,e2), list(T,P));
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePair(web, compStrat);
+print(L[1]);
+
+// Now we can do the same thing by calling mfPushforward directly; this
+// way we have control over the homotopies that get used
+
+number dinv = 1/number(d);
+matrix A = MFtensor( T, P );
+matrix H = dinv*ZZtensor( diff(T,x(1)), unitmat(ncols(P)) );
+matrix H_alt = -dinv*ZZtensor( unitmat(ncols(T)), diff(P,x(1)) );
+
+// Compute the pushforward using two different homotopies
+list L = mfPushforward(A, x(1), d-1, H); 
+list L_alt = mfPushforward(A, x(1), d-1, H_alt);
+
+L[1] == L_alt[1]; // the splittings agree
+
+matrix e = L[3] * L[2];
+matrix e_alt = L_alt[3] * L_alt[2];
+
+// Now if you hack mfPushforward to actually return the differential on Ablow, you find
+// that e and e_alt are actually homotopic as endomorphisms of Ablow. So in fact the
+// different homotopies really give homotopic maps.
