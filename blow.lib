@@ -3300,18 +3300,30 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     def RRR = basering;
     
     // Check for grading
-    int useGrading;
+    int useGrading, returnAblow;
     if( size(#) > 0 )
     {
-        intvec Agr = #[1];
-        int useGrading = 1;
-        
-        if( useSanityChecks )
+        if( typeof(#[1]) == "intvec" )
         {
-            if( !isGradingValid(A,Agr) )
+            intvec Agr = #[1];
+            useGrading = 1;
+        
+            if( useSanityChecks )
             {
-                print("[mfPushforward] Given an invalid grading, exiting.");
-                return();
+                if( !isGradingValid(A,Agr) )
+                {
+                    print("[mfPushforward] Given an invalid grading, exiting.");
+                    return();
+                }
+            }
+        }
+        
+        if( typeof(#[1]) == "string" )
+        {
+            // At the end of our return list, add Ablow
+            if( #[1] == "return_ablow" )
+            {
+                returnAblow = 1;
             }
         }
     }
@@ -3482,7 +3494,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         }
     }
     
-    kill Ablow,l;
+    kill l;
 
     // Move the homotopies over to the reduction RT
     if( homotopyList )
@@ -3619,6 +3631,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     }
     
     kill s,t,F,G,RT,e,ep,epstrict;
+    if( !returnAblow ){ kill Ablow; }
     if( useGrading ){ kill RTgr; }
         
     // Back to the original ring and return. Note that we use fetch and not imap
@@ -3628,6 +3641,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     matrix final = fetch(nR,final);
     matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
     matrix mapFinalToAblow = fetch(nR,mapFinalToAblow);
+    if( returnAblow ){ matrix Ablow = fetch(nR, Ablow); }
     if( homotopyList )
     {
         list Hlist = fetch(nR,Hlist);
@@ -3638,6 +3652,8 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     mapAblowToFinal = mfSuspendMorph( mapAblowToFinal );
     mapFinalToAblow = mfSuspendMorph( mapFinalToAblow );
     if( useGrading ){ finalgr = mfSuspendGrading( finalgr ); }
+    if( returnAblow ){ Ablow = mfSuspend( Ablow ); }
+    
     if( homotopyList )
     {
         for(i=1;i<=size(Hlist);i++)
@@ -3646,7 +3662,16 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         }
     }
     
-    list retlist = list(final,mapAblowToFinal,mapFinalToAblow);
+    if( !returnAblow )
+    {
+        // Normal behaviour
+        list retlist = list(final,mapAblowToFinal,mapFinalToAblow);
+    }
+    else
+    {
+        // Special behaviour
+        list retlist = list(final, mapAblowToFinal,mapFinalToAblow, Ablow);
+    }
     
     // Note that grading (if it exists) goes before homotopy list (if it exists!)
     if( useGrading )
