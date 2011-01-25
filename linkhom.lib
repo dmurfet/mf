@@ -198,7 +198,7 @@ proc linkLibrary(string s)
     }
 
     if( s == "solomon_version_2" )
-    {    
+    {
         intvec edgevec(1) = 2,3,4,1;
         intvec edgevec(2) = 7,8,3,2;
         intvec edgevec(3) = 1,4,5,6;
@@ -265,7 +265,7 @@ proc linkLibrary(string s)
         intvec edgevec(4) = 10,4,2,11;
         intvec edgevec(5) = 8,5,10,12;
         intvec edgevec(6) = 12,11,1,9;
-        intvec vertexParity = -1,-1,1,1-1,1;
+        intvec vertexParity = -1,-1,1,1,-1,1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
@@ -277,7 +277,7 @@ proc linkLibrary(string s)
         intvec edgevec(4) = 10,4,2,11;
         intvec edgevec(5) = 12,8,5,10;
         intvec edgevec(6) = 11,1,9,12;
-        intvec vertexParity = 1,1,1,-1,-1,-1,
+        intvec vertexParity = 1,1,1,-1,-1,-1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
@@ -620,6 +620,12 @@ proc removefromlist(list l, poly p)
 
 proc mfVertex(int zeroOrOne, list varis, int N)
 {
+    if( size(varis) != 4 )
+    {
+        print("[mfVertex] Passed a variable list of incorrect size");
+        return();
+    }
+    
     if( zeroOrOne == 0 )
     {
         matrix A = mfIdentityEdge( varis[1], varis[2], varis[3], varis[4], N );

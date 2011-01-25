@@ -1237,16 +1237,16 @@ proc webCompile(list web, list compStrat)
         // contains a list of these variables. Note we only change rings if there
         // are internal variables left, otherwise ringWithoutVars might try to create
         // a ring with no variables
-        
+
         if( numInternalVar > 0 )
         {
             def nR(count+1) = ringWithoutVars(substrat_var);
             setring nR(count+1);
-        
+
             list web = imap(nR(count),web);
             list compStrat = imap(nR(count),compStrat);
             kill nR(count);
-        
+
             // Increment the counter, get ready to go again!
             count++;
         }
