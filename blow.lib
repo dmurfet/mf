@@ -3087,58 +3087,7 @@ proc mfReduce(matrix A, list #)
     
     kill l;
                 
-    /////// BEGIN GAUSS ////////
-    // WARNING: At the moment this creates subtle errors in grading, because
-    // the matrix G has some problem
-    // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
-    if( 0 )
-    {
-        matrix zero_b[nrows(b0)][ncols(b0)];
-        if( b0 != zero_b && b1 != zero_b )
-        {
-            matrix tr, b0r;
-
-            list gau = rowred(b0,1);
-            tr = gau[2];
-            b0r = gau[1];
-
-            if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
-            if( det(tr) == 0 )
-            {
-                print("[mfReduce] Transformation matrix not invertible (first)."); 
-                return();
-            }
-
-            matrix trinv = inverse(tr);
-
-            b0 = b0r;
-            b1 = b1 * trinv;
-
-            f1 = tr * f1;
-            g1 = g1 * trinv;
-
-            matrix tr2;
-
-            // Try a second time on the transpose
-            list gau = rowred(transpose(b0),1);
-            tr2 = transpose(gau[2]);
-            b0r = transpose(gau[1]);
-
-            if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
-            if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
-
-            matrix tr2inv = inverse(tr2);
-
-            b0 = b0r;
-            b1 = tr2inv * b1;
-            f0 = tr2inv * f0;
-            g0 = g0 * tr2;
-
-            kill tr, b0r, gau, trinv, tr2, tr2inv;
-        }
-        kill zero_b;
-    }
-    /////// END GAUSS ////////
+    // Optional, removed: run mfReduceGaussian here
     
     // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
     // the original MF and the reduced MF (b0,b1)
@@ -3218,6 +3167,64 @@ proc mfReduce(matrix A, list #)
     }
     
     return(ret);
+}
+
+proc mfReduceGaussian(matrix A)
+{
+    // Extract the odd and even part of the differential
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    kill blocks;
+    
+    // WARNING: At the moment this creates subtle errors in grading, because
+    // the matrix G has some problem
+    // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
+    matrix zero_b[nrows(b0)][ncols(b0)];
+    if( b0 == zero_b || b1 == zero_b ){ return(A); }
+    
+    matrix tr, b0r;
+
+    list gau = rowred(b0,1);
+    tr = gau[2];
+    b0r = gau[1];
+
+    if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
+    if( det(tr) == 0 )
+    {
+        print("[mfReduce] Transformation matrix not invertible (first)."); 
+        return();
+    }
+
+    matrix trinv = inverse(tr);
+
+    b0 = b0r;
+    b1 = b1 * trinv;
+
+    //f1 = tr * f1;
+    //g1 = g1 * trinv;
+
+    matrix tr2;
+
+    // Try a second time on the transpose
+    list gau = rowred(transpose(b0),1);
+    tr2 = transpose(gau[2]);
+    b0r = transpose(gau[1]);
+
+    if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
+    if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
+
+    matrix tr2inv = inverse(tr2);
+
+    b0 = b0r;
+    b1 = tr2inv * b1;
+    //f0 = tr2inv * f0;
+    //g0 = g0 * tr2;
+
+    kill tr, b0r, gau, trinv, tr2, tr2inv;
+
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix B = blockmat(zb, b1, b0, zb);
+    return(B);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -4238,4 +4245,43 @@ proc isMorphismNull(matrix QQQ, matrix PPP, matrix F)
     {
         return(0);
     }
+}
+
+////////////////////////////////////////////////////////////////////
+// chernChar
+//
+// Given a matrix factorisation, returns the Chern character as a
+// reduced element modulo the Jacobi ideal (so two MFs have the same
+// chern char, as an element of the Jacobi algebra, iff the return
+// values of this routine are the same). By definition
+//
+//      ch(A) = (-1)^{n choose 2} str(diff(A,x(1)),...,diff(A,x(n))
+// 
+// where n is the total number of variables.
+
+proc chernChar(matrix A)
+{
+    // First determine the potential
+    poly W = (A*A)[1,1];
+    
+    // Now the Jacobi algebra
+    ideal jaci = jacob(W);
+    ideal J = std(jaci);
+    int numVars = nvars(basering);
+
+    int i;
+    matrix X = unitmat(ncols(A));
+    
+    for(i=1; i<=numVars;i++)
+    {
+        print(X);
+        X = X * diff(A,var(i));
+    }
+    print(X);
+    
+    int p = (n*(n-1))/2;
+    poly ch = (-1)^(p) * supertrace(X);
+    print(ch);
+    ch = reduce( ch, J );
+    return(ch);
 }
