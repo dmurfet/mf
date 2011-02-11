@@ -204,7 +204,8 @@ _[5,1],_[5,2],0,     _[5,4],0,     0,     0,     0,
 0,     _[6,2],0,     0,     0,     0,     0,     0,     
 _[7,1],_[7,2],_[7,3],0,     0,     0,     0,     0,     
 _[8,1],_[8,2],_[8,3],0,     0,     0,     0,     0    
-  
+
+
 > defects[1][7];
 _[1,1]=0
 _[1,2]=0
@@ -273,3 +274,48 @@ _[8,8]=0
 
 defects[1][11];
 
+// EXAMPLE 2 - Figure eight chern character
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..9)),dp;
+printlevel = 1;
+
+int N = 3;
+list linkData = linkLibrary("figure-eight");
+intvec state = 1:4;
+list L = defectTangleFromLink(linkData, state, N, 1);
+list web = L[1];
+list compStrat = L[2];
+matrix D = webCompile(web, compStrat)[1];
+
+ring ss=0,(x(1),x(9)),dp;
+matrix D = imap(rr,D);
+chernChar(D);
+print(chernChar(mfIdentityDefect(x(1)^(N+1),x(9)^(N+1),x(1),x(9))));
+// Result is that chernChar(D) = 6 * chernChar(Id).
+
+// EXAMPLE 3 - Cinquefoil
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..11)),dp;
+printlevel = 1;
+
+int N = 3;
+list linkData = linkLibrary("5_1");
+intvec state = 1:5;
+list L = defectTangleFromLink(linkData, state, N, 1);
+list web = L[1];
+list compStrat = L[2];
+matrix D = webCompile(web, compStrat)[1];
+
+ring ss=0,(x(1),x(11)),dp;
+matrix D = imap(rr,D);
+chernChar(D);
+print(chernChar(mfIdentityDefect(x(1)^(N+1),x(11)^(N+1),x(1),x(11))));
+// Result is that chernChar(D) = -32 * chernChar(Id).
