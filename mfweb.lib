@@ -1400,6 +1400,169 @@ proc webFromLink(list linkData, intvec state, int N, list #)
 }
 
 
+/////////////////////////////////////////////////
+// defectTangleFromLink
+//
+// Given a link in the format described in linkhom.lib, and an intvec
+// giving a "state", i.e. assigning 0 or 1 to every vertex, we return a list whose first entry is
+// the web that is produced by cutting the cutpos-th edge in the state web. The second entry of the
+// list is a compilation strategy that does not contain the cutpos-th variable.
+
+proc defectTangleFromLink(list linkData, intvec state, int N, int cutpos, list #)
+{
+    // If we are passed a fifth parameter we are being asked for a web to
+    // compute reduced KR homology, with the given polynomial as the mark
+    // to be eliminated. In this case we omit this edge from the web, and
+    // substitute reductionMark = 0 in all MFs.
+    int useReduced;
+    poly reductionMark = 1;
+    if( size(#) > 0 )
+    {
+        useReduced = 1;
+        reductionMark = #[1];
+    }
+    
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];    
+    int numVertices = size(edgeList);
+    
+    list compStratVert;
+    list compStratVar;
+    int i,j;
+    for( j=1; j<=size(edgeList); j++ )
+    {
+        compStratVert[j] = j;
+    }
+    
+    for( j=1; j<=nvars(basering)-1; j++ )
+    {
+        if( j != cutpos )
+        {   
+            compStratVar = compStratVar + list(var(j));
+        }
+    }    
+    list compStrat = compStratVert,compStratVar;
+    
+    // Each edge in the link is a list of four integers. The first two are incoming,
+    // and the second two are outgoing. Every edge in a web coming from a link has
+    // a single variable with exponent N+1, so we can already populate some of the
+    // information on each edge
+    list edges;
+    
+    // Loop through vertices
+    for(j=1; j<=numVertices; j++)
+    {
+        // Loop through entries of vertex
+        intvec v = edgeList[j];
+        for(i=1; i<=4; i++)
+        {
+            list edge;
+            if( typeof(edges[v[i]]) == "none" )
+            {
+                // This edge hasn't been created yet
+                edge = 0,0,list(var(v[i])),var(v[i])^(N+1);
+            }
+            else
+            {
+                edge = edges[v[i]];
+            }
+            
+            if( i <= 2 )
+            {
+                // This edge begins at this vertex, set the source
+                edge = setEdgeSource(edge, j);
+            }
+            else
+            {
+                // This edge ends at this vertex, set the target
+                edge = setEdgeTarget(edge, j);
+            }
+            
+            edges[v[i]] = edge;
+            kill edge;
+        }
+        kill v;
+    }
+    
+    // The list edges, as defined above, describes the uncut web. Now we cut the cutpos-th edge in
+    // two pieces, leaving two loose ends which we associate with the boundary vertex 0. The new edge 
+    // whose source is 0 will be labelled by n+1, where n is the number of edges in the original web.
+    
+    int n = size(edges);
+    int target = edges[cutpos][2];
+    edges[n+1] = edges[cutpos];
+
+    // Set the target of the cutpos-th edge to 0, set the source of the (n+1)-th edge to 0, and
+    // label this last edge with the last variable:
+    edges[cutpos][2] = 0;
+    edges[n+1][1] = 0;
+    edges[n+1][3] = list(var(n+1));
+    edges[n+1][4] = var(n+1)^(N+1);
+        
+    // Now build the list of MFs and gradings
+    list webMfs;
+    list webMfsGrading;
+
+    for(j=1; j<=numVertices; j++)
+    {
+        intvec e = edgeList[j];
+        
+        // If we are looking at the target of the edge cutpos, we need to replace the associated
+        // variable by the "last" variable in the MF of vertex j:
+        if( j == target )
+        {
+            for( i=1; i<=4; i++ )
+            {
+                if( e[i] == cutpos )
+                {
+                    e[i] = n+1;
+                }
+            }
+        }
+    
+        matrix X = mfVertex(state[j], list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+        intvec Xgr = mfVertexGrading(state[j], N);
+    
+        webMfs = webMfs + list(X);
+        webMfsGrading = webMfsGrading + list(Xgr);
+        kill X,e,Xgr;
+    }
+
+    if( useReduced )
+    {
+        // Delete the edge with the reduced variable
+        int i;
+        for(i=1; i<=size(edges); i++)
+        {
+            if( edgeVariables(edges[i])[1] == reductionMark )
+            {
+                edges = delete(edges,i);
+                break;
+            }
+        }
+        
+        // Set reductionMark = 0 in all Mfs
+        for(i=1; i<=size(webMfs); i++)
+        {
+            webMfs[i] = subst(webMfs[i],reductionMark,0);
+        }
+    }
+    
+    // Define the web
+    list web = numVertices + 1, edges, webMfs, webMfsGrading;
+    
+    // Don't check this because we have one vertex more (namely the boundary vertex 0) than there 
+    // are MFs:
+    //    if( !webVerify(web) )
+    //    {
+    //        print("[defectTangleFromLink] Failed to construct valid web, exiting.");
+    //        return();
+    //    }
+    
+    list returnlist = web, compStrat;
+    return(returnlist);
+}
+
 
 
 /////////////////////////////////////////////////

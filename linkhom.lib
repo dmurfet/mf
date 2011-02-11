@@ -1643,6 +1643,226 @@ proc linkCompile(list linkData, string fileName, int N)
     return(list(returnListWebs,returnListMaps));
 }
 
+
+////////////////////////////////////////////////////////////////////
+// linkCompileParts
+//
+// Just like linkCompile, but computes only states (and not their morphisms) 
+// in the range [startpos, endpos].
+
+proc linkCompileParts(list linkData, string fileName, int N, int startpost, int endpos)
+{
+    // We do not change rings: we assume that the ambient ring has the same number of variables
+    // as edges in the link, and we associate ith variable var(i) with the edge i. Of course
+    // if there is a save file, then loading this save file will set the ring.
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    int useMPfile = blowFlags("use_mpfile");
+    
+    system("--ticks-per-sec",1000);
+    int timeLink = timer;
+ 
+    def RRR = basering;
+    
+    intvec vertexParity = linkData[1];
+    list edgeList = linkData[2];
+    int webSiz = size(vertexParity);
+    
+    // Read in the save file, if it exists
+    if( status(fileName,"exists") == "yes" )
+    {
+        if( useMPfile )
+        {
+            def nR = loadSaveFile(fileName);
+            setring nR;
+        }
+        else
+        {
+            execute(loadSaveFile(fileName));
+        }
+    }
+        
+    list returnListWebs;
+    list returnListMaps;
+    
+    // The compilation strategy is the same for all webs: we simply compile from the 1st
+    // vertex to the last one, and enumerate the variables in the given order (note that
+    // all the ring variables are taken as internal variables)
+    list compStratVert;
+    list compStratVar;
+    int j;
+    for(j=1;j<=size(edgeList); j++)
+    {
+        compStratVert[j] = j;
+    }
+    for(j=1;j<=nvars(basering);j++)
+    {
+        compStratVar = compStratVar + list(var(j));
+    }
+    list compStrat = compStratVert,compStratVar;
+        
+    // STEP 1. Go through each state of the link and compile the corresponding web. Then
+    // add the data to returnListWebs. 
+    // The compilation of a state 1101 is stored in web1101
+    int i;
+    list stateDiagrams = powervec(webSiz);
+    int numStateDiagrams = size(stateDiagrams);
+    
+    int globalZ2Degree = -1;
+    
+    for( i = startpost; i <= endpos; i++ )
+    {
+        // Our current state diagram
+        intvec v = stateDiagrams[i];
+        
+        dbprint(printlevel, "");
+        dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
+        
+        string listName = "compiled" + intvecToString(v); // compilation product
+        string listName2 = "web" + intvecToString(v); // web
+        
+        string cmd = "int definedCheck = defined(" + listName + ") && defined(" + listName2 + ");";
+        execute(cmd);
+        
+        if( definedCheck )
+        {
+            // We have already compiled this web /////////////
+            dbprint(printlevel, "[linkCompile] Already compiled, skipping.");
+        }
+        else
+        {
+            // We have not already compiled this web ///////////
+            dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
+        
+            // Build a web suitable for calling webCompile
+            list web = webFromLink(linkData, v, N);
+            
+            execute("list " + listName2 + " = web;");
+            
+            // Call webCompile
+            execute("list " + listName + " = webCompile(web, compStrat);");
+            
+            // Save the results to the savefile
+            dbprint(printlevel, "[linkCompile] Saving to disk.");
+
+            execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
+            execute("writeObjectToFile(fileName,\"" + listName2 + "\"," + listName2 + ");");
+            
+            kill web;
+        }
+        
+        string cmd = "list Z = " + listName + ";";
+        execute(cmd);
+        
+        // The return value of webCompile should look like "nonsquare", r1,r2, Q
+        // and the last entry of Q should be ("nonsquare",r1,r2,R) with the last entry of R
+        // a tuple (f0,f1,g0,g1,u,N) with f0,g0 splitting the even part of the very last
+        // idempotent and similarly for f1,g1.
+        if( typeof(Z[1]) != "string" || size(Z) != 4 || typeof(Z[4]) != "list" )
+        {
+            print("[linkCompile] Return of webCompile is not of the expected format, exiting.");
+            return();
+        }
+        
+        // Q = Z[4], Q[size(Q)] is ("nonsquare",r1,r2,R) so R is
+        list R = Z[4][size(Z[4])][4];
+        list lastEntry = R[size(R)];
+        
+        matrix f(0) = lastEntry[2];
+        matrix f(1) = lastEntry[3];
+        matrix g(0) = lastEntry[4];
+        matrix g(1) = lastEntry[5];
+        
+        // First compute the dimension of the compilation in each degree
+        int j;
+        for(j=0; j<=1; j++)
+        {
+            // The compilation of the current web is a Z/2-graded Q-vector space Y = Y0 + Y1.
+            // The product f(i) * g(i) will either be a unitmatrix of size k if dim(Yi) = k > 0
+            // or a 1x1 zero matrix if Yi = 0.
+            int dimComp(j);
+            if( f(j) * g(j) != matrix(0,1,1) && f(j) * g(j) != unitmat(nrows(f(j))) )
+            {
+                print("[linkCompile] Unexpected output from webCompile, exiting.");
+                return();
+            }
+            
+            // Y is zero in this degree
+            if( f(j) * g(j) == matrix(0,1,1) )
+            {
+                dimComp(j) = 0;
+            }
+            
+            // Y is nonzero in this degree
+            if( f(j) * g(j) == unitmat(nrows(f(j))) )
+            {
+                dimComp(j) = nrows(f(j));
+            }
+            
+            kill f(j), g(j);
+        }
+        
+        // Decide on the degree in which we are nonzero and set the rank in that degree
+        int rankk, compDegree;
+        intvec grading;
+        if( dimComp(0) == 0 && dimComp(1) != 0 )
+        {
+            // We are concentrated in degree 1
+            compDegree = 1;
+            rankk = dimComp(1);
+            grading = Z[3];
+        }
+        
+        if( dimComp(0) != 0 && dimComp(1) == 0 )
+        {
+            compDegree = 0;
+            rankk = dimComp(0);
+            grading = Z[2];
+        }
+        
+        if( dimComp(0) == 0 && dimComp(1) == 0 )
+        {
+            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero."); //debug
+            compDegree = -1;
+            rankk = 0;
+        }
+        
+        // All webs compilations should be living in one of the Z2 degrees
+        if( compDegree != -1 )
+        {
+            if( globalZ2Degree != -1 && globalZ2Degree != compDegree )
+            {
+                print("[linkCompile] The compilation of " + intvecToString(v) + " is in Z2 degree " + string(compDegree));
+                print("[linkCompile] whereas an earlier web was in degree " + string(globalZ2Degree) + ", exiting.");
+                return();
+            }
+            
+            if( globalZ2Degree == -1 )
+            {
+                globalZ2Degree = compDegree;
+            }
+        }
+        
+        // Add the compilation products to the return list
+        // Recall that tuples in this list have the format
+        // (intvec state, int rankk, int degree, intvec grading)
+        list compiledEntry = v, rankk, compDegree, grading;
+        returnListWebs = returnListWebs + list(compiledEntry);
+        kill compiledEntry, v, Z, R, lastEntry, rankk, compDegree, grading;
+        kill dimComp(0), dimComp(1);
+    }
+    
+    dbprint(printlevel, "[linkCompile] Time taken to compile webs: " + string(timer-timeLink) + "ms."); 
+
+    setring RRR;
+   
+    dbprint(printlevel, "[linkCompile] total elapsed time " + string(timer-timeLink) + "ms."); 
+    kill returnListWebs;
+    return(list());
+}
+
+
+
+
 ////////////////////////////////////////////////////////////////////
 // linkCompileReduced
 //
