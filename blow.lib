@@ -4274,14 +4274,11 @@ proc chernChar(matrix A)
     
     for(i=1; i<=numVars;i++)
     {
-        print(X);
         X = X * diff(A,var(i));
     }
-    print(X);
     
-    int p = (n*(n-1))/2;
+    int p = (numVars*(numVars-1))/2;
     poly ch = (-1)^(p) * supertrace(X);
-    print(ch);
     ch = reduce( ch, J );
     return(ch);
 }
