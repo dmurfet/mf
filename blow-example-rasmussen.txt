@@ -1,0 +1,111 @@
+// Figure eight ///////////////////////////////////////////
+//
+// Comparison with Rasmussen
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=(0,t,q),(x),dp;
+printlevel = 1;
+
+proc qint(int n)
+{
+    number ret = 0;
+    int i;
+    for(i = -n+1; i <= n-1; i=i+2)
+    {
+        ret = ret + q^i;
+    }
+    
+    return(ret);
+}
+
+// Returns the Poincare polynomial given in equation (86) of the published version of
+// Rasmussen's 2-bridge paper
+proc rasmussen_41_poincare(int N)
+{
+    number ret = qint(N) + qint(N-1)*(q^(2*N+1)*t^(-2) + q*t^(-1) + q^(-1)*t + q^(-2*N-1)*t^2);
+    return(ret);
+}
+
+// The following checks all pass
+
+rasmussen_41_poincare(2) == (q10+q6t2+q6t+q4t3+q4t2+t4)/(q5t2);
+rasmussen_41_poincare(3) == (q16+q14+q10t2+q10t+q8t3+q8t2+q8t+q6t3+q6t2+q2t4+t4)/(q8t2);
+rasmussen_41_poincare(4) == (t4q4+t4q2+t4+t3q12+t3q10+t3q8+t2q14+t2q12+t2q10+t2q8+tq14+tq12+tq10+q22+q20+q18)/(t2q11);
+rasmussen_41_poincare(5) == (t4q6+t4q4+t4q2+t4+t3q16+t3q14+t3q12+t3q10+t2q18+t2q16+t2q14+t2q12+t2q10+tq18+tq16+tq14+tq12+q28+q26+q24+q22)/(t2q14);
+
+// Torus knots ///////////////////////////////////////////
+
+// Apparently T(p,q) = T(q,p) = T(-p,-q). Rasmussen discusses the Poincare polynomial
+// of the T(2,n) torus knot in Proposition 5.7, and we have, according to the Knot atlas
+//
+// T(2,3) = Trefoil
+// T(2,5) = Cinquefoil
+// T(2,7) = 7_1
+
+// The following returns the Poincare polynomial given in (82) of Rasmussen's paper
+// The n is for the T(2,n) torus knot, and the N is the sl(N). n should be odd
+proc rasmussen_torus_poincare(int n, int N)
+{
+    number ret = 0;
+    number summ = 0;
+    
+    int i;
+    for(i=1; i<= (n-1)/2; i++)
+    {
+        summ = summ + q^(4*i)*t^(-2*i);
+    }
+    
+    ret = q^((n-1)*(N-1))*( qint(N) + qint(N-1)*q^(-1)*(1 + q^(2*N) * t^(-1))*summ);
+    return(ret);
+}
+
+// The following checks all pass, so Rasmussen gets the trefoil correct
+
+rasmussen_torus_poincare(3,2) == (q9+q5t+q3t3+qt3)/(t3);
+rasmussen_torus_poincare(3,3) == (q14+q12+q8t+q6t3+q6t+q4t3+q2t3)/(t3);
+rasmussen_torus_poincare(3,4) == (q19+q17+q15+q11t+q9t3+q9t+q7t3+q7t+q5t3+q3t3)/(t3);
+rasmussen_torus_poincare(3,5) == (q24+q22+q20+q18+q14t+q12t3+q12t+q10t3+q10t+q8t3+q8t+q6t3+q4t3)/(t3);
+rasmussen_torus_poincare(3,6) == (t3q15+t3q13+t3q11+t3q9+t3q7+t3q5+tq17+tq15+tq13+tq11+tq9+q29+q27+q25+q23+q21)/(t3);
+rasmussen_torus_poincare(3,7) == (t3q18+t3q16+t3q14+t3q12+t3q10+t3q8+t3q6+tq20+tq18+tq16+tq14+tq12+tq10+q34+q32+q30+q28+q26+q24)/(t3);
+rasmussen_torus_poincare(3,8) == (t3q21+t3q19+t3q17+t3q15+t3q13+t3q11+t3q9+t3q7+tq23+tq21+tq19+tq17+tq15+tq13+tq11+q39+q37+q35+q33+q31+q29+q27)/(t3);
+
+// Cinquefoil ///////////////////////////////////////////
+
+// The Cinquefoil is the torus knot T(2,5) according to the knot atlas
+
+proc invqt(number f)
+{
+    number f1 = numerator(f);
+    number f2 = denominator(f);
+    
+    number g = number(subst(f1,q,1/q)/subst(f2,q,1/q));
+    
+    number g1 = numerator(g);
+    number g2 = denominator(g);
+    
+    number h = number(subst(g1,t,1/t)/subst(g2,t,1/t));
+    
+    return(h);
+}
+
+// The following tests all pass, but only if we invert t and q (both of these operations actually change
+// the polynomial).
+
+rasmussen_torus_poincare(5,2) == invqt((q12+q10+q8t2+q4t4+q4t3+t5)/(q15));
+rasmussen_torus_poincare(5,3) == invqt((q16+q14+q12t2+q12+q10t2+q8t4+q6t4+q6t3+q4t3+q2t5+t5)/(q22));
+rasmussen_torus_poincare(5,4) == invqt((q20+q18+q16t2+q16+q14t2+q14+q12t4+q12t2+q10t4+q8t4+q8t3+q6t3+q4t5+q4t3+q2t5+t5)/(q29));
+rasmussen_torus_poincare(5,5) == invqt((q24+q22+q20t2+q20+q18t2+q18+q16t4+q16t2+q16+q14t4+q14t2+q12t4+q10t4+q10t3+q8t3+q6t5+q6t3+q4t5+q4t3+q2t5+t5)/(q36));
+rasmussen_torus_poincare(5,6) == invqt((q28+q26+q24t2+q24+q22t2+q22+q20t4+q20t2+q20+q18t4+q18t2+q18+q16t4+q16t2+q14t4+q12t4+q12t3+q10t3+q8t5+q8t3+q6t5+q6t3+q4t5+q4t3+q2t5+t5)/(q43));
+
+// 7_1 ///////////////////////////////////////////
+
+// 7_1 is the Torus knot T(7,2) according to the knot atlas
+
+// The following test passes, again after inverting t and q
+
+rasmussen_torus_poincare(7,2) == invqt((t7+t6q4+t5q4+t4q8+t3q8+t2q12+q16+q14)/(q21));
