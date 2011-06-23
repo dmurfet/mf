@@ -1,0 +1,143 @@
+//////////////////////////////////////////////////////////////////////////////////
+// "poly2column" blows up a polynomial into a column vector: x-monomials are 
+// replaced by the column vectors that represent them as elements in the vector 
+// space k[x-variables]/J
+//
+// NOTE: We assume that the algebra k[x-variables]/J is finite-dimensional.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc poly2column(ideal J, poly polynomialToBeStretched)
+{
+    int prl = printlevel;
+    def RRR = basering;
+    def nR = ringWithoutYVars();
+
+    int i,j,k;
+    poly xprod = 1;
+    int numX = numXVars();
+    
+    for(i=1; i<=numX; i++)
+    {
+        xprod = xprod * x(i);
+    }
+    matrix koffer = coef( polynomialToBeStretched, xprod );
+    
+    int numberOfXmonomials = ncols(koffer);
+
+    setring nR;
+    
+    ideal Jx = std(imap(RRR,J));
+    ideal basis = kbase(Jx);
+    int jdim = size(basis);
+    module BB = reduce(basis,Jx);
+    module syzBB = std(syz(BB)); 
+    
+    setring RRR;
+    matrix stretched[jdim][1];
+
+    for( i=1; i<=numberOfXmonomials; i++ )
+    {    
+        poly xPower = koffer[1,i];
+        setring nR;
+        poly xPower = imap(RRR, xPower);        
+        
+        module ff = reduce( xPower, Jx );
+        matrix MM = matrix(reduce(lift(BB,ff), syzBB));
+        
+        setring RRR;
+        
+        matrix MM = imap(nR,MM);
+        stretched = stretched + koffer[2,i] * MM;
+    }
+                    
+    return(stretched);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// "mastretch" blows up a matrix by blowing up all its entries using poly2column.
+// The matrix M may be non-square.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc mastrech(matrix M, ideal J)
+{
+    int n = dimAlgebraOverInternalVariables(J);
+
+    // Define L to be an appropriately indexed list of blown-up matrices:
+    int i1,j1,i2,j2,i;
+    
+    int ncolsM = ncols(M);
+    int nrowsM = nrows(M);
+    
+    list e,L;
+    for(i=1; i<=nrowsM; i++)
+    {
+        L[i] = e;
+    }
+    for(i1=1; i1<=nrowsM; i1++) // row
+    {
+        for(j1=1; j1<=ncolsM; j1++) // column
+        {
+            matrix PM = poly2column(J, M[i1,j1]);
+            L[i1][j1] = PM;
+            kill PM;
+        }
+    }
+
+    matrix A[nrowsM*n][ncolsM];
+
+    for(i1=1; i1<=nrowsM; i1++)
+    {
+        for(j1=1; j1<=n; j1++)
+        {
+            for(i2=1; i2<=ncolsM; i2++)
+            {
+                    A[(i1-1)*n + j1, i2] = L[i1][i2][j1,1];
+            }
+        }
+    }
+    
+    return(A);
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+// "thetaMap(Y,X,J)" gives the map theta: Y x X --> Y x X x J.
+//////////////////////////////////////////////////////////////////////////////////
+
+proc thetaMap(matrix Y,X, ideal J)
+{
+    int i,j,k;
+    int numX = numXVars();
+    list S = SGroupintvecs(numX);
+    matrix idY = unitmat(ncols(Y));
+    list L;
+        
+    for( i=1; i<=size(S); i++ )
+    {
+        def varperm = S[i];
+        matrix XdiffProduct = unitmat(ncols(X));
+        
+        for( j=1; j<=numX; j++ )
+        {
+            XdiffProduct = XdiffProduct * diff( X, x(varperm[j]) );
+        }
+        
+        // TODO: take care of the sign sgn(sigma) in the definition of theta.
+        
+        L[i] = mastrech( MFtensor( idY, XdiffProduct ), J );
+    }
+    
+    matrix theta = 1/(factorial(numX)) *  L[1];
+    
+    for( i=2; i<=size(S); i++ )
+    {
+        theta = theta + L[i];
+    }
+
+    // TODO: take care of the sign (-1)^(n * |y|) in the definition of theta.
+    
+    return(theta)
+}
+        
+        

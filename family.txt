@@ -1,0 +1,78 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=(0,w),(x(1..2)),dp;
+minpoly = w^4 + 1;            // w = (-1)^(1/4)
+number I = w^2;
+
+// Playing with with deformations of tensor products of simple A-type minimal model MFs, one finds
+// the following family M=M(u1,u2,u3,u4) of MFs of x1^4 + x2^4:
+// 
+//     matrix M[4][4];
+//     M[1,1]=0;
+//     M[1,2]=0;
+//     M[1,3]=x(2)^2-x(2)*u1-u2;
+//     M[1,4]=-x(2)*u3+x(1)-u4;
+//     M[2,1]=0;
+//     M[2,2]=0;    // M[2,3]=x(2)*u1^2*u3^3+x(1)*x(2)*u1*u3^2+x(2)*u2*u3^3+u1*u2*u3^3+3*x(2)*u1*u3^2*u4+x(1)^2*x(2)*u3+x(1)*u2*u3^2+2*x(1)*x(2)*u3*u4+3*u2*u3^2*u4+3*x(2)*u3*u4^2+x(1)^3+x(1)^2*u4+x(1)*u4^2+u4^3;
+//     M[2,4]=-u1^2*u3^4-x(1)*u1*u3^3-u2*u3^4-3*u1*u3^3*u4-x(1)^2*u3^2-2*x(1)*u3^2*u4-3*u3^2*u4^2-x(2)^2-x(2)*u1-u1^2-u2;
+// M[3,1]=u1^2*u3^4+x(1)*u1*u3^3+u2*u3^4+3*u1*u3^3*u4+x(1)^2*u3^2+2*x(1)*u3^2*u4+3*u3^2*u4^2+x(2)^2+x(2)*u1+u1^2+u2;
+//     M[3,2]=-x(2)*u3+x(1)-u4;
+//     M[3,3]=0;
+//     M[3,4]=0;
+// M[4,1]=x(2)*u1^2*u3^3+x(1)*x(2)*u1*u3^2+x(2)*u2*u3^3+u1*u2*u3^3+3*x(2)*u1*u3^2*u4+x(1)^2*x(2)*u3+x(1)*u2*u3^2+2*x(1)*x(2)*u3*u4+3*u2*u3^2*u4+3*x(2)*u3*u4^2+x(1)^3+x(1)^2*u4+x(1)*u4^2+u4^3;
+//     M[4,2]=-x(2)^2+x(2)*u1+u2;
+//     M[4,3]=0;
+//     M[4,4]=0;
+//     
+// where one has to constrain two of the four parameters according to 
+//
+//     u2 = -(u1^2 * (I + u3^2))/(4 * u3^2) and u4 = (-I * u1 - u1 * u3^2)/(2 * u3)
+//
+// in order to satisfy the obstruction equations, while the parameters u1,u3 are unconstrained.
+// However, substituting generic non-zero values for u1, one finds that the associated MF M
+// will be isomorphic to a trivial MF. Hence we set u1=0 and thus obtain a one-parameter family
+// of MFs. This family happens to depend on the remaining parameter u3 only up to quadratic order.
+
+// To test whether different values for the remaining parameter u3 lead to non-isomorphic MFs, 
+// we look at the three MFs with u3=1,42,-1/2, respectively, and compute their morphism spaces. 
+// We find that while all endomorphism spaces are (4+4)-dimensional, the remaining morphism spaces
+// are only (2+2)-dimensional. Hence these MFs cannot be isomorphic to one another. 
+
+list u3values = 1, 42, -1/2, 30;
+int s = size(u3values);
+
+for( int j=1; j<=s; j++ )
+{    
+    number u3 = u3values[j];
+    matrix M(j)[4][4];
+    M(j)[1,1]=0;
+    M(j)[1,2]=0;
+    M(j)[1,3]=x(2)^2;
+    M(j)[1,4]=-x(2)*u3+x(1);
+    M(j)[2,1]=0;
+    M(j)[2,2]=0;
+    M(j)[2,3]=x(1)^2*x(2)*u3+x(1)^3;
+    M(j)[2,4]=-x(1)^2*u3^2-x(2)^2;
+    M(j)[3,1]=x(1)^2*u3^2+x(2)^2;
+    M(j)[3,2]=-x(2)*u3+x(1);
+    M(j)[3,3]=0;
+    M(j)[3,4]=0;
+    M(j)[4,1]=x(1)^2*x(2)*u3+x(1)^3;
+    M(j)[4,2]=-x(2)^2;
+    M(j)[4,3]=0;
+    M(j)[4,4]=0;
+}
+
+// endomorphisms: 
+for( int j=1; j<=s; j++ )
+{    
+    string(size(MFcofull(M(j),M(j))[1])) + " + " + string(size(MFcofull(M(j),M(j))[2]));
+}
+
+// non-endomorphisms:
+for( int j=1; j<=s-1; j++ )
+{    
+    string(size(MFcofull(M(j),M(j+1))[1])) + " + " + string(size(MFcofull(M(j),M(j+1))[2]));
+}
+
+// How can one decide whether M(u3=a) != M(u3=b) for a != b in general? 

@@ -1,0 +1,83 @@
+// Generic ///////////////////////////////////////////
+
+// Values for the following variables should be set on the command line
+//
+// linkname - name of the link to compute, as in linkLibrary
+// N - the N in sl(N) homology
+// path - either 0 (use ./data/), or 1 (use /scr, for nemo)
+//
+// with for example Singular -c "string linkname=\"6_1\";int N=2;int path=0;"
+
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+
+// Figure out how many variables in this link
+list linkL = linkLibrary(linkname);
+
+int numVars = 0;
+int i;
+for(i=1;i<=size(linkL[2]);i++)
+{
+    intvec e = linkL[2][i];
+    int j;
+    for(j=1;j<=4;j++)
+    {
+        if( e[j] > numVars ){ numVars = e[j]; }
+    }
+}
+
+// Find out the path
+int useMPfile = blowFlags("use_mpfile");
+string suffix;
+if( useMPfile )
+{
+    suffix = "mp";
+}
+else
+{
+    suffix = "txt";
+}
+
+string fileName;
+if( path == 0 )
+{
+    fileName = "./data/" + linkname + "-N" + string(N) + "." + suffix;
+}
+else
+{
+    fileName = "/scr/" + linkname + "-N" + string(N) + "." + suffix;
+}
+
+print("");
+print(">> Computing sl(" + string(N) + ") link homology for " + linkname);
+print(">> Output to file: " + fileName);
+
+ring rr=0,(x(1..numVars)),dp;
+printlevel = 1;
+
+list h = linkCompile(linkL, fileName, N);
+
+print("");
+print(">> Completed compilation, computing invariants...");
+print("");
+
+list cp = KRcomplex(linkL, h, N);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+
+print(">> Euler char: " + string(euler));
+
+// The KR homology is described by its Poincare polynomial
+number poincare = gradedPoincare(cohom, q, t);
+print(">> Poincare poly: " + string(poincare));
+print("");
+
+exit;
