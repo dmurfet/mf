@@ -402,6 +402,19 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
+    if( s == "L7a7" )
+    {    
+        intvec edgevec(1) = 5,1,7,6;
+        intvec edgevec(2) = 6,8,4,5;
+        intvec edgevec(3) = 3,11,1,2;
+        intvec edgevec(4) = 2,4,12,3;
+        intvec edgevec(5) = 12,13,14,11;
+        intvec edgevec(6) = 9,10,13,8;
+        intvec edgevec(7) = 7,14,10,9;
+        intvec vertexParity = 1,1,1,1,-1,-1,-1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6),edgevec(7));
+    }
+
     return(retLink);
 }
 
@@ -683,30 +696,34 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 {
     if( zeroOrOne == 0 )
     {
+        number mu = 1/2;
+
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
         poly u2 = ( gpoly(p(3)+p(4), p(1)*p(2), N) - gpoly(p(3)+p(4), p(3)*p(4), N) )/( p(1)*p(2)-p(3)*p(4) );
-        poly aa1 = -u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );
-
-        matrix chi0[4][4] = p(4)-p(2), 0, 0,    0,
+        poly aa1 = -u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );        
+        
+        matrix chi0[4][4] = p(4)-p(2) + mu*(p(1)+p(2)-p(3)-p(4)), 0, 0,    0,
                         aa1,        1, 0,    0,
-                        0,         0, p(4), -p(2),
-                        0,         0, -1,   1;            // We set mu=0.                    
+                        0,         0, p(4) + mu*(p(1)-p(4)), -p(2) + mu*(p(2)-p(3)),
+                        0,         0, -1,   1;
         return(chi0);
     }
 
     if( zeroOrOne == 1 )
     {
+        number lambda = 1/2;
+        
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
         poly u2 = ( gpoly(p(3)+p(4), p(1)*p(2), N) - gpoly(p(3)+p(4), p(3)*p(4), N) )/( p(1)*p(2)-p(3)*p(4) );
-        poly aa2 = ( u1 + p(1) * u2 - pi23 )/( p(4)-p(1) );
-        poly aa3 = p(1) - p(3);
+        poly aa2 = lambda*u2 + ( u1 + p(1) * u2 - pi23 )/( p(4)-p(1) );
+        poly aa3 = lambda*(p(3)+p(4)-p(1)-p(2)) + p(1) - p(3);
 
         matrix chi1[4][4] = 1, 0, 0,    0,
                         aa2,        aa3, 0,    0,
-                        0,         0, 1, p(3),
-                        0,         0, 1, p(1);            // We set lambda=0.
+                        0,         0, 1, p(3) + lambda*(p(2)-p(3)),
+                        0,         0, 1, p(1) + lambda*(p(4)-p(1));
     
         return(chi1);
     }
