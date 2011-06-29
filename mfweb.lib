@@ -123,6 +123,28 @@ proc isEdgeBetweenVertices(list edge, int v1, int v2)
     if( edgeSource(edge) == v2 && edgeTarget(edge) == v1 ){ return(1); }
     return(0);
 }
+proc edgeVerify(list edge)
+{
+    if( typeof(edge[1]) != "int" ){ return(0); }
+    if( edge[1] < 0 ){ return(0); }
+    
+    if( typeof(edge[2]) != "int" ){ return(0); }
+    if( edge[2] < 0 ){ return(0); }
+    
+    if( typeof(edge[3]) != "list" ){ return(0); }
+    if( size(edge[3]) == 0 ){ return(0); }
+    
+    int i;
+    for(i=1; i<=size(edge[3]); i++)
+    {
+       // Each entry must be a ring variable
+        if( rvar(edge[3][i]) == 0 ){ return(0); }
+    }
+    
+    if( typeof(edge[4]) != "poly" ){ return(0); }
+    
+    return(1);
+}
 
 // NOTE: augmentedEdgeForEdge breaks the setter/getter barrier.
 
@@ -332,6 +354,15 @@ proc augmentedEdgeForEdge(list edge)
     int powerCutoff = blowFlags("power_cutoff_jacobi"); 
     int useSanityChecks = blowFlags("sanity_checks");
     
+    if( useSanityChecks )
+    {
+        if( !edgeVerify(edge) )
+        {
+            print("[augmentedEdgeForEdge] Passed invalid edge, exiting.");
+            return();
+        }
+    }
+            
     // Recall that an edge has the format (S,T,L,W) and an augmented edge has the format
     // (S,T,L,W,B,C) where B is an intvec and C a matrix.
     
@@ -339,7 +370,7 @@ proc augmentedEdgeForEdge(list edge)
     def RRR = basering;
     def nR = ringWithOnlyVars(edgeVariables(edge));
     setring nR;
-
+    
     // Note it's important that we respect the order of the variables in the edge, NOT
     // the natural ordering in the ring.
     list edge = imap(RRR,edge);
@@ -371,7 +402,6 @@ proc augmentedEdgeForEdge(list edge)
         {
             if( reduce(va^p, Jstd) == 0 )
             {
-                //print(string(va) + " to the power " + string(p) + " belongs to J"); //debug
                 power = p;
                 B[i] = p;
                 matrix T = lift(J, va^p);
@@ -806,7 +836,6 @@ proc webCompilePair(list web, list compStrat)
     for(i=1;i<=size(varOrder);i++)
     {
         poly u = varOrder[i];
-        //dbprint(printlevel, "[webCompilePair] Integrating out internal variable " + string(u)); // debug
         
         // Find out which edge this variable lies on
         int j;
@@ -1006,37 +1035,60 @@ proc webCompile(list web, list compStrat)
             return();
         }
         
-        // Construct a subweb and substrategy consisting of the first two vertices to be fused
-        list subweb = subwebWithVertices(web, list(vertexOrder[1],vertexOrder[2]));
-        list subwebVar = webVariables(subweb);
-        list substrat_var;
+        // Construct a subweb and substrategy consisting of the vertices to be fused.
+        // We prefer to fuse the first two, but there may not be any edges between them:
+        // in this case we iterate the second vertex. So the fusion will be between
+        // vertex 1 and the vertex with index fusionVertex
+        int fusionVertex;
+        list subweb, subwebVar, substrat_var;
         
-        // Intersect the variables in varOrder with the list of internal vars in the subweb
-        int i;
-        for(i=1; i<=size(varOrder); i++) 
+        for(fusionVertex=2; fusionVertex<=size(vertexOrder); fusionVertex++)
         {
-            poly u = varOrder[i];
-            
-            int j;
-            for(j=1; j<=size(edges); j++)
+            subweb = subwebWithVertices(web, list(vertexOrder[1],vertexOrder[fusionVertex]));
+            subwebVar = webVariables(subweb);
+
+            // Intersect the variables in varOrder with the list of internal vars in the subweb
+            int i;
+            for(i=1; i<=size(varOrder); i++) 
             {
-                list e = edges[j];
-                if( checklist(edgeVariables(e),u) && isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[2]) )
+                poly u = varOrder[i];
+            
+                int j;
+                for(j=1; j<=size(edges); j++)
                 {
-                    substrat_var = substrat_var + list(varOrder[i]);
-                    break;
+                    list e = edges[j];
+                    if( checklist(edgeVariables(e),u) && isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[fusionVertex]) )
+                    {
+                        substrat_var = substrat_var + list(varOrder[i]);
+                        break;
+                    }
+                    kill e;
                 }
-                kill e;
+                kill u;
             }
-            kill u;
+            
+            if( size(substrat_var) != 0 )
+            {
+                // We have found a vertex linked to the first one by at least one edge
+                // so let us continue...
+                break;
+            }
+        }
+        
+        // If we cannot find any internal edges linked to the first vertex, fail
+        if( size(substrat_var) == 0 )
+        {
+            print("[webCompile] Found no internal variables! exiting.");
+            return();
         }
         
         list substrat = list(list(1,2), substrat_var);
         
         // Change to the ring containing only those variables involved in this fusion
         def tempring = ringWithOnlyVars(subwebVar);
-        kill subwebVar;
         
+        kill subwebVar;
+
         ///////// BEGIN tempring //////////
         setring tempring;
         list subweb = imap(nR(count),subweb);
@@ -1048,7 +1100,7 @@ proc webCompile(list web, list compStrat)
         setring nR(count);
         kill subweb, substrat;
         ///////// END tempring ///////////
-        
+
         list l = imap(tempring, l);
         kill tempring;
         
@@ -1063,8 +1115,6 @@ proc webCompile(list web, list compStrat)
             // using the grading) and R is the splitting record, but where the last (F,G) pair in R is
             // a tuple (f0,f1,g0,g1) with f0,g0 splitting the even part of the very last idempotent
             // and similarly for f1,g1.
-        
-            //dbprint(printlevel, "[webCompile] Hit nonsquare matrices, wrapping it up.");
         
             kill numVertices, edges, mfs, vertexOrder, varOrder;
             if( useGrading ){ kill webGr; }
@@ -1118,18 +1168,18 @@ proc webCompile(list web, list compStrat)
         // 1. List of matrices
         list fusedWebMfs = mfs;
         fusedWebMfs[vertexOrder[1]] = l[1];
-        fusedWebMfs = delete(fusedWebMfs,vertexOrder[2]);
+        fusedWebMfs = delete(fusedWebMfs,vertexOrder[fusionVertex]);
         
         // 2. Gradings
         if( useGrading )
         {
             list fusedWebGr = webGr;
             fusedWebGr[vertexOrder[1]] = l[2];
-            fusedWebGr = delete(fusedWebGr,vertexOrder[2]);
+            fusedWebGr = delete(fusedWebGr,vertexOrder[fusionVertex]);
         }
         
         // 3. Edges. Remove all squeezed out internal edges, and redirect
-        // other edges which end or begin at vertexOrder[2] so that they
+        // other edges which end or begin at vertexOrder[fusionVertex] so that they
         // now end or begin resp. at vertexOrder[1].
 
         int i;
@@ -1139,29 +1189,29 @@ proc webCompile(list web, list compStrat)
             list e = edges[i];
             
             // Exclude edges which where squeezed out
-            if( !isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[2]) )
+            if( !isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[fusionVertex]) )
             {
                 list newEdge = e;
                 
-                if( edgeSource(newEdge) == vertexOrder[2] )
+                if( edgeSource(newEdge) == vertexOrder[fusionVertex] )
                 {
                     newEdge = setEdgeSource(newEdge, vertexOrder[1]);
                 }
                 
-                if( edgeTarget(newEdge) == vertexOrder[2] )
+                if( edgeTarget(newEdge) == vertexOrder[fusionVertex] )
                 {
                     newEdge = setEdgeTarget(newEdge, vertexOrder[1]);
                 }
             
                 // Finally, if the edge begins or ends on a vertex appearing after
-                // vertexOrder[2] we need to decrement the index, as the fused web
+                // vertexOrder[fusionVertex] we need to decrement the index, as the fused web
                 // has one less vertex and all indices shifted
-                if( edgeSource(newEdge) > vertexOrder[2] )
+                if( edgeSource(newEdge) > vertexOrder[fusionVertex] )
                 {
                     newEdge = setEdgeSource(newEdge, edgeSource(newEdge) - 1);
                 }
                 
-                if( edgeTarget(newEdge) > vertexOrder[2] )
+                if( edgeTarget(newEdge) > vertexOrder[fusionVertex] )
                 {
                     newEdge = setEdgeTarget(newEdge, edgeTarget(newEdge) - 1);
                 }
@@ -1186,12 +1236,12 @@ proc webCompile(list web, list compStrat)
         
         // Next we rearrange the compilation strategy. The vertices is simple: we have
         // replaced the first vertex in the strategy by the fusion, so we just drop the
-        // second entry of vertexOrder
-        list fusedVertexOrder = delete(vertexOrder,2);
+        // entry of vertexOrder in position fusionVertex
+        list fusedVertexOrder = delete(vertexOrder,fusionVertex);
         
         for(i=1;i<=size(fusedVertexOrder);i++)
         {
-            if( fusedVertexOrder[i] > vertexOrder[2] )
+            if( fusedVertexOrder[i] > vertexOrder[fusionVertex] )
             {
                 fusedVertexOrder[i] = fusedVertexOrder[i] - 1;
             }
@@ -1214,7 +1264,7 @@ proc webCompile(list web, list compStrat)
             {
                 // u is an internal variable which was squeezed out, so
                 // reduce our internal variable count appropriately
-                numInternalVar--;
+                numInternalVar--;                
             }
             
             kill u;
@@ -1316,7 +1366,7 @@ proc webFromLink(list linkData, intvec state, int N, list #)
     int i,j;
     list edges;
     
-    // Loop through vertices
+    // Loop through vertices (in the link data)
     for(j=1; j<=numVertices; j++)
     {
         // Loop through entries of vertex
@@ -1775,7 +1825,7 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
             list R(2) = splitRec(2)[i][2 + useGrading];    
         }
         
-        //displaySplittingRecord(R(1)); //debug
+        //displaySplittingRecord(R(1));
         
         // A splitting record R looks like a list of tuples (F,G,u,N) where
         // F is a map Ablow[1] --> final, G is a map final --> Ablow[1] and
