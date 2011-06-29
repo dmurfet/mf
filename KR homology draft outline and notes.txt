@@ -74,8 +74,9 @@ OBSERVATIONS (incomplete):
         L6a5 (we only have version 1 here...),
         L6n1 (we only have version 1 here...).
 -- Often the total dimension of reduced KR is independent of N.
--- our results for Z2-even and Z2-odd reduced KR invariants always differ by a factor q^(N-1), 
-   but the "direction" depends on the example! 
+-- In our examples the choice of mark does not matter. 
+-- Our results for Z2-even and Z2-odd reduced KR invariants always differ by a factor q^(N-1); 
+   the Z2-degree with the higher q-degree is given by #crossings + #components + 1 mod 2.  
 -- L6a3 version 1 much easier to compute than L6a3 version 2, for example...
 -- Regarding the need to sometimes replace q <--> 1/q and t <--> 1/t to get agreement with Knot Atlas, [GSV] or
    [DGR], see also remark at end of section 2.4 in [DGR, journal version, p.134].
@@ -83,21 +84,16 @@ OBSERVATIONS (incomplete):
    many 7-crossings knots that we don't consider, and similarly we don't look at other "versions" of L6a5 and L6n1.
 
 TODOs:
--- Check if KR invariants can distinguish knots related by oriented mutation. 
-   (Non-trivial mutations can only occur with 11 or more crossings. Easiest example for us to check probably
-    is the "Conway knot".)
-   (Homfly and Khovanov homology CANNOT distinguish the 11-crossing mutant pairs (as stated at the very end of
-    section 3 of [DGR, journal version]. However, Khovanov homology is mutation sensitive for some knots, see 
-    [http://arxiv.org/abs/math/0301312]. Furthermore, [http://arxiv.org/abs/1101.3302] says that reduced KR homology
-    is mutation invariant for odd N. So we have not chance of finding an example of a mutant pair that reduced
-    KR homology can resolve. Maybe we are lucky with unreduced N=3 KR homology?)
 -- Implement virtual crossings for virtual links (see appendix of [KR 2007]).
 -- Try other marks on same component and compare (should give same reasult!).
 -- Explicitly check whether Rasmussen's formula for reduced KR in terms of Homfly for 2-bridge knots also holds for
    N=3 and N=4 in our calculations.
 -- Go through all of code, make nicer where possible...
 -- Try to guess general formulas for unreduced KR invariants. Compute more unreduced examples. 
--- Check the unreduced homology lives in the right degree in our examples (
+-- Apply the argument of [GIKV, section 3.1] to other 2-component links to get invariants for general N; 
+       see also [GSV, eq. (5.5)]. In particular, all our 2-component links (L4a1, L5a1, L6a1, L6a2, L6a3) have 
+       nothing but unknots for components! 
+   Apparently, this trick does not work for Solomon's knot, see the file "GSV-trick -- check for Solomon's knot.nb". 
 
 NOTES: 
 -- Kauffman thinks that unreduced homology can in general NOT be obtained from reduced homology.
@@ -110,8 +106,6 @@ NOTES:
    He computes his invariant for the Hopf link (and no other examples) in section 5.6, finds same result as refined 
    topological vertex computatation of arXiv:0903.5383v2 [hep-th] up to monomial factor and rescaling... 
    SEE ALSO [0907.0695v5, section 1.4]
-   
----------------------------
 
 DAN's TODO list:
 
@@ -120,4 +114,60 @@ DAN's TODO list:
 - Bugs in Stevedore (6_1), 6_3 and various reduced homologies.
 - Web idempotent and Atiyah class Leibniz rule
 
-- Review virtual crossings
+-- It would be nice to see if KR invariants can distinguish knots related by oriented mutation. 
+   (Non-trivial mutations can only occur with 11 or more crossings. Easiest example for us to check probably
+    is the "Conway knot".)
+   (Homfly and Khovanov homology CANNOT distinguish the 11-crossing mutant pairs (as stated at the very end of
+    section 3 of [DGR, journal version]. However, Khovanov homology is mutation sensitive for some knots, see 
+    [http://arxiv.org/abs/math/0301312]. Furthermore, [http://arxiv.org/abs/1101.3302] says that reduced KR homology
+    is mutation invariant for odd N. So we have not chance of finding an example of a mutant pair that reduced
+    KR homology can resolve. Maybe we are lucky with unreduced N=3 KR homology?)
+    I had an unreduced N=3 KR computation for the 11-crossing Conway knot running on finzi for 1.5 days. 
+    It got to state 16/2048 in the compilation, then it started swapping memory. Without immense improvements of
+    the code or the machines it runs on, checking KR homology for mutation sensitivity is far out of reach.
+   
+REFERENCES (more to be added): 
+
+Ooguri-Vafa & co.:
+http://arxiv.org/abs/hep-th/9912123 
+http://arxiv.org/abs/math/0104180 
+http://arxiv.org/abs/hep-th/0010102 
+http://arxiv.org/abs/hep-th/0004196 
+
+Khovanov-Rozansky & co.:
+http://arxiv.org/abs/math/0401268 
+http://arxiv.org/abs/math/0504045
+http://arxiv.org/abs/math/0505056 
+http://arxiv.org/abs/math/0508510 
+http://arxiv.org/abs/math/0510265 
+http://arxiv.org/abs/math/0701333 
+http://arxiv.org/abs/0906.0220 
+http://arxiv.org/abs/0907.0695 
+http://arxiv.org/abs/1105.0702 
+
+Webster: 
+http://arxiv.org/abs/math/0610650 
+http://arxiv.org/abs/1001.2020 
+http://arxiv.org/abs/1005.4559 
+
+Superpolynomials and categorification ideas from "physics":
+http://arxiv.org/abs/hep-th/0412243
+http://arxiv.org/abs/math/0505662 
+http://arxiv.org/abs/hep-th/0512298 
+http://arxiv.org/abs/0705.1368 
+http://arxiv.org/abs/0706.2369 
+
+Witten & Witten-Gaiotto: 
+http://arxiv.org/abs/1101.3216 
+http://arxiv.org/abs/1106.4789
+
+Aganagic/Shakirov: 
+http://arxiv.org/abs/1105.5117 
+
+Not yet properly read:
+http://arxiv.org/abs/math/0201219
+http://arxiv.org/abs/math/0402266 
+http://arxiv.org/abs/math/0702230 
+http://arxiv.org/abs/0801.4018 
+http://arxiv.org/abs/0910.1790 
+http://math.u-bourgogne.fr/IMB/wagner/index.html/embedded.pdf 

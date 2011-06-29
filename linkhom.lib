@@ -4,7 +4,7 @@ category="Miscellaneous";
 info="
 LIBRARY:   linkhom.lib  Computation of link homology using web compilation
 AUTHOR:    Nils Carqueville, Daniel Murfet
-KEYWORDS:  matrix factorization, link homology
+KEYWORDS:  matrix factorisation, link homology
 
 PROCEDURES:
 ";
@@ -22,8 +22,8 @@ LIB "mfweb.lib";
 // in the link under consideration. In principle parameters should be OK, but
 // this has not been checked.
 //
-// The references to [KR] are to Khovanov and Rozansky "Matrix factorizations and
-// link homology" arXiv:math/0401268v2.
+// The references to [KR] are to Khovanov and Rozansky, "Matrix factorizations and
+// link homology", arXiv:math/0401268v2.
 
 ////////////////////////////////////////////////////////////////////
 // NOTES ON GRADING
@@ -66,7 +66,7 @@ proc linkLibrary(string s)
     
     // 3 crossing knots ////////////////////////////////////////
     
-    if( s == "trefoil" )
+    if( s == "trefoil" || s == "3_1" )
     {
         // This is the right handed trefoil
         intvec edgevec(1) = 2,1,3,4;
@@ -78,7 +78,7 @@ proc linkLibrary(string s)
     
     // 4 crossing knots ////////////////////////////////////////
     
-    if( s == "figure-eight" )
+    if( s == "figure-eight" || s == "4_1" )
     {
         intvec edgevec(1) = 1,7,8,5;
         intvec edgevec(2) = 6,8,7,2;
@@ -114,7 +114,7 @@ proc linkLibrary(string s)
         
     // 6 crossing knots ////////////////////////////////////////
     
-    if( s == "6_1" )
+    if( S == "stevedore" || s == "6_1" )
     {
         intvec edgevec(1) = 1,2,3,4;
         intvec edgevec(2) = 6,8,7,1;
@@ -166,7 +166,6 @@ proc linkLibrary(string s)
     }
     
     // 8 crossing knots ////////////////////////////////////////
-
     
     if( s == "8_19" )
     {
@@ -181,10 +180,29 @@ proc linkLibrary(string s)
         intvec vertexParity = -1,-1,-1,-1,-1,-1,-1,-1;
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6),edgevec(7),edgevec(8));
     }
+
+    // 11 crossing knots ////////////////////////////////////////
+    
+    if( s == "11KTC_1" )
+    {
+        intvec edgevec(1) = 1,4,3,2;
+        intvec edgevec(2) = 2,7,6,5;
+        intvec edgevec(3) = 3,8,22,7;
+        intvec edgevec(4) = 5,6,9,12;
+        intvec edgevec(5) = 9,22,10,13;
+        intvec edgevec(6) = 12,18,15,14;
+        intvec edgevec(7) = 14,15,17,16;
+        intvec edgevec(8) = 16,17,21,1;
+        intvec edgevec(9) = 13,20,19,18;
+        intvec edgevec(10) = 21,19,20,11;
+        intvec edgevec(11) = 11,10,8,4;
+        intvec vertexParity = 1,1,-1,1,-1,-1,-1,-1,1,1,1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6),edgevec(7),edgevec(8),edgevec(9),edgevec(10),edgevec(11));
+    }
     
     // LINKS ////////////////////////////////////////
     
-    if( s == "hopf" )
+    if( s == "hopf" || s == "L2a1" )
     {
         intvec edgevec(1) = 1,2,3,4;
         intvec edgevec(2) = 4,3,2,1;
@@ -192,7 +210,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2));
     }
 
-    if( s == "hopf_version_2" )
+    if( s == "hopf_version_2" s == "L2a1_version_2" )
     {
         intvec edgevec(1) = 3,2,1,4;
         intvec edgevec(2) = 4,1,2,3;
@@ -200,7 +218,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2));
     }
     
-    if( s == "solomon" )
+    if( s == "solomon" || s == "L4a1")
     {    
         intvec edgevec(1) = 1,2,3,4;
         intvec edgevec(2) = 8,3,2,7;
@@ -210,7 +228,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
     }
 
-    if( s == "solomon_version_2" )
+    if( s == "solomon_version_2" || s == "L4a1_version_2")
     {
         intvec edgevec(1) = 2,3,4,1;
         intvec edgevec(2) = 7,8,3,2;
@@ -220,7 +238,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4));
     }
 
-    if( s == "whitehead" )
+    if( s == "whitehead" || s == "L5a1" )
     {
         intvec edgevec(1) = 4,3,1,2;
         intvec edgevec(2) = 2,1,10,9;
@@ -231,12 +249,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
     }
 
-    // NOTE: Either "whitehead_version_2" or "whitehead_version_2_alternate" below
-    //       are equivalent to "whitehead" above; all three of them give the same KR invariant
-    //       for N=2, but either "whitehead_version_2" or "whitehead_version_2_alternate" has 
-    //       a different relative orientation than "whitehead".
-
-    if( s == "whitehead_version_2" )
+    if( s == "whitehead_version_2" || s == "L5a1_version_2" )
     {
         intvec edgevec(1) = 2,4,3,1;
         intvec edgevec(2) = 8,7,5,4;
@@ -247,18 +260,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
     }
 
-    if( s == "whitehead_version_2_alternate" )
-    {
-        intvec edgevec(1) = 4,3,1,2;
-        intvec edgevec(2) = 7,5,4,8;
-        intvec edgevec(3) = 8,9,6,7;
-        intvec edgevec(4) = 2,1,10,9;
-        intvec edgevec(5) = 6,10,3,5;
-        intvec vertexParity = 1,-1,-1,1,1;
-        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5));
-    }
-    
-    if( s == "borromeanRings" )
+    if( s == "borromeanRings" || s == "L6a4" )
     {    
         intvec edgevec(1) = 1,2,3,7;
         intvec edgevec(2) = 3,4,5,6;
@@ -270,7 +272,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
-    if( s == "borromeanRings_version_2" )
+    if( s == "borromeanRings_version_2" || s == "L6a4_version_2" )
     {    
         intvec edgevec(1) = 1,2,3,7;
         intvec edgevec(2) = 6,3,4,5;
@@ -282,7 +284,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
-    if( s == "borromeanRings_version_3" )
+    if( s == "borromeanRings_version_3" || s == "L6a4_version_3" )
     {    
         intvec edgevec(1) = 2,3,7,1;
         intvec edgevec(2) = 5,6,3,4;
@@ -294,7 +296,7 @@ proc linkLibrary(string s)
         retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
     }
 
-    if( s == "borromeanRings_version_4" )
+    if( s == "borromeanRings_version_4" || s == "L6a4_version_4" )
     {    
         intvec edgevec(1) = 2,3,7,1;
         intvec edgevec(2) = 4,5,6,3;
@@ -467,7 +469,7 @@ proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
 {
     poly W = a^(n+1) + b^(n+1) - c^(n+1) - d^(n+1);
     
-    // Following KR we write W = (a + b - c - d)u1 + (ab - cd)u2 
+    // Following KR we write W = (a + b - c - d)u1 + (ab - cd)u2:
     poly u1 = (gpoly(a + b, a*b, n) - gpoly(c + d, a*b, n))/(a+b-c-d);
     poly u2 = (gpoly(c + d, a*b, n) - gpoly(c + d, c*d, n))/(a*b-c*d);
     
@@ -496,10 +498,10 @@ proc mfWideEdgeGrading(int n)
     intvec g = 0, 1-n;
     intvec h = 0, 3-n;
     
-    // Grading vector on the tensor product
+    // Grading vector on the tensor product:
     intvec r = MFtensorGradings(h, g);
     
-    // The grading is then shifted by -1, as defined on [KR, p.48]
+    // The grading is then shifted by -1, as defined on [KR, p.48]:
     int i;
     for(i=1;i<=size(r);i++){ r[i] = r[i] - 1; }
     
@@ -511,7 +513,7 @@ proc mfWideEdgeGrading(int n)
 //
 // We are given two potentials W1 and W2 and two variables y and x.
 // We assume that W1 = W(y) and W2 = W(x) for some fixed polynomial
-// W and we return the identity defect W2 -> W1
+// W and we return the identity defect W2 -> W1.
 ////////////////////////////////////////////////////////////////////
 
 proc mfIdentityDefect(poly W1, poly W2, poly y, poly x)
@@ -520,7 +522,7 @@ proc mfIdentityDefect(poly W1, poly W2, poly y, poly x)
     return(koszul1);
 }
 
-// We are given the degree of some homogeneous potential
+// We are given the degree of some homogeneous potential.
 proc mfIdentityDefectGrading(int dg)
 {
     int n = dg - 1;
@@ -538,7 +540,7 @@ proc mfIdentityDefectGrading(int dg)
 //
 // We are given four variables a,b,c,d and an integer N, and we return
 // the matrix factorisation of a^(n+1) + b^(n+1) - c^(n+1) - d^(n+1)
-// associated by Khovanov and Rozansky to the Gamma0 diagram of Figure 8
+// associated by Khovanov and Rozansky to the Gamma0 diagram of Figure 8.
 // Let us include the following picture of a wide edge
 //
 //       a        b
@@ -751,7 +753,7 @@ proc powervec(int m)
     int i;
     for(i=1;i<=size(l);i++)
     {
-       // Prepend either 0 or 1 to each entry of l
+       // Prepend either 0 or 1 to each entry of l:
         intvec v = l[i];
         intvec a = 0,v;
         intvec b = 1,v;
@@ -785,7 +787,7 @@ proc intvecToString(intvec v)
 
 proc externalDegreeOfWeb(intvec v, intvec vertexParity)
 {
-    // 0 is always degree zero, and 1 is either degree -1 or +1 depending on the crossing type
+    // 0 is always degree zero, and 1 is either degree -1 or +1 depending on the crossing type.
     int i;
     int d;
     for( i = 1; i <= size(v); i++ )
@@ -814,14 +816,14 @@ proc superblockmat(int numCols, list #)
     
     int numRows = size(#)/numCols;
     
-    // We first collect each row of the block matrix into a list
+    // We first collect each row of the block matrix into a list.
     list l;
     
     int i,j,k,t,s;
     for(s = 1;s<=numRows;s++)
     {
         // In this row of the block matrix we have the matrices
-        // #[(s-1)*numCols + 1], ...., #[s * numCols]
+        // #[(s-1)*numCols + 1], ...., #[s * numCols].
         int b = nrows(#[s*numCols]);
         
         for(j=1;j<=b;j++)
@@ -830,7 +832,7 @@ proc superblockmat(int numCols, list #)
             
             for(k=1;k<=numCols;k++)
             {
-                // We are now inside #[(s-1)*numCols + k]
+                // We are now inside #[(s-1)*numCols + k].
                 matrix cMat = #[(s-1)*numCols +k];
                 for(t=1;t<=ncols(cMat);t++)
                 {
@@ -843,7 +845,7 @@ proc superblockmat(int numCols, list #)
         }
     }
     
-    // Convert l to a matrix
+    // Convert l to a matrix:
     matrix A[size(l)][size(l[1])];
     for(i=1;i<=size(l);i++)
     {
@@ -934,7 +936,7 @@ proc computeCohomology(list cpx)
                 }
             }
             
-            // If we are still here, we found a consistent degree
+            // If we are still here, we found a consistent degree.
             wt[j] = vwt;
         }
         
@@ -949,14 +951,14 @@ proc computeCohomology(list cpx)
 //
 // Takes as input a sequence of graded vector spaces, specified as a
 // tuple (m,V,H) as described as the ouput of computeCohomology. The return
-// is the graded Poincare poly. The second and argument are the parameters
-// to use (i.e., the q and t).
+// is the graded Poincare polynomial. The second and third argument are 
+// the parameters to use (i.e., the q and t).
 //
 // Recall that given a bigraded vector space H, the Poincare polynomial is
 //
 //     sum_i,j t^i * q^j * dim( H^(i,j) )
 //
-// Where i, j range over all integers, i is a cohomological degree and j
+// where i, j range over all integers, i is a cohomological degree and j
 // is the weight or internal degree.
 
 proc gradedPoincare(list cohom, number v, number u)
@@ -1020,9 +1022,6 @@ proc gradedEuler(list cohom, number v)
 // return a pair (m,L,G) where m is the minimum nonzero degree of the KR
 // complex, L is the list of matrices giving the differentials, and G is
 // the list of intvecs giving the weights on each of the vector spaces.
-//
-// NOTE: The complex we produce here is not a complex is in the "new"
-// sense introduced just before cpxTensor.
 
 proc KRcomplex(list linkData, list linkComp, int N)
 {
@@ -1032,7 +1031,7 @@ proc KRcomplex(list linkData, list linkComp, int N)
     list h = linkComp[2];
     intvec vertexParity = linkData[1];
     
-    // Discover which webs in the KR complex live in which cohomological degrees
+    // Discover which webs in the KR complex live in which cohomological degrees:
     list r = listWebsByDegree(linkData, linkComp, N);
     
     int minDegree = r[1];
@@ -1077,7 +1076,7 @@ proc KRcomplex(list linkData, list linkComp, int N)
 
                 // Both source, target have the format (intvec state, int rank, intvec weight)
 
-                // Look for the map between these two webs in h, if it exists
+                // Look for the map between these two webs in h, if it exists:
                 matrix A;
                 int s;
                 int found = 0;
@@ -1085,7 +1084,7 @@ proc KRcomplex(list linkData, list linkComp, int N)
                 {
                     if( h[s][1] == source[1] && h[s][2] == target[1] )
                     {
-                        // Calculate the Koszul sign
+                        // Calculate the Koszul sign:
                         int signf;
                         int chiposition = h[s][4];
                         int b;
@@ -1148,14 +1147,14 @@ proc KRcomplex(list linkData, list linkComp, int N)
 //
 // NOTE: Webs are ordered in whatever ordering the routine powervec puts them in.
 //
-// NOTE: We ignore webs that compile to zero dimensional vector spaces
+// NOTE: We ignore webs that compile to zero dimensional vector spaces.
 
 proc listWebsByDegree(list linkData, list linkComp, int N)
 {
     list webComp = linkComp[1];
     list h = linkComp[2];
     
-    // webComp is a list of tuples (intvec state, int rank, int degree, intvec grading)
+    // webComp is a list of tuples (intvec state, int rank, int degree, intvec grading).
     // h is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
     
     int minDegree = 0;
@@ -1194,16 +1193,16 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
             
             int rankk = webComp[i][2];
 
-            // We do not include webs compiling to zero
-            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; }
+            // We do not include webs compiling to zero.
+            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; } //debug
 
-            // Look for this web as the source or target of something in h
+            // Look for this web as the source or target of something in h:
             intvec weights = webComp[i][4];
             intvec inWeight = weights;
             int c;
             for(c = 1; c <= size(h); c++)
             {
-                // Every time we see this web as the source of a map
+                // Every time we see this web as the source of a map.
                 if( h[c][1] == web )
                 {    
                     // By [KR,p.81] we have an additional 1 - N or N if the chitype is 0 or 1 resp.
@@ -1219,7 +1218,7 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
                     }
                 }
                     
-                // Every time we see this web as the target of a map
+                // Every time we see this web as the target of a map.
                 if( h[c][2] == web )
                 {
                     // By [KR,p.81] we have an additional -N or N - 1 if the chitype is 0 or 1 resp.
@@ -1316,7 +1315,7 @@ proc linkCompile(list linkData, string fileName, int N)
     
     // The compilation strategy is the same for all webs: we simply compile from the 1st
     // vertex to the last one, and enumerate the variables in the given order (note that
-    // all the ring variables are taken as internal variables)
+    // all the ring variables are taken as internal variables).
     list compStratVert;
     list compStratVar;
     int j;
@@ -1332,7 +1331,7 @@ proc linkCompile(list linkData, string fileName, int N)
         
     // STEP 1. Go through each state of the link and compile the corresponding web. Then
     // add the data to returnListWebs. 
-    // The compilation of a state 1101 is stored in web1101
+    // The compilation of a state 1101 is stored in web1101.
     int i;
     list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
@@ -1341,7 +1340,7 @@ proc linkCompile(list linkData, string fileName, int N)
     
     for( i = 1; i <= numStateDiagrams; i++ )
     {
-        // Our current state diagram
+        // Our current state diagram:
         intvec v = stateDiagrams[i];
         
         dbprint(printlevel, "");
@@ -1355,23 +1354,23 @@ proc linkCompile(list linkData, string fileName, int N)
         
         if( definedCheck )
         {
-            // We have already compiled this web /////////////
+            // We have already compiled this web. /////////////
             dbprint(printlevel, "[linkCompile] Already compiled, skipping.");
         }
         else
         {
-            // We have not already compiled this web ///////////
+            // We have not already compiled this web. ///////////
             dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
-            // Build a web suitable for calling webCompile
+            // Build a web suitable for calling webCompile:
             list web = webFromLink(linkData, v, N);
             
             execute("list " + listName2 + " = web;");
             
-            // Call webCompile
+            // Call webCompile:
             execute("list " + listName + " = webCompile(web, compStrat);");
             
-            // Save the results to the savefile
+            // Save the results to the savefile:
             dbprint(printlevel, "[linkCompile] Saving to disk.");
 
             execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
@@ -1402,7 +1401,7 @@ proc linkCompile(list linkData, string fileName, int N)
         matrix g(0) = lastEntry[4];
         matrix g(1) = lastEntry[5];
         
-        // First compute the dimension of the compilation in each degree
+        // First compute the dimension of the compilation in each degree:
         int j;
         for(j=0; j<=1; j++)
         {
@@ -1416,13 +1415,13 @@ proc linkCompile(list linkData, string fileName, int N)
                 return();
             }
             
-            // Y is zero in this degree
+            // Y is zero in this degree.
             if( f(j) * g(j) == matrix(0,1,1) )
             {
                 dimComp(j) = 0;
             }
             
-            // Y is nonzero in this degree
+            // Y is nonzero in this degree.
             if( f(j) * g(j) == unitmat(nrows(f(j))) )
             {
                 dimComp(j) = nrows(f(j));
@@ -1436,7 +1435,7 @@ proc linkCompile(list linkData, string fileName, int N)
         intvec grading;
         if( dimComp(0) == 0 && dimComp(1) != 0 )
         {
-            // We are concentrated in degree 1
+            // We are concentrated in degree 1.
             compDegree = 1;
             rankk = dimComp(1);
             grading = Z[3];
@@ -1456,7 +1455,7 @@ proc linkCompile(list linkData, string fileName, int N)
             rankk = 0;
         }
         
-        // All webs compilations should be living in one of the Z2 degrees
+        // All webs compilations should be living in one of the Z2 degrees.
         if( compDegree != -1 )
         {
             if( globalZ2Degree != -1 && globalZ2Degree != compDegree )
@@ -1472,9 +1471,9 @@ proc linkCompile(list linkData, string fileName, int N)
             }
         }
         
-        // Add the compilation products to the return list
+        // Add the compilation products to the return list.
         // Recall that tuples in this list have the format
-        // (intvec state, int rankk, int degree, intvec grading)
+        // (intvec state, int rankk, int degree, intvec grading).
         list compiledEntry = v, rankk, compDegree, grading;
         returnListWebs = returnListWebs + list(compiledEntry);
         kill compiledEntry, v, Z, R, lastEntry, rankk, compDegree, grading;
@@ -1489,17 +1488,17 @@ proc linkCompile(list linkData, string fileName, int N)
     
     for( i = 1; i <= numStateDiagrams; i++ )
     {
-        // Our current state diagram
+        // Our current state diagram:
         intvec v = stateDiagrams[i];
         dbprint(printlevel, "[linkCompile] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
     
-        // Look at each position and the possible maps given by chis
+        // Look at each position and the possible maps given by chis.
         int j;
         for( j = 1; j <= size(v); j++ )
         {
             // If either the current position in v is a 0 and the crossing is positive, or
             // if the current position is 1 and the crossing is negative, then there is a map
-            // originating in this state diagram with a chi in this position
+            // originating in this state diagram with a chi in this position.
             intvec w = v;
             int somethingToDo = 0;
             int chitype;
@@ -1522,13 +1521,13 @@ proc linkCompile(list linkData, string fileName, int N)
             {
                 dbprint(printlevel, "[linkCompile]  Looking at the map to [" + string(w) + "].");
                 
-                // Load up the appropriate webs
+                // Load up the appropriate webs:
                 string cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";"; execute(cmd);
                 cmd = "list leftWeb = web" + intvecToString(v) + ";"; execute(cmd);
                 cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";"; execute(cmd);
                 cmd = "list rightWeb = web" + intvecToString(w) + ";"; execute(cmd);
                 
-                // Lookup the degree in which these compilation products are nonzero
+                // Lookup the degree in which these compilation products are nonzero.
                 // At position i in returnListWebs is various information about the
                 // compilation of the "left" web.
                 list bleft = returnListWebs[i];
@@ -1559,17 +1558,11 @@ proc linkCompile(list linkData, string fileName, int N)
                 {
                     // The source web compiles to zero (in the sense that its differential 
                     // is zero, not necessarily its rank), so we can just put some
-                    // zero matrix onto the return list and skip
-                    
-                    // NOTE to Nils: remove this if you feel confident that we
-                    // can handle zeros, I'm not going to vouch for it...
-                    print("[linkCompile] One of the compilations was zero, not sure we handle this well, exiting.");
-                    return();
+                    // zero matrix onto the return list and skip.
                     
                     // In listWebsByDegree (and then in KRcomplex) we discard
                     // webs compiling to zero, so we should also not include zero maps
                     // from or to zero modules.
-                    // NOTE that in the three-twist example this case does NOT come up.
                     //
                     // list compiledEntry = v, w, v[j], j, zeromat(0,1,1);
                     // returnListMaps = returnListMaps + list(compiledEntry);
@@ -1579,11 +1572,11 @@ proc linkCompile(list linkData, string fileName, int N)
                     continue;
                 }
                 
-                // Otherwise we have a well defined degree, and a well defined vector space
-                // of the following rank in the source web
+                // Otherwise we have a well-defined degree, and a well-defined vector space
+                // of the following rank in the source web.
                 int rankSource = bleft[2];
                 
-                // Now check to see if we have already compiled this map
+                // Now check to see if we have already compiled this map:
                 string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
 
                 string cmd = "int definedCheck = defined(" + listName + ");";
@@ -1591,7 +1584,7 @@ proc linkCompile(list linkData, string fileName, int N)
                                 
                 if( definedCheck )
                 {
-                    // We have already compiled this morphism
+                    // We have already compiled this morphism.
                     dbprint(printlevel, "[linkCompile]  Already compiled, skipping.");
                     
                     string cmd = "list D = " + listName + ";";
@@ -1599,14 +1592,14 @@ proc linkCompile(list linkData, string fileName, int N)
                 }
                 else
                 {
-                    // We have not already compiled this morphism
+                    // We have not already compiled this morphism.
                     intvec e = edgeList[j];
                     matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
                     kill e;
                 
                     def Dp = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
                     
-                    // We should end up with a zero potential, so the output of webCompileMorphism should be a pair
+                    // We should end up with a zero potential, so the output of webCompileMorphism should be a pair.
                     if( typeof(Dp) != "list" )
                     {
                         print("[linkCompile] webCompileMorphism did not return a pair, exiting.");
@@ -1618,7 +1611,7 @@ proc linkCompile(list linkData, string fileName, int N)
                     string cmd = "list " + listName + " = D;"; execute(cmd);
                     kill M;
                     
-                    // Check that D is degree +1
+                    // Check that D is of degree +1:
                     if( useSanityChecks )
                     {
                         matrix Dc = D[concentrateDegree+1];
@@ -1642,7 +1635,7 @@ proc linkCompile(list linkData, string fileName, int N)
                         kill Dc;
                     }
                     
-                    // Save the results to the savefile
+                    // Save the results to the savefile:
                     dbprint(printlevel, "[linkCompile] Saving to disk.");
                     execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
                 }
@@ -1653,7 +1646,7 @@ proc linkCompile(list linkData, string fileName, int N)
                     return();
                 }
                 
-                // Add the computed list to the end of compiledEntry
+                // Add the computed list to the end of compiledEntry:
                 list compiledEntry = v, w, v[j], j, D[concentrateDegree+1];                
                 
                 returnListMaps = returnListMaps + list(compiledEntry);
@@ -1715,7 +1708,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
     
     // The compilation strategy is the same for all webs: we simply compile from the 1st
     // vertex to the last one, and enumerate the variables in the given order (note that
-    // all the ring variables are taken as internal variables)
+    // all the ring variables are taken as internal variables).
     list compStratVert;
     list compStratVar;
     int j;
@@ -1731,7 +1724,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
         
     // STEP 1. Go through each state of the link and compile the corresponding web. Then
     // add the data to returnListWebs. 
-    // The compilation of a state 1101 is stored in web1101
+    // The compilation of a state 1101 is stored in web1101.
     int i;
     list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
@@ -1740,7 +1733,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
     
     for( i = startpost; i <= endpos; i++ )
     {
-        // Our current state diagram
+        // Our current state diagram.
         intvec v = stateDiagrams[i];
         
         dbprint(printlevel, "");
@@ -1754,23 +1747,23 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
         
         if( definedCheck )
         {
-            // We have already compiled this web /////////////
+            // We have already compiled this web. /////////////
             dbprint(printlevel, "[linkCompile] Already compiled, skipping.");
         }
         else
         {
-            // We have not already compiled this web ///////////
+            // We have not already compiled this web. ///////////
             dbprint(printlevel, "[linkCompile] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
-            // Build a web suitable for calling webCompile
+            // Build a web suitable for calling webCompile:
             list web = webFromLink(linkData, v, N);
             
             execute("list " + listName2 + " = web;");
             
-            // Call webCompile
+            // Call webCompile:
             execute("list " + listName + " = webCompile(web, compStrat);");
             
-            // Save the results to the savefile
+            // Save the results to the savefile:
             dbprint(printlevel, "[linkCompile] Saving to disk.");
 
             execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
@@ -1801,7 +1794,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
         matrix g(0) = lastEntry[4];
         matrix g(1) = lastEntry[5];
         
-        // First compute the dimension of the compilation in each degree
+        // First compute the dimension of the compilation in each degree.
         int j;
         for(j=0; j<=1; j++)
         {
@@ -1830,7 +1823,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
             kill f(j), g(j);
         }
         
-        // Decide on the degree in which we are nonzero and set the rank in that degree
+        // Decide on the degree in which we are nonzero and set the rank in that degree.
         int rankk, compDegree;
         intvec grading;
         if( dimComp(0) == 0 && dimComp(1) != 0 )
@@ -1855,7 +1848,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
             rankk = 0;
         }
         
-        // All webs compilations should be living in one of the Z2 degrees
+        // All webs compilations should be living in one of the Z2 degrees.
         if( compDegree != -1 )
         {
             if( globalZ2Degree != -1 && globalZ2Degree != compDegree )
@@ -1871,7 +1864,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
             }
         }
         
-        // Add the compilation products to the return list
+        // Add the compilation products to the return list.
         // Recall that tuples in this list have the format
         // (intvec state, int rankk, int degree, intvec grading)
         list compiledEntry = v, rankk, compDegree, grading;
@@ -1942,7 +1935,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     list edgeList = linkData[2];
     int webSiz = size(vertexParity);
     
-    // Read in the save file, if it exists
+    // Read in the save file, if it exists:
     if( status(fileName,"exists") == "yes" )
     {
         if( useMPfile )
@@ -1962,7 +1955,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     
     // The compilation strategy is the same for all webs: we simply compile from the 1st
     // vertex to the last one, and enumerate the variables in the given order (note that
-    // all the ring variables are taken as internal variables)
+    // all the ring variables are taken as internal variables).
     list compStratVert;
     list compStratVar;
     int j;
@@ -1982,7 +1975,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         
     // STEP 1. Go through each state of the link and compile the corresponding web. Then
     // add the data to returnListWebs. 
-    // The compilation of a state 1101 is stored in web1101
+    // The compilation of a state 1101 is stored in web1101.
     int i;
     list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
@@ -1991,7 +1984,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     
     for( i = 1; i <= numStateDiagrams; i++ )
     {
-        // Our current state diagram
+        // Our current state diagram:
         intvec v = stateDiagrams[i];
         
         dbprint(printlevel, "");
@@ -2005,23 +1998,23 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         
         if( definedCheck )
         {
-            // We have already compiled this web /////////////
+            // We have already compiled this web. /////////////
             dbprint(printlevel, "[linkCompileReduced] Already compiled, skipping.");
         }
         else
         {
-            // We have not already compiled this web ///////////
+            // We have not already compiled this web. ///////////
             dbprint(printlevel, "[linkCompileReduced] Currently used memory: " + string(memory(0) div 1024) + "kb."); 
         
-            // Build a web suitable for calling webCompile
+            // Build a web suitable for calling webCompile:
             list web = webFromLink(linkData, v, N, reductionMark);
                         
             execute("list " + listName2 + " = web;");
             
-            // Call webCompile
+            // Call webCompile:
             execute("list " + listName + " = webCompile(web, compStrat);");
             
-            // Save the results to the savefile
+            // Save the results to the savefile:
             dbprint(printlevel, "[linkCompileReduced] Saving to disk.");
 
             execute("writeObjectToFile(fileName,\"" + listName + "\"," + listName + ");");
@@ -2034,7 +2027,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         execute(cmd);
         
         // In contrast to the nonreduced homology, the return value of webCompile may live
-        // in more than one Z2 degree. In fact we assume that it does
+        // in more than one Z2 degree. In fact we assume that it does.
         
         if( typeof(Z[1]) != "matrix" || typeof(Z[2]) != "intvec" || size(Z[2]) != ncols(Z[1]) )
         {
@@ -2053,7 +2046,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         // Recall that tuples in this list have the format
         // (intvec state, int rank, int concdegree, intvec grading)
         // We match the format of linkCompile just for convenience, although of
-        // course the concentration degree isn't relevant here
+        // course the concentration degree isn't relevant here.
         
         if( useDegree == -1 )
         {
@@ -2082,23 +2075,23 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     
     dbprint(printlevel, "[linkCompileReduced] Time taken to compile webs: " + string(timer-timeLink) + "ms."); 
     
-    // STEP 2. Compile the maps
+    // STEP 2. Compile the maps.
     dbprint(printlevel, "");
     dbprint(printlevel, "[linkCompileReduced] Now compiling maps.");
     
     for( i = 1; i <= numStateDiagrams; i++ )
     {
-        // Our current state diagram
+        // Our current state diagram:
         intvec v = stateDiagrams[i];
         dbprint(printlevel, "[linkCompileReduced] Looking at state [" + string(v) + "] which is number [[ " + string(i) + "/" + string(numStateDiagrams) + " ]].");
     
-        // Look at each position and the possible maps given by chis
+        // Look at each position and the possible maps given by chis.
         int j;
         for( j = 1; j <= size(v); j++ )
         {
             // If either the current position in v is a 0 and the crossing is positive, or
             // if the current position is 1 and the crossing is negative, then there is a map
-            // originating in this state diagram with a chi in this position
+            // originating in this state diagram with a chi in this position.
             intvec w = v;
             int somethingToDo = 0;
             int chitype;
@@ -2121,17 +2114,13 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
             {
                 dbprint(printlevel, "[linkCompileReduced]  Looking at the map to [" + string(w) + "].");
                 
-                // Load up the appropriate webs
+                // Load up the appropriate webs:
                 string cmd = "list leftCompiledWeb = compiled" + intvecToString(v) + ";"; execute(cmd);
                 cmd = "list leftWeb = web" + intvecToString(v) + ";"; execute(cmd);
                 cmd = "list rightCompiledWeb = compiled" + intvecToString(w) + ";"; execute(cmd);
                 cmd = "list rightWeb = web" + intvecToString(w) + ";"; execute(cmd);
                 
-                // Lookup the degree in which these compilation products are nonzero
-                // At position i in returnListWebs is various information about the
-                // compilation of the "left" web.
-                
-                // Now check to see if we have already compiled this map
+                // Now check to see if we have already compiled this map.
                 string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
 
                 string cmd = "int definedCheck = defined(" + listName + ");";
@@ -2139,7 +2128,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                                 
                 if( definedCheck )
                 {
-                    // We have already compiled this morphism
+                    // We have already compiled this morphism.
                     dbprint(printlevel, "[linkCompileReduced]  Already compiled, skipping.");
                     
                     string cmd = "list D = " + listName + ";";
@@ -2147,7 +2136,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                 }
                 else
                 {
-                    // We have not already compiled this morphism
+                    // We have not already compiled this morphism.
                     intvec e = edgeList[j];
                     matrix M = mfChi(chitype, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
                     M = subst(M,reductionMark,0);
@@ -2155,7 +2144,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
 
                     def Dp = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
                     
-                    // The output of webCompileMorphism should be a matrix
+                    // The output of webCompileMorphism should be a matrix.
                     if( typeof(Dp) != "matrix" )
                     {
                         print("[linkCompileReduced] webCompileMorphism did not return a matrix.");
@@ -2164,7 +2153,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                     matrix D = Dp;
                     kill Dp;
                     
-                    // Other sanity checks
+                    // Other sanity checks:
                     if( ncols(D) != ncols(leftCompiledWeb[1]) || nrows(D) != ncols(rightCompiledWeb[1]) )
                     {
                         print("[linkCompileReduced] Size is mismatch, exiting.");
@@ -2173,14 +2162,11 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                     
                     string cmd = "list " + listName + " = D;"; execute(cmd);
                     kill M;
-                    
-                    // Save the results to the savefile
+
+                    // Save the results to the savefile:
                     dbprint(printlevel, "[linkCompileReduced] Saving to disk.");
                     execute("writeObjectToFile(fileName,\"" + listName + "\",D);");
                 }
-                
-                // Add the computed list to the end of compiledEntry
-                //list compiledEntry = v, w, v[j], j, D;
                 
                 if( useDegree == -1 )
                 {
@@ -2227,7 +2213,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
 //   def nR = loadFromMPfile("example.mp");
 //   setring nR;
 //
-// If we are in ASCII mode then we simply rturn the contents of the given
+// If we are in ASCII mode then we simply return the contents of the given
 // file, so that running execute should recreate the needed objects in memory, and we
 // use the current basering (there is no return value in this case).
 //
@@ -2249,7 +2235,7 @@ proc loadSaveFile(string filename)
         return(read(filename));
     }
     
-    // Now we are in MP mode. First open the link
+    // Now we are in MP mode. First open the link:
     link l = "MPfile:r " + filename;
     open(l);
     
@@ -2261,7 +2247,7 @@ proc loadSaveFile(string filename)
     
     while( status(l,"read","ready") )
     {
-        // Read the next line
+        // Read the next line:
         def L = read(l);
         
         if( typeof(L) == "list" )
@@ -2293,7 +2279,7 @@ proc writeObjectToFile(string fileName, string nam, def L)
     
     if( useMPfile )
     {
-        // If we are using MPfile then we write out the list (nam, L)
+        // If we are using MPfile then we write out the list (nam, L).
         link l = "MPfile: " + fileName;
         execute("write(l,list(\"" + nam + "\",L));");
         close(l);
@@ -2302,7 +2288,7 @@ proc writeObjectToFile(string fileName, string nam, def L)
     {
         // If we are using ASCII, write out to the file the lines
         // list nam = ???; (or matrix nam = ??, etc) 
-        // where ?? is the output of archiveListToString
+        // where ?? is the output of archiveListToString.
         string s = typeof(L) + " " + nam + " = " + archiveObjectToString(L) + ";";
         write(":a " + fileName, s);
     }
@@ -2408,7 +2394,7 @@ proc archiveObjectToString(def L)
 
 proc cpxMinDegree(list cpx){ return(cpx[1]); }
 
-// Degree where the last differential ends
+// Degree where the last differential ends:
 proc cpxMaxDegree(list cpx){ return(cpx[1] + size(cpx[3])); }
 
 proc cpxDifferentialInDegree(list cpx, int degr)
@@ -2427,7 +2413,7 @@ proc cpxDifferentialInDegree(list cpx, int degr)
 
 proc cpxRankInDegree(list cpx, int degr)
 {
-    // We deduce the rank from the number of rols/cols in the differential
+    // We deduce the rank from the number of rols/cols in the differential.
     int mind = cpxMinDegree(cpx);
     int maxd = cpxMaxDegree(cpx);
     
@@ -2522,7 +2508,7 @@ proc cpxIsValid(list cpx)
 ////////////////////////////////////////////////////////////////////
 // complexTensor
 //
-// Given two complexes (possibly graded) return the tensor product
+// Given two complexes (possibly graded) return the tensor product.
 //
 // NOTE: If we are given gradings, we do not check that the differentials
 // are degree zero.
@@ -2549,7 +2535,7 @@ proc cpxTensor(list cpx(1), list cpx(2))
     int maxDegreeTensor = maxDegree(1) + maxDegree(2);
     
     // Decide on the ranks of the free modules in the tensor product, and at
-    // the same time record which tensors contribute to each degree of the product
+    // the same time record which tensors contribute to each degree of the product.
     list tensorRanks;
     list nonzeroTensors;
     if( useGrading ){ list nonzeroTensorsGrading; }
@@ -2609,7 +2595,7 @@ proc cpxTensor(list cpx(1), list cpx(2))
         
         //print("Constructing differential in degree " + string(k));
         
-        // We are trying to construct the differential in degree k of the tensor product
+        // We are trying to construct the differential in degree k of the tensor product.
         if( size(nonzeroTensors[sk]) == 0 || size(nonzeroTensors[sk+1]) == 0 )
         {
             // The source or target has rank zero
@@ -2660,7 +2646,7 @@ proc cpxTensor(list cpx(1), list cpx(2))
     
     if( useGrading )
     {
-        // Construct the grading vectors
+        // Construct the grading vectors:
         list finalGr;
         for(k=minDegreeTensor; k<=maxDegreeTensor; k++)
         {

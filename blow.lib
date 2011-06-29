@@ -4,7 +4,7 @@ category="Miscellaneous";
 info="
 LIBRARY:   blow.lib  Pushforwards of matrix factorisations
 AUTHOR:    Nils Carqueville, Daniel Murfet
-KEYWORDS:  matrix factorization
+KEYWORDS:  matrix factorisation
 
 PROCEDURES:
 ";
@@ -16,11 +16,11 @@ LIB "ring.lib";
 ////////////////////////////////////////////////////////////////////
 // USAGE GUIDE
 //
-// At the moment we expect our ambient ring to be of one of the types
+// We expect our ambient ring to be of one of the types
 //
 //     0,(x(1..t),y(1..s)),dp    OR    (0,r),(x(1..t),y(1..s)),dp
 // 
-// for some integers t and s. The x variables are the "internal" variables.
+// for some integers t and s. The x-variables are the "internal" variables.
 // We always expect "r" to be the parameter defining an extension ring.
 //
 // In the second case where we define a ring extension, in addition to defining
@@ -86,8 +86,8 @@ LIB "ring.lib";
 // Change the return value, say of sanity_checks, to turn off sanity checks in all routines.
 //
 // NOTE: Singular's evaluation of a && b does not use shortcuts, it evaluates both a and
-// b before doing the logical AND, so if you are using flags to avoid computation, you have
-// to nest your ifs. Bummer.
+// b before doing the logical AND, so if one uses flags to avoid computation, one has 
+// to nest ifs. 
 
 proc blowFlags(string s)
 {
@@ -187,7 +187,7 @@ proc numYVars()
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-// "ringwithoutyvars" returns the ambient ring with y variables removed
+// "ringwithoutyvars" returns the ambient ring with y-variables removed
 // NOTE: We just return the ring, we do not change the current basering
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -198,7 +198,7 @@ proc ringWithoutYVars()
     int numY = numYVars();
 
     // Define new ring -- exactly the same as RRR, but without the y-variables:
-    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
+    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters.
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
@@ -239,7 +239,7 @@ proc ringWithoutYVars()
 
     def newRing = basering;
     
-    // Before returning the new ring, set the ambient ring as current
+    // Before returning the new ring, set the ambient ring as current:
     setring RRR;
     
     return(newRing);
@@ -247,7 +247,7 @@ proc ringWithoutYVars()
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// "ringWithoutXVars" returns the ambient ring with x variables removed
+// "ringWithoutXVars" returns the ambient ring with x-variables removed
 // NOTE: We just return the ring, we do not change the current basering
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -258,7 +258,7 @@ proc ringWithoutXVars()
     int numY = numYVars();
     
     // Define new ring -- exactly the same as RRR, but without the x-variables:
-    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters
+    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters.
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
@@ -300,7 +300,7 @@ proc ringWithoutXVars()
     
     def newRing = basering;
     
-    // Before returning the new ring, set the ambient ring as current
+    // Before returning the new ring, set the ambient ring as current:
     setring RRR;
     
     return(newRing);
@@ -338,7 +338,7 @@ proc deltaInflationList(int i, int exponent, ideal J)
 {
     int prl = printlevel;
     
-    // Compute a k-basis of I
+    // Compute a k-basis of J:
     def RRR = basering;
     def nR = ringWithoutYVars();
     setring nR;
@@ -354,18 +354,18 @@ proc deltaInflationList(int i, int exponent, ideal J)
     
     for(b=1; b<= 2*exponent - 1; b++)
     {
-        // Compute the matrix representing the operator [g_i, x(i)^b] on I = nR/J
+        // Compute the matrix representing the operator [g_i, x(i)^b] on I = nR/J:
         list L;
         for(k=1; k<=jdim; k++)
         {
-            // First compute g_i( x(i)^b * - ) on our basis element
+            // First compute g_i( x(i)^b * - ) on our basis element:
             poly f1 = ( x(i)^b * basis[k] - reduce(x(i)^b * basis[k],std(x(i)^exponent)) )/(x(i)^exponent);
 
-            // Next compute x(i)^b * g_i(-)
+            // Next compute x(i)^b * g_i(-):
             poly f2 = x(i)^b * ( basis[k] - reduce(basis[k],std(x(i)^exponent)) )/(x(i)^exponent);
 
             // To our output matrix we add the expression of the commutator f1 - f2 in the
-            // chosen basis of the algebra I
+            // chosen basis of the algebra I:
             module ff = reduce(f1 - f2,Jstd);
             matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
             L = L + list(MM);
@@ -439,7 +439,7 @@ proc variableInflationList(ideal J)
 
 //////////////////////////////////////////////////////////////////////////////////
 // "poly2matrix" blows up a polynomial into a matrix: x-monomials are replaced by
-// the matrices that represent the former's action on the algebra k[x-variables]/J
+// the matrices that represent the former's action on the algebra k[x-variables]/J.
 //
 // NOTE: We assume that the algebra k[x-variables]/J is finite-dimensional.
 //
@@ -453,7 +453,7 @@ proc variableInflationList(ideal J)
 
 proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
 {
-    // First compute the x-monomials and their coefficients in tepo
+    // First compute the x-monomials and their coefficients in tepo:
     int i;
     poly xprod = 1;
     int numX = numXVars();
@@ -469,9 +469,9 @@ proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
     
     for(u=1;u<=ncols(koffer);u++)
     {
-        // Each column of koffer represents an x-monomial, let us now factorize this.
+        // Each column of koffer represents an x-monomial, let us now factorise this.
         // The list powers contains, in order, the power of each internal variable
-        // in monom + 1 (since we multiply by xprod to make sure all vars appear)
+        // in monom + 1 (since we multiply by xprod to make sure all vars appear).
         poly monom = koffer[1,u];
         intvec powers = factorize(monom*xprod,2)[2];
         matrix monomAction = unitmat(jdim);
@@ -503,7 +503,7 @@ proc mfInflate(matrix A, poly intvar, int N)
     
     // Convert everything into a more suitable ring. We go through the original
     // list of ring variables, rename everything apart from intvar to y(i)'s (in
-    // ascending order) and rename intvar to x(1)
+    // ascending order) and rename intvar to x(1).
     
     list rlist = ringlist(RRR);
     list varlist = rlist[2];
@@ -535,7 +535,7 @@ proc mfInflate(matrix A, poly intvar, int N)
     newringList[4] = rlist[4];
     kill rlist;
     
-    // Fix the variable weighting
+    // Fix the variable weighting:
     intvec kk = (1..size(newvar));
     for(i=1; i<=size(newvar); i++)
     {
@@ -544,12 +544,12 @@ proc mfInflate(matrix A, poly intvar, int N)
     newringList[3][1][2] = kk;
     kill newvar, kk;
     
-    // Create our new ring
+    // Create our new ring:
     def nR = ring(newringList);
     kill newringList;
     setring nR;
     
-    // Now we can call mablow
+    // Now we can call mablow:
     matrix A = fetch(RRR,A);
     ideal J = x(1)^N;
     matrix Ablow = mablow(A,J);
@@ -569,11 +569,11 @@ proc mablow(matrix M, ideal J)
 {
     int benchmark = 1; // Set to 1 to output benchmarking data
 
-    // Compute dimension of the algebra k[x-vars]/J
+    // Compute dimension of the algebra k[x-vars]/J:
     int n = dimAlgebraOverInternalVariables(J);
     
     // Roughly speaking mablow takes "difficulty" ms to complete. We only give
-    // debugging output if this is likely to take > 10 seconds
+    // debugging output if this is likely to take > 10 seconds.
     int difficulty = nrows(M) * ncols(M) * n / 3;
     if( difficulty > 10000 )
     {
@@ -586,7 +586,7 @@ proc mablow(matrix M, ideal J)
         dbprint(printlevel, "[mablow] Inflating " + string(nrows(M)) + "x" + string(ncols(M)) + " matrix by " + string(n) + "-dim algebra");
     }
     
-    // Compute the inflation of individual variables
+    // Compute the inflation of individual variables:
     list variableActions = variableInflationList(J);
     
     // Define L to be an appropriately indexed list of blown-up matrices:
@@ -663,7 +663,7 @@ proc mablowGrading(intvec g, ideal J, int N)
     intvec r;   
     
     // There is an overall grading shift given by the sum of the degrees of
-    // the generators of J, plus an additional N + 1 for each generator
+    // the generators of J, plus an additional N + 1 for each generator. 
     int k;
     int E;
     for(k=1;k <= size(J);k++)
@@ -690,14 +690,14 @@ proc mablowGrading(intvec g, ideal J, int N)
 //
 // Let us write nR for the basering without its y-variables.
 //
-// Given a polynomial in the x and y-variables and an integer i, we return a matrix
-// in only the y-variables, where the x monomials are "inflated" by their action on
+// Given a polynomial in the x- and y-variables and an integer i, we return a matrix
+// in only the y-variables, where the x-monomials are "inflated" by their action on
 // the algebra I = nR/J.
 //////////////////////////////////////////////////////////////////////////////////
 
 proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableActions, list deltaActions, int jdim)
 {
-    // First compute the x-monomials and their coefficients in tepo
+    // First compute the x-monomials and their coefficients in tepo:
     int t;
     poly xprod = 1; 
     int numX = numXVars();
@@ -712,9 +712,9 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
     
     for(u=1;u<=ncols(koffer);u++)
     {
-        // Each column of koffer represents an x-monomial, let us now factorize this.
+        // Each column of koffer represents an x-monomial, let us now factorise this.
         // The list powers contains, in order, the power of each internal variable
-        // in monom + 1 (since we multiply by xprod to make sure all vars appear)
+        // in monom + 1 (since we multiply by xprod to make sure all vars appear).
         poly monom = koffer[1,u];
         intvec powers = factorize(monom*xprod,2)[2];
         matrix monomAction = unitmat(jdim);
@@ -722,7 +722,7 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
         for(k=1;k<=numX;k++)
         {
             // If k is not equal to i, then we just take the usual inflation,
-            // but for k = i we do the "delta" inflation
+            // but for k = i we do the "delta" inflation:
             if( k != i )
             {
                 monomAction = monomAction * power(variableActions[k],powers[k]-1);
@@ -732,7 +732,7 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
                 // We have to multiply by a factor corresponding to x(i)^(powers[k]-1),
                 // which is the action on the internal algebra of the operator
                 // [g_i,x(i)^(powers[k]-1)], as recorded in deltaActions. If the exponent
-                // is between one and 2 * exponent - 1 we use the array. Otherwise the
+                // is between 1 and 2 * exponent - 1 we use the array. Otherwise the
                 // operator is zero, so multiply by zero.
 
                 if( powers[k] - 1 >= 1 && powers[k] - 1 <= 2*exponent - 1)
@@ -755,20 +755,20 @@ proc poly2matrix_delta(poly tepo, ideal J, int i, int exponent, list variableAct
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////
-// "mablow_delta" blows up a matrix by blowing up all its entries using poly2matrix_delta
+// "mablow_delta" blows up a matrix by blowing up all its entries using poly2matrix_delta.
 //
 // exponent is the integer such that g_i is division without remainder by x(i)^exponent.
 /////////////////////////////////////////////////////////////////////////////////////////
 
 proc mablow_delta(matrix M, int i, int exponent, ideal J)
 {
-    // Compute dimension of the algebra k[x-vars]/J
+    // Compute dimension of the algebra k[x-vars]/J:
     int n = dimAlgebraOverInternalVariables(J);
  
-    // Compute the ordinary inflation of individual variables
+    // Compute the ordinary inflation of individual variables:
     list variableActions = variableInflationList(J);
     
-    // Compute the delta inflation [g_i,x(i)^b] for all integers b
+    // Compute the delta inflation [g_i,x(i)^b] for all integers b:
     list deltaActions = deltaInflationList(i,exponent,J);
  
     // Define L to be an appropriately indexed list of blown-up matrices:
@@ -830,7 +830,7 @@ proc SGroupintvecs(int n)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q)
+// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q).
 //
 // q is an intvec containing the exponents responsible for defining the operators g_i,
 // so that g_i is division by x(i)^q[i] without remainder.
@@ -841,7 +841,7 @@ proc deltaQ(matrix F, intvec q)
     LIB "matrix.lib";
     
     // The ideal whose quotient gives the algebra I is generated by the internal
-    // variables to the powers given by q
+    // variables to the powers given by q:
     int i;
     ideal J;
     int numX = numXVars();
@@ -854,7 +854,7 @@ proc deltaQ(matrix F, intvec q)
     int n = dimAlgebraOverInternalVariables(J);
     int prl = printlevel;
 
-    // The blown up matrix will be of dimension n x ncols(f)
+    // The blown up matrix will be of dimension n x ncols(f):
     int gg = ncols(F) * n;
 
     list S = SGroupintvecs(numX);
@@ -862,7 +862,7 @@ proc deltaQ(matrix F, intvec q)
     int j;    
     matrix Mi[gg][gg];
 
-    // Precompute all the deltas
+    // Precompute all the deltas:
     list deltas; 
     for(j = 1; j <= numX; j++)
     {
@@ -904,7 +904,7 @@ proc dQ(matrix f, intvec q, matrix C)
     poly detC = det(C);
     
     // The ideal whose quotient gives the algebra I is generated by the internal
-    // variables to the powers given by q
+    // variables to the powers given by q:
     int i;
     ideal J;
     int numX = numXVars();
@@ -916,7 +916,7 @@ proc dQ(matrix f, intvec q, matrix C)
 
     int n = dimAlgebraOverInternalVariables(J);
     
-    // The blown up matrix will be of dimension n x ncols(f)
+    // The blown up matrix will be of dimension n x ncols(f):
     int gg = ncols(f) * n;
 
     list S = SGroupintvecs(numX);
@@ -924,7 +924,7 @@ proc dQ(matrix f, intvec q, matrix C)
 
     matrix Mi[gg][gg];
 
-    // Precompute all the mablows
+    // Precompute all the mablows:
     list dels; 
     for(j = 1; j <= numX; j++)
     {
@@ -944,10 +944,10 @@ proc dQ(matrix f, intvec q, matrix C)
         Mi = Mi + Ma; 
     }
 
-    // Multiply with detC
+    // Multiply with detC:
     Mi = mablow( detC * unitmat(ncols(f)), J) * Mi;
 
-    // Multiply by the scaling factor
+    // Multiply by the scaling factor:
     number ffac = 1;
     for(i=1; i<=numX; i++)
     {
@@ -960,10 +960,10 @@ proc dQ(matrix f, intvec q, matrix C)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "varTrans" gives a list L of with two entries:
+// "varTrans" gives a list L with two entries:
 // -- L[1]: an intvec q used to define g_i as division by x(i)^q[i] without remainder
 // -- L[2]: a matrix C such that x(i)^q[i] = \sum_j C_{i,j} \partial_j W
-// This is possible if and only if the Jacobi algebra of W is finite
+// This is possible if and only if the Jacobi algebra of W is finite-
 // dimensional, and we assume this is the case (otherwise this proc
 // may not terminate).
 /////////////////////////////////////////////////////////////////////////////////////
@@ -1036,15 +1036,15 @@ proc varTrans(poly W)
 
 proc constantpart(poly P)
 {
-int i;
-int n = nvars(basering);
-matrix C;
-C[1,1] = P;
-for(i=1; i<=n; i++)
-{
-C = coeffs( C[1,1], var(i) );
-}
-return(C[1,1]);
+    int i;
+    int n = nvars(basering);
+    matrix C;
+    C[1,1] = P;
+    for(i=1; i<=n; i++)
+    {
+        C = coeffs( C[1,1], var(i) );
+    }
+    return(C[1,1]);
 }
 
 
@@ -1054,16 +1054,16 @@ return(C[1,1]);
 
 proc permuterows(matrix M, int a,b)
 {
-int i;
-int s = ncols(M);
-for(i=1; i<=s; i++)
-{
-poly pa = M[a,i];
-poly pb = M[b,i];
-M[a,i] = pb;
-M[b,i] = pa;
-}
-return(M);
+    int i;
+    int s = ncols(M);
+    for(i=1; i<=s; i++)
+    {
+        poly pa = M[a,i];
+        poly pb = M[b,i];
+        M[a,i] = pb;
+        M[b,i] = pa;
+    }
+    return(M);
 }
 
 
@@ -1073,35 +1073,35 @@ return(M);
 
 proc permutecols(matrix M, int a,b)
 {
-int i;
-int s = nrows(M);
-for(i=1; i<=s; i++)
-{
-poly pa = M[i,a];
-poly pb = M[i,b];
-M[i,a] = pb;
-M[i,b] = pa;
-}
-return(M);
+    int i;
+    int s = nrows(M);
+    for(i=1; i<=s; i++)
+    {
+        poly pa = M[i,a];
+        poly pb = M[i,b];
+        M[i,a] = pb;
+        M[i,b] = pa;
+    }
+    return(M);
 }
 
 // blockmat(A,B,C,D) gives the block-matrix {{A,B},{C,D}} if the square matrices A,B,C,D all have the same size.
 
 proc blockmat(matrix block1,matrix block2,matrix block3,matrix block4)
 {
-int i,j;
-int r=ncols(block1);
-matrix m[2*r][2*r];
-for(i=1;i<=r;i++){for(j=1;j<=r;j++){m[i,j]=block1[i,j];}}
-for(i=1;i<=r;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block2[i,j-r];}}
-for(i=r+1;i<=2*r;i++){for(j=1;j<=r;j++){m[i,j]=block3[i-r,j];}}
-for(i=r+1;i<=2*r;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block4[i-r,j-r];}}
-return(m);
+    int i,j;
+    int r=ncols(block1);
+    matrix m[2*r][2*r];
+    for(i=1;i<=r;i++){for(j=1;j<=r;j++){m[i,j]=block1[i,j];}}
+    for(i=1;i<=r;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block2[i,j-r];}}
+    for(i=r+1;i<=2*r;i++){for(j=1;j<=r;j++){m[i,j]=block3[i-r,j];}}
+    for(i=r+1;i<=2*r;i++){for(j=r+1;j<=2*r;j++){m[i,j]=block4[i-r,j-r];}}
+    return(m);
 }
 
-// Modification of blockmat to accommodate nonsquare entries (consider replacing blockmat with this)
+// Modification of blockmat to accommodate nonsquare entries (consider replacing blockmat with this).
 // We assume only that a block matrix makes sense, i.e. that in the order given the matrices fit
-// together into a matrix. Here is the ASCII diagram
+// together into a matrix. Here is the ASCII diagram:
 //
 //       a        b
 //   ----------|-------|
@@ -1141,36 +1141,36 @@ proc blockmat_nsq(matrix block1,matrix block2,matrix block3,matrix block4)
 }
 
 
-// To get blocks from block square matrix returns list (1-4 of blocks)
+// To get blocks from block square matrix returns list (1-4 of blocks):
 
 proc blocksq(matrix m)
 {
-int n=nrows(m);
-int intnon2=n/2;
-number non2=number(n)/2;
-if(n!=ncols(m))
-{
-    printf("Matrix should be square");
-    return();
-}
-if(non2!=intnon2)
-{
-    printf("Matrix should have an even number of rows/columns");
-    return();
-}
-matrix block1[intnon2][intnon2]=submat(m,1..intnon2,1..intnon2);
-matrix block2[intnon2][intnon2]=submat(m,1..intnon2,intnon2+1..n);;
-matrix block3[intnon2][intnon2]=submat(m,intnon2+1..n,1..intnon2);;
-matrix block4[intnon2][intnon2]=submat(m,intnon2+1..n,intnon2+1..n);;
-list L=block1,block2,block3,block4;
-kill n,intnon2,non2,block1,block2,block3,block4;
-return(L);
+    int n=nrows(m);
+    int intnon2=n/2;
+    number non2=number(n)/2;
+    if(n!=ncols(m))
+    {
+        printf("Matrix should be square");
+        return();
+    }
+    if(non2!=intnon2)
+    {
+        printf("Matrix should have an even number of rows/columns");
+        return();
+    }
+    matrix block1[intnon2][intnon2]=submat(m,1..intnon2,1..intnon2);
+    matrix block2[intnon2][intnon2]=submat(m,1..intnon2,intnon2+1..n);;
+    matrix block3[intnon2][intnon2]=submat(m,intnon2+1..n,1..intnon2);;
+    matrix block4[intnon2][intnon2]=submat(m,intnon2+1..n,intnon2+1..n);;
+    list L=block1,block2,block3,block4;
+    kill n,intnon2,non2,block1,block2,block3,block4;
+    return(L);
 }
 
 ////////////////////////////////////////////////////////////////////
 // zeromat - Returns a square zero matrix of the specified size if
 // called with one parameter, and a zero matrix of size n x m if called
-// with two parameters n, m
+// with two parameters n, m.
 ////////////////////////////////////////////////////////////////////
 
 proc zeromat(int n, list #)
@@ -1208,12 +1208,12 @@ proc mfSuspend(matrix A, list #)
     
     if( power mod 2 == 0 )
     {
-        // The power is even, so return the original MF
+        // The power is even, so return the original MF:
         return(A);
     }
     else
     {
-        // The power is odd, so suspend
+        // The power is odd, so suspend:
         matrix Asusp = blockmat(z, -1 * a0, -1 * a1, z);
         return(Asusp);
     }
@@ -1258,12 +1258,12 @@ proc mfSuspendMorph(matrix A, list #)
     
     if( power mod 2 == 0 )
     {
-        // The power is even, so return the original MF
+        // The power is even, so return the original MF:
         return(A);
     }
     else
     {
-        // The power is odd, so suspend
+        // The power is odd, so suspend:
         matrix Asusp = blockmat_nsq(a1, z, z, a0);
         return(Asusp);
     }
@@ -1287,7 +1287,7 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
 {
     int useSanityChecks = blowFlags("sanity_checks"); 
     
-    // If U is already strictly idempotent, return it
+    // If U is already strictly idempotent, return it:
     if( U * U == U ){ return(U); }
     
     int m = ncols(A);
@@ -1358,7 +1358,7 @@ proc computeGradingFromInjection(matrix F, intvec g)
 {
     LIB "control.lib";
     
-    // Check that the sizes of g and F are compatible
+    // Check that the sizes of g and F are compatible:
     if( size(g) != nrows(F) )
     {
         print("[computeGradingFromInjection] Sizes of map and grading vector not compatible, exiting.");
@@ -1453,12 +1453,12 @@ proc matrixSplitIdempotent(matrix E)
     
     list Elist = mathomoglist(E);
     
-    // First we split the scalar matrix Elist[1] in the usual way (this is the degree zero part of E)
+    // First we split the scalar matrix Elist[1] in the usual way (this is the degree zero part of E):
     module M = Elist[1];
     
     if( useSanityChecks )
     {
-        // minbase can only work on a homogeneous module
+        // minbase can only work on a homogeneous module.
         if( !homog(M) )
         {
             print("[matrixSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
@@ -1490,17 +1490,17 @@ proc matrixSplitIdempotent(matrix E)
         return();
     }
     
-    // The final F and G will have the same dimensions as f0 and g0
+    // The final F and G will have the same dimensions as f0 and g0.
     matrix F[nrows(f(0))][ncols(f(0))] = f(0);
     matrix G[nrows(g(0))][ncols(f(0))] = g(0);
     list prefixList = unitmat(nrows(g(0)));
     
-    // The prefixes are for example (writing e(i) = Elist[i+1] for the degree i part of e)
+    // The prefixes are for example (writing e(i) = Elist[i+1] for the degree i part of e):
     // prefixList[1] = 1
     // prefixList[2] = e(1)^2 + e(2)
     // prefixList[3] = e(3) + e(2)e(1) + e(1)e(2) + e(1)^3.
     
-    // We keep modifying F and G until they work! (or we hit a cutoff)
+    // We keep modifying F and G until they work! (Or we hit a cutoff.)
     int i = 1;
     while( (F * G != unitmat(nrows(F)) || G * F != E) && i < 1000 )
     {
@@ -1519,7 +1519,7 @@ proc matrixSplitIdempotent(matrix E)
         matrix g(i) = prefix * g(0);
         kill prefix, j;
         
-        // Update F and G in preparation for the while check
+        // Update F and G in preparation for the while check:
         F = F + f(i);
         G = G + g(i);
         kill f(i), g(i);
@@ -1556,9 +1556,6 @@ proc matrixSplitIdempotent(matrix E)
 // where f(i), g(i) splits the idempotent in degree i (possibly f(i) * g(i) = 0 if the splitting
 // in some degree is the zero module). If there is a grading, we return an additional pair r(0)
 // r(1) giving the grading in each degree separately.
-// 
-// NOTE: The role of F and G has been interchanged since the last version (to match with 
-// mfReduce)
 
 proc mfSplitIdempotent(matrix A, matrix E, list #)
 {   
@@ -1572,23 +1569,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     {
         intvec Agr = #[1];
         int useGrading = 1;
-        
-        //if( useSanityChecks )
-        //{
-        //    if( !isGradingValid(A,Agr) )
-        //    {
-        //        print("[mfSplitIdempotent] Given an invalid grading, exiting.");
-        //        return();
-        //    }
-        //}
     }
     
-    // debug
-    //writeObjectToFile("./data/idem-test.mp","A",A);
-    //writeObjectToFile("./data/idem-test.mp","E",E);
-    //return();
-                
-    // Sanity checks
     if( useSanityChecks )
     {
         if( A * E != E * A )
@@ -1606,7 +1588,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     
     print("[mfSplitIdempotent] Badness of worst coeff in E: " + string(size(string(worstMonomialCoeff(E))))); //debug
         
-    // Extract the odd and even part of the differential and morphism
+    // Extract the odd and even part of the differential and morphism:
     list blocks = extractblockmat(A);
     list e_blocks = extractblockmat(E);
     
@@ -1622,7 +1604,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     {
         if( e(i) != matrix(0,nrows(e(i)),ncols(e(i))) )
         {
-            // First try the most awesome splitting method
+            // First try the most awesome splitting method:
             def trySplit = matrixSplitIdempotent(e(i));
             
             if( typeof(trySplit) == "list" )
@@ -1633,18 +1615,17 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
             }
             else
             {
-                // The new way failed, try the old way
+                // The new way failed, try the old way:
                 print(""); //debug
                 print("[mfSplitIdempotent] New method failed [!######################!]");
                 print("");
                 
-                // M is the image of the idempotent
+                // M is the image of the idempotent.
                 module M = e(i);
 
                 if( useSanityChecks )
                 {
                     // minbase can only work on a homogeneous module
-                    // debug: No idea how slow homog is, seems OK, but this test could be a holdup.
                     if( !homog(M) )
                     {
                         print("[mfSplitIdempotent] Image of idempotent is not homogeneous, exiting.");
@@ -1655,7 +1636,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 // Compute a minimal generating set for the image. Note that minbase
                 // is currently bugged (Singular 3-1-1) and may not create a linearly
                 // independent generating set on the run through. So we try reapplying
-                // minbase a certain number of times (set by the flag minbaseCutoff)
+                // minbase a certain number of times (set by the flag minbaseCutoff).
                 module im = minbase(M);
                 kill M;
 
@@ -1681,7 +1662,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 // so the image of g(i) is a free module. But then any generating set of
                 // this image must contain a basis, so a minimal generating set _is_ a
                 // basis. That is, the columns of g(i) must be a basis for the image.
-                // Equivalently, the map g(i) is a monomorphism. Since it's image is
+                // Equivalently, the map g(i) is a monomorphism. Since its image is
                 // equal to the image of e(i), it follows that f(i) is an epimorphism.
                 // Then in the usual way we deduce that f(i) * g(i) = 1.
 
@@ -1692,7 +1673,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 int minbaseCount = 1;
                 while( f(i) * g(i) != unitmat(nrows(f(i))) && minbaseCount < minbaseCutoff )
                 {
-                    // Try running minbase again
+                    // Try running minbase again:
                     dbprint(printlevel, "[mfSplitIdempotent] WARNING: Encountered minbase bug, running it again...");
                     im = minbase(im);
                     n = lift(im,e(i));
@@ -1712,7 +1693,6 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
     
-    // Sanity check
     if( useSanityChecks )
     {
         int i;
@@ -1725,18 +1705,16 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 return();
             }
             
-            // We should also have g * f = 1. The only excuse is if we hit zeros
+            // We should also have g * f = 1. The only excuse is if we hit zeros.
             if( !hitZeros(i) && f(i) * g(i) != unitmat(nrows(f(i))) )
             {
                 print("[mfSplitIdempotent] Splitting was not successful, as f * g != 1 in degree " + string(i) + ", exiting.");
                 print( g(i) * f(i) );
                 //print("[mfSplitIdempotent] The above is the matrix that should be 1, it has been exported as errMat.");
-                //matrix errMat = g(i) * f(i);
-                //exportto(Top,errMat);
                 return();
             }
             
-            // If we did hit zeros, then f * g should be a 1x1 zero matrix
+            // If we did hit zeros, then f * g should be a 1x1 zero matrix.
             if( hitZeros(i) && f(i) * g(i) != matrix(0,1,1) )
             {
                 print("[mfSplitIdempotent] Splitting was not successful, error in degree " + string(i));
@@ -1764,15 +1742,10 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
         
-    // If we have nonsquare matrices we have to do something special
+    // If we have nonsquare matrices we have to do something special:
     if( hitZeros(0) || hitZeros(1) || nrows(f(0)) != nrows(f(1)) )
     {
-        //dbprint(printlevel, "[mfSplitIdempotent] Worst coeff in f0: " + string(worstMonomialCoeff(f(0)))); //debug
-        //dbprint(printlevel, "[mfSplitIdempotent] Worst coeff in f1: " + string(worstMonomialCoeff(f(1)))); //debug
-        //print("[mfSplitIdempotent] Worst coeff in g0: " + string(worstMonomialCoeff(g(0)))); //debug
-        //print("[mfSplitIdempotent] Worst coeff in g1: " + string(worstMonomialCoeff(g(1)))); //debug
-        
-        // This only makes sense if the potential is zero, so warn and quit otherwise
+        // This only makes sense if the potential is zero, so warn and quit otherwise:
         if( useSanityChecks )
         {
             if( A * A != matrix(0,nrows(A),ncols(A)) )
@@ -1783,7 +1756,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
         
         // The case of zero potential and non-square splitting is special, so our return
-        // values is special. We put a string in the first position of the return list, so
+        // value is special. We put a string in the first position of the return list, so
         // that the receiver knows to interpret the rest of the output in the special manner.
         
         list rls = "nonsquare",f(0),f(1),g(0),g(1);
@@ -1797,7 +1770,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         return(rls);
     }
 
-    // Put the f and g matrices back together
+    // Put the f and g matrices back together:
     matrix zf1[nrows(f(0))][ncols(f(1))];
     matrix zf2[nrows(f(1))][ncols(f(0))];
     
@@ -1808,31 +1781,21 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     matrix G = blockmat_nsq(g(0), zg1, zg2, g(1));
     kill f(0), f(1), g(0), g(1), zf1, zf2, zg1, zg2;
     
-    // The differential on the splitting is given by B = F * A * G
+    // The differential on the splitting is given by:
     matrix B = F * A * G;
-    
-    //print("[mfSplitIdempotent] Worst coeff in F: " + string(worstMonomialCoeff(F))); //debug
-    //print("[mfSplitIdempotent] Worst coeff in G: " + string(worstMonomialCoeff(G))); //debug
-    //print("[mfSplitIdempotent] Worst coeff in original A: " + string(worstMonomialCoeff(A))); //debug
     
     print("[mfSplitIdempotent] Badness of worst coeff in final B: " + string(size(string(worstMonomialCoeff(B))))); //debug
     print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B))); //debug
-    //print("[mfSplitIdempotent] Content of b0: " + string(contentMat(extractblockmat(B)[3])));
-    //print("[mfSplitIdempotent] Content of b1: " + string(contentMat(extractblockmat(B)[2])));
-    //number Bcont = contentMat(B);
-    //matrix C = B * 1/Bcont;
-    //print("[mfSplitIdempotent] Content of B: " + string(Bcont));
-    //print("[mfSplitIdempotent] Worst coeff in alter B: " + string(worstMonomialCoeff(C))); //debug
     
     list retll = B,F,G;
     
     if( useGrading )
     {
-        // We are dealing with graded MFs
+        // We are dealing with graded MFs.
         intvec Bgr = Bgr(0), Bgr(1);
         retll = retll + list(Bgr);
         
-        if( useSanityChecks && useGrading ) // debug can probably comment out (but keep)
+        if( useSanityChecks && useGrading )
         {
             if( !isGradingValid(B, Bgr) )
             {
@@ -1840,7 +1803,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
                 return();
             }
             
-            // Check that F and G are degree zero
+            // Check that F and G are degree zero:
             if( !checkMorphismDegree(A, Agr, B, Bgr, F, 0) || !checkMorphismDegree(B, Bgr, A, Agr, G, 0) )
             {
                 print("[mfSplitIdempotent] One of the maps F,G is not degree zero, exiting.");
@@ -1880,7 +1843,7 @@ proc findConstant(matrix A)
     return(list(0,"na"));
 }
 
-// Much slower than findConstant but will keep down the size of coefficients
+// Much slower than findConstant but will keep down the size of coefficients:
 proc findConstantMin(matrix A)
 {
     number small;
@@ -1967,7 +1930,7 @@ proc worstMonomialCoeff(matrix A)
         {
             if( A[i,j] != 0 )
             {
-                // Look at all coeffs of monomials
+                // Look at all coeffs of monomials:
                 matrix co = coef(A[i,j], allVars);
                 for(k=1;k<=ncols(co);k++)
                 {
@@ -1996,7 +1959,7 @@ proc worstMonomialCoeff(matrix A)
 
 proc checkMorphismDegree(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F, int d)
 {
-    // Sanity check
+    // Sanity check:
     if( F * A != B * F )
     {
         print("[isMorphismDegreeZero] Not passed valid morphism, exiting.");
@@ -2068,7 +2031,7 @@ proc isGradingValid(matrix A, intvec g)
         {
             // First we check that the polynomial a0[i,j] is "valid". It is a map
             // R{a} -> R{b} where a = g[j] and b = g[m + i], and for A to be a valid
-            // graded MF this map should be of degree n + 1 (note doubling of grading!)
+            // graded MF this map should be of degree n + 1 (note doubling of grading!).
             
             // Note that zeros are always OK
             if( a0[i,j] != 0 )
@@ -2080,7 +2043,7 @@ proc isGradingValid(matrix A, intvec g)
                 }
             }
             
-            // Next check that a1[i,j] is valid
+            // Next check that a1[i,j] is valid:
             if( a1[i,j] != 0 )
             {
                 if( n+1 - g[i] + g[m+j] != 2 * deg(a1[i,j]) )
@@ -2092,14 +2055,14 @@ proc isGradingValid(matrix A, intvec g)
         }
     }
     
-    // If we are still here then A is valid
+    // If we are still here then A is valid.
     return(1);
 }
 
 ////////////////////////////////////////////////////////////////////
 // matrixreduce
 //
-// After some bad experiences with examples I don't trust Singular's gaussian elimination
+// After some bad experiences with examples we cannot trust Singular's gaussian elimination
 // routines, so here is a primitive version which is good enough for our purposes.
 //
 // The input is a square matrix M. The output is a matrix N and four invertible matrices P, Q
@@ -2124,7 +2087,7 @@ proc matrixreduce(matrix M, intvec v)
     matrix permr = permrow(unitmat(mrank),1,i);
     matrix permc = permcol(unitmat(mrank),1,j);
                 
-    // We found our constant term, permute it to (1,1)
+    // We found our constant term, permute it to (1,1):
     matrix P = 1/(M[i,j]) * permr;
     matrix Pinv = M[i,j] * permr;
     matrix Q = permc;
@@ -2132,7 +2095,7 @@ proc matrixreduce(matrix M, intvec v)
                 
     M = P * M * Q;
 
-    // Go through the first column and transform away everything
+    // Go through the first column and transform away everything:
     matrix Pn = unitmat(mrank);
     matrix Pninv = Pn;
     
@@ -2163,7 +2126,7 @@ proc matrixreduce(matrix M, intvec v)
 
 proc MFtensor(matrix A, matrix B)
 {
-    // There are two differentials A x 1 and B x 1 on the tensor product and we return their sum
+    // There are two differentials A x 1 and B x 1 on the tensor product and we return their sum.
     int arank = ncols(A);
     int brank = ncols(B);
     
@@ -2276,7 +2239,7 @@ proc ZZtensor(matrix A, matrix B)
     
     if( B != bigzero && b11 == zero && b22 == zero ){ degb = 1; }
     
-    // Define the four corners of Z, then use blockmat
+    // Define the four corners of Z, then use blockmat:
     matrix z11 = blockmat_nsq( tensor(a11,b11), (-1)^(degb) * tensor(a12,b12), tensor(a21,b21), (-1)^(degb) * tensor(a22,b22) );
     matrix z12 = blockmat_nsq( tensor(a11,b12), (-1)^(degb) * tensor(a12,b11), tensor(a21,b22), (-1)^(degb) * tensor(a22,b21) );
     matrix z21 = blockmat_nsq( tensor(a11,b21), (-1)^(degb) * tensor(a12,b22), tensor(a21,b11), (-1)^(degb) * tensor(a22,b12) );
@@ -2290,7 +2253,7 @@ proc ZZtensor(matrix A, matrix B)
 ////////////////////////////////////////////////////////////////////
 // extractblockmat takes a block matrix (A B // C D) and returns a list {A, B, C, D}.
 // We assume that the blocks each have half the width of the matrix, and half the height
-// of the matrix (so we assume both are even, but we allow nonsquare blocks)
+// of the matrix (so we assume both are even, but we allow nonsquare blocks).
 
 proc extractblockmat(matrix block)
 {
@@ -2332,15 +2295,14 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     int prl = printlevel;
 
     // First compute the internal algebra. That is, find powers of the internal
-    // variables which can be written as linear combinations of the partials. If
-    // we follow the notation of my note then this is the algebra I.
+    // variables which can be written as linear combinations of the partials. 
 
     list t = varTrans(W);
     matrix C = t[2];
     intvec q = t[1];
     
-    // The ideal whose quotient gives the algebra I is generated by the internal
-    // variables to the powers given by q
+    // The ideal whose quotient gives the algebra J is generated by the internal
+    // variables to the powers given by q.
     int i;
     ideal J;
     int numX = numXVars();
@@ -2350,7 +2312,7 @@ proc fuseDefects(matrix Y, matrix X, poly W)
         J[i] = x(i)^(q[i]);
     }
 
-    // Compute the ordinary tensor product
+    // Compute the ordinary tensor product:
     matrix D = MFtensor(Y,X);
     
     // Inflate or blow up the differential on this tensor product, that is,
@@ -2358,30 +2320,30 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     dbprint(prl, "[fuseDefects] Blowing up differential on tensor product.");
     matrix Dblow = mablow(D,J);
     
-    // Reduce this inflated differential
+    // Reduce this inflated differential:
     dbprint(prl, "[fuseDefects] Reducing blown up differential.");
     list l = mfReduce(Dblow);
     matrix RD = l[1];
     matrix F = l[2]; // A homotopy equivalence F: Dblow -> RD
     matrix G = l[3]; // A homotopy equivalence G: RD -> Dblow
 
-    // Compute the matrix dQ_X
+    // Compute the matrix dQ_X:
     dbprint(prl, "[fuseDefects] Computing dQ.");
     matrix dq = dQ(X, q, C);
     matrix iddQ = ZZtensor( unitmat(ncols(Y)), dq ); // "iddQ" is "id x dQ_X"
     
-    // Compute the matrix deltaQ
+    // Compute the matrix deltaQ:
     dbprint(prl, "[fuseDefects] Computing deltaQ.");
     matrix delQ = deltaQ(D, q);
 
-    // And finally the idempotent e on Dblow
+    // And finally the idempotent e on Dblow:
     int sign = (numX * (numX-1)) div 2;
     matrix e = (-1)^(sign) * iddQ * delQ;
     
-    // The induced idempotent on the reduction is denoted ep
+    // The induced idempotent on the reduction is denoted ep:
     matrix ep = F * e * G;
 
-    // Sanity check: ep must be an endomorphism of RD
+    // Sanity check: ep must be an endomorphism of RD:
     int h = ncols(ep * RD);
     matrix zero[h][h];
     
@@ -2396,163 +2358,6 @@ proc fuseDefects(matrix Y, matrix X, poly W)
     return(l);
 }
 
-////// DEPRECATED
-
-
-//////////////////////////////////////////////////////////////////////////////////
-// "deltaInflation"
-//
-// Let us write nR for the basering without its y-variables.
-//
-// Given a monomial XA in the x-variables and an integer i, we return the scalar matrix
-// representing the action of [g_i, XA] on the algebra I = nR/J. Here g_i stands for the
-// k-linear endomorphism of the ring nR (without y-variables) which sends a polynomial f
-// to its division by x(i)^exponent without remainder.
-//
-// NOTE: x(i) only appears as x(i)^exponent, so maybe we should pass the latter rather than
-// i and the exponent separately.
-//////////////////////////////////////////////////////////////////////////////////
-
-proc deltaInflation(poly XA, int i, int exponent, ideal J)
-{
-    // Compute a k-basis of I
-    def RRR = basering;
-    def nR = ringWithoutYVars();
-    setring nR;
-
-    ideal J = imap(RRR,J);
-    poly XA = imap(RRR,XA);
-    ideal Jstd = std(J);
-    ideal basis = kbase(Jstd);
-    module BB = reduce(basis,Jstd);
-
-    int n = size(basis);
-    
-    int k;
-    list L;
-    for(k=1; k<=n; k++)
-    {
-        poly basisElt = basis[k];
-
-        // First compute g_i( XA * - ) on our basis element
-        poly f1 = ( XA * basisElt - reduce(XA * basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
-
-        // Next compute XA * g_i(-)
-        poly f2 = XA * ( basisElt - reduce(basisElt,std(x(i)^exponent)) )/(x(i)^exponent);
-
-        // To our output matrix we add the expression of the commutator f1 - f2 in the
-        // chosen basis of the algebra I
-        module ff = reduce(f1 - f2,Jstd);
-        matrix MM = matrix(reduce(lift(BB,ff),std(syz(BB))));
-        L = L + list(MM);
-    }
-
-    matrix U = L[1];
-    for(k=2; k<=n; k++)
-    {
-        U=concat(U,L[k]);
-    }
-
-    setring RRR;
-    matrix NN = imap(nR,U);
-    
-    return(NN);
-}
-
-//////////////////////////////////////////////////////////////////////////////////
-// "deltaImablow" blows up a matrix by blowing up all its entries using deltaInflation. (This
-// is equal to \delta_{x_i}(Q) of sec 3.1 in Dan's note from 2010-06-26.)
-//
-// exponent is the integer such that g_i is division without remainder by x(i)^exponent.
-//////////////////////////////////////////////////////////////////////////////////
-
-proc deltaImablow(matrix M, int i, int exponent, ideal J)
-{
-    int prl = printlevel;
-
-    // Compute n := dimension of I = k[x-vars]/J
-    int n = dimAlgebraOverInternalVariables(J);
-
-    // Define L to be an appropriately indexed list of blown-up matrices:
-    int colsm = ncols(M);
-    int i1,j1,i2,j2,k;
-    list e,L;
-
-    poly xprod = 1;
-    int numX = numXVars();
-    
-    for(k=1; k<=numX; k++)
-    {
-        xprod = xprod * x(k);
-    }
-
-    for(k=1; k<=colsm; k++)
-    {
-        L[k] = e;
-    }
-    
-    for(i1=1; i1<=colsm; i1++)
-    {
-        for(j1=1; j1<=colsm; j1++)
-        {
-            ///////////////////////////////////////////////////
-            // INTERESTING PART: 
-            //
-            // koffer is a matrix with two rows. The first row contains
-            // all the x-monomials with nonzero coefficient in M[i1,j1].
-            // The second row contains the corresponding coefficient, which is a polynomial
-            // in only the y-variables.
-
-            matrix koffer = coef(M[i1,j1], xprod);
-            matrix NN[n][n];
-
-            for(k=1; k<=ncols(koffer); k++)
-            {
-                poly monom = koffer[1,k];
-                
-                // Compute the power of the x(i)-variable in monom. Note that deltaInflation
-                // of any monomial NOT involving x(i) must be zero. Note we multiply with
-                // all the variables to ensure that factorize returns a matrix whose ith
-                // column is the integer we're interested in + 1.
-                int p = factorize(monom * xprod,2)[2][i] - 1; 
-                
-                if( koffer[2,k] != 0 && monom != 0 && p > 0 )
-                {
-                    NN = NN + koffer[2,k] * deltaInflation(monom, i, exponent, J);
-                }
-            }
-
-            L[i1] = insert(L[i1], NN, j1-1);
-            ///////////////////////////////////////////////////
-        }
-    }
-
-    // TODO: This next loop is very slow...
-    matrix A[colsm*n][colsm*n];
-
-    for(i1=1; i1<=colsm; i1++)
-    {
-        for(j1=1; j1<=n; j1++)
-        {
-            for(i2=1; i2<=colsm; i2++)
-            {
-                for(j2=1; j2<=n; j2++)
-                {
-                    A[(i1-1)*n + j1, (i2-1)*n + j2] = L[i1][i2][j1,j2];
-                }
-            }
-        }
-    }
-    
-    return(A);
-}
-
-////////////////////////////////////////////////////////////////////
-// Given a block matrix returns the supertrace
-//
-// INPUT: Block matrix (A & B \\ C & D) where A,B,C,D are square matrices
-//
-// OUTPUT: Tr(A) - Tr(D)
 
 proc supertrace(matrix m)
 {
@@ -2564,6 +2369,1199 @@ proc supertrace(matrix m)
 
     return( trace( B * m ) );
 }
+
+proc mfReduce(matrix A, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    int factorOutContent = blowFlags("factor_out_content");
+    
+    dbprint(printlevel, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
+        
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    int useGrading;
+    if( size(#) > 0 )
+    {
+        intvec Agr = #[1];
+        int useGrading = 1;
+    }
+    
+    if( factorOutContent )
+    {
+        // Pull out the content of the matrix, to reduce to the size of coeffs being multiplied:
+        number Acont = contentMat(A);
+        //print("[mfReduce] Content of A: " + string(Acont)); //debug
+        A = A * 1/Acont;
+    }
+    
+    // Extract the odd and even part of the differential:
+    list blocks = extractblockmat(A);
+    matrix b0 = blocks[3]; matrix b1 = blocks[2];
+    kill blocks;
+    
+    // Reduce b0. This returns a list b0r,P,Q,n where P,Q are invertible matrices,
+    // b0r is a matrix with no nonzero constant entries, and P * b0 * Q = dsum(unitmat(n),b0r).
+    // (Unless n = 0 in which case P * b0 * Q = b0r.) 
+    // The induced differential in degree one is dsum(W * unitmat(n),b1r) = Q^{-1} * b1 * P^{-1}.
+    
+    list l = zoomreduce(b0);
+    // n = l[2];
+    // P = l[3];
+    // Q = l[4];
+    // Pinv = l[5];
+    // Qinv = l[6];
+    
+    b0 = l[1];
+    b1 = submat(l[6] * b1 * l[5],(l[2]+1)..nrows(b1),(l[2]+1)..ncols(b1));
+    
+    matrix f0 = submat(l[6],(l[2]+1)..nrows(l[6]),1..ncols(l[6]));
+    matrix f1 = submat(l[3],(l[2]+1)..nrows(l[3]),1..ncols(l[3]));
+    matrix g0 = submat(l[4],1..nrows(l[4]),(l[2]+1)..ncols(l[4]));
+    matrix g1 = submat(l[5],1..nrows(l[5]),(l[2]+1)..ncols(l[5]));
+    
+    if( useGrading )
+    {
+        // The grading on P * b0 * Q, Q^{-1} * b1 * P is induced from Q and Pinv.
+        intvec Agr0 = Agr[1..(ncols(A)/2)];
+        intvec Agr1 = Agr[(ncols(A)/2+1)..ncols(A)];
+        
+        Agr0 = computeGradingFromInjection(l[4], Agr0);
+        Agr1 = computeGradingFromInjection(l[5], Agr1);
+        
+        // Next in both differentials we split off the first n columns and n rows,
+        // so do the same to the grading:
+        Agr0 = Agr0[(l[2]+1)..size(Agr0)];
+        Agr1 = Agr1[(l[2]+1)..size(Agr1)];
+    }
+    
+    kill l;
+        
+    // Now repeat the awesome feat on b1. This time b1 is replaced by P * b1 * Q
+    // and b0 is replaced by Qinv * b0 * Pinv (with a nxn trivial piece removed).
+    list l = zoomreduce(b1);
+    
+    b1 = l[1];
+    b0 = submat(l[6] * b0 * l[5],(l[2]+1)..nrows(b0),(l[2]+1)..ncols(b0));
+    
+    f0 = submat(l[3] * f0,(l[2]+1)..nrows(l[3]),1..ncols(f0));
+    f1 = submat(l[6] * f1,(l[2]+1)..nrows(l[6]),1..ncols(f1));
+    g0 = submat(g0 * l[5],1..nrows(g0),(l[2]+1)..ncols(l[5]));
+    g1 = submat(g1 * l[4],1..nrows(g1),(l[2]+1)..ncols(l[4]));
+    
+    if( useGrading )
+    {
+        // The grading on Qinv * b0 * Pinv, P * b1 * Q is induced from Pinv and Q.
+        Agr0 = computeGradingFromInjection(l[5], Agr0);
+        Agr1 = computeGradingFromInjection(l[4], Agr1);
+        
+        // Next in both differentials we split off the first n columns and n rows,
+        // so do the same to the grading:
+        Agr0 = Agr0[(l[2]+1)..size(Agr0)];
+        Agr1 = Agr1[(l[2]+1)..size(Agr1)];
+    }
+    
+    kill l;
+                
+    // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
+    // the original MF and the reduced MF (b0,b1). 
+    matrix zb[nrows(b0)][ncols(b0)];
+    matrix zf[nrows(f0)][ncols(f0)];
+    matrix zg[nrows(g0)][ncols(g0)];
+
+    matrix B = blockmat(zb, b1, b0, zb);
+    matrix F = blockmat_nsq(f0, zf, zf, f1);
+    matrix G = blockmat_nsq(g0, zg, zg, g1);
+    if( useGrading ){ intvec Bgr = Agr0, Agr1; }
+    kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
+    
+    // Partial check that F * G is homotopic to 1. Note that the
+    // check we use won't work to check G * F \simeq 1 because we
+    // need the MF in question to be reduced.
+    if( useSanityChecks )
+    {
+        // Check that F and G are morphisms
+        if( F * A != B * F || G * B != A * G )
+        {
+            print("[mfReduce] Either F or G is not a morphism, exiting.");
+            return();
+        }
+        
+        if( useGrading )
+        {
+            if( !isGradingValid(B, Bgr) )
+            {
+                print("[mfReduce] Produced a non-valid grading on reduction, exiting.");
+                return();
+            }
+        }
+        
+        if( 0 ) // debug additional checks
+        {
+            matrix shouldBeZero = F * G - unitmat(nrows(F));
+            matrix Bc = B;
+            
+            int j;
+            for(j=1; j<=nvars(basering); j++)
+            {
+                shouldBeZero = subst(shouldBeZero,var(j),0);
+                Bc = subst(Bc,var(j),0);
+            }
+        
+            if( shouldBeZero != matrix(0,nrows(shouldBeZero),ncols(shouldBeZero)) )
+            {
+                print("[mfReduce] F * G is not homotopic to the identity, exiting.");
+                return();
+            }
+            
+            // Check that B is actually reduced debug
+            if( Bc != matrix(0,nrows(Bc),ncols(Bc)) )
+            {
+                print("[mfReduce] Error, the return matrix is not reduced, exiting.");
+                return();
+            }
+        }
+    }
+    
+    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
+    dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
+    dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    if( factorOutContent )
+    {
+        B = B * Acont; //debug
+    }
+    
+    list ret = B, F, G;
+    kill B, F, G;
+    
+    if( useGrading )
+    {
+        ret = ret + list(Bgr);
+    }
+    
+    return(ret);
+}
+
+////////////////////////////////////////////////////////////////////
+// isHomotopyIdempotent
+//
+// Partial check whether the given matrix is an idempotent up to homotopy.
+
+proc isHomotopyIdempotent(matrix E)
+{
+    int ycount = numYVars();
+    int i;
+    for(i=1;i<=ycount;i++)
+    {
+        E = subst( E, y(i), 0 );
+    }
+    
+    if( E * E != E )
+    {
+        return(0);
+    }
+    
+    return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// mfPushforward
+//
+// We are given a matrix A interpreted as the differential on a matrix factorisation X
+// of a potential W in our ring, together with a ring variable "intvar" and integer N
+// such that intvar^N acts null-homotopically on X, and a matrix H of degree one such that
+// A * H + H * A = intvar^N * unitmat, i.e. the entries of H give a homotopy between
+// intvar^N and the zero map. We assume that, as a polynomial, W does not depend on the
+// variable intvar.
+//
+// Let S denote the ring obtained from our basering by deleting intvar. We can restrict
+// scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
+// The first return value of this routine is the differential of a finite rank MF Y of W over S
+// homotopy equivalent to this pushforward.
+//
+// Let Xblow denote the MF of W over S obtained by "inflation". Then the pushforward is a
+// direct summand of Xblow[1] and the second and third return value are morphisms F: Xblow[1] -> Y
+// and G: Y -> Xblow[1] such that F * G == unitmat and G * F is, up to homotopy, the same
+// idempotent on Xblow[1] determined by its direct summand the pushforward.
+//
+// If we are passed an intvec grading for A as the last parameter, we respect this grading
+// throughout and return as a fourth parameter a grading vector on Y.
+//
+// We assume that our ring is R = 0,(some variables, we don't care),dp.
+//
+// NOTE: Before calling any of the routines of blow.lib we rename intvar to x(1) and all the other
+// variables to y's, so that our active ring is of the form 0,(x(1),y(1),...,y(??)),dp and
+// S is 0,(y(1),...,y(??)),dp. Naturally we convert back to the original ring before returning
+// our results.
+//
+// Note: if the fourth parameter is a _list_ of matrices then we assume that the first is the
+// H described above, and the rest are homotopies on A. We then return an additional list consisting
+// of the homotopies induced on Y by these homotopies in the list.
+//
+// NOTE: If the potential is zero and splitting an idempotent produces nonsquare matrices, then 
+// the return format is different, because the Z/2-graded module may be zero in one degree: this
+// means we can't write things as block matrices. In this case we return a list 
+//
+//  "nonsquare", f0,f1,g0,g1 [possibly two grading vectors r1,r2]
+//
+// where f0,g0 split the idempotent on Xblow[1] in degree zero and resp. for f1,g1. Hence the
+// differential on Y is implicit (obtained from fi,gi and the differential on Xblow[1]). The
+// grading vectors ri give the degrees on the even and odd part of Y resp.
+
+proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    dbprint(printlevel, "[mfPushforward] Pushing forward matrix of size " + string(ncols(A)) + " with N = " + string(N));
+    //dbprint(printlevel, "[mfPushforward] Worst input coeff: " + string(worstMonomialCoeff(A)));
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    def RRR = basering;
+    
+    // Check for grading:
+    int useGrading, returnAblow;
+    if( size(#) > 0 )
+    {
+        if( typeof(#[1]) == "intvec" )
+        {
+            intvec Agr = #[1];
+            useGrading = 1;
+        
+            if( useSanityChecks )
+            {
+                if( !isGradingValid(A,Agr) )
+                {
+                    print("[mfPushforward] Given an invalid grading, exiting.");
+                    return();
+                }
+            }
+        }
+        
+        if( typeof(#[1]) == "string" )
+        {
+            // At the end of our return list, add Ablow
+            if( #[1] == "return_ablow" )
+            {
+                returnAblow = 1;
+            }
+        }
+    }
+    
+    // Check for a list of homotopies to track:
+    int homotopyList;
+    if( typeof(Hlist) == "list" )
+    {
+        matrix H = Hlist[1];
+        Hlist = delete(Hlist,1);    
+        
+        if( size(Hlist) != 0 )
+        {
+            int homotopyList = 1;
+        }
+    }
+    else
+    {
+        matrix H = Hlist;
+    }
+    
+    if( useSanityChecks )
+    {
+        if( A * H + H * A != intvar^N * unitmat(ncols(A)) )
+        {
+            print("[mfPushforward] Not passed valid homotopy, exiting.");
+            return();
+        }
+    }
+    
+    // Convert everything into a more suitable ring. We go through the original
+    // list of ring variables, rename everything apart from intvar to y(i)'s (in
+    // ascending order) and rename intvar to x(1).
+    list rlist = ringlist(RRR);
+    list varlist = rlist[2];
+    
+    // Create the new list of variables:
+    list newvar;
+    int i;
+    int ycount;
+    for(i=1;i<=size(varlist);i++)
+    {
+        if( string(intvar) == varlist[i] )
+        {
+            newvar = newvar + list("x(1)");
+        }
+        else
+        {
+            ycount++;
+            string s = "y(" + string(ycount) + ")";
+            newvar = newvar + list(s);
+            kill s;
+        }
+    }
+    kill varlist;
+    
+    list newringList;
+    newringList[1] = rlist[1];
+    newringList[2] = newvar;
+    newringList[3] = rlist[3];
+    newringList[4] = rlist[4];
+    kill rlist;
+    
+    // Fix the variable weighting
+    intvec kk = (1..size(newvar));
+    for(i=1; i<=size(newvar); i++)
+    {
+        kk[i] = 1;
+    }
+    newringList[3][1][2] = kk;
+    kill kk;
+    
+    int useParameter;
+    if( defined(minpolyblow) && defined(r) ) // deal with minpoly
+    { 
+        newringList[1][4][1] = 0;
+        useParameter = 1;
+    }
+    
+    // Create our new ring:
+    def nR = ring(newringList);
+    setring nR;
+    
+    // Now complete the correct definition of nR by specifying the right minpoly: 
+    if( useParameter )
+    {
+        // Note that fetch uses the position of the ring variables, not the name, so 
+        // that fetch(var(1)) is always var(1).
+        poly minpolyblow = fetch(RRR,minpolyblow); 
+        export(minpolyblow);
+        poly zz = subst(minpolyblow,var(1),r);
+        number nu = leadcoef(zz);
+        minpoly = nu;
+        kill zz, nu;
+    }    
+    
+    // If we call fetch then the object of RRR is converted to the new renamed variables
+    matrix A = fetch(RRR,A);
+    matrix H = fetch(RRR,H);
+    if( homotopyList )
+    {
+        list Hlist = fetch(RRR,Hlist);
+    }
+        
+    // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
+    // Compute the inflation:
+    ideal J = x(1)^N;
+    matrix Ablow = mablow(A,J);
+    if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
+
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = mablow(Hlist[i],J);
+        }
+    }
+    
+    // Compute the idempotent on the inflation:
+    ideal J = x(1)^N; 
+    matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J);
+    
+    // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)]):
+    if( !useGrading )
+    {
+        // for mfReduceAlt use list l = mfReduceAlt(Ablow,e).
+        list l = mfReduce(Ablow);
+    }
+    else
+    {
+        // For mfReduceAlt use list l = mfReduceAlt(Ablow, e, Ablowgr).
+        list l = mfReduce(Ablow, Ablowgr);
+    }
+    matrix RT = l[1]; // Differential on reduced MF
+    matrix F = l[2]; // A homotopy equivalence Ablow -> RT
+    matrix G = l[3]; // A homotopy equivalence RT -> Ablow
+    
+    // For mfReduceAlt use matrix ep = l[useGrading + 4].
+    matrix ep = F * e * G;
+    
+    if( useGrading )
+    {
+        intvec RTgr = l[4];
+    }
+    
+    kill l;
+
+    // Move the homotopies over to the reduction RT:
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = F * Hlist[i] * G;
+        }
+    }
+    
+    if( useSanityChecks )
+    {
+        if( ep * RT != RT * ep )
+        {
+            print("[mfPushforward] The reduced idempotent (up to homotopy) ep is not an endomorphism of RT, exiting.");
+            return();
+        }
+    }
+    
+    // Check that ep is idempotent up to homotopy, and strictify it:
+    matrix epstrict;
+    if( ep * ep != ep )
+    {
+        matrix epck = ep;
+        for(i=1;i<=ycount;i++)
+        {
+            epck = subst( epck, y(i), 0 );
+        }
+
+        if( epck * epck != epck )
+        {
+            // NOTE: If this test fails to pass, it is usually due to a sign problem...
+            if( epck * epck == -1 * epck )
+            {
+                ep = -ep;
+            }
+        }
+        kill epck;
+
+        epstrict = mfStrictifyIdempotent(RT, ep);
+    }
+    else
+    {
+        epstrict = ep;
+    }
+    
+    if( useSanityChecks )
+    {
+        if( epstrict * RT != RT * epstrict || epstrict * epstrict != epstrict )
+        {
+            print("[mfPushforward] The strictified idempotent is not an endomorphism of RT, or not an idempotent on the nose, exiting.");
+            return();
+        }
+        
+        if( useGrading )
+        {
+            if( !checkMorphismDegree( RT, RTgr, RT, RTgr, epstrict, 0 ) )
+            {
+                print("[mfPushforward] Strictified idempotent is not degree zero, exiting.");
+                return();
+            }
+        }
+    }
+    
+    list l;
+    if( !useGrading )
+    {
+        l = mfSplitIdempotent(RT, epstrict);
+    }
+    else
+    {
+        l = mfSplitIdempotent(RT, epstrict, RTgr);
+    }
+
+    // This can only happen if the potential is zero and mfSplitIdempotent found non-square
+    // matrices. In this case our return formatting is different, see the introduction.
+    if( typeof(l[1]) == "string" )
+    {
+        // In this the list l has the format l = "nonsquare",f0,f1,g0,g1 where fi,gi are the
+        // splittings in the respective degrees, and l may have as a final entry a grading
+        // vector for the even and odd parts (separately).
+        
+        // IMPORTANT: We need to "suspend" this answer in order to get the splitting
+        // which is equal to Y. 
+        
+        setring RRR;
+        list l = imap(nR,l);
+        list retlist = l;
+        retlist[2] = l[3]; // suspend by replacing f0 by f1
+        retlist[3] = l[2]; // and f1 by f0
+        retlist[4] = l[5];
+        retlist[5] = l[4];
+        
+        if( useGrading )
+        {
+            retlist[6] = l[7]; // also suspend the gradings
+            retlist[7] = l[6];
+        }
+        kill l;
+        
+        dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
+            
+        return(retlist);
+    }
+    
+    // mfSplitIdempotent returns not just the splitting of the idempotent, but the
+    // actual maps splitting the idempotent. In the following notation, this means
+    // that s * t == ep and t * s == unitmat. Here t = l[2] and s = l[3].
+    
+    matrix final = l[1];
+    if( useGrading ){ intvec finalgr = l[4]; }
+    
+    matrix t = l[2]; // t: RT --> final
+    matrix s = l[3]; // s: final --> RT
+    
+    // We have now split the original idempotent e on Ablow, and the splittings are:
+    matrix mapAblowToFinal = t * F;
+    matrix mapFinalToAblow = G * s;
+    
+    // Each of the homotopies in our list is a homotopy on RT, let us replace
+    // these by homotopies on final.
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = t * Hlist[i] * s;
+        }
+    }
+    
+    kill s,t,F,G,RT,e,ep,epstrict;
+    if( !returnAblow ){ kill Ablow; }
+    if( useGrading ){ kill RTgr; }
+        
+    // Back to the original ring and return. Note that we use fetch and not imap
+    // because we want to replace variables in nR by the variables in RRR in the same
+    // _position_ in ringlist.
+    setring RRR;
+    matrix final = fetch(nR,final);
+    matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
+    matrix mapFinalToAblow = fetch(nR,mapFinalToAblow);
+    if( returnAblow ){ matrix Ablow = fetch(nR, Ablow); }
+    if( homotopyList )
+    {
+        list Hlist = fetch(nR,Hlist);
+    }
+    
+    // Note that we really want a splitting of e[1] on Ablow[1], so let us suspend:
+    final = mfSuspend( final );
+    mapAblowToFinal = mfSuspendMorph( mapAblowToFinal );
+    mapFinalToAblow = mfSuspendMorph( mapFinalToAblow );
+    if( useGrading ){ finalgr = mfSuspendGrading( finalgr ); }
+    if( returnAblow ){ Ablow = mfSuspend( Ablow ); }
+    
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = mfSuspend( Hlist[i] ); // homotopies are suspended just like differentials
+        }
+    }
+    
+    if( !returnAblow )
+    {
+        // Normal behaviour:
+        list retlist = list(final,mapAblowToFinal,mapFinalToAblow);
+    }
+    else
+    {
+        // Special behaviour:
+        list retlist = list(final, mapAblowToFinal,mapFinalToAblow, Ablow);
+    }
+    
+    // Note that grading (if it exists) goes before homotopy list (if it exists!).
+    if( useGrading )
+    {
+        retlist = retlist + list(finalgr);
+    }
+
+    if( homotopyList )
+    {
+        retlist = retlist + list(Hlist);
+        kill Hlist;
+    }
+    
+    dbprint(printlevel, "[mfPushforward] result is size " + string(ncols(final)) + ".");
+    dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
+    kill final, mapAblowToFinal, mapFinalToAblow;
+        
+    return(retlist);
+}
+
+////////////////////////////////////////////////////////////////////
+// mfPushforwardInductive
+//
+// We are given a matrix A interpreted as the differential on a matrix factorisation X
+// of a potential W in our ring, together with a list of ring variables "intvars" and list NN
+// such that intvar[i]^NN[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
+// A * H[i] + H[i] * A = intvar[i]^NN[i] * unitmat, i.e. the entries of H[i] give a homotopy between
+// intvar[i]^NN[i] and the zero map. We assume that, as a polynomial, W does not depend on the
+// variables intvar.
+//
+// Let S denote the ring obtained from our basering by deleting the intvars. We can restrict
+// scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
+// The first return value of this routine is the differential of a finite rank MF Y of W over S
+// homotopy equivalent to this pushforward.
+//
+// The second return value is the grading vector for A, if we are using gradings.
+//
+// The third (or second, if there is no grading) return value is a list R (of the same length
+// as intvars) whose entries are tuples
+//
+//       (F,G,u,NN,D[,r])
+//
+// which records the F and G matrices returned by mfPushforward at each stage of the computation,
+// along with the internal variable u in question and the exponent NN it is associated with. The D
+// is the differential of the pushforward, and r is its optional grading vector. Note that if in
+// the splitting we encounter non-square matrices the format is slightly different; see the code.
+
+proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks"); // Turn off to run faster
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    def RRR = basering;
+    list R;
+    
+    // Check for grading:
+    int useGrading;
+    if( size(#) > 0 )
+    {
+        intvec Agr = #[1];
+        int useGrading = 1;
+    }
+    
+    // If we are not passed any internal variables, we perform no pushforward:
+    if( size(intvars) == 0 )
+    {
+        list retlist = A;
+        if( useGrading )
+        {
+            retlist = retlist + list(Agr);
+        }
+        return(retlist);
+    }
+    
+    int i;
+    if( useSanityChecks )
+    {
+        for(i=1;i<=size(intvars);i++)
+        {
+            if( A * H[i] + H[i] * A != intvars[i]^(NN[i]) * unitmat(ncols(A)) )
+            {
+                print("[mfPushforward] Not passed valid homotopies, exiting.");
+                return();
+            }
+        }
+    }
+    
+    // Inductively we contract off the action of each of the external variables, using
+    // the given homotopies. During the process we switch rings, killing off the 
+    // external variables that we have used up.
+    
+    int count = 1;
+    def nR(1) = basering;
+    int useParameter;
+    
+    while( size(intvars) > 0 )
+    {
+        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count))); //debug
+        
+        // Do the reduction with respect to the first variable and homotopy, and
+        // induce homotopies on this reduction for the action of the rest of the variables.
+        if( !useGrading )
+        {
+            list l = mfPushforward(A, intvars[1], NN[1], H);
+        }
+        else
+        {
+            list l = mfPushforward(A, intvars[1], NN[1], H, Agr);
+        }
+        
+        if( typeof(l[1]) == "string" )
+        {   
+            // mfSplitIdempotent found, during mfPushforward, that it had to split
+            // an idempotent on a complex. Our return value in this situation is
+            // "nonsquare",[r1,r2],R' where r1,r2 are possible gradings. We are given
+            // "nonsquare",f0,f1,g0,g1,[r1,r2] by mfPushforward.
+            poly ivar = intvars[1];
+            setring RRR;
+            
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+                poly ivar = imap(nR(count),ivar);
+            }
+            
+            list ll = "nonsquare";
+            
+            if( useGrading )
+            {
+                ll = ll + list(l[6],l[7]); // Add on r1,r2
+            }
+            
+            // Modify the current map list R by adding on the end the list
+            //
+            //    ("nonsquare",f0,f1,g0,g1,intvars[1],NN[1][,r1,r2])
+            //
+            // NOTE: We can't stick these together into block matrices (like the other
+            // entries in R) because we might be rank zero in one component
+            
+            list tempp = "nonsquare",l[2],l[3],l[4],l[5],ivar,NN[1];
+            if( useGrading ){ tempp = tempp + list(l[6],l[7]); }
+            R = R + list(tempp);
+            kill tempp;
+            
+            ll = ll + list(R);
+                        
+            dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
+            
+            return(ll);
+        }
+        
+        // Legend
+        // final = l[1] is the MF with intvars[1] excluded which is h.e. to the pushforward
+        // l[2] is a map Ablow[1] --> final
+        // l[3] is a map final --> Ablow[1] (where [1] means suspension)
+        // l[4] is the grading (if we are using gradings) or our modified list of homotopies
+        // l[5] is our homotopies if we are using the grading, and undefined otherwise
+    
+        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],NN[1],l[1][,l[4]]). Note
+        // we have to return to the original ring because l[2],l[3] may depend on
+        // external variables which we are going to delete in a moment.
+        poly ivar = intvars[1];
+        
+        setring RRR;
+        
+            // The first time through nR(1) = RRR so there is no need for imap.
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+                poly ivar = imap(nR(count),ivar);
+            }
+
+            // Add the tuple (F,G,u,NN,D[,r])
+            list tempp = l[2], l[3], ivar, NN[1], l[1];
+            if( useGrading ){ tempp = tempp + list(l[4]); }
+            R = R + list(tempp);
+            kill tempp;
+            
+        setring nR(count);
+        
+        // Remove the variable intvars[1] from our active ring:
+        list rlist = ringlist(nR(count));
+        list varlist = rlist[2];
+    
+        // Create the new list of variables:
+        int i;
+        for(i=1;i<=size(varlist);i++)
+        {
+            if( varlist[i] == string(intvars[1]) )
+            {
+                varlist = delete(varlist,i);
+                break;
+            }
+        }
+    
+        list newringList;
+        newringList[1] = rlist[1];
+        newringList[2] = varlist;
+        newringList[3] = rlist[3];
+        newringList[4] = rlist[4];
+        // Fix the variable weighting
+        intvec kk = (1..size(varlist));
+        for(i=1; i<=size(varlist); i++)
+        {
+            kk[i] = 1;
+        }
+        newringList[3][1][2] = kk;
+        
+        if( defined(minpolyblow) && defined(r) ) // deal with minpoly
+        { 
+            newringList[1][4][1] = 0;
+            useParameter = 1;
+        } 
+        
+        // Prepare for the next step of the induction:
+        A = l[1];
+        if( useGrading ){ Agr = l[4]; }
+        
+        intvars = delete(intvars,1);
+        NN = delete(NN,1);
+        
+        if( size(intvars) == 0 )
+        {
+            break;
+        }
+
+        H = l[4 + useGrading];
+    
+        // Create our new ring:
+        def nR(count+1) = ring(newringList);
+        setring nR(count+1);
+    
+        // Now complete the correct definition of nR by specifying the right minpoly: 
+        if( useParameter )
+        {
+            // Note that fetch uses the position of the ring variables, not the name, so 
+            // that fetch(var(1)) is always var(1).
+            poly minpolyblow = fetch(nR(count),minpolyblow); 
+            export(minpolyblow);
+            poly zz = subst(minpolyblow,var(1),r);
+            number nu = leadcoef(zz);
+            minpoly = nu;
+            kill zz, nu;
+        }
+        
+        matrix A = imap(nR(count),A);
+        list intvars = imap(nR(count),intvars);
+        list H = imap(nR(count),H);
+        
+        count++;
+    }
+    
+    // Return to the original ring:
+    setring RRR;
+    matrix Anew = imap(nR(count),A);
+    
+    list retlist = Anew;
+    
+    if( useGrading )
+    {
+        retlist = retlist + list(Agr);
+    }
+    
+    // Add on the maps:
+    retlist = retlist + list(R);
+    dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    return(retlist);
+}
+
+proc displaySplittingRecord(list R)
+{
+    print("[displaySplittingRecord] Given a splitting record of length " + string(size(R)));
+    
+    int i;
+    for(i=1;i<=size(R);i++)
+    {
+        if( size(R[i]) == 4 )
+        {
+            string out = "[displaySplittingRecord]    Variable: ";
+            out = out + string(R[i][3]) + " exponent: " + string(R[i][4]);
+            out = out + " F: " + string(nrows(R[i][1])) + "x" + string(ncols(R[i][1])) + " G: ";
+            out = out + string(nrows(R[i][2])) + "x" + string(ncols(R[i][2]));
+            print(out);
+        }
+        else
+        {
+            string out = "[displaySplittingRecord]    Nonsquare, variable: ";
+            out = out + string(R[i][5]) + " exponent: ";
+            out = out + string(R[i][6]) + " f0: " + string(nrows(R[i][1])) + "x" + string(ncols(R[i][1]));
+            out = out + " f1: " + string(nrows(R[i][2])) + "x" + string(ncols(R[i][2]));
+            out = out + " g0: " + string(nrows(R[i][3])) + "x" + string(ncols(R[i][3]));
+            out = out + " g1: " + string(nrows(R[i][4])) + "x" + string(ncols(R[i][4]));
+            print(out);
+        }// f0,f1,g0,g1,intvars[1],N[1]
+    }
+}
+
+////////////////////////////////////////////////////////////////////
+// isMorphismNull
+//
+// Given two MFs QQQ, PPP (in block format) and a morphism F: QQQ --> PPP
+// returns 1 if the map is null-homotopic and zero otherwise.
+
+proc isMorphismNull(matrix QQQ, matrix PPP, matrix F)
+{
+    if( PPP * F != F * QQQ )
+    {
+        print("[isMorphismNull] Given matrix is not a morphism, exiting.");
+        return();
+    }
+    
+    vector B = matrix2vector(F);
+    
+    matrix f = blocksq(QQQ)[3];
+    matrix g = blocksq(QQQ)[2];
+    matrix fp = blocksq(PPP)[3];
+    matrix gp = blocksq(PPP)[2];
+    
+    module M=syz(dminus(f,g,fp,gp));
+    matrix Mker=M;
+    
+    // Test that B (= F as a vector) actually belongs to the kernel of dminus:
+    if( reduce(B, std(Mker)) != [0] )
+    {
+        print("[isMorphismNull] Strange error, exiting.");
+        return();
+    }
+    
+    // Test whether B is in the image of dplus
+    module im = module(dplus(f,g,fp,gp));
+    
+    if( reduce(B, std(im)) == [0] )
+    {
+        return(1);
+    }
+    else
+    {
+        return(0);
+    }
+}
+
+////////////////////////////////////////////////////////////////////
+// chernChar
+//
+// Given a matrix factorisation, returns the Chern character as a
+// reduced element modulo the Jacobi ideal (so two MFs have the same
+// chern char, as an element of the Jacobi algebra, iff the return
+// values of this routine are the same). By definition
+//
+//      ch(A) = (-1)^{n choose 2} str(diff(A,x(1)),...,diff(A,x(n))
+// 
+// where n is the total number of variables.
+
+proc chernChar(matrix A)
+{
+    // First determine the potential:
+    poly W = (A*A)[1,1];
+    
+    // Now the Jacobi algebra
+    ideal jaci = jacob(W);
+    ideal J = std(jaci);
+    int numVars = nvars(basering);
+
+    int i;
+    matrix X = unitmat(ncols(A));
+    
+    for(i=1; i<=numVars;i++)
+    {
+        X = X * diff(A,var(i));
+    }
+    
+    int p = (numVars*(numVars-1))/2;
+    poly ch = (-1)^(p) * supertrace(X);
+    ch = reduce( ch, J );
+    return(ch);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// Old routines for computing cohomology
+//
+// Let Q = (0 g \\ f 0) and Q' = (0 g' \\ f' 0) be matrix factorisations
+// of a common potential.
+// 
+// We define the operator dminus on even elements of Hom(Q,Q') (the Z2
+// graded Hom, before taking cohomology) and dplus on odd elements, by
+//
+// dminus(a) = Q' a - a Q    and   dplus(a) = Q' a + a Q.
+//
+// i.e. the differential on Hom(Q,Q'). To compute cohomology we want to
+// find the kernel and images of these maps, but first we convert them
+// into matrices. We do this by writing dminus (resp. dplus) as 2rr' x 2rr'
+// matrices which act on maps a represented as column vectors (in the natural
+// way, see the preprint). This is done in the routines dminus and dplus
+// below. Then we can take Ker and Im and, using matrix2vector and vector2matrix,
+// convert between the representations.
+
+////////////////////////////////////////////////////////////////////
+// rdsum
+//
+// Returns the matrix A^{\oplus r}
+
+proc rdsum(matrix A, int r)
+{
+    list B;
+    B[1]=A;
+    for (int i=2; i<=r; i++)
+    {
+        B[i]=dsum(B[i-1],A);
+    }
+    return(B[r]);
+}
+
+proc dminus(matrix f,g,f',g')
+{
+    int r=nrows(f);
+    int r'=nrows(f');
+    matrix P1=concat(tensor(f',unitmat(r)), rdsum(-transpose(f),r'));
+    matrix P2=concat(rdsum(transpose(-g),r'),tensor(g',unitmat(r)));
+    matrix P[2*r*r'][2*r*r']=P2,P1;
+    return(P);
+}
+
+proc dplus(matrix f,g,f',g')
+{ 
+    int r=nrows(f);
+    int r'=nrows(f');
+    matrix P1=concat(rdsum(transpose(f),r'),tensor(g',unitmat(r)));
+    matrix P2=concat(tensor(f',unitmat(r)),rdsum(transpose(g),r'));
+    matrix P[2*r*r'][2*r*r']=P1,P2;
+    return(P);
+}
+
+proc vector2matrix(list V, int r, int r')
+{
+    int i,j,k;
+    list M;
+    matrix ma[2*r'][2*r];
+    for(i=1; i<=size(V); i++){M = M + list(ma);}
+    for(i=1; i<=size(V); i++)
+    {
+        for(j=1; j<=r; j++)
+        {
+            for(k=1; k<=r'; k++)
+            {
+                M[i][k,j] = V[i][(k-1)*r + j, 1];
+                M[i][k+r',j+r] = V[i][(r'-1+k)*r + j, 1];
+            }
+        }
+    }
+
+    return(M);
+}
+
+proc vector2matrixFerm(list V, int r, int r')
+{
+    int i,j,k;
+    list M;
+    matrix ma[2*r'][2*r];
+    for(i=1; i<=size(V); i++){M = M + list(ma);}
+    for(i=1; i<=size(V); i++)
+    {
+        for(j=1; j<=r; j++)
+        {
+            for(k=1; k<=r'; k++)
+            {
+                M[i][k,j+r] = V[i][(k-1)*r + j, 1];
+                M[i][k+r',j] = V[i][(r'-1+k)*r + j, 1];
+            }
+        }
+    }
+    
+    return(M);
+}
+
+proc matrix2vector(matrix M)
+{
+    int r1 = ncols(M)/2;
+    int r2 = nrows(M)/2;
+    int i,ii,j,k;
+    vector v;
+    
+    // bosonic part:
+    for(ii=1; ii<= r2; ii++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen((ii-1)*r1 + j)*M[ii,j];
+        }
+    }
+
+    for(ii=1; ii<= r2; ii++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen(r1*r2 + (ii-1)*r1 + j)*M[ii+r2,j+r1];
+        }
+    }
+
+    // fermionic part:
+    for(i=1; i<= r2; i++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen(2*r1*r2 + (i-1)*r1 + j)*M[i,j+r1];
+        }
+    }
+
+    for(i=1; i<= r2; i++)
+    {
+        for(j=1; j<= r1; j++)
+        {
+            v = v + gen(2*r1*r2 + r1*r2 + (i-1)*r1 + j)*M[i+r2,j];
+        }
+    }
+
+    return(v);
+}
+
+////////////////////////////////////////////////////////////////////
+// MFco
+//
+// We are given the differentials (0 g \\ f 0) and (0 g' \\ f' 0) of two
+// matrix factorisations X,Y and we return a basis over the basefield for
+// the cohomology H of the two-periodic complex Hom(X,Y), as a list
+// MM with MM[1] a basis of H^0 and MM[2] a basis of H^1.
+
+proc MFco(matrix f,g,f',g')
+{
+    module M=syz(dminus(f,g,f',g'));
+    matrix Mker=M;
+    module Q=modulo(M,module(dplus(f,g,f',g')));
+    matrix base=kbase(std(Q));
+    matrix m = Mker*base;
+
+    module Mf=syz(dplus(f,g,f',g'));
+    matrix Mkerf=Mf;
+    module Qf=modulo(Mf,module(dminus(f,g,f',g')));
+    matrix basef=kbase(std(Qf));
+    matrix mf = Mkerf*basef;
+
+    int i;
+    int r = ncols(f);
+    int r' = ncols(f');
+    matrix ma[2*r'][2*r];
+    list L;
+    for(i=1; i<=ncols(m); i++){L = L + list(ma);}
+    intvec v1 = 1..nrows(m);
+    intvec v2;
+
+    list Lf;
+    for(i=1; i<=ncols(mf); i++){Lf = Lf + list(ma);}
+    intvec vf1 = 1..nrows(mf);
+    intvec vf2;
+
+    for(i=1; i<=ncols(m); i++)
+    {
+        intvec v2 = i;
+        L[i] = submat(m,v1,v2);
+    }
+
+    for(i=1; i<=ncols(mf); i++)
+    {
+        intvec vf2 = i;
+        Lf[i] = submat(mf,vf1,vf2);
+    }
+
+    list MMb = vector2matrix(L, r, r');
+    list MMf = vector2matrixFerm(Lf, r, r');
+
+    matrix null[2*r'][2*r];
+    list leer;
+    if(MMb[1] == null)
+        {MMb = leer;}
+    if(MMf[1] == null)
+        {MMf = leer;}
+
+    list MM;
+    MM[1] = MMb;
+    MM[2] = MMf;
+
+    return(MM);
+}
+
+proc MFcofull(matrix QQQ,PPP)
+{
+    matrix f = blocksq(QQQ)[3];
+    matrix g = blocksq(QQQ)[2];
+    matrix f' = blocksq(PPP)[3];
+    matrix g' = blocksq(PPP)[2];
+
+    list MM = MFco(f,g,f',g');
+    return(MM);
+}
+
+
+// Old routines:
 
 proc zoomreduce(matrix A)
 {
@@ -2986,1263 +3984,4 @@ proc mfReduce_splitworker(matrix q0, matrix q1)
     list retlist = p0,p1,u0,u1,v0,v1;
     kill e, d, h, f, g, p0, p1, u0, u1, v0, v1;
     return(retlist);
-}
-
-proc mfReduce(matrix A, list #)
-{
-    int useSanityChecks = blowFlags("sanity_checks");
-    int factorOutContent = blowFlags("factor_out_content");
-    
-    dbprint(printlevel, "[mfReduce] Reducing matrix of size " + string(ncols(A)));
-        
-    system("--ticks-per-sec",1000);
-    int timeElapsed = timer;
-    
-    int useGrading;
-    if( size(#) > 0 )
-    {
-        intvec Agr = #[1];
-        int useGrading = 1;
-    }
-    
-    if( factorOutContent )
-    {
-        // Pull out the content of the matrix, to reduce to the size of coeffs being multiplied
-        number Acont = contentMat(A);
-        //print("[mfReduce] Content of A: " + string(Acont)); //debug
-        A = A * 1/Acont;
-    }
-    
-    // Extract the odd and even part of the differential
-    list blocks = extractblockmat(A);
-    matrix b0 = blocks[3]; matrix b1 = blocks[2];
-    kill blocks;
-    
-    // Reduce b0. This returns a list b0r,P,Q,n where P,Q are invertible matrices,
-    // b0r is a matrix with no nonzero constant entries, and P * b0 * Q = dsum(unitmat(n),b0r).
-    // (unless n = 0 in which case P * b0 * Q = b0r).
-    // The induced differential in degree one is dsum(W * unitmat(n),b1r) = Q^{-1} * b1 * P^{-1}
-    
-    list l = zoomreduce(b0);
-    // n = l[2];
-    // P = l[3];
-    // Q = l[4];
-    // Pinv = l[5];
-    // Qinv = l[6];
-    
-    b0 = l[1];
-    b1 = submat(l[6] * b1 * l[5],(l[2]+1)..nrows(b1),(l[2]+1)..ncols(b1));
-    
-    matrix f0 = submat(l[6],(l[2]+1)..nrows(l[6]),1..ncols(l[6]));
-    matrix f1 = submat(l[3],(l[2]+1)..nrows(l[3]),1..ncols(l[3]));
-    matrix g0 = submat(l[4],1..nrows(l[4]),(l[2]+1)..ncols(l[4]));
-    matrix g1 = submat(l[5],1..nrows(l[5]),(l[2]+1)..ncols(l[5]));
-    
-    if( useGrading )
-    {
-        // The grading on P * b0 * Q, Q^{-1} * b1 * P is induced from Q and Pinv
-        intvec Agr0 = Agr[1..(ncols(A)/2)];
-        intvec Agr1 = Agr[(ncols(A)/2+1)..ncols(A)];
-        
-        Agr0 = computeGradingFromInjection(l[4], Agr0);
-        Agr1 = computeGradingFromInjection(l[5], Agr1);
-        
-        // Next in both differentials we split off the first n columns and n rows,
-        // so do the same to the grading
-        Agr0 = Agr0[(l[2]+1)..size(Agr0)];
-        Agr1 = Agr1[(l[2]+1)..size(Agr1)];
-    }
-    
-    kill l;
-        
-    // Now repeat the awesome feat on b1. This time b1 is replaced by P * b1 * Q
-    // and b0 is replaced by Qinv * b0 * Pinv (with a nxn trivial piece removed).
-    list l = zoomreduce(b1);
-    
-    b1 = l[1];
-    b0 = submat(l[6] * b0 * l[5],(l[2]+1)..nrows(b0),(l[2]+1)..ncols(b0));
-    
-    f0 = submat(l[3] * f0,(l[2]+1)..nrows(l[3]),1..ncols(f0));
-    f1 = submat(l[6] * f1,(l[2]+1)..nrows(l[6]),1..ncols(f1));
-    g0 = submat(g0 * l[5],1..nrows(g0),(l[2]+1)..ncols(l[5]));
-    g1 = submat(g1 * l[4],1..nrows(g1),(l[2]+1)..ncols(l[4]));
-    
-    if( useGrading )
-    {
-        // The grading on Qinv * b0 * Pinv, P * b1 * Q is induced from Pinv and Q
-        Agr0 = computeGradingFromInjection(l[5], Agr0);
-        Agr1 = computeGradingFromInjection(l[4], Agr1);
-        
-        // Next in both differentials we split off the first n columns and n rows,
-        // so do the same to the grading
-        Agr0 = Agr0[(l[2]+1)..size(Agr0)];
-        Agr1 = Agr1[(l[2]+1)..size(Agr1)];
-    }
-    
-    kill l;
-                
-    // Optional, removed: run mfReduceGaussian here
-    
-    // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
-    // the original MF and the reduced MF (b0,b1)
-    matrix zb[nrows(b0)][ncols(b0)];
-    matrix zf[nrows(f0)][ncols(f0)];
-    matrix zg[nrows(g0)][ncols(g0)];
-
-    matrix B = blockmat(zb, b1, b0, zb);
-    matrix F = blockmat_nsq(f0, zf, zf, f1);
-    matrix G = blockmat_nsq(g0, zg, zg, g1);
-    if( useGrading ){ intvec Bgr = Agr0, Agr1; }
-    kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
-    
-    // Partial check that F * G is homotopic to 1. Note that the
-    // check we use won't work to check G * F \simeq 1 because we
-    // need the MF in question to be reduced.
-    if( useSanityChecks )
-    {
-        // Check that F and G are morphisms
-        if( F * A != B * F || G * B != A * G )
-        {
-            print("[mfReduce] Either F or G is not a morphism, exiting.");
-            return();
-        }
-        
-        if( useGrading )
-        {
-            if( !isGradingValid(B, Bgr) )
-            {
-                print("[mfReduce] Produced a non-valid grading on reduction, exiting.");
-                return();
-            }
-        }
-        
-        if( 0 ) // debug additional checks
-        {
-            matrix shouldBeZero = F * G - unitmat(nrows(F));
-            matrix Bc = B;
-            
-            int j;
-            for(j=1; j<=nvars(basering); j++)
-            {
-                shouldBeZero = subst(shouldBeZero,var(j),0);
-                Bc = subst(Bc,var(j),0);
-            }
-        
-            if( shouldBeZero != matrix(0,nrows(shouldBeZero),ncols(shouldBeZero)) )
-            {
-                print("[mfReduce] F * G is not homotopic to the identity, exiting.");
-                return();
-            }
-            
-            // Check that B is actually reduced debug
-            if( Bc != matrix(0,nrows(Bc),ncols(Bc)) )
-            {
-                print("[mfReduce] Error, the return matrix is not reduced, exiting.");
-                return();
-            }
-        }
-    }
-    
-    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
-    dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
-    dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
-    
-    if( factorOutContent )
-    {
-        B = B * Acont; //debug
-    }
-    
-    list ret = B, F, G;
-    kill B, F, G;
-    
-    if( useGrading )
-    {
-        ret = ret + list(Bgr);
-    }
-    
-    return(ret);
-}
-
-proc mfReduceGaussian(matrix A)
-{
-    // Extract the odd and even part of the differential
-    list blocks = extractblockmat(A);
-    matrix b0 = blocks[3]; matrix b1 = blocks[2];
-    kill blocks;
-    
-    // WARNING: At the moment this creates subtle errors in grading, because
-    // the matrix G has some problem
-    // NOTE: Only apply Gaussian elimination if we know the matrices b0, b1 are nonzero
-    matrix zero_b[nrows(b0)][ncols(b0)];
-    if( b0 == zero_b || b1 == zero_b ){ return(A); }
-    
-    matrix tr, b0r;
-
-    list gau = rowred(b0,1);
-    tr = gau[2];
-    b0r = gau[1];
-
-    if( tr * b0 != b0r ){ print("[mfReduce] Error in Gaussian elimination (first)."); return(); }
-    if( det(tr) == 0 )
-    {
-        print("[mfReduce] Transformation matrix not invertible (first)."); 
-        return();
-    }
-
-    matrix trinv = inverse(tr);
-
-    b0 = b0r;
-    b1 = b1 * trinv;
-
-    //f1 = tr * f1;
-    //g1 = g1 * trinv;
-
-    matrix tr2;
-
-    // Try a second time on the transpose
-    list gau = rowred(transpose(b0),1);
-    tr2 = transpose(gau[2]);
-    b0r = transpose(gau[1]);
-
-    if( b0 * tr2 != b0r ){ print("[mfReduce] Error in Gaussian column elimination (second)."); return(); }
-    if( det(tr2) == 0 ){ print("[mfReduce] Transformation matrix not invertible (second)."); return(); }
-
-    matrix tr2inv = inverse(tr2);
-
-    b0 = b0r;
-    b1 = tr2inv * b1;
-    //f0 = tr2inv * f0;
-    //g0 = g0 * tr2;
-
-    kill tr, b0r, gau, trinv, tr2, tr2inv;
-
-    matrix zb[nrows(b0)][ncols(b0)];
-    matrix B = blockmat(zb, b1, b0, zb);
-    return(B);
-}
-
-////////////////////////////////////////////////////////////////////
-// isHomotopyIdempotent
-//
-// Partial check whether the given matrix is an idempotent up to htpy
-// TODO: we only check the y variables since the usage we have in mind
-// is for endomorphisms of MFs over the external variables.
-
-proc isHomotopyIdempotent(matrix E)
-{
-    int ycount = numYVars();
-    int i;
-    for(i=1;i<=ycount;i++)
-    {
-        E = subst( E, y(i), 0 );
-    }
-    
-    if( E * E != E )
-    {
-        return(0);
-    }
-    
-    return(1);
-}
-
-////////////////////////////////////////////////////////////////////
-// mfPushforward
-//
-// We are given a matrix A interpreted as the differential on a matrix factorisation X
-// of a potential W in our ring, together with a ring variable "intvar" and integer N
-// such that intvar^N acts null-homotopically on X, and a matrix H of degree one such that
-// A * H + H * A = intvar^N * unitmat, i.e. the entries of H give a homotopy between
-// intvar^N and the zero map. We assume that, as a polynomial, W does not depend on the
-// variable intvar.
-//
-// Let S denote the ring obtained from our basering by deleting intvar. We can restrict
-// scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
-// The first return value of this routine is the differential of a finite rank MF Y of W over S
-// homotopy equivalent to this pushforward.
-//
-// Let Xblow denote the MF of W over S obtained by "inflation". Then the pushforward is a
-// direct summand of Xblow[1] and the second and third return value are morphisms F: Xblow[1] -> Y
-// and G: Y -> Xblow[1] such that F * G == unitmat and G * F is, up to homotopy, the same
-// idempotent on Xblow[1] determined by its direct summand the pushforward.
-//
-// If we are passed an intvec grading for A as the last parameter, we respect this grading
-// throughout and return as a fourth parameter a grading vector on Y.
-//
-// We assume that our ring is R = 0,(some variables, we don't care),dp.
-//
-// NOTE: Before calling any of the routines of blow.lib we rename intvar to x(1) and all the other
-// variables to y's, so that our active ring is of the form 0,(x(1),y(1),...,y(??)),dp and
-// S is 0,(y(1),...,y(??)),dp. Naturally we convert back to the original ring before returning
-// our results.
-//
-// Note: if the fourth parameter is a _list_ of matrices then we assume that the first is the
-// H described above, and the rest are homotopies on A. We then return an additional list consisting
-// of the homotopies induced on Y by these homotopies in the list.
-//
-// NOTE: If the potential is zero and splitting an idempotent produces nonsquare matrices, then 
-// the return format is different, because the Z/2-graded module may be zero in one degree: this
-// means we can't write things as block matrices. In this case we return a list 
-//
-//  "nonsquare", f0,f1,g0,g1 [possibly two grading vectors r1,r2]
-//
-// where f0,g0 split the idempotent on Xblow[1] in degree zero and resp. for f1,g1. Hence the
-// differential on Y is implicit (obtained from fi,gi and the differential on Xblow[1]). The
-// grading vectors ri give the degrees on the even and odd part of Y resp.
-
-proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
-{
-    int useSanityChecks = blowFlags("sanity_checks"); 
-    dbprint(printlevel, "[mfPushforward] Pushing forward matrix of size " + string(ncols(A)) + " with N = " + string(N));
-    //dbprint(printlevel, "[mfPushforward] Worst input coeff: " + string(worstMonomialCoeff(A)));
-    
-    system("--ticks-per-sec",1000);
-    int timeElapsed = timer;
-    
-    def RRR = basering;
-    
-    // Check for grading
-    int useGrading, returnAblow;
-    if( size(#) > 0 )
-    {
-        if( typeof(#[1]) == "intvec" )
-        {
-            intvec Agr = #[1];
-            useGrading = 1;
-        
-            if( useSanityChecks )
-            {
-                if( !isGradingValid(A,Agr) )
-                {
-                    print("[mfPushforward] Given an invalid grading, exiting.");
-                    return();
-                }
-            }
-        }
-        
-        if( typeof(#[1]) == "string" )
-        {
-            // At the end of our return list, add Ablow
-            if( #[1] == "return_ablow" )
-            {
-                returnAblow = 1;
-            }
-        }
-    }
-    
-    // Check for a list of homotopies to track
-    int homotopyList;
-    if( typeof(Hlist) == "list" )
-    {
-        matrix H = Hlist[1];
-        Hlist = delete(Hlist,1);    
-        
-        if( size(Hlist) != 0 )
-        {
-            int homotopyList = 1;
-        }
-    }
-    else
-    {
-        matrix H = Hlist;
-    }
-    
-    // Sanity check
-    if( useSanityChecks )
-    {
-        if( A * H + H * A != intvar^N * unitmat(ncols(A)) )
-        {
-            print("[mfPushforward] Not passed valid homotopy, exiting.");
-            return();
-        }
-    }
-    
-    // Convert everything into a more suitable ring. We go through the original
-    // list of ring variables, rename everything apart from intvar to y(i)'s (in
-    // ascending order) and rename intvar to x(1)
-    list rlist = ringlist(RRR);
-    list varlist = rlist[2];
-    
-    // Create the new list of variables
-    list newvar;
-    int i;
-    int ycount;
-    for(i=1;i<=size(varlist);i++)
-    {
-        if( string(intvar) == varlist[i] )
-        {
-            newvar = newvar + list("x(1)");
-        }
-        else
-        {
-            ycount++;
-            string s = "y(" + string(ycount) + ")";
-            newvar = newvar + list(s);
-            kill s;
-        }
-    }
-    kill varlist;
-    
-    list newringList;
-    newringList[1] = rlist[1];
-    newringList[2] = newvar;
-    newringList[3] = rlist[3];
-    newringList[4] = rlist[4];
-    kill rlist;
-    
-    // Fix the variable weighting
-    intvec kk = (1..size(newvar));
-    for(i=1; i<=size(newvar); i++)
-    {
-        kk[i] = 1;
-    }
-    newringList[3][1][2] = kk;
-    kill kk;
-    
-    int useParameter;
-    if( defined(minpolyblow) && defined(r) ) // deal with minpoly
-    { 
-        newringList[1][4][1] = 0;
-        useParameter = 1;
-    }
-    
-    // Create our new ring
-    def nR = ring(newringList);
-    setring nR;
-    
-    // Now complete the correct definition of nR by specifying the right minpoly: 
-    if( useParameter )
-    {
-        // Note that fetch uses the position of the ring variables, not the name, so 
-        // that fetch(var(1)) is always var(1).
-        poly minpolyblow = fetch(RRR,minpolyblow); 
-        export(minpolyblow);
-        poly zz = subst(minpolyblow,var(1),r);
-        number nu = leadcoef(zz);
-        minpoly = nu;
-        kill zz, nu;
-    }    
-    
-    // If we call fetch then the object of RRR is converted to the new renamed variables
-    matrix A = fetch(RRR,A);
-    matrix H = fetch(RRR,H);
-    if( homotopyList )
-    {
-        list Hlist = fetch(RRR,Hlist);
-    }
-        
-    // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
-    // Compute the inflation
-    ideal J = x(1)^N;
-    matrix Ablow = mablow(A,J);
-    if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
-
-    if( homotopyList )
-    {
-        for(i=1;i<=size(Hlist);i++)
-        {
-            Hlist[i] = mablow(Hlist[i],J);
-        }
-    }
-    
-    // Compute the idempotent on the inflation
-    ideal J = x(1)^N; 
-    matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J);
-    
-    // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)])
-    if( !useGrading )
-    {
-        // for mfReduceAlt use list l = mfReduceAlt(Ablow,e)
-        list l = mfReduce(Ablow);
-    }
-    else
-    {
-        // For mfReduceAlt use list l = mfReduceAlt(Ablow, e, Ablowgr)
-        list l = mfReduce(Ablow, Ablowgr);
-    }
-    matrix RT = l[1]; // Differential on reduced MF
-    matrix F = l[2]; // A homotopy equivalence Ablow -> RT
-    matrix G = l[3]; // A homotopy equivalence RT -> Ablow
-    
-    // For mfReduceAlt use matrix ep = l[useGrading + 4]
-    matrix ep = F * e * G;
-    
-    if( useGrading )
-    {
-        intvec RTgr = l[4];
-    }
-    
-    kill l;
-
-    // Move the homotopies over to the reduction RT
-    if( homotopyList )
-    {
-        for(i=1;i<=size(Hlist);i++)
-        {
-            Hlist[i] = F * Hlist[i] * G;
-        }
-    }
-    
-    // Sanity checks:
-    if( useSanityChecks )
-    {
-        if( ep * RT != RT * ep )
-        {
-            print("[mfPushforward] The reduced idempotent (up to homotopy) ep is not an endomorphism of RT, exiting.");
-            return();
-        }
-    }
-    
-    // Check that ep is idempotent up to homotopy, and strictify it
-    matrix epstrict;
-    if( ep * ep != ep )
-    {
-        matrix epck = ep;
-        for(i=1;i<=ycount;i++)
-        {
-            epck = subst( epck, y(i), 0 );
-        }
-
-        if( epck * epck != epck )
-        {
-            // NOTE: If this test fails to pass, it is usually due to a sign problem...
-
-            // TODO DEBUG DEBUG WARNING UGLY HACK
-            if( epck * epck == -1 * epck )
-            {
-                ep = -ep;
-            }
-        }
-        kill epck;
-
-        epstrict = mfStrictifyIdempotent(RT, ep);
-    }
-    else
-    {
-        epstrict = ep;
-    }
-    
-    // Sanity checks:
-    if( useSanityChecks )
-    {
-        if( epstrict * RT != RT * epstrict || epstrict * epstrict != epstrict )
-        {
-            print("[mfPushforward] The strictified idempotent is not an endomorphism of RT, or not an idempotent on the nose, exiting.");
-            return();
-        }
-        
-        if( useGrading )
-        {
-            if( !checkMorphismDegree( RT, RTgr, RT, RTgr, epstrict, 0 ) )
-            {
-                print("[mfPushforward] Strictified idempotent is not degree zero, exiting.");
-                return();
-            }
-        }
-    }
-    
-    list l;
-    if( !useGrading )
-    {
-        l = mfSplitIdempotent(RT, epstrict);
-    }
-    else
-    {
-        l = mfSplitIdempotent(RT, epstrict, RTgr);
-    }
-
-    // This can only happen if the potential is zero and mfSplitIdempotent found non-square
-    // matrices. In this case our return formatting is different, see the introduction.
-    if( typeof(l[1]) == "string" )
-    {
-        // In this the list l has the format l = "nonsquare",f0,f1,g0,g1 where fi,gi are the
-        // splittings in the respective degrees, and l may have as a final entry a grading
-        // vector for the even and odd parts (separately).
-        
-        // IMPORTANT: We need to "suspend" this answer in order to get the splitting
-        // which is equal to Y. DO NOT SCREW WITH the ordering of retlist unless you
-        // are THINKING VERY CAREFULLY.
-        
-        setring RRR;
-        list l = imap(nR,l);
-        list retlist = l;
-        retlist[2] = l[3]; // suspend by replacing f0 by f1
-        retlist[3] = l[2]; // and f1 by f0
-        retlist[4] = l[5];
-        retlist[5] = l[4];
-        
-        if( useGrading )
-        {
-            retlist[6] = l[7]; // also suspend the gradings
-            retlist[7] = l[6];
-        }
-        kill l;
-        
-        dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
-            
-        return(retlist);
-    }
-    
-    // mfSplitIdempotent returns not just the splitting of the idempotent, but the
-    // actual maps splitting the idempotent. In the following notation, this means
-    // that s * t == ep and t * s == unitmat. Here t = l[2] and s = l[3].
-    
-    matrix final = l[1];
-    if( useGrading ){ intvec finalgr = l[4]; }
-    
-    matrix t = l[2]; // t: RT --> final
-    matrix s = l[3]; // s: final --> RT
-    
-    // We have now split the original idempotent e on Ablow, and the splittings are
-    matrix mapAblowToFinal = t * F;
-    matrix mapFinalToAblow = G * s;
-    
-    // Each of the homotopies in our list is a homotopy on RT, let us replace
-    // these by homotopies on final
-    if( homotopyList )
-    {
-        for(i=1;i<=size(Hlist);i++)
-        {
-            Hlist[i] = t * Hlist[i] * s;
-        }
-    }
-    
-    kill s,t,F,G,RT,e,ep,epstrict;
-    if( !returnAblow ){ kill Ablow; }
-    if( useGrading ){ kill RTgr; }
-        
-    // Back to the original ring and return. Note that we use fetch and not imap
-    // because we want to replace variables in nR by the variables in RRR in the same
-    // _position_ in ringlist.
-    setring RRR;
-    matrix final = fetch(nR,final);
-    matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
-    matrix mapFinalToAblow = fetch(nR,mapFinalToAblow);
-    if( returnAblow ){ matrix Ablow = fetch(nR, Ablow); }
-    if( homotopyList )
-    {
-        list Hlist = fetch(nR,Hlist);
-    }
-    
-    // Note that we really want a splitting of e[1] on Ablow[1], so let us suspend
-    final = mfSuspend( final );
-    mapAblowToFinal = mfSuspendMorph( mapAblowToFinal );
-    mapFinalToAblow = mfSuspendMorph( mapFinalToAblow );
-    if( useGrading ){ finalgr = mfSuspendGrading( finalgr ); }
-    if( returnAblow ){ Ablow = mfSuspend( Ablow ); }
-    
-    if( homotopyList )
-    {
-        for(i=1;i<=size(Hlist);i++)
-        {
-            Hlist[i] = mfSuspend( Hlist[i] ); // homotopies are suspended just like differentials
-        }
-    }
-    
-    if( !returnAblow )
-    {
-        // Normal behaviour
-        list retlist = list(final,mapAblowToFinal,mapFinalToAblow);
-    }
-    else
-    {
-        // Special behaviour
-        list retlist = list(final, mapAblowToFinal,mapFinalToAblow, Ablow);
-    }
-    
-    // Note that grading (if it exists) goes before homotopy list (if it exists!)
-    if( useGrading )
-    {
-        retlist = retlist + list(finalgr);
-    }
-
-    if( homotopyList )
-    {
-        retlist = retlist + list(Hlist);
-        kill Hlist;
-    }
-    
-    dbprint(printlevel, "[mfPushforward] result is size " + string(ncols(final)) + ".");
-    dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
-    kill final, mapAblowToFinal, mapFinalToAblow;
-        
-    return(retlist);
-}
-
-////////////////////////////////////////////////////////////////////
-// mfPushforwardInductive
-//
-// We are given a matrix A interpreted as the differential on a matrix factorisation X
-// of a potential W in our ring, together with a list of ring variables "intvars" and list NN
-// such that intvar[i]^NN[i] acts null-homotopically on X, and a matrix H[i] of degree one such that
-// A * H[i] + H[i] * A = intvar[i]^NN[i] * unitmat, i.e. the entries of H[i] give a homotopy between
-// intvar[i]^NN[i] and the zero map. We assume that, as a polynomial, W does not depend on the
-// variables intvar.
-//
-// Let S denote the ring obtained from our basering by deleting the intvars. We can restrict
-// scalars on X and obtain an infinite rank MF of W over S, the so-called "pushforward".
-// The first return value of this routine is the differential of a finite rank MF Y of W over S
-// homotopy equivalent to this pushforward.
-//
-// The second return value is the grading vector for A, if we are using gradings.
-//
-// The third (or second, if there is no grading) return value is a list R (of the same length
-// as intvars) whose entries are tuples
-//
-//       (F,G,u,NN,D[,r])
-//
-// which records the F and G matrices returned by mfPushforward at each stage of the computation,
-// along with the internal variable u in question and the exponent NN it is associated with. The D
-// is the differential of the pushforward, and r is its optional grading vector. Note that if in
-// the splitting we encounter non-square matrices the format is slightly different; see the code.
-
-proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
-{
-    int useSanityChecks = blowFlags("sanity_checks"); // Turn off to run faster
-    
-    system("--ticks-per-sec",1000);
-    int timeElapsed = timer;
-    
-    def RRR = basering;
-    list R;
-    
-    // Check for grading
-    int useGrading;
-    if( size(#) > 0 )
-    {
-        intvec Agr = #[1];
-        int useGrading = 1;
-    }
-    
-    // If we are not passed any internal variables, we perform no pushforward
-    if( size(intvars) == 0 )
-    {
-        list retlist = A;
-        if( useGrading )
-        {
-            retlist = retlist + list(Agr);
-        }
-        return(retlist);
-    }
-    
-    // Sanity check
-    int i;
-    if( useSanityChecks )
-    {
-        for(i=1;i<=size(intvars);i++)
-        {
-            if( A * H[i] + H[i] * A != intvars[i]^(NN[i]) * unitmat(ncols(A)) )
-            {
-                print("[mfPushforward] Not passed valid homotopies, exiting.");
-                return();
-            }
-        }
-    }
-    
-    // Inductively we contract off the action of each of the external variables, using
-    // the given homotopies. During the process we switch rings, killing off the 
-    // external variables that we have used up
-    
-    int count = 1;
-    def nR(1) = basering;
-    int useParameter;
-    
-    while( size(intvars) > 0 )
-    {
-        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count))); //debug
-        
-        // Do the reduction with respect to the first variable and homotopy, and
-        // induce homotopies on this reduction for the action of the rest of the variables
-        if( !useGrading )
-        {
-            list l = mfPushforward(A, intvars[1], NN[1], H);
-        }
-        else
-        {
-            list l = mfPushforward(A, intvars[1], NN[1], H, Agr);
-        }
-        
-        if( typeof(l[1]) == "string" )
-        {
-            // mfSplitIdempotent found, during mfPushforward, that it had to split
-            // an idempotent on a complex. Our return value in this situation is
-            // "nonsquare",[r1,r2],R' where r1,r2 are possible gradings. We are given
-            // "nonsquare",f0,f1,g0,g1,[r1,r2] by mfPushforward
-            poly ivar = intvars[1];
-            setring RRR;
-            
-            if( count > 1 )
-            {
-                list l = imap(nR(count),l);
-                poly ivar = imap(nR(count),ivar);
-            }
-            
-            list ll = "nonsquare";
-            
-            if( useGrading )
-            {
-                ll = ll + list(l[6],l[7]); // Add on r1,r2
-            }
-            
-            // Modify the current map list R by adding on the end the list
-            //
-            //    ("nonsquare",f0,f1,g0,g1,intvars[1],NN[1][,r1,r2])
-            //
-            // NOTE: We can't stick these together into block matrices (like the other
-            // entries in R) because we might be rank zero in one component
-            
-            list tempp = "nonsquare",l[2],l[3],l[4],l[5],ivar,NN[1];
-            if( useGrading ){ tempp = tempp + list(l[6],l[7]); }
-            R = R + list(tempp);
-            kill tempp;
-            
-            ll = ll + list(R);
-                        
-            dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
-            
-            return(ll);
-        }
-        
-        // Legend
-        // final = l[1] is the MF with intvars[1] excluded which is h.e. to the pushforward
-        // l[2] is a map Ablow[1] --> final
-        // l[3] is a map final --> Ablow[1] (where [1] means suspension)
-        // l[4] is the grading (if we are using gradings) or our modified list of homotopies
-        // l[5] is our homotopies if we are using the grading, and undefined otherwise
-    
-        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],NN[1],l[1][,l[4]]). Note
-        // we have to return to the original ring because l[2],l[3] may depend on
-        // external variables which we are going to delete in a moment
-        poly ivar = intvars[1];
-        
-        setring RRR;
-        
-            // The first time through nR(1) = RRR so there is no need for imap
-            if( count > 1 )
-            {
-                list l = imap(nR(count),l);
-                poly ivar = imap(nR(count),ivar);
-            }
-
-            // Add the tuple (F,G,u,NN,D[,r])
-            list tempp = l[2], l[3], ivar, NN[1], l[1];
-            if( useGrading ){ tempp = tempp + list(l[4]); }
-            R = R + list(tempp);
-            kill tempp;
-            
-        setring nR(count);
-        
-        // Remove the variable intvars[1] from our active ring
-        list rlist = ringlist(nR(count));
-        list varlist = rlist[2];
-    
-        // Create the new list of variables
-        int i;
-        for(i=1;i<=size(varlist);i++)
-        {
-            if( varlist[i] == string(intvars[1]) )
-            {
-                varlist = delete(varlist,i);
-                break;
-            }
-        }
-    
-        list newringList;
-        newringList[1] = rlist[1];
-        newringList[2] = varlist;
-        newringList[3] = rlist[3];
-        newringList[4] = rlist[4];
-        // Fix the variable weighting
-        intvec kk = (1..size(varlist));
-        for(i=1; i<=size(varlist); i++)
-        {
-            kk[i] = 1;
-        }
-        newringList[3][1][2] = kk;
-        
-        if( defined(minpolyblow) && defined(r) ) // deal with minpoly
-        { 
-            newringList[1][4][1] = 0;
-            useParameter = 1;
-        } 
-        
-        // Prepare for the next step of the induction
-        A = l[1];
-        if( useGrading ){ Agr = l[4]; }
-        
-        intvars = delete(intvars,1);
-        NN = delete(NN,1);
-        
-        if( size(intvars) == 0 )
-        {
-            break;
-        }
-
-        H = l[4 + useGrading];
-    
-        // Create our new ring
-        def nR(count+1) = ring(newringList);
-        setring nR(count+1);
-    
-        // Now complete the correct definition of nR by specifying the right minpoly: 
-        if( useParameter )
-        {
-            // Note that fetch uses the position of the ring variables, not the name, so 
-            // that fetch(var(1)) is always var(1).
-            poly minpolyblow = fetch(nR(count),minpolyblow); 
-            export(minpolyblow);
-            poly zz = subst(minpolyblow,var(1),r);
-            number nu = leadcoef(zz);
-            minpoly = nu;
-            kill zz, nu;
-        }
-        
-        matrix A = imap(nR(count),A);
-        list intvars = imap(nR(count),intvars);
-        list H = imap(nR(count),H);
-        
-        count++;
-    }
-    
-    // Return to the original ring
-    setring RRR;
-    matrix Anew = imap(nR(count),A);
-    
-    list retlist = Anew;
-    
-    if( useGrading )
-    {
-        retlist = retlist + list(Agr);
-    }
-    
-    // Add on the maps
-    retlist = retlist + list(R);
-    dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
-    
-    return(retlist);
-}
-
-proc displaySplittingRecord(list R)
-{
-    print("[displaySplittingRecord] Given a splitting record of length " + string(size(R)));
-    
-    int i;
-    for(i=1;i<=size(R);i++)
-    {
-        if( size(R[i]) == 4 )
-        {
-            string out = "[displaySplittingRecord]    Variable: ";
-            out = out + string(R[i][3]) + " exponent: " + string(R[i][4]);
-            out = out + " F: " + string(nrows(R[i][1])) + "x" + string(ncols(R[i][1])) + " G: ";
-            out = out + string(nrows(R[i][2])) + "x" + string(ncols(R[i][2]));
-            print(out);
-        }
-        else
-        {
-            string out = "[displaySplittingRecord]    Nonsquare, variable: ";
-            out = out + string(R[i][5]) + " exponent: ";
-            out = out + string(R[i][6]) + " f0: " + string(nrows(R[i][1])) + "x" + string(ncols(R[i][1]));
-            out = out + " f1: " + string(nrows(R[i][2])) + "x" + string(ncols(R[i][2]));
-            out = out + " g0: " + string(nrows(R[i][3])) + "x" + string(ncols(R[i][3]));
-            out = out + " g1: " + string(nrows(R[i][4])) + "x" + string(ncols(R[i][4]));
-            print(out);
-        }// f0,f1,g0,g1,intvars[1],N[1]
-    }
-}
-
-////////////////////////////////////////////////////////////////////
-// Old routines for computing cohomology
-//
-// The notation is given in Nils Carqueville "Computing BRST cohomology
-// algorithmically". Here is an overview. Let Q = (0 g \\ f 0) and
-// Q' = (0 g' \\ f' 0) be matrix factorisations of a common potential.
-// 
-// We define the operator dminus on even elements of Hom(Q,Q') (the Z2
-// graded Hom, before taking cohomology) and dplus on odd elements, by
-//
-// dminus(a) = Q' a - a Q    and   dplus(a) = Q' a + a Q.
-//
-// i.e. the differential on Hom(Q,Q'). To compute cohomology we want to
-// find the kernel and images of these maps, but first we convert them
-// into matrices. We do this by writing dminus (resp. dplus) as 2rr' x 2rr'
-// matrices which act on maps a represented as column vectors (in the natural
-// way, see the preprint). This is done in the routines dminus and dplus
-// below. Then we can take Ker and Im and, using matrix2vector and vector2matrix,
-// convert between the representations.
-
-////////////////////////////////////////////////////////////////////
-// rdsum
-//
-// Returns the matrix A^{\oplus r}
-
-proc rdsum(matrix A, int r)
-{
-    list B;
-    B[1]=A;
-    for (int i=2; i<=r; i++)
-    {
-        B[i]=dsum(B[i-1],A);
-    }
-    return(B[r]);
-}
-
-proc dminus(matrix f,g,f',g')
-{
-    int r=nrows(f);
-    int r'=nrows(f');
-    matrix P1=concat(tensor(f',unitmat(r)), rdsum(-transpose(f),r'));
-    matrix P2=concat(rdsum(transpose(-g),r'),tensor(g',unitmat(r)));
-    matrix P[2*r*r'][2*r*r']=P2,P1;
-    return(P);
-}
-
-proc dplus(matrix f,g,f',g')
-{ 
-    int r=nrows(f);
-    int r'=nrows(f');
-    matrix P1=concat(rdsum(transpose(f),r'),tensor(g',unitmat(r)));
-    matrix P2=concat(tensor(f',unitmat(r)),rdsum(transpose(g),r'));
-    matrix P[2*r*r'][2*r*r']=P1,P2;
-    return(P);
-}
-
-proc vector2matrix(list V, int r, int r')
-{
-    int i,j,k;
-    list M;
-    matrix ma[2*r'][2*r];
-    for(i=1; i<=size(V); i++){M = M + list(ma);}
-    for(i=1; i<=size(V); i++)
-    {
-        for(j=1; j<=r; j++)
-        {
-            for(k=1; k<=r'; k++)
-            {
-                M[i][k,j] = V[i][(k-1)*r + j, 1];
-                M[i][k+r',j+r] = V[i][(r'-1+k)*r + j, 1];
-            }
-        }
-    }
-
-    return(M);
-}
-
-proc vector2matrixFerm(list V, int r, int r')
-{
-    int i,j,k;
-    list M;
-    matrix ma[2*r'][2*r];
-    for(i=1; i<=size(V); i++){M = M + list(ma);}
-    for(i=1; i<=size(V); i++)
-    {
-        for(j=1; j<=r; j++)
-        {
-            for(k=1; k<=r'; k++)
-            {
-                M[i][k,j+r] = V[i][(k-1)*r + j, 1];
-                M[i][k+r',j] = V[i][(r'-1+k)*r + j, 1];
-            }
-        }
-    }
-    
-    return(M);
-}
-
-proc matrix2vector(matrix M)
-{
-    int r1 = ncols(M)/2;
-    int r2 = nrows(M)/2;
-    int i,ii,j,k;
-    vector v;
-    
-    // bosonic part:
-    for(ii=1; ii<= r2; ii++)
-    {
-        for(j=1; j<= r1; j++)
-        {
-            v = v + gen((ii-1)*r1 + j)*M[ii,j];
-        }
-    }
-
-    for(ii=1; ii<= r2; ii++)
-    {
-        for(j=1; j<= r1; j++)
-        {
-            v = v + gen(r1*r2 + (ii-1)*r1 + j)*M[ii+r2,j+r1];
-        }
-    }
-
-    // fermionic part:
-    for(i=1; i<= r2; i++)
-    {
-        for(j=1; j<= r1; j++)
-        {
-            v = v + gen(2*r1*r2 + (i-1)*r1 + j)*M[i,j+r1];
-        }
-    }
-
-    for(i=1; i<= r2; i++)
-    {
-        for(j=1; j<= r1; j++)
-        {
-            v = v + gen(2*r1*r2 + r1*r2 + (i-1)*r1 + j)*M[i+r2,j];
-        }
-    }
-
-    return(v);
-}
-
-////////////////////////////////////////////////////////////////////
-// MFco
-//
-// We are given the differentials (0 g \\ f 0) and (0 g' \\ f' 0) of two
-// matrix factorisations X,Y and we return a basis over the basefield for
-// the cohomology H of the two-periodic complex Hom(X,Y), as a list
-// MM with MM[1] a basis of H^0 and MM[2] a basis of H^1.
-
-proc MFco(matrix f,g,f',g')
-{
-    module M=syz(dminus(f,g,f',g'));
-    matrix Mker=M;
-    module Q=modulo(M,module(dplus(f,g,f',g')));
-    matrix base=kbase(std(Q));
-    matrix m = Mker*base;
-
-    module Mf=syz(dplus(f,g,f',g'));
-    matrix Mkerf=Mf;
-    module Qf=modulo(Mf,module(dminus(f,g,f',g')));
-    matrix basef=kbase(std(Qf));
-    matrix mf = Mkerf*basef;
-
-    int i;
-    int r = ncols(f);
-    int r' = ncols(f');
-    matrix ma[2*r'][2*r];
-    list L;
-    for(i=1; i<=ncols(m); i++){L = L + list(ma);}
-    intvec v1 = 1..nrows(m);
-    intvec v2;
-
-    list Lf;
-    for(i=1; i<=ncols(mf); i++){Lf = Lf + list(ma);}
-    intvec vf1 = 1..nrows(mf);
-    intvec vf2;
-
-    for(i=1; i<=ncols(m); i++)
-    {
-        intvec v2 = i;
-        L[i] = submat(m,v1,v2);
-    }
-
-    for(i=1; i<=ncols(mf); i++)
-    {
-        intvec vf2 = i;
-        Lf[i] = submat(mf,vf1,vf2);
-    }
-
-    list MMb = vector2matrix(L, r, r');
-    list MMf = vector2matrixFerm(Lf, r, r');
-
-    matrix null[2*r'][2*r];
-    list leer;
-    if(MMb[1] == null)
-        {MMb = leer;}
-    if(MMf[1] == null)
-        {MMf = leer;}
-
-    list MM;
-    MM[1] = MMb;
-    MM[2] = MMf;
-
-    return(MM);
-}
-
-proc MFcofull(matrix QQQ,PPP)
-{
-    matrix f = blocksq(QQQ)[3];
-    matrix g = blocksq(QQQ)[2];
-    matrix f' = blocksq(PPP)[3];
-    matrix g' = blocksq(PPP)[2];
-
-    list MM = MFco(f,g,f',g');
-    return(MM);
-}
-
-////////////////////////////////////////////////////////////////////
-// isMorphismNull
-//
-// Given two MFs QQQ, PPP (in block format) and a morphism F: QQQ --> PPP
-// returns 1 if the map is null-homotopic and zero otherwise
-
-proc isMorphismNull(matrix QQQ, matrix PPP, matrix F)
-{
-    if( PPP * F != F * QQQ )
-    {
-        print("[isMorphismNull] Given matrix is not a morphism, exiting.");
-        return();
-    }
-    
-    vector B = matrix2vector(F);
-    
-    matrix f = blocksq(QQQ)[3];
-    matrix g = blocksq(QQQ)[2];
-    matrix fp = blocksq(PPP)[3];
-    matrix gp = blocksq(PPP)[2];
-    
-    module M=syz(dminus(f,g,fp,gp));
-    matrix Mker=M;
-    
-    // Test that B (= F as a vector) actually belongs to the kernel of dminus
-    if( reduce(B, std(Mker)) != [0] )
-    {
-        print("[isMorphismNull] Strange error, exiting.");
-        return();
-    }
-    
-    // Test whether B is in the image of dplus
-    module im = module(dplus(f,g,fp,gp));
-    
-    if( reduce(B, std(im)) == [0] )
-    {
-        return(1);
-    }
-    else
-    {
-        return(0);
-    }
-}
-
-////////////////////////////////////////////////////////////////////
-// chernChar
-//
-// Given a matrix factorisation, returns the Chern character as a
-// reduced element modulo the Jacobi ideal (so two MFs have the same
-// chern char, as an element of the Jacobi algebra, iff the return
-// values of this routine are the same). By definition
-//
-//      ch(A) = (-1)^{n choose 2} str(diff(A,x(1)),...,diff(A,x(n))
-// 
-// where n is the total number of variables.
-
-proc chernChar(matrix A)
-{
-    // First determine the potential
-    poly W = (A*A)[1,1];
-    
-    // Now the Jacobi algebra
-    ideal jaci = jacob(W);
-    ideal J = std(jaci);
-    int numVars = nvars(basering);
-
-    int i;
-    matrix X = unitmat(ncols(A));
-    
-    for(i=1; i<=numVars;i++)
-    {
-        X = X * diff(A,var(i));
-    }
-    
-    int p = (numVars*(numVars-1))/2;
-    poly ch = (-1)^(p) * supertrace(X);
-    ch = reduce( ch, J );
-    return(ch);
 }
