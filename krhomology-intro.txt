@@ -1,0 +1,86 @@
+// README
+
+In this document we give a walkthrough of the major steps involved in computing the Khovanov-Rozansky
+homology of a link. The output is the Poincare polynomial, which encodes the dimension of each bidegree
+in the final homology. We begin with example code, which computes the N = 3 KR homology of the trefoil.
+Explaining this code will lead us naturally through the major components of the library.
+
+0. Example code
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "mfweb.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+ring rr=0,(x(1..6)),dp; // Create a polynomial ring Q[x1,...,x6], one variable per edge in the resolution
+int N = 3; // The N in sl(N) link homology
+printlevel = 1; // Turn on debugging output
+
+list trefoilLink = linkLibrary("trefoil"); // Load the link data (many simple knots and links are pre-encoded)
+list h = linkCompile(trefoilLink, "trefoil.mp", N);
+list cp = KRcomplex(trefoilLink, h, N);
+
+ring ss=(0,t,q),(x),dp; // Change rings to introduce parameters t, q for the Poincare polynomial
+list cp = imap(rr,cp); // Import the complex cp to the new ring
+list cohom = computeCohomology(cp);
+gradedPoincare(cohom, q, t);
+
+1. Overview of libraries
+
+blow.lib - Pushforwards of matrix factorisations
+mfweb.lib - Compilation of webs of matrix factorisations, using pushforwards
+linkhom.lib - Computation of KR homology, using compilation of webs
+
+2. General strategy
+
+We begin with a link, or rather a chosen planar diagram of a link, which is encoded as explained
+at the beginning of linkhom.lib. If the link has M crossings then there are 2^M "resolutions", each
+of which can be associated with a Z x Z/2-graded complex of finite-dimensional Q-vector spaces. Calling
+linkCompile on the link data returns these 2^M vector spaces, together with the maps between them
+given by the construction. From this, using KRcomplex, computeCohomology and gradedPoincare we end
+up with the desired Poincare polynomial.
+
+All the action happens inside linkCompile, which lives in linkhom.lib. There are two versions: one for
+unreduced and one for reduced homology; we will outline how the unreduced computation works, but the
+reduced computation is very similar.
+
+3. linkCompile
+
+We fix a planar diagram of our link, with M crossings. A "state" is the assignment of either 0 or 1 to
+each crossing. Such a state represents the resolution of the planar diagram where we resolve the ith
+crossing by either rerouting edges so that there is no crossing (if the state assigns 0 to the crossing)
+or by inserting a wide edge (if the state assigns 1 to the crossing), in the manner explained in [KR].
+
+For each state we compute a ZxZ/2-graded Q-vector space. This is done in two steps:
+
+    1. Construct a web representing the state (webFromLink).
+    2. Compute the associated ZxZ/2-graded vector space (webCompile).
+    
+It remains to explain what a "web" is, and what is means to "compile" a web. Let us leave this aside
+for the moment, and explain the remaining steps in linkCompile. These 2^M Q-vector spaces which we
+have now computed form the vertices of a hypercube, with maps between vertices corresponding to states
+differing in only one position. These maps are defined by Khovanov and Rozansky on the level of
+complexes, and the remaining step in linkCompile is to compute what these maps are on cohomology.
+So, for each one of these maps between vertices of the hypercube, we
+
+    3. Compute the associated map of ZxZ/2-graded vector spaces (webCompileMorphismFromData).
+    
+We also store intermediate computations to disk, to facilitate large computations running acrossing
+multiple machines.
+
+Next we explain what a web is, and how webCompile and webCompileMorphismFromData work. Once we have
+the graded vector spaces and maps, it is straightforward to combine these (KRcomplex) to form the
+Khovanov-Rozansky complex.
+
+4. What is a web?
+
+This should be explained sufficiently in the paper.
+
+5. webCompile
+
+
+TODO
+====
+
+Explain inflation.
