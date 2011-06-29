@@ -1,0 +1,24 @@
+// L7a7 link - reduced ///////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..14)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list L7a7 = linkLibrary("L7a7");
+list h = linkCompileReduced(L7a7, "whitehead-N" + string(N) + "-zoom-reduced.mp", N, x(1), 1);
+list cp = KRcomplex(L7a7, h, N);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+
+number poincare = gradedPoincare(cohom, q, t);
+poincare;
