@@ -34,3 +34,30 @@ poincare;
 
 // N = 4 (took 23450 seconds)
 // (q22+q20t+q20+q18t+q18+q16t+q16+q12t2+q10t4+q10t2+2q8t4+q8t2+3q6t4+3q4t4+2q2t4+t4)/(q22)
+
+// 6_1 //////////////////
+
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..12)),dp;
+int N = 2; // The N in sl(N) link homology
+printlevel = 1;
+
+list link7 = linkLibrary("6_1");
+list h = linkCompileReduced(link7, "./data/61-N" + string(N) + "-reduced.mp", N, x(1), 1);
+
+// The problem is that in some fusions we may end up with no internal variables! This is an edge
+// case which crashes webCompile
+
+list cp = KRcomplex(link7, h, N);
+
+ring ss=(0,t,q),(x),dp;
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+
+number poincare = gradedPoincare(cohom, q, t);poincare;
