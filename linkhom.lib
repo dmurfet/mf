@@ -38,9 +38,9 @@ LIB "mfweb.lib";
 // We represent this as a list (X,Y) consisting of an intvec X and a list Y, such that
 //
 // - X is an intvec of size m with X[i] = 1 if the i-th crossing of the link is positive
-// and X[i] = -1 if the crossing is negative.
+// and X[i] = -1 if the crossing is negative. We follow the positive/negative conventions of [KR].
 // - each entry of Y is an intvec of size 4 such that Y[i] labels the edges incident at
-//  the i-th crossing of the link, oriented in the usual clockwise fashion.
+//  the i-th crossing of the link, oriented in the usual clockwise fashion (see below).
 
 ////////////////////////////////////////////////////////////////////
 // linkLibrary
@@ -1028,7 +1028,6 @@ proc KRcomplex(list linkData, list linkComp, int N)
 {
     // linkComp[1] is a list of tuples (intvec state, int rank, int degree, intvec grading)
     // limkComp[2] is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
-    //dbprint(printlevel, "[KRcomplex] Computing KR complex for N = " + string(N)); //debug
     
     list h = linkComp[2];
     intvec vertexParity = linkData[1];
@@ -1196,7 +1195,7 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
             int rankk = webComp[i][2];
 
             // We do not include webs compiling to zero
-            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; } //debug
+            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; }
 
             // Look for this web as the source or target of something in h
             intvec weights = webComp[i][4];
@@ -1452,7 +1451,7 @@ proc linkCompile(list linkData, string fileName, int N)
         
         if( dimComp(0) == 0 && dimComp(1) == 0 )
         {
-            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero."); //debug
+            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero.");
             compDegree = -1;
             rankk = 0;
         }
@@ -1851,7 +1850,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
         
         if( dimComp(0) == 0 && dimComp(1) == 0 )
         {
-            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero."); //debug
+            dbprint(printlevel, "[mfCompileLink] Web " + intvecToString(v) + " compiled to zero.");
             compDegree = -1;
             rankk = 0;
         }
@@ -1917,6 +1916,8 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
 // odd, and -1 for both). We do not get the "right answers" for -1, and probably not unless
 // you choose the same degree in which the unreduced homology lives, but this means that the
 // correct value needs to be passed in by hand (for now).
+//
+// TODO: Correct these comments
 
 proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMark, int useDegree)
 {
@@ -2014,7 +2015,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         
             // Build a web suitable for calling webCompile
             list web = webFromLink(linkData, v, N, reductionMark);
-            
+                        
             execute("list " + listName2 + " = web;");
             
             // Call webCompile
@@ -2129,25 +2130,6 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                 // Lookup the degree in which these compilation products are nonzero
                 // At position i in returnListWebs is various information about the
                 // compilation of the "left" web.
-                //list bleft = returnListWebs[i];
-                
-                //if( bleft[1] != v )
-                //{
-                //    print("[linkCompile] Unexpected data format, exiting.");
-                //    return();
-                //}
-                
-                // Locate the target web
-                //for( int aa=1; aa<=size(returnListWebs); aa++ )
-                //{
-                //    if( returnListWebs[aa][1] == w )
-                //    {
-                //        int wPosition = aa;
-                //        break;
-                //    }
-                //}
-                
-                //list bright = returnListWebs[wPosition];
                 
                 // Now check to see if we have already compiled this map
                 string listName = "map" + intvecToString(v) + "to" + intvecToString(w);
@@ -2191,8 +2173,6 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                     
                     string cmd = "list " + listName + " = D;"; execute(cmd);
                     kill M;
-                    
-                    // TODO: Implement check of D's grade
                     
                     // Save the results to the savefile
                     dbprint(printlevel, "[linkCompileReduced] Saving to disk.");
@@ -2287,7 +2267,6 @@ proc loadSaveFile(string filename)
         if( typeof(L) == "list" )
         {
             // The first position is the variable name, the second the actual object
-            //dbprint(printlevel, "[loadFromMPfile]     Reading in variable " + L[1]);
             string cmd = "def " + L[1] + " = L[2];";
             execute(cmd);
 

@@ -2,7 +2,7 @@ version="0.1";
 category="Miscellaneous";
 // summary description of the library
 info="
-LIBRARY:   blow.lib  Compilation of defect webs
+LIBRARY:   blow.lib  Pushforwards of matrix factorisations
 AUTHOR:    Nils Carqueville, Daniel Murfet
 KEYWORDS:  matrix factorization
 
@@ -897,8 +897,6 @@ proc deltaQ(matrix F, intvec q)
 /////////////////////////////////////////////////////////////////////////////////////
 // "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X)
 /////////////////////////////////////////////////////////////////////////////////////
-// TODO: May be faster to compute dQ_X first, then mablow the result, rather than
-// mablowing every factor
 
 proc dQ(matrix f, intvec q, matrix C)
 {
@@ -933,20 +931,16 @@ proc dQ(matrix f, intvec q, matrix C)
         dels[j] = mablow(diff(f,x(j)), J);
     }
 
-    // TODO: Probably these summands are all equal and there is no point summing over
-    // n! of them.
     for(i=1; i<=size(S); i++)
     {
         intvec perm = S[i];
         matrix Ma = (-1)^(LengthSymElement(perm)) * unitmat(gg);    
         
-        //print("[dQ] Permutation is " + string(perm) + " with sign " + string(LengthSymElement(perm)));
         for(j=1; j<=numX; j++)
         {
             Ma = Ma * dels[perm[j]];
         }
         
-        //print("[dQ] Adding summand"); print(Ma);
         Mi = Mi + Ma; 
     }
 
@@ -3475,30 +3469,6 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     if( useGrading )
     {
         intvec RTgr = l[4];
-        
-        // This should agree with the old way of calculating
-        // debug, this test can be removed later
-        //if( RTgr != computeGradingFromInjection(G,Ablowgr) )
-        //{
-        //    print("[mfPushforward] Unexpected disagreement on grading, exiting.");
-        //    return();
-        //}
-        
-        if( 0 && useSanityChecks ) // debug unnecessary checks
-        {
-            // Check that F and G are degree zero
-            if( !checkMorphismDegree(Ablow, Ablowgr, RT, RTgr, F, 0) )
-            {
-                print("[mfPushforward] Map F is not degree zero, exiting.");
-                return();
-            }
-            
-            if( !checkMorphismDegree(RT, RTgr, Ablow, Ablowgr, G, 0) )
-            {
-                print("[mfPushforward] Map G is not degree zero, exiting.");
-                return();
-            }
-        }
     }
     
     kill l;
@@ -3607,7 +3577,6 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         }
         kill l;
         
-        //dbprint(printlevel, "[mfPushforward] splitting produced nonsquare matrices.");
         dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
             
         return(retlist);
@@ -3725,9 +3694,6 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
 // along with the internal variable u in question and the exponent NN it is associated with. The D
 // is the differential of the pushforward, and r is its optional grading vector. Note that if in
 // the splitting we encounter non-square matrices the format is slightly different; see the code.
-//
-// TODO: When we are happy that everything is working correctly, there is no need to store
-// D and r here; they are only used for sanity checks.
 
 proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
 {
@@ -3797,8 +3763,6 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
         
         if( typeof(l[1]) == "string" )
         {
-            //dbprint(printlevel, "[mfPushforwardInductive] Pushing forward produced nonsquare matrices.");
-            
             // mfSplitIdempotent found, during mfPushforward, that it had to split
             // an idempotent on a complex. Our return value in this situation is
             // "nonsquare",[r1,r2],R' where r1,r2 are possible gradings. We are given
