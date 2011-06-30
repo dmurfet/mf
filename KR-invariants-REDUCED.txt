@@ -8,11 +8,6 @@ REDUCED KR invariants for various knots and links
 Jobs running on: finzi, landi, lassus, ligeti, lully
 
 
-
-N = 5 unreduced WhiteheadV2 running on finzi since 2011-06-25 (at 16/32).
-
-
-
 Hopf link (aka L2a1, two components, see http://katlas.org/wiki/Image:L2a1.gif)
 
 N = 2 and Z2-degree 0:
@@ -255,6 +250,11 @@ N = 9 and Z2-degree 0:
 N = 9 and Z2-degree 1:
 (t3q16+tq20+q36)/(t3) (Took 15 minutes on finzi.)
 
+N = 10 and Z2-degree 0:
+RUNNING on finzi since 2011-06-30.
+N = 10 and Z2-degree 1:
+RUNNING on landi since 2011-06-30.
+
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Figure-eight knot (aka 4_1, see http://katlas.org/wiki/Image:4_1.gif)
@@ -296,7 +296,15 @@ Compiled all webs within two days, then:
    ? `_` is undefined
 
 N = 7 and Z2-degree 1:
-RUNNING on landi since 2011-06-26.
+Compiled all webs within two days, then:
+[linkCompileReduced] Now compiling maps.
+[linkCompileReduced] Looking at state [0,0,0,0] which is number [[ 1/16 ]].
+[linkCompileReduced]  Looking at the map to [1,0,0,0].
+[isMorphismDegreeZero] Not passed valid morphism, exiting.
+[webCompileMorphismFromData] M is not degree +1 in i = 1 j = 1
+// ** right side is not a datum, assignment ignored
+[linkCompileReduced] webCompileMorphism did not return a matrix.
+   ? `_` is undefined
 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
@@ -765,8 +773,6 @@ N = 3 and Z2-degree 1:
 (t4q2+t4+t2q8+3t2q6+t2q4+q12+q10)/(t2q8)
 
 N = 4 and Z2-degree 0:
-RERUNNING from scratch on lully since 2011-06-22 (64/64).
-
 Earlier linkCompileReduced computation went through successfully in 7.4 days on lully, but then:
 . list cp = KRcomplex(linki, h, N);
    ? error occurred in or before linkhom.lib::KRcomplex line 992: `parameter of cohomologies`
@@ -780,7 +786,18 @@ Singular : signal 11 (v: 3120/ 13650 ):
 current line:>>        return(read(filename));<<
 Segment fault/Bus error occurred at 7f594dd45018 because of 10206 (r:1308732064)
 please inform the authors
- 
+
+A rerun from scratch on lully again successfully compiles all webs (in about 8 days), but then:
+
+[linkCompileReduced] Now compiling maps.
+[linkCompileReduced] Looking at state [0,0,0,0,0,0] which is number [[ 1/64 ]].
+[linkCompileReduced]  Looking at the map to [0,0,1,0,0,0].
+   ? `p(1)` is not defined
+   ? error occurred in or before linkhom.lib::mfChi line 714: `parameter list #;p(1) - p(4) );        `
+   ? leaving linkhom.lib::mfChi
+   skipping text from `;` error at token `)`
+   ? leaving linkhom.lib::linkCompileReduced
+
 N = 4 and Z2-degree 1:
 
 
@@ -968,6 +985,7 @@ N = 2 and Z2-degree 1:
 
 N = 3 and Z2-degree 0:
 USE something better than ligeti for this.
+RUNNING on lully since 2011-06-30. 
 N = 3 and Z2-degree 1:
 USE something better than ligeti for this.
 
@@ -1220,11 +1238,18 @@ N = 3 and Z2-degree 1:
 L7a7 (three components, see http://katlas.org/wiki/L7a7)
 
 N = 2 and Z2-degree 0:
-TODO: this very quickly gives this error, which I don't understand as substrat *is* defined a few lines above 
-      line 1043:
-[webCompile] Entering round 2 of compilation.
-   ? identifier substrat not found in nR(2)
-   ? error occurred in mfweb.lib::webCompile line 1043: `        list substrat = imap(nR(count),substrat);`
-   ? leaving mfweb.lib::webCompile
+All webs compile in 2.8 hours, but then again:
+
+[linkCompileReduced] Now compiling maps.
+[linkCompileReduced] Looking at state [0,0,0,0,0,0,0] which is number [[ 1/128 ]].
+[linkCompileReduced]  Looking at the map to [1,0,0,0,0,0,0].
+[linkCompileReduced] Saving to disk.
+[linkCompileReduced]  Looking at the map to [0,1,0,0,0,0,0].
+[isMorphismDegreeZero] Not passed valid morphism, exiting.
+[webCompileMorphismFromData] M is not degree +1 in i = 1 j = 1
+// ** right side is not a datum, assignment ignored
+[linkCompileReduced] webCompileMorphism did not return a matrix.
+   ? `_` is undefined
+
 N = 2 and Z2-degree 1:
 
