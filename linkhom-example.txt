@@ -5,13 +5,13 @@
 option(noredefine);option(noloadLib);option(redSB);
 LIB "linkhom.lib";
 
-list linkData = linkLibrary("figure-eight"); // e.g. trefoil, 6_1, 6_2, see linkhom.lib/linkLibrary
+list linkData = linkLibrary("trefoil"); // e.g. trefoil, 6_1, 6_2, see linkhom.lib/linkLibrary
 int numVar = linkNumberOfVariables(linkData); // number of ring variables required
 ring rr=0,(x(1..numVar)),dp; // we work over the ring Q[x(1),...,x(numVar)]
 int N = 2; // The N in sl(N) link homology
 printlevel = 1; // Turn on debugging output
 
-list h = linkCompile(linkData, "./temp.txt", N); // Output data constructs to temp.mp
+list h = linkCompile(linkData, "./temp.mp", N); // Output data constructs to temp.mp
 list cp = KRcomplex(linkData, h, N); // Compute KR complex from compilation h
 
 ring ss=(0,t,q),(x),dp; // Switch to a ring with parameters t,q for Poincare polynomial
@@ -24,3 +24,26 @@ poincare; // KR homology, encoded as the Poincare polynomial
 /////////////////////////////////////////////
 // Generic example of reduced KR homology
 /////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "linkhom.lib";
+
+list linkData = linkLibrary("trefoil");
+int numVar = linkNumberOfVariables(linkData);
+ring rr=0,(x(1..numVar)),dp;
+int N = 2;
+printlevel = 1;
+
+// Note that the reduced homology lives in both Z2-degrees, but linkCompileReduced
+// will only return one degree at a time. The final argument tells it which degree
+// to return (0 for even and 1 for odd). You specify which component of the link is
+// "marked" by specifying a variable as the second last component.
+list h = linkCompileReduced(linkData, "./temp-reduced.mp", N, x(1), 1);
+list cp = KRcomplex(linkData, h, N);
+
+ring ss=(0,t,q),(x),dp;
+
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number poincare = gradedPoincare(cohom, q, t);
+poincare; // reduced KR homology, encoded as the Poincare polynomial
