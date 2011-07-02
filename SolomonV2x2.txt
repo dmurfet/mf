@@ -1,0 +1,45 @@
+option(noredefine);option(noloadLib);option(redSB);//option(prot);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+LIB "mfweb.lib";
+ring rr=0,(x(1..8)),dp;
+int N = 5; // The N in sl(N) link homology
+printlevel = 1;
+
+list solomon = linkLibrary("solomon_version_2");
+list h = linkCompileReduced(solomon, "solomon_version_2-N5-reduced_x2_0.mp", N, x(2), 0);
+list cp = KRcomplex(solomon, h, N);
+
+ring ss=(0,t,q),(x),dp;
+list cp = imap(rr,cp);
+list cohom = computeCohomology(cp);
+number euler = gradedEuler(cohom,q);
+
+number poincare = gradedPoincare(cohom, q, t);poincare;
+
+// BUG HUNTIN
+
+list leftWeb = webFromLink(solomon, intvec(0,0,0,0), N, x(2));
+list rightWeb = webFromLink(solomon, intvec(1,0,0,0), N, x(2));
+
+// We are interested in the first MF in these webs. leftWeb[3][1] and rightWeb[3][1] are the two
+// MFs between which we have a "failed" morphism
+
+list linkData = solomon;
+intvec vertexParity = linkData[1];
+list edgeList = linkData[2];
+intvec e = edgeList[1];
+
+matrix X1 = mfVertex(0, list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+matrix X2 = mfVertex(1, list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+matrix M = mfChi(0, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
+
+// These are the matrices in leftWeb and rightWeb, i.e. the matrices between which
+// there is a failed morphism
+subst(X1,x(2),0) == leftWeb[3][1];
+subst(X2,x(2),0) == rightWeb[3][1];
+
+// Note that M already fails to be a morphism before setting x(2) = 0.
+X2 * M == M * X1;
