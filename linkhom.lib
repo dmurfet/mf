@@ -689,16 +689,25 @@ proc mfVertexGrading(int zeroOrOne, int N)
 ////////////////////////////////////////////////////////////////////
 // mfChi
 //
-// mfChi(zeroOrOne,x(1),x(2),x(3),x(4),N) is the map C(Gamma^0) --> C(Gamma^1)
+// mfChi(zeroOrOne,p(1),p(2),p(3),p(4),N) is the map C(Gamma^0) --> C(Gamma^1)
 // from [KR, p.50] for zeroOrOne=0, and the map C(Gamma^1) --> C(Gamma^0)
 // from [KR, p.51] for zeroOrOne=1.
+//
+// NOTE: The definition of the maps in [KR] involves parameters mu, lambda,
+// which are allowed to take any integer value. We set these equal to zero,
+// for the simple reason that in some examples nonzero values give rise to
+// bugs (note that according to KR all values of mu, lambda should give rise
+// to homotopic maps, so there should be no bugs... nonetheless).
+//
+// If you get error messages about matrices not being morphisms during
+// compilation, try messing with the values of mu and lambda.
 ////////////////////////////////////////////////////////////////////
 
 proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 {
     if( zeroOrOne == 0 )
     {
-        number mu = 1/2;
+        number mu = 0;
 
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
@@ -714,7 +723,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 
     if( zeroOrOne == 1 )
     {
-        number lambda = 1/2;
+        number lambda = 0;
         
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
@@ -2142,6 +2151,8 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                     M = subst(M,reductionMark,0);
                     kill e;
 
+                    // CAUTION: If you get error messages regarding M not being a morphism, try
+                    // changing the values of mu and lambda in mfChi.
                     def Dp = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
                     
                     // The output of webCompileMorphism should be a matrix.

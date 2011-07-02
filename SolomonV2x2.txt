@@ -32,8 +32,8 @@ intvec vertexParity = linkData[1];
 list edgeList = linkData[2];
 intvec e = edgeList[1];
 
-matrix X1 = mfVertex(0, list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
-matrix X2 = mfVertex(1, list(var(e[1]),var(e[2]),var(e[3]),var(e[4])), N);
+matrix X1 = mfIdentityEdge( var(e[1]),var(e[2]),var(e[3]),var(e[4]), N );
+matrix X2 = mfWideEdge( var(e[1]),var(e[2]),var(e[3]),var(e[4]), N );
 matrix M = mfChi(0, var(e[1]), var(e[2]), var(e[3]), var(e[4]), N);
 
 // These are the matrices in leftWeb and rightWeb, i.e. the matrices between which
@@ -43,3 +43,5 @@ subst(X2,x(2),0) == rightWeb[3][1];
 
 // Note that M already fails to be a morphism before setting x(2) = 0.
 X2 * M == M * X1;
+
+// With mu = lambda = 0, the above now works...
