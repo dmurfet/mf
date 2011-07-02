@@ -11,6 +11,7 @@ PROCEDURES:
 
 LIB "linalg.lib";
 LIB "matrix.lib";
+LIB "control.lib"; // for rightKernel
 LIB "ring.lib";
 LIB "blow.lib";
 LIB "mfweb.lib";
@@ -420,6 +421,33 @@ proc linkLibrary(string s)
     return(retLink);
 }
 
+////////////////////////////////////////////////////////////////////
+// linkNumberOfVariables
+//
+// Given a link (as returned by linkLibrary) returns the number of
+// variables needed in the basering
+
+proc linkNumberOfVariables(list linkData)
+{
+    list edgeList = linkData[2];
+    
+    int i;
+    int mx = 1;
+    for(i=1;i<=size(edgeList);i++)
+    {
+        int j;
+        for(j=1;j<=4;j++)
+        {
+            if( edgeList[i][j] > mx )
+            {
+                mx = edgeList[i][j];
+            }
+        }
+    }
+    
+    return(mx);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 // gpoly - returns the polynomial g of [KR] p.48.
 /////////////////////////////////////////////////////////////////////////////////////
@@ -707,7 +735,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
 {
     if( zeroOrOne == 0 )
     {
-        number mu = 0;
+        number mu = 1;
 
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
