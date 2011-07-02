@@ -77,23 +77,31 @@ OBSERVATIONS (incomplete):
 -- In our examples the choice of mark does not matter. 
 -- Our results for Z2-even and Z2-odd reduced KR invariants always differ by a factor q^(N-1); 
    the Z2-degree with the higher q-degree is given by #crossings + #components + 1 mod 2.  
--- L6a3 version 1 much easier to compute than L6a3 version 2, for example...
+-- L6a3 version 1 much easier to compute than L6a3 version 2, for example. Similarly for Solomon's knot... 
 -- Regarding the need to sometimes replace q <--> 1/q and t <--> 1/t to get agreement with Knot Atlas, [GSV] or
    [DGR], see also remark at end of section 2.4 in [DGR, journal version, p.134].
 -- We are (so far) not very systematic or complete about which link invariants we compute. For example, there are
    many 7-crossings knots that we don't consider, and similarly we don't look at other "versions" of L6a5 and L6n1.
+-- Rasmussen's formulas for unreduced KR homology for figure-eight knot and torus knots of type T(2,m) also holds
+   for N=3 and N=4. (Rasmussen could not prove this for these values of N.)
+-- Rasmussen's formula for reduced KR homology in terms of Homfly also holds for N=3 and N=4 in our calculations
+   for 2-bridge _KNOTS_. (Rasmussen could not prove this for these values of N.)
+-- All prime links with exactly two components and up to six crossings are 2-bridge, but Rasmussen's formula 
+   works for none of them (where I both computed Homfly by hand and tried the one from katlas.org). The formula
+   already fails in the sense that the expression HOMFLY[a, p - 1/p] /. {a -> (q^n t^(-1)), p -> (I q t^(-1/2))}
+   has terms like 1/(q^2 + t), t^(1/2) and (-1)^(1/2) in it. 
 
 TODOs:
 -- Implement virtual crossings for virtual links (see appendix of [KR 2007]).
 -- Try other marks on same component and compare (should give same reasult!).
--- Explicitly check whether Rasmussen's formula for reduced KR in terms of Homfly for 2-bridge knots also holds for
-   N=3 and N=4 in our calculations.
 -- Go through all of code, make nicer where possible...
 -- Try to guess general formulas for unreduced KR invariants. Compute more unreduced examples. 
--- Apply the argument of [GIKV, section 3.1] to other 2-component links to get invariants for general N; 
-       see also [GSV, eq. (5.5)]. In particular, all our 2-component links (L4a1, L5a1, L6a1, L6a2, L6a3) have 
-       nothing but unknots for components! 
+-- Why does the GSV trick work for L4a1, L5a1, L6a1, but not for L6a1_v2, L6a2, L6a2_v2, L6a3? 
+-- Is there also a GSV trick for 3-component links? Ask Gukov! 
 -- Check the unreduced homology lives in the right degree in our examples. 
+-- Fix the "Not passed valid morphism"-bug. 
+-- Ask Rasmussen whether he has a formula for 2-bridge links. (Maybe the best he can do is his Theorem 5.3
+   which says "Suppose that L is ... a two-bridge knot ..., and suppose that det L != 0. Then L is N-thin (WITH RESPECT TO EITHER COMPONENT) for all N > 4.".)
 
 DAN's TODO list:
 - Autoequivalences from adjunctions: issue with totalisation
@@ -163,6 +171,9 @@ http://arxiv.org/abs/1106.4789
 
 Aganagic/Shakirov: 
 http://arxiv.org/abs/1105.5117 
+
+Other useful links:
+http://mathoverflow.net/questions/31025/intuitive-explanation-for-the-use-of-matrix-factorizations-in-knot-theory
 
 Not yet properly read:
 http://arxiv.org/abs/math/0201219
