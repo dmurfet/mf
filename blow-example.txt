@@ -6,6 +6,8 @@
 //          mfPushforward, but fuseDefects is a distinct code base. It is likely
 //          that mfPushforward will be faster in general than fuseDefects.
 //
+// R series - Examples of defect actions on boundary conditions.
+//
 // H series - Computing Hom spaces using fuseDefects. The point is that the answers
 //          can be compared with independent calculations in the stable category of MFs.
 
@@ -110,6 +112,203 @@ webVerify(web);
 list compStrat = defaultCompStratForWeb(web);
 list L = webCompilePair(web, compStrat);
 print(L[1]); // Answer is the same as before (up to isomorphism, there are some signs)
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE R1 - Identity defect acting on (x,x^4)
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=0,(x(1),y(1)),dp;
+poly W = x(1)^5;
+
+// Define X, I where X is the identity defect
+matrix I[2][2] = 0, y(1)-x(1), (y(1)^5 - x(1)^5)/(y(1)-x(1)), 0;
+matrix X[2][2] = 0, x(1), x(1)^4, 0;
+
+list l = fuseDefects(I, X, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+ep * ep == ep; // is ep is an idempotent "on the nose"?
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 1 );
+print(final); // Answer should be (y(1)^4,y(1))
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE R2 - two variable example, using a root of unity
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=(0,r),(x(1),x(2),y(1),y(2)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
+
+int baa=5;
+poly W = x(1)^baa + x(2)^baa;
+
+// Define the matrix factorisations
+matrix X[2][2] = 0, x(1) + r^2 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^2 * x(2)), 0;
+matrix Y1[2][2] = 0, x(1) + r^3 * x(2), -(x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2)), 0;
+matrix Y2[2][2] = 0, y(1) + r^4 * y(2), (y(1)^baa + y(2)^baa)/(y(1) + r^4 * y(2)), 0;
+matrix Y = MFtensor(Y1, Y2);
+
+// X and Y factorise W and W(y) - W(x) respectively
+X * X == W * unitmat(2);
+Y * Y == (y(1)^baa + y(2)^baa - x(1)^baa - x(2)^baa) * unitmat(4);
+
+// The fusion of Y with X is the image of X under the kernel functor with kernel Y
+list l = fuseDefects(Y, X, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+ep * ep == ep; // ep is an idempotent on the nose
+
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 2 );
+print(final);
+
+// Scaling d1 by a scalar C and d0 by the scalar 1/C gives an
+// isomorphic matrix factorisation
+number c = -r^3 - r^2 - 1;
+matrix scale[2][2] = c, 0, 0, 1/c;
+final == scale * Y2;
+
+// We conclude that the fusion of Y with X is isomorphic to Y2.
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE R3 - Defect action on fundamental branes in A-type minimal model
+//
+// We want to check against eq. (6.36) of [Brunner/Roggenkamp 0707.0922] which
+// says that P_{m,m+1} x T_a = T_{a-1} + T_{a+1}. (See their (6.2) and (6.29)
+// for the notation.)
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=(0,r),(x(1),y(1)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
+
+int d = 5;
+poly W = x(1)^d;
+
+int m = 1;
+int a = 1;
+
+// Define T and P
+matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
+matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
+
+// Do the fusion
+list l = fuseDefects(P, T, W);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD
+ep * ep == ep; // is ep is an idempotent "on the nose"?
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 1 );
+print(final);
+
+// According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
+// T2 := (0, y(1)^2 // y(1)^3, 0), which is the output of the above.
+
+// Now run the above with a = 2 instead of a = 1.
+
+a = 2;
+matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
+matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
+list l = fuseDefects(P, T, W);
+matrix RD = l[1];
+matrix ep = l[2];
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 1 );
+print(final);
+
+// According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
+// (0, y(1)^1 // y(1)^4, 0) + (0, y(1)^3 // y(1)^2, 0). 
+
+// Compute the endomorphisms of the MFs final and 
+// BR := (0, y(1)^1 // y(1)^4, 0) + (0, y(1)^3 // y(1)^2, 0): 
+
+def RRR = basering;
+def nR = ringWithoutXVars();
+setring nR;
+
+matrix final = imap(RRR, final);
+
+matrix BR[4][4] = 0, 0, y(1), 0,
+                  0, 0, 0, y(1)^3, 
+                  y(1)^4, 0,0,0,
+                  0, y(1)^2,0,0;
+
+list Fco  = MFcofull(final,final);
+list BRco = MFcofull(BR,BR);
+
+// final and BR have the same numbers of endobosons and endofermions:
+
+size(Fco[1]) - size(BRco[1]);
+size(Fco[2]) - size(BRco[2]);
+
+// Look at even morphisms between BR and final:
+
+int i;
+for(i=1; i<=5; i++)
+{
+    print(" ");
+    print(MFcofull(BR,final)[1][i]);
+}
+
+// The morphism M: BR -> final is an isomorphism (since its determinant is a nonzero constant):
+
+matrix M = MFcofull(BR,final)[1][1] + MFcofull(BR,final)[1][4];
+det(M);
+// TODO: Well in fact det(M) is not a constant any more.
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE R4 - Fusion of symmetry defects in A-type minimal models. 
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=(0,r),(x(1),y(1),y(2)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
+
+poly W = x(1)^5;
+
+// Define Pi = P_{i}, Pj = P_{j} and Pij = P_{i+j}:
+
+int i,j = 77,42;
+
+matrix Pj[2][2] = 0, ( x(1) - r^j * y(2) ), ( x(1)^5 - y(2)^5 )/(( x(1) - r^j * y(2) )), 0;
+matrix Pi[2][2] = 0, ( y(1) - r^i * x(1) ), ( y(1)^5 - x(1)^5 )/(( y(1) - r^i * x(1) )), 0;
+matrix Pij[2][2] = 0, ( y(1) - r^(i+j) * y(2) ), ( y(1)^5 - y(2)^5 )/(( y(1) - r^(i+j) * y(2) )), 0;
+
+list l = fuseDefects(Pi, Pj, W);
+matrix RD = l[1];
+matrix ep = l[2];
+ep * ep == ep;
+
+// The result is that is Pi x Pj is isomorphic to Pij. The actual isomorphism is sensitive
+// to the actual implementation of fuseDefects (and how certain matrices are reduced, etc.),
+// but for example the following works as of 3/7/2011.
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 1 );
+
+matrix scale[2][2] = -5, 0, 0, -1/5;
+final == scale * Pij;
+
+// Since scale * Pij is clearly isomorphic to Pij, we have the desired outcome.
+
+
+
+
+
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -255,231 +454,3 @@ print(mat_rk(ep1)); // Output is dim H^1 Hom(X,X)
 list H = MFcofull(X,X);
 print(H[1][1]); print(H[1][2]); print(H[1][3]); print(H[1][4]);
 print(H[2][1]); print(H[2][2]);
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE R4 - Fusion of symmetry defects in A-type minimal models. 
-//////////////////////////////////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=1;
-int ny=2;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(5);
-poly minpolyblow = (x(1)^4+x(1)^3+x(1)^2+x(1)+1);
-
-poly W = x(1)^5;
-
-// Define Pi = P_{i}, Pj = P_{j} and Pij = P_{i+j}:
-
-int i,j = 77,42;
-
-matrix Pj[2][2] = 0, ( x(1) - r^j * y(2) ), ( x(1)^5 - y(2)^5 )/(( x(1) - r^j * y(2) )), 0;
-matrix Pi[2][2] = 0, ( y(1) - r^i * x(1) ), ( y(1)^5 - x(1)^5 )/(( y(1) - r^i * x(1) )), 0;
-
-matrix Pij[2][2] = 0, ( y(1) - r^(i+j) * y(2) ), ( y(1)^5 - y(2)^5 )/(( y(1) - r^(i+j) * y(2) )), 0;
-
-list l = fuseDefects(Pi, Pj, W);
-matrix RD = l[1];
-matrix ep = l[2];
-print(ep * ep - ep);
-
-// The result is that is Pi x Pj is equal to -Pij and therefore isomorphic to Pij:
-
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final + Pij);
-
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE R2 - 2-variable example, defect is not the identity defect!
-//////////////////////////////////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=2;
-int ny=2;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(5);
-poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
-
-int baa=5;
-poly W = x(1)^baa + x(2)^baa;
-
-// Define X, Y and D = Y x X:
-
-matrix X[2][2] = 0, x(1) + r^2 * x(2), (x(1)^baa + x(2)^baa)/(x(1) + r^2 * x(2)), 0;
-matrix Y1[2][2] = 0, x(1) + r^3 * x(2), -(x(1)^baa + x(2)^baa)/(x(1) + r^3 * x(2)), 0;
-matrix Y2[2][2] = 0, y(1) + r^4 * y(2), (y(1)^baa + y(2)^baa)/(y(1) + r^4 * y(2)), 0;
-matrix Y = MFtensor(Y1, Y2);
-
-list l = fuseDefects(Y, X, W);
-matrix RD = l[1]; // Reduced inflation of Y x X
-matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final);
-
-print(final - Y2); // Answer is that Y x X is Y2, as expected
-
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE R1 - Identity defect acting on (x,x^4)
-//////////////////////////////////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=1;
-int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(5);
-poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
-
-int baa=5;
-poly W = x(1)^baa;
-
-// Define X, Y and D = Y x X:
-matrix fY[1][1] = y(1)-x(1); 
-matrix gY[1][1] = (y(1)^5 - x(1)^5)/(y(1)-x(1));
-matrix fX[1][1] = x(1); 
-matrix gX[1][1] = x(1)^4;
-matrix fD = MFtensorF(fY,gY,fX,gX);
-matrix gD = MFtensorG(fY,gY,fX,gX);
-matrix n1[1][1];
-matrix n2[2][2];
-matrix X = blockmat(n1,gX,fX,n1);
-matrix Y = blockmat(n1,gY,fY,n1);
-matrix D = blockmat(n2,gD,fD,n2);
-
-list l = fuseDefects(Y, X, W);
-matrix RD = l[1]; // Reduced inflation of Y x X
-matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final); // Answer should be (y,y^4)
-
-// Note this gives the suspension of X, but that's OK because Y is not the identity defect,
-// it is the suspension of the identity defect.
-
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE DQ1 (defect action on fundamental branes in A-type minimal model)
-//
-//         We want to check against eq. (6.36) of [Brunner/Roggenkamp 0707.0922] which
-//         says that P_{m,m+1} x T_a = T_{a-1} + T_{a+1}. (See their (6.2) and (6.29)
-//         for the notation.)
-//////////////////////////////////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=1;
-int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(5);
-poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
-
-int d = 5;
-poly W = x(1)^d;
-
-int m = 1;
-int a = 1;
-
-// Define T and P
-matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
-matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
-
-// Do the fusion
-list l = fuseDefects(P, T, W);
-matrix RD = l[1]; // Reduced inflation of Y x X
-matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final);
-
-// According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
-// T2 := (0, y(1)^2 // y(1)^3, 0). And indeed, if we define
-number c = (-1/5*r^2-1/5*r-1/5); 
-matrix f[4][2] = 1, 0, c*y(1), 0, 0, 1, 0, c * y(1)^2;  // morphism from T2[1] to RD
-matrix g[2][4] = 1,0,0,0,0,0,1,0;                       // morphism from RD to T2[1]
-// (f,g) is a splitting of ep: 
-print( g*f - unitmat(2) );
-print( f*g - ep );
-
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE DQ3 
-//////////////////////////////////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-int nx=1;
-int ny=1;
-ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
-minpoly = rootofUnity(5);
-poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
-
-int d = 5;
-poly W = x(1)^d;
-
-int m = 1;
-int a = 2;
-
-// Define T and P
-matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
-matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
-
-// Do the fusion
-list l = fuseDefects(P, T, W);
-matrix RD = l[1]; // Reduced inflation of Y x X
-matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], nx );
-print(final);
-
-// According to (6.36) of [Brunner/Roggenkamp 0707.0922], P x T should be isomorphic to
-// (0, y(1)^1 // y(1)^4, 0) + (0, y(1)^3 // y(1)^2, 0). 
-
-// Compute the endomorphisms of the MFs final and 
-// BR := (0, y(1)^1 // y(1)^4, 0) + (0, y(1)^3 // y(1)^2, 0): 
-
-def RRR = basering;
-def nR = ringWithoutXVars();
-setring nR;
-
-matrix final = imap(RRR, final);
-
-matrix BR[4][4] = 0, 0, y(1), 0,
-                  0, 0, 0, y(1)^3, 
-                  y(1)^4, 0,0,0,
-                  0, y(1)^2,0,0;
-
-list Fco  = MFcofull(final,final);
-list BRco = MFcofull(BR,BR);
-
-// final and BR have the same numbers of endobosons and endofermions:
-
-size(Fco[1]) - size(BRco[1]);
-size(Fco[2]) - size(BRco[2]);
-
-// Look at even morphisms between BR and final:
-
-int i;
-for(i=1; i<=5; i++)
-{
-    print(" ");
-    print(MFcofull(BR,final)[1][i]);
-}
-
-// The morphism M: BR -> final is an isomorphism (since its determinant is a nonzero constant):
-
-matrix M = MFcofull(BR,final)[1][1] + MFcofull(BR,final)[1][4];
-det(M);
