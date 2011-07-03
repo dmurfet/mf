@@ -21,7 +21,7 @@ LIB "ring.lib";
 //     0,(x(1..t),y(1..s)),dp    OR    (0,r),(x(1..t),y(1..s)),dp
 // 
 // for some integers t and s. The x-variables are the "internal" variables.
-// We always expect "r" to be the parameter defining an extension ring.
+// We always expect "r" to be the param defining an extension ring.
 //
 // In the second case where we define a ring extension, in addition to defining
 // the minpoly we expect that before using this library an additional variable
@@ -62,7 +62,7 @@ LIB "ring.lib";
 // For example, if X = X0 + X1 is a free module of rank 4, then g = (3 3 2 1) would express
 // that as a graded module X0 = R{3} + R{3} and X1 = R{2} + R{1} where R is the polynomial
 // ring with the doubled grading. Suppose that the potential W has |W| = 4, so n = 1. Then
-// the differential A = (0, a1 \\ a0, 0) would have to consist of a morphism
+// the differential A = (0, a1 newline a0, 0) would have to consist of a morphism
 // a0: R{3}+R{3} -> R{2}+R{1} of degree n+1 = 2, so 
 // |a0[1,1]| = 3,
 // |a0[1,2]| = 3,
@@ -89,11 +89,30 @@ LIB "ring.lib";
 // b before doing the logical AND, so if one uses flags to avoid computation, one has 
 // to nest ifs. 
 
+proc wackTest()
+{
+    if( defined(wack2) )
+    {
+        print("defined");
+    }
+}
+
 proc blowFlags(string s)
 {
+    // Throughout the code, there are various checks on the integrity of data
+    // (that certain things are morphisms, that MFs factorise the potential they
+    // should, and so on). These can slow down the code dramatically, but help
+    // locate bugs. Turn off for large computations.
     if( s == "sanity_checks" )
     {
-        return(0); // default is 1
+        if( defined(blow_flag_sanity_checks) )
+        {
+            return(1); 
+        }
+        else
+        {
+            return(0); // default is 0
+        }
     }
     
     // Turn on this flag if you want to optimise for small coefficients (of monomials)
@@ -108,7 +127,7 @@ proc blowFlags(string s)
     // be degree +1)
     if( s == "link_homology_checks" )
     {
-        return(1); // default is 0
+        return(0); // default is 0
     }
     
     if( s == "minbase_cutoff" )
@@ -116,9 +135,20 @@ proc blowFlags(string s)
         return(5); // default is 5
     }
     
+    // We make use of two storage options: ASCII and MPFILE. The flag use_mpfile
+    // controls which one is used (some operating systems only support ASCII).
+    // The default is to use ASCII since it is more compatible, but MPFILE is 
+    // much faster.
     if( s == "use_mpfile" )
     {
-        return(1); // default is 1
+        if( defined(blow_flag_use_mpfile) )
+        {
+            return(1);
+        }
+        else
+        {
+            return(0); // default is 0
+        }
     }
     
     // Cutoff for how high to look for a power of ring variables belonging
@@ -132,6 +162,9 @@ proc blowFlags(string s)
     {
         return(0); // default is 0
     }
+    
+    // We did not recognise this flag
+    print("[blowFlags] Flag not recognised, returning zero.");
     
     return(0);
 }
@@ -198,7 +231,7 @@ proc ringWithoutYVars()
     int numY = numYVars();
 
     // Define new ring -- exactly the same as RRR, but without the y-variables:
-    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters.
+    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of params.
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
@@ -229,7 +262,7 @@ proc ringWithoutYVars()
         }
         else
         {
-            print("[ringWithoutYVars] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+            print("[ringWithoutYVars] Ring param other than r, or unspecified minpolyblow. Please see the Usage Guide.");
         }
     }
     else
@@ -258,7 +291,7 @@ proc ringWithoutXVars()
     int numY = numYVars();
     
     // Define new ring -- exactly the same as RRR, but without the x-variables:
-    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of parameters.
+    // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of params.
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
@@ -290,7 +323,7 @@ proc ringWithoutXVars()
         }
         else
         {
-            print("[ringWithoutXVars] Ring parameter other than r, or unspecified minpolyblow. Please see the Usage Guide.");
+            print("[ringWithoutXVars] Ring param other than r, or unspecified minpolyblow. Please see the Usage Guide.");
         }
     }
     else
@@ -495,7 +528,7 @@ proc poly2matrix(poly tepo, ideal J, list variableActions, int jdim)
 // We are given a matrix A interpreted as the differential on a matrix factorisation X
 // of a potential W in our ring, together with a ring variable intvar and a power N.
 // We assume that W is a polynomial in the set of variables with intvar removed, and
-// we return the differential on the tensor product X \otimes Q[intvar]/(intvar^N).
+// we return the differential on the tensor product X otimes Q[intvar]/(intvar^N).
 
 proc mfInflate(matrix A, poly intvar, int N)
 {
@@ -830,7 +863,7 @@ proc SGroupintvecs(int n)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "deltaQ" is \delta Q^{\wedge n} (where below we have F=Q).
+// "deltaQ" is delta Q^{wedge n} (where below we have F=Q).
 //
 // q is an intvec containing the exponents responsible for defining the operators g_i,
 // so that g_i is division by x(i)^q[i] without remainder.
@@ -895,7 +928,7 @@ proc deltaQ(matrix F, intvec q)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "dQ" is d Q_X^{\wedge n} (where below we have f=Q_X)
+// "dQ" is d Q_X^{wedge n} (where below we have f=Q_X)
 /////////////////////////////////////////////////////////////////////////////////////
 
 proc dQ(matrix f, intvec q, matrix C)
@@ -962,7 +995,7 @@ proc dQ(matrix f, intvec q, matrix C)
 /////////////////////////////////////////////////////////////////////////////////////
 // "varTrans" gives a list L with two entries:
 // -- L[1]: an intvec q used to define g_i as division by x(i)^q[i] without remainder
-// -- L[2]: a matrix C such that x(i)^q[i] = \sum_j C_{i,j} \partial_j W
+// -- L[2]: a matrix C such that x(i)^q[i] = sum_j C_{i,j} partial_j W
 // This is possible if and only if the Jacobi algebra of W is finite-
 // dimensional, and we assume this is the case (otherwise this proc
 // may not terminate).
@@ -1169,8 +1202,8 @@ proc blocksq(matrix m)
 
 ////////////////////////////////////////////////////////////////////
 // zeromat - Returns a square zero matrix of the specified size if
-// called with one parameter, and a zero matrix of size n x m if called
-// with two parameters n, m.
+// called with one param, and a zero matrix of size n x m if called
+// with two params n, m.
 ////////////////////////////////////////////////////////////////////
 
 proc zeromat(int n, list #)
@@ -1192,8 +1225,8 @@ proc zeromat(int n, list #)
 // mfSuspend
 // 
 // Returns the suspension of the given matrix factorisation. If called
-// with no additional parameters we suspend once, otherwise we suspend
-// the number of times indicated by the second parameter.
+// with no additional params we suspend once, otherwise we suspend
+// the number of times indicated by the second param.
 
 proc mfSuspend(matrix A, list #)
 {
@@ -1242,8 +1275,8 @@ proc mfSuspendGrading(intvec g, list #)
 // mfSuspendMorph
 // 
 // Returns the suspension of the given even morphism of matrix factorisations. If called
-// with no additional parameters we suspend once, otherwise we suspend
-// the number of times indicated by the second parameter.
+// with no additional params we suspend once, otherwise we suspend
+// the number of times indicated by the second param.
 
 proc mfSuspendMorph(matrix A, list #)
 {
@@ -1545,7 +1578,7 @@ proc matrixSplitIdempotent(matrix E)
 // a list B, F, G consisting of the differential B on a MF Y splitting E and morphisms F: X -> Y,
 // G: Y -> X such that E = G * F and 1_Y = F * G.
 //
-// If we are given a third parameter we assume it is a grading vector for X and use it to compute
+// If we are given a third param we assume it is a grading vector for X and use it to compute
 // a grading vector r on Y making F,G homogeneous of degree zero. Our return is then B,F,G,r.
 //
 // NOTE: There is a special case. If the potential is zero and the splitting is a Z/2-graded
@@ -2198,7 +2231,7 @@ proc MFtensorBigradings(list g, list h)
 //
 // Takes as input an odd block 2x2 matrix A which we interpret as a differential
 // on a Z/2-graded free modules X. Returns the differential of the "dual" MF, namely
-// if A = (0 a1 \\ a0 0) then we return (0 transpose(a0) \\ -transpose(a1) 0)
+// if A = (0 a1 newline a0 0) then we return (0 transpose(a0) newline -transpose(a1) 0)
 
 proc MFdual(matrix A)
 {
@@ -2476,7 +2509,7 @@ proc mfReduce(matrix A, list #)
     kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
     
     // Partial check that F * G is homotopic to 1. Note that the
-    // check we use won't work to check G * F \simeq 1 because we
+    // check we use won't work to check G * F simeq 1 because we
     // need the MF in question to be reduced.
     if( useSanityChecks )
     {
@@ -2585,8 +2618,8 @@ proc isHomotopyIdempotent(matrix E)
 // and G: Y -> Xblow[1] such that F * G == unitmat and G * F is, up to homotopy, the same
 // idempotent on Xblow[1] determined by its direct summand the pushforward.
 //
-// If we are passed an intvec grading for A as the last parameter, we respect this grading
-// throughout and return as a fourth parameter a grading vector on Y.
+// If we are passed an intvec grading for A as the last param, we respect this grading
+// throughout and return as a fourth param a grading vector on Y.
 //
 // We assume that our ring is R = 0,(some variables, we don't care),dp.
 //
@@ -2595,7 +2628,7 @@ proc isHomotopyIdempotent(matrix E)
 // S is 0,(y(1),...,y(??)),dp. Naturally we convert back to the original ring before returning
 // our results.
 //
-// Note: if the fourth parameter is a _list_ of matrices then we assume that the first is the
+// Note: if the fourth param is a _list_ of matrices then we assume that the first is the
 // H described above, and the rest are homotopies on A. We then return an additional list consisting
 // of the homotopies induced on Y by these homotopies in the list.
 //
@@ -2717,11 +2750,11 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     newringList[3][1][2] = kk;
     kill kk;
     
-    int useParameter;
+    int useParam;
     if( defined(minpolyblow) && defined(r) ) // deal with minpoly
     { 
         newringList[1][4][1] = 0;
-        useParameter = 1;
+        useParam = 1;
     }
     
     // Create our new ring:
@@ -2729,7 +2762,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     setring nR;
     
     // Now complete the correct definition of nR by specifying the right minpoly: 
-    if( useParameter )
+    if( useParam )
     {
         // Note that fetch uses the position of the ring variables, not the name, so 
         // that fetch(var(1)) is always var(1).
@@ -3057,7 +3090,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
     
     int count = 1;
     def nR(1) = basering;
-    int useParameter;
+    int useParam;
     
     while( size(intvars) > 0 )
     {
@@ -3175,7 +3208,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
         if( defined(minpolyblow) && defined(r) ) // deal with minpoly
         { 
             newringList[1][4][1] = 0;
-            useParameter = 1;
+            useParam = 1;
         } 
         
         // Prepare for the next step of the induction:
@@ -3197,7 +3230,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
         setring nR(count+1);
     
         // Now complete the correct definition of nR by specifying the right minpoly: 
-        if( useParameter )
+        if( useParam )
         {
             // Note that fetch uses the position of the ring variables, not the name, so 
             // that fetch(var(1)) is always var(1).
@@ -3346,7 +3379,7 @@ proc chernChar(matrix A)
 ////////////////////////////////////////////////////////////////////
 // Old routines for computing cohomology
 //
-// Let Q = (0 g \\ f 0) and Q' = (0 g' \\ f' 0) be matrix factorisations
+// Let Q = (0 g newline f 0) and Q' = (0 g' newline f' 0) be matrix factorisations
 // of a common potential.
 // 
 // We define the operator dminus on even elements of Hom(Q,Q') (the Z2
@@ -3365,7 +3398,7 @@ proc chernChar(matrix A)
 ////////////////////////////////////////////////////////////////////
 // rdsum
 //
-// Returns the matrix A^{\oplus r}
+// Returns the matrix A^{oplus r}
 
 proc rdsum(matrix A, int r)
 {
@@ -3487,7 +3520,7 @@ proc matrix2vector(matrix M)
 ////////////////////////////////////////////////////////////////////
 // MFco
 //
-// We are given the differentials (0 g \\ f 0) and (0 g' \\ f' 0) of two
+// We are given the differentials (0 g newline f 0) and (0 g' newline f' 0) of two
 // matrix factorisations X,Y and we return a basis over the basefield for
 // the cohomology H of the two-periodic complex Hom(X,Y), as a list
 // MM with MM[1] a basis of H^0 and MM[2] a basis of H^1.
@@ -3874,7 +3907,7 @@ proc mfReduceAlt(matrix A, matrix e, list #)
     kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
     
     // Partial check that F * G is homotopic to 1. Note that the
-    // check we use won't work to check G * F \simeq 1 because we
+    // check we use won't work to check G * F simeq 1 because we
     // need the MF in question to be reduced.
     if( useSanityChecks && 0 ) //debug, forced off
     {
@@ -3947,7 +3980,7 @@ proc mfReduce_splitworker(matrix q0, matrix q1)
         return();
     }
     
-    // We break q0 as (a,b\\c,d) and q1 as (e, f \\ g,h ) and we assume
+    // We break q0 as (a,b newline c,d) and q1 as (e, f newline g,h ) and we assume
     // that q0 * q1 = q1 * q0 = W for some potential W, and that e is a
     // scalar.
     
