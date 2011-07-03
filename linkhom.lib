@@ -11,6 +11,7 @@ PROCEDURES:
 
 LIB "linalg.lib";
 LIB "matrix.lib";
+LIB "control.lib"; // for rightKernel
 LIB "ring.lib";
 LIB "blow.lib";
 LIB "mfweb.lib";
@@ -19,7 +20,7 @@ LIB "mfweb.lib";
 // USAGE GUIDE
 //
 // We expect the ambient ring to have the same number of variables as edges
-// in the link under consideration. In principle parameters should be OK, but
+// in the link under consideration. In principle params should be OK, but
 // this has not been checked.
 //
 // The references to [KR] are to Khovanov and Rozansky, "Matrix factorizations and
@@ -420,6 +421,33 @@ proc linkLibrary(string s)
     return(retLink);
 }
 
+////////////////////////////////////////////////////////////////////
+// linkNumberOfVariables
+//
+// Given a link (as returned by linkLibrary) returns the number of
+// variables needed in the basering
+
+proc linkNumberOfVariables(list linkData)
+{
+    list edgeList = linkData[2];
+    
+    int i;
+    int mx = 1;
+    for(i=1;i<=size(edgeList);i++)
+    {
+        int j;
+        for(j=1;j<=4;j++)
+        {
+            if( edgeList[i][j] > mx )
+            {
+                mx = edgeList[i][j];
+            }
+        }
+    }
+    
+    return(mx);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 // gpoly - returns the polynomial g of [KR] p.48.
 /////////////////////////////////////////////////////////////////////////////////////
@@ -693,7 +721,7 @@ proc mfVertexGrading(int zeroOrOne, int N)
 // from [KR, p.50] for zeroOrOne=0, and the map C(Gamma^1) --> C(Gamma^0)
 // from [KR, p.51] for zeroOrOne=1.
 //
-// NOTE: The definition of the maps in [KR] involves parameters mu, lambda,
+// NOTE: The definition of the maps in [KR] involves params mu, lambda,
 // which are allowed to take any integer value. We set these equal to zero,
 // for the simple reason that in some examples nonzero values give rise to
 // bugs (note that according to KR all values of mu, lambda should give rise
@@ -712,7 +740,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
         poly u2 = ( gpoly(p(3)+p(4), p(1)*p(2), N) - gpoly(p(3)+p(4), p(3)*p(4), N) )/( p(1)*p(2)-p(3)*p(4) );
-        poly aa1 = (mu - 1) * u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );        
+        poly aa1 = (mu-1) * u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );        
         
         matrix chi0[4][4] = p(4)-p(2) + mu*(p(1)+p(2)-p(3)-p(4)), 0, 0,    0,
                         aa1,        1, 0,    0,
@@ -961,7 +989,7 @@ proc computeCohomology(list cpx)
 // Takes as input a sequence of graded vector spaces, specified as a
 // tuple (m,V,H) as described as the ouput of computeCohomology. The return
 // is the graded Poincare polynomial. The second and third argument are 
-// the parameters to use (i.e., the q and t).
+// the params to use (i.e., the q and t).
 //
 // Recall that given a bigraded vector space H, the Poincare polynomial is
 //
@@ -995,7 +1023,7 @@ proc gradedPoincare(list cohom, number v, number u)
 //
 // Takes as input a sequence of graded vector spaces, specified as a
 // tuple (m,V,H) as described as the ouput of computeCohomology. The return
-// is the graded Euler characteristic. The second argument is the parameter
+// is the graded Euler characteristic. The second argument is the param
 // to use (i.e., the q).
 
 proc gradedEuler(list cohom, number v)
@@ -1203,7 +1231,7 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
             int rankk = webComp[i][2];
 
             // We do not include webs compiling to zero.
-            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; } //debug
+            if( rankk == 0 ){ print("[listWebsByDegree] Skipping zero web"); i++; continue; }
 
             // Look for this web as the source or target of something in h:
             intvec weights = webComp[i][4];
@@ -1269,7 +1297,7 @@ proc listWebsByDegree(list linkData, list linkComp, int N)
 //
 //   2. Y is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
 //   where state1, state2 range over all state diagrams, chitype is 0 or 1 resp. if the map
-//   is a \chi0 or \chi1 map, and chipos gives the position in the state diagram where the
+//   is a chi0 or chi1 map, and chipos gives the position in the state diagram where the
 //   map is inserted. Finally, F is the matrix of the map, the result of calling
 //   webCompileMorphism.
 //
@@ -1636,7 +1664,6 @@ proc linkCompile(list linkData, string fileName, int N)
                                         print("[linkCompile] !!!WARNING!!! Map is not degree +1.");
                                         print("[linkCompile] In position (" + string(i2) + "," + string(j2) + ") there is " + string(Dc[i2,j2]) + "." +
                                                 "The source has degree " + string(bleft[4][j2]) + " and the target " + string(bright[4][i2]) + ".");
-                                        //return(); debug
                                     }
                                 }
                             }
@@ -1898,7 +1925,7 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
 // linkCompileReduced
 //
 // Almost identical to linkCompile, except that we take an additional
-// parameter (a ring variable reductionMark) and use it to compute the reduced
+// param (a ring variable reductionMark) and use it to compute the reduced
 // bigraded sl(N) Khovanov-Rozansky homology. Essentially we take the webs from
 // the usual calculation, drop the edge with reductionMark on it, and substitute
 // reductionMark = 0 in all MFs.
@@ -1910,11 +1937,11 @@ proc linkCompileParts(list linkData, string fileName, int N, int startpost, int 
 //
 //   2. Y is a list of tuples (intvec state1,intvec state2,int chitype,int chipos,matrix F).
 //   where state1, state2 range over all state diagrams, chitype is 0 or 1 resp. if the map
-//   is a \chi0 or \chi1 map, and chipos gives the position in the state diagram where the
+//   is a chi0 or chi1 map, and chipos gives the position in the state diagram where the
 //   map is inserted. Finally, F is the matrix of the map, the result of calling
 //   webCompileMorphism.
 //
-// NOTE: The final parameter tells us which part of the Z/2-grading to use (0 for even, 1 for
+// NOTE: The final param tells us which part of the Z/2-grading to use (0 for even, 1 for
 // odd, and -1 for both). We do not get the "right answers" for -1, and probably not unless
 // you choose the same degree in which the unreduced homology lives, but this means that the
 // correct value needs to be passed in by hand (for now).
