@@ -223,6 +223,7 @@ proc numYVars()
 // "ringwithoutyvars" returns the ambient ring with y-variables removed
 // NOTE: We just return the ring, we do not change the current basering
 // NOTE: This assumes our only ring variables are xs and ys
+// NOTE: This does get called by linkhom.lib with numY = 0, i.e. nothing to do.
 //////////////////////////////////////////////////////////////////////////////////
 
 proc ringWithoutYVars()
@@ -234,12 +235,6 @@ proc ringWithoutYVars()
     if( numX == 0 )
     {
         print("[ringWithoutYVars] Cannot create a ring with no variables, failing.");
-        return();
-    }
-    
-    if( numY == 0 )
-    {
-        print("[ringWithoutYVars] No y-variables to remove, failing.");
         return();
     }
     
@@ -312,12 +307,6 @@ proc ringWithoutXVars()
     if( numY == 0 )
     {
         print("[ringWithoutXVars] Cannot create a ring with no variables, failing.");
-        return();
-    }
-    
-    if( numX == 0 )
-    {
-        print("[ringWithoutXVars] No x-variables to remove, failing.");
         return();
     }
     
