@@ -1565,7 +1565,7 @@ proc matrixSplitIdempotent(matrix E)
         return();
     }
     
-    print("[matrixSplitIdempotent] Split idempotent matrix in " + string(i-1) + " steps.");
+    // print("[matrixSplitIdempotent] Split idempotent matrix in " + string(i-1) + " steps."); // debug
     
     return(list(F,G));
 }
@@ -1619,7 +1619,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
     
-    print("[mfSplitIdempotent] Badness of worst coeff in E: " + string(size(string(worstMonomialCoeff(E))))); //debug
+    // print("[mfSplitIdempotent] Badness of worst coeff in E: " + string(size(string(worstMonomialCoeff(E))))); //debug
         
     // Extract the odd and even part of the differential and morphism:
     list blocks = extractblockmat(A);
@@ -1817,8 +1817,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // The differential on the splitting is given by:
     matrix B = F * A * G;
     
-    print("[mfSplitIdempotent] Badness of worst coeff in final B: " + string(size(string(worstMonomialCoeff(B))))); //debug
-    print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B))); //debug
+    //print("[mfSplitIdempotent] Badness of worst coeff in final B: " + string(size(string(worstMonomialCoeff(B))))); //debug
+    //print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B))); //debug
     
     list retll = B,F,G;
     
@@ -2320,7 +2320,7 @@ proc extractblockmat(matrix block)
 //
 // Returns the reduced tensor product of Y with X, as a pair (B, e) 
 // consisting of the differential B of a matrix factorisation of the total
-// potential and an idempotent endomorphism e whose splitting is (YxX)[n],
+// potential W and an idempotent endomorphism e whose splitting is (YxX)[n],
 // where n is the number of internal variables.
 
 proc fuseDefects(matrix Y, matrix X, poly W)

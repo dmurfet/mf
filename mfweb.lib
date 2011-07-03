@@ -668,6 +668,12 @@ proc subwebWithVertices(list web, list vertices)
 
 proc webVerify(list web)
 {
+    if( typeof(web[1]) != "int" || typeof(web[2]) != "list" || typeof(web[3]) != "list" )
+    {
+        print("[webVerify] Entries in web are not of type int, list, list, failed.");
+        return(0);
+    }
+    
     int useGrading = webIsGraded(web);
     int numVertices = webSize(web);
     
