@@ -1,5 +1,13 @@
 /////////////////////////////////////////////////////////////////////////////
 // Examples of defect fusion, pushforwards, etc. using blow.lib and mfweb.lib
+//
+// A series - Computing a boundary-defect fusion three ways, using fuseDefects,
+//          mfPushforward and webCompilePair. The last reduces, internally, to
+//          mfPushforward, but fuseDefects is a distinct code base. It is likely
+//          that mfPushforward will be faster in general than fuseDefects.
+//
+// H series - Computing Hom spaces using fuseDefects. The point is that the answers
+//          can be compared with independent calculations in the stable category of MFs.
 
 //////////////////////////////////////////////////////////////////////////////////////
 // EXAMPLE A1 - Tensoring (x,x2) with a factorisation of y^5 - x^3
@@ -11,10 +19,10 @@ ring rr=0,(x(1),y(1)),dp;
 poly W = x(1)^3;
 poly V = y(1)^5 - x(1)^3;
 
-// Define X, Y and D = Y x X:
-matrix X[2][2] = 0, x(1)^2, x(1), 0;
+matrix X[2][2] = 0, x(1)^2, x(1), 0; // X is a MF of W
 
 // Y is a factorisation of V, which we consider as a functor between MF(W) and MF(y(1)^5).
+// We want to compute the image of X under this functor, that is, the fusion of Y and X.
 matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
 matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
 matrix z[2][2];
@@ -22,29 +30,29 @@ matrix Y = blockmat(z,Y1,Y0,z);
 
 list l = fuseDefects(Y, X, W);
 matrix RD = l[1]; // Reduced inflation of Y x X
-matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final);
+matrix ep = l[2]; // Idempotent endomorphism of RD (up to homotopy)
+ep * ep == ep; // This endomorphism is actually a strict idempotent
+matrix A = mfSplitIdempotent(RD, ep)[1]; // Differential on the MF A splitting ep
+matrix final = mfSuspend( A, 1 ); // Differential on A[1]
+
+print(final); // This is the differential on the fusion of Y with X
+
+// The answer is a direct sum of two copies of the Koszul factorisation (y(1),y(1)^4)
 
 //////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE MFP1 - Tensoring (x,x2) with a factorisation of y^5 - x^3, using mfPushforward
+// EXAMPLE A2
+//
+// We do the computation of Example A1, but using mfPushforward instead of fuseDefects.
 //////////////////////////////////////////////////////////////////////////////////////
-
-// This is the old blow-example-An.txt redone with mfPushforward instead of fuseDefects
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
-LIB "matrix.lib";
 ring rr=0,(x(1),y(1)),dp;
+poly W = x(1)^3;
+poly V = y(1)^5 - x(1)^3;
 
-poly W = x(1)^3; // X is a MF of W
-poly V = y(1)^5 - x(1)^3; // Y is a MF of V
-
-// Define X, Y and D = Y x X:
 matrix X[2][2] = 0, x(1)^2, x(1), 0;
 
-// Y is a factorisation of V, which we consider as a functor between MF(W) and MF(y(1)^5).
 matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
 matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
 matrix z[2][2];
@@ -60,33 +68,33 @@ H * D + D * H == x(1)^2 * unitmat(ncols(D));
 list l = mfPushforward(D, x(1), 2, H);
 print(l[1]);
 
-// We get two copies of (y(1),y(1)^4), which agrees with the earlier calculation in blow-example-An.txt
+// Again, we get a direct sum of two copies of (y(1),y(1)^4)
 
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE MFP3 - Tensoring (x,x2) with a factorisation of y^5 - x^3, using webCompilePair
-//////////////////////////////////////////////////////////////////////////////////////
-
-// This is the old blow-example-An.txt redone with webCompilePair instead of fuseDefects
+/////////////////////////////////////////////////////////////////
+// EXAMPLE A3
+//
+// We do the computation of Example A1, A2 using webCompilePair
+/////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "matrix.lib";
-LIB "mfweb.lib";
 LIB "linkhom.lib";
 ring rr=0,(x(1),y(1)),dp;
 
-// Vertex 1 has one outgoing edge labelled with x(1)^3
-list vertex1 = list(list(),list(),list(x(1)),list(3));
+// We consider a web with two vertices and two edges
+//
+//    X ---- x(1)^3 ----> Y ---- y(1)^5 ---->
+//
+// Here the second edge goes to the boundary.
 
-// Vertex 2 has one incoming edge labelled with x(1)^3 and one outgoing edge labelled with y(1)^5.
-list vertex2 = list(list(x(1)),list(3),list(y(1)),list(5));
+// Format for an edge is source, target, variable, potential. Start indexing
+// your vertices at 1, since 0 stands for the boundary.
+list e1 = list(1,2,list(x(1)),x(1)^3);
+list e2 = list(2,0,list(y(1)),y(1)^5);
+list edgeList = list(e1,e2);
 
-list vertices = list(vertex1,vertex2);
-
-// Now define the mfs to be placed at each vertex 
+// Now define the mfs X,Y to be placed at each vertex 
 matrix X[2][2] = 0, x(1)^2, x(1), 0;
 
-// Y is a factorisation of V, which we consider as a functor between MF(W) and MF(y(1)^5).
 matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
 matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
 matrix z[2][2];
@@ -94,18 +102,14 @@ matrix Y = blockmat(z,Y1,Y0,z);
 
 list mfs = X, Y;
 
-list web = list(vertices,mfs);
-
+// Define the web
+list web = list(2, edgeList, mfs); // 2 for the number of vertices
 webVerify(web);
 
-// The compilation strategy is to write Y x X
-list compStrat = list(list(2,1),list(x(1)));
-
+// The compilation of this web is the fusion of Y with X. 
+list compStrat = defaultCompStratForWeb(web);
 list L = webCompilePair(web, compStrat);
-print(L[1]); // Answer is the same as before.
-
-list L = webCompile(web, compStrat);
-
+print(L[1]); // Answer is the same as before (up to isomorphism, there are some signs)
 
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -114,14 +118,11 @@ list L = webCompile(web, compStrat);
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
-LIB "matrix.lib";
-int nx=1;
-int ny=1;
-ring rr=0,(x(1..nx),y(1..ny)),dp;
+ring rr=0,(x(1),y(1)),dp;
 int baa=10;
 poly W = x(1)^baa;
 
-// We give ourselves matrix factorisations X and Y of W over k[x]
+// We give ourselves matrix factorisations X and Y of W
 matrix X[2][2] = 0, x(1), x(1)^(baa-1), 0;
 matrix Y[2][2] = 0, x(1)^4, x(1)^(baa-4), 0;
 
@@ -130,9 +131,11 @@ matrix Y[2][2] = 0, x(1)^4, x(1)^(baa-4), 0;
 list l = fuseDefects(MFdual(Y), X, W);
 matrix RD = l[1]; // Reduced inflation of MFdual(Y) x X
 matrix ep = l[2]; // Idempotent endomorphism of RD
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
-print(final); // Yields k + k[1].
+ep * ep == ep; // ep happens to be an idempotent "on the nose"?
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 1 );
+print(final); 
+
+// The output is a 2x2 zero matrix. This is the differential on the Z/2-graded vector space k + k[1].
 
 // We know that Hom(Y,X) is homotopy equivalent to the splitting of ep. Hence on
 // cohomology (which is automatically the case here, since RD has zero differential) the
@@ -169,27 +172,27 @@ isCM(M); isCM(N);
 Ext(2,N,M,1); Ext(2,Nsusp,M,1);
 
 //////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE H2 - Computing the endomorphism space of a certain MF over the E6 singularity
+// EXAMPLE H2 - Computing the endomorphism space of a  MF over the E6 singularity
 //////////////////////////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
-LIB "matrix.lib";
-int nx=2;
-int ny=1;
-ring rr=0,(x(1..nx),y(1..ny)),dp;
+ring rr=0,(x(1),x(2),y(1)),dp;
 poly W = x(1)^3 + x(2)^4;
 
+// Define the matrix factorisation
 matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2,-x(1) * x(2),-x(2)^3;
 matrix psi[3][3] = x(2),0,x(1),x(1),-x(2)^2,0,0,x(1),-x(2);
 matrix z[3][3];
 matrix X = blockmat(z,phi,psi,z);
+X*X == W * unitmat(6);
 
+// The fusion of X with its dual is Hom(X,X)
 list l = fuseDefects(MFdual(X), X, W);
 matrix RD = l[1];
 matrix ep = l[2];
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep) );
+ep * ep == ep; // ep happens to be idempotent on the nose
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep)[1], 1 );
 print(final);
 
 // The output is that Hom(X,X) is six dimensional, and Hom(X,X[1]) is six dimensional. We can
@@ -223,22 +226,21 @@ Ext(2,M,M,1); Ext(2,M,Msusp,1);
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
-LIB "matrix.lib";
-int nx=2;
-ring rr=0,(x(1..nx)),dp;
+ring rr=0,(x(1),x(2)),dp;
 poly W = x(1)^2 * x(2) + x(2)^4;
 
+// Define the matrix factorisation
 matrix phi[2][2] = x(1) * x(2), x(2)^2, x(2)^3, -x(1) * x(2);
 matrix psi[2][2] = x(1), x(2), x(2)^2, -x(1);
 matrix z[2][2];
 matrix X = blockmat(z,phi,psi,z);
+X * X == W * unitmat(4);
 
 // We know from previous calculations that End(X) is four dimensional.
-
 list l = fuseDefects(MFdual(X), X, W);
 matrix RD = l[1];
 matrix ep = l[2];
-print(ep * ep - ep); // is ep is an idempotent "on the nose"?
+ep * ep == ep; 
 
 // We see that RD has zero differential (of course) and 
 matrix ep0 = extractblockmat(ep)[1];
@@ -252,48 +254,14 @@ print(mat_rk(ep1)); // Output is dim H^1 Hom(X,X)
 
 list H = MFcofull(X,X);
 print(H[1][1]); print(H[1][2]); print(H[1][3]); print(H[1][4]);
-
 print(H[2][1]); print(H[2][2]);
 
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE MFP2
-//////////////////////////////////////////////////////////////////////////////////////
 
-option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "linkhom.lib";
-LIB "matrix.lib";
-LIB "control.lib";
-LIB "inout.lib";
 
-link l = "MPfile:r ./data/pokemon.mp";
-def final1 = read(l);
-def V1 = read(l);
-def T1 = read(l);
 
-// T1 is defined as the following tensor product
-T1 == MFtensor(final1,V1);
 
-// Our basering is now 0,(x(1),x(2),x(3),x(4)),dp
-matrix H(1) = 1/3 * ZZtensor( diff(final1,x(1)), unitmat(ncols(V1)) );
-matrix H(2) = 1/3 * ZZtensor( diff(final1,x(2)), unitmat(ncols(V1)) );
-matrix H(3) = 1/3 * ZZtensor( unitmat(ncols(final1)), diff(V1,x(3)) );
-matrix H(4) = 1/3 * ZZtensor( unitmat(ncols(final1)), diff(V1,x(4)) );
 
-// Check these are homotopies contracting the action of each x(i)^2
-int i;
-for(i=1;i<=4;i++)
-{
-    H(i) * T1 + T1 * H(i) == x(i)^2 * unitmat(32);
-}
 
-list varlist = x(1),x(2),x(3),x(4);
-list exps = 2,2,2,2;
-list homotopies = H(1),H(2),H(3),H(4);
-
-list L = mfPushforwardInductive(T1, varlist, exps, homotopies);
-
-// Takes about 7 seconds, as compared to 36 the old way.
 
 //////////////////////////////////////////////////////////////////////////////////////
 // EXAMPLE R4 - Fusion of symmetry defects in A-type minimal models. 
