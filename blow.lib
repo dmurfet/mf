@@ -222,6 +222,7 @@ proc numYVars()
 //////////////////////////////////////////////////////////////////////////////////
 // "ringwithoutyvars" returns the ambient ring with y-variables removed
 // NOTE: We just return the ring, we do not change the current basering
+// NOTE: This assumes our only ring variables are xs and ys
 //////////////////////////////////////////////////////////////////////////////////
 
 proc ringWithoutYVars()
@@ -229,17 +230,35 @@ proc ringWithoutYVars()
     def RRR = basering;
     int numX = numXVars();
     int numY = numYVars();
-
+    
+    if( numX == 0 )
+    {
+        print("[ringWithoutYVars] Cannot create a ring with no variables, failing.");
+        return();
+    }
+    
+    if( numY == 0 )
+    {
+        print("[ringWithoutYVars] No y-variables to remove, failing.");
+        return();
+    }
+    
     // Define new ring -- exactly the same as RRR, but without the y-variables:
     // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of params.
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
         list L = ringlist(RRR);
-        for(i=1;i<=numY;i++)
+        list newVars;
+        for(i=1;i<=numX;i++)
         {
-            L[2] = delete(L[2],numX+1);
+            string nv = "x(" + string(i) + ")";
+            newVars = newVars + list(nv);
+            kill nv;
         }
+        L[2] = newVars;
+        kill newVars;
+        
         intvec kk = (1..numX);
 
         for(i=1; i<=numX; i++)
@@ -254,9 +273,9 @@ proc ringWithoutYVars()
         if( defined(minpolyblow) && defined(r) )
         {
             setring nR;
-            poly minpolyblow = imap(RRR,minpolyblow);
+            poly minpolyblow = fetch(RRR,minpolyblow); // Use fetch so the minpoly stays using var(1)
             export(minpolyblow);
-            poly z = subst(minpolyblow,x(1),r);
+            poly z = subst(minpolyblow,var(1),r);
             number nu = leadcoef(z);
             minpoly = nu;
         }
@@ -290,16 +309,35 @@ proc ringWithoutXVars()
     int numX = numXVars();
     int numY = numYVars();
     
+    if( numY == 0 )
+    {
+        print("[ringWithoutXVars] Cannot create a ring with no variables, failing.");
+        return();
+    }
+    
+    if( numX == 0 )
+    {
+        print("[ringWithoutXVars] No x-variables to remove, failing.");
+        return();
+    }
+    
     // Define new ring -- exactly the same as RRR, but without the x-variables:
     // ringlist(RRR)[1] will be the characteristic followed by (possibly) the names of params.
     if(size(ringlist(RRR)[1]) > 1)
     {
         int i,j,k;
         list L = ringlist(RRR);
-        for(i=1;i<=numX;i++)
+        
+        list newVars;
+        for(i=1;i<=numY;i++)
         {
-            L[2] = delete(L[2],1);
+            string nv = "y(" + string(i) + ")";
+            newVars = newVars + list(nv);
+            kill nv;
         }
+        L[2] = newVars;
+        kill newVars;
+        
         intvec kk = (1..numY);
 
         for(i=1; i<=numY; i++)
@@ -313,11 +351,10 @@ proc ringWithoutXVars()
         // Now complete the correct definition of nR by specifying the right minpoly: 
         if( defined(minpolyblow) && defined(r) )
         {
-            poly K = subst(minpolyblow,x(1),y(1));
             setring nR;
-            poly minpolyblow = imap(RRR,K);
+            poly minpolyblow = fetch(RRR,minpolyblow);
             export(minpolyblow);
-            poly z = subst(minpolyblow,y(1),r);
+            poly z = subst(minpolyblow,var(1),r);
             number nu = leadcoef(z);
             minpoly = nu;
         }
@@ -429,7 +466,7 @@ proc deltaInflationList(int i, int exponent, ideal J)
 proc variableInflationList(ideal J)
 {
     int prl = printlevel;
-
+    
     def RRR = basering;
     def nR = ringWithoutYVars();
     setring nR;
@@ -437,6 +474,13 @@ proc variableInflationList(ideal J)
     ideal Jx = std(imap(RRR,J));
     ideal basis = kbase(Jx);
     int jdim = size(basis);
+    
+    if( jdim == 0 )
+    {
+        print("[variableInflationList] Internal algebra is zero-dimensional, exiting.");
+        return();
+    }
+    
     module BB = reduce(basis,Jx);
     module syzBB = std(syz(BB)); 
     
@@ -453,7 +497,7 @@ proc variableInflationList(ideal J)
             matrix MM = matrix(reduce(lift(BB,ff), syzBB));
             L = L + list(MM);
         }
-
+        
         matrix U = L[1];
         for(k=2; k<=jdim; k++)
         {
@@ -601,7 +645,7 @@ proc mfInflate(matrix A, poly intvar, int N)
 proc mablow(matrix M, ideal J)
 {
     int benchmark = 1; // Set to 1 to output benchmarking data
-
+    
     // Compute dimension of the algebra k[x-vars]/J:
     int n = dimAlgebraOverInternalVariables(J);
     
@@ -1345,8 +1389,6 @@ proc mfStrictifyIdempotent(matrix A, matrix U)
         return();
     }
     
-    //print("[mfStrictifyIdempotent] Vanishing order is " + string(vanishingOrder)); //debug
-    
     // vanishingOrder is the smallest integer positive such that N^vanishingOrder = 0.
     int i;
     matrix X[m][m];
@@ -1565,7 +1607,7 @@ proc matrixSplitIdempotent(matrix E)
         return();
     }
     
-    // print("[matrixSplitIdempotent] Split idempotent matrix in " + string(i-1) + " steps."); // debug
+    // print("[matrixSplitIdempotent] Split idempotent matrix in " + string(i-1) + " steps.");
     
     return(list(F,G));
 }
@@ -1619,7 +1661,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
         }
     }
     
-    // print("[mfSplitIdempotent] Badness of worst coeff in E: " + string(size(string(worstMonomialCoeff(E))))); //debug
+    // print("[mfSplitIdempotent] Badness of worst coeff in E: " + string(size(string(worstMonomialCoeff(E)))));
         
     // Extract the odd and even part of the differential and morphism:
     list blocks = extractblockmat(A);
@@ -1649,7 +1691,7 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
             else
             {
                 // The new way failed, try the old way:
-                print(""); //debug
+                print("");
                 print("[mfSplitIdempotent] New method failed [!######################!]");
                 print("");
                 
@@ -1817,8 +1859,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     // The differential on the splitting is given by:
     matrix B = F * A * G;
     
-    //print("[mfSplitIdempotent] Badness of worst coeff in final B: " + string(size(string(worstMonomialCoeff(B))))); //debug
-    //print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B))); //debug
+    //print("[mfSplitIdempotent] Badness of worst coeff in final B: " + string(size(string(worstMonomialCoeff(B)))));
+    //print("[mfSplitIdempotent] Worst coeff in final B: " + string(worstMonomialCoeff(B)));
     
     list retll = B,F,G;
     
@@ -2424,7 +2466,7 @@ proc mfReduce(matrix A, list #)
     {
         // Pull out the content of the matrix, to reduce to the size of coeffs being multiplied:
         number Acont = contentMat(A);
-        //print("[mfReduce] Content of A: " + string(Acont)); //debug
+        //print("[mfReduce] Content of A: " + string(Acont));
         A = A * 1/Acont;
     }
     
@@ -2547,7 +2589,7 @@ proc mfReduce(matrix A, list #)
                 return();
             }
             
-            // Check that B is actually reduced debug
+            // Check that B is actually reduced
             if( Bc != matrix(0,nrows(Bc),ncols(Bc)) )
             {
                 print("[mfReduce] Error, the return matrix is not reduced, exiting.");
@@ -2556,13 +2598,13 @@ proc mfReduce(matrix A, list #)
         }
     }
     
-    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
+    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B)));
     dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
     dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
     
     if( factorOutContent )
     {
-        B = B * Acont; //debug
+        B = B * Acont;
     }
     
     list ret = B, F, G;
@@ -2749,7 +2791,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     }
     newringList[3][1][2] = kk;
     kill kk;
-    
+        
     int useParam;
     if( defined(minpolyblow) && defined(r) ) // deal with minpoly
     { 
@@ -2781,13 +2823,14 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     {
         list Hlist = fetch(RRR,Hlist);
     }
-        
+    
     // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
     // Compute the inflation:
+
     ideal J = x(1)^N;
     matrix Ablow = mablow(A,J);
     if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
-
+    
     if( homotopyList )
     {
         for(i=1;i<=size(Hlist);i++)
@@ -3094,7 +3137,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
     
     while( size(intvars) > 0 )
     {
-        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count))); //debug
+        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count)));
         
         // Do the reduction with respect to the first variable and homotopy, and
         // induce homotopies on this reduction for the action of the rest of the variables.
@@ -3688,7 +3731,7 @@ proc zoomreduce(matrix A)
         n = n + 1;
     }
     
-    if( useSanityChecks ) //debug slow
+    if( useSanityChecks ) //debug very slow
     {
         matrix Afin = A;
         if( n > 0 ){ Afin = dsum(unitmat(n),Afin); }
@@ -3906,55 +3949,6 @@ proc mfReduceAlt(matrix A, matrix e, list #)
     if( useGrading ){ intvec Bgr = Bgr0, Bgr1; }
     kill zb,zf,zg,b1,b0,f0,f1,g0,g1;
     
-    // Partial check that F * G is homotopic to 1. Note that the
-    // check we use won't work to check G * F simeq 1 because we
-    // need the MF in question to be reduced.
-    if( useSanityChecks && 0 ) //debug, forced off
-    {
-        // Check that F and G are morphisms
-        if( F * A != B * F || G * B != A * G )
-        {
-            print("[mfReduceAlt] Either F or G is not a morphism, exiting.");
-            return();
-        }
-        
-        if( useGrading )
-        {
-            if( !isGradingValid(B, Bgr) )
-            {
-                print("[mfReduceAlt] Produced a non-valid grading on reduction, exiting.");
-                return();
-            }
-        }
-        
-        if( 0 ) // debug additional checks
-        {
-            matrix shouldBeZero = F * G - unitmat(nrows(F));
-            matrix Bc = B;
-            
-            int j;
-            for(j=1; j<=nvars(basering); j++)
-            {
-                shouldBeZero = subst(shouldBeZero,var(j),0);
-                Bc = subst(Bc,var(j),0);
-            }
-        
-            if( shouldBeZero != matrix(0,nrows(shouldBeZero),ncols(shouldBeZero)) )
-            {
-                print("[mfReduceAlt] F * G is not homotopic to the identity, exiting.");
-                return();
-            }
-            
-            // Check that B is actually reduced debug
-            if( Bc != matrix(0,nrows(Bc),ncols(Bc)) )
-            {
-                print("[mfReduceAlt] Error, the return matrix is not reduced, exiting.");
-                return();
-            }
-        }
-    }
-    
-    //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B))); //debug
     dbprint(printlevel, "[mfReduceAlt]          result is size " + string(ncols(B)) + ".");
     dbprint(printlevel, "[mfReduceAlt]          elapsed time " + string(timer-timeElapsed) + "ms.");
         

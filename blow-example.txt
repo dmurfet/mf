@@ -10,6 +10,9 @@
 //
 // H series - Computing Hom spaces using fuseDefects. The point is that the answers
 //          can be compared with independent calculations in the stable category of MFs.
+//
+// W series - Fusion of defect webs with more than two defects
+//
 
 //////////////////////////////////////////////////////////////////////////////////////
 // EXAMPLE A1 - Tensoring (x,x2) with a factorisation of y^5 - x^3
@@ -454,3 +457,49 @@ print(mat_rk(ep1)); // Output is dim H^1 Hom(X,X)
 list H = MFcofull(X,X);
 print(H[1][1]); print(H[1][2]); print(H[1][3]); print(H[1][4]);
 print(H[2][1]); print(H[2][2]);
+
+
+
+
+
+
+
+///////////////////////////////////////////////////
+// EXAMPLE W1 - Fusion of three defect web
+///////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "linkhom.lib";
+ring RRRR=(0,r),(x(1),y(1..3)),dp;
+minpoly = rootofUnity(3);
+poly minpolyblow = x(1)^2 + x(1) + 1;
+def blow_flag_sanity_checks;
+printlevel=1;
+
+matrix defect1[2][2] = 0,x(1)-r*y(1),(x(1)^3-y(1)^3)/(x(1)-r*y(1)),0;
+matrix defect2[2][2] = 0,y(2)-r*x(1),(y(2)^3-x(1)^3)/(y(2)-r*x(1)),0;
+matrix defect3[2][2] = 0,y(3)-r*y(2),(y(3)^3-y(2)^3)/(y(3)-r*y(2)),0;
+
+// Define a web with three vertices and four edges, i.e. a defect fusion
+//
+//    --- y(1) ---> defect1 ---- x(1) ----> defect2 --- y(2) ---> defect3 --- y(3) --->
+
+list e1 = list(0,1,list(y(1)),y(1)^3);
+list e2 = list(1,2,list(x(1)),x(1)^3);
+list e3 = list(2,3,list(y(2)),y(2)^3);
+list e4 = list(3,0,list(y(3)),y(3)^3);
+list web = list(3, list(e1,e2,e3,e4), list(defect1,defect2,defect3));
+webVerify(web);
+
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompile(web, compStrat);
+print(L[1]);
+
+// Now we can use subwebWithVertices to extract a subweb
+//
+//    --- y(1) ---> defect1 ---- x(1) ----> defect2 --- y(2) --->
+
+list subweb = subwebWithVertices(web, list(1,2));
+list compStratS = list(1,2), list(x(1));
+list L = webCompile(subweb, compStratS);
+print(L[1]);

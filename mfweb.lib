@@ -334,8 +334,9 @@ proc ringWithoutVars(list vars)
         
         // Note that fetch uses the position of the ring variables, not the name, so 
         // that fetch(var(1)) is always var(1).
-        poly P = fetch(SSS,minpolyblow); 
-        poly z = subst(P,var(1),r);
+        poly minpolyblow = fetch(SSS,minpolyblow);
+        export(minpolyblow);
+        poly z = subst(minpolyblow,var(1),r);
         number nu = leadcoef(z);
         minpoly = nu;
         setring SSS;
@@ -343,6 +344,7 @@ proc ringWithoutVars(list vars)
     
     return(nR);
 }
+
 
 /////////////////////////////////////////////////
 // augmentedEdgeForEdge
