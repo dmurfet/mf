@@ -8,23 +8,23 @@ Explaining this code will lead us naturally through the major components of the 
 0. Example code
 
 option(noredefine);option(noloadLib);option(redSB);
-LIB "blow.lib";
-LIB "mfweb.lib";
 LIB "linkhom.lib";
-LIB "matrix.lib";
-LIB "control.lib";
-ring rr=0,(x(1..6)),dp; // Create a polynomial ring Q[x1,...,x6], one variable per edge in the resolution
+
+list linkData = linkLibrary("trefoil"); // Load the link data
+int numVar = linkNumberOfVariables(linkData); // number of ring variables required
+ring rr=0,(x(1..numVar)),dp; // we work over the ring Q[x(1),...,x(numVar)]
 int N = 3; // The N in sl(N) link homology
 printlevel = 1; // Turn on debugging output
 
-list trefoilLink = linkLibrary("trefoil"); // Load the link data (many simple knots and links are pre-encoded)
-list h = linkCompile(trefoilLink, "trefoil.mp", N);
-list cp = KRcomplex(trefoilLink, h, N);
+list h = linkCompile(linkData, "./temp", N);
+list cp = KRcomplex(linkData, h, N);
 
-ring ss=(0,t,q),(x),dp; // Change rings to introduce parameters t, q for the Poincare polynomial
-list cp = imap(rr,cp); // Import the complex cp to the new ring
+ring ss=(0,t,q),(x),dp; // Switch to a ring with parameters t,q for Poincare polynomial
+
+list cp = imap(rr,cp);
 list cohom = computeCohomology(cp);
-gradedPoincare(cohom, q, t);
+number poincare = gradedPoincare(cohom, q, t);
+poincare; // KR homology, encoded as the Poincare polynomial
 
 1. Overview of libraries
 
