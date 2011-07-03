@@ -740,7 +740,7 @@ proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
         poly pi23 = ( p(2)^(N+1) - p(3)^(N+1) )/( p(2)-p(3) );
         poly u1 = ( gpoly(p(1)+p(2), p(1)*p(2), N) - gpoly(p(3)+p(4), p(1)*p(2), N) )/( p(1)+p(2)-p(3)-p(4) );
         poly u2 = ( gpoly(p(3)+p(4), p(1)*p(2), N) - gpoly(p(3)+p(4), p(3)*p(4), N) )/( p(1)*p(2)-p(3)*p(4) );
-        poly aa1 = -u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );        
+        poly aa1 = (mu-1) * u2 + ( u1 +  p(1) * u2 - pi23 )/( p(1) - p(4) );        
         
         matrix chi0[4][4] = p(4)-p(2) + mu*(p(1)+p(2)-p(3)-p(4)), 0, 0,    0,
                         aa1,        1, 0,    0,
