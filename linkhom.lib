@@ -1096,7 +1096,7 @@ proc KRcomplex(list linkData, list linkComp, int N)
     }
 
     // Try computing the differentials in the KR complex
-    list KRcomplex;
+    list KRKomplex;
     int c;
     for( c=minDegree; c<=maxDegree-1; c++ )
     {
@@ -1148,21 +1148,21 @@ proc KRcomplex(list linkData, list linkComp, int N)
         }
 
         matrix final = superblockmat(size(websByDegree[sc]),webmaps);
-        KRcomplex = KRcomplex + list(final);
+        KRKomplex = KRKomplex + list(final);
     }
 
     // Sanity check:
     for( i=minDegree; i<=maxDegree-2; i++ )
     {
-        matrix zerom[nrows(KRcomplex[i+1-minDegree+1])][ncols(KRcomplex[i-minDegree+1])];
-        if( KRcomplex[i+1-minDegree+1] * KRcomplex[i-minDegree+1] != zerom )
+        matrix zerom[nrows(KRKomplex[i+1-minDegree+1])][ncols(KRKomplex[i-minDegree+1])];
+        if( KRKomplex[i+1-minDegree+1] * KRKomplex[i-minDegree+1] != zerom )
         {
             print("[KRlinkInvariant] KRcomplex is not a complex at cohomological degree " + string(i) + ", exiting");
             return();
         }
     }
     
-    return(list(minDegree,KRcomplex,weightsPerCohomologicalDegree));
+    return(list(minDegree,KRKomplex,weightsPerCohomologicalDegree));
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -2167,7 +2167,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                     // We have already compiled this morphism.
                     dbprint(printlevel, "[linkCompileReduced]  Already compiled, skipping.");
                     
-                    string cmd = "list D = " + listName + ";";
+                    string cmd = "matrix D = " + listName + ";";
                     execute(cmd);
                 }
                 else
