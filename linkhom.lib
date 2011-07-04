@@ -723,12 +723,7 @@ proc mfVertexGrading(int zeroOrOne, int N)
 //
 // NOTE: The definition of the maps in [KR] involves params mu, lambda,
 // which are allowed to take any integer value. We set these equal to zero,
-// for the simple reason that in some examples nonzero values give rise to
-// bugs (note that according to KR all values of mu, lambda should give rise
-// to homotopic maps, so there should be no bugs... nonetheless).
-//
-// If you get error messages about matrices not being morphisms during
-// compilation, try messing with the values of mu and lambda.
+// but any other value gives a morphism too. 
 ////////////////////////////////////////////////////////////////////
 
 proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
@@ -2178,8 +2173,6 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
                     M = subst(M,reductionMark,0);
                     kill e;
 
-                    // CAUTION: If you get error messages regarding M not being a morphism, try
-                    // changing the values of mu and lambda in mfChi.
                     def Dp = webCompileMorphismFromData( leftWeb, leftCompiledWeb, rightWeb, rightCompiledWeb, compStrat, M, j );
                     
                     // The output of webCompileMorphism should be a matrix.
