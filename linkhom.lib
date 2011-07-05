@@ -723,12 +723,7 @@ proc mfVertexGrading(int zeroOrOne, int N)
 //
 // NOTE: The definition of the maps in [KR] involves params mu, lambda,
 // which are allowed to take any integer value. We set these equal to zero,
-// for the simple reason that in some examples nonzero values give rise to
-// bugs (note that according to KR all values of mu, lambda should give rise
-// to homotopic maps, so there should be no bugs... nonetheless).
-//
-// If you get error messages about matrices not being morphisms during
-// compilation, try messing with the values of mu and lambda.
+// but any other value gives a morphism too. 
 ////////////////////////////////////////////////////////////////////
 
 proc mfChi(int zeroOrOne, poly p(1), p(2), p(3), p(4), int N)
@@ -1096,7 +1091,7 @@ proc KRcomplex(list linkData, list linkComp, int N)
     }
 
     // Try computing the differentials in the KR complex
-    list KRcomplex;
+    list KRKomplex;
     int c;
     for( c=minDegree; c<=maxDegree-1; c++ )
     {
@@ -1148,21 +1143,21 @@ proc KRcomplex(list linkData, list linkComp, int N)
         }
 
         matrix final = superblockmat(size(websByDegree[sc]),webmaps);
-        KRcomplex = KRcomplex + list(final);
+        KRKomplex = KRKomplex + list(final);
     }
 
     // Sanity check:
     for( i=minDegree; i<=maxDegree-2; i++ )
     {
-        matrix zerom[nrows(KRcomplex[i+1-minDegree+1])][ncols(KRcomplex[i-minDegree+1])];
-        if( KRcomplex[i+1-minDegree+1] * KRcomplex[i-minDegree+1] != zerom )
+        matrix zerom[nrows(KRKomplex[i+1-minDegree+1])][ncols(KRKomplex[i-minDegree+1])];
+        if( KRKomplex[i+1-minDegree+1] * KRKomplex[i-minDegree+1] != zerom )
         {
             print("[KRlinkInvariant] KRcomplex is not a complex at cohomological degree " + string(i) + ", exiting");
             return();
         }
     }
     
-    return(list(minDegree,KRcomplex,weightsPerCohomologicalDegree));
+    return(list(minDegree,KRKomplex,weightsPerCohomologicalDegree));
 }
 
 ////////////////////////////////////////////////////////////////////
