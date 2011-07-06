@@ -1733,8 +1733,8 @@ proc defectTangleFromLink(list linkData, intvec state, int N, int cutpos, list #
 // two webs. We assume that the matrix factorisations in the web agree except possibly at
 // the specified vertex mapPos.
 //
-// NOTE: mapPos is an index into the ordering of the vertices determined by the compilation
-// strategy. This is important.
+// NOTE: mapPos is an index into the absolute ordering the vertices, as defined in the
+// link encoding, NOT an index into the compilation strategy.
 //
 // Recall that the first output of webCompile is the differential on the "compilation" MF,
 // which we earlier referred to as Y. Let Y1 denote the compilation of web1 and Y2 the
@@ -1779,6 +1779,29 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
         list mfsgr(2) = webMFgr(web2);
     }
     
+    if( useSanityChecks )
+    {
+        if( mapPos < 1 or mapPos > numVertices )
+        {
+            print("[webCompileMorphismFromData] mapPos invalid range, exiting.");
+            return();
+        }
+    }
+    
+    // Figure out which index in the compilation strategy corresponds to mapPos
+    int mapPosStrat;
+    int i;
+    for(i=1;i<=numVertices;i++)
+    {
+        if( stratVertices[i] == mapPos )
+        {
+            mapPosStrat = i;
+            break;
+        }
+    }
+    
+    print("mapPos is position " + string(mapPosStrat) + " in the strategy."); //debug
+    
     // Now we walk through the compilation strategy. Here's roughly what's going to happen.
     // Suppose our mfs are mf(1), ..., mf(v), ordered according to the compilation strategy.
     // This means that, somewhat confusingly, mf(i) is mfs(1)[stratVertices[i]].
@@ -1802,7 +1825,7 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
     //
     // These steps are then repeated, to obtain mf(1,2,3) from mf(1,2) * mf(3), and so on.
     //
-    // Suppose for the sake of simplicity that mapPos = 3, and write mf'(i) for the MFs occurring
+    // Suppose for the sake of simplicity that mapPosStrat = 3, and write mf'(i) for the MFs occurring
     // in web2. Hence M is a map mf(3) --> mf'(3). Then we have an induced map
     //
     // mf(1,2) * mf(3) --> mf(1,2) * mf'(3).
@@ -1823,7 +1846,7 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
         int i;
         for(i=1; i<=numVertices; i++)
         {
-            if( i != mapPos && mfs(1)[stratVertices[i]] != mfs(2)[stratVertices[i]] )
+            if( i != mapPos && mfs(1)[i] != mfs(2)[i] )
             {
                 print("[webCompileMorphism] Matrix factorisations in position " + string(stratVertices[i]) + " differ, exiting.");
                 return();
@@ -1831,15 +1854,15 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
         }
         
         // Check that M is actually a morphism
-        if( M * mfs(1)[stratVertices[mapPos]] != mfs(2)[stratVertices[mapPos]] * M )
+        if( M * mfs(1)[mapPos] != mfs(2)[mapPos] * M )
         {
             print("[webCompileMorphism] Given matrix is not a morphism, exiting.");
             return();
         }
     }
     
-    // The first task is to fastforward to the mapPos - 1 position in the compilation
-    // by looking up the differential on mf(1,2,...,mapPos - 1).
+    // The first task is to fastforward to the mapPosStrat - 1 position in the compilation
+    // by looking up the differential on mf(1,2,...,mapPosStrat - 1).
     int nonsquare = (typeof(compile(1)[1]) == "string");
     
     // For nonsquare matrices compile looks like string, [intvec,intvec,] list and for
@@ -1860,33 +1883,33 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
     // mf(1,...,i) with mf(i+1).
     
     int startPoint;
-    if( mapPos > 2 )
+    if( mapPosStrat > 2 )
     {
-        list record = splitRec(1)[mapPos - 2];
+        list record = splitRec(1)[mapPosStrat - 2];
         
         // The compilations of web1 and web2 should agree up to this point
         if( useSanityChecks )
         {
-            if( record[1] != splitRec(2)[mapPos - 2][1] )
+            if( record[1] != splitRec(2)[mapPosStrat - 2][1] )
             {
                 print("[webCompileMorphism] Expected equal compilations, but this was not true. Exiting.");
                 return();
             }
         }
         
-        // Replace M by mf(1,..,mapPos-1) * mf(mapPos) --> mf(1,..,mapPos-1) * mf'(mapPos)
+        // Replace M by mf(1,..,mapPosStrat-1) * mf(mapPosStrat) --> mf(1,..,mapPosStrat-1) * mf'(mapPosStrat)
         M = ZZtensor( unitmat(ncols(record[1])), M );
-        startPoint = mapPos - 1;
+        startPoint = mapPosStrat - 1;
     }
     
-    if( mapPos == 2 )
+    if( mapPosStrat == 2 )
     {
         // Replace M by mf(1) * mf(2) --> mf(1) * mf'(2).
         M = ZZtensor( unitmat(ncols(mfs(1)[stratVertices[1]])), M );
         startPoint = 1;
     }
     
-    if( mapPos == 1 )
+    if( mapPosStrat == 1 )
     {
         // Replace M by mf(1) * mf(2) --> mf'(1) * mf(2)
         M = ZZtensor( M, unitmat(ncols(mfs(1)[stratVertices[2]])) );
