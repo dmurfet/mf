@@ -118,7 +118,19 @@ proc linkLibrary(string s)
     if( s == "stevedore" || s == "6_1" )
     {
         intvec edgevec(1) = 1,2,3,4;
-        intvec edgevec(2) = 6,8,7,1;
+        intvec edgevec(2) = 8,6,1,7;
+        intvec edgevec(3) = 7,9,10,8;
+        intvec edgevec(4) = 11,10,9,12;
+        intvec edgevec(5) = 12,4,5,11;
+        intvec edgevec(6) = 5,3,2,6;
+        intvec vertexParity = -1,1,1,1,1,-1;
+        retLink = vertexParity, list(edgevec(1),edgevec(2),edgevec(3),edgevec(4),edgevec(5),edgevec(6));
+    }
+    
+    if( s == "6_1_bad" ) // Old 6_1, preserved for inspection
+    {
+        intvec edgevec(1) = 1,2,3,4;
+        intvec edgevec(2) = 6,8,7,1; // This appears to be an error, should be 8,6,1,7
         intvec edgevec(3) = 7,9,10,8;
         intvec edgevec(4) = 11,10,9,12;
         intvec edgevec(5) = 12,4,5,11;
@@ -1345,9 +1357,12 @@ proc linkCompile(list linkData, string fileName, int N)
     list returnListWebs;
     list returnListMaps;
     
-    // The compilation strategy is the same for all webs: we simply compile from the 1st
-    // vertex to the last one, and enumerate the variables in the given order (note that
-    // all the ring variables are taken as internal variables).
+    // The compilation strategy is the same for all webs. We always enumerate the variables
+    // in the default order, but we have to choose an ordering of the vertices which gives
+    // a valid compilation strategy. That is, after fusing the first i vertices, the result
+    // should be connected to the (i+1)st vertex by an edge.
+    
+    // First build the default compilation strategy
     list compStratVert;
     list compStratVar;
     int j;
@@ -1360,14 +1375,36 @@ proc linkCompile(list linkData, string fileName, int N)
         compStratVar = compStratVar + list(var(j));
     }
     list compStrat = compStratVert,compStratVar;
+    
+    // Now make sure it is valid, and permute the ordering of the vertices if not
+    // Note it doesn't matter what MFs we put in the web: compilationStratVerify only cares
+    // about the edges
+    list stateDiagrams = powervec(webSiz);
+    list web = webFromLink(linkData, stateDiagrams[1], N);
+    
+    if( !compilationStratVerify(web, compStrat) )
+    {
+        dbprint(printlevel, "[linkCompile] Default compilation strategy is invalid, trying to permute vertices...");
         
+        // Try permuting the order of the vertices
+        list rStrat = permuteCompStrat(web, compStrat);
+        compStrat = rStrat;
+        kill rStrat;
+        
+        // If it's still no good, bail
+        if( !compilationStratVerify(web, compStrat) )
+        {
+            print("[linkCompile] Unable to find a valid compilation strategy, failing.");
+            return();
+        }
+    }
+    kill web;
+    
     // STEP 1. Go through each state of the link and compile the corresponding web. Then
     // add the data to returnListWebs. 
     // The compilation of a state 1101 is stored in web1101.
     int i;
-    list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
-    
     int globalZ2Degree = -1;
     
     for( i = 1; i <= numStateDiagrams; i++ )
@@ -1396,7 +1433,6 @@ proc linkCompile(list linkData, string fileName, int N)
         
             // Build a web suitable for calling webCompile:
             list web = webFromLink(linkData, v, N);
-            
             execute("list " + listName2 + " = web;");
             
             // Call webCompile:
@@ -1704,6 +1740,8 @@ proc linkCompile(list linkData, string fileName, int N)
 // Just like linkCompile, but computes only states (and not their morphisms) 
 // in the range [startpos, endpos].
 
+// TODO: Either remove or update to bug fixes in linkCompile and linkCompileReduced
+
 proc linkCompileParts(list linkData, string fileName, int N, int startpost, int endpos)
 {
     // We do not change rings: we assume that the ambient ring has the same number of variables
@@ -1985,9 +2023,13 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     list returnListWebs;
     list returnListMaps;
     
-    // The compilation strategy is the same for all webs: we simply compile from the 1st
-    // vertex to the last one, and enumerate the variables in the given order (note that
-    // all the ring variables are taken as internal variables).
+    // The compilation strategy is the same for all webs. We always enumerate the variables
+    // in the default order, but we have to choose an ordering of the vertices which gives
+    // a valid compilation strategy. That is, after fusing the first i vertices, the result
+    // should be connected to the (i+1)st vertex by an edge. Note that we delete the edge
+    // with the variable reductionMark, so this edge doesn't count!
+    
+    // First build the default compilation strategy
     list compStratVert;
     list compStratVar;
     int j;
@@ -2005,11 +2047,32 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
     }
     list compStrat = compStratVert,compStratVar;
         
+    // Now make sure it is valid, and permute the ordering of the vertices if not
+    list stateDiagrams = powervec(webSiz);
+    list web = webFromLink(linkData, stateDiagrams[1], N, reductionMark);
+    
+    if( !compilationStratVerify(web, compStrat) )
+    {
+        dbprint(printlevel, "[linkCompileReduced] Default compilation strategy is invalid, trying to permute vertices...");
+        
+        // Try permuting the order of the vertices
+        list rStrat = permuteCompStrat(web, compStrat);
+        compStrat = rStrat;
+        kill rStrat;
+        
+        // If it's still no good, bail
+        if( !compilationStratVerify(web, compStrat) )
+        {
+            print("[linkCompileReduced] Unable to find a valid compilation strategy, failing.");
+            return();
+        }
+    }
+    kill web;
+    
     // STEP 1. Go through each state of the link and compile the corresponding web. Then
     // add the data to returnListWebs. 
     // The compilation of a state 1101 is stored in web1101.
     int i;
-    list stateDiagrams = powervec(webSiz);
     int numStateDiagrams = size(stateDiagrams);
     
     int globalZ2Degree = -1;
@@ -2040,7 +2103,6 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         
             // Build a web suitable for calling webCompile:
             list web = webFromLink(linkData, v, N, reductionMark);
-                        
             execute("list " + listName2 + " = web;");
             
             // Call webCompile:

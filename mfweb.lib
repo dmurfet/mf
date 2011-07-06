@@ -100,6 +100,15 @@ LIB "linkhom.lib";
 // L1 were 3,1,2 we should first tensor the MF at vertex 3 with the one at vertex 1,
 // and then tensor the result with the MF at vertex 2) and L2 tells us the ordering
 // on the variables to use in the reduction/pushforward procedure.
+//
+// NOTE: There is no implied relationship between the variable ordering and the
+// vertex ordering, e.g., the variables around the first vertex do not need to
+// go first.
+//
+// IMPORTANT: For a compilation strategy to be valid, each fusion has to involve
+// a nonzero number of variables. That is, if L1 = {v1,...,vn} then for each 1 <= i <= n-1
+// we are trying to fuse v(i+1) with the result of fusing v1,...,vi. We require that
+// there is an edge between one of the v1,...,vi and v(i+1).
 
 /////////////////////////////////////////////////
 // Settor and Accessor methods for an edge.
@@ -664,6 +673,103 @@ proc subwebWithVertices(list web, list vertices)
 }
 
 /////////////////////////////////////////////////
+// compilationStratVerify
+//
+// Verify that the given list is a valid compilation strategy
+
+proc compilationStratVerify(list web, list compStrat)
+{
+    int numVertices = webSize(web);
+    list edges = webEdges(web);
+
+    list vertexOrder = compStrat[1];
+
+    if( size(vertexOrder) != numVertices )
+    {
+        dbprint(printlevel, "[compilationStratVerify] Wrong number of vertices in compilation strategy, failed.");
+        return(0);
+    }
+    
+    // For each 1 <= i <= n-1 check that one of the first i vertices is connected
+    // to the (i+1)st vertex by an edge (vertices indexed according to the comp strat)
+    int i;
+    for(i=1;i<numVertices;i++)
+    {
+        int k;
+        int foundEdge = 0;
+        
+        for(k=1;k<=i;k++)
+        {
+            int j;
+            for(j=1; j<=size(edges); j++)
+            {
+                if( isEdgeBetweenVertices(edges[j],vertexOrder[k],vertexOrder[i+1]) )
+                {
+                    // Found an edge between one of the first i vertices and the (i+1)st
+                    foundEdge = 1;
+                    break;
+                }
+            }
+            
+            if( foundEdge ){ break; }
+        }
+        
+        if( !foundEdge )
+        {
+            //dbprint(printlevel, "[compilationStratVerify] Found no edges between the first " + string(i) + " vertices and vertex " + string(i+1) + ", failing.");
+            return(0);
+        }
+    }
+    
+    return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// permuteCompStrat
+//
+// Tries permuting the order of the vertices in a given compilation
+// strategy to find a valid compilation strategy. Since we check
+// all possible permutations, this could be very slow!
+
+proc permuteCompStrat(list web, list compStrat)
+{
+    int numVertices = webSize(web);
+    list vertexOrder = compStrat[1];
+    list varOrder = compStrat[2];
+
+    list perms = SGroupintvecs(numVertices);
+    
+    int i;
+    for(i=1;i<=size(perms);i++)
+    {
+        intvec p = perms[i];
+        
+        list newV;
+        int j;
+        for(j=1;j<=numVertices;j++)
+        {
+            newV[j] = vertexOrder[p[j]];
+        }
+        
+        list testStrat = newV, varOrder;
+        
+        if( compilationStratVerify(web, testStrat) )
+        {
+            // We found a valid permutation, return it
+            dbprint(printlevel, "[permuteCompStrat] Found a valid permutation of the vertices: " + string(p));
+            return(testStrat);
+        }
+        
+        kill newV, p, testStrat;
+    }
+    
+    // We failed to find a valid permutation
+    dbprint(printlevel, "[permuteCompStrat] Failed to find a valid permutation.");
+    return();
+}
+
+
+/////////////////////////////////////////////////
 // webVerify
 //
 // Verify that the given list satisfies (some of) the conditions to be a web.
@@ -1008,6 +1114,12 @@ proc webCompile(list web, list compStrat)
             print("[webCompile] Given web is not valid, exiting.");
             return();
         }
+        
+        if( !compilationStratVerify(web, compStrat) )
+        {
+            print("[webCompile] Given compilation strategy is not valid, exiting.");
+            return();
+        }
     }
     
     def RRR = basering;
@@ -1044,49 +1156,36 @@ proc webCompile(list web, list compStrat)
         }
         
         // Construct a subweb and substrategy consisting of the vertices to be fused.
-        // We prefer to fuse the first two, but there may not be any edges between them:
-        // in this case we iterate the second vertex. So the fusion will be between
-        // vertex 1 and the vertex with index fusionVertex
-        int fusionVertex;
+        // We always fuse the first two vertices in the compilation strategy
         list subweb, subwebVar, substrat_var;
-        
-        for(fusionVertex=2; fusionVertex<=size(vertexOrder); fusionVertex++)
-        {
-            subweb = subwebWithVertices(web, list(vertexOrder[1],vertexOrder[fusionVertex]));
-            subwebVar = webVariables(subweb);
+        subweb = subwebWithVertices(web, list(vertexOrder[1],vertexOrder[2]));
+        subwebVar = webVariables(subweb);
 
-            // Intersect the variables in varOrder with the list of internal vars in the subweb
-            int i;
-            for(i=1; i<=size(varOrder); i++) 
-            {
-                poly u = varOrder[i];
+        // Intersect the variables in varOrder with the list of internal vars in the subweb
+        int i;
+        for(i=1; i<=size(varOrder); i++) 
+        {
+            poly u = varOrder[i];
             
-                int j;
-                for(j=1; j<=size(edges); j++)
+            int j;
+            for(j=1; j<=size(edges); j++)
+            {
+                list e = edges[j];
+                if( checklist(edgeVariables(e),u) && isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[2]) )
                 {
-                    list e = edges[j];
-                    if( checklist(edgeVariables(e),u) && isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[fusionVertex]) )
-                    {
-                        substrat_var = substrat_var + list(varOrder[i]);
-                        break;
-                    }
-                    kill e;
+                    substrat_var = substrat_var + list(varOrder[i]);
+                    break;
                 }
-                kill u;
+                kill e;
             }
-            
-            if( size(substrat_var) != 0 )
-            {
-                // We have found a vertex linked to the first one by at least one edge
-                // so let us continue...
-                break;
-            }
+            kill u;
         }
-        
-        // If we cannot find any internal edges linked to the first vertex, fail
+            
         if( size(substrat_var) == 0 )
         {
-            print("[webCompile] Found no internal variables! exiting.");
+            // In the current intermediate compilation strategy, the first and second vertex
+            // are not linked by any edges: that is, the compilation strategy is not valid.
+            print("[webCompile] In the intermediate compilation strategy the first and second vertex are not connected by edges, failing.");
             return();
         }
         
@@ -1176,18 +1275,18 @@ proc webCompile(list web, list compStrat)
         // 1. List of matrices
         list fusedWebMfs = mfs;
         fusedWebMfs[vertexOrder[1]] = l[1];
-        fusedWebMfs = delete(fusedWebMfs,vertexOrder[fusionVertex]);
+        fusedWebMfs = delete(fusedWebMfs,vertexOrder[2]);
         
         // 2. Gradings
         if( useGrading )
         {
             list fusedWebGr = webGr;
             fusedWebGr[vertexOrder[1]] = l[2];
-            fusedWebGr = delete(fusedWebGr,vertexOrder[fusionVertex]);
+            fusedWebGr = delete(fusedWebGr,vertexOrder[2]);
         }
         
         // 3. Edges. Remove all squeezed out internal edges, and redirect
-        // other edges which end or begin at vertexOrder[fusionVertex] so that they
+        // other edges which end or begin at vertexOrder[2] so that they
         // now end or begin resp. at vertexOrder[1].
 
         int i;
@@ -1197,29 +1296,29 @@ proc webCompile(list web, list compStrat)
             list e = edges[i];
             
             // Exclude edges which where squeezed out
-            if( !isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[fusionVertex]) )
+            if( !isEdgeBetweenVertices(e,vertexOrder[1],vertexOrder[2]) )
             {
                 list newEdge = e;
                 
-                if( edgeSource(newEdge) == vertexOrder[fusionVertex] )
+                if( edgeSource(newEdge) == vertexOrder[2] )
                 {
                     newEdge = setEdgeSource(newEdge, vertexOrder[1]);
                 }
                 
-                if( edgeTarget(newEdge) == vertexOrder[fusionVertex] )
+                if( edgeTarget(newEdge) == vertexOrder[2] )
                 {
                     newEdge = setEdgeTarget(newEdge, vertexOrder[1]);
                 }
             
                 // Finally, if the edge begins or ends on a vertex appearing after
-                // vertexOrder[fusionVertex] we need to decrement the index, as the fused web
+                // vertexOrder[2] we need to decrement the index, as the fused web
                 // has one less vertex and all indices shifted
-                if( edgeSource(newEdge) > vertexOrder[fusionVertex] )
+                if( edgeSource(newEdge) > vertexOrder[2] )
                 {
                     newEdge = setEdgeSource(newEdge, edgeSource(newEdge) - 1);
                 }
                 
-                if( edgeTarget(newEdge) > vertexOrder[fusionVertex] )
+                if( edgeTarget(newEdge) > vertexOrder[2] )
                 {
                     newEdge = setEdgeTarget(newEdge, edgeTarget(newEdge) - 1);
                 }
@@ -1244,12 +1343,12 @@ proc webCompile(list web, list compStrat)
         
         // Next we rearrange the compilation strategy. The vertices is simple: we have
         // replaced the first vertex in the strategy by the fusion, so we just drop the
-        // entry of vertexOrder in position fusionVertex
-        list fusedVertexOrder = delete(vertexOrder,fusionVertex);
+        // entry of vertexOrder in position 2
+        list fusedVertexOrder = delete(vertexOrder,2);
         
         for(i=1;i<=size(fusedVertexOrder);i++)
         {
-            if( fusedVertexOrder[i] > vertexOrder[fusionVertex] )
+            if( fusedVertexOrder[i] > vertexOrder[2] )
             {
                 fusedVertexOrder[i] = fusedVertexOrder[i] - 1;
             }
