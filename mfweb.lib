@@ -1800,8 +1800,6 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
         }
     }
     
-    print("mapPos is position " + string(mapPosStrat) + " in the strategy."); //debug
-    
     // Now we walk through the compilation strategy. Here's roughly what's going to happen.
     // Suppose our mfs are mf(1), ..., mf(v), ordered according to the compilation strategy.
     // This means that, somewhat confusingly, mf(i) is mfs(1)[stratVertices[i]].
@@ -1990,7 +1988,6 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                 }
 
                 // First we need to inflate and suspend.
-                print("[webCompileMorphismFromData] mfInflate watch 1"); //debug
                 matrix Minf = mfInflate(M,u,expo);
                 M = mfSuspendMorph( Minf );
                 kill Minf;
@@ -2040,7 +2037,6 @@ proc webCompileMorphismFromData(list web1, list compile(1), list web2, list comp
                 int expo = R(1)[j][7];
                 
                 // Inflate and suspend
-                print("[webCompileMorphismFromData] mfInflate watch 2"); //debug
                 matrix Minf = mfInflate(M,u,expo);
                 M = mfSuspendMorph( Minf );
                 kill Minf;
