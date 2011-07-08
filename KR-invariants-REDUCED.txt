@@ -7,9 +7,14 @@ REDUCED KR invariants for various knots and links
 
 Jobs running on: finzi, landi, lassus, ligeti, lully
 
+TODOs:
+-- restart N = 4 unreduced 6_2 (at 32/64) with 
+   list h = linkCompile(linkL, "./data/62-N" + string(N) + "-zoom.mp", N);
 
-N = 3 unreduced L6a3 running on landi since 2011-07-01 (at 11/64).
-
+N = 3 unreduced L6a3 running on landi since 2011-07-01 (at 33/64).
+N = 3 unreduced L7a7 running on finzi since 2011-07-06 (at 28/128).
+N = 4 unreduced Borromean Rings VERSION 3 running on ligeti since 2011-07-05 (at 16/64).
+N = 4 unreduced L6aq running on lassus since 2011-07-05 (at 17/64).
 
 Hopf link (aka L2a1, two components, see http://katlas.org/wiki/Image:L2a1.gif)
 
@@ -532,7 +537,7 @@ N = 4 and Z2-degree 1:
 (t5+t4q6+t3q8+t2q14+t2q10+tq16+q18)/(q24)
 
 N = 5 and Z2-degree 0:
-RUNNING on lassus since 2011-06-25 (at 16/32).
+Ran for 10 days on lassus, but did not get past state 16/32. Then I killed the job. 
 N = 5 and Z2-degree 1:
 
 
@@ -559,7 +564,7 @@ N = 4 and Z2-degree 1:
 (t5+t4q6+t4q2+t3q8+t2q14+t2q12+2t2q10+tq12+q18)/(t2q16)
 
 N = 5 and Z2-degree 0:
-RUNNING on ligeti since 2011-07-01 (at 16/32).
+Got killed on ligeti at state 16/64 after running for four days. 
 N = 5 and Z2-degree 1:
 
 
@@ -572,27 +577,13 @@ Whitehead link, OTHER COMPONENT (aka L5a1, two components, see http://katlas.org
 
 
 N = 2 and Z2-degree 0:
-TODO
-Web compilations go through without complaint, but then: 
-[linkCompileReduced] Now compiling maps.
-[linkCompileReduced] Looking at state [0,0,0,0,0] which is number [[ 1/32 ]].
-[linkCompileReduced]  Looking at the map to [1,0,0,0,0].
-[isMorphismDegreeZero] Not passed valid morphism, exiting.
-[webCompileMorphismFromData] M is not degree +1 in i = 1 j = 1
-// ** right side is not a datum, assignment ignored
-[linkCompileReduced] webCompileMorphism did not return a matrix.
-
+(t5+2t4q2+t3q4+2t2q6+tq8+q10)/(t2q7)
 N = 2 and Z2-degree 1:
-[linkCompileReduced] Now compiling maps.
-[linkCompileReduced] Looking at state [0,0,0,0,0] which is number [[ 1/32 ]].
-[linkCompileReduced]  Looking at the map to [1,0,0,0,0].
-[isMorphismDegreeZero] Not passed valid morphism, exiting.
-[webCompileMorphismFromData] M is not degree +1 in i = 1 j = 1
-// ** right side is not a datum, assignment ignored
-[linkCompileReduced] webCompileMorphism did not return a matrix.
+
 
 N = 3 and Z2-degree 0:
-
+(t5+t4q4+t4q2+t3q6+t2q10+2t2q8+tq10+q14)/(t2q10)
+Took 1.3 hours.
 N = 3 and Z2-degree 1:
 
 
@@ -653,6 +644,10 @@ N = 2 and Z2-degree 0:
 (t6+t5q2+t4q4+2t3q6+2t2q8+tq10+q12)/(t2q8)
 N = 2 and Z2-degree 1:
 (t6+t5q2+t4q4+2t3q6+2t2q8+tq10+q12)/(t2q9)
+
+N = 3 and Z2-degree 0:
+TODO
+N = 3 and Z2-degree 1:
 
 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
@@ -839,7 +834,6 @@ N = 3 and Z2-degree 1:
 (t4q2+t4+t2q8+3t2q6+t2q4+q12+q10)/(t2q8)
 
 N = 4 and Z2-degree 0:
-TODO (from savefile, otherwise expect 8 days)
 Earlier linkCompileReduced computation went through successfully in 7.4 days on lully, but then:
 . list cp = KRcomplex(linki, h, N);
    ? error occurred in or before linkhom.lib::KRcomplex line 992: `parameter of cohomologies`
@@ -1097,7 +1091,7 @@ N = 2 and Z2-degree 1:
 N = 3 and Z2-degree 0:
 (t6q2+t6+t5q2+2t4q6+t3q10+t3q8+t2q12+t2q10+tq14+q16)/(q24)
 N = 3 and Z2-degree 1:
-TODO
+
 
 N = 4 and Z2-degree 0:
 (t6q4+t6q2+t6+t5q2+2t4q8+t3q14+t3q10+t2q16+t2q12+tq18+q20)/(q32)
@@ -1192,7 +1186,6 @@ N = 4 and Z2-degree 1:
 (t6q4+t6q2+t6+t5q2+t4q8+t3q6+t2q12+q16)/(q31)
 
 N = 5 and Z2-degree 0:
-TODO (from savefile, otherwise expect 5 days)
 Earlier computation successfully went through the complete linkCompileReduced routine in 5 days, but then:
 > list cp = KRcomplex(linki, h, N);
    ? error occurred in or before linkhom.lib::KRcomplex line 992: `parameter of cohomologies`
@@ -1201,7 +1194,7 @@ Earlier computation successfully went through the complete linkCompileReduced ro
    skipping text from ` `   ? leaving linkhom.lib::KRcomplex
  error at token `)`
 
-A rerun from the savefile gave: 
+Two reruns (one after morphism bug fix) from the savefile gave: 
 [linkCompileReduced] Now compiling maps.
 [linkCompileReduced] Looking at state [0,0,0,0,0,0] which is number [[ 1/64 ]].
 [linkCompileReduced]  Looking at the map to [1,0,0,0,0,0].
@@ -1213,7 +1206,6 @@ A rerun from the savefile gave:
    ? leaving linkhom.lib::linkCompileReduced
  
 N = 5 and Z2-degree 1:
-TODO (from savefile, otherwise expect 6 days)
 Earlier computation successfully went through the complete linkCompileReduced routine in 6 days, but then:
 > list cp = KRcomplex(linki, h, N);
    ? error occurred in or before linkhom.lib::KRcomplex line 992: `parameter of cohomologies`
@@ -1316,7 +1308,7 @@ N = 3 and Z2-degree 1:
 
 L7a7 (three components, see http://katlas.org/wiki/L7a7)
 
-    TODO: guess general formula
+    TODO: guess general formula...
 
 N = 2 and Z2-degree 0:
 (t7+t6q2+4t5q4+3t4q6+4t3q8+3t2q10+3tq12+q14)/(t3q9)

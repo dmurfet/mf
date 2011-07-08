@@ -27,7 +27,8 @@ Issues and questions:
            These proofs do NOT work for general Homfly, and our results on Solomon's knot
            say that the reduced KR invariants are NOT related by multiplying by a monomial.)
         ++ guess Rasmussen-like formula in unreduced case? (Dan tried, not easy...)
-        ++ Mina gets reduced knot invariants (as she compares successfully with Rasmussen), but GSV and
+        ++ Of course Mina gets reduced knot invariants (which she compares successfully with Rasmussen) 
+           because this is how she defines Pscript after equation (7.6) of their paper. GSV and
            others (to which we successfully compare our unreduced invariants) get unreduced invariants. 
         ++ Rasmussen's formula for KR homolgy in terms of Homfly on page 1 of 0508510 probably is correct
            for the two-bridge _link_ "Solomon's knot". Probably the information about orientation is encoded
@@ -44,7 +45,7 @@ OBSERVATIONS (incomplete):
         L6a5 (we only have version 1 here...),
         L6n1 (we only have version 1 here...).
 -- Often the total dimension of reduced KR is independent of N.
--- In our examples the choice of mark does not matter. 
+-- In all our examples the choice of mark does not matter. 
 -- Our results for Z2-even and Z2-odd reduced KR invariants always differ by a factor q^(N-1); 
    the Z2-degree with the higher q-degree is given by #crossings + #components + 1 mod 2.  
 -- L6a3 version 1 much easier to compute than L6a3 version 2, for example. Similarly for Solomon's knot... 
@@ -60,17 +61,32 @@ OBSERVATIONS (incomplete):
    works for none of them (where I both computed Homfly by hand and tried the one from katlas.org). The formula
    already fails in the sense that the expression HOMFLY[a, p - 1/p] /. {a -> (q^n t^(-1)), p -> (I q t^(-1/2))}
    has terms like 1/(q^2 + t), t^(1/2) and (-1)^(1/2) in it. 
--- GSV trick only seems to work for L6a1 VERSION 1 only if we use the (wrong) "linking number" 2. (Double-check!)
+-- When I get the GSV trick to work, then alpha is twice the "linking number" (see next item).
+-- GSV trick only seems to work for L6a1 VERSION 1 only if we use the (wrong) "linking number" 2. 
+-- "Versions" DO MATTER for the following links that we consider: 
+        + unreduced & reduced Solomon's knot
+        + unreduced & reduced Borromean rings (versions 1,3,4 are all the same, but different from version 2)
+        + unreduced & reduced L6a1
+        + unreduced & reduced L6a2
+        + unreduced & reduced L6a3               
+-- "Versions" DO NOT MATTER for the following links that we consider:  
+        + unreduced & reduced Hopf link
+        + unreduced & reduced Whitehead link
+-- Agreement with results/proposals from other people:
+        + Rasmussen: unreduced T(2,3), T(2,5), T(2,7), and figure-eight knot, 
+                     all reduced 2-bridge knots with up to 6 crossings (check 6_1 and 6_3!)
+        + GSV: unreduced T(2,3), T(2,5)
+        + GIKV: unreduced Hopf link
+        + AS: TODO
+        + DGR: TODO
 
 TODOs:
 -- Implement virtual crossings for virtual links (see appendix of [KR 2007]).
--- Try other marks on same component and compare (should give same reasult!).
+-- Try other marks on same component and compare (should give same result!).
 -- Go through all of code, make nicer where possible...
 -- Try to guess general formulas for unreduced KR invariants. Compute more unreduced examples. 
--- Is there also a GSV trick for 3-component links? Ask Gukov! 
 -- Check the unreduced homology lives in the right degree in our examples. 
--- Ask Rasmussen whether he has a formula for 2-bridge links. (Maybe the best he can do is his Theorem 5.3
-   which says "Suppose that L is ... a two-bridge knot ..., and suppose that det L != 0. Then L is N-thin (WITH RESPECT TO EITHER COMPONENT) for all N > 4.".)
+-- Try to compare Rasmussen's construction (on page 566 of his paper) for L6a1 version 1 with our results. 
 
 DAN's TODO list:
 - Reduced KR homology dependence on marking?
@@ -98,6 +114,7 @@ NOTES:
     I had an unreduced N=3 KR computation for the 11-crossing Conway knot running on finzi for 1.5 days. 
     It got to state 16/2048 in the compilation, then it started swapping memory. Without immense improvements of
     the code or the machines it runs on, checking KR homology for mutation sensitivity is far out of reach.
+-- Gukov does not seem to know how to generalise the GSV trick to 3-component links (see his July 4 email).
 
 REFERENCES (more to be added): 
 
