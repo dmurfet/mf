@@ -53,13 +53,11 @@ LIB "mfweb.lib";
 //       a        b
 //         \   /
 //          \/
-//          |
-//          |
 //         /\
 //       /   \
 //     d       c
 //
-// i.e. this edge would be represented by a,b,c,d.
+// i.e. this crossing would be represented by a,b,c,d.
 
 proc linkLibrary(string s)
 {
@@ -556,6 +554,176 @@ proc linkNumberOfVariables(list linkData)
     return(mx);
 }
 
+////////////////////////////////////////////////////////////////////
+// linkParity
+//
+// Given a link (as returned by linkLibrary) returns the parity, in
+// the sense of [KR]. Namely, we replace all crossings with the smooth
+// resolution and count the number of circles in the resulting link.
+// The "parity" is this integer modulo 2.
+
+proc linkParity(list linkData)
+{
+    // We maintain a list of "unclaimed" edges, and cross off
+    // from this list as we enumerate components using
+    // enumerateComponentFromEdge
+    
+    list unclaimedEdges;
+    int numVar = linkNumberOfVariables(linkData);
+    
+    int i;
+    for(i=1; i<=numVar; i++)
+    {
+        unclaimedEdges = unclaimedEdges + list(i);
+    }
+    
+    list componentList;
+    
+    while( size(unclaimedEdges) != 0 )
+    {
+        list thisComp = enumerateComponentFromEdgeInSmoothing( linkData, unclaimedEdges[1] );
+        
+        componentList = componentList + list(thisComp);
+        
+        // Now delete from our unclaimed list all the edges
+        // we found in this component
+        int i;
+        for(i=1;i<=size(thisComp);i++)
+        {
+            int j;
+            for(j=1;j<=size(unclaimedEdges);j++)
+            {
+                if( unclaimedEdges[j] == thisComp[i] )
+                {
+                    unclaimedEdges = delete(unclaimedEdges, j);
+                    break;
+                }
+            }
+        }
+        
+        kill i,j,thisComp;
+    }
+    
+    int parity = size(componentList);
+    return(parity);
+}
+
+////////////////////////////////////////////////////////////////////
+// enumerateComponentFromEdge
+//
+// Given a link (as returned by linkLibrary) and an edge in the
+// link, returns the list of edges in the same component of the
+// link as the given edge. The ordering follows the orientation.
+
+proc enumerateComponentFromEdge(list linkData, int m)
+{
+    list comp;
+    int currentEdge = m;
+    
+    while( 1 )
+    {
+        comp = comp + list(currentEdge);
+        currentEdge = nextEdgeFromEdge(linkData, currentEdge);
+        
+        if( currentEdge == m ){ break; }
+    }
+    
+    return(comp);
+}
+
+////////////////////////////////////////////////////////////////////
+// enumerateComponentFromEdgeInSmoothing
+//
+// Given a link (as returned by linkLibrary) and an edge in the
+// link, returns the list of edges in the same component of the
+// "smoothed" link obtained by replacing every crossing by its
+// 0-smoothing in the sense of resolutions.
+
+proc enumerateComponentFromEdgeInSmoothing(list linkData, int m)
+{
+    list comp;
+    int currentEdge = m;
+    
+    while( 1 )
+    {
+        comp = comp + list(currentEdge);
+        currentEdge = nextEdgeFromEdgeInSmoothing(linkData, currentEdge);
+        
+        if( currentEdge == m ){ break; }
+    }
+    
+    return(comp);
+}
+
+////////////////////////////////////////////////////////////////////
+// nextEdgeFromEdge
+//
+// Given a link (as returned by linkLibrary) and an edge in the
+// link, returns the next edge following the orientation of the link.
+
+proc nextEdgeFromEdge(list linkData, int m)
+{
+    list edges = linkData[2];
+    
+    int i;
+    for(i=1; i<=size(edges); i++)
+    {
+        intvec e = edges[i];
+        
+        if( e[3] == m )
+        {
+            // Our edge is the bottom right leg, so return the top left leg
+            return(e[1]);
+        }
+        
+        if( e[4] == m )
+        {
+            // Our edge is the bottom left leg, so return the top right leg
+            return(e[2]);
+        }
+        
+        kill e;
+    }
+    
+    print("[nextEdgeFromEdge] Error: could not find next edge.");
+    return(-1);
+}
+
+////////////////////////////////////////////////////////////////////
+// nextEdgeFromEdgeInSmoothing
+//
+// Given a link (as returned by linkLibrary) and an edge in the
+// link, returns the next edge if we erase the crossing and replace
+// it with the smoothing (i.e. the 0 state).
+
+proc nextEdgeFromEdgeInSmoothing(list linkData, int m)
+{
+    list edges = linkData[2];
+    
+    int i;
+    for(i=1; i<=size(edges); i++)
+    {
+        intvec e = edges[i];
+        
+        if( e[3] == m )
+        {
+            // Our edge is the bottom right leg, so return the top right leg
+            return(e[2]);
+        }
+        
+        if( e[4] == m )
+        {
+            // Our edge is the bottom left leg, so return the top left leg
+            return(e[1]);
+        }
+        
+        kill e;
+    }
+    
+    print("[nextEdgeFromEdgeInSmoothing] Error: could not find next edge.");
+    return(-1);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 // gpoly - returns the polynomial g of [KR] p.48.
 /////////////////////////////////////////////////////////////////////////////////////
@@ -608,12 +776,6 @@ proc mfWideEdge(poly a, poly b, poly c, poly d, int n)
     // Following KR we write W = (a + b - c - d)u1 + (ab - cd)u2:
     poly u1 = (gpoly(a + b, a*b, n) - gpoly(c + d, a*b, n))/(a+b-c-d);
     poly u2 = (gpoly(c + d, a*b, n) - gpoly(c + d, c*d, n))/(a*b-c*d);
-    
-    if( W != u1 * (a + b - c - d) + u2 * (a * b - c * d) )
-    {
-        print("[mfWideEdge] Something wrong in the calculation, exiting.");
-        return();
-    }
     
     matrix koszul1[2][2] = 0, a + b - c - d, u1, 0;
     matrix koszul2[2][2] = 0, a * b - c * d, u2, 0;
