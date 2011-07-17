@@ -66,9 +66,9 @@ LIB "ring.lib";
 // ring with the doubled grading. Suppose that the potential W has |W| = 4, so n = 1. Then
 // the differential A = (0, a1 newline a0, 0) would have to consist of a morphism
 // a0: R{3}+R{3} -> R{2}+R{1} of degree n+1 = 2, so 
-// |a0[1,1]| = 3,
+// |a0[1,1]| = 3, (i.e. this entry would have to be zero, because there are no odd degrees)
 // |a0[1,2]| = 3,
-// |a0[2,1]| = 4,
+// |a0[2,1]| = 4 (i.e. a polynomial f with deg(f) = 2)
 // |a0[2,2]| = 4
 //
 // NOTE: All operations on graded MFs assume that A is square (i.e. both degrees have
@@ -2260,6 +2260,12 @@ proc MFdual(matrix A)
     matrix z[nrows(A)/2][ncols(A)/2];
     matrix dual = blockmat_nsq( z, transpose(blocks[3]), -transpose(blocks[2]), z );
     return(dual);
+}
+
+proc MFdualGrading(intvec v)
+{
+    // We take the grading vector and multiply it by minus one.
+    return(-v);
 }
 
 ////////////////////////////////////////////////////////////////////
