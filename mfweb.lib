@@ -768,6 +768,72 @@ proc permuteCompStrat(list web, list compStrat)
     return();
 }
 
+/////////////////////////////////////////////////
+// webDual
+//
+// Returns the dual web, obtained by reversing the direction
+// of all edges, multiplying by -1 the potential at each vertex
+// and replacing every MF by its dual. We take care of the gradings
+// as well, if they are present.
+
+proc webDual(list web)
+{
+    int useSanityChecks = blowFlags("sanity_checks");
+    
+    // Extract the content of the web
+    int numVertices = webSize(web);
+    list edgeList = webEdges(web);
+    list mfList = webMFs(web);
+    
+    int useGrading = webIsGraded(web);
+    if( useGrading ){ list mfGradings = webMFgr(web); }
+    
+    // First reverse all edges
+    list dualEdgeList;
+    int i;
+    for(i=1;i<=size(edgeList);i++)
+    {
+        list e = edgeList[i];
+        int s = e[1];
+        int t = e[2];
+        
+        e[1] = t;
+        e[2] = s;
+        
+        dualEdgeList = dualEdgeList + list(e);
+    }
+
+    // Now dualise all matrices
+    list dualMfList;
+    list dualMfGradings;
+    for(i=1;i<=size(mfList);i++)
+    {
+        matrix D = MFdual(mfList[i]);
+        dualMfList = dualMfList + list(D);
+        kill D;
+        
+        if( useGrading )
+        {
+            intvec v = MFdualGrading(mfGradings[i]);
+            dualMfGradings = dualMfGradings + list(v);
+            kill v;
+        }
+    }
+    
+    list retWeb = numVertices, dualEdgeList, dualMfList;
+    if( useGrading ){ retWeb = retWeb + list(dualMfGradings); }
+    
+    if( useSanityChecks )
+    {
+        if( !webVerify(retWeb) )
+        {
+            dbprint(printlevel, "[webDual] Failed to create valid dual web.");
+            return();
+        }
+    }
+    
+    return(retWeb);
+}
 
 /////////////////////////////////////////////////
 // webVerify
