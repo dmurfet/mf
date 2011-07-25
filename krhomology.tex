@@ -19,7 +19,7 @@
 \def\KR{\operatorname{KR}}
 \def\I{\!\operatorname{i}\!}
 \def\E{\operatorname{e}\!}
-\def\sln{\operatorname{\mathfrak{sl}}(N)}
+\def\sln{\mathfrak{sl}(N)}
 \def\nN{\mathds{N}}
 \def\nZ{\mathds{Z}}
 \def\nQ{\mathds{Q}}
@@ -39,10 +39,10 @@
 \node (0) at (0,0) [circle,inner sep=0.99pt, thin,draw=black,fill= black] {};
 \end{tikzpicture}%
 }
-
 \def\id{\operatorname{id}}
 \DeclareMathOperator{\mff}{mf}
 \DeclareMathOperator{\MF}{MF}
+
 
 \SelectTips{cm}{}
 
@@ -148,11 +148,11 @@
 \newcommand{\kproful}[3]{\mathbf{N}^{#1}_{#2}(\Flat #3)}
 \newcommand{\homd}[2]{[#1,#2]_{\mathbb{D}}}
 \newcommand{\homk}[2]{[#1,#2]_{\mathbb{K}}}
-\newcommand{\homn}[2]{[#1,#2]_{\mathbb{N}}}
+\newcommand{\homn}[2]{[#1,#2]_{\mathds{N}}}
 \newcommand{\lift}[1]{\dot{#1}}
 \newcommand{\dlift}[1]{\ddot{#1}}
 \def\qhom{\mathscr{H}\! om_{\qc}}
-\def\rdev{\mathbb{R}}
+\def\rdev{\mathds{R}}
 \def\dual{*}
 \def\uotimes{\underaccent{\;\;\:=}{\otimes}}
 \newcommand{\qcmod}[1]{\Qco(#1)}
@@ -168,25 +168,23 @@
 \def\homot{\simeq}
 \def\ceta{\vartheta}
 \def\ctr{\Tr^{\sg}}
-\def\cf{\bold{cf}}
-\def\bx{\bold{x}}
-\def\by{\bold{y}}
+\def\cf{\boldsymbol{cf}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
 \def\totimes{\otimes}
 \def\di{Q}
 \def\rint{R_{int}}
 \def\rext{R_{ext}}
 \def\intvar{n}
-\def\idem{e}
 \newcommand{\cotimes}[1]{\,\widehat{\otimes}_{#1}\,}
-\def\QQ{\mathbb{Q}}
+\def\QQ{\mathds{Q}}
 \def\krc{C}
 \def\diffm{d}
 \def\diffh{d_{\chi}}
-\def\sln{sl(N)}
 \def\redh{\overline{H}}
-\def\ZZ{\mathbb{Z}}
+\def\ZZ{\mathds{Z}}
 \def\bs{\boldsymbol}
-\def\Ztwo{\mathbb{Z}_2}
+\def\Ztwo{\mathds{Z}_2}
 \def\mdual{^{\vee}}
 
 \title{Computing Khovanov-Rozansky homology \\ and defect fusion}
@@ -351,45 +349,22 @@ by certain combinations of the local diagrams\footnote{Note that we deliberately
 More precisely, one associates complexes of matrix factorisations to each crossing: The construction of~\cite{kr0401268} provides an assignment
 \begin{equation}
 \label{DeltaX}
-\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
-\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
-\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
-\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{i}$};
+\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{j}$};
+\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{k}$};
+\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{l}$};
 \draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
 \draw[ ->, thick ] (230:1) arc (230:130:1); 
 \end{tikzpicture}
 \widehat = \,
 \Xcirc \, ,
 \qquad 
-%\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle] {};
-%\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
-%\node (br) at (1,-1) [circle] {{\scriptsize $x^{N+1}_{l}$}};
-%\node (tl) at (-1,1) [circle] {{\scriptsize $x^{N+1}_{i}$}};
-%\node (tr) at (1,1) [circle] {{\scriptsize $x^{N+1}_{j}$}};
-%\draw[->,  thick] (bl) to [out=40,in=-40]  (tl); 
-%\draw[->,  thick] (br) to [out=140,in=220]  (tr); 
-%\end{tikzpicture}
-%\widehat = \,
-%\Xcirc \, ,
-%\qquad 
-%\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-%\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
-%\node (br) at (1,-1) [circle] {{\scriptsize $x^{N+1}_{l}$}};
-%\node (tl) at (-1,1) [circle] {{\scriptsize $x^{N+1}_{i}$}};
-%\node (tr) at (1,1) [circle] {{\scriptsize $x^{N+1}_{j}$}};
-%\draw[-,  thick] (bl) -- (0); 
-%\draw[-,  thick] (br) -- (0); 
-%\draw[->, very  thick] (0) -- (tl); 
-%\draw[->,  thick] (0) -- (tr); 
-%\end{tikzpicture}
-\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
-\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
-\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
-\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{i}$};
+\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{j}$};
+\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{k}$};
+\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{l}$};
 \node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
 \node (bl) at (-1,-1) [circle] {};
 \node (br) at (1,-1) [circle] {};
@@ -401,8 +376,39 @@ More precisely, one associates complexes of matrix factorisations to each crossi
 \draw[->,  thick] (0) -- (tr); 
 \end{tikzpicture}
 \widehat = \,
-\Xbul
+\Xbul\,.
 \end{equation}
+%\begin{equation}
+%\label{DeltaX}
+%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
+%\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
+%\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
+%\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
+%\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
+%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
+%\draw[ ->, thick ] (230:1) arc (230:130:1); 
+%\end{tikzpicture}
+%\widehat = \,
+%\Xcirc \, ,
+%\qquad 
+%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
+%\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
+%\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
+%\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
+%\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
+%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
+%\node (bl) at (-1,-1) [circle] {};
+%\node (br) at (1,-1) [circle] {};
+%\node (tl) at (-1,1) [circle] {};
+%\node (tr) at (1,1) [circle] {};
+%\draw[-,  thick] (bl) -- (0); 
+%\draw[-,  thick] (br) -- (0); 
+%\draw[->,  thick] (0) -- (tl); 
+%\draw[->,  thick] (0) -- (tr); 
+%\end{tikzpicture}
+%\widehat = \,
+%\Xbul
+%\end{equation}
 where $\Xcirc$ and $\Xbul$ are certain $(4\times 4)$-matrices with entries in $\nQ[x_{i},x_{j},x_{k},x_{l}]$ such that $\Xcirc^2=\Xbul^2 = (x^{N+1}_{i}+x^{N+1}_{j}-x^{N+1}_{k}-x^{N+1}_{l})\cdot\operatorname{id}_{4\times 4}$. In other words, $\Xcirc$ and~$\Xbul$ are matrix factorisations of the sum of outgoing potentials minus the sum of incoming potentials. Their explicit expressions are given in Section~\ref{KRconstruction}. We also note that for two general matrix factorisations $D,D'$  of polynomials $W,W'$, respectively, there is a tensor product matrix factorisation $D\otimes D'$ of $W+W'$. 
 
 Now the ``resolution''  mentioned before is given by assigning two-term complexes of matrix factorisations to over- and under-crossings: 
@@ -455,7 +461,7 @@ Since all the ingredients for the construction of Khovanov-Rozansky homology are
 
 In a link diagram any oriented strand is incoming and outgoing with respect to some crossing, hence the complex $C^{\bullet,\bullet}_N(L)$ is a complex of matrix factorisations of zero. Yet nevertheless both these matrix factorisations and more importantly the differentials of $C^{\bullet,\bullet}_N(L)$ still depend on the variables~$x_{i}$. Hence $C^{\bullet,\bullet}_N(L)$ is of infinite rank over~$\nQ$, and its cohomology cannot be easily computed in general. The reason is that in practice computer algebra packages compute cohomology over polynomial rings by repeatedly determining Gr\"obner bases of certain ideals. In the case of Khovanov-Rozansky homology the number and the degrees of the generators involved are such that naive computations tend to exhaust the available memory rather quickly, making it impossible to determine invariants in all but the very simplest examples this way. 
 
-To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$. The matrix factorisation~$B$ is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the splitting of~$\idem$ (up to shifts). This means that from the pair $(B,\idem)$ we can find a triple $(F,f,g)$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g_{2}=\operatorname{id}_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
+To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$. The matrix factorisation~$B$ is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the splitting of~$\idem$ (up to shifts). This means that from the pair $(B,\idem)$ we can find a triple $(F,f,g)$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g=\operatorname{id}_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
 
 Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. One of its applications is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Section~\ref{compilewebs}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
 
@@ -536,36 +542,37 @@ From this point of view, once one has replaced each crossing in a link diagram w
 
 \medskip
 
-The remaining part of the present paper is organised as follows. TODO
+The remaining part of the present paper is organised as follows. In Section~\ref{preliminaries} we briefly review basic facts about graded matrix factorisations and fix our notation. We start Section~\ref{compilewebs} with a preparation of our discussion of Khovanov-Rozansky homology by recalling the approach to $\sln$ link invariants via state graphs and their skein relations. Then we introduce the notion of a web decorated by matrix factorisations and its compilation, which will allow us to reduce tensor products of matrix factorisations to finite rank. This is the key ingredient of our explicit computations of Khovanov-Rozansky homology, on which we offer a somewhat more conceptual look in terms of autoequivalences of triangulated categories arising from adjunctions of symmetric polynomials in Section~\ref{KRconstruction}. We illustrate how to use our computer implementation with several simple examples in Section~\ref{simpleexamples}, and we present a discussion of our results for Khovanov-Rozansky homology of links with up to six crossings and three components in Section~\ref{compres}. Several technical details are relegated to the appendices. 
 
 
 \begin{acknowledgements}
-We thank M.~Aganagic, N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, and G.~Watts. 
-TODO: add more
+We thank M.~Aganagic, N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, and G.~Watts. 
 \end{acknowledgements}
 
-\section{Somewhat earlier, in the discussion of MOY}
+%\section{Somewhat earlier, in the discussion of MOY}
+%
+%Our conventions for the the state model follow Rasmussen \cite{r0607544}. A \emph{state graph} $\Gamma$ is an oriented planar graph all of whose vertices have valence either two or four. Loops and multiple edges are allowed. The four-valent vertices are called \emph{singular crossings} and have two incoming and two outgoing edges, while the bivalent vertices are called \emph{marks} and have one incoming and one outgoing edge. The edges of a state graph are labelled by integers $1,\ldots,m$ where $m$ is the number of edges.
+%\[
+%\text{Example of state graph}.
+%\]
+%In \cite{moy1998} Murakami, Ohtsuhki and Yamada define a Homfly polynomial $\widetilde{P}(D)$ for a state graph $D$, which they use to give a state model definition of the Homfly polynomial similar to the Kauffman state model for the Jones polynomial.
+%
+%The closure of a braid diagram all of whose crossings are singular (and which therefore defines a state graph) is called a \emph{braid graph} (note that all our braid graphs are closed, as compared to Rasmussen). Recall the induction scheme of Wu on $p.20$ of \cite{r0607544}.
+%
+%\begin{itemize}
+%\item Somewhere discuss that the dual of the homology of a link is the homology of the mirror link (hence KR homology can be reasonably called either \emph{homology} or \emph{cohomology}).
+%\item Be clear on the grading on the quotient algebra, i.e. we do not pre-shift it.
+%\end{itemize}
 
-Our conventions for the the state model follow Rasmussen \cite{r0607544}. A \emph{state graph} $\Gamma$ is an oriented planar graph all of whose vertices have valence either two or four. Loops and multiple edges are allowed. The four-valent vertices are called \emph{singular crossings} and have two incoming and two outgoing edges, while the bivalent vertices are called \emph{marks} and have one incoming and one outgoing edge. The edges of a state graph are labelled by integers $1,\ldots,m$ where $m$ is the number of edges.
-\[
-\text{Example of state graph}.
-\]
-In \cite{moy1998} Murakami, Ohtsuhki and Yamada define a HOMFLY polynomial $\widetilde{P}(D)$ for a state graph $D$, which they use to give a state model definition of the HOMFLY polynomial similar to the Kauffman state model for the Jones polynomial.
-
-The closure of a braid diagram all of whose crossings are singular (and which therefore defines a state graph) is called a \emph{braid graph} (note that all our braid graphs are closed, as compared to Rasmussen). Recall the induction scheme of Wu on $p.20$ of \cite{r0607544}.
-
-\begin{itemize}
-\item Somewhere discuss that the dual of the homology of a link is the homology of the mirror link (hence KR homology can be reasonably called either \emph{homology} or \emph{cohomology}).
-\item Be clear on the grading on the quotient algebra, i.e. we do not pre-shift it.
-\end{itemize}
 
 \section{Preliminaries}
+\label{preliminaries}
 
 In this section we recall our notation. In most cases we are consistent with \cite{kr0401268} (\textbf{todo}).
 
 \subsection{Graded matrix factorisations}
 
-Let $R = \oplus_{i \ge 0} R_i$ be a graded ring. We write $M_i$ for the degree $i$ elements in a graded $R$-module~$M$. We define a $(\ZZ \times \Ztwo)$-graded $R$-module to be a graded $R$-module $X$ together with a chosen decomposition $X = X^0 \oplus X^1$ as a direct sum of graded submodules. An element of $(X^i)_j$ is said to be have bidegree $(i,j)$ and if $\varphi: X \lto Y$ is an $R$-linear map of $(\ZZ \times \Ztwo)$-graded $R$-modules, we say that $\varphi$ has bidegree $(a,b)$ if $\varphi(X^i) \subseteq X^{i+a}$ and $\varphi(X_j) \subseteq X_{j+b}$ for all integers $i,j$.
+Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. We write $M_i$ for the degree $i$ elements in a graded $R$-module~$M$. We define a $(\ZZ \times \Ztwo)$-graded $R$-module to be a graded $R$-module $X$ together with a chosen decomposition $X = X^0 \oplus X^1$ as a direct sum of graded submodules. An element of $(X^i)_j$ is said to be have bidegree $(i,j)$ and if $\varphi: X \lto Y$ is an $R$-linear map of $(\ZZ \times \Ztwo)$-graded $R$-modules, we say that $\varphi$ has bidegree $(a,b)$ if $\varphi(X^i) \subseteq X^{i+a}$ and $\varphi(X_j) \subseteq X_{j+b}$ for all integers $i,j$.
 
 Let $W \in R_{2c}$ be a homogeneous element of even degree. A \emph{graded linear factorisation} of $W$ is a pair $X^0, X^1$ of graded $R$-modules together with $R$-linear maps $d_X^0, d_X^1$ of degree $c$, as in the diagram
 \[
@@ -573,7 +580,7 @@ Let $W \in R_{2c}$ be a homogeneous element of even degree. A \emph{graded linea
 X^0 \ar[r]^-{d_X^0} & X^1 \ar[r]^-{d_X^1} & X^0\,,
 }
 \]
-such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then the \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\oplus_{i \text{ even}} Z^i$ in degree zero, $\oplus_{i \text{ odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded matrix factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
+such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in $\nZ_{2}$-degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then its \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\bigoplus_{i\;\text{even}} Z^i$ in degree zero, $\bigoplus_{i\;\text{odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded matrix factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
 
 A \emph{morphism} $\varphi: X \lto Y$ of degree $e$ between graded linear factorisations is an $R$-linear map of bigdegree $(0, e)$ satisfying $d_Y \circ \varphi = \varphi \circ d_X$, that is, a pair $\varphi^0, \varphi^1$ of linear maps of degree $e$ making the diagram
 \[
@@ -582,59 +589,62 @@ X^0 \ar[d]_-{\varphi^0} \ar[r]^-{d_X^0} & X^1 \ar[d]_-{\varphi^1} \ar[r]^-{d_X^1
 Y^1 \ar[r]_-{d_Y^0} & Y^1 \ar[r]_-{d_Y^1} & Y^0
 }
 \] 
-commute. All morphisms are degree zero, unless specified otherwise. With the obvious composition and identity maps, this makes graded linear factorisations into an $R_0$-linear category. We say that a graded linear factorisation $X$ is a \emph{matrix factorisation} if each $X^i$ is a free graded $R$-module, and a \emph{finite rank matrix factorisation} if each $X^i$ is a free graded module of finite rank. In this case, if we write each $X^i$ as a finite direct sum of grading shifted copies $R\{ b_i \}$ of $R$, the differential $d_X$ is represented by an odd matrix with homogeneous entries (given an integer $m$, $M\{ m \}$ denotes the $R$-module $M$ with the shifted grading $M\{ m \}_i = M_{i - m}$).
+commute. All morphisms are degree zero, unless specified otherwise. With the obvious composition and identity maps, this makes graded linear factorisations into an $R_0$-linear category. We say that a graded linear factorisation $X$ is a \emph{matrix factorisation} if each $X^i$ is a free graded $R$-module, and a \emph{finite-rank matrix factorisation} if each $X^i$ is a free graded module of finite rank. In this case, if we write each $X^i$ as a finite direct sum of grading shifted copies $R\{ b_i \}$ of $R$, the differential $d_X$ is represented by an odd matrix with homogeneous entries (given an integer $m$, $M\{ m \}$ denotes the $R$-module $M$ with the shifted grading $M\{ m \}_i = M_{i - m}$).
 
-Given morphisms $\varphi, \psi: X \lto Y$ of graded linear factorisations of $W$, a \emph{homotopy} from $\varphi$ to $\psi$ is an $R$-linear bidegree $(-1,-c)$ map $\lambda: X \lto Y$ such that $d_Y \circ \lambda + \lambda \circ d_X = \psi - \varphi$, and if such a homotopy exists we say that $\varphi, \psi$ are \emph{homotopic} and write $\varphi \simeq \psi$. This is an equivalence relation, the null-homotopic morphisms form an $R_0$-submodule of all morphisms, and we define the \emph{homotopy category of graded linear factorisations} $\HF(R,W)$ to be the category of graded linear factorisations modulo the homotopy relation. We write $\HMF(R,W)$, respectively $\hmf(R,W)$, for the full subcategories of matrix factorisations and finite rank matrix factorisations in $\HF(R,W)$. 
+Given morphisms $\varphi, \psi: X \lto Y$ of graded linear factorisations of $W$, a \emph{homotopy} from $\varphi$ to $\psi$ is an $R$-linear bidegree $(-1,-c)$ map $\lambda: X \lto Y$ such that $d_Y \circ \lambda + \lambda \circ d_X = \psi - \varphi$, and if such a homotopy exists we say that $\varphi, \psi$ are \emph{homotopic} and write $\varphi \simeq \psi$. This is an equivalence relation, the null-homotopic morphisms form an $R_0$-submodule of all morphisms, and we define the \emph{homotopy category of graded linear factorisations} $\HF(R,W)$ to be the category of graded linear factorisations modulo the homotopy relation. We write $\HMF(R,W)$, respectively $\hmf(R,W)$, for the full subcategories of matrix factorisations and finite-rank matrix factorisations in $\HF(R,W)$. 
 
-If $X$ is a graded linear factorisation of $W$ and $m \in \mathbb{Z}$ then the grading shifted module $X\{ m \}$ is a graded linear factorisation with differential of $X$ and decomposition $X\{ m \} = X^0\{ m \} \oplus X^1\{ m \}$, and so a degree $e$ morphism $X \lto Y$ is the same as a degree zero morphism $X \lto Y\{-e\}$. The \emph{suspension} of $X$, denoted $X\langle 1 \rangle$, is the graded linear factorisation
+If $X$ is a graded linear factorisation of $W$ and $m \in \mathds{Z}$ then the grading shifted module $X\{ m \}$ is a graded linear factorisation with differential of $X$ and decomposition $X\{ m \} = X^0\{ m \} \oplus X^1\{ m \}$, and so a degree $e$ morphism $X \lto Y$ is the same as a degree zero morphism $X \lto Y\{-e\}$. The \emph{suspension} of $X$, denoted $X\langle 1 \rangle$, is the graded linear factorisation
 \[
 \xymatrix{
 X^1 \ar[r]^-{-d_X^1} & X^0 \ar[r]^-{d_X^0} & X^1\,.
 }
 \]
-Following \cite{kr0401268} we use $\langle - \rangle$ rather than $[-]$ to denote the suspension, for reasons that will become apparent in Section \ref{??}. Note that the functors $\{ m \}$ and $\langle n \rangle$ commute.
+Following \cite{kr0401268} we use $\langle - \rangle$ rather than $[-]$ to denote the suspension. Note that the functors $\{ m \}$ and $\langle n \rangle$ commute.
 
-\subsubsection{The graded Hom} Let $X,Y$ be graded linear factorisations of $W,W' \in R_{2c}$ respectively. Ignoring the differentials for the moment, we can form the graded $R$-module
+\subsubsection{The graded Hom} Let $X,Y$ be graded linear factorisations of $W,W' \in R_{2c}$, respectively. Ignoring the differentials for the moment, we can form the graded $R$-module
 \[
-\Hom_{gr}(X,Y) = \bigoplus_{i \in \mathbb{Z}} \Hom_R(X,Y)_i
+\Hom_{\text{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i
 \]
-where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of degree $i$. This is a submodule of $\Hom_R(X,Y)$, and if $X$ is finitely generated then $\Hom_{gr}(X,Y) = \Hom_R(X,Y)$, in which case we use the latter notation. This graded module has a natural $\Ztwo$-decomposition into even and odd maps
+where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of degree $i$. This is a submodule of $\Hom_R(X,Y)$, and if $X$ is finitely generated then $\Hom_{\text{gr}}(X,Y) = \Hom_R(X,Y)$, in which case we use the latter notation. This graded module has a natural $\Ztwo$-decomposition into even and odd maps
 \begin{align*}
-\Hom_{gr}(X,Y) &= \left( \Hom_{gr}(X^0, Y^0) \oplus \Hom_{gr}(X^1, Y^1) \right)\\
-&\qquad \oplus \left( \Hom_{gr}(X^0, Y^1) \oplus \Hom_{gr}(X^1, Y^0) \right)\,.
+\Hom_{\text{gr}}(X,Y) &= \left( \Hom_{\text{gr}}(X^0, Y^0) \oplus \Hom_{\text{gr}}(X^1, Y^1) \right)\\
+&\qquad \oplus \left( \Hom_{\text{gr}}(X^0, Y^1) \oplus \Hom_{\text{gr}}(X^1, Y^0) \right)\,.
 \end{align*}
-Together with the differential $d$ defined for an odd or even map $\alpha$ (with $|\alpha|$ denoting this $\Ztwo$-degree)
+Together with the differential $d$ defined on an odd or even map $\alpha$ (with $|\alpha|$ denoting this $\Ztwo$-degree) by
 \[
-d(\alpha) = d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X,
+d(\alpha) = d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X \, ,
 \]
-the graded module $\Hom_{gr}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \Ztwo)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lto Y'$ is a morphism of graded linear factorisations of degree $e$, then $\Hom_{gr}(X,\varphi)$ is another morphism of degree $e$, and similarly in the first variable.
+the graded module $\Hom_{\text{gr}}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \Ztwo)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lto Y'$ is a morphism of graded linear factorisations of degree $e$, then $\Hom_{\text{gr}}(X,\varphi)$ is another morphism of degree $e$, and similarly in the first variable.
 
-\subsubsection{The graded tensor product} Let $X,Y$ be graded linear factorisations of $W,W' \in R_{2c}$ respectively. Then $X \otimes Y$ (all tensor products are $R$-linear) is a graded $R$-module with $\Ztwo$-decomposition
+\subsubsection{The graded tensor product} Let $X,Y$ be graded linear factorisations of $W,W' \in R_{2c}$, respectively. Then $X \otimes Y$ (all tensor products are $R$-linear) is a graded $R$-module with $\Ztwo$-decomposition
 \begin{align*}
 X \otimes Y &= \left( (X^0 \otimes Y^0) \oplus (X^1 \otimes Y^1) \right)\\
 &\qquad \oplus \left( (X^0 \otimes Y^1) \oplus (X^1 \otimes Y^0) \right)\,
 \end{align*}
 and differential $d = d_X \otimes 1 + 1 \otimes d_Y$ making it into a graded linear factorisation of $W + W'$. The notation here implicitly involves Koszul signs: if $x \in X^i$ and $y \in Y^j$ then
 \[
-d( x \otimes y ) = d_X(x) \otimes 1 + (-1)^j x \otimes d_Y(y).
+d( x \otimes y ) = d_X(x) \otimes 1 + (-1)^j x \otimes d_Y(y) \, .
 \]
 The tensor product is functorial in each variable and has all the expected properties, moreover, the graded Hom and tensor interact in the usual way; see Appendix \ref{appendix:graded_mfs}.
 
 \subsection{Cyclic Koszul complexes}\label{prelim:cyclic_koszul}
 
-Let us recall the definition of the cyclic Koszul complex from \cite[\S 2]{kr0401268}. Let $R = \oplus_{i \ge 0} R_i$ be a graded ring. If $a,b$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then $\{ a, b \}$ denotes the graded matrix factorisation of $ab$ given by
+Let us recall the definition of the cyclic Koszul complex from \cite[\S 2]{kr0401268}. Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $a,b\in R$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then $\{ a, b \}$ denotes the graded matrix factorisation of $ab$ given by
 \[
-R \xlto{a} R\{ c - \deg(a) \} \xlto{b} R.
+\xymatrix{
+R \ar[r]^-{a} & R\{ c - \deg(a) \} \ar[r]^-{b} & R \, ,
+}
 \]
-For two sequences $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ of homogeneous elements in $R$ satisfying $\deg(a_i) + \deg(b_i) = 2c$ for each $i$, we introduce the following notation for the tensor product
+For two sequences $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ of homogeneous elements in $R$ satisfying $\deg(a_i) + \deg(b_i) = 2c$ for each $i$, we denote
 \[
-\{ \bs{a}, \bs{b} \} := \{a_1,b_1\} \otimes \cdots \otimes \{a_m, b_m\}
+\{ \bs{a}, \bs{b} \} := \{a_1,b_1\} \otimes \ldots \otimes \{a_m, b_m\}
 \]
-which is a graded matrix factorisation of $\sum_i a_i b_i \in R_{2c}$. A better way to present the differential on this tensor product is to introduce formal symbols $\theta_i$ of bidegree $(-1, \deg(a_i) - c)$, so that when we write $R \theta_i$ we mean the $R\{ \deg(a_i) - c \}$ placed in cohomological degree $-1$. The graded free module $F = \oplus_i R\theta_i$ and its exterior algebra $\bigwedge F$ acquire both a $\ZZ$-grading from these cohomological degrees, and a grading in the usual sense. We define differentials $\delta_{\pm}$ on $\bigwedge F$ of bidegree $(\pm 1,c)$ by
+which is a graded matrix factorisation of $\sum_i a_i b_i \in R_{2c}$. A better way to present the differential on this tensor product is to introduce formal symbols $\theta_i$ of bidegree $(-1, \deg(a_i) - c)$, so that when we write $R \theta_i$ we mean $R\{ \deg(a_i) - c \}$ placed in cohomological degree $-1$. The graded free module $F = \bigoplus_i R\theta_i$ and its exterior algebra $\bigwedge F$ acquire both a $\ZZ$-grading from these cohomological degrees, and a grading in the usual sense. We define differentials $\delta_{\pm}$ on $\bigwedge F$ of bidegree $(\pm 1,c)$ by
 \[
-\delta_+ = \Big(\sum_i b_i \theta_i^*\Big) \neg\, (-) \quad \delta_{-} = \Big(\sum_i a_i \theta_i\Big) \wedge (-)\,.
+\delta_+ = \Big(\sum_i b_i \theta_i^*\Big) \neg\, (-) \, , \qquad \delta_{-} = \Big(\sum_i a_i \theta_i\Big) \wedge (-)\,.
 \]
 On the $\Ztwo$-folding of $\bigwedge F$ the map $\delta = \delta_+ + \delta_-$ has bidegree $(1,c)$ and squares to multiplication by $\sum_i a_i b_i$, so the pair $(\bigwedge F, \delta)$ is a graded matrix factorisation of this potential, canonically isomorphic to $\{ \bs{a}, \bs{b} \}$. We will identify these two factorisations.
+
 
 \section{Compiling decorated webs}
 \label{compilewebs}
@@ -701,7 +711,7 @@ where both strands of a smoothing are actually divided by a bivalent vertex call
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage}.} 
-From a link diagram with~$m$ crossings we thus produce $2^m$ oriented planar graphs~$\Gamma$ whose vertices are either bivalent with one incoming and one outgoing edge, or four-valent of type 
+From a link diagram with~$s$ crossings we thus produce $2^s$ oriented planar graphs~$\Gamma$ whose vertices are either bivalent with one incoming and one outgoing edge, or four-valent of type 
  \begin{minipage}{0.48cm}
 \begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
 \node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= black] {};
@@ -714,7 +724,7 @@ From a link diagram with~$m$ crossings we thus produce $2^m$ oriented planar gra
 \draw[->] (0) -- (tl); 
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
-\end{minipage}. If~$\Gamma$ has~$m$ edges and we label each edge by distinct integers $1,\ldots,m$, then we call it a \emph{state graph}. To each state graph~$\Gamma$ the construction of~\cite{moy1998} associates a Laurent polynomial $p_{N}(\Gamma)\in\nZ[q^{\pm 1}]$ that is uniquely determined by its value $[N]=(q^N-q^{-N})(q-q^{-1})^{-1}$ for an oriented circle, and the skein relations
+\end{minipage}. If~$\Gamma$ has~$r$ edges and we label each edge by distinct integers $1,\ldots,r$, then we call it a \emph{state graph}. To each state graph~$\Gamma$ the construction of~\cite{moy1998} associates a Laurent polynomial $p_{N}(\Gamma)\in\nZ[q^{\pm 1}]$ that is uniquely determined by its value $[N]=(q^N-q^{-N})(q-q^{-1})^{-1}$ for an oriented circle, and the skein relations
 \begin{align}
 & 
 p_{N} \Bigg( 
@@ -887,7 +897,7 @@ p_{N} \Bigg( \;
 \end{align}
 As is customary in each of the above identities we only show those parts of the graphs which differ in the arguments of the $p_{N}$'s. 
 
-In the second step, the link invariant $P_{N}(L)$ is obtained as follows. To produce the $2^m$ graphs $\Gamma_{j}$, each crossing in the link diagram is resolved according to
+In the second step, the link invariant $P_{N}(L)$ is obtained as follows. To produce the $2^s$ graphs $\Gamma_{j}$, each crossing in the link diagram is resolved according to
 \begin{equation}
 \label{graphreduction}
 \begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
@@ -952,8 +962,6 @@ Denoting by $q^{\alpha_j}$ the product of the~$c$ $q$-monomials associated to th
 $$
 P_{N}(L) = \sum_{j=1}^{2^c} q^{\alpha_j} p_{N}(\Gamma_{j}) \, .
 $$
-
-TODO: add example calculation here? 
 
 Khovanov and Rozansky categorify both steps in the above construction. As we will discuss in more detail later, $p_{N}(\Gamma)$ is replaced by a graded vector space which is obtained by assigning two special matrix factorisations to the resolutions 
 \begin{minipage}{0.36cm}
@@ -1077,22 +1085,22 @@ Thus $\Gamma$ is a closed oriented planar graph whose only vertices  are of type
 \end{minipage}. 
 To make it into a state web we decorate each edge~$i$ with the single variable~$x_{i}$ and the potential~$x_{i}^{N+1}$, and for the vertices we make the assignments
 $$
-\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
-\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
-\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
-\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{i}$};
+\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{j}$};
+\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{k}$};
+\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{l}$};
 \draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
 \draw[ ->, thick ] (230:1) arc (230:130:1); 
 \end{tikzpicture}
 \widehat = \,
 \Xcirc \, ,
 \qquad 
-\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
-\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
-\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
-\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{i}$};
+\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{j}$};
+\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{k}$};
+\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{l}$};
 \node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
 \node (bl) at (-1,-1) [circle] {};
 \node (br) at (1,-1) [circle] {};
@@ -1110,7 +1118,7 @@ where $\Xcirc$ and $\Xbul$ are fixed matrix factorisations of $x^{N+1}_{i}+x^{N+
 
 \begin{remark}
 \label{MOYremark}
-Note that we do not specify the matrix factorisations $\Xcirc$ and $\Xbul$ in the definition of a state web. However, in order for a state web to categorify the MOY relations, i.\,e.~for identities analogous to~\eqref{MOYdecomp1} to hold between compilations of state webs, $\Xcirc$ and $\Xbul$ need to be carefully chosen. This was done in~\cite{kr0401268} and we will give the expressions for $\Xcirc$ and $\Xbul$ in TODO below; see also~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4}. 
+Note that we do not specify the matrix factorisations $\Xcirc$ and $\Xbul$ in the definition of a state web. However, in order for a state web to categorify the MOY relations, i.\,e.~for identities analogous to~\eqref{MOYdecomp1} to hold between compilations of state webs, $\Xcirc$ and $\Xbul$ need to be carefully chosen. This was done in~\cite{kr0401268} and we will give the expressions for $\Xcirc$ and $\Xbul$ in~\eqref{XbulXcirc} below; see also~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4}. 
 \end{remark}
 
 For the remainder of this section we fix a decoration of a general web $\cat{F}$, and to avoid triviality we assume that there is at least one internal edge. Combining the matrix factorisations at each vertex we have the \emph{total matrix factorisation}
@@ -1154,7 +1162,7 @@ For the second type of derivative we need a way to index monomials in the intern
 \[
 \boldsymbol{\phi} = \{ \phi_1, \ldots, \phi_{\intvar} \} = \{ x_{e_1,1}, \ldots, x_{e_1,n_{e_1}}, x_{e_2,1}, \ldots, x_{e_2,n_{e_2}}, \ldots \}
 \]
-where we order the variables according to the edge ordering. Given a tuple $\alpha \in \mathbb{N}^\intvar$ we write $\phi^\alpha$ for the corresponding monomial $\phi_1^{\alpha_1} \ldots \phi_\intvar^{\alpha_\intvar}$. In (\ref{eq:defnqsweb}) we produced a collection of integers $\{q_e\}_{e \in E_{\text{int}}}$, and a $k$-basis for~$J$ is formed by the monomials with sufficiently small degrees in each variable. Precisely, for $\alpha \in \mathbb{N}^\intvar$ we write $\alpha < q$ if for each internal edge $e$ and each $i\in\{1,\ldots,n_{e}\}$ the integer associated to the variable $x_{e,i}$ by $\alpha$ is smaller than $ q_e$. Then it is clear that $\{ x^\alpha \}_{\alpha < q}$ forms a $k$-basis for~$J$, and we let $\pi: R_{\text{int}} \lto J$ be the projection and denote by
+where we order the variables according to the edge ordering. Given a tuple $\alpha \in \mathds{N}^\intvar$ we write $\phi^\alpha$ for the corresponding monomial $\phi_1^{\alpha_1} \ldots \phi_\intvar^{\alpha_\intvar}$. In (\ref{eq:defnqsweb}) we produced a collection of integers $\{q_e\}_{e \in E_{\text{int}}}$, and a $k$-basis for~$J$ is formed by the monomials with sufficiently small degrees in each variable. Precisely, for $\alpha \in \mathds{N}^\intvar$ we write $\alpha < q$ if for each internal edge $e$ and each $i\in\{1,\ldots,n_{e}\}$ the integer associated to the variable $x_{e,i}$ by $\alpha$ is smaller than $ q_e$. Then it is clear that $\{ x^\alpha \}_{\alpha < q}$ forms a $k$-basis for~$J$, and we let $\pi: R_{\text{int}} \lto J$ be the projection and denote by
 \begin{equation}
 \sigma: J \lto R_{\text{int}}, \quad \sigma(x^\alpha) = x^\alpha \text{ for } \alpha < q
 \end{equation}
@@ -1169,11 +1177,11 @@ This means that $g_{i}(f)$ is the polynomial determined by the unique decomposit
 
 \begin{definition} Given a matrix~$P$ representing an $R$-linear homogeneous map from~$X$ to itself there is a unique expression
 \begin{equation}
-P = \sum_{\alpha \in \mathbb{N}^\intvar} P_\alpha \cdot \phi^\alpha
+P = \sum_{\alpha \in \mathds{N}^\intvar} P_\alpha \cdot \phi^\alpha
 \end{equation}
 where each $P_\alpha$ is a matrix over $\rext$. For an internal variable $\phi_i$ we define an $\rext$-linear map from $X \otimes_{R_{\text{int}}} J$ to itself of the same degree as~$P$ by its representative
 $$
-\delta_{\phi_i}(P) = \sum_{\alpha \in \mathbb{N}^\intvar} P_\alpha \otimes \pi [g_i, \phi^\alpha] \sigma \, ,
+\delta_{\phi_i}(P) = \sum_{\alpha \in \mathds{N}^\intvar} P_\alpha \otimes \pi [g_i, \phi^\alpha] \sigma \, ,
 $$
 in the chosen basis, and we set
 $$
@@ -1207,13 +1215,14 @@ We thus arrive at the result that one can algorithmically compile any decorated 
 As we will discuss in Section~\ref{compres} we have used this implementation to compute Khovanov-Rozansky homology for several links. We stress however that our construction can just as well compute invariants associated to arbitrary tangles in~\cite{kr0401268} (which are still special cases of decorated webs), and we can explicitly compute the fusion of any topological defects in any Landau-Ginzburg model with potentials that are isolated singularities.
 
 \section{The construction}
+\label{KRconstruction}
 % notes: skrh, skrh2, ptons
 
-In this section we complete the description of Khovanov and Rozansky's homological link invariant, begun in Section \ref{??}. This invariant categorifies a specialisation of the HOMFLY polynomial, and as outlined earlier the categorification happens in two steps, following the two-step approach to the HOMFLY polynomial of \cite{moy1998}. The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose graded Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations which lift the MOY relations (\ref{??}).
+In this section we give a description of Khovanov and Rozansky's homological link invariants. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, following the two-step approach to the Homfly polynomial of \cite{moy1998}. The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose graded Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations which lift the MOY relations~\eqref{MOYdecomp1}.
 
-This is done by making good on the promise made in Remark \ref{??}. A state graph makes a choice, for each crossing in our link, of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $\Xcirc, \Xbul$). Tensoring these together over all crossings will produce a $\ZZ \times \Ztwo$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
+This is done by making good on the promise made in Remark~\ref{MOYremark}. A state graph makes a choice, for each crossing in our link, of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $\Xcirc, \Xbul$). Tensoring these together over all crossings will produce a $(\ZZ \times \Ztwo)$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
 
-The second step is to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right hand side of the identities in (\ref{??}), and we thereby define the homological invariant $\textup{KR}_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over and under crossings.
+The second step is to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right hand side of the identities in~\eqref{graphreduction}, and we thereby define the homological invariant $\textup{KR}_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over and under crossings.
 
 We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier \cite{??}, one can try to build autoequivalences of triangulated categories out of special kinds of adjunctions; if one is very clever with the choice of adjunction, these autoequivalences give rise to link invariants. 
 
@@ -1232,41 +1241,41 @@ of symmetric polynomials in all polynomials. As with any ring morphism, there ar
 \varphi^* \ar@{-|}[r] & \varphi_* \ar@{-|}[r] & \varphi^!
 }
 \]
-between restriction of scalars $\varphi_*$, extension of scalars $\varphi^* = - \otimes_A S$ and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of $S$-modules
+between restriction of scalars $\varphi_*$, extension of scalars $\varphi^* = (-) \otimes_A S$ and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ can be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of $S$-modules
 \[
-\psi: S \lto \Hom_A(S,A), \quad \psi(1) = (x_1-x_2)^*, \; \psi(x_1-x_2) = 1^*.
+\psi: S \lto \Hom_A(S,A) \, , \qquad \psi(1) = (x_1-x_2)^* \, , \qquad \psi(x_1-x_2) = 1^* \, .
 \]
-From this we deduce a natural isomorphism for any $A$-module $N$
+From this we deduce for any $A$-module $N$ a natural isomorphism 
 \[
-\varphi^!(N) = \Hom_A(S,N) \cong \Hom_A(S,A) \otimes_A N \stackrel{\psi}{\cong} S \otimes_A N = \varphi^*(N),
+\varphi^!(N) = \Hom_A(S,N) \cong \Hom_A(S,A) \otimes_A N \stackrel{\psi}{\cong} S \otimes_A N = \varphi^*(N) \, ,
 \]
 so that the left and right adjoints of $\varphi_*$ are naturally isomorphic. One way to look at this is that by allowing us to identify $\varphi^*$ with $\varphi^!$, the map $\psi$ has provided us with an adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, so that these functors are biadjoint. By a process of stabilisation this biadjunction will give rise to a biadjunction on the level of matrix factorisations, which is the starting point for the Khovanov-Rozansky construction.
 
 These morphisms will come from the units and counits of the adjunction $\xymatrix@1{\varphi^* \ar@{-|}[r] & \varphi_*}$, which we denote $\eta, \varepsilon$, and the units and counits of the new adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, which we denote $\eta', \varepsilon'$. For an $A$-module $N$ and $S$-module $M$ these maps are given by
 \begin{align*}
-\eta: N \lto \varphi_* \varphi^*(N) = \varphi_*( S \otimes_A N ), \qquad &n \mapsto 1 \otimes n,\\
-\eta': M \lto \varphi^* \varphi_*(M) = S \otimes_A \varphi_*(M), \qquad &m \mapsto (x_1-x_2) \otimes m + 1 \otimes (x_1 - x_2) \cdot m
+\eta: N  \lto \varphi_* \varphi^*(N) = \varphi_*( S \otimes_A N ) \, , \qquad n & \longmapsto 1 \otimes n \, ,\\
+\eta': M  \lto \varphi^* \varphi_*(M) = S \otimes_A \varphi_*(M) \, , \qquad m & \longmapsto (x_1-x_2) \otimes m + 1 \otimes (x_1 - x_2) \cdot m
 \end{align*}
 and
 \begin{align*}
-\varepsilon: S \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) \to M, \qquad &b \otimes m \mapsto b \cdot m,\\
-\varepsilon': \varphi_*(S \otimes_A N) = \varphi_*\varphi^*(N) \lto N, \qquad &b \otimes n \mapsto \psi(b)(1) \cdot n.
+\varepsilon: S \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) \lto M \, , \qquad b \otimes m & \longmapsto b \cdot m \, ,\\
+\varepsilon': \varphi_*(S \otimes_A N) = \varphi_*\varphi^*(N) \lto N \, , \qquad b \otimes n & \longmapsto \psi(b)(1) \cdot n \, .
 \end{align*}
 To make the transition from modules to matrix factorisations, we present the biadjunction between $\varphi^*$ and $\varphi_*$ in terms of bimodules and bimodule morphisms. It is clear that $\varphi^*$ is represented by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. The units and counits of adjunction are represented by morphisms between these bimodules and the rings $A,S$ as bimodules over themselves, representing the identity functors:
 \[
-\eta: S \lto S \otimes_A S, \qquad b \mapsto (x_1 - x_2) \otimes b + 1 \otimes (x_1 - x_2)b
+\eta: S \lto S \otimes_A S \, , \qquad b \longmapsto (x_1 - x_2) \otimes b + 1 \otimes (x_1 - x_2)b
 \]
 and
 \[
-\varepsilon: S = S \otimes_A A \lto A, \qquad b \mapsto \psi(b)(1).
+\varepsilon: S = S \otimes_A A \lto A \, , \qquad b \longmapsto \psi(b)(1) \, .
 \]
 \textbf{todo} present units and counits of the right-way adjunction. The bimodule $S \otimes_A S$ is of particular interest:
 
-\begin{lemma}\label{lemma:bimodules_as_algebras} Viewing a $\QQ[x_1,x_2,y_1,y_2]$-module as a $S$-bimodule by identifying the action of $y_1, y_2$ with the right action of $x_1, x_2$ respectively, there are isomorphisms of $S$-bimodules
-\begin{gather*}
-S \otimes_A S \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2),\\
-S \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,.
-\end{gather*}
+\begin{lemma}\label{lemma:bimodules_as_algebras} Viewing a $\QQ[x_1,x_2,y_1,y_2]$-module as an $S$-bimodule by identifying the action of $y_1, y_2$ with the right action of $x_1, x_2$, respectively, there are isomorphisms of $S$-bimodules
+\begin{align*}
+S \otimes_A S & \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \, ,\\
+S & \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,.
+\end{align*}
 \end{lemma}
 
 Moreover it is clear that these isomorphisms make the following diagrams commute:
@@ -1285,23 +1294,25 @@ S \ar[r]_-{\cong}\ar[d]_{??} & \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2) \ar[d
 S \otimes_A S \ar[r]^-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2)\,.
 }
 \end{equation}
-If $W \in A$ is any symmetric polynomial then, since $S$ is free as an $A$-module with basis $\{1, x_1 - x_2\}$, these functors lift to an adjoint pair of functors between the triangulated categories of matrix factorisations
+If $W \in A$ is any symmetric polynomial then, since $S$ is free as an $A$-module with basis $\{1, x_1 - x_2\}$, these functors lift to an adjoint pair of functors between the triangulated categories of matrix factorisations, 
 \[
 \xymatrix@C+2pc{
-\hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, W) \ar@<1ex>[l]^{\varphi_*}.
+\hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, W) \ar@<1ex>[l]^{\varphi_*} \, .
 }
 \]
 Let us fix the polynomial $W = x_1^{N+1} + x_2^{N+1}$. The general theory of \cite{??} applies (\emph{details}) to produce an interesting autoequivalence of $\mathbb{K}^b( \hmf(S, W) )$, given by tensoring with the short complex (or something like this)
 \[
-0 \lto S \otimes_A S \lto S \lto 0.
+\xymatrix{%
+0 \ar[r] & S \otimes_A S \ar[r] & S \ar[r] & 0 \, .
+}
 \]
 This is the autoequivalence we want to associate to an undercrossing of our link. Next we are going to replace this short complex of bimodules by a short complex of matrix factorisations. The intuition is the following: there is an equivalence
 \[
 \hmf(S, W) \cong \qderu{b}{\modd S}/\K^b(\modd S)
 \]
-which says that a matrix factorisation of $W$ remembers the asymptotic part of a free resolution of a $S/W$-module. In this sense $S \otimes_A S, S$, which are both clearly $S/W$-modules, contain far too much information: the action of the corresponding functors on the homotopy category of matrix factorisations will only depend on the asymptotic part of the resolution of $S \otimes_A S, S$ as $S/W$-modules. Extracting this asymptotic part is the process known as \emph{stabilisation}, and will take place in the next section. We will stabilise $S \otimes_A S$ to a matrix factorisation $\Xbul$ and $S$ to $\Xcirc$. The morphisms $??$ lift to the free resolutions of these modules and thus to the asymptotic part, which means that these maps stabilise to morphisms between $\Xcirc$ and $\Xbul$, which are the $\chi$-morphisms of \cite{kr0401268}.
+which says that a matrix factorisation of $W$ remembers the asymptotic part of a free resolution of a $S/(W)$-module. In this sense $S \otimes_A S, S$, which are both clearly $S/(W)$-modules, contain far too much information: the action of the corresponding functors on the homotopy category of matrix factorisations will only depend on the asymptotic part of the resolution of $S \otimes_A S, S$ as $S/(W)$-modules. Extracting this asymptotic part is the process known as \emph{stabilisation}, and will take place in the next subsection. We will stabilise $S \otimes_A S$ to a matrix factorisation $\Xbul$ and $S$ to $\Xcirc$. The morphisms $??$ lift to the free resolutions of these modules and thus to the asymptotic part, which means that these maps stabilise to morphisms between $\Xcirc$ and $\Xbul$, which are the $\chi$-morphisms of \cite{kr0401268}.
 
-We can view the stabilisation as a kind of truncation of the bimodule picture elaborated above, and in fact these truncations together form a kind of filtration as we vary the integer $N$. Indeed if one proceeds in the above line, one will end up constructing the triply graded Khovanov-Rozansky homology of \cite{??}, and the relationship between this homology and the truncations at level $N$ (the $sl(N)$-homologies) is encoded by the spectral sequence of Rasmussen \cite{??}.
+We can view the stabilisation as a kind of truncation of the bimodule picture elaborated above, and in fact these truncations together form a kind of filtration as we vary the integer $N$. Indeed if one proceeds in the above line, one will end up constructing the triply graded Khovanov-Rozansky homology of \cite{??}, and the relationship between this homology and the truncations at level $N$ (the $\sln$-homologies) is encoded by the spectral sequence of~\cite{r0607544}.
 
 \subsection{Stabilisation}
 
@@ -1309,11 +1320,11 @@ Earlier we explained how one constructs the Khovanov-Rozansky complex by stabili
 
 Let us begin with a general definition.
 
-\begin{definition} Let $R$ be a ring, $W \in R$ and $M$ a finitely generated $R/(W)$-module. We define the \emph{stabilisation} of $M$ with respect to $W$ to be a finite rank matrix factorisation $X_M \in \hmf(R,W)$ together with a morphism of linear factorisations $\pi: X_M \lto M$ with the property that the map
+\begin{definition} Let $R$ be a ring, $W \in R$ and $M$ a finitely generated $R/(W)$-module. We define the \emph{stabilisation} of $M$ with respect to $W$ to be a finite-rank matrix factorisation $X_M \in \hmf(R,W)$ together with a morphism of linear factorisations $\pi: X_M \lto M$ with the property that the map
 \[
 \Hom_R(Y, X_M) \lto \Hom_R(Y, M)
 \]
-is a quasi-isomorphism for every finite rank matrix factorisation $Y$ of $W$.
+is a quasi-isomorphism for every finite-rank matrix factorisation $Y$ of $W$.
 \end{definition}
 
 \textbf{todo}: mention the equivalence of triangulated categories, equivalent to the above definition of stabilisation.
@@ -1385,70 +1396,70 @@ W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}
 \end{equation}
 Both $\Xbul, \Xcirc$ are cyclic Koszul complexes. Namely, if we write $t_i = y_i - x_i$ then
 \begin{equation}\label{eq:cons1}
-W = \pi_1 t_1 + \pi_2 t_2, \qquad \pi_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i},
+W = \pi_1 t_1 + \pi_2 t_2 \, , \qquad \pi_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i} \, ,
 \end{equation}
 and due to the symmetry of $W$ there are polynomials $u_1,u_2$ such that
 \begin{equation}\label{eq:cons2}
 W = u_1 ( y_1 + y_2 - x_1 - x_2 ) + u_2 ( y_1 y_2 - x_1 x_2 ).
 \end{equation}
-Then in the notation of Section \ref{prelim:cyclic_koszul}, we define
-\begin{align*}
-\Xbul &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \}\\
-\Xcirc &= \{ (\pi_1, \pi_2) \, , (t_1, t_2) \}\,.
-\end{align*}
-Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x$'s with the $y$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$ for $i = 1,2$ (see Appendix \ref{??}). We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just mentioned.
+Then in the notation of Subsection \ref{prelim:cyclic_koszul}, we define
+\begin{align}
+\Xbul &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \} \, , \nonumber \\
+\Xcirc &= \{ (\pi_1, \pi_2) \, , (t_1, t_2) \}\,. \label{XbulXcirc}
+\end{align}
+Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x$'s with the $y$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$ for $i \in \{ 1,2 \}$ (see Appendix \ref{??}). We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just mentioned.
 
-Recall from Section \ref{prelim:cyclic_koszul} that the model of the Koszul complex that we use is the following: set $F = R \theta_1 \oplus R \theta_2$, where the $\theta$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
+Recall from Subsection \ref{prelim:cyclic_koszul} that the model of the Koszul complex that we use is the following: set $F = R \theta_1 \oplus R \theta_2$, where the $\theta$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
 \[
-\Xbul = ( \bigwedge F, \beta_+ + \beta_{-}), \quad \beta_+ = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-), \quad \beta_{-} = \Big(\sum_i u_i \theta_i\Big) \wedge (-).
+\Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \, , \qquad \beta_+ = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-) \, , \qquad \beta_{-} = \Big(\sum_i u_i \theta_i\Big) \wedge (-) \, ,.
 \]
 where $s_1 = y_1 + y_2 - x_1 - x_2$ and $s_2 = y_1 y_2 - x_1 x_2$, and
 \[
-\Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}), \quad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-), \quad \delta_{-} = \Big(\sum_i \pi_i \theta_i\Big) \wedge (-).
+\Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \, , \qquad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-) \, , \qquad \delta_{-} = \Big(\sum_i \pi_i \theta_i\Big) \wedge (-) \, .
 \]
-By construction these are both matrix factorisations of $W$ over $R$. In the $\mathbb{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
+By construction these are both matrix factorisations of $W$ over $R$. In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
 \begin{align*}
-\pi_{\circ}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto \bigwedge^0 F/\Im(\beta_+^0) = R/\bold{s} R,\\
-\pi_{\bullet}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto \bigwedge^0 F/\Im(\delta_+^0) = R/\bold{t} R.
+& \pi_{\circ}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
+& \pi_{\bullet}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
 \end{align*}
-The module $R/\bold{t} R = R/(t_1,t_2)R$ is the diagonal, and we identify it with $S = \QQ[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/\bold{s} R$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
+The module $R/(\boldsymbol{t}) = R/(t_1,t_2)$ is the diagonal, and we identify it with $S = \QQ[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/(\boldsymbol{s})$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
 
 The $\pi$ morphisms are, as we will soon see, universal in a certain sense: they exhibit $\Xbul, \Xcirc$ as the \emph{stabilisations} of the Soergel bimodule and the diagonal, respectively. To prove this we make use of the perturbation lemma (\emph{details}, in appendoix).
 \\
 
 The upshot is that the maps
 \begin{align*}
-\Hom(1,\pi_{\circ})&: \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/(\bold{t}))\\
-\Hom(1,\pi_{\bullet})&: \Hom_R(\Xcirc, \Xbul) \lto \Hom_R(\Xcirc, R/(\bold{s}))
+\Hom(1,\pi_{\circ})&: \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/(\boldsymbol{t})) \, , \\
+\Hom(1,\pi_{\bullet})&: \Hom_R(\Xcirc, \Xbul) \lto \Hom_R(\Xcirc, R/(\boldsymbol{s}))
 \end{align*}
 are isomorphisms in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: \Xbul \lto \Xcirc$ as the image under the inverse of $\Hom(1,\pi_{\circ})$ of a certain natural cocycle on the right hand side, namely, the composite
 \begin{equation}\label{eq:cons4}
 \xymatrix{
-\Xbul \ar[r]^-{\pi_{\bullet}} & R/\bold{s} R \ar[r]^-{\can} & R/\bold{t}R
+\Xbul \ar[r]^-{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[r]^-{\can} & R/\boldsymbol{t}R
 }
 \end{equation}
-where the second map comes about because of the inclusion of ideals $\bold{s} R \subseteq \bold{t} R$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the diagram
+where the second map comes about because of the inclusion of ideals $\boldsymbol{s} R \subseteq \boldsymbol{t} R$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the diagram
 \begin{equation}\label{eq:cons5}
 \xymatrix@C+2pc{
-\Xbul \ar[d]_{\chi_1} \ar[r]^{\pi_{\bullet}} & R/\bold{s} R \ar[d]^{\can}\\
-\Xcirc \ar[r]_{\pi_{\circ}} & R/\bold{t} R
+\Xbul \ar[d]_{\chi_1} \ar[r]^{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[d]^{\can}\\
+\Xcirc \ar[r]_{\pi_{\circ}} & R/(\boldsymbol{t})
 }
 \end{equation}
 commute (we might say $\chi_1$ is the stabilisation of the canonical map between the quotient algebras).
 
-We know abstractly that $\chi_1$ exists. To write it down as a matrix one could study the equations which say that the matrix commutes with the differentials and makes (\ref{eq:cons5}) commute. This appears to be the approach of \cite{kr0401268}, where explicit matrices are presented without explanation. A more conceptual explanation was given in Khovanov and Rozansky's second paper on the subject \cite{??} and by Wu \cite{??}. But these constructions are rather specific to the special kind of Koszul factorisations that arise in Khovanov-Rozansky homology: 
+We know abstractly that $\chi_1$ exists. To write it down as a matrix one could study the equations which say that the matrix commutes with the differentials and makes (\ref{eq:cons5}) commute. This appears to be the approach of \cite{kr0401268}, where explicit matrices are presented without explanation. A more conceptual explanation was given in Khovanov and Rozansky's second paper on the subject \cite{??} and by Wu \cite{??}. But these constructions are rather specific to the special kind of Koszul factorisations that arise in Khovanov-Rozansky homology. 
 
 We give a more conceptual derivation by finding an explicit inverse of $\Hom(1,\pi_{\circ})$ and evaluating it on (\ref{eq:cons4}). Besides avoiding the need for explicit polynomials $u_i$ in the foundations, our approach has the advantage that it can be adapted to stabilise other morphisms into the diagonal.
 
 The proof of the following lemma is technical and we have relegated it to Appendix \ref{section:morphismpert}. For the statement we need to introduce the following polynomial:
 \[
-\gamma = \frac{\partial u_1}{\partial y_1} - \frac{\partial u_1}{\partial y_2} - \frac{1}{2} \frac{\partial u_2}{\partial y_2}(x_2 + y_2) + \frac{1}{2} \frac{\partial u_2}{\partial y_1}(x_1 + y_1).
+\gamma = \frac{\partial u_1}{\partial y_1} - \frac{\partial u_1}{\partial y_2} - \frac{1}{2} \frac{\partial u_2}{\partial y_2}(x_2 + y_2) + \frac{1}{2} \frac{\partial u_2}{\partial y_1}(x_1 + y_1) \, .
 \]
-\begin{lemma}\label{lemma:consfirst} The partial differential equation in an unknown $z$
+\begin{lemma}\label{lemma:consfirst} The partial differential equation 
 \begin{equation}\label{eq:consfirst1}
 2 z + \frac{\partial z}{\partial y_1} (y_1 - x_1) + \frac{\partial z}{\partial y_2}(y_2 - x_2) = \gamma
 \end{equation}
-has a unique polynomial solution $\Omega_2(\gamma)$, and the map $\chi_1: \Xbul \lto \Xcirc$ defined by
+in an unknown $z$ has a unique polynomial solution $\Omega_2(\gamma)$, and the map $\chi_1: \Xbul \lto \Xcirc$ defined by
 \begin{align*}
 \chi_1(1) &= 1 + \Omega_2( \gamma )\theta_1 \theta_2,\\
 \chi_1(\theta_1) &= \theta_1 + \theta_2,\\
@@ -1486,18 +1497,18 @@ More carefully, we define $\chi_0'$ to be the morphism making the diagram below 
 \]
 where each map is an isomorphism labelled by the corresponding Lemma in Appendix \ref{appendix:graded_mfs} (\textbf{todo} what to say about gradings?). The matrix factorisations $\{ \bs{a}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams (\ref{delta2}) with the orientations of the arrows reversed. Switching the role of the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
 
-Let $\phi: R \lto R$ be the automorphism $\phi(x_i) = y_i$ and $\phi(y_i) = x_i$. It is clear that $\phi$ sends $t_i$ to $-t_i$, $s_i$ to $-s_i$ and $W$ to $-W$, so that by pulling back along $\phi$ (equivalently, applying $\phi$ to the entries of all matrices) we get a morphism of matrix factorisations of $W$
+Let $\phi: R \lto R$ be the automorphism with $\phi(x_i) = y_i$ and $\phi(y_i) = x_i$. It is clear that $\phi$ sends $t_i$ to $-t_i$, $s_i$ to $-s_i$ and $W$ to $-W$, so that by pulling back along $\phi$ (equivalently, applying $\phi$ to the entries of all matrices) we get a morphism of matrix factorisations of $W$: 
 \[
 \xymatrix{
-\Xcirc = \{ \bs{a}, \bs{t} \} = \{ \phi\bs{a}, -\phi \bs{t} \} = \phi^*\{ \bs{a}, -\bs{t} \} \ar[rr]^-{\phi^* \chi'_0} & & \phi^*\{ \bs{u}, -\bs{s} \} = \{ \phi \bs{u}, -\phi \bs{s} \} = \{ \bs{u}, \bs{s} \} = \Xbul
+\Xcirc = \{ \bs{a}, \bs{t} \} = \{ \phi\bs{a}, -\phi \bs{t} \} = \phi^*\{ \bs{a}, -\bs{t} \} \ar[rr]^-{\phi^* \chi'_0} & & \phi^*\{ \bs{u}, -\bs{s} \} = \{ \phi \bs{u}, -\phi \bs{s} \} = \{ \bs{u}, \bs{s} \} = \Xbul \, ,
 }
 \]
 and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact that we have chosen the $u_i$ such that $\phi(u_i) = u_i$. If one is careful with signs, it is straightforward to deduce from the above the explicit form of $\chi_0$:
 \begin{equation}\label{eq:chi0defn}
 \begin{split}
-\chi_0(1) &= \frac{1}{2}(x_1 + y_1 - x_2 - y_2) \cdot 1 + a_2 \theta_1 \theta_2,\\
-\chi_0(\theta_1) &= -\theta_2 + \frac{1}{2}(x_1 + y_1) \theta_1,\\
-\chi_0(\theta_2) &= \theta_2 - \frac{1}{2}(x_2 + y_2)\theta_1,\\
+\chi_0(1) &= \frac{1}{2}(x_1 + y_1 - x_2 - y_2) \cdot 1 + a_2 \theta_1 \theta_2 \, ,\\
+\chi_0(\theta_1) &= -\theta_2 + \frac{1}{2}(x_1 + y_1) \theta_1\, ,\\
+\chi_0(\theta_2) &= \theta_2 - \frac{1}{2}(x_2 + y_2)\theta_1\, ,\\
 \chi_0(\theta_1\theta_2) &= \theta_1\theta_2\,.
 \end{split}
 \end{equation}
@@ -1506,8 +1517,8 @@ where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - \pi_2)/(x_1-y_1)$ is as before. H
 \begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul$ defined by (\ref{eq:chi0defn}) is the unique morphism of graded matrix factorisations of degree $2$, making the diagram
 \begin{equation}
 \xymatrix@C+2pc{
-\Xcirc \ar[d]_{\chi_0} \ar[r]^{\pi_{\bullet}} & R/(\bold{t}) \ar[d]^-{blah}\\
-\Xbul \ar[r]_{\pi_{\circ}} & R/(\bold{s})
+\Xcirc \ar[d]_{\chi_0} \ar[r]^{\pi_{\bullet}} & R/(\boldsymbol{t}) \ar[d]^-{blah}\\
+\Xbul \ar[r]_{\pi_{\circ}} & R/(\boldsymbol{s})
 }
 \end{equation}
 commute up to homotopy.
@@ -2073,7 +2084,30 @@ This is done by the following code (which outputs the correct $(2\times 2)$-matr
 
 
 \begin{example}(Tensor product of graded matrix factorisations) 
-TODO
+In the previous two examples we were not concerned with the grading of the matrix factorisations. As recalled in Section~\ref{preliminaries} we encode the grading of a matrix factorisation in the shifts~$m_{i}$ of their underlying free modules $\bigoplus_{i}R\{m_{i}\}$. If the shifts of matrix factorisations in a web are given to \texttt{webCompile} as a fourth (optional) argument, it also outputs the shifts of the compilation. 
+
+As a simple example let us consider $P_{a}(x,y)$ again. Viewed as a graded matrix factorisation it is the cyclic Koszul complex
+$$
+\xymatrix{%
+R\{0\} \ar[r]^-{\frac{x^d-y^d}{x-\eta^{a}y}} & R\{d-2(d-1)\}  \ar[r]^-{x-\eta^{a}y}  & R\{0\}
+}
+$$
+with $R=\nC[x,y]$. The shifts of the matrix factorisations in the previous example are thus given by the tuple $(0,-1)$. If we augment the code of that example by
+{\footnotesize
+\begin{verbatim}
+    intvec defect1Grading = 0, -1;
+    intvec defect2Grading = 0, -1;
+    intvec defect3Grading = 0, -1;
+    list gradingList = defect1Grading, defect2Grading, defect3Grading;
+\end{verbatim}
+}
+\noindent and redefine
+{\footnotesize
+\begin{verbatim}
+    list web = list(2, list(e1, e2, e3, e4), defectList, gradingList);
+\end{verbatim}
+}
+\noindent then the second argument \texttt{L[2]} of the output~\texttt{L} of \texttt{webCompile} gives the grading shifts of the compilation of $D_{1}\otimes D_{2}\otimes D_{3}$. 
 \end{example}
 
 
@@ -2087,7 +2121,7 @@ To compute the unreduced and reduced link invariants $\KR_{N}$ and $\overline{\K
     list linkData = linkLibrary("trefoil");       // e.g. trefoil, 6_1; see linkhom.lib/linkLibrary
     int numVar = linkNumberOfVariables(linkData); // number of ring variables required
     ring rr=0,(x(1..numVar)),dp;
-    int N = 3;                                    // the N in sl(N) link homology
+    int N = 3;                                    // the N in \sln link homology
     printlevel = 1;
     
     list h = linkCompile(linkData, "tempfile", N);// output data constructs to tempfile
@@ -2146,7 +2180,7 @@ The expressions for $\KR_{N}(T_{2,3})$ and $\KR_{N}(T_{2,5})$ were already given
 
 Let us now move on to a discussion of Khovanov-Rozansky invariants that have not been previously studied in the literature. Our method allows to compute reduced and unreduced homologies alike, and it does not discriminate against any types of links. The main limiting factors for the computations to finish on the ordinary PCs we had access to are the number of crossings and the value of~$N$. In the language of Section~\ref{compilewebs}, these determine the number of vertices in the webs to be compiled and the size of ``inflated'' matrices, respectively. Currently this allows us to calculate Khovanov-Rozansky invariants for links with up to 6 crossings and 3 components; future computer generations will push these limits further. 
 
-The unreduced and reduced Khovanov-Rozansky invariants that we obtained are collected in the tables below. For links with more than one component it matters how the components are oriented \emph{relatively} to one another. We indicate this by referring to different ``versions'' of all the links with at least two components in the tables. For example, $4_{1}^2\,\text{{\footnotesize (v1)}}$ and $4_{1}^2\,\text{{\footnotesize (v2)}}$ denote the two versions of Solomon's link. Note also that we do not list their mirrors separately as the reversal of the orientation of \emph{all} components of any link simply leads to the same  Khovanov-Rozansky invariants after the substitutions $q\mapsto q^{-1}$, $t\mapsto t^{-1}$. 
+The unreduced and reduced Khovanov-Rozansky invariants that we obtained are collected in the tables below. For links with more than one component it matters how the components are oriented \emph{relatively} to one another. We indicate this by referring to different ``versions'' of all the links with at least two components in the tables. For example, $4_{1}^2\,\text{{\footnotesize (v1)}}$ and $4_{1}^2\,\text{{\footnotesize (v2)}}$ denote the two versions of Solomon's link. Note also that we do not list their mirrors separately as the reversal of the orientation of \emph{all} components of any link simply leads to the same  Khovanov-Rozansky invariants after the substitutions $q\longmapsto q^{-1}$, $t\longmapsto t^{-1}$. 
 
 We conclude this section by listing some observations and comments on our results; we let the Tables~\ref{unreducedKR} and~\ref{reducedKR} speak for themselves otherwise. 
 
@@ -2410,7 +2444,7 @@ $6_{1}^2\,\text{{\tiny (v2)}}$
 & 
 $
 \displaystyle{%
-\KR_{2} = 1+\frac{1}{q^2}+\frac{t^2}{q^6}+\frac{t^3}{q^6}+\frac{t^4}{q^{10}}+\frac{t^6}{q^{14}}+\frac{t^6}{q^{12}}+\frac{t^{q^{12}}}{q^{14}}
+\KR_{2} = 1+\frac{1}{q^2}+\frac{t^2}{q^6}+\frac{t^3}{q^6}+\frac{t^4}{q^{10}}+\frac{t^6}{q^{14}}+\frac{t^6}{q^{12}}+\frac{t q^{12}}{q^{14}}
 }
 $
 \newline 
@@ -3008,10 +3042,10 @@ $
 
 \section{Properties of graded matrix factorisations}\label{appendix:graded_mfs}
 
-Let $R = \oplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite rank graded matrix factorisation of $W \in R_{2c}$ over $R$ then the \emph{dual factorisation} is $X\mdual = \Hom_R(X,R)$, which factorises $-W$. More explicitly, the dual factorisation is the pair
+Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank graded matrix factorisation of $W \in R_{2c}$ over $R$ then the \emph{dual factorisation} is $X\mdual = \Hom_R(X,R)$, which factorises $-W$. More explicitly, the dual factorisation is the pair
 \[
 \xymatrix@C+3pc{
-\Hom_R(X^0, R) \ar[r]^-{-\Hom(1, d^1_X)} & \Hom_R(X^1,R) \ar[r]^-{\Hom(1,d^0_X)} & \Hom_R(X^0, R).
+\Hom_R(X^0, R) \ar[r]^-{-\Hom(1, d^1_X)} & \Hom_R(X^1,R) \ar[r]^-{\Hom(1,d^0_X)} & \Hom_R(X^0, R) \, .
 }
 \]
 
@@ -3020,7 +3054,7 @@ Let $R = \oplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite rank graded 
 
 We will need the following basic facts relating the graded tensor and Hom. The proofs are easy (the standard isomorphisms for graded modules commute with the differentials) and we omit them.
 
-\begin{lemma} Given $W, W' \in R_{2c}$ and a finite rank graded matrix factorisation $X$ of $W$ and a graded linear factorisation $Y$ of $W'$, there is a natural isomorphism
+\begin{lemma} Given $W, W' \in R_{2c}$ and a finite-rank graded matrix factorisation $X$ of $W$ and a graded linear factorisation $Y$ of $W'$, there is a natural isomorphism
 \[
 \xi: X\mdual \otimes Y \lto \Hom_R(X,Y)
 \]
@@ -3028,14 +3062,14 @@ of graded linear factorisations of $W' - W$, defined for $\Ztwo$-homogeneous ele
 \end{lemma}
 % see NGMF
 
-\begin{lemma} Given $X,Y,Z$ which are graded linear factorisations of $W, W', W'' \in R_{2c}$ respectively, there is a natural isomorphism of graded linear factorisations of $W'' - W' - W$
+\begin{lemma} Given $X,Y,Z$ which are graded linear factorisations of $W, W', W'' \in R_{2c}$, respectively, there is a natural isomorphism of graded linear factorisations of $W'' - W' - W$
 \[
-\Hom_{gr}(X \otimes Y, Z) \lto \Hom_{gr}(X, \Hom_{gr}(Y,Z)).
+\Hom_{\text{gr}}(X \otimes Y, Z) \lto \Hom_{\text{gr}}(X, \Hom_{\text{gr}}(Y,Z)) \, .
 \]
 \end{lemma}
 % see NGMF
 
-In particular if $X, Y$ are finite rank graded matrix factorisations we have
+In particular if $X, Y$ are finite-rank graded matrix factorisations we have
 \begin{equation}\label{eq:dual_tensor}
 \begin{split}
 (X \otimes Y)\mdual &= \Hom_R(X \otimes Y, R)\\
@@ -3043,14 +3077,14 @@ In particular if $X, Y$ are finite rank graded matrix factorisations we have
 &\cong \Hom_R(X,R) \otimes \Hom_R(Y,R) = X\mdual \otimes Y\mdual.
 \end{split}
 \end{equation}
-Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign $x \otimes y \mapsto (-1)^{n|x} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product with no signs.
+Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product with no signs.
 \\
 
-In the following let $R = \oplus_{i \ge 0} R_i$ be a graded ring, and $\bs{a}, \bs{b}$ sequences of $n$ homogeneous elements in $R$ with $\deg(a_i) + \deg(b_i) = 2c$. If $\bs{a} = (a_1,\ldots,a_n)$ then $- \bs{a}$ denotes $(-a_1, \ldots, -a_n)$. In describing maps between cyclic Koszul complexes we use the symbols $\theta_i$ introduced in Section \ref{prelim:cyclic_koszul}.
+In the following let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring, and $\bs{a}, \bs{b}$ sequences of $n$ homogeneous elements in $R$ with $\deg(a_i) + \deg(b_i) = 2c$. If $\bs{a} = (a_1,\ldots,a_n)$ then $- \bs{a}$ denotes $(-a_1, \ldots, -a_n)$. In describing maps between cyclic Koszul complexes we use the symbols $\theta_i$ introduced in Subsection \ref{prelim:cyclic_koszul}.
 
 \begin{lemma}\label{lemma:cyclickos1} There is a canonical isomorphism of graded matrix factorisations
 \[
-\{ \bs{a}, \bs{b} \}\mdual \cong \{ -\bs{b}, \bs{a} \}.
+\{ \bs{a}, \bs{b} \}\mdual \cong \{ -\bs{b}, \bs{a} \} \, .
 \]
 \end{lemma}
 \begin{proof}
@@ -3058,7 +3092,7 @@ Using Remark \ref{remark:dual_koszul_cyclic} we have
 \begin{align*}
 \{ \bs{a}, \bs{b} \}\mdual &\cong \left( \{ a_1, b_1 \} \otimes \ldots \otimes \{ a_n, b_n \} \right)\mdual\\
 &\cong \{ a_1, b_1 \}\mdual \otimes \ldots \otimes \{ a_n, b_n \}\mdual\\
-&\cong \{ -b_1, a_1 \} \otimes \ldots \otimes \{ -b_n, a_n \} = \{ - \bs{b}, \bs{a} \}.
+&\cong \{ -b_1, a_1 \} \otimes \ldots \otimes \{ -b_n, a_n \} = \{ - \bs{b}, \bs{a} \} \, .
 \end{align*}
 \end{proof}
 % see ngkos
@@ -3087,10 +3121,10 @@ and shifting the grading by $\{ c - \deg(a) \}$ we have $\{ a, b \}\langle 1 \ra
 \[
 \{ \bs{a}, \bs{b} \} \cong \{ -\bs{a}, - \bs{b} \}\,,
 \]
-defined by $\theta_i \mapsto - \theta_i$.
+defined by $\theta_i \longmapsto - \theta_i$.
 \end{lemma}
 
-Finally, let us discuss the cohomology of cyclic Koszul complexes (\textbf{todo, fix}). Let $R$ be any ring. We begin more generally: let $C = \oplus_{i \in \mathbb{Z}} C^i$ be a $\mathbb{Z}$-graded $R$-module together with $R$-linear maps $d_{\pm}: C \lto C$ of degree $\pm 1$, satisfying
+Finally, let us discuss the cohomology of cyclic Koszul complexes (\textbf{todo, fix}). Let $R$ be any ring. We begin more generally: let $C = \bigoplus_{i \in \mathds{Z}} C^i$ be a $\mathds{Z}$-graded $R$-module together with $R$-linear maps $d_{\pm}: C \lto C$ of degree $\pm 1$, satisfying
 \[
 (d_+)^2 = (d_{-})^2 = 0, \qquad \text{ and } \qquad d_{+}d_{-} + d_{-}d_{+} = 0.
 \]
@@ -3114,14 +3148,14 @@ In particular for sequences $\bs{a}, \bs{b}$ we have $H(\{ \bs{a}, \bs{b} \}) \c
 
 \section{The relation between reduced and unreduced homology}
 
-As was discussed in Section \ref{??}, to a state graph $\Gamma$ with $m$ edges Khovanov and Rozansky assign a $\Ztwo$-graded complex $\krc(\Gamma)$ over the polynomial ring $R = \QQ[\boldsymbol{x}]$ in the edge variables $\boldsymbol{x} = \{x_1,\ldots,x_m\}$, defined by tensoring together local matrix factorisations assigned to the singular crossings and marks of the state graph. The definition depends on a choice of integer $N > 1$, which we fix throughout and omit from the notation, so that all our homologies are $\sln$-homologies.
+As was discussed in Section~\ref{KRconstruction}, to a state graph $\Gamma$ with $m$ edges Khovanov and Rozansky assign a $\Ztwo$-graded complex $\krc(\Gamma)$ over the polynomial ring $R = \QQ[\boldsymbol{x}]$ in the edge variables $\boldsymbol{x} = \{x_1,\ldots,x_m\}$, defined by tensoring together local matrix factorisations assigned to the singular crossings and smoothings of the state graph. The definition depends on a choice of integer $N > 1$, which we fix throughout and omit from the notation, so that all our homologies are $\sln$-homologies.
 
-The Khovanov-Rozansky complex $\krc(D)$ of a planar diagram $D$ of a link $L$ is defined by tensoring together two term complexes build from these $\krc(\Gamma)'s$, as $\Gamma$ varies over all resolutions of $D$, and recall that the unreduced and reduced Khovanov-Rozansky homology are defined respectively by
+The Khovanov-Rozansky complex $\krc(D)$ of a planar diagram $D$ of a link $L$ is defined by tensoring together two term complexes build from these $\krc(\Gamma)$'s, as $\Gamma$ varies over all resolutions of $D$, and recall that the unreduced and reduced Khovanov-Rozansky homology are defined respectively by
 \begin{align*}
-H(L) &= H\big( H(\krc(D),\diffm), \diffh \big),\\
-\overline{H}(L, C) &= H\big( H( \krc(D) \otimes_{R} R/(x_i), \diffm), \diffh \big),
+H(L) &= H\big( H(\krc(D),\diffm), \diffh \big) \, ,\\
+\overline{H}(L, C) &= H\big( H( \krc(D) \otimes_{R} R/(x_i), \diffm), \diffh \big) \, ,
 \end{align*}
-where $C$ denotes a component of $L$, and $i$ is a label assigned in the planar diagram $D$ to an edge lying on this component. In this section we make some remarks about the relationship between reduced and unreduced homology. Let us fix the label $i$ in the following.
+where $C$ denotes a component of $L$, and $i$ is a label assigned in the planar diagram $D$ to an edge lying on this component. In this appendix we make some remarks about the relationship between reduced and unreduced homology. Let us fix the label $i$ in the following.
 
 After taking the $\diffm$-cohomology everything becomes finite-dimensional, and taking the cohomology with respect to the differential $\diffh$ is trivial; the whole problem with computing these invariants is computing $H(\krc(D), \diffm)$. In this article the emphasis is on computations, and in this context there is a big difference between taking cohomology before and after setting $x_i = 0$. Since $H(\krc(D), \diffm)$ is a direct sum of modules $H(\krc(\Gamma), \diffm)$ for various state graphs $\Gamma$ let us speak only of state graphs, in which case we are making the distinction between
 \[
@@ -3129,16 +3163,16 @@ H(\krc(\Gamma) \otimes_R R/(x_i), \diffm ) \qquad \text{ and } \qquad H( \krc(\G
 \]
 In the second case one computes the essential ingredient $H( \krc(\Gamma), \diffm )$ in the \emph{unreduced} homology, and then throws away information; in the first case one deals from the beginning with one less variable, so the computation is significantly easier. For this reason, the first definition (which is the original one of \cite{kr0401268}) is the one our code computes; but since the second definition is the one studied in \cite{r0607544} and other references, we want to explain the relationship between the two. Let us set
 \begin{align*}
-H(\Gamma) &= H( \krc(\Gamma), \diffm ),\\
-\redh(\Gamma) &= H( \krc(\Gamma) \otimes_R R/(x_i), d ).
+H(\Gamma) &= H( \krc(\Gamma), \diffm ) \, ,\\
+\redh(\Gamma) &= H( \krc(\Gamma) \otimes_R R/(x_i), d ) \, .
 \end{align*}
-These are both finite-dimensional $\mathbb{Z} \times \Ztwo$-graded vector spaces. It is shown in \cite{kr0401268} that $H(\Gamma)$ is concentrated in only one $\Ztwo$-degree, namely the degree of the \emph{parity} $p = p(\Gamma)$ defined by erasing all wide edges in $\Gamma$ and counting the number of circles in the resulting link. It follows that the link homology $H(L)$, which is \emph{a priori} $\ZZ \times \ZZ \times \Ztwo$-graded, is actually only $\ZZ \times \ZZ$-graded.
+These are both finite-dimensional $(\mathds{Z} \times \Ztwo)$-graded vector spaces. It is shown in \cite{kr0401268} that $H(\Gamma)$ is concentrated in only one $\Ztwo$-degree, namely the degree of the parity $p = p(\Gamma)$ defined by erasing all wide edges in $\Gamma$ and counting the number of circles in the resulting link. It follows that the link homology $H(L)$, which is \emph{a priori} $(\ZZ \times \ZZ \times \Ztwo)$-graded, is actually only $(\ZZ \times \ZZ)$-graded.
 
-On the other hand $\redh(\Gamma)$ has nonzero contributions in both $\Ztwo$-degrees, so the reduced link homology $\overline{H}(L,C)$, as defined in \cite{kr0401268}, is honestly $\ZZ \times \ZZ \times \Ztwo$-graded. We write $\redh^j(\Gamma)$, respectively $\redh^j(L,C)$, for the $\Ztwo$-component in degree $j \in \Ztwo$. The point of this section is to check that $\redh^0(L,C)$ and $\redh^1(L,C)$ only differ by a grading shift.
+On the other hand $\redh(\Gamma)$ has nonzero contributions in both $\Ztwo$-degrees, so the reduced link homology $\overline{H}(L,C)$, as defined in \cite{kr0401268}, is honestly $(\ZZ \times \ZZ \times \Ztwo)$-graded. We write $\redh^j(\Gamma)$, respectively $\redh^j(L,C)$, for the $\Ztwo$-component in degree $j \in \Ztwo$. The point of this appendix is to check that $\redh^0(L,C)$ and $\redh^1(L,C)$ only differ by a grading shift.
 
-\begin{lemma}\label{lemma:redvsunred} There is an isomorphism of $\ZZ \times \ZZ$-graded $\mathbb{Q}$-vector spaces 
+\begin{lemma}\label{lemma:redvsunred} There is an isomorphism of $(\ZZ \times \ZZ)$-graded $\mathds{Q}$-vector spaces 
 \[
-\redh^{p+1}(L,C) \cong \redh^{p}(L,C)\{N-1\}.
+\redh^{p+1}(L,C) \cong \redh^{p}(L,C)\{N-1\} \, .
 \]
 \end{lemma}
 
@@ -3154,13 +3188,13 @@ It is clear from this exact sequence that the dimensions of the odd and even deg
 \[
 \redh^p(L, C) \cong H(H(C(D),d) \otimes_R R/(x_i), d_{\chi})\,.
 \]
-As has already been mentioned, this $\ZZ \times \ZZ$-graded $\QQ$-vector space is adopted as the \emph{definition} of the reduced Khovanov-Rozansky homology in \cite{r0607544,websterblah, rasmussenblah}. In light of Lemma \ref{lemma:redvsunred} this is reasonable, as the other $\Ztwo$-degree of $\redh(L,C)$ contains no new information, but as far as we know the lemma has not appeared before in the literature (although it is no doubt known to the experts). To relate the $\ZZ$-gradings of $\redh^p(\Gamma)$ and $\redh^{p+1}(\Gamma)$ we make use of the following basic property of the space $H(\Gamma)$.
+As has already been mentioned, this $(\ZZ \times \ZZ)$-graded $\QQ$-vector space is adopted as the \emph{definition} of the reduced Khovanov-Rozansky homology in \cite{r0607544,websterblah, rasmussenblah}. In light of Lemma \ref{lemma:redvsunred} this is reasonable, as the other $\Ztwo$-degree of $\redh(L,C)$ contains no new information, but as far as we know the lemma has not appeared before in the literature (although it is no doubt known to the experts). To relate the $\ZZ$-gradings of $\redh^p(\Gamma)$ and $\redh^{p+1}(\Gamma)$ we make use of the following basic property of the space $H(\Gamma)$.
 
 \textbf{Convention.} Since we ultimately only care about the homologies $H(L)$ and $\overline{H}(L,C)$, we are free to choose $D$ to be the closure of a braid with $i$ the label on one of the edges in the closure, and for the rest of this section we make this assumption. In particular, $\Gamma$ is a braid graph.
 
-\begin{lemma}\label{lemma:directsumalgebras} $H(\Gamma)$ is concentrated in degree $p(\Gamma)$, and as a graded $\QQ[x_i]$-module it is isomorphic to a direct sum of copies of $\QQ[x_i]/(x_i^N)$ shifted in the $\mathbb{Z}$-grading, that is, for some integers $b_j$
+\begin{lemma}\label{lemma:directsumalgebras} $H(\Gamma)$ is concentrated in degree $p(\Gamma)$, and as a graded $\QQ[x_i]$-module it is isomorphic to a direct sum of copies of $\QQ[x_i]/(x_i^N)$ shifted in the $\mathds{Z}$-grading, that is, for some integers $b_j$
 \[
-H(\Gamma) \cong \bigoplus_{j} \QQ[x_i]/(x_i^N)\{b_j\}.
+H(\Gamma) \cong \bigoplus_{j} \QQ[x_i]/(x_i^N)\{b_j\} \, .
 \]
 \end{lemma}
 
@@ -3168,7 +3202,7 @@ Further, one can prove that the integers $b_j$ have some symmetry: $H(\Gamma)$ i
 
 \begin{proof}[Proof of Lemma \ref{lemma:redvsunred}] We claim that $\redh^{p+1}(\Gamma) \cong \redh^p(\Gamma)\{N-1\}$ as graded vector spaces. In light of the exact sequence (\ref{eq:redvsunred_seq}), to understand $\overline{H}(\Gamma)$ it suffices to understand the action of $x_i$ on $H(\Gamma)$. But with Lemma \ref{lemma:directsumalgebras} in hand this is trivial: it reduces to understanding the action of $x_i$ on $\QQ[x_i]/(x_i^N)$, and we deduce that
 \begin{align*}
-\redh^{p+1}(\Gamma)\{N-1\} &\cong \bigoplus_j \QQ \cdot x_i^{N-1} \{ b_j \} = \bigoplus_j \QQ\{b_j + 2N - 2 \}\\
+\redh^{p+1}(\Gamma)\{N-1\} &\cong \bigoplus_j \QQ \cdot x_i^{N-1} \{ b_j \} = \bigoplus_j \QQ\{b_j + 2N - 2 \} \, ,\\
 \redh^p(\Gamma) &\cong \bigoplus_j \QQ \{ b_j \}\,.
 \end{align*}
 From this we deduce that $\redh^{p+1}(\Gamma) \cong \bigoplus_j \QQ\{b_j + N - 1 \} \cong \redh^p(\Gamma)\{N-1\}$, as claimed.
@@ -3186,7 +3220,8 @@ commutes. Decompose $H(\Gamma), H(\Gamma')$ as in Lemma \ref{lemma:directsumalge
 \begin{proof}[Proof of Lemma \ref{lemma:directsumalgebras}]
 The argument is similar to that of \cite[Lemma 5.8]{r0607544}. We prove the claim by induction on the complexity of braid graphs $\Gamma$ together with a chosen edge $i$ appearing in the braid closure, using the induction scheme of Wu \cite{Wu} and the MOY relations proved in \cite[Section 6]{kr0401268}. 
 
-By \cite{Wu}, if $\Gamma$ is the closure of an open braid graph $\Gamma_{open}$ then $\Gamma$ always contains a region of the form $\Gamma_0$ or $\Gamma_{\text{I}}$, or $\Gamma_{open}$ contains a region $\Gamma_{\text{II}}$ or $\Gamma_{\text{III}}$. This means that using only the MOY relations I-III we can go from any braid graph to a family of unlinked circles $\Gamma$, and in this base case $H(\Gamma)$ is is a tensor product over $\mathbb{Q}$ of grading shifted copies of $\QQ[x_j]/(x_j^N)\langle 1 \rangle$ for various $j$. By hypothesis $i$ is among these indices, so both claims are clear in the base case.
+(TODO: refer to \eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4}, define various $\Gamma$'s) 
+By \cite{Wu}, if $\Gamma$ is the closure of an open braid graph $\Gamma_{open}$ then $\Gamma$ always contains a region of the form $\Gamma_0$ or $\Gamma_{\text{I}}$, or $\Gamma_{open}$ contains a region $\Gamma_{\text{II}}$ or $\Gamma_{\text{III}}$. This means that using only the MOY relations I-III we can go from any braid graph to a family of unlinked circles $\Gamma$, and in this base case $H(\Gamma)$ is is a tensor product over $\mathds{Q}$ of grading shifted copies of $\QQ[x_j]/(x_j^N)\langle 1 \rangle$ for various $j$. By hypothesis $i$ is among these indices, so both claims are clear in the base case.
 
 The only MOY relation which changes the parity is relation I, which changes the parity by one and also introduces (in the direct sum decomposition of \cite[Section 6]{kr0401268}) a suspension, so it is now clear by induction that $H(\Gamma)$ is always concentrated in degree $p(\Gamma)$, and we need to check the other claim.
 
@@ -3214,7 +3249,7 @@ Let $R$ be a noetherian ring, $\varphi: S \lto R$ a ring morphism and $\bs{a} = 
 \nabla: R \lto R \otimes_{S[\bs{b}]} \Omega^1_{S[\bs{b}]/S}
 \]
 such that $\Ker(\nabla) + \bs{b}R R$, which is standard in the sense of \cite{??}.
-\item Let $F = R \theta_1 \oplus \cdots \oplus R \theta_n$ with $|\theta_i| = -1$ and define $\{ \bs{a}, \bs{b} \}$ in the usual way, let
+\item Let $F = R \theta_1 \oplus \ldots \oplus R \theta_n$ with $|\theta_i| = -1$ and define $\{ \bs{a}, \bs{b} \}$ in the usual way, let
 \[
 \pi: ( \bigwedge F, \delta_+ ) \lto R/(\bs{b})
 \]
@@ -3224,18 +3259,18 @@ be the usual morphism from the Koszul complex to its cohomology.
 \textbf{todo} We begin with the diagram
 \begin{equation}\label{eq:cons3}
 \xymatrix@C+2pc{
-\Hom_R(X, \Xcirc) \ar[r]^{\Hom(1,\pi_{\circ})} & \Hom_R(X, R/\bold{t} R)\\
-X^{\lor} \otimes \Xcirc \ar[u]^{\cong} \ar[r]_{1 \otimes \pi} & X^{\lor} \otimes R/\bold{t} R \ar@/^2pc/[l]^{\sigma_\infty} \ar[u]_{\cong}
+\Hom_R(X, \Xcirc) \ar[r]^{\Hom(1,\pi_{\circ})} & \Hom_R(X, R/(\boldsymbol{t}))\\
+X^{\lor} \otimes \Xcirc \ar[u]^{\cong} \ar[r]_{1 \otimes \pi} & X^{\lor} \otimes R/(\boldsymbol{t}) \ar@/^2pc/[l]^{\sigma_\infty} \ar[u]_{\cong}
 }
 \end{equation}
 where $(-)^{\lor} = \Hom_R(-,R)$, tensor products are $R$-linear, and the columns are the canonical maps.
 
-There is an $S$-linear homotopy inverse $\sigma_\infty$ of the map $1 \otimes \pi$, which comes about as follows: consider the $\Ztwo$-graded module $X^{\lor} \otimes \Xcirc$ with only the differential $1 \otimes \delta_{+}$, for which we write $(X^{\lor} \otimes \Xcirc, 1 \otimes \delta_{+})$. This is clearly quasi-isomorphic to $(X^{\lor} \otimes R/\bold{t} R, 0)$. In fact the map $\pi_{\circ}: (\Xcirc, \delta_+) \lto (R/\bold{t} R,0)$ is stronger than a quasi-isomorphism: it is an $S$-linear homotopy equivalence, and we can produce an inverse using a choice of connection. Since we can write $R$ as $S[t_1,t_2]$ there is an $S$-linear standard (\emph{explain}) flat connection
+There is an $S$-linear homotopy inverse $\sigma_\infty$ of the map $1 \otimes \pi$, which comes about as follows: consider the $\Ztwo$-graded module $X^{\lor} \otimes \Xcirc$ with only the differential $1 \otimes \delta_{+}$, for which we write $(X^{\lor} \otimes \Xcirc, 1 \otimes \delta_{+})$. This is clearly quasi-isomorphic to $(X^{\lor} \otimes R/(\boldsymbol{t}), 0)$. In fact the map $\pi_{\circ}: (\Xcirc, \delta_+) \lto (R/(\boldsymbol{t}),0)$ is stronger than a quasi-isomorphism: it is an $S$-linear homotopy equivalence, and we can produce an inverse using a choice of connection. Since we can write $R$ as $S[t_1,t_2]$ there is an $S$-linear standard (\emph{explain}) flat connection
 \begin{gather*}
-\nabla: R \lto R \otimes_{S[\bold{t}]} \Omega^1_{S[\bold{t}]/S},\\
+\nabla: R \lto R \otimes_{S[\boldsymbol{t}]} \Omega^1_{S[\boldsymbol{t}]/S},\\
 \nabla( f(x_1,x_2,y_1,y_2) ) = \frac{\partial f}{\partial y_1} \ud t_1 + \frac{\partial f}{\partial y_2} \ud t_2.
 \end{gather*}
-This induces an $S$-linear map, also denoted $\nabla$, on $R \otimes_{S[\bold{t}]} \Omega_{S[\bold{t}]/S}$ where $\Omega = \bigwedge^\bullet \Omega^1$. We identify this free $\mathbb{Z}$-graded $R$-module with $\bigwedge F$ (and hence also with $\Delta$) via $\ud t_i = \theta_i$. It is easily checked that for $\theta = \theta_{i_1} \cdots \theta_{i_p}$ with distinct indices $i_j$ and $p > 0, f \in R$,
+This induces an $S$-linear map, also denoted $\nabla$, on $R \otimes_{S[\boldsymbol{t}]} \Omega_{S[\boldsymbol{t}]/S}$ where $\Omega = \bigwedge^\bullet \Omega^1$. We identify this free $\mathds{Z}$-graded $R$-module with $\bigwedge F$ (and hence also with $\Xcirc$) via $\ud t_i = \theta_i$. It is easily checked that for $\theta = \theta_{i_1} \ldots \theta_{i_p}$ with distinct indices $i_j$ and $p > 0, f \in R$,
 \[
 (\nabla \delta_+ + \delta_+ \nabla)(f \cdot \theta) = (p + \delta_{+}\nabla)(f) \cdot \theta,
 \]
@@ -3260,12 +3295,12 @@ One defines a degree $-1$ $S$-linear map
 \[
 H = (\nabla \delta_+ + \delta_+ \nabla)^{-1} \nabla
 \]
-on the module $\bigwedge F$. Each application of $H$ involves differentiation with respect to the $y_i$, and then solving a differential equation. Let $\sigma: S = R/\bold{t} R \lto \bigwedge F$ be the inclusion of $k[x_1,x_2]$ into $R$. One checks that $H \delta_+ + \delta_+ H = 1 - \sigma \pi_{\Delta}$, so that $\sigma$ is exhibited by $H$ as the $S$-linear homotopy inverse to the canonical morphism $\pi_{\Delta}: (\Delta, \delta_+) \lto (R/\bold{t} R,0)$ from the Koszul complex to its cohomology.
+on the module $\bigwedge F$. Each application of $H$ involves differentiation with respect to the $y_i$, and then solving a differential equation. Let $\sigma: S = R/(\boldsymbol{t}) \lto \bigwedge F$ be the inclusion of $k[x_1,x_2]$ into $R$. One checks that $H \delta_+ + \delta_+ H = 1 - \sigma \pi_{\Delta}$, so that $\sigma$ is exhibited by $H$ as the $S$-linear homotopy inverse to the canonical morphism $\pi_{\Delta}: (\Delta, \delta_+) \lto (R/(\boldsymbol{t}),0)$ from the Koszul complex to its cohomology.
 
-It remains to tensor with $X^{\lor}$ and perturb in the other differentials. With only the differential $\delta_+$ turned on it is clear that $X^{\lor} \otimes \Delta$ is $S$-homotopy equivalent to $X^{\lor} \otimes R/\bold{t} R$. The actual equivalence is exhibited by extending $H$ and $\sigma$ to $S$-linear maps
+It remains to tensor with $X^{\lor}$ and perturb in the other differentials. With only the differential $\delta_+$ turned on it is clear that $X^{\lor} \otimes \Delta$ is $S$-homotopy equivalent to $X^{\lor} \otimes R/(\boldsymbol{t})$. The actual equivalence is exhibited by extending $H$ and $\sigma$ to $S$-linear maps
 \[
 \xymatrix@C+2pc{
-X^{\lor} \otimes \Delta \ar@(dl,dr)[]_{H} & X^{\lor} \otimes R/\bold{t} R \ar[l]_{\sigma}
+X^{\lor} \otimes \Delta \ar@(dl,dr)[]_{H} & X^{\lor} \otimes R/(\boldsymbol{t}) \ar[l]_{\sigma}
 }
 \]
 using the homogeneous basis $1^*, \theta_1^*, \theta_2^*, (\theta_1\theta_2)^*$ for $X^{\lor}$. This involves Koszul signs as we move $H$ and $\sigma$ past homogeneous elements of $X^{\lor}$, for example, $H(\theta_1^* \otimes f \theta_2) = - \theta_1^* \otimes H(f \theta_2)$. 
@@ -3278,7 +3313,7 @@ on $X^{\lor} \otimes \Delta$, viewed as a perturbation of the differential on $(
 \[
 \sigma_\infty = \sum_{m \ge 0} (-1)^m (H \mu)^m \sigma
 \]
-is an $S$-homotopy inverse to $1 \otimes \pi$. Composing with the vertical isomorphisms in (\ref{eq:cons3}) we have the desired inverse of $\Hom(1,\pi_{\Delta})$. The morphism (\ref{eq:cons4}) corresponds to the tensor $1^* \otimes 1 \in X^{\lor} \otimes R/\bold{t} R$, so to find $\chi_1$ we are left with the task of evaluating
+is an $S$-homotopy inverse to $1 \otimes \pi$. Composing with the vertical isomorphisms in (\ref{eq:cons3}) we have the desired inverse of $\Hom(1,\pi_{\Delta})$. The morphism (\ref{eq:cons4}) corresponds to the tensor $1^* \otimes 1 \in X^{\lor} \otimes R/(\boldsymbol{t})$, so to find $\chi_1$ we are left with the task of evaluating
 \[
 \sigma_\infty(1^* \otimes 1) = \sigma(1^* \otimes 1) - H \mu \sigma(1^* \otimes 1) + H \mu H \mu(1^* \otimes 1).
 \]
@@ -3323,7 +3358,7 @@ M.~Aganagic and S.~Shakirov, \emph{Knot {H}omology from {R}efined
   {C}hern-{S}imons {T}heory},
   \href{http://arxiv.org/abs/1105.5117}{[arXiv:1105.5117]}.
 
-\bibitem[BN03]{bnKhovanov11crossings11crossings}
+\bibitem[BN03]{bnKhovanov11crossings}
 D.~Bar-Natan, \emph{Khovanov {H}omology for {K}nots and {L}inks with up to 11
   {C}rossings}, available at
   \href{http://www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}{http:%
