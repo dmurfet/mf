@@ -630,7 +630,7 @@ For two sequences $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ 
 \[
 \{ \bs{a}, \bs{b} \} := \{a_1,b_1\} \otimes \cdots \otimes \{a_m, b_m\}
 \]
-which is a graded matrix factorisation of $\sum_i a_i b_i \in R_{2c}$. A better way to present the differential on this tensor product is to introduce formal symbols $\theta_i$ of bidegree $(-1, \deg(a_i) - s)$, so that when we write $R \theta_i$ we mean the $R\{ \deg(a_i) - s \}$ placed in cohomological degree $-1$. The graded free module $F = \oplus_i R\theta_i$ and its exterior algebra $\bigwedge F$ acquire both a $\ZZ$-grading from these cohomological degrees, and a grading in the usual sense. We define differentials $\delta_{\pm}$ on $\bigwedge F$ of bidegree $(\pm 1,c)$ by
+which is a graded matrix factorisation of $\sum_i a_i b_i \in R_{2c}$. A better way to present the differential on this tensor product is to introduce formal symbols $\theta_i$ of bidegree $(-1, \deg(a_i) - c)$, so that when we write $R \theta_i$ we mean the $R\{ \deg(a_i) - c \}$ placed in cohomological degree $-1$. The graded free module $F = \oplus_i R\theta_i$ and its exterior algebra $\bigwedge F$ acquire both a $\ZZ$-grading from these cohomological degrees, and a grading in the usual sense. We define differentials $\delta_{\pm}$ on $\bigwedge F$ of bidegree $(\pm 1,c)$ by
 \[
 \delta_+ = \Big(\sum_i b_i \theta_i^*\Big) \neg\, (-) \quad \delta_{-} = \Big(\sum_i a_i \theta_i\Big) \wedge (-)\,.
 \]
@@ -1211,82 +1211,95 @@ As we will discuss in Section~\ref{compres} we have used this implementation to 
 
 In this section we complete the description of Khovanov and Rozansky's homological link invariant, begun in Section \ref{??}. This invariant categorifies a specialisation of the HOMFLY polynomial, and as outlined earlier the categorification happens in two steps, following the two-step approach to the HOMFLY polynomial of \cite{moy1998}. The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose graded Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations which lift the MOY relations (\ref{??}).
 
-This is done by making good on the promise made in Remark \ref{??}. A state graph makes a choice, for each crossing in our link, of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $X_{\circ}, X_{\bullet}$). Tensoring these together over all crossings will produce a $\ZZ \times \Ztwo$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
+This is done by making good on the promise made in Remark \ref{??}. A state graph makes a choice, for each crossing in our link, of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $\Xcirc, \Xbul$). Tensoring these together over all crossings will produce a $\ZZ \times \Ztwo$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
 
-The second step is to produce maps $X_{\circ} \lto X_{\bullet}$ and $X_{\bullet} \lto X_{\circ}$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right hand side of the identities in (\ref{??}), and we thereby define the homological invariant $\textup{KR}_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over and under crossings.
+The second step is to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right hand side of the identities in (\ref{??}), and we thereby define the homological invariant $\textup{KR}_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over and under crossings.
 
 We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier \cite{??}, one can try to build autoequivalences of triangulated categories out of special kinds of adjunctions; if one is very clever with the choice of adjunction, these autoequivalences give rise to link invariants. 
 
 \subsection{Symmetric polynomials and adjunction}
 
-Let $k$ be a field of characteristic zero and consider the inclusion
+Consider the inclusion
 \[
-\varphi: A = k[x_1 + x_2, x_1 x_2] \lto k[x_1,x_2] = B
+\varphi: A = \QQ[x_1 + x_2, x_1 x_2] \lto \QQ[x_1,x_2] = S
 \]
 of symmetric polynomials in all polynomials. As with any ring morphism, there are adjunctions
 \[
 \xymatrix@C+3pc{
-\Modd(A) \ar@/^1pc/[r]^-{\varphi^*} \ar@/_1pc/[r]_-{\varphi^!} & \Modd(B) \ar[l]^-{\varphi_*}
+\Modd(A) \ar@/^1pc/[r]^-{\varphi^*} \ar@/_1pc/[r]_-{\varphi^!} & \Modd(S) \ar[l]^-{\varphi_*}
 }, \qquad
 \xymatrix{
 \varphi^* \ar@{-|}[r] & \varphi_* \ar@{-|}[r] & \varphi^!
 }
 \]
-between restriction of scalars $\varphi_*$, extension of scalars $\varphi^* = - \otimes_A B$ and $\varphi^! = \Hom_A(B, -)$. Now any polynomial $f \in B$ be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $B$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(B,A)$ as an $A$-module. The important point is that there is an isomorphism of $B$-modules
+between restriction of scalars $\varphi_*$, extension of scalars $\varphi^* = - \otimes_A S$ and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of $S$-modules
 \[
-\psi: B \lto \Hom_A(B,A), \quad \psi(1) = (x_1-x_2)^*, \; \psi(x_1-x_2) = 1^*.
+\psi: S \lto \Hom_A(S,A), \quad \psi(1) = (x_1-x_2)^*, \; \psi(x_1-x_2) = 1^*.
 \]
 From this we deduce a natural isomorphism for any $A$-module $N$
 \[
-\varphi^!(N) = \Hom_A(B,N) \cong \Hom_A(B,A) \otimes_A N \stackrel{\psi}{\cong} B \otimes_A N = \varphi^*(N),
+\varphi^!(N) = \Hom_A(S,N) \cong \Hom_A(S,A) \otimes_A N \stackrel{\psi}{\cong} S \otimes_A N = \varphi^*(N),
 \]
 so that the left and right adjoints of $\varphi_*$ are naturally isomorphic. One way to look at this is that by allowing us to identify $\varphi^*$ with $\varphi^!$, the map $\psi$ has provided us with an adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, so that these functors are biadjoint. By a process of stabilisation this biadjunction will give rise to a biadjunction on the level of matrix factorisations, which is the starting point for the Khovanov-Rozansky construction.
 
-These morphisms will come from the units and counits of the adjunction $\xymatrix@1{\varphi^* \ar@{-|}[r] & \varphi_*}$, which we denote $\eta, \varepsilon$, and the units and counits of the new adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, which we denote $\eta', \varepsilon'$. For an $A$-module $N$ and $B$-module $M$ these maps are given by
+These morphisms will come from the units and counits of the adjunction $\xymatrix@1{\varphi^* \ar@{-|}[r] & \varphi_*}$, which we denote $\eta, \varepsilon$, and the units and counits of the new adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, which we denote $\eta', \varepsilon'$. For an $A$-module $N$ and $S$-module $M$ these maps are given by
 \begin{align*}
-\eta: N \lto \varphi_* \varphi^*(N) = \varphi_*( B \otimes_A N ), \qquad &n \mapsto 1 \otimes n,\\
-\eta': M \lto \varphi^* \varphi_*(M) = B \otimes_A \varphi_*(M), \qquad &m \mapsto (x_1-x_2) \otimes m + 1 \otimes (x_1 - x_2) \cdot m
+\eta: N \lto \varphi_* \varphi^*(N) = \varphi_*( S \otimes_A N ), \qquad &n \mapsto 1 \otimes n,\\
+\eta': M \lto \varphi^* \varphi_*(M) = S \otimes_A \varphi_*(M), \qquad &m \mapsto (x_1-x_2) \otimes m + 1 \otimes (x_1 - x_2) \cdot m
 \end{align*}
 and
 \begin{align*}
-\varepsilon: B \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) \to M, \qquad &b \otimes m \mapsto b \cdot m,\\
-\varepsilon': \varphi_*(B \otimes_A N) = \varphi_*\varphi^*(N) \lto N, \qquad &b \otimes n \mapsto \psi(b)(1) \cdot n.
+\varepsilon: S \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) \to M, \qquad &b \otimes m \mapsto b \cdot m,\\
+\varepsilon': \varphi_*(S \otimes_A N) = \varphi_*\varphi^*(N) \lto N, \qquad &b \otimes n \mapsto \psi(b)(1) \cdot n.
 \end{align*}
-To make the transition from modules to matrix factorisations, we present the biadjunction between $\varphi^*$ and $\varphi_*$ in terms of bimodules and bimodule morphisms. It is clear that $\varphi^*$ is represented by tensoring with the $B$-$A$-bimodule ${}_B B_A$, and likewise $\varphi_*$ is represented by the $A$-$B$-bimodule ${}_A B_B$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_B B \otimes_A B {}_B$ and $\varphi_* \varphi^*$ by ${}_A B {}_A$. The units and counits of adjunction are represented by morphisms between these bimodules and the rings $A,B$ as bimodules over themselves, representing the identity functors:
+To make the transition from modules to matrix factorisations, we present the biadjunction between $\varphi^*$ and $\varphi_*$ in terms of bimodules and bimodule morphisms. It is clear that $\varphi^*$ is represented by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. The units and counits of adjunction are represented by morphisms between these bimodules and the rings $A,S$ as bimodules over themselves, representing the identity functors:
 \[
-\eta: B \lto B \otimes_A B, \qquad b \mapsto (x_1 - x_2) \otimes b + 1 \otimes (x_1 - x_2)b
+\eta: S \lto S \otimes_A S, \qquad b \mapsto (x_1 - x_2) \otimes b + 1 \otimes (x_1 - x_2)b
 \]
 and
 \[
-\varepsilon: B = B \otimes_A A \lto A, \qquad b \mapsto \psi(b)(1).
+\varepsilon: S = S \otimes_A A \lto A, \qquad b \mapsto \psi(b)(1).
 \]
-\textbf{todo} present units and counits of the right-way adjunction. The bimodule $B \otimes_A B$ is of particular interest: 
+\textbf{todo} present units and counits of the right-way adjunction. The bimodule $S \otimes_A S$ is of particular interest:
 
-\begin{lemma} Viewing a $k[x_1,x_2,x_3,x_4]$-module as a $B$-bimodule by identifying the action of $x_3, x_4$ with the right action of $x_1, x_2$ respectively, there are isomorphisms of $B$-bimodules
-\[
-B \otimes_A B \cong k[x_1,x_2,x_3,x_4]/(x_1 + x_2 - x_3 - x_4, x_1 x_2 - x_3 x_4)
-\]
-and
-\[
-B \cong k[x_1,x_2,x_3,x_4]/(x_1 - x_3, x_2 - x_4).
-\]
+\begin{lemma}\label{lemma:bimodules_as_algebras} Viewing a $\QQ[x_1,x_2,y_1,y_2]$-module as a $S$-bimodule by identifying the action of $y_1, y_2$ with the right action of $x_1, x_2$ respectively, there are isomorphisms of $S$-bimodules
+\begin{gather*}
+S \otimes_A S \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2),\\
+S \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,.
+\end{gather*}
 \end{lemma}
 
-If $W \in A$ is any symmetric polynomial then, since $B$ is free as an $A$-module with basis $\{1, x_1 - x_2\}$, these functors lift to an adjoint pair of functors between the triangulated categories of matrix factorisations
+Moreover it is clear that these isomorphisms make the following diagrams commute:
+\begin{equation}
+\label{eq:bimodalg1}
+\xymatrix{
+S \otimes_A S \ar[d]_{??} \ar[r]^-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \ar[d]^{\can}\\
+S \ar[r]_-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,,
+}
+\end{equation}
+where the vertical map on the right is a quotient, and
+\begin{equation}
+\label{eq:bimodalg2}
+\xymatrix{
+S \ar[r]_-{\cong}\ar[d]_{??} & \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2) \ar[d]^{??}\\
+S \otimes_A S \ar[r]^-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2)\,.
+}
+\end{equation}
+If $W \in A$ is any symmetric polynomial then, since $S$ is free as an $A$-module with basis $\{1, x_1 - x_2\}$, these functors lift to an adjoint pair of functors between the triangulated categories of matrix factorisations
 \[
 \xymatrix@C+2pc{
-\hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(B, W) \ar@<1ex>[l]^{\varphi_*}.
+\hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, W) \ar@<1ex>[l]^{\varphi_*}.
 }
 \]
-Let us fix the polynomial $W = x_1^{n+1} + x_2^{n+1}$. The general theory of \cite{??} applies (\emph{details}) to produce an interesting autoequivalence of $\mathbb{K}^b( \hmf(B, W) )$, given by tensoring with the short complex (or something like this)
+Let us fix the polynomial $W = x_1^{N+1} + x_2^{N+1}$. The general theory of \cite{??} applies (\emph{details}) to produce an interesting autoequivalence of $\mathbb{K}^b( \hmf(S, W) )$, given by tensoring with the short complex (or something like this)
 \[
-0 \lto B \otimes_A B \lto B \lto 0.
+0 \lto S \otimes_A S \lto S \lto 0.
 \]
 This is the autoequivalence we want to associate to an undercrossing of our link. Next we are going to replace this short complex of bimodules by a short complex of matrix factorisations. The intuition is the following: there is an equivalence
 \[
-\hmf(B, W) \cong \qderu{b}{\modd B}/\K^b(\modd B)
+\hmf(S, W) \cong \qderu{b}{\modd S}/\K^b(\modd S)
 \]
-which says that a matrix factorisation of $W$ remembers the asymptotic part of a free resolution of a $B/W$-module. In this sense $B \otimes_A B, B$, which are both clearly $B/W$-modules, contain far too much information: the action of the corresponding functors on the homotopy category of matrix factorisations will only depend on the asymptotic part of the resolution of $B \otimes_A B, B$ as $B/W$-modules. Extracting this asymptotic part is the process known as \emph{stabilisation}, and will take place in the next section. We will stabilise $B \otimes_A B$ to a matrix factorisation $X_{\bullet}$ and $B$ to $X_{\circ}$. The morphisms $??$ lift to the free resolutions of these modules and thus to the asymptotic part, which means that these maps stabilise to morphisms between $X_{\circ}$ and $X_{\bullet}$, which are the $\chi$-morphisms of \cite{kr0401268}.
+which says that a matrix factorisation of $W$ remembers the asymptotic part of a free resolution of a $S/W$-module. In this sense $S \otimes_A S, S$, which are both clearly $S/W$-modules, contain far too much information: the action of the corresponding functors on the homotopy category of matrix factorisations will only depend on the asymptotic part of the resolution of $S \otimes_A S, S$ as $S/W$-modules. Extracting this asymptotic part is the process known as \emph{stabilisation}, and will take place in the next section. We will stabilise $S \otimes_A S$ to a matrix factorisation $\Xbul$ and $S$ to $\Xcirc$. The morphisms $??$ lift to the free resolutions of these modules and thus to the asymptotic part, which means that these maps stabilise to morphisms between $\Xcirc$ and $\Xbul$, which are the $\chi$-morphisms of \cite{kr0401268}.
 
 We can view the stabilisation as a kind of truncation of the bimodule picture elaborated above, and in fact these truncations together form a kind of filtration as we vary the integer $N$. Indeed if one proceeds in the above line, one will end up constructing the triply graded Khovanov-Rozansky homology of \cite{??}, and the relationship between this homology and the truncations at level $N$ (the $sl(N)$-homologies) is encoded by the spectral sequence of Rasmussen \cite{??}.
 
@@ -1311,17 +1324,68 @@ is a quasi-isomorphism for every finite rank matrix factorisation $Y$ of $W$.
 See appendix.
 \end{proof}
 
-\textbf{todo} The example we are most interested in: stabilising the bimodules of the previous section.
-\\
-
-Let $S = \QQ[x_1,x_2]$ and $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. We consider the potential
+We want to stabilise the bimodules $S \otimes_A S$ and $S$ of the previous section to get graded matrix factorisations $\Xbul$ and $\Xcirc$, together with morphisms $\chi_0$ and $\chi_1$ stabilising the units and counits of adjunction in (\ref{eq:bimodalg1}) and (\ref{eq:bimodalg2}). Take $S = \QQ[x_1,x_2]$ as before and set $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. Fix an integer $N > 0$ and consider the potential
 \[
-W = y_1^{n+1} + y_2^{n+1} - x_1^{n+1} - x_2^{n+1}
+W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}
 \]
-
+(\textbf{todo}) This is the potential associated with a crossing, and the factorisations $\Xcirc, \Xbul$ are each assigned to one of the two ways of resolving a crossing, as in the diagram
+\begin{equation}
+\label{delta2}
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
+\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
+\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
+\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
+\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
+\draw[ ->, thick ] (230:1) arc (230:130:1); 
+\end{tikzpicture}
+\widehat = \,
+\Xcirc \, ,
+\qquad 
+%\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
+%\node (0) at (0,0) [circle] {};
+%\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
+%\node (br) at (1,-1) [circle] {{\scriptsize $x^{N+1}_{l}$}};
+%\node (tl) at (-1,1) [circle] {{\scriptsize $x^{N+1}_{i}$}};
+%\node (tr) at (1,1) [circle] {{\scriptsize $x^{N+1}_{j}$}};
+%\draw[->,  thick] (bl) to [out=40,in=-40]  (tl); 
+%\draw[->,  thick] (br) to [out=140,in=220]  (tr); 
+%\end{tikzpicture}
+%\widehat = \,
+%\Xcirc \, ,
+%\qquad 
+%\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
+%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
+%\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
+%\node (br) at (1,-1) [circle] {{\scriptsize $x^{N+1}_{l}$}};
+%\node (tl) at (-1,1) [circle] {{\scriptsize $x^{N+1}_{i}$}};
+%\node (tr) at (1,1) [circle] {{\scriptsize $x^{N+1}_{j}$}};
+%\draw[-,  thick] (bl) -- (0); 
+%\draw[-,  thick] (br) -- (0); 
+%\draw[->, very  thick] (0) -- (tl); 
+%\draw[->,  thick] (0) -- (tr); 
+%\end{tikzpicture}
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
+\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
+\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
+\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
+\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
+\node (bl) at (-1,-1) [circle] {};
+\node (br) at (1,-1) [circle] {};
+\node (tl) at (-1,1) [circle] {};
+\node (tr) at (1,1) [circle] {};
+\draw[-,  thick] (bl) -- (0); 
+\draw[-,  thick] (br) -- (0); 
+\draw[->,  thick] (0) -- (tl); 
+\draw[->,  thick] (0) -- (tr); 
+\end{tikzpicture}
+\widehat = \,
+\Xbul\,.
+\end{equation}
 Both $\Xbul, \Xcirc$ are cyclic Koszul complexes. Namely, if we write $t_i = y_i - x_i$ then
 \begin{equation}\label{eq:cons1}
-W = \pi_1 t_1 + \pi_2 t_2, \qquad \pi_i = \frac{y_i^{n+1} - x_i^{n+1}}{y_i - x_i},
+W = \pi_1 t_1 + \pi_2 t_2, \qquad \pi_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i},
 \end{equation}
 and due to the symmetry of $W$ there are polynomials $u_1,u_2$ such that
 \begin{equation}\label{eq:cons2}
@@ -1332,10 +1396,9 @@ Then in the notation of Section \ref{prelim:cyclic_koszul}, we define
 \Xbul &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \}\\
 \Xcirc &= \{ (\pi_1, \pi_2) \, , (t_1, t_2) \}\,.
 \end{align*}
-Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x$'s with the $y$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$ for $i = 1,2$ (see Appendix \ref{??}). We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just discussed.
+Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x$'s with the $y$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$ for $i = 1,2$ (see Appendix \ref{??}). We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just mentioned.
 
-
-The model of the Koszul complex that we use is the following: set $F = R \theta_1 \oplus R \theta_2$, where the $\theta$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
+Recall from Section \ref{prelim:cyclic_koszul} that the model of the Koszul complex that we use is the following: set $F = R \theta_1 \oplus R \theta_2$, where the $\theta$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
 \[
 \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}), \quad \beta_+ = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-), \quad \beta_{-} = \Big(\sum_i u_i \theta_i\Big) \wedge (-).
 \]
@@ -1348,36 +1411,17 @@ By construction these are both matrix factorisations of $W$ over $R$. In the $\m
 \pi_{\circ}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto \bigwedge^0 F/\Im(\beta_+^0) = R/\bold{s} R,\\
 \pi_{\bullet}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto \bigwedge^0 F/\Im(\delta_+^0) = R/\bold{t} R.
 \end{align*}
-The module $R/\bold{t} R = R/(t_1,t_2)R$ is the diagonal, and we identify it with $S = k[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/\bold{s} R$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
+The module $R/\bold{t} R = R/(t_1,t_2)R$ is the diagonal, and we identify it with $S = \QQ[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/\bold{s} R$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
 
 The $\pi$ morphisms are, as we will soon see, universal in a certain sense: they exhibit $\Xbul, \Xcirc$ as the \emph{stabilisations} of the Soergel bimodule and the diagonal, respectively. To prove this we make use of the perturbation lemma (\emph{details}, in appendoix).
 \\
 
-which Khovanov and Rozansky associate to a crossing labeled as in the diagram
-\[
-\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-\node (bl) at (-1,-1) [circle,draw=white,fill= white] {$x_1$};
-\node (br) at (1,-1) [circle,draw=white,fill= white] {$x_2$};
-\node (tl) at (-1,1) [circle,draw=white,fill= white] {$y_1$};
-\node (tr) at (1,1) [circle,draw=white,fill= white] {$y_2$};
-\draw[->, thick] (bl) -- (tr); 
-\draw[-, thick] (br) -- (0); 
-\draw[->, thick] (0) -- (tl); 
-\end{tikzpicture}
-\]
-In the convention of \cite{kr0401268} this is a negative crossing, and we are going to attach to this crossing a complex of matrix factorisations
-\[
-\xymatrix{
-0 \ar[r] & \Xbul \ar[r]^{\chi_1} & \Xcirc \ar[r] & 0\,.
-}
-\]
-
-The upshot is that the map
-\[
-\Hom(1,\pi_{\circ}): \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/\bold{t} R)
-\]
-is an isomorphism in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: \Xbul \lto \Xcirc$ as the image under the inverse of $\Hom(1,\pi_{\circ})$ of a certain natural cocycle on the right hand side, namely, the composite
+The upshot is that the maps
+\begin{align*}
+\Hom(1,\pi_{\circ})&: \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/(\bold{t}))\\
+\Hom(1,\pi_{\bullet})&: \Hom_R(\Xcirc, \Xbul) \lto \Hom_R(\Xcirc, R/(\bold{s}))
+\end{align*}
+are isomorphisms in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: \Xbul \lto \Xcirc$ as the image under the inverse of $\Hom(1,\pi_{\circ})$ of a certain natural cocycle on the right hand side, namely, the composite
 \begin{equation}\label{eq:cons4}
 \xymatrix{
 \Xbul \ar[r]^-{\pi_{\bullet}} & R/\bold{s} R \ar[r]^-{\can} & R/\bold{t}R
@@ -1394,7 +1438,7 @@ commute (we might say $\chi_1$ is the stabilisation of the canonical map between
 
 We know abstractly that $\chi_1$ exists. To write it down as a matrix one could study the equations which say that the matrix commutes with the differentials and makes (\ref{eq:cons5}) commute. This appears to be the approach of \cite{kr0401268}, where explicit matrices are presented without explanation. A more conceptual explanation was given in Khovanov and Rozansky's second paper on the subject \cite{??} and by Wu \cite{??}. But these constructions are rather specific to the special kind of Koszul factorisations that arise in Khovanov-Rozansky homology: 
 
-We give a more conceptual derivation by finding an explicit inverse of $\Hom(1,\pi_{\Delta})$ and evaluating it on (\ref{eq:cons4}). Besides avoiding the need for explicit polynomials $u_i$ in the foundations, our approach has the advantage that it can be adapted to stabilise other morphisms into the diagonal.
+We give a more conceptual derivation by finding an explicit inverse of $\Hom(1,\pi_{\circ})$ and evaluating it on (\ref{eq:cons4}). Besides avoiding the need for explicit polynomials $u_i$ in the foundations, our approach has the advantage that it can be adapted to stabilise other morphisms into the diagonal.
 
 The proof of the following lemma is technical and we have relegated it to Appendix \ref{section:morphismpert}. For the statement we need to introduce the following polynomial:
 \[
@@ -1422,45 +1466,55 @@ The only obstacle to having an explicit formula for $\chi_1$ is determining the 
 Setting $y_1 = x_1$ in (\ref{eq:cons2}) shows that $u_1 + y_1 u_2 - \pi_2$ is divisible by $x_1 - y_1$. We must show it is a solution of (\ref{eq:consfirst1}). All we know of the polynomials $u_i$ is that they satisfy (\ref{eq:cons2}), and indeed one shows that $-a_2$ is a solution of (\ref{eq:consfirst1}) by direct substitution using the $y_2$-derivative of (\ref{eq:cons2}) to obtain an expression for $u_1 + y_1 u_2$.
 \end{proof}
 
-In the basis $1, \theta_1\theta_2, \theta_1, \theta_2$ the matrix of the morphism $\chi_1$ is therefore
-\[
-(\chi_1)^0 = \begin{pmatrix} 1 & 0 \\ -a_2 & \frac{1}{2}(x_1+y_1-x_2-y_2)\end{pmatrix}, \qquad (\chi_1)^1 = \begin{pmatrix} 1 & \frac{1}{2}(x_2+y_2) \\ 1 & \frac{1}{2}(x_1+y_1) \end{pmatrix}.
-\]
-These agree with the matrices $V_0,V_1$ of \cite[p.51]{kr0401268} for $\lambda = \frac{1}{2}$, up to a sign which arises because they write their differentials and maps in the basis $1, \theta_2 \theta_1 = - \theta_1 \theta_2, \theta_1, \theta_2$.
+%In the basis $1, \theta_1\theta_2, \theta_1, \theta_2$ the matrix of the morphism $\chi_1$ is therefore
+%\[
+%(\chi_1)^0 = \begin{pmatrix} 1 & 0 \\ -a_2 & \frac{1}{2}(x_1+y_1-x_2-y_2)\end{pmatrix}, \qquad (\chi_1)^1 = \begin{pmatrix} 1 & \frac{1}{2}(x_2+y_2) \\ 1 & \frac{1}{2}(x_1+y_1) \end{pmatrix}.
+%\]
+The $\chi_1$ given above agrees with the definition given on \cite[p.51]{kr0401268} for $\lambda = \frac{1}{2}$, up to a sign which arises because they write their differentials and maps in the basis $1, \theta_2 \theta_1 = - \theta_1 \theta_2, \theta_1, \theta_2$.
 \\
 
-Next to the positive crossing
-\[
-\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-\node (bl) at (-1,-1) [circle,draw=white,fill= white] {$x_1$};
-\node (br) at (1,-1) [circle,draw=white,fill= white] {$x_2$};
-\node (tl) at (-1,1) [circle,draw=white,fill= white] {$y_1$};
-\node (tr) at (1,1) [circle,draw=white,fill= white] {$y_2$};
-\draw[-, thick] (bl) -- (0); 
-\draw[->, thick] (br) -- (tl); 
-\draw[->, thick] (0) -- (tr); 
-\end{tikzpicture}
-\]
-we are going to attach to the complex of matrix factorisations
-\[
-\xymatrix{
-0 \ar[r] & \Xcirc \ar[r]^{\chi_0} & \Xbul \ar[r] & 0\,,
-}
-\]
-where $\chi_0$ is the morphism stabilising \textbf{todo}. Rather than use perturbation, which is much more complicated in this case, we obtain $\chi_0$ by dualising $\chi_1$ to get a morphism $(\chi_1)\mdual: \Xcirc\mdual \lto \Xbul\mdual$. Using the standard properties of cyclic Koszul complexes collected in Appendix \ref{??}, we can rewrite the dual of a cyclic Koszul complex as a cyclic Koszul complex; up to signs and a change of variables $\Xcirc$ and $\Xbul$ are self-dual, so we get a morphism $\Xcirc \lto \Xbul$. This is our $\chi_0$.
+Next we discuss the morphism $\chi_0$ stabilising \textbf{todo}. Rather than use perturbation, which is much more complicated in this case, we obtain $\chi_0$ by dualising $\chi_1$ to get a morphism $(\chi_1)\mdual: \Xcirc\mdual \lto \Xbul\mdual$. Using the standard properties of cyclic Koszul complexes collected in Appendix \ref{??}, we can rewrite the dual of a cyclic Koszul complex as a cyclic Koszul complex; up to signs and a change of variables $\Xcirc$ and $\Xbul$ are self-dual, so we get a morphism $\Xcirc \lto \Xbul$. This is our $\chi_0$.
 
 More carefully, we define $\chi_0'$ to be the morphism making the diagram below commute:
 \[
 \xymatrix@C+2pc{
-\Xcirc\mdual \ar[r]^-{\chi_1\mdual} & \Xbul\mdual\\
-\{ \bs{a}, \bs{t} \}\mdual & \{ \bs{u}, \bs{s} \}\mdual\\
-\{ -\bs{t}, \bs{a} \} & \{ -\bs{s}, \bs{u} \}\\
-\{ -\bs{a}, \bs{t} \} & \{ -\bs{u}, \bs{s} \}\\
-\{ \bs{a}, -\bs{t} \} & \{ \bs{u}, -\bs{s} \}
+\{ \bs{a}, \bs{t} \}\mdual = \Xcirc\mdual \ar[r]^-{\chi_1\mdual} & \Xbul\mdual = \{ \bs{u}, \bs{s} \}\mdual \ar[d]^-{(\ref{lemma:cyclickos1})}\\
+\{ -\bs{t}, \bs{a} \} \ar[u]^-{(\ref{lemma:cyclickos1})} & \{ -\bs{s}, \bs{u} \} \ar[d]^-{(\ref{lemma:cyclickos2})}\\
+\{ -\bs{a}, \bs{t} \} \ar[u]^-{(\ref{lemma:cyclickos2})} & \{ -\bs{u}, \bs{s} \} \ar[d]^-{(\ref{lemma:cyclickos3})}\\
+\{ \bs{a}, -\bs{t} \} \ar@{.>}[r]_-{\chi_0'} \ar[u]^-{(\ref{lemma:cyclickos3})} & \{ \bs{u}, -\bs{s} \}
 }
 \]
-\newpage
+where each map is an isomorphism labelled by the corresponding Lemma in Appendix \ref{appendix:graded_mfs} (\textbf{todo} what to say about gradings?). The matrix factorisations $\{ \bs{a}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams (\ref{delta2}) with the orientations of the arrows reversed. Switching the role of the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
+
+Let $\phi: R \lto R$ be the automorphism $\phi(x_i) = y_i$ and $\phi(y_i) = x_i$. It is clear that $\phi$ sends $t_i$ to $-t_i$, $s_i$ to $-s_i$ and $W$ to $-W$, so that by pulling back along $\phi$ (equivalently, applying $\phi$ to the entries of all matrices) we get a morphism of matrix factorisations of $W$
+\[
+\xymatrix{
+\Xcirc = \{ \bs{a}, \bs{t} \} = \{ \phi\bs{a}, -\phi \bs{t} \} = \phi^*\{ \bs{a}, -\bs{t} \} \ar[rr]^-{\phi^* \chi'_0} & & \phi^*\{ \bs{u}, -\bs{s} \} = \{ \phi \bs{u}, -\phi \bs{s} \} = \{ \bs{u}, \bs{s} \} = \Xbul
+}
+\]
+and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact that we have chosen the $u_i$ such that $\phi(u_i) = u_i$. If one is careful with signs, it is straightforward to deduce from the above the explicit form of $\chi_0$:
+\begin{equation}\label{eq:chi0defn}
+\begin{split}
+\chi_0(1) &= \frac{1}{2}(x_1 + y_1 - x_2 - y_2) \cdot 1 + a_2 \theta_1 \theta_2,\\
+\chi_0(\theta_1) &= -\theta_2 + \frac{1}{2}(x_1 + y_1) \theta_1,\\
+\chi_0(\theta_2) &= \theta_2 - \frac{1}{2}(x_2 + y_2)\theta_1,\\
+\chi_0(\theta_1\theta_2) &= \theta_1\theta_2\,.
+\end{split}
+\end{equation}
+where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - \pi_2)/(x_1-y_1)$ is as before. Here we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given on \cite[p.50]{kr0401268} for $\mu = \frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
+
+\begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul$ defined by (\ref{eq:chi0defn}) is the unique morphism of graded matrix factorisations of degree $2$, making the diagram
+\begin{equation}
+\xymatrix@C+2pc{
+\Xcirc \ar[d]_{\chi_0} \ar[r]^{\pi_{\bullet}} & R/(\bold{t}) \ar[d]^-{blah}\\
+\Xbul \ar[r]_{\pi_{\circ}} & R/(\bold{s})
+}
+\end{equation}
+commute up to homotopy.
+\end{lemma}
+\begin{proof}
+\textbf{todo} $\chi_0$ does the right thing on $1$, and uniqueness is for free.
+\end{proof}
 
 \subsection{Khovanov-Rozansky homology}
 
@@ -3170,13 +3224,13 @@ be the usual morphism from the Koszul complex to its cohomology.
 \textbf{todo} We begin with the diagram
 \begin{equation}\label{eq:cons3}
 \xymatrix@C+2pc{
-\Hom_R(X, \Delta) \ar[r]^{\Hom(1,\pi_\Delta)} & \Hom_R(X, R/\bold{t} R)\\
-X^{\lor} \otimes \Delta \ar[u]^{\cong} \ar[r]_{1 \otimes \pi} & X^{\lor} \otimes R/\bold{t} R \ar@/^2pc/[l]^{\sigma_\infty} \ar[u]_{\cong}
+\Hom_R(X, \Xcirc) \ar[r]^{\Hom(1,\pi_{\circ})} & \Hom_R(X, R/\bold{t} R)\\
+X^{\lor} \otimes \Xcirc \ar[u]^{\cong} \ar[r]_{1 \otimes \pi} & X^{\lor} \otimes R/\bold{t} R \ar@/^2pc/[l]^{\sigma_\infty} \ar[u]_{\cong}
 }
 \end{equation}
 where $(-)^{\lor} = \Hom_R(-,R)$, tensor products are $R$-linear, and the columns are the canonical maps.
 
-There is an $S$-linear homotopy inverse $\sigma_\infty$ of the map $1 \otimes \pi$, which comes about as follows: consider the $\Ztwo$-graded module $X^{\lor} \otimes \Delta$ with only the differential $1 \otimes \delta_{+}$, for which we write $(X^{\lor} \otimes \Delta, 1 \otimes \delta_{+})$. This is clearly quasi-isomorphic to $(X^{\lor} \otimes R/\bold{t} R, 0)$. In fact the map $\pi_{\Delta}: (\Delta, \delta_+) \lto (R/\bold{t} R,0)$ is stronger than a quasi-isomorphism: it is an $S$-linear homotopy equivalence, and we can produce an inverse using a choice of connection. Since we can write $R$ as $S[t_1,t_2]$ there is an $S$-linear standard (\emph{explain}) flat connection
+There is an $S$-linear homotopy inverse $\sigma_\infty$ of the map $1 \otimes \pi$, which comes about as follows: consider the $\Ztwo$-graded module $X^{\lor} \otimes \Xcirc$ with only the differential $1 \otimes \delta_{+}$, for which we write $(X^{\lor} \otimes \Xcirc, 1 \otimes \delta_{+})$. This is clearly quasi-isomorphic to $(X^{\lor} \otimes R/\bold{t} R, 0)$. In fact the map $\pi_{\circ}: (\Xcirc, \delta_+) \lto (R/\bold{t} R,0)$ is stronger than a quasi-isomorphism: it is an $S$-linear homotopy equivalence, and we can produce an inverse using a choice of connection. Since we can write $R$ as $S[t_1,t_2]$ there is an $S$-linear standard (\emph{explain}) flat connection
 \begin{gather*}
 \nabla: R \lto R \otimes_{S[\bold{t}]} \Omega^1_{S[\bold{t}]/S},\\
 \nabla( f(x_1,x_2,y_1,y_2) ) = \frac{\partial f}{\partial y_1} \ud t_1 + \frac{\partial f}{\partial y_2} \ud t_2.
