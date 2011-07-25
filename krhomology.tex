@@ -187,7 +187,7 @@
 \def\ZZ{\mathbb{Z}}
 \def\bs{\boldsymbol}
 \def\Ztwo{\mathbb{Z}_2}
-\def\mdual{^{\lor}}
+\def\mdual{^{\vee}}
 
 \title{Computing Khovanov-Rozansky homology \\ and defect fusion}
 \author{Nils Carqueville}
@@ -570,7 +570,7 @@ Let $R = \oplus_{i \ge 0} R_i$ be a graded ring. We write $M_i$ for the degree $
 Let $W \in R_{2c}$ be a homogeneous element of even degree. A \emph{graded linear factorisation} of $W$ is a pair $X^0, X^1$ of graded $R$-modules together with $R$-linear maps $d_X^0, d_X^1$ of degree $c$, as in the diagram
 \[
 \xymatrix{
-X^0 \ar[r]^-{d_X^0} & X^1 \ar[r]^-{d_X^1} & X^1\,,
+X^0 \ar[r]^-{d_X^0} & X^1 \ar[r]^-{d_X^1} & X^0\,,
 }
 \]
 such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then the \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\oplus_{i \text{ even}} Z^i$ in degree zero, $\oplus_{i \text{ odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded matrix factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
@@ -1314,19 +1314,30 @@ See appendix.
 \textbf{todo} The example we are most interested in: stabilising the bimodules of the previous section.
 \\
 
-Let $k$ be a field of characteristic zero and $S = k[x_1,x_2]$ and $R = k[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. We consider the potential
+Let $S = \QQ[x_1,x_2]$ and $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. We consider the potential
 \[
 W = y_1^{n+1} + y_2^{n+1} - x_1^{n+1} - x_2^{n+1}
 \]
 which Khovanov and Rozansky associate to a crossing labeled as in the diagram
 \[
-diagram.
+\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
+\node (bl) at (-1,-1) [circle,draw=white,fill= white] {$x_1$};
+\node (br) at (1,-1) [circle,draw=white,fill= white] {$x_2$};
+\node (tl) at (-1,1) [circle,draw=white,fill= white] {$y_1$};
+\node (tr) at (1,1) [circle,draw=white,fill= white] {$y_2$};
+\draw[->, thick] (bl) -- (tr); 
+\draw[-, thick] (br) -- (0); 
+\draw[->, thick] (0) -- (tl); 
+\end{tikzpicture}
 \]
 In the convention of \cite{kr0401268} this is a negative crossing, and we are going to attach to this crossing a complex of matrix factorisations
 \[
-0 \lto X \xlto{\chi_1} \Delta \lto 0.
+\xymatrix{
+0 \ar[r] & \Xbul \ar[r]^{\chi_1} & \Xcirc \ar[r] & 0\,.
+}
 \]
-To keep the notation to a minimum, we write $X$ instead of $C(\Gamma^1)$ (the $X$ is meant to remind the reader of the wide-edge) and $\Delta$ for $C(\Gamma^0)$. Both $X, \Delta$ are Koszul factorisations associated to certain linear factorisations of $W$. Namely, if we write $t_i = y_i - x_i$ then
+Both $\Xbul, \Xcirc$ are Koszul factorisations associated to certain linear factorisations of $W$. Namely, if we write $t_i = y_i - x_i$ then
 \begin{equation}\label{eq:cons1}
 W = \pi_1 t_1 + \pi_2 t_2, \qquad \pi_i = \frac{y_i^{n+1} - x_i^{n+1}}{y_i - x_i},
 \end{equation}
@@ -1338,40 +1349,42 @@ Specific polynomials $u_i$ are given in \cite[p.48]{kr0401268}, and these will o
 
 In the notation of Section \ref{prelim:cyclic_koszul}, we define
 \begin{align*}
-X &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \}\\
-\Delta &= \{ (\pi_1, \pi_2) \, , (t_1, t_2) \}\,.
+\Xbul &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \}\\
+\Xcirc &= \{ (\pi_1, \pi_2) \, , (t_1, t_2) \}\,.
 \end{align*}
-The model of the Koszul complex that we use is the following: set $F = R \theta_1 \oplus R \theta_2$, where the $\theta$'s are formal symbols of degree $-1$. Then both $X$ and $\Delta$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
+The model of the Koszul complex that we use is the following: set $F = R \theta_1 \oplus R \theta_2$, where the $\theta$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
 \[
-X = ( \bigwedge F, \beta_+ + \beta_{-}), \quad \beta_+ = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-), \quad \beta_{-} = \Big(\sum_i u_i \theta_i\Big) \wedge (-).
+\Xbul = ( \bigwedge F, \beta_+ + \beta_{-}), \quad \beta_+ = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-), \quad \beta_{-} = \Big(\sum_i u_i \theta_i\Big) \wedge (-).
 \]
 where $s_1 = y_1 + y_2 - x_1 - x_2$ and $s_2 = y_1 y_2 - x_1 x_2$, and
 \[
-\Delta = ( \bigwedge F, \delta_+ + \delta_{-}), \quad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-), \quad \delta_{-} = \Big(\sum_i \pi_i \theta_i\Big) \wedge (-).
+\Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}), \quad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-), \quad \delta_{-} = \Big(\sum_i \pi_i \theta_i\Big) \wedge (-).
 \]
 By construction these are both matrix factorisations of $W$ over $R$. In the $\mathbb{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
 \begin{align*}
-\pi_X: X = ( \bigwedge F, \beta_+ + \beta_{-}) \lto \bigwedge^0 F/\Im(\beta_+^0) = R/\bold{s} R,\\
-\pi_\Delta: \Delta = ( \bigwedge F, \delta_+ + \delta_{-}) \lto \bigwedge^0 F/\Im(\delta_+^0) = R/\bold{t} R.
+\pi_{\circ}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto \bigwedge^0 F/\Im(\beta_+^0) = R/\bold{s} R,\\
+\pi_{\bullet}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto \bigwedge^0 F/\Im(\delta_+^0) = R/\bold{t} R.
 \end{align*}
 The module $R/\bold{t} R = R/(t_1,t_2)R$ is the diagonal, and we identify it with $S = k[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/\bold{s} R$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
 
-The $\pi$ morphisms are, as we will soon see, universal in a certain sense: they exhibit $X, \Delta$ as the \emph{stabilisations} of the Soergel bimodule and the diagonal, respectively. To prove this we make use of the perturbation lemma (\emph{details}, in appendoix).
+The $\pi$ morphisms are, as we will soon see, universal in a certain sense: they exhibit $\Xbul, \Xcirc$ as the \emph{stabilisations} of the Soergel bimodule and the diagonal, respectively. To prove this we make use of the perturbation lemma (\emph{details}, in appendoix).
 \\
 
 The upshot is that the map
 \[
-\Hom(1,\pi_\Delta): \Hom_R(X, \Delta) \lto \Hom_R(X, R/\bold{t} R)
+\Hom(1,\pi_{\circ}): \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/\bold{t} R)
 \]
-is an isomorphism in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: X \lto \Delta$ as the image under the inverse of $\Hom(1,\pi_{\Delta})$ of a certain natural cocycle on the right hand side, namely, the composite
+is an isomorphism in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: \Xbul \lto \Xcirc$ as the image under the inverse of $\Hom(1,\pi_{\circ})$ of a certain natural cocycle on the right hand side, namely, the composite
 \begin{equation}\label{eq:cons4}
-X \xlto{\pi_X} R/\bold{s} R \xlto{\can} R/\bold{t}R
+\xymatrix{
+\Xbul \ar[r]^-{\pi_{\bullet}} & R/\bold{s} R \ar[r]^-{\can} & R/\bold{t}R
+}
 \end{equation}
 where the second map comes about because of the inclusion of ideals $\bold{s} R \subseteq \bold{t} R$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the diagram
 \begin{equation}\label{eq:cons5}
 \xymatrix@C+2pc{
-X \ar[d]_{\chi_1} \ar[r]^{\pi_X} & R/\bold{s} R \ar[d]^{\can}\\
-\Delta \ar[r]_{\pi_{\Delta}} & R/\bold{t} R
+\Xbul \ar[d]_{\chi_1} \ar[r]^{\pi_{\bullet}} & R/\bold{s} R \ar[d]^{\can}\\
+\Xcirc \ar[r]_{\pi_{\circ}} & R/\bold{t} R
 }
 \end{equation}
 commute (we might say $\chi_1$ is the stabilisation of the canonical map between the quotient algebras).
@@ -1388,7 +1401,7 @@ The proof of the following lemma is technical and we have relegated it to Append
 \begin{equation}\label{eq:consfirst1}
 2 z + \frac{\partial z}{\partial y_1} (y_1 - x_1) + \frac{\partial z}{\partial y_2}(y_2 - x_2) = \gamma
 \end{equation}
-has a unique polynomial solution $\Omega_2(\gamma)$, and the map $\chi_1: X \lto \Delta$ defined by
+has a unique polynomial solution $\Omega_2(\gamma)$, and the map $\chi_1: \Xbul \lto \Xcirc$ defined by
 \begin{align*}
 \chi_1(1) &= 1 + \Omega_2( \gamma )\theta_1 \theta_2,\\
 \chi_1(\theta_1) &= \theta_1 + \theta_2,\\
@@ -2915,7 +2928,7 @@ Let $R = \oplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite rank graded 
 }
 \]
 
-\begin{remark} If $a,b \in R$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then it is clear that there is an isomorphism $\{ b, a \}\mdual \cong \{-a, b\}$, and if we think of these cyclic Koszul factorisations as exterior algebras on a symbol $\theta$, this isomorphism sends the basis element $1^*$ to $1$ and $\theta^*$ to $\theta$.
+\begin{remark}\label{remark:dual_koszul_cyclic} If $a,b \in R$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then it is clear that there is an isomorphism $\{ b, a \}\mdual \cong \{-a, b\}$, and if we think of these cyclic Koszul factorisations as exterior algebras on a symbol $\theta$, this isomorphism sends the basis element $1^*$ to $1$ and $\theta^*$ to $\theta$.
 \end{remark}
 
 We will need the following basic facts relating the graded tensor and Hom. The proofs are easy (the standard isomorphisms for graded modules commute with the differentials) and we omit them.
@@ -2936,11 +2949,13 @@ of graded linear factorisations of $W' - W$, defined for $\Ztwo$-homogeneous ele
 % see NGMF
 
 In particular if $X, Y$ are finite rank graded matrix factorisations we have
-\begin{align*}
+\begin{equation}\label{eq:dual_tensor}
+\begin{split}
 (X \otimes Y)\mdual &= \Hom_R(X \otimes Y, R)\\
 &\cong \Hom_R(X, \Hom_R(Y,R))\\
 &\cong \Hom_R(X,R) \otimes \Hom_R(Y,R) = X\mdual \otimes Y\mdual.
-\end{align*}
+\end{split}
+\end{equation}
 Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign $x \otimes y \mapsto (-1)^{n|x} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product with no signs.
 \\
 
@@ -2952,7 +2967,12 @@ For the next pair of lemmas let $R = \oplus_{i \ge 0} R_i$ be a graded ring, and
 \]
 \end{lemma}
 \begin{proof}
-\textbf{todo}.
+Using Remark \ref{remark:dual_koszul_cyclic} we have
+\begin{align*}
+\{ \bs{b}, \bs{a} \}\mdual &\cong \left( \{ b_1, a_1 \} \otimes \ldots \otimes \{ b_n, a_n \} \right)\mdual\\
+&\cong \{ b_1, a_1 \}\mdual \otimes \ldots \otimes \{ b_n, a_n \}\mdual\\
+&\cong \{ -a_1, b_1 \} \otimes \ldots \otimes \{ -a_n, b_n \} = \{ - \bs{a}, \bs{b} \}.
+\end{align*}
 \end{proof}
 % see ngkos
 
@@ -2962,7 +2982,18 @@ For the next pair of lemmas let $R = \oplus_{i \ge 0} R_i$ be a graded ring, and
 \]
 \end{lemma}
 \begin{proof}
-\textbf{todo}.
+Let us begin with $a,b$ homogeneous such that $\deg(a) + \deg(b) = 2c$. Then $\{ a, b \}\langle 1 \rangle$ is
+\[
+\xymatrix{
+R\{ \deg(a) - c \} \ar[r]^-{-a} & R \ar[r]^-{b} & R\{ \deg(a) - c \}
+}
+\]
+and taking the grading shift by $\{ c - \deg(a) \}$ we have that $\{ a, b \}\langle 1 \rangle\{ c - \deg(a) \}$ is equal to $\{ b, -a \}$. Hence
+\begin{align*}
+\{ - \bs{a}, \bs{b} \} &\cong \{ -a_1, b_1 \} \otimes \ldots \otimes \{ -a_n, b_n \}\\
+&\cong \{ b_1, a_1 \}\langle 1 \rangle\{ \deg(a_1) - c \} \otimes \ldots \otimes \{ b_n, a_n \}\langle 1 \rangle\{ \deg(a_n) - c \}\\
+&\cong \{ \bs{b}, \bs{a} \}\langle n \rangle\big\{ \sum_i \deg(a_i) - nc \big\}.
+\end{align*}
 \end{proof}
 
 Finally, let us discuss the cohomology of cyclic Koszul complexes (\textbf{todo, fix}). We begin more generally: let $C = \oplus_{i \in \mathbb{Z}} C^i$ be a $\mathbb{Z}$-graded $R$-module together with $R$-linear maps $d_{\pm}: C \lto C$ of degree $\pm 1$, satisfying
