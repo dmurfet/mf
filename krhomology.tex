@@ -1221,11 +1221,11 @@ As we will discuss in Section~\ref{compres} we have used this implementation to 
 \label{KRconstruction}
 % notes: skrh, skrh2, ptons
 
-In this section we give a description of Khovanov and Rozansky's homological link invariants. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, following the two-step approach to the Homfly polynomial of \cite{moy1998}. The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose graded Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations which lift the MOY relations~\eqref{MOYdecomp1}.
+In this section we give a description of Khovanov and Rozansky's $\sln$ link homology. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, following the two-step approach of \cite{moy1998}. The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose graded Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations which lift the MOY relations~\eqref{MOYdecomp1}.
 
-This is done by making good on the promise made in Remark~\ref{MOYremark}. A state graph makes a choice, for each crossing in our link, of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $\Xcirc, \Xbul$). Tensoring these together over all crossings will produce a $(\ZZ \times \Ztwo)$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
+This is done by making good on the promise made in Remark~\ref{MOYremark}. A state graph makes a choice for each crossing of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $\Xcirc, \Xbul$). Tensoring these together over all crossings will produce a $(\ZZ \times \Ztwo)$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
 
-The second step is to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right hand side of the identities in~\eqref{graphreduction}, and we thereby define the homological invariant $\textup{KR}_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over and under crossings.
+The second step is to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right hand side of the identities in~\eqref{graphreduction}, and we thereby define the homological invariant $H_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over and under crossings.
 
 We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier \cite{??}, one can try to build autoequivalences of triangulated categories out of special kinds of adjunctions; if one is very clever with the choice of adjunction, these autoequivalences give rise to link invariants. 
 
@@ -1330,43 +1330,37 @@ This process is known as \emph{stabilisation}, and will take place in the next s
 
 \subsection{Stabilisation}\label{section:stabilisation}
 
-In this section we give the explicit matrix factorisations and morphisms which stabilise the adjunction discussed in the previous section, following \cite{kr0401268}. The presentation of the matrix factorisations is standard, but we give a new approach to stabilisation of the morphisms by inverting a certain canonical quasi-isomorphism. Our construction is no better for computations: we simply recover the explicit maps of \cite{kr0401268}, but we feel it is worth including here since the \emph{ad hoc} nature of the maps in the originl paper is a major turn off for newbies (\emph{rephrase}).
-
-Let us begin with a general definition.
-
-\begin{definition} Let $R$ be a ring, $W \in R$ and $M$ a finitely generated $R/(W)$-module. We define the \emph{stabilisation} of $M$ with respect to $W$ to be a finite-rank matrix factorisation $X_M \in \hmf(R,W)$ together with a morphism of linear factorisations $\pi: X_M \lto M$ with the property that the map
+We give the explicit matrix factorisations and morphisms which stabilise the adjunction given in the previous section. We begin with a general definition: let $R$ be a graded ring, $W \in R_{2c}$ a homogeneous element of even degree and $M$ a finitely generated graded $R/(W)$-module. The \emph{stabilisation} of $M$ with respect to $W$ is a finite-rank graded matrix factorisation $X_M$ of $W$ over $R$ together with a morphism of linear factorisations $\pi: X_M \lto M$ with the property that the map
 \[
 \Hom_R(Y, X_M) \lto \Hom_R(Y, M)
 \]
-is a quasi-isomorphism for every finite-rank matrix factorisation $Y$ of $W$.
-\end{definition}
+is a quasi-isomorphism for every finite-rank graded matrix factorisation $Y$ of $W$.
 
-\textbf{todo}: mention the equivalence of triangulated categories, equivalent to the above definition of stabilisation.
+%The presentation of the matrix factorisations is standard, but we give a new approach to stabilisation of the morphisms by inverting a certain canonical quasi-isomorphism. Our construction is no better for computations: we simply recover the explicit maps of \cite{kr0401268}, but we feel it is worth including here since the \emph{ad hoc} nature of the maps in the originl paper is a major turn off for newbies (\emph{rephrase}).
 
-\begin{proposition} Under some conditions $\{ \bs{a}, \bs{b} \}$ stabilises $R/(\bs{b})$.
-\end{proposition}
-\begin{proof}
-See appendix.
-\end{proof}
 
-We want to stabilise the bimodules $S \otimes_A S$ and $S$ of the previous section to get graded matrix factorisations $\Xbul$ and $\Xcirc$, together with morphisms $\chi_0$ and $\chi_1$ stabilising the units and counits of adjunction in (\ref{eq:bimodalg1}) and (\ref{eq:bimodalg2}). Take $S = \QQ[x_1,x_2]$ as before and set $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. Fix an integer $N > 0$ and consider the potential
-\[
-W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}
-\]
-(\textbf{todo}) This is the potential associated with a crossing, and the factorisations $\Xcirc, \Xbul$ are each assigned to one of the two ways of resolving a crossing, as in the diagram
-\begin{equation}
-\label{delta2}
-\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
-\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
-\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
-\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
-\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
-\draw[ ->, thick ] (230:1) arc (230:130:1); 
-\end{tikzpicture}
-\widehat = \,
-\Xcirc \, ,
-\qquad 
+Clearly the stabilisation, if it exists, is unique up to homotopy equivalence. Take $S = \QQ[x_1,x_2]$ as before and set $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. Fix an integer $N > 0$ and define
+\begin{align*}
+W &= y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}\,,\\
+t_i &= y_i - x_i\,\\
+s_1 &= y_1 + y_2 - x_1 - x_2\,\\
+s_2 &= y_1 y_2 - x_1 x_2\,.
+\end{align*}
+As in Lemma \ref{lemma:bimodules_as_algebras} we identify the graded $S$-bimodules $S \otimes_A S, S$ with the graded $R$-modules $R/(\bs{s})$ and $R/(\bs{t})$. Both are killed by $W$ and therefore give $R/(W)$-modules. The stabilisations $\Xbul, \Xcirc$ of these graded $R/(W)$-modules exist and can be described using cyclic Koszul complexes. Note that
+%(\textbf{todo}) This is the potential associated with a crossing, and the factorisations $\Xcirc, \Xbul$ are each assigned to one of the two ways of resolving a crossing, as in the diagram
+%\begin{equation}
+%\label{delta2}
+%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+%\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
+%\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
+%\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
+%\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
+%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
+%\draw[ ->, thick ] (230:1) arc (230:130:1); 
+%\end{tikzpicture}
+%\widehat = \,
+%\Xcirc \, ,
+%\qquad 
 %\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
 %\node (0) at (0,0) [circle] {};
 %\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
@@ -1390,25 +1384,24 @@ W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}
 %\draw[->, very  thick] (0) -- (tl); 
 %\draw[->,  thick] (0) -- (tr); 
 %\end{tikzpicture}
-\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
-\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
-\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
-\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
-\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-\node (bl) at (-1,-1) [circle] {};
-\node (br) at (1,-1) [circle] {};
-\node (tl) at (-1,1) [circle] {};
-\node (tr) at (1,1) [circle] {};
-\draw[-,  thick] (bl) -- (0); 
-\draw[-,  thick] (br) -- (0); 
-\draw[->,  thick] (0) -- (tl); 
-\draw[->,  thick] (0) -- (tr); 
-\end{tikzpicture}
-\widehat = \,
-\Xbul\,.
-\end{equation}
-Both $\Xbul, \Xcirc$ are cyclic Koszul complexes. Namely, if we write $t_i = y_i - x_i$ then
+%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+%\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
+%\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
+%\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
+%\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
+%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
+%\node (bl) at (-1,-1) [circle] {};
+%\node (br) at (1,-1) [circle] {};
+%\node (tl) at (-1,1) [circle] {};
+%\node (tr) at (1,1) [circle] {};
+%\draw[-,  thick] (bl) -- (0); 
+%\draw[-,  thick] (br) -- (0); 
+%\draw[->,  thick] (0) -- (tl); 
+%\draw[->,  thick] (0) -- (tr); 
+%\end{tikzpicture}
+%\widehat = \,
+%\Xbul\,.
+%\end{equation}
 \begin{equation}\label{eq:cons1}
 W = \pi_1 t_1 + \pi_2 t_2 \, , \qquad \pi_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i} \, ,
 \end{equation}
@@ -1436,31 +1429,32 @@ By construction these are both matrix factorisations of $W$ over $R$. In the $\m
 & \pi_{\bullet}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
 & \pi_{\circ}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
 \end{align*}
-The module $R/(\boldsymbol{t}) = R/(t_1,t_2)$ is the diagonal, and we identify it with $S = \QQ[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/(\boldsymbol{s})$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
+The module $R/(\boldsymbol{t})$ is the diagonal $S$, and $R/(\bs{s})$ is $S \otimes_A S$. 
 
-The $\pi$ morphisms are, as we will soon see, universal in a certain sense: they exhibit $\Xbul, \Xcirc$ as the \emph{stabilisations} of the Soergel bimodule and the diagonal, respectively. To prove this we make use of the perturbation lemma (\emph{details}, in appendoix).
-\\
+\begin{proposition} The morphisms $\pi_{\bullet}, \pi_{\circ}$ are the stabilisations of $R/(\bs{s})$ and $R/(\bs{t})$ respectively.
+\end{proposition}
+\begin{proof}
+See Appendix \ref{section:morphismpert}.
+\end{proof}
 
-The upshot is that the maps
+Now that we have stabilised $R/(\bs{s}), R/(\bs{t})$ we turn to stabilisation of the maps $\varepsilon$ and $\eta'$. The first observation is that, by the proposition just stated, the maps
 \begin{align*}
 \Hom(1,\pi_{\circ})&: \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/(\boldsymbol{t})) \, , \\
 \Hom(1,\pi_{\bullet})&: \Hom_R(\Xcirc, \Xbul) \lto \Hom_R(\Xcirc, R/(\boldsymbol{s}))
 \end{align*}
-are isomorphisms in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: \Xbul \lto \Xcirc$ as the image under the inverse of $\Hom(1,\pi_{\circ})$ of a certain natural cocycle on the right hand side, namely, the composite
+are quasi-isomorphisms. By definition the morphism $\chi_1: \Xbul \lto \Xcirc$ stabilising $\varepsilon$ is the cohomology class of $\Hom_R(\Xbul, \Xcirc)$ corresponding under the above quasi-isomorphism to the composite
 \begin{equation}\label{eq:cons4}
 \xymatrix{
 \Xbul \ar[r]^-{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[r]^-{\can} & R/(\boldsymbol{t})
 }
 \end{equation}
-where the second map comes about because of the inclusion of ideals $(\boldsymbol{s}) \subseteq (\boldsymbol{t})$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the diagram
+where the second map comes about because of the inclusion of ideals $(\boldsymbol{s}) \subseteq (\boldsymbol{t})$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the following diagram commute:
 \begin{equation}\label{eq:cons5}
 \xymatrix@C+2pc{
 \Xbul \ar[d]_{\chi_1} \ar[r]^{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[d]^{\can}\\
 \Xcirc \ar[r]_{\pi_{\circ}} & R/(\boldsymbol{t})
 }
 \end{equation}
-commute (we might say $\chi_1$ is the stabilisation of the canonical map between the quotient algebras).
-
 We know abstractly that $\chi_1$ exists. To write it down as a matrix one could study the equations which say that the matrix commutes with the differentials and makes (\ref{eq:cons5}) commute. This appears to be the approach of \cite{kr0401268}, where explicit matrices are presented without explanation. A more conceptual explanation was given in Khovanov and Rozansky's second paper on the subject \cite{??} and by Wu \cite{??}. But these constructions are rather specific to the special kind of Koszul factorisations that arise in Khovanov-Rozansky homology. 
 
 We give a more conceptual derivation by finding an explicit inverse of $\Hom(1,\pi_{\circ})$ and evaluating it on (\ref{eq:cons4}). Besides avoiding the need for explicit polynomials $u_i$ in the foundations, our approach has the advantage that it can be adapted to stabilise other morphisms into the diagonal.
@@ -1480,7 +1474,7 @@ in an unknown $z$ has a unique polynomial solution $\Omega_2(\gamma)$, and the m
 \chi_1(\theta_2) &= \frac{1}{2}(x_2 + y_2)\theta_1 + \frac{1}{2}(x_1 + y_1)\theta_2,\\
 \chi_1(\theta_1\theta_2) &= \frac{1}{2}(x_1 + y_1 - x_2 - y_2) \theta_1\theta_2
 \end{align*}
-is a morphism of matrix factorisations, making the diagram (\ref{eq:cons5}) commute up to homotopy.
+is a morphism of graded matrix factorisations, making the diagram (\ref{eq:cons5}) commute up to homotopy.
 \end{lemma}
 
 The only obstacle to having an explicit formula for $\chi_1$ is determining the solution $\Omega_2(\gamma)$ of the differential equation (\ref{eq:consfirst1}). Fortunately the solution has already been provided by Khovanov and Rozansky: up to a sign, it is the polynomial $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - \pi_2)/(x_1-y_1)$ of \cite[p.51]{kr0401268} (with $\lambda = \frac{1}{2}$).
@@ -1498,7 +1492,14 @@ Setting $y_1 = x_1$ in (\ref{eq:cons2}) shows that $u_1 + y_1 u_2 - \pi_2$ is di
 The $\chi_1$ given above agrees with the definition given on \cite[p.51]{kr0401268} for $\lambda = \frac{1}{2}$, up to a sign which arises because they write their differentials and maps in the basis $1, \theta_2 \theta_1 = - \theta_1 \theta_2, \theta_1, \theta_2$.
 \\
 
-Next we discuss the morphism $\chi_0$ stabilising \textbf{todo}. Rather than use perturbation, which is much more complicated in this case, we obtain $\chi_0$ by dualising $\chi_1$ to get a morphism $(\chi_1)\mdual: \Xcirc\mdual \lto \Xbul\mdual$. Using the standard properties of cyclic Koszul complexes collected in Appendix \ref{??}, we can rewrite the dual of a cyclic Koszul complex as a cyclic Koszul complex; up to signs and a change of variables $\Xcirc$ and $\Xbul$ are self-dual, so we get a morphism $\Xcirc \lto \Xbul$. This is our $\chi_0$.
+Next we discuss the morphism $\chi_0$ stabilising $\eta'$. Recall that $\eta': S \lto S \otimes_A S\{-2\}$ corresponds to the map $R/(\bs{t}) \lto R/(\bs{s})\{-2\}$ given by multiplication with $\frac{1}{2}(x_1 + y_1 - x_2 - y_2)$. So by definition $\chi_0$ is the unique (up to homotopy) morphism making the following diagram commute:
+\begin{equation}\label{eq:cons50}
+\xymatrix@C+2pc{
+\Xcirc \ar[d]_{\chi_0} \ar[r]^{\pi_{\circ}} & R/(\boldsymbol{t}) \ar[d]^-{\frac{1}{2}(x_1+y_1-x_2-y_2)}\\
+\Xbul\{-2\} \ar[r]_{\pi_{\bullet}} & R/(\boldsymbol{s})\{-2\}
+}
+\end{equation}
+Rather than use perturbation theory, which is much more complicated in this case, we obtain $\chi_0$ by dualising $\chi_1$ to get a morphism $(\chi_1)\mdual: \Xcirc\mdual \lto \Xbul\mdual$. Using the standard properties of cyclic Koszul complexes collected in Appendix \ref{appendix:graded_mfs}, we can rewrite the dual of a cyclic Koszul complex as a cyclic Koszul complex; up to signs and a change of variables $\Xcirc$ and $\Xbul$ are self-dual, so we get a morphism $\Xcirc \lto \Xbul$. This will turn out to be the desired map $\chi_0$.
 
 More carefully, we define $\chi_0'$ to be the morphism making the diagram below commute:
 \[
@@ -1509,7 +1510,8 @@ More carefully, we define $\chi_0'$ to be the morphism making the diagram below 
 \{ \bs{a}, -\bs{t} \} \ar@{.>}[r]_-{\chi_0'} \ar[u]^-{(\ref{lemma:cyclickos3})} & \{ \bs{u}, -\bs{s} \}
 }
 \]
-where each map is an isomorphism labelled by the corresponding Lemma in Appendix \ref{appendix:graded_mfs} (\textbf{todo} what to say about gradings?). The matrix factorisations $\{ \bs{a}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams (\ref{delta2}) with the orientations of the arrows reversed. Switching the role of the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
+where each map is an isomorphism labelled by the corresponding Lemma in Appendix \ref{appendix:graded_mfs}. The matrix factorisations $\{ \bs{a}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams (\ref{delta2}) with the orientations of the arrows reversed. Switching the role of the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
+% TODO: What to say about gradings? Also in \chi_1
 
 Let $\phi: R \lto R$ be the automorphism with $\phi(x_i) = y_i$ and $\phi(y_i) = x_i$. It is clear that $\phi$ sends $t_i$ to $-t_i$, $s_i$ to $-s_i$ and $W$ to $-W$, so that by pulling back along $\phi$ (equivalently, applying $\phi$ to the entries of all matrices) we get a morphism of matrix factorisations of $W$: 
 \[
@@ -1528,18 +1530,8 @@ and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact tha
 \end{equation}
 where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - \pi_2)/(x_1-y_1)$ is as before. Here we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given on \cite[p.50]{kr0401268} for $\mu = \frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
 
-\begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul$ defined by (\ref{eq:chi0defn}) is the unique morphism of graded matrix factorisations of degree $2$, making the diagram
-\begin{equation}
-\xymatrix@C+2pc{
-\Xcirc \ar[d]_{\chi_0} \ar[r]^{\pi_{\bullet}} & R/(\boldsymbol{t}) \ar[d]^-{blah}\\
-\Xbul \ar[r]_{\pi_{\circ}} & R/(\boldsymbol{s})
-}
-\end{equation}
-commute up to homotopy.
+\begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul$ defined by (\ref{eq:chi0defn}) is a morphism of graded matrix factorisations of degree two, which makes (\ref{eq:cons50}) commute.
 \end{lemma}
-\begin{proof}
-\textbf{todo} $\chi_0$ does the right thing on $1$, and uniqueness is for free.
-\end{proof}
 
 \subsection{Khovanov-Rozansky homology}
 
