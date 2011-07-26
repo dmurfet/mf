@@ -84,6 +84,7 @@
 \def\uHom{\underline{\Hom}}
 \def\modd{\operatorname{mod}}
 \def\Modd{\operatorname{Mod}}
+\def\Grmodd{\operatorname{GrMod}}
 \def\CM{\operatorname{CM}}
 \def\Ker{\operatorname{Ker}}
 \def\Spec{\operatorname{Spec}}
@@ -1234,68 +1235,71 @@ Consider the inclusion
 \[
 \varphi: A = \QQ[x_1 + x_2, x_1 x_2] \lto \QQ[x_1,x_2] = S
 \]
-of symmetric polynomials in all polynomials. As with any ring morphism, there are adjunctions
+of symmetric polynomials in all polynomials. We give the variables $x_i$ degree $2$. As with any degree zero ring morphism, $\varphi$ determines adjunctions between the categories of graded modules and degree zero morphisms
 \[
 \xymatrix@C+3pc{
-\Modd(A) \ar@/^1pc/[r]^-{\varphi^*} \ar@/_1pc/[r]_-{\varphi^!} & \Modd(S) \ar[l]^-{\varphi_*}
+\Grmodd(A) \ar@/^1pc/[r]^-{\varphi^*} \ar@/_1pc/[r]_-{\varphi^!} & \Grmodd(S) \ar[l]^-{\varphi_*}
 }, \qquad
 \xymatrix{
-\varphi^* \ar@{-|}[r] & \varphi_* \ar@{-|}[r] & \varphi^!
+\varphi^* \ar@{-|}[r] & \varphi_* \ar@{-|}[r] & \varphi^!\,.
 }
 \]
-between restriction of scalars $\varphi_*$, extension of scalars $\varphi^* = (-) \otimes_A S$ and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ can be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of $S$-modules
+Here $\varphi_*$ denotes restriction of scalars, $\varphi^* = (-) \otimes_A S$ is extension of scalars and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ can be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of graded $S$-modules (here $\{ m \}$ denotes shifting the grading \emph{up} by $m$)
 \[
-\psi: S \lto \Hom_A(S,A) \, , \qquad \psi(1) = (x_1-x_2)^* \, , \qquad \psi(x_1-x_2) = 1^* \, .
+\psi: S \lto \Hom_A(S,A)\{2\} \, , \qquad \psi(1) = 2(x_1-x_2)^* \, , \qquad \psi(x_1-x_2) = 2 \cdot 1^* \, .
 \]
-From this we deduce for any $A$-module $N$ a natural isomorphism 
+Obviously we are free to choose the normalisation: the factors of $2$ will be justified later. From this we deduce for any graded $A$-module $N$ a natural isomorphism 
 \[
-\varphi^!(N) = \Hom_A(S,N) \cong \Hom_A(S,A) \otimes_A N \stackrel{\psi}{\cong} S \otimes_A N = \varphi^*(N) \, ,
+\varphi^!(N) = \Hom_A(S,N) \cong \Hom_A(S,A) \otimes_A N \stackrel{\psi}{\cong} S \otimes_A N \{-2\} = \varphi^*(N)\{-2\} \, ,
 \]
-so that the left and right adjoints of $\varphi_*$ are naturally isomorphic. One way to look at this is that by allowing us to identify $\varphi^*$ with $\varphi^!$, the map $\psi$ has provided us with an adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, so that these functors are biadjoint. By a process of stabilisation this biadjunction will give rise to a biadjunction on the level of matrix factorisations, which is the starting point for the Khovanov-Rozansky construction.
+so that, up to a grading shift, the left and right adjoints of $\varphi_*$ are naturally isomorphic. One way to look at this is that the map $\psi$ has provided us with an adjunction $\xymatrix@1{\varphi_*\, \ar@{-|}[r] & \,\varphi^*\{-2\}}$. We say that the functors $\varphi_*, \varphi^*$ are \emph{biadjoint}. By a process of stabilisation (see the next section) this biadjunction will give rise to a biadjunction on the level of matrix factorisations, which is the starting point for the Khovanov-Rozansky construction.
 
-These morphisms will come from the units and counits of the adjunction $\xymatrix@1{\varphi^* \ar@{-|}[r] & \varphi_*}$, which we denote $\eta, \varepsilon$, and the units and counits of the new adjunction $\xymatrix@1{\varphi_* \ar@{-|}[r] & \varphi^*}$, which we denote $\eta', \varepsilon'$. For an $A$-module $N$ and $S$-module $M$ these maps are given by
+The units and counits of these adjunctions will give rise to the morphisms $\chi_0, \chi_1$ between $\Xbul, \Xcirc$ mentioned above. The units are described for a graded $A$-module $N$ and graded $S$-module $M$ by
 \begin{align*}
 \eta: N  \lto \varphi_* \varphi^*(N) = \varphi_*( S \otimes_A N ) \, , \qquad n & \longmapsto 1 \otimes n \, ,\\
-\eta': M  \lto \varphi^* \varphi_*(M) = S \otimes_A \varphi_*(M) \, , \qquad m & \longmapsto (x_1-x_2) \otimes m + 1 \otimes (x_1 - x_2) \cdot m
+\eta': M  \lto \varphi^* \varphi_*(M)\{-2\} = S \otimes_A \varphi_*(M) \{-2\} \, , \qquad m & \longmapsto \frac{1}{2}(x_1-x_2) \otimes m + 1 \otimes \frac{1}{2}(x_1 - x_2) \cdot m
 \end{align*}
-and
+and the counits are given by
 \begin{align*}
 \varepsilon: S \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) \lto M \, , \qquad b \otimes m & \longmapsto b \cdot m \, ,\\
-\varepsilon': \varphi_*(S \otimes_A N) = \varphi_*\varphi^*(N) \lto N \, , \qquad b \otimes n & \longmapsto \psi(b)(1) \cdot n \, .
+\varepsilon': \varphi_*(S \otimes_A N)\{-2\} = \varphi_*\varphi^*(N)\{-2\} \lto N \, , \qquad b \otimes n & \longmapsto \psi(b)(1) \cdot n \, .
 \end{align*}
-To make the transition from modules to matrix factorisations, we present the biadjunction between $\varphi^*$ and $\varphi_*$ in terms of bimodules and bimodule morphisms. It is clear that $\varphi^*$ is represented by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. The units and counits of adjunction are represented by morphisms between these bimodules and the rings $A,S$ as bimodules over themselves, representing the identity functors:
-\[
-\eta: S \lto S \otimes_A S \, , \qquad b \longmapsto (x_1 - x_2) \otimes b + 1 \otimes (x_1 - x_2)b
-\]
-and
-\[
-\varepsilon: S = S \otimes_A A \lto A \, , \qquad b \longmapsto \psi(b)(1) \, .
-\]
-\textbf{todo} present units and counits of the right-way adjunction. The bimodule $S \otimes_A S$ is of particular interest:
+To make the transition from modules to matrix factorisations, we present the biadjunction in terms of graded bimdoules and bimodule maps. It is clear that $\varphi^*$ is given by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. Let us abuse notation and reuse $\eta, \eta', \varepsilon, \varepsilon'$ for the morphisms between these bimodules which represent the units
+\begin{align*}
+\eta: A \lto S \, , \qquad a &\longmapsto \varphi(a)\,,\\
+\eta': S \lto S \otimes_A S\{-2\} \, , \qquad b &\longmapsto \frac{1}{2}(x_1 - x_2) \otimes b + 1 \otimes \frac{1}{2}(x_1 - x_2)b
+\end{align*}
+and counits
+\begin{align*}
+\varepsilon: S \otimes_A S \lto S &\, , \qquad b \otimes b' \longmapsto bb'\,,\\
+\varepsilon': S\{-2\} \lto A &\, , \qquad b \longmapsto \psi(b)(1) \, . 
+\end{align*}
 
-\begin{lemma}\label{lemma:bimodules_as_algebras} Viewing a $\QQ[x_1,x_2,y_1,y_2]$-module as an $S$-bimodule by identifying the action of $y_1, y_2$ with the right action of $x_1, x_2$, respectively, there are isomorphisms of $S$-bimodules
+\begin{lemma}\label{lemma:bimodules_as_algebras} Viewing a $\QQ[x_1,x_2,y_1,y_2]$-module as an $S$-bimodule by identifying the action of $y_1, y_2$ with the right action of $x_1, x_2$, respectively, there are isomorphisms of graded $S$-bimodules
 \begin{align*}
 S \otimes_A S & \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \, ,\\
 S & \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,.
 \end{align*}
 \end{lemma}
 
-Moreover it is clear that these isomorphisms make the following diagrams commute:
+Moreover it is clear that these isomorphisms make the diagrams of graded bimodules
 \begin{equation}
 \label{eq:bimodalg1}
 \xymatrix{
-S \otimes_A S \ar[d]_{??} \ar[r]^-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \ar[d]^{\can}\\
+S \otimes_A S \ar[d]_{\varepsilon} \ar[r]^-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \ar[d]^{\can}\\
 S \ar[r]_-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,,
 }
 \end{equation}
-where the vertical map on the right is a quotient, and
+and
 \begin{equation}
 \label{eq:bimodalg2}
 \xymatrix{
-S \ar[r]_-{\cong}\ar[d]_{??} & \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2) \ar[d]^{??}\\
-S \otimes_A S \ar[r]^-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2)\,.
+S \ar[r]^-{\cong}\ar[d]_{\eta'} & \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2) \ar[d]^{\frac{1}{2}(x_1 + y_1 - x_2 - y_2)}\\
+S \otimes_A S\{-2\} \ar[r]_-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2)\{-2\}\,.
 }
 \end{equation}
+commute. In the first diagram the vertical map on the right comes about because $y_1 + y_2 - x_1 - x_2$ and $y_1 y_2 - x_1 x_2$ belong to the ideal generated by the $y_i - x_i$. We note that the right-hand vertical map in (\ref{eq:bimodalg2}) is the determinant of the matrix which writes the regular sequence $(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2)$ in terms of $(y_1 - x_1, y_2 - x_2)$, and if one thinks in terms of Koszul complexes it is clear that (\ref{eq:bimodalg1}) is in some sense dual to (\ref{eq:bimodalg2}). This will be made explicit at the end of Section \ref{section:stabilisation}.
+
 If $W \in A$ is any symmetric polynomial then, since $S$ is free as an $A$-module with basis $\{1, x_1 - x_2\}$, these functors lift to an adjoint pair of functors between the triangulated categories of matrix factorisations, 
 \[
 \xymatrix@C+2pc{
@@ -3043,6 +3047,8 @@ $
 \appendix
 
 \section{Properties of graded matrix factorisations}\label{appendix:graded_mfs}
+
+\textbf{todo} Cite relevant places in KR.
 
 Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank graded matrix factorisation of $W \in R_{2c}$ over $R$ then the \emph{dual factorisation} is $X\mdual = \Hom_R(X,R)$, which factorises $-W$. More explicitly, the dual factorisation is the pair
 \[
