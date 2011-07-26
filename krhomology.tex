@@ -171,6 +171,8 @@
 \def\cf{\boldsymbol{cf}}
 \def\bx{\boldsymbol{x}}
 \def\by{\boldsymbol{y}}
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
 \def\totimes{\otimes}
 \def\di{Q}
 \def\rint{R_{int}}
@@ -1314,7 +1316,7 @@ which says that a matrix factorisation of $W$ remembers the asymptotic part of a
 
 We can view the stabilisation as a kind of truncation of the bimodule picture elaborated above, and in fact these truncations together form a kind of filtration as we vary the integer $N$. Indeed if one proceeds in the above line, one will end up constructing the triply graded Khovanov-Rozansky homology of \cite{??}, and the relationship between this homology and the truncations at level $N$ (the $\sln$-homologies) is encoded by the spectral sequence of~\cite{r0607544}.
 
-\subsection{Stabilisation}
+\subsection{Stabilisation}\label{section:stabilisation}
 
 Earlier we explained how one constructs the Khovanov-Rozansky complex by stabilising an adjunction on the level of module categories. In this section we present the explicit matrix factorisations and morphisms which stabilise this adjunction, following \cite{kr0401268}. The presentation of the matrix factorisations is standard, but we give a new approach to stabilisation of the morphisms by inverting a certain canonical quasi-isomorphism. Our construction is no better for computations: we simply recover the explicit maps of \cite{kr0401268}, but we feel it is worth including here since the \emph{ad hoc} nature of the maps in the originl paper is a major turn off for newbies (\emph{rephrase}).
 
@@ -1419,8 +1421,8 @@ where $s_1 = y_1 + y_2 - x_1 - x_2$ and $s_2 = y_1 y_2 - x_1 x_2$, and
 \]
 By construction these are both matrix factorisations of $W$ over $R$. In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
 \begin{align*}
-& \pi_{\circ}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
-& \pi_{\bullet}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
+& \pi_{\bullet}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
+& \pi_{\circ}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
 \end{align*}
 The module $R/(\boldsymbol{t}) = R/(t_1,t_2)$ is the diagonal, and we identify it with $S = \QQ[x_1,x_2]$ in the usual way. If we make the identification $R \cong S \otimes_k S$ with $x_1,x_2$ in the second tensor factor being identified with $y_1,y_2$ in $R$ then the $R$-module $R/(\boldsymbol{s})$ corresponds to a certain $S$-$S$-bimodule, which happens to be the most basic kind of \emph{Soergel bimodule}.
 
@@ -1435,10 +1437,10 @@ The upshot is that the maps
 are isomorphisms in the homotopy category of $\Ztwo$-graded complexes over $S$. We are now going to produce the morphism $\chi_1: \Xbul \lto \Xcirc$ as the image under the inverse of $\Hom(1,\pi_{\circ})$ of a certain natural cocycle on the right hand side, namely, the composite
 \begin{equation}\label{eq:cons4}
 \xymatrix{
-\Xbul \ar[r]^-{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[r]^-{\can} & R/\boldsymbol{t}R
+\Xbul \ar[r]^-{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[r]^-{\can} & R/(\boldsymbol{t})
 }
 \end{equation}
-where the second map comes about because of the inclusion of ideals $\boldsymbol{s} R \subseteq \boldsymbol{t} R$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the diagram
+where the second map comes about because of the inclusion of ideals $(\boldsymbol{s}) \subseteq (\boldsymbol{t})$. That is, $\chi_1$ will be the unique (up to homotopy) morphism making the diagram
 \begin{equation}\label{eq:cons5}
 \xymatrix@C+2pc{
 \Xbul \ar[d]_{\chi_1} \ar[r]^{\pi_{\bullet}} & R/(\boldsymbol{s}) \ar[d]^{\can}\\
@@ -3054,7 +3056,7 @@ Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank grad
 
 We will need the following basic facts relating the graded tensor and Hom. The proofs are easy (the standard isomorphisms for graded modules commute with the differentials) and we omit them.
 
-\begin{lemma} Given $W, W' \in R_{2c}$ and a finite-rank graded matrix factorisation $X$ of $W$ and a graded linear factorisation $Y$ of $W'$, there is a natural isomorphism
+\begin{lemma}\label{lemma:homdual} Given $W, W' \in R_{2c}$ and a finite-rank graded matrix factorisation $X$ of $W$ and a graded linear factorisation $Y$ of $W'$, there is a natural isomorphism
 \[
 \xi: X\mdual \otimes Y \lto \Hom_R(X,Y)
 \]
@@ -3236,41 +3238,58 @@ C(\Gamma^{\lor}) = C(\Gamma)\mdual = \{ \boldsymbol{a}, \boldsymbol{b} \}\{c\}\m
 But $\{ \bs{a}, -\bs{b} \}$ has the same cohomology as $\{ \bs{a}, \bs{b} \}$ (Appendix \ref{??}), so up to grading shifts the cohomology of $\Gamma$ and $\Gamma^{\lor}$ agree. It therefore suffices to prove the claim for $\Gamma^{\lor}$. This follows by the above argument, since $i$ is the leftmost edge and can therefore never be involved in a $\Gamma_{\text{I}}$-relation.
 \end{proof}
 
-\section{Morphisms via perturbation}\label{section:morphismpert}
+\section{Stabilisation}\label{section:morphismpert}
 % dcct, skrh, ptons
 
-do it ungraded but mention what happens when $\bs{a}, \bs{b}$ are graded.
+In this appendix we use perturbation techniques to study stabilisation. For simplicity graded matrix factorisations will not feature here: this means that we work throughout with matrix factorisations in the usual sense. One nonstandard piece of terminology is that for us a \emph{linear factorisation} of~$W \in R$ is an arbitrary $\Ztwo$-graded $R$-module with an odd differential squaring to multiplication by $W$. One can tensor and Hom such things in the obvious way; see for example \cite[Section 2]{dm1102.2957}.
 
-Let $R$ be a noetherian ring, $\varphi: S \lto R$ a ring morphism and $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ elements of $R$ with $\bs{b}$ a regular sequence, and set $W = \sum_i a_i b_i$. We assume
-\begin{itemize}
-\item $R/(\bs{b})$ is a finitely generated projective $S$-module.
-\item There is a flat $S$-linear connection
-\[
-\nabla: R \lto R \otimes_{S[\bs{b}]} \Omega^1_{S[\bs{b}]/S}
-\]
-such that $\Ker(\nabla) + \bs{b}R R$, which is standard in the sense of \cite{??}.
-\item Let $F = R \theta_1 \oplus \ldots \oplus R \theta_n$ with $|\theta_i| = -1$ and define $\{ \bs{a}, \bs{b} \}$ in the usual way, let
-\[
-\pi: ( \bigwedge F, \delta_+ ) \lto R/(\bs{b})
-\]
-be the usual morphism from the Koszul complex to its cohomology.
-\end{itemize}
+Let $R$ be a noetherian ring and take sequences $\ba = (a_1,\ldots,a_n)$ and $\bb = (b_1, \ldots, b_n)$ in $R$ with $\bs{b}$ regular, and set $W = \sum_i a_i b_i$. We define the matrix factorisation $\{ \ba, \bb \}$ of $W$ as in Section \ref{prelim:cyclic_koszul} so $F = \oplus_i R \theta_1$ with $|\theta_i| = -1$ and $\bigwedge F$ has two differentials $\delta_+$ and $\delta_{-}$ such that $\{ \ba, \bb \} = (\bigwedge F, \delta_+ + \delta_{-})$. If we use only the differential $\delta_+$ then this is just the Koszul complex on the $b_i$, so there is a morphism of complexes from the Koszul complex to its cohomology
+\begin{equation}\label{eq:app_stab0}
+\pi: ( \bigwedge F, \delta_+ ) \lto R/(\bb)\,.
+\end{equation}
+In fact the map $\pi$ commutes with $\delta_{-}$, so $\pi$ is also morphism of linear factorisations $\{ \ba, \bb \} \lto R/(\bb)$. The task we give ourselves is to show that under some mild hypotheses this map is universal, in the following sense: for any finite rank matrix factorisation $Y$ of $W$ we claim that the map
+\begin{equation}\label{eq:app_stab1}
+\Hom(1, \pi): \Hom_R(Y, \{ \ba, \bb \}) \lto \Hom_R(Y, R/(\bb))
+\end{equation}
+is a quasi-isomorphism. That is, $\{ \ba, \bb \}$ \emph{stabilises} $R/(\bb)$. This is a standard fact \cite{tobythesis,eisenbud} but the twist here is that we produce an explicit homotopy inverse. The first step is to use (the ungraded analogue of) Lemma \ref{lemma:homdual} to rewrite (\ref{eq:app_stab1}) up to isomorphism as
+\begin{equation}\label{eq:app_stab2}
+1 \otimes \pi: Y\mdual \otimes \{ \ba, \bb \} \lto Y \mdual \otimes R/(\bb).
+\end{equation}
+Our starting point is the fact that, turning off the differential $\delta_-$, $(Y\mdual \otimes \bigwedge F, \delta_+)$ is a direct sum of copies of the Koszul complex on the $b_i$, and is therefore quasi-isomorphic to $(Y\mdual \otimes R/(\bb), 0)$. If over some smaller ring (say $R$ contains a field) this is actually a homotopy equivalence, then using the language of deformation retracts and perturbation we can promote an inverse for this homotopy equivalence to an inverse for (\ref{eq:app_stab2}). Rather than repeat the basic facts about perturbation here, we direct the reader to \cite[Section 5]{dm1102.2957} for a full discussion; from now on we use the notation of \emph{loc.\,cit.}
 
-\textbf{todo} We begin with the diagram
+Suppose that $R$ is an algebra over a ring $S$ and that the map $\pi$ in (\ref{eq:app_stab0}) is a homotopy equivalence of $\ZZ$-graded complexes over $S$. More specifically, suppose that there is an $S$-linear morphism of complexes $\sigma: R/(\bb) \lto (\bigwedge F, \delta_+)$ and an $S$-linear homotopy $h$ on $\bigwedge F$ such that $\delta_+ h + h \delta_+ = 1 - \sigma \pi$, $h^2 = 0$ and $h \sigma = 0$. In a moment we will explain how to produce such homotopies, using connections.
+
+With $Y$ as above, there is a a deformation retract of linear factorisations of zero over $S$
+\begin{equation}\label{eq:pre_perturb_htm3}
+\xymatrix@C+2pc{
+(Y\mdual \otimes R/(\bb), 0) \ar@<-0.8ex>[r]_{1 \otimes \sigma} & (Y\mdual \otimes \bigwedge F, 1 \otimes \delta_+), \ar@<-0.8ex>[l]_{\pi}
+} \quad - 1 \otimes h
+\end{equation}
+Here we fix a homogeneous basis for $Y$, and therefore for $Y\mdual$, and use it to extend $h, \sigma$ to $S$-linear maps on the tensor products (using Koszul signs in the case of $h$, which has degree one). Then the conditions for a deformation retract are simply a restatement of our hypothesis on $\sigma, h$ and $\pi$. 
+
+Next we view $\mu = d_{Y\mdual} \otimes 1 + 1 \otimes \delta_{-}$ as a perturbation on $Y\mdual \otimes \bigwedge F$. The total differential $1 \otimes \delta_+ + \mu$ is the usual differential on the tensor product $Y\mdual \otimes \{ \ba, \bb \}$, and the perturbation lemma furnishes us with another deformation retract of $\Ztwo$-graded complexes over $S$
+\[
+\xymatrix@C+2pc{
+(Y\mdual \otimes R/(\bb), d_{Y\mdual}\otimes 1) \ar@<-0.8ex>[r]_-{\sigma_\infty} & (Y\mdual \otimes \bigwedge F, 1 \otimes \delta_+ + \mu), \ar@<-0.8ex>[l]_-{1 \otimes \pi}
+} \quad h_\infty
+\]
+here $h_\infty$ is a homotopy whose exact form does not concern us, and $\sigma_\infty = \sum_{m \ge 0} (-1)^m (h \mu)^m \sigma$. In particular $1 \otimes \pi$ is a homotopy equivalence over $S$, and thus from the commutative diagram
 \begin{equation}\label{eq:cons3}
 \xymatrix@C+2pc{
-\Hom_R(X, \Xcirc) \ar[r]^{\Hom(1,\pi_{\circ})} & \Hom_R(X, R/(\boldsymbol{t}))\\
-X^{\lor} \otimes \Xcirc \ar[u]^{\cong} \ar[r]_{1 \otimes \pi} & X^{\lor} \otimes R/(\boldsymbol{t}) \ar@/^2pc/[l]^{\sigma_\infty} \ar[u]_{\cong}
+\Hom_R(Y, \{\ba, \bb\}) \ar[r]^-{\Hom(1,\pi)} & \Hom_R(Y, R/(\bb))\\
+Y^{\lor} \otimes \{ \ba, \bb \} \ar[u]^{\cong} \ar[r]_-{1 \otimes \pi} & Y^{\lor} \otimes R/(\bb) \ar@/^2pc/[l]^-{\sigma_\infty} \ar[u]_{\cong}
 }
 \end{equation}
-where $(-)^{\lor} = \Hom_R(-,R)$, tensor products are $R$-linear, and the columns are the canonical maps.
+we learn that $\Hom(1,\pi)$ is a homotopy equivalence over $S$ (and hence a quasi-isomorphism over $R$, as claimed) and moreover we have a homotopy inverse $\sigma_\infty$. To actually use $\sigma_\infty$ to lift morphisms $Y \lto R/(\bb)$ to morphisms $Y \lto \{ \ba, \bb \}$, we need a concrete homotopy $h$. Let us turn to this now.
 
-There is an $S$-linear homotopy inverse $\sigma_\infty$ of the map $1 \otimes \pi$, which comes about as follows: consider the $\Ztwo$-graded module $X^{\lor} \otimes \Xcirc$ with only the differential $1 \otimes \delta_{+}$, for which we write $(X^{\lor} \otimes \Xcirc, 1 \otimes \delta_{+})$. This is clearly quasi-isomorphic to $(X^{\lor} \otimes R/(\boldsymbol{t}), 0)$. In fact the map $\pi_{\circ}: (\Xcirc, \delta_+) \lto (R/(\boldsymbol{t}),0)$ is stronger than a quasi-isomorphism: it is an $S$-linear homotopy equivalence, and we can produce an inverse using a choice of connection. Since we can write $R$ as $S[t_1,t_2]$ there is an $S$-linear standard (\emph{explain}) flat connection
+Rather than proceed in complete generality, let us specialise to situation of Section \ref{section:stabilisation}, where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \ba, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\ba = (a_1,a_2)$ is the one elaborated in Section \ref{section:stabilisation}. This means that we take $\bb = \bs{t}$ in the above. 
+
+Since we are interested in morphisms $\Xbul \lto \Xcirc$, in addition we take $Y = \Xbul$. We can write $R$ as $S[t_1,t_2]$ so there is an $S$-linear standard (in the sense of \cite[Section 8.1]{dm1102.2957}) flat connection
 \begin{gather*}
 \nabla: R \lto R \otimes_{S[\boldsymbol{t}]} \Omega^1_{S[\boldsymbol{t}]/S},\\
 \nabla( f(x_1,x_2,y_1,y_2) ) = \frac{\partial f}{\partial y_1} \ud t_1 + \frac{\partial f}{\partial y_2} \ud t_2.
 \end{gather*}
-This induces an $S$-linear map, also denoted $\nabla$, on $R \otimes_{S[\boldsymbol{t}]} \Omega_{S[\boldsymbol{t}]/S}$ where $\Omega = \bigwedge^\bullet \Omega^1$. We identify this free $\mathds{Z}$-graded $R$-module with $\bigwedge F$ (and hence also with $\Xcirc$) via $\ud t_i = \theta_i$. It is easily checked that for $\theta = \theta_{i_1} \ldots \theta_{i_p}$ with distinct indices $i_j$ and $p > 0, f \in R$,
+This induces an $S$-linear map, also denoted $\nabla$, on $R \otimes_{S[\boldsymbol{t}]} \Omega_{S[\boldsymbol{t}]/S}$ where $\Omega = \bigwedge^\bullet \Omega^1$. We identify this free $\mathds{Z}$-graded $R$-module with $\bigwedge F$ via $\ud t_i = \theta_i$. It is easily checked that for $\theta = \theta_{i_1} \ldots \theta_{i_p}$ with distinct indices $i_j$ and $p > 0, f \in R$,
 \[
 (\nabla \delta_+ + \delta_+ \nabla)(f \cdot \theta) = (p + \delta_{+}\nabla)(f) \cdot \theta,
 \]
@@ -3289,37 +3308,31 @@ p z + \frac{\partial z}{\partial y_1} (y_1 - x_1) + \frac{\partial z}{\partial y
 \end{itemize}
 \end{example}
 
-
-
 One defines a degree $-1$ $S$-linear map
 \[
 H = (\nabla \delta_+ + \delta_+ \nabla)^{-1} \nabla
 \]
-on the module $\bigwedge F$. Each application of $H$ involves differentiation with respect to the $y_i$, and then solving a differential equation. Let $\sigma: S = R/(\boldsymbol{t}) \lto \bigwedge F$ be the inclusion of $k[x_1,x_2]$ into $R$. One checks that $H \delta_+ + \delta_+ H = 1 - \sigma \pi_{\Delta}$, so that $\sigma$ is exhibited by $H$ as the $S$-linear homotopy inverse to the canonical morphism $\pi_{\Delta}: (\Delta, \delta_+) \lto (R/(\boldsymbol{t}),0)$ from the Koszul complex to its cohomology.
+on the module $\bigwedge F$. Each application of $H$ involves differentiation with respect to the $y_i$, and then solving a differential equation. Let $\sigma: S = R/(\boldsymbol{t}) \lto \bigwedge F$ be the inclusion of $\QQ[x_1,x_2]$ into $R$. One checks (see \cite[Section 8.1]{dm1102.2957}) that $H \delta_+ + \delta_+ H = 1 - \sigma \pi$, so that $\sigma$ is exhibited by $H$ as the $S$-linear homotopy inverse to the morphism $\pi: (\bigwedge F, \delta_+) \lto (R/(\boldsymbol{t}),0)$.
 
-It remains to tensor with $X^{\lor}$ and perturb in the other differentials. With only the differential $\delta_+$ turned on it is clear that $X^{\lor} \otimes \Delta$ is $S$-homotopy equivalent to $X^{\lor} \otimes R/(\boldsymbol{t})$. The actual equivalence is exhibited by extending $H$ and $\sigma$ to $S$-linear maps
+As explained above, we tensor with $Y\mdual$ and perturb in the other differentials. The first step is to extend $H$ and $\sigma$ to $S$-linear maps
 \[
 \xymatrix@C+2pc{
-X^{\lor} \otimes \Delta \ar@(dl,dr)[]_{H} & X^{\lor} \otimes R/(\boldsymbol{t}) \ar[l]_{\sigma}
+Y\mdual \otimes \bigwedge F \ar@(dl,dr)[]_{H} & Y\mdual \otimes R/(\boldsymbol{t}) \ar[l]_{\sigma}
 }
 \]
-using the homogeneous basis $1^*, \theta_1^*, \theta_2^*, (\theta_1\theta_2)^*$ for $X^{\lor}$. This involves Koszul signs as we move $H$ and $\sigma$ past homogeneous elements of $X^{\lor}$, for example, $H(\theta_1^* \otimes f \theta_2) = - \theta_1^* \otimes H(f \theta_2)$. 
+using the homogeneous basis $1^*, \theta_1^*, \theta_2^*, (\theta_1\theta_2)^*$ for $Y\mdual$. This involves Koszul signs as we move $H$ and $\sigma$ past homogeneous elements of $X^{\lor}$, for example, $H(\theta_1^* \otimes f \theta_2) = - \theta_1^* \otimes H(f \theta_2)$. 
 
 Next we consider the $R$-linear map
 \[
-\mu = d_{X^{\lor}} \otimes 1 + 1 \otimes \delta_{-}
+\mu = d_{Y\mdual} \otimes 1 + 1 \otimes \delta_{-}
 \]
-on $X^{\lor} \otimes \Delta$, viewed as a perturbation of the differential on $(X^{\lor} \otimes \Delta, 1 \otimes \delta_{+})$. The total differential $\mu + 1 \otimes \delta_{+}$ is the usual differential on the tensor product, and the perturbation lemma tells us that the $S$-linear map
-\[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m (H \mu)^m \sigma
-\]
-is an $S$-homotopy inverse to $1 \otimes \pi$. Composing with the vertical isomorphisms in (\ref{eq:cons3}) we have the desired inverse of $\Hom(1,\pi_{\Delta})$. The morphism (\ref{eq:cons4}) corresponds to the tensor $1^* \otimes 1 \in X^{\lor} \otimes R/(\boldsymbol{t})$, so to find $\chi_1$ we are left with the task of evaluating
+on $Y\mdual \otimes \bigwedge F$, viewed as a perturbation of the differential on $(Y\mdual \otimes \bigwedge, 1 \otimes \delta_{+})$. The total differential $\mu + 1 \otimes \delta_{+}$ is the usual differential on the tensor product, and the perturbation lemma tells us that the $S$-linear map $\sigma_\infty = \sum_{m \ge 0} (-1)^m (H \mu)^m \sigma$ is an $S$-homotopy inverse to $1 \otimes \pi$. Composing with the vertical isomorphisms in (\ref{eq:cons3}) we have the desired inverse of $\Hom(1,\pi)$. The morphism (\ref{eq:cons4}) corresponds to the tensor $1^* \otimes 1 \in Y\mdual \otimes R/(\boldsymbol{t})$, so to find $\chi_1$ we are left with the task of evaluating
 \[
 \sigma_\infty(1^* \otimes 1) = \sigma(1^* \otimes 1) - H \mu \sigma(1^* \otimes 1) + H \mu H \mu(1^* \otimes 1).
 \]
 
 \begin{proof}[Proof of Lemma \ref{lemma:consfirst}]
-The map corresponding to $\sigma_\infty(1^* \otimes 1)$ makes (\ref{eq:cons5}) commute, so we need to evaluate this tensor and show that it has the explicit form given in the statement of the lemma. The notation becomes a little involved: throughout recall that we are producing tensors in $X^{\lor} \otimes \Delta$, an $R$-basis of which is given by tensors $\theta_1^* \otimes 1, 1^* \otimes \theta_1\theta_2$, etc. Clearly $\sigma(1^* \otimes 1)$ is just $1^* \otimes 1$, and
+The map corresponding to $\sigma_\infty(1^* \otimes 1)$ makes (\ref{eq:cons5}) commute, so we need to evaluate this tensor and show that it has the explicit form given in the statement of the lemma. The notation becomes a little involved: throughout recall that we are producing tensors in $Y\mdual \otimes \bigwedge F$, an $R$-basis of which is given by tensors $\theta_1^* \otimes 1, 1^* \otimes \theta_1\theta_2$, etc. Clearly $\sigma(1^* \otimes 1)$ is just $1^* \otimes 1$, and
 % compared to skrh we use s_i instead of d_i, and pi_i instead of a_i
 \begin{align*}
 H \mu \sigma(1^* \otimes 1) &= H( d_{X^{\lor}} + \delta_{-})(1^* \otimes 1)\\
@@ -3346,7 +3359,7 @@ Applying $H\mu$ again we obtain after some work an expression for $H\mu H\mu\sig
 &- \theta_1^* \otimes (\theta_1 + \theta_2) - \frac{1}{2} \theta_2^* \otimes ( (x_2+y_2)\theta_1 + (x_1+y_1)\theta_2 ).
 \end{split}
 \end{equation}
-The image under the canonical isomorphism $\varepsilon: X^{\lor} \otimes \Delta \lto \Hom_R(X, \Delta)$ is our morphism $\chi_1 := \varepsilon \sigma_\infty(1^* \otimes 1)$, which has the desired form (the signs get corrected by Koszul signs in $\varepsilon$).
+The image under the canonical isomorphism $\xi: \Xbul\mdual \otimes \Xcirc \lto \Hom_R(\Xbul, \Xcirc)$ is our morphism $\chi_1 := \xi \sigma_\infty(1^* \otimes 1)$, which has the desired form (the signs get corrected by Koszul signs in $\xi$).
 \end{proof}
 
 \newcommand{\etalchar}[1]{$^{#1}$}
