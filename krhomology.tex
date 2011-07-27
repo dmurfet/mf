@@ -1218,15 +1218,13 @@ As we will discuss in Section~\ref{compres} we have used this implementation to 
 \label{KRconstruction}
 % notes: skrh, skrh2, ptons
 
-TODO: try to improve intro (will do that on Wednesday morning): 
+In this section we give a description of Khovanov and Rozansky's $\sln$ link homology. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, generalising the two-step approach of \cite{moy1998}. 
 
-In this section we give a description of Khovanov and Rozansky's $\sln$ link homology. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, following the two-step approach of \cite{moy1998}. The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose graded Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations which lift the MOY relations~\eqref{MOYdecomp1}.
+The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations that lift the MOY relations~\eqref{MOYdecomp1}. As announced in Remark~\ref{MOYremark} this is done by upgrading~$\Gamma$ to a special kind of state web. In particular one assigns matrix factorisations~$\Xcirc$ and~$\Xbul$ to the two types of resolutions of crossings in a link diagram, and we will explain their origin. Tensoring together all matrix factorisations in the state web will produce a graded complex whose homology $H(\Gamma)$ is the desired graded vector space.
 
-This is done by making good on the promise made in Remark~\ref{MOYremark}. A state graph makes a choice for each crossing of one of two types of resolution, and we have to explain how to choose for each type of resolution a corresponding matrix factorisation (denoted here $\Xcirc, \Xbul$). Tensoring these together over all crossings will produce a $(\ZZ \times \Ztwo)$-graded complex $C(\Gamma)$ whose homology $H(\Gamma)$ happens to be concentrated in one $\Ztwo$-degree, so that we have the desired graded $\QQ$-vector space.
+In the second step one has to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These are viewed as two-term complexes of matrix factorisations, and they correspond to the differences on the right-hand side of the identities in~\eqref{graphreduction} in the categorification. Associating these two-term complexes to the positive and negative crossings of a link diagram allows for the construction of the homological link invariant $H(L)$ as the cohomology of the total complex. This categorifies the $\sln$ polynomial $P_{N}(L)$ in the sense that the Poincar\'e polynomial $\KR_{N}(L)$ of $H(L)$ specialises to $P_{N}(L)=\KR_{N}(L)|_{t=-1}$. 
 
-The second step is to produce maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These morphisms are viewed as two-term complexes of matrix factorisations, categorifying the differences on the right-hand side of the identities in~\eqref{graphreduction}, and we thereby define the homological invariant $H_N(L)$ which categorifies $P_N(L)$. Our point of view is that these two-term complexes represent autoequivalences of a certain triangulated category, corresponding to the over- and undercrossings.
-
-We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier \cite{??}, one can try to build autoequivalences of triangulated categories out of special kinds of adjunctions; if one is very clever with the choice of adjunction, these autoequivalences give rise to link invariants. 
+We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier~\cite{RouquierMexico}, one can build autoequivalences of triangulated categories out of the special kinds of adjunctions that we obtain. In this setting we will identify the two-term complexes $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$ as representations of the autoequivalences that give rise to categorified link invariants. 
 
 \subsection{Symmetric polynomials and adjunction}
 
@@ -1305,7 +1303,7 @@ Now we make the jump to matrix factorisations. If $W$ is a homogeneous symmetric
 \hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, W) \ar@<1ex>[l]^{\varphi_*} \, .
 }
 \]
-Let us fix for example the polynomial $W = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of Rouquier \cite{??} applies (\textbf{todo}) to produce an interesting autoequivalence of $\K^b( \hmf(S, W) )$. Namely, tensoring with the complexes of graded bimodules
+Let us fix for example the polynomial $W = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite{RouquierMexico} applies (\textbf{todo}) to produce an interesting autoequivalence of $\K^b( \hmf(S, W) )$. Namely, tensoring with the complexes of graded bimodules
 \begin{equation}\label{eq:bimod_cpx1}
 \xymatrix{
 0 \ar[r] & S \otimes_A S \ar[r]^-{\varepsilon} & \underline{S} \ar[r] & 0 \, ,
@@ -3372,6 +3370,10 @@ The image under the canonical isomorphism $\xi: \Xbul\mdual \otimes \Xcirc \lto 
 \end{proof}
 
 
+%\bibliographystyle{amsalpha}
+%\bibliography{/Users/nils/Uni/literatur}
+
+
 \newcommand{\etalchar}[1]{$^{#1}$}
 \providecommand{\href}[2]{#2}
 \begin{thebibliography}{FYH{\etalchar{+}}85}
@@ -3554,6 +3556,11 @@ J.~Rasmussen, \emph{Some differentials on {K}hovanov-{R}ozansky homology},
 J.~Rasmussen, \emph{Khovanov-{R}ozansky homology of two-bridge knots and links},
   Duke Math. J. \textbf{136} (2007), 551--583,
   \href{http://arxiv.org/abs/math/0508510}{[math.GT/0508510]}.
+  
+\bibitem[Rou06]{RouquierMexico}
+R.~Rouquier, \emph{Categorification of {$\mathfrak{sl}_{2}$} and braid groups},
+  Trends in representation theory of algebras and related topics (2006),
+  137--167.
 
 \bibitem[RT90]{RT1990}
 N.~Reshetikhin and V.~Turaev, \emph{Ribbon graphs and their invariants derived
