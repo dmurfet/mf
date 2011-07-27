@@ -205,7 +205,7 @@ We compute the categorified $\sln$ link invariants as defined by Khovanov and Ro
 
 \section{Introduction}
 
-In this paper we present and implement the first method to directly compute Khovanov and Rozansky's categorified $\sln$ link invariants for arbitrary links. This is made possible by a technology to explicitly fuse topological defects in Landau-Ginzburg models. In the following we shall explain how these two topics relate, try to put them into context, and outline the main results of the present paper. 
+In this paper we present and implement the first method to directly compute Khovanov and Rozansky's categorified $\sln$ link invariants for arbitrary links. This is made possible by a technology to explicitly fuse topological defects in Landau-Ginzburg models. In the following we shall explain how these two topics relate, and we try to put them into context. 
 
 Let us begin by recalling some pieces of knot theory at the borderland of pure mathematics and mathematical physics. By knot theory we mean the study of isotopy classes of knotted and linked circles in $S^3$. One way to try and distinguish two given links is to compare their polynomial invariants like the Jones and Homfly polynomials~\cite{JonesPolynomialPaper, Homfly, HomflyPT}. Such invariants can be computed from the essentially \emph{two}-dimensional link diagram and the skein relations. 
 
@@ -219,32 +219,25 @@ In a parallel development, the application of the categorification programme to 
 
 It is easy to give a precise definition of the notion of categorification of some mathematical structure~$S$. It is nothing but a category~$\mathcal C$ together with a map~$f$ from the isomorphism classes of objects of~$\mathcal C$ to~$S$. A standard example is the case of $S=\nN$ where~$\mathcal C$ is the category of vector spaces and~$f$ simply assigns the dimension. Another example, which will be central for us, is where one categorifies the space~$S$ of Laurent polynomials (interpreted as link invariants) by constructing a category~$\mathcal C$ of graded complexes, and the map $f:\operatorname{Isom}(\mathcal C)\longrightarrow S$ is given by computing the Poincar\'e polynomial. 
 
-A categorification of the $\sln$ link invariants was achieved by Khovanov and Rozansky in~\cite{kr0401268}. It is these homological link invariants that we study and compute in the present paper. Before we give an overview of the construction and our results, let us briefly go on to embed them into the context of further recent developments. 
+A categorification of $\sln$ link invariants was achieved by Khovanov and Rozansky in~\cite{kr0401268}. It is these homological link invariants that we study and compute in the present paper. Before we give an overview of the construction and our results, let us briefly go on to embed them into the context of further recent developments. 
 
 Following~\cite{kr0401268}, which reproduces Khovanov homology in the special case $N=2$, categorifications of the Homfly and Kauffman polynomials were proposed in~\cite{kr0505056, kr0701333}, and in~\cite{y0906.0220, w0907.0695} the $\sln$ categorification was extended to the case where arbitrary exterior powers of the defining representation label the link components. In all the works just mentioned matrix factorisations play a central role, but this is only one of many approaches to categorified link invariants. In particular, there are constructions of categorified $\sln$ link invariants via the category~$\mathcal O$~\cite{sCatTLcTCpf, ms0709.1971, s0701045}, via Floer homology~\cite{ss0405089, m0601629} in the setting of A-type sigma models, and via derived categories associated to certain projective varieties~\cite{ck0701194, ck0710.3216} which are expected to be the B-model dual of~\cite{ss0405089, m0601629} by homological mirror symmetry. There are reasons to believe that all these categorifications are very closely related to one another, but in general this has not been settled. The most comprehensive approach to date is that of~\cite{w1005.4559} which categorifies the link invariants of~\cite{RT1990, RT1991} for all representations of quantum groups. As is the case for most of the other constructions, no explicit examples have been computed beyond what is known for Khovanov homology (for which however extensive tables exist, see e.\,g.~\cite{bnKhovanov11crossings}). 
 
 Soon after the appearance of~\cite{kr0401268} a string theoretic interpretation was offered in~\cite{gsv0412243}. This was done by enhancing the construction of~\cite{ov9912123} with the identification of an additional symmetry, and it lead to precise conjectures for the Khovanov-Rozansky invariants of certain torus knots which were later verified by the rigorous results of~\cite{r0508510, r0607544}; see also~\cite{dgr0505662, gw0512298}. A related approach is that of~\cite{as1105.5117} which uses the refined topological vertex and its relation to M-theory to efficiently compute Laurent polynomials which are conjecturally Khovanov-Rozansky knot invariants. 
 
-A different way to understand Khovanov homology and its generalisations within mathematical physics was proposed in~\cite{w1101.3216}. This approach focuses on gauge theory, and it starts by expressing the Chern-Simons path integral in the presence of links in terms of a path integral in \emph{four}-dimensional $\mathcal N=4$ super Yang-Mills theory on $\nR^3\times\nR_{+}$ with a certain boundary condition. The boundary condition is described by a D3-NS5 brane system, and by applying~$S$- and $T$-duality this becomes a D4-D6 system while the four-dimensional gauge theory becomes \emph{five}-dimensional twisted super Yang-Mills theory. The boundary condition of this theory is described by certain elliptic partial differential equations whose solutions are gauge field configurations invariant under a particular conserved supercharge. Its cohomology is naturally bigraded, and its is the proposed candidate for categorified link invariants. 
+A different way to understand Khovanov homology and its generalisations within mathematical physics was proposed in~\cite{w1101.3216}. This approach focuses on gauge theory, and it starts by expressing the Chern-Simons path integral in the presence of links in terms of a path integral in \emph{four}-dimensional $\mathcal N=4$ super Yang-Mills theory on $\nR^3\times\nR_{+}$ with a certain boundary condition which is a D3-NS5 brane system. By applying~$S$- and $T$-duality this becomes a D4-D6 system while the four-dimensional gauge theory becomes \emph{five}-dimensional twisted super Yang-Mills theory. The boundary condition of this theory is described by certain elliptic partial differential equations whose solutions are gauge field configurations invariant under a particular conserved supercharge. Its cohomology is naturally bigraded, and its is the proposed candidate for categorified link invariants. 
 
 \medskip
 
-Let us now recall the basic ideas of Khovanov and Rozansky's construction, and discuss the relation to defect operators in Landau-Ginzburg models. The starting point is the link diagram of the oriented link in question, for example the Hopf link: 
+Let us now recall the basic ideas of Khovanov and Rozansky's construction, and discuss the relation to defect operators in Landau-Ginzburg models. The starting point is the link diagram of the oriented link in question.
+If it has~$m$ strands, then one arbitrarily associates distinct ``potentials'', i.\,e.~in this case monomials $x_{i}^{N+1}$, $i\in\{1,\ldots,m\}$, to each strand. In the example of the Hopf link we can decorate the link diagram as follows:
 $$
-\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-% Hopf link:
-\draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
-\draw[ ->, thick ] (140:1) arc (-220:130:1); 
-\end{tikzpicture}
-$$
-If the link diagram has~$m$ strands, then one arbitrarily associates distinct ``potentials'', i.\,e.~in this case monomials $x_{i}^{N+1}$, $i\in\{1,\ldots,m\}$, to each strand, e.\,g.:
-$$
-\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+\begin{tikzpicture}[scale=1.0,baseline, inner sep=1mm, >=stealth]
 % potentials as labels:
-\node (1) at (-2.9,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{1}$}};
-\node (2) at (-1.5,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{2}$}};
-\node (3) at (0.15,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{3}$}};
-\node (4) at (1.55,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{4}$}};
+\node (1) at (-2.9,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{1}$}};
+\node (2) at (-1.5,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{2}$}};
+\node (3) at (0.15,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{3}$}};
+\node (4) at (1.55,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{4}$}};
 % Hopf link:
 \draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
 \draw[ ->, thick ] (140:1) arc (-220:130:1); 
@@ -344,6 +337,122 @@ by certain combinations of the local diagrams\footnote{Note that we deliberately
 %\end{tikzpicture}
 %. 
 %\end{equation}
+
+%Let us now recall the basic ideas of Khovanov and Rozansky's construction, and discuss the relation to defect operators in Landau-Ginzburg models. The starting point is the link diagram of the oriented link in question, for example the Hopf link: 
+%$$
+%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+%% Hopf link:
+%\draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
+%\draw[ ->, thick ] (140:1) arc (-220:130:1); 
+%\end{tikzpicture}
+%$$
+%If the link diagram has~$m$ strands, then one arbitrarily associates distinct ``potentials'', i.\,e.~in this case monomials $x_{i}^{N+1}$, $i\in\{1,\ldots,m\}$, to each strand, e.\,g.:
+%$$
+%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
+%% potentials as labels:
+%\node (1) at (-2.9,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{1}$}};
+%\node (2) at (-1.5,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{2}$}};
+%\node (3) at (0.15,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{3}$}};
+%\node (4) at (1.55,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{4}$}};
+%% Hopf link:
+%\draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
+%\draw[ ->, thick ] (140:1) arc (-220:130:1); 
+%\end{tikzpicture}
+%$$
+%In order to compute the categorified link invariant one now has to ``resolve'' the two kinds of crossings that appear. The very rough idea is to replace all crossings 
+%\begin{minipage}{0.48cm}
+%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
+%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
+%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
+%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
+%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
+%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
+%\draw[-] (bl) -- (0); 
+%\draw[->] (br) -- (tl); 
+%\draw[->] (0) -- (tr); 
+%\end{tikzpicture}
+%\end{minipage}
+% and 
+%\begin{minipage}{0.48cm}     
+%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
+%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
+%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
+%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
+%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
+%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
+%\draw[->] (bl) -- (tr); 
+%\draw[-] (br) -- (0); 
+%\draw[->] (0) -- (tl); 
+%\end{tikzpicture}
+%\end{minipage} 
+%%$$
+%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
+%%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
+%%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
+%%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
+%%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
+%%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
+%%\draw[-, thick] (bl) -- (0); 
+%%\draw[->, thick] (br) -- (tl); 
+%%\draw[->, thick] (0) -- (tr); 
+%%\end{tikzpicture}
+%%\qquad
+%%\text{and}
+%%\qquad
+%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
+%%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
+%%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
+%%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
+%%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
+%%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
+%%\draw[->, thick] (bl) -- (tr); 
+%%\draw[-, thick] (br) -- (0); 
+%%\draw[->, thick] (0) -- (tl); 
+%%\end{tikzpicture}
+%%$$
+%by certain combinations of the local diagrams\footnote{Note that we deliberately do not use the (representation theoretically more appropriate) ``wide edge'' depiction of~\cite{kr0401268} for the second diagram. This is done to facilitate the interpretation in terms of Landau-Ginzburg models below.} 
+%\begin{minipage}{0.36cm}
+%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
+%\draw[ ->, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
+%\draw[ -> ] (230:1) arc (230:130:1); 
+%\end{tikzpicture}
+%\end{minipage}
+% and 
+% \begin{minipage}{0.48cm}
+%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
+%\node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= black] {};
+%\node (bl) at (-1,-1) [circle] {};
+%\node (br) at (1,-1) [circle] {};
+%\node (tl) at (-1,1) [circle] {};
+%\node (tr) at (1,1) [circle] {};
+%\draw[-] (bl) -- (0); 
+%\draw[-] (br) -- (0); 
+%\draw[->] (0) -- (tl); 
+%\draw[->] (0) -- (tr); 
+%\end{tikzpicture}
+%\end{minipage}.
+%%\begin{equation}
+%%\label{res_unlabelled}
+%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
+%%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
+%%\draw[ ->, thick ] (230:1) arc (230:130:1); 
+%%\end{tikzpicture}
+%%\qquad
+%%\text{and}
+%%\qquad
+%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
+%%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
+%%\node (bl) at (-1,-1) [circle] {};
+%%\node (br) at (1,-1) [circle] {};
+%%\node (tl) at (-1,1) [circle] {};
+%%\node (tr) at (1,1) [circle] {};
+%%\draw[-,  thick] (bl) -- (0); 
+%%\draw[-,  thick] (br) -- (0); 
+%%\draw[->,  thick] (0) -- (tl); 
+%%\draw[->,  thick] (0) -- (tr); 
+%%\end{tikzpicture}
+%%. 
+%%\end{equation}
 
 More precisely, one associates complexes of matrix factorisations to each crossing: The construction of~\cite{kr0401268} provides an assignment
 \begin{equation}
@@ -446,9 +555,9 @@ Now the ``resolution''  mentioned before is given by assigning two-term complexe
 }
 .
 \end{equation}
-Here the underlined component has cohomological degree~$0$, $\chi_{0}$ and $\chi_{1}$ are certain morphisms, and we do not display shifts with respect to an internal grading of~$\Xcirc$ and~$X$ (see Section~\ref{KRconstruction} for the details). While we do not explicitly show it in the presentation~\eqref{resolutions}, we stress that for each crossing the matrices $\Xcirc,\Xbul,\chi_{0}$ or~$\chi_{1}$ depend only on the variables $x_{i},x_{j},x_{k},x_{l}$ of the incoming and outgoing potentials. 
+Here the underlined component has cohomological degree~$0$, $\chi_{0}$ and $\chi_{1}$ are certain morphisms, and we do not display shifts with respect to an internal grading of~$\Xcirc$ and~$\Xbul$ (see Section~\ref{KRconstruction} for the details). While we do not explicitly show it in the presentation~\eqref{resolutions}, we stress that for each crossing the matrices $\Xcirc,\Xbul,\chi_{0}$ or~$\chi_{1}$ depend only on the variables $x_{i},x_{j},x_{k},x_{l}$ of the incoming and outgoing potentials. 
 
-We are now in a position to conclude our reminder of the construction of~\cite{kr0401268}. To each crossing in a link diagram of a link~$L$ one associates the appropriate complex in~\eqref{resolutions}, and then one takes the tensor product of all these complexes to produce the total complex $C(L)$. It has a bigrading which is induced by the cohomological grading of the two-term complexes~\eqref{resolutions} and the internal grading of the matrix factorisations involved. The main result of~\cite{kr0401268} can now be summarised by the fact that the cohomology $H(L)$ of $C(L)$ is an invariant of~$L$ which is conveniently encoded in the Poincar\'e polynomial
+With the above ingredients we can now conclude our reminder of the construction of~\cite{kr0401268}. To each crossing in a link diagram of a link~$L$ one associates the appropriate complex in~\eqref{resolutions}, and then one takes the tensor product of all these complexes to produce the total complex $C(L)$. It has a bigrading which is induced by the cohomological grading of the two-term complexes~\eqref{resolutions} and the internal grading of the matrix factorisations involved. The main result of~\cite{kr0401268} can now be summarised by the fact that the cohomology $H(L)$ of $C(L)$ is an invariant of~$L$ which is conveniently encoded in the Poincar\'e polynomial
 $$
 \KR_{N}(L) = \sum_{i,j\in\nZ} t^{i} q^j \dim_{\nQ}(H^{i,j}(L)) \, . 
 $$
@@ -456,13 +565,13 @@ This is indeed a more refined invariant than the uncategorified $\sln$ link inva
 
 \medskip
 
-Since all the ingredients for the construction of Khovanov-Rozansky homology are explicitly given, one may expect that the invariants can be straightforwardly computed. However, there is one technical impediment that has prevented direct computations until now. This difficulty comes about via the properties of tensor products of matrix factorisations. 
+Since all the elements in the construction of Khovanov-Rozansky homology are explicitly given, one may expect that the invariants can be straightforwardly computed. However, there is one technical impediment that has prevented direct computations until now. This difficulty comes about via the properties of tensor products of matrix factorisations. 
 
-In a link diagram any oriented strand is incoming and outgoing with respect to some crossing, hence the complex $C(L)$ is a complex of matrix factorisations of zero. Yet nevertheless both these matrix factorisations and more importantly the differentials of $C(L)$ still depend on the variables~$x_{i}$. Hence $C(L)$ is of infinite rank over~$\nQ$, and its cohomology cannot be easily computed in general. The reason is that in practice computer algebra packages compute cohomology over polynomial rings by repeatedly determining Gr\"obner bases of certain ideals. In the case of Khovanov-Rozansky homology the number and the degrees of the generators involved are such that naive computations tend to exhaust the available memory rather quickly, making it impossible to determine invariants in all but the very simplest examples this way. 
+In a link diagram any oriented strand is incoming and outgoing with respect to some crossing, hence the complex $C(L)$ is a complex of matrix factorisations of zero. Yet nevertheless both these matrix factorisations and more importantly the differentials of $C(L)$ still depend on the variables~$x_{i}$. Hence $C(L)$ is of infinite rank over~$\nQ$, and its cohomology cannot be easily computed in general. The reason is that in practice computer algebra packages compute cohomology over polynomial rings by repeatedly determining Gr\"obner bases of certain ideals. In the case of Khovanov-Rozansky homology the number and the degrees of the generators involved are such that naive approaches tend to exhaust the available memory and computing power rather quickly, making it impossible to determine invariants in all but the very simplest examples this way. 
 
-To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$. The matrix factorisation~$B$ is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the splitting of~$\idem$ (up to shifts). This means that from the pair $(B,\idem)$ we can find a triple $(F,f,g)$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g=\operatorname{id}_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
+To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$; it is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the finite-rank splitting of~$\idem$ (up to shifts). This means that from the pair $B,\idem$ we can find a triple $F,f,g$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g=1_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
 
-Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. One of its applications is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Section~\ref{compilewebs}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
+Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. One of its applications is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
 
 Our method could as well be straightforwardly applied to the categorification~\cite{kr0701333} of the Kauffman polynomial and to virtual links; this will be discussed elsewhere. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
 
@@ -505,7 +614,7 @@ $$
 where we only show the relevant part of the worldsheet. 
 In this way fusion endows the set of all Landau-Ginzburg models with the structure of a bicategory~\cite{Calinetal2, McNameethesis, cr0909.4381, cr1006.5609}. 
 
-It is now clear why the explicit construction of the tensor product $F\cong D\otimes D'$ is of interest in the study of Landau-Ginzburg models: the ``unphysical'' variables~$y$ (which no longer have an interpretation since after fusion there is no longer a domain with potential $W_{2}(y)$) have to be ``integrated out''. This is precisely what the idempotent construction provides. 
+It is now clear why the explicit construction of the tensor product $F\cong D\otimes D'$ is of interest in the study of Landau-Ginzburg models: the ``unphysical'' variables~$\bs{y}$ (which no longer have an interpretation since after fusion there is no longer a domain with potential $W_{2}(\bs{y})$) have to be ``integrated out''. This is precisely what the idempotent construction provides. 
 
 With this interpretation in mind let us now briefly revisit the resolutions~\eqref{resolutions} in terms of the matrix factorisations~\eqref{DeltaX} that are at the heart of the Khovanov-Rozansky construction. It is natural to interpret~$\Xcirc$ and~$\Xbul$ as defect operators between Landau-Ginzburg models with potentials $x^{N+1}_{i}+x^{N+1}_{j}$ and $x^{N+1}_{k}+x^{N+1}_{l}$. In this sense computing Khovanov-Rozansky invariants essentially boils down to repeatedly fusing defects in Landau-Ginzburg models. 
 
@@ -567,11 +676,11 @@ TODO: We thank M.~Aganagic, N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rou
 \section{Preliminaries}
 \label{preliminaries}
 
-In this section we recall our notation. In most cases we are consistent with \cite{kr0401268} (\textbf{todo}).
+% In this section we recall our notation. In most cases we are consistent with \cite{kr0401268} (\textbf{todo}).
 
 \subsection{Graded matrix factorisations}
 
-Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. We write $M_i$ for the degree $i$ elements in a graded $R$-module~$M$. We define a $(\ZZ \times \Ztwo)$-graded $R$-module to be a graded $R$-module $X$ together with a chosen decomposition $X = X^0 \oplus X^1$ as a direct sum of graded submodules. An element of $(X^i)_j$ is said to be have bidegree $(i,j)$ and if $\varphi: X \lto Y$ is an $R$-linear map of $(\ZZ \times \Ztwo)$-graded $R$-modules, we say that $\varphi$ has bidegree $(a,b)$ if $\varphi(X^i) \subseteq X^{i+a}$ and $\varphi(X_j) \subseteq X_{j+b}$ for all integers $i,j$.
+Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. We write $M_i$ for the degree $i$ elements in a graded $R$-module~$M$. We define a $(\ZZ \times \Ztwo)$-graded $R$-module to be a graded $R$-module $X$ together with a chosen decomposition $X = X^0 \oplus X^1$ as a direct sum of graded submodules. An element of $(X^i)_j$ is said to have bidegree $(i,j)$ and if $\varphi: X \lto Y$ is an $R$-linear map of $(\ZZ \times \Ztwo)$-graded $R$-modules, we say that $\varphi$ has bidegree $(a,b)$ if $\varphi(X^i) \subseteq X^{i+a}$ and $\varphi(X_j) \subseteq X_{j+b}$ for all integers $i,j$.
 
 Let $W \in R_{2c}$ be a homogeneous element of even degree that we call a \emph{potential}. A \emph{graded linear factorisation} of $W$ is a pair $X^0, X^1$ of graded $R$-modules together with $R$-linear maps $d_X^0, d_X^1$ of degree $c$, as in the diagram
 \[
@@ -579,7 +688,7 @@ Let $W \in R_{2c}$ be a homogeneous element of even degree that we call a \emph{
 X^0 \ar[r]^-{d_X^0} & X^1 \ar[r]^-{d_X^1} & X^0\,,
 }
 \]
-such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in $\nZ_{2}$-degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then its \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\bigoplus_{i\;\text{even}} Z^i$ in degree zero, $\bigoplus_{i\;\text{odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded matrix factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
+such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ to which we refer to as the \emph{differential}, such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in $\nZ_{2}$-degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then its \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\bigoplus_{i\;\text{even}} Z^i$ in degree zero, $\bigoplus_{i\;\text{odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded matrix factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
 
 A \emph{morphism} $\varphi: X \lto Y$ of degree $e$ between graded linear factorisations is an $R$-linear map of bigdegree $(0, e)$ satisfying $d_Y \circ \varphi = \varphi \circ d_X$, that is, a pair $\varphi^0, \varphi^1$ of linear maps of degree $e$ making the diagram
 \[
@@ -588,7 +697,7 @@ X^0 \ar[d]_-{\varphi^0} \ar[r]^-{d_X^0} & X^1 \ar[d]_-{\varphi^1} \ar[r]^-{d_X^1
 Y^1 \ar[r]_-{d_Y^0} & Y^1 \ar[r]_-{d_Y^1} & Y^0
 }
 \] 
-commute. All morphisms are degree zero, unless specified otherwise. With the obvious composition and identity maps, this makes graded linear factorisations into an $R_0$-linear category. We say that a graded linear factorisation $X$ is a \emph{matrix factorisation} if each $X^i$ is a free graded $R$-module, and a \emph{finite-rank matrix factorisation} if each $X^i$ is a free graded module of finite rank. In this case, if we write each $X^i$ as a finite direct sum of grading shifted copies $R\{ b_i \}$ of $R$, the differential $d_X$ is represented by an odd matrix with homogeneous entries (given an integer $m$, $M\{ m \}$ denotes the $R$-module $M$ with the shifted grading $M\{ m \}_i = M_{i - m}$).
+commute. All morphisms are of degree zero, unless specified otherwise. With the obvious composition and identity maps, this makes graded linear factorisations into an $R_0$-linear category. We say that a graded linear factorisation $X$ is a \emph{matrix factorisation} if each $X^i$ is a free graded $R$-module, and a \emph{finite-rank matrix factorisation} if each $X^i$ is a free graded module of finite rank. In this case, if we write each $X^i$ as a finite direct sum of grading shifted copies $R\{ b_i \}$ of $R$, the differential $d_X$ is represented by an odd matrix with homogeneous entries (given an integer $m$, $M\{ m \}$ denotes the $R$-module $M$ with the shifted grading $M\{ m \}_i = M_{i - m}$).
 
 Given morphisms $\varphi, \psi: X \lto Y$ of graded linear factorisations of $W$, a \emph{homotopy} from $\varphi$ to $\psi$ is an $R$-linear bidegree $(-1,-c)$ map $\lambda: X \lto Y$ such that $d_Y \circ \lambda + \lambda \circ d_X = \psi - \varphi$, and if such a homotopy exists we say that $\varphi, \psi$ are \emph{homotopic} and write $\varphi \simeq \psi$. This is an equivalence relation, the null-homotopic morphisms form an $R_0$-submodule of all morphisms, and we define the \emph{homotopy category of graded linear factorisations} $\HF(R,W)$ to be the category of graded linear factorisations modulo the homotopy relation. We write $\HMF(R,W)$, respectively $\hmf(R,W)$, for the full subcategories of matrix factorisations and finite-rank matrix factorisations in $\HF(R,W)$. 
 
@@ -609,26 +718,26 @@ where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of deg
 \Hom_{\text{gr}}(X,Y) &= \left( \Hom_{\text{gr}}(X^0, Y^0) \oplus \Hom_{\text{gr}}(X^1, Y^1) \right)\\
 &\qquad \oplus \left( \Hom_{\text{gr}}(X^0, Y^1) \oplus \Hom_{\text{gr}}(X^1, Y^0) \right)\,.
 \end{align*}
-Together with the differential $d$ defined on an odd or even map $\alpha$ (with $|\alpha|$ denoting this $\Ztwo$-degree) by
+Together with the differential $d$ defined on an odd or even map $\alpha$ (with $|\alpha|$ denoting the $\Ztwo$-degree) by
 \[
 d(\alpha) = d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X \, ,
 \]
 the graded module $\Hom_{\text{gr}}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \Ztwo)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lto Y'$ is a morphism of graded linear factorisations of degree $e$, then $\Hom_{\text{gr}}(X,\varphi)$ is another morphism of degree $e$, and similarly in the first variable.
 
-\subsubsection{The graded tensor product} Let $X,Y$ be graded linear factorisations of $W,W' \in R_{2c}$, respectively. Then $X \otimes Y$ (all tensor products are $R$-linear) is a graded $R$-module with $\Ztwo$-decomposition
+\subsubsection{The graded tensor product} Let $X,Y$ be graded linear factorisations of $W,W' \in R_{2c}$, respectively. Then $X \otimes Y$ (all tensor products in this section are $R$-linear) is a graded $R$-module with $\Ztwo$-decomposition
 \begin{align*}
 X \otimes Y &= \left( (X^0 \otimes Y^0) \oplus (X^1 \otimes Y^1) \right)\\
 &\qquad \oplus \left( (X^0 \otimes Y^1) \oplus (X^1 \otimes Y^0) \right)\,
 \end{align*}
-and differential $d = d_X \otimes 1 + 1 \otimes d_Y$ making it into a graded linear factorisation of $W + W'$. The notation here implicitly involves Koszul signs: if $x \in X^i$ and $y \in Y^j$ then
+and differential $d_{X\otimes Y} = d_X \otimes 1 + 1 \otimes d_Y$ making it into a graded linear factorisation of $W + W'$. The notation here implicitly involves Koszul signs: if $x \in X^i$ and $y \in Y^j$ then
 \[
-d( x \otimes y ) = d_X(x) \otimes 1 + (-1)^j x \otimes d_Y(y) \, .
+d_{X\otimes Y}( x \otimes y ) = d_X(x) \otimes 1 + (-1)^j x \otimes d_Y(y) \, .
 \]
 The tensor product is functorial in each variable and has all the expected properties, moreover, the graded Hom and tensor interact in the usual way; see Appendix \ref{appendix:graded_mfs}.
 
 \subsection{Cyclic Koszul complexes}\label{prelim:cyclic_koszul}
 
-Let us recall the definition of the cyclic Koszul complex from \cite[\S 2]{kr0401268}. Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $a,b\in R$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then $\{ a, b \}$ denotes the graded matrix factorisation of $ab$ given by
+Let us recall the definition of the cyclic Koszul complex from \cite[Section~2]{kr0401268}. Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $a,b\in R$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then $\{ a, b \}$ denotes the graded matrix factorisation of $ab$ given by
 \[
 \xymatrix{
 R \ar[r]^-{a} & R\{ c - \deg(a) \} \ar[r]^-{b} & R \, ,
@@ -894,7 +1003,7 @@ p_{N} \Bigg( \;
 \end{tikzpicture}
 \bigg) \, . \label{MOYdecomp1}
 \end{align}
-As is customary in each of the above identities we only show those parts of the graphs which differ in the arguments of the $p_{N}$'s. 
+As is customary in each of the above identities we only show those parts of the graphs~$\Gamma$ which differ in the arguments of the $p_{N}$'s. 
 
 In the second step, the link invariant $P_{N}(L)$ is obtained as follows. To produce the $2^s$ graphs $\Gamma_{j}$, each crossing in the link diagram is resolved according to
 \begin{equation}
@@ -957,7 +1066,7 @@ q^{N-1} \,
 \draw[->,  thick] (0) -- (tr); 
 \end{tikzpicture} \, .
 \end{equation}
-Denoting by $q^{\alpha_j}$ the product of the~$c$ $q$-monomials associated to the graph $\Gamma_{j}$ by~\eqref{graphreduction}, the link invariant is computed as
+Denoting by $q^{\alpha_j}$ the product of the~$s$ $q$-monomials associated to the graph $\Gamma_{j}$ by~\eqref{graphreduction}, the link invariant is computed as
 $$
 P_{N}(L) = \sum_{j=1}^{2^c} q^{\alpha_j} p_{N}(\Gamma_{j}) \, .
 $$
@@ -1133,7 +1242,7 @@ Since $W \in \rext$ we may restrict scalars and consider $(X,d)$ as an infinite-
 \[
 \psi: C \lto D \, , \qquad \vartheta: D \lto C
 \]
-such that $\psi \circ \vartheta = \operatorname{id}_{D}$ and $\vartheta \circ \psi = \idem$ in $\operatorname{HMF}(R_{\text{ext}},W)$.
+such that $\psi \circ \vartheta = 1_{D}$ and $\vartheta \circ \psi = \idem$ in $\operatorname{HMF}(R_{\text{ext}},W)$.
 \end{definition}
 
 We remark that it would be preferable to define the compilation of a decorated web simply as a finite-rank matrix factorisation $(X',d')$ which is isomorphic to $(X,d)$, but we do not know how to construct $(X',d')$ directly. Instead, we will now review and reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs the idempotent~$\idem$ on~$C$ whose splitting in $\operatorname{HMF}(R_{\text{ext}},W)$ is $(X,D)$. But since~$C$ has finite rank we can also algorithmically compute a splitting of~$\idem$ in $\operatorname{hmf}(R_{\text{ext}},W)$, and this will give the sought-after $(X',d')$. 
@@ -2090,7 +2199,7 @@ In the previous two examples we were not concerned with the grading of the matri
 As a simple example let us consider $P_{a}(x,y)$ again. Viewed as a graded matrix factorisation it is the cyclic Koszul complex
 $$
 \xymatrix{%
-R\{0\} \ar[r]^-{\frac{x^d-y^d}{x-\eta^{a}y}} & R\{d-2(d-1)\}  \ar[r]^-{x-\eta^{a}y}  & R\{0\}
+R\{0\} \ar[rr]^-{\frac{x^d-y^d}{x-\eta^{a}y}} && R\{2-d\}  \ar[rr]^-{x-\eta^{a}y} && R\{0\}
 }
 $$
 with $R=\nC[x,y]$. The shifts of the matrix factorisations in the previous example are thus given by the tuple $(0,-1)$. If we augment the code of that example by
