@@ -198,7 +198,7 @@
 \classification{TODO}
 
 \begin{abstract}
-We compute the categorified $\sln$ link invariants as defined by Khovanov and Rozansky, for various links and various values of~$N$. This direct computation is made tractable by a general and constructive method to reduce tensor products of matrix factorisations to finite rank, which also has an interpretation as fusion of defect operators in B-twisted Landau-Ginzburg models. We implement this method on the computer and show how to use it in practice. 
+We compute the categorified $\sln$ link invariants as defined by Khovanov and Rozansky, for various links and various values of~$N$. This direct computation is made tractable by a general and constructive method to reduce tensor products of matrix factorisations to finite rank, which also has an interpretation as fusion of defects in B-twisted Landau-Ginzburg models. We implement this method on the computer and show how to use it in practice. 
 \end{abstract}
 
 \maketitle
@@ -229,7 +229,7 @@ A different way to understand Khovanov homology and its generalisations within m
 
 \medskip
 
-Let us now recall the basic ideas of Khovanov and Rozansky's construction, and discuss the relation to defect operators in Landau-Ginzburg models. The starting point is the link diagram of the oriented link in question.
+Let us now recall the basic ideas of Khovanov and Rozansky's construction, and discuss the relation to line defects in Landau-Ginzburg models. The starting point is the link diagram of the oriented link in question.
 If it has~$m$ strands, then one arbitrarily associates distinct ``potentials'', i.\,e.~in this case monomials $x_{i}^{N+1}$, $i\in\{1,\ldots,m\}$, to each strand. In the example of the Hopf link we can decorate the link diagram as follows:
 $$
 \begin{tikzpicture}[scale=1.0,baseline, inner sep=1mm, >=stealth]
@@ -577,7 +577,7 @@ Our method could as well be straightforwardly applied to the categorification~\c
 
 \medskip
 
-Finally, let us mention the relation to our original motivation to consider tensor products of matrix factorisations, namely topological defects in Landau-Ginzburg models. The latter are two-dimensional topological field theories which may govern the ``physics'' of the (possibly different) domains of a worldsheet.  The boundary conditions at the line separating two neighbouring domains are described by defect operators, see e.\,g.~\cite{k1004.2307, dkr1107.0495} for two recent reviews. If two such domains are governed by Landau-Ginzburg models with potentials $W_{1}$ and $W_{2}$,\footnote{In the following we will sometimes identify a polynomial~$W$ with the Landau-Ginzburg model with potential~$W$.} then the defect operators are given by matrix factorisations~$D$ of $W_{1}-W_{2}$~\cite{br0707.0922}. 
+Finally, let us mention the relation to our original motivation to consider tensor products of matrix factorisations, namely topological defects in Landau-Ginzburg models. The latter are two-dimensional topological field theories which may govern the ``physics'' of the (possibly different) domains of a worldsheet.  We refer to the boundary conditions at the line separating two neighbouring domains as defects, see e.\,g.~\cite{k1004.2307, dkr1107.0495} for two recent reviews. If two such domains are governed by Landau-Ginzburg models with potentials $W_{1}$ and $W_{2}$,\footnote{In the following we will sometimes identify a polynomial~$W$ with the Landau-Ginzburg model with potential~$W$.} then the defects are described by matrix factorisations~$D$ of $W_{1}-W_{2}$~\cite{br0707.0922}. 
 
 One may also consider more than two domains and defects between them. For example, there can be a defect~$D$ between theories $W_{1}$ and $W_{2}$, and another defect~$D'$ between $W_{2}$ and $W_{3}$. Because of their topological nature (and in the absence of field insertions in the domain with potential~$W_{2}$) the defects may be moved arbitrarily close to one another. The limit of this process (in which the intermediate domain ceases to exist) is called the fusion of the two defects, and it is described by the matrix factorisation $D\otimes D'$~\cite{br0707.0922}. In terms of correlation functions of worldsheets with domains labelled by potentials this means that
 $$
@@ -616,7 +616,7 @@ In this way fusion endows the set of all Landau-Ginzburg models with the structu
 
 It is now clear why the explicit construction of the tensor product $F\cong D\otimes D'$ is of interest in the study of Landau-Ginzburg models: the ``unphysical'' variables~$\bs{y}$ (which no longer have an interpretation since after fusion there is no longer a domain with potential $W_{2}(\bs{y})$) have to be ``integrated out''. This is precisely what the idempotent construction provides. 
 
-With this interpretation in mind let us now briefly revisit the resolutions~\eqref{resolutions} in terms of the matrix factorisations~\eqref{DeltaX} that are at the heart of the Khovanov-Rozansky construction. It is natural to interpret~$\Xcirc$ and~$\Xbul$ as defect operators between Landau-Ginzburg models with potentials $x^{N+1}_{i}+x^{N+1}_{j}$ and $x^{N+1}_{k}+x^{N+1}_{l}$. In this sense computing Khovanov-Rozansky invariants essentially boils down to repeatedly fusing defects in Landau-Ginzburg models. 
+With this interpretation in mind let us now briefly revisit the resolutions~\eqref{resolutions} in terms of the matrix factorisations~\eqref{DeltaX} that are at the heart of the Khovanov-Rozansky construction. It is natural to interpret~$\Xcirc$ and~$\Xbul$ as defects between Landau-Ginzburg models with potentials $x^{N+1}_{i}+x^{N+1}_{j}$ and $x^{N+1}_{k}+x^{N+1}_{l}$. In this sense computing Khovanov-Rozansky invariants essentially boils down to repeatedly fusing defects in Landau-Ginzburg models. 
 
 From this point of view, once one has replaced each crossing in a link diagram with either of the two resolutions 
 \begin{minipage}{0.36cm}
@@ -639,7 +639,7 @@ From this point of view, once one has replaced each crossing in a link diagram w
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage}
-, we can propose the following interpretation of the resulting graph. To every edge~$i$ we associate a Landau-Ginzburg model with potential $x_{i}^{N+1}$, and to every point we associate a defect operator. To a point on an edge~$i$ we assign the invisible defect, i.\,e.~the unit object~$I$ of the monoidal category $\operatorname{MF}_{\text{bi}}(x_{i}^{N+1})$ of~\cite{cr0909.4381}, and to a point that is a vertex we associate the matrix factorisation~$\Xbul$ as before. This perspective coincides with the construction of~\cite{kr0401268} as the matrix factorisation~$\Xcirc$ associated to 
+, we can interpret the resulting graph as a slice of a worldsheet with defect lines: To every edge~$i$ we associate a Landau-Ginzburg model with potential $x_{i}^{N+1}$, and to every point we associate a defect. To a point on an edge~$i$ we assign the invisible defect, i.\,e.~the unit object~$I$ of the monoidal category $\operatorname{MF}_{\text{bi}}(x_{i}^{N+1})$ of~\cite{cr0909.4381}, and to a point that is a vertex we associate the matrix factorisation~$\Xbul$ as before. This perspective coincides with the construction of~\cite{kr0401268} as the matrix factorisation~$\Xcirc$ associated to 
 \begin{minipage}{0.3cm}
 \begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
 \draw[ ->, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
@@ -654,7 +654,7 @@ The remaining part of the present paper is organised as follows. In Section~\ref
 
 
 \begin{acknowledgements}
-TODO: We thank M.~Aganagic, N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, and G.~Watts. 
+TODO: We thank N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, I.~Runkel, and G.~Watts. 
 \end{acknowledgements}
 
 %\section{Somewhat earlier, in the discussion of MOY}
@@ -688,7 +688,7 @@ Let $W \in R_{2c}$ be a homogeneous element of even degree that we call a \emph{
 X^0 \ar[r]^-{d_X^0} & X^1 \ar[r]^-{d_X^1} & X^0\,,
 }
 \]
-such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ to which we refer to as the \emph{differential}, such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in $\nZ_{2}$-degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then its \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\bigoplus_{i\;\text{even}} Z^i$ in degree zero, $\bigoplus_{i\;\text{odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded matrix factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
+such that $d_X^0 \circ d_X^1 = W \cdot 1_{X^1}$ and $d_X^1 \circ d_X^0  = W \cdot 1_{X^0}$. It is equivalent to say that $X$ is a $(\ZZ \times \Ztwo)$-graded $R$-module together with an $R$-linear endomorphism $d_X$ of bidegree $(1,c)$ to which we refer to as the \emph{differential}, such that $d_X^2 = W \cdot 1_X$. We often just denote a graded linear factorisation $(X,d_X)$ by the name $X$ of the underlying graded module, leaving the differential implicit. When $W = 0$ a graded linear factorisations of $W$ is simply a $(\ZZ \times \Ztwo)$-graded complex: for example, we view any graded $R$-module as a graded linear factorisation of zero, concentrated in $\nZ_{2}$-degree zero. More generally, if $Z$ is a (normal, $\ZZ$-graded) complex of graded $R$-modules then its \emph{$\Ztwo$-folding} is the $(\ZZ \times \Ztwo)$-graded complex with $\bigoplus_{i\;\text{even}} Z^i$ in degree zero, $\bigoplus_{i\;\text{odd}} Z^i$ in degree one, and the same differential as before. We note that there are different conventions for graded factorisations in the literature: in particular, one need not work with potentials of even degree, but in following this convention of \cite{kr0401268} both differentials enter the definition on an even footing, and this avoids some annoying technicalities.
 
 A \emph{morphism} $\varphi: X \lto Y$ of degree $e$ between graded linear factorisations is an $R$-linear map of bigdegree $(0, e)$ satisfying $d_Y \circ \varphi = \varphi \circ d_X$, that is, a pair $\varphi^0, \varphi^1$ of linear maps of degree $e$ making the diagram
 \[
@@ -1135,7 +1135,7 @@ Let $\boldsymbol{x}_{\text{int}}$ be the set of all variables lying on internal 
 \[
 R = k[\boldsymbol{x}] \, , \qquad R_{\text{int}} = k[\boldsymbol{x}_{\text{int}}] \, , \qquad \rext = k[\boldsymbol{x}_{\text{ext}}] \, .
 \]
-The \emph{total potential} $W$ is the sum over external edges $e$ of the potentials $W_e$, which are given a positive sign if $e$ begins on a vertex and ends on the boundary, and a negative sign otherwise. If there are no external edges, then $W = 0$ and $\rext = k$. Finally, we write
+The \emph{total potential} $W$ is the sum over external edges $e$ of the potentials $W_e$, which are given a positive sign if $e$ begins on a vertex and ends on the boundary, and a negative sign otherwise; hence $W=W_{b}$. If there are no external edges, then $W = 0$ and $\rext = k$. Finally, we write
 \[
 \intvar = \sum_{e \in E_{\text{int}}} n_e
 \]
@@ -1247,7 +1247,7 @@ such that $\psi \circ \vartheta = 1_{D}$ and $\vartheta \circ \psi = \idem$ in $
 
 We remark that it would be preferable to define the compilation of a decorated web simply as a finite-rank matrix factorisation $(X',d')$ which is isomorphic to $(X,d)$, but we do not know how to construct $(X',d')$ directly. Instead, we will now review and reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs the idempotent~$\idem$ on~$C$ whose splitting in $\operatorname{HMF}(R_{\text{ext}},W)$ is $(X,D)$. But since~$C$ has finite rank we can also algorithmically compute a splitting of~$\idem$ in $\operatorname{hmf}(R_{\text{ext}},W)$, and this will give the sought-after $(X',d')$. 
 
-The potentials are all isolated singularities, and therefore in their respective rings generate ideals which contain powers of the variables. This means that for each internal edge $e$ there exists an integer $q_e > 0$ and a matrix $C_e$ over $k[\boldsymbol{x}_e]$ such that
+Since the potentials are all isolated singularities, for each internal edge~$e$ there exists an integer $q_e > 0$ and a matrix $C_e$ over $k[\boldsymbol{x}_e]$ such that
 \begin{equation}\label{eq:defnqsweb}
 \boldsymbol{x}_e^{q_e} = C_e \cdot \partial_{\boldsymbol{x}_e} W_e \, ,
 \end{equation}
@@ -1370,7 +1370,7 @@ and the counits are given by
 \varepsilon: S \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) & \lto M \, , \qquad & b \otimes m & \longmapsto b \cdot m \, ,\\
 \varepsilon': \varphi_*(S \otimes_A N)\{-2\} = \varphi_*\varphi^*(N)\{-2\} & \lto N \, , \qquad & b \otimes n & \longmapsto \psi(b)(1) \cdot n \, .
 \end{align*}
-To make the transition from modules to matrix factorisations, we present the biadjunction in terms of graded bimdoules and bimodule maps. It is clear that $\varphi^*$ is given by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. Let us abuse notation and reuse $\eta, \eta', \varepsilon, \varepsilon'$ for the morphisms between these bimodules which represent the units
+To make the transition from modules to matrix factorisations, we present the biadjunction in terms of graded bimodules and bimodule maps. It is clear that $\varphi^*$ is given by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. Let us abuse notation and reuse $\eta, \eta', \varepsilon, \varepsilon'$ for the morphisms between these bimodules which represent the units
 \begin{align*}
 \eta: A & \lto S \, , \qquad & a & \longmapsto \varphi(a)\,,\\
 \eta': S & \lto S \otimes_A S\{-2\} \, , \qquad & b &\longmapsto \frac{1}{2}(x_1 - x_2) \otimes b + 1 \otimes \frac{1}{2}(x_1 - x_2)b
@@ -1388,7 +1388,7 @@ S & \cong \QQ[x_1,x_2,y_1,y_2]/(y_1 - x_1, y_2 - x_2)\,.
 \end{align*}
 \end{lemma}
 
-Moreover it is clear that these isomorphisms make the diagrams of graded bimodules
+Moreover it is clear that these isomorphisms can be chosen to make the diagrams of graded bimodules
 \begin{equation}
 \label{eq:bimodalg1}
 \xymatrix{
