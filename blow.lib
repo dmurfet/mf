@@ -2646,7 +2646,8 @@ proc isHomotopyIdempotent(matrix E)
 // idempotent on Xblow[1] determined by its direct summand the pushforward.
 //
 // If we are passed an intvec grading for A as the last param, we respect this grading
-// throughout and return as a fourth param a grading vector on Y.
+// throughout and return as a fourth param a grading vector on Y, such that Y is equivalent
+// as a graded MF to the pushforward.
 //
 // We assume that our ring is R = 0,(some variables, we don't care),dp.
 //
@@ -3085,7 +3086,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
     if( size(#) > 0 )
     {
         intvec Agr = #[1];
-        int useGrading = 1;
+        useGrading = 1;
     }
     
     // If we are not passed any internal variables, we perform no pushforward:
@@ -3183,7 +3184,7 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
         // l[4] is the grading (if we are using gradings) or our modified list of homotopies
         // l[5] is our homotopies if we are using the grading, and undefined otherwise
     
-        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],NN[1],l[1][,l[4]]). Note
+        // Return to the original ring and add to R the tuple (l[2],l[3],intvar[1],NN[1],l[1][,l[4]]). Note
         // we have to return to the original ring because l[2],l[3] may depend on
         // external variables which we are going to delete in a moment.
         poly ivar = intvars[1];
