@@ -2847,7 +2847,7 @@ $
 }
 $
 \newline\newline\newline\newline
-Checked up to TODO. Agrees with results of~\cite{r0508510, r0607544}. 
+Checked up to $N=7$. Agrees with results of~\cite{r0508510, r0607544}. 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -3200,7 +3200,7 @@ In particular if $X, Y$ are finite-rank graded matrix factorisations we have
 &\cong \Hom_R(X, \Hom_R(Y,R)) \nonumber \\
 &\cong \Hom_R(X,R) \otimes \Hom_R(Y,R) = X\mdual \otimes Y\mdual \, . \label{eq:dual_tensor}
 \end{align}
-Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product with no signs.
+Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign: $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product with no signs.
 \\
 
 In the following let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring, and $\bs{a}, \bs{b}$ sequences of $n$ homogeneous elements in $R$ with $\deg(a_i) + \deg(b_i) = 2c$. If $\bs{a} = (a_1,\ldots,a_n)$ then $- \bs{a}$ denotes $(-a_1, \ldots, -a_n)$. In describing maps between cyclic Koszul complexes we use the symbols $\theta_i$ introduced in Section \ref{prelim:cyclic_koszul}.
@@ -3250,9 +3250,9 @@ defined by $\theta_i \longmapsto - \theta_i$.
 
 Finally, let us discuss the cohomology of cyclic Koszul complexes (\textbf{todo, fix}). Let $R$ be any ring. We begin more generally: let $C = \bigoplus_{i \in \mathds{Z}} C^i$ be a $\mathds{Z}$-graded $R$-module together with $R$-linear maps $d_{\pm}: C \lto C$ of degree $\pm 1$, satisfying
 \[
-(d_+)^2 = (d_{-})^2 = 0 \, , \qquad \text{and} \qquad d_{+}d_{-} + d_{-}d_{+} = 0 \, .
+(d_+)^2 = (d_{-})^2 = 0 \qquad \text{and} \qquad d_{+}d_{-} + d_{-}d_{+} = 0 \, .
 \]
-Let $C_{\Ztwo}$ denote the $\Ztwo$-folding, which is a $\Ztwo$-graded complex with different $d_{\text{tot}} = d_+ + d_{-}$. If we replace $d_{+}$ by $-d_{+}$ then we have a second complex $(C_{\Ztwo}, -d_{+} + d_{-})$. We claim that these two complexes have the same $\Ztwo$-graded cohomology: this is the cyclic version of the obvious fact that multiplying the differentials on the ordinary Koszul complex by $-1$ does not change the cohomology. Recall that given a $\Ztwo$-graded complex $(X,d)$ we denote by $(X,d)_{-}$ the complex
+Let $C_{\Ztwo}$ denote the $\Ztwo$-folding, which is a $\Ztwo$-graded complex with differential $d_{\text{tot}} = d_+ + d_{-}$. If we replace $d_{+}$ by $-d_{+}$ then we have a second complex $(C_{\Ztwo}, -d_{+} + d_{-})$. We claim that these two complexes have the same $\Ztwo$-graded cohomology: this is the cyclic version of the obvious fact that multiplying the differentials on the ordinary Koszul complex by $-1$ does not change the cohomology. Recall that given a $\Ztwo$-graded complex $(X,d)$ we denote by $(X,d)_{-}$ the complex
 \[
 \xymatrix{%
 X^0 \ar[r]^-{-d^0} & X^1 \ar[r]^-{d^1} & X^0\,.
@@ -3310,13 +3310,13 @@ On the other hand $\redh(\Gamma)$ has nonzero contributions in both $\Ztwo$-degr
 This will follow if we can show that there is an isomorphism $\redh^{p+1}(\Gamma) \cong \redh^p(\Gamma)\{N-1\}$ natural with respect to the $\chi$ maps. It is easy to see that the two $\Ztwo$-components of $\redh(\Gamma)$ have the same dimension: it is the gradings that we need to compare. From the short exact sequence
 \[
 \xymatrix{%
-0 \ar[r] & C(\Gamma) \ar[r]^-{x_{i}} & C(\Gamma)\{-2\} \ar[r] & C(\Gamma) \otimes_R R/(x)\{-2\} \ar[r] & 0
+0 \ar[r] & C(\Gamma) \ar[r]^-{x_{i}} & C(\Gamma)\{-2\} \ar[r] & C(\Gamma) \otimes_R R/(x_{i})\{-2\} \ar[r] & 0
 }
 \]
 we deduce a long exact sequence in cohomology, of graded $R$-modules:
 \begin{equation}\label{eq:redvsunred_seq}
 \xymatrix{%
-0 \ar[r] & \redh^{p+1}(\Gamma)\{N-1\} \lto H(\Gamma) \ar[r]^-{x_{i}} & H(\Gamma)\{-2\} \ar[r] & \redh^p(\Gamma)\{-2\} \ar[r] & 0 \, ,
+0 \ar[r] & \redh^{p+1}(\Gamma)\{N-1\} \ar[r] & H(\Gamma) \ar[r]^-{x_{i}} & H(\Gamma)\{-2\} \ar[r] & \redh^p(\Gamma)\{-2\} \ar[r] & 0 \, .
 }
 \end{equation}
 It is clear from this exact sequence that the dimensions of the odd and even degrees of $\redh(\Gamma)$ agree (this is also observed in \cite[Proposition 3.12]{r0607544}). Moreover, assembling the $H(\Gamma)$'s to form the link homology, we deduce that
