@@ -140,8 +140,6 @@
 \node (0) at (0,0) [circle,inner sep=0.99pt, thin,draw=black,fill= black] {};
 \end{tikzpicture}%
 }
-%\def\id{\operatorname{id}}
-
 
 \title{Computing Khovanov-Rozansky homology \\ and defect fusion}
 \author{Nils Carqueville}
@@ -226,31 +224,6 @@ In order to compute the categorified link invariant one now has to ``resolve'' t
 \draw[->] (0) -- (tl); 
 \end{tikzpicture}
 \end{minipage} 
-%$$
-%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
-%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
-%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
-%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
-%\draw[-, thick] (bl) -- (0); 
-%\draw[->, thick] (br) -- (tl); 
-%\draw[->, thick] (0) -- (tr); 
-%\end{tikzpicture}
-%\qquad
-%\text{and}
-%\qquad
-%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
-%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
-%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
-%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
-%\draw[->, thick] (bl) -- (tr); 
-%\draw[-, thick] (br) -- (0); 
-%\draw[->, thick] (0) -- (tl); 
-%\end{tikzpicture}
-%$$
 by certain combinations of the local diagrams\footnote{Note that we deliberately do not use the (representation theoretically more appropriate) ``wide edge'' depiction of~\cite{kr0401268} for the second diagram. This is done to facilitate the interpretation in terms of Landau-Ginzburg models below.} 
 \begin{minipage}{0.36cm}
 \begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
@@ -272,144 +245,6 @@ by certain combinations of the local diagrams\footnote{Note that we deliberately
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage}.
-%\begin{equation}
-%\label{res_unlabelled}
-%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
-%\draw[ ->, thick ] (230:1) arc (230:130:1); 
-%\end{tikzpicture}
-%\qquad
-%\text{and}
-%\qquad
-%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-%\node (bl) at (-1,-1) [circle] {};
-%\node (br) at (1,-1) [circle] {};
-%\node (tl) at (-1,1) [circle] {};
-%\node (tr) at (1,1) [circle] {};
-%\draw[-,  thick] (bl) -- (0); 
-%\draw[-,  thick] (br) -- (0); 
-%\draw[->,  thick] (0) -- (tl); 
-%\draw[->,  thick] (0) -- (tr); 
-%\end{tikzpicture}
-%. 
-%\end{equation}
-
-%Let us now recall the basic ideas of Khovanov and Rozansky's construction, and discuss the relation to defect operators in Landau-Ginzburg models. The starting point is the link diagram of the oriented link in question, for example the Hopf link: 
-%$$
-%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-%% Hopf link:
-%\draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
-%\draw[ ->, thick ] (140:1) arc (-220:130:1); 
-%\end{tikzpicture}
-%$$
-%If the link diagram has~$m$ strands, then one arbitrarily associates distinct ``potentials'', i.\,e.~in this case monomials $x_{i}^{N+1}$, $i\in\{1,\ldots,m\}$, to each strand, e.\,g.:
-%$$
-%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-%% potentials as labels:
-%\node (1) at (-2.9,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{1}$}};
-%\node (2) at (-1.5,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{2}$}};
-%\node (3) at (0.15,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{3}$}};
-%\node (4) at (1.55,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{4}$}};
-%% Hopf link:
-%\draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
-%\draw[ ->, thick ] (140:1) arc (-220:130:1); 
-%\end{tikzpicture}
-%$$
-%In order to compute the categorified link invariant one now has to ``resolve'' the two kinds of crossings that appear. The very rough idea is to replace all crossings 
-%\begin{minipage}{0.48cm}
-%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
-%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
-%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
-%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
-%\draw[-] (bl) -- (0); 
-%\draw[->] (br) -- (tl); 
-%\draw[->] (0) -- (tr); 
-%\end{tikzpicture}
-%\end{minipage}
-% and 
-%\begin{minipage}{0.48cm}     
-%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
-%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
-%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
-%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
-%\draw[->] (bl) -- (tr); 
-%\draw[-] (br) -- (0); 
-%\draw[->] (0) -- (tl); 
-%\end{tikzpicture}
-%\end{minipage} 
-%%$$
-%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-%%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
-%%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
-%%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
-%%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
-%%\draw[-, thick] (bl) -- (0); 
-%%\draw[->, thick] (br) -- (tl); 
-%%\draw[->, thick] (0) -- (tr); 
-%%\end{tikzpicture}
-%%\qquad
-%%\text{and}
-%%\qquad
-%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%%\node (0) at (0,0) [circle,inner sep=1.5pt, draw=white,fill= white] {};
-%%\node (bl) at (-1,-1) [circle,draw=white,fill= white] {};
-%%\node (br) at (1,-1) [circle,draw=white,fill= white] {};
-%%\node (tl) at (-1,1) [circle,draw=white,fill= white] {};
-%%\node (tr) at (1,1) [circle,draw=white,fill= white] {};
-%%\draw[->, thick] (bl) -- (tr); 
-%%\draw[-, thick] (br) -- (0); 
-%%\draw[->, thick] (0) -- (tl); 
-%%\end{tikzpicture}
-%%$$
-%by certain combinations of the local diagrams\footnote{Note that we deliberately do not use the (representation theoretically more appropriate) ``wide edge'' depiction of~\cite{kr0401268} for the second diagram. This is done to facilitate the interpretation in terms of Landau-Ginzburg models below.} 
-%\begin{minipage}{0.36cm}
-%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
-%\draw[ ->, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
-%\draw[ -> ] (230:1) arc (230:130:1); 
-%\end{tikzpicture}
-%\end{minipage}
-% and 
-% \begin{minipage}{0.48cm}
-%\begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= black] {};
-%\node (bl) at (-1,-1) [circle] {};
-%\node (br) at (1,-1) [circle] {};
-%\node (tl) at (-1,1) [circle] {};
-%\node (tr) at (1,1) [circle] {};
-%\draw[-] (bl) -- (0); 
-%\draw[-] (br) -- (0); 
-%\draw[->] (0) -- (tl); 
-%\draw[->] (0) -- (tr); 
-%\end{tikzpicture}
-%\end{minipage}.
-%%\begin{equation}
-%%\label{res_unlabelled}
-%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
-%%\draw[ ->, thick ] (230:1) arc (230:130:1); 
-%%\end{tikzpicture}
-%%\qquad
-%%\text{and}
-%%\qquad
-%%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-%%\node (bl) at (-1,-1) [circle] {};
-%%\node (br) at (1,-1) [circle] {};
-%%\node (tl) at (-1,1) [circle] {};
-%%\node (tr) at (1,1) [circle] {};
-%%\draw[-,  thick] (bl) -- (0); 
-%%\draw[-,  thick] (br) -- (0); 
-%%\draw[->,  thick] (0) -- (tl); 
-%%\draw[->,  thick] (0) -- (tr); 
-%%\end{tikzpicture}
-%%. 
-%%\end{equation}
 
 More precisely, one associates complexes of matrix factorisations to each crossing: The construction of~\cite{kr0401268} provides an assignment
 \begin{equation}
@@ -443,37 +278,6 @@ More precisely, one associates complexes of matrix factorisations to each crossi
 \widehat = \,
 \Xbul\,.
 \end{equation}
-%\begin{equation}
-%\label{DeltaX}
-%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
-%\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
-%\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
-%\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
-%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
-%\draw[ ->, thick ] (230:1) arc (230:130:1); 
-%\end{tikzpicture}
-%\widehat = \,
-%\Xcirc \, ,
-%\qquad 
-%\begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
-%\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{i}$}};
-%\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{j}$}};
-%\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{k}$}};
-%\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {{\tiny $x^{N+1}_{l}$}};
-%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-%\node (bl) at (-1,-1) [circle] {};
-%\node (br) at (1,-1) [circle] {};
-%\node (tl) at (-1,1) [circle] {};
-%\node (tr) at (1,1) [circle] {};
-%\draw[-,  thick] (bl) -- (0); 
-%\draw[-,  thick] (br) -- (0); 
-%\draw[->,  thick] (0) -- (tl); 
-%\draw[->,  thick] (0) -- (tr); 
-%\end{tikzpicture}
-%\widehat = \,
-%\Xbul
-%\end{equation}
 where $\Xcirc$ and $\Xbul$ are certain $(4\times 4)$-matrices with entries in $\nQ[x_{i},x_{j},x_{k},x_{l}]$ such that $\Xcirc^2=\Xbul^2 = (x^{N+1}_{i}+x^{N+1}_{j}-x^{N+1}_{k}-x^{N+1}_{l})\cdot\operatorname{id}_{4\times 4}$. In other words, $\Xcirc$ and~$\Xbul$ are matrix factorisations of the sum of outgoing potentials minus the sum of incoming potentials. Their explicit expressions are given in Section~\ref{KRconstruction}. We also note that for two general matrix factorisations $D,D'$  of polynomials $W,W'$, respectively, there is a tensor product matrix factorisation $D\otimes D'$ of $W+W'$. 
 
 Now the ``resolution''  mentioned before is given by assigning two-term complexes of matrix factorisations to over- and under-crossings: 
@@ -613,21 +417,6 @@ The remaining part of the present paper is organised as follows. In Section~\ref
 \begin{acknowledgements}
 TODO: We thank N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, I.~Runkel, and G.~Watts. also T.~Licata, C.~Stroppel, S.~Cautis,
 \end{acknowledgements}
-
-%\section{Somewhat earlier, in the discussion of MOY}
-%
-%Our conventions for the the state model follow Rasmussen \cite{r0607544}. A \emph{state graph} $\Gamma$ is an oriented planar graph all of whose vertices have valence either two or four. Loops and multiple edges are allowed. The four-valent vertices are called \emph{singular crossings} and have two incoming and two outgoing edges, while the bivalent vertices are called \emph{marks} and have one incoming and one outgoing edge. The edges of a state graph are labelled by integers $1,\ldots,m$ where $m$ is the number of edges.
-%\[
-%\text{Example of state graph}.
-%\]
-%In \cite{moy1998} Murakami, Ohtsuhki and Yamada define a Homfly polynomial $\widetilde{P}(D)$ for a state graph $D$, which they use to give a state model definition of the Homfly polynomial similar to the Kauffman state model for the Jones polynomial.
-%
-%The closure of a braid diagram all of whose crossings are singular (and which therefore defines a state graph) is called a \emph{braid graph} (note that all our braid graphs are closed, as compared to Rasmussen). Recall the induction scheme of Wu on $p.20$ of \cite{r0607544}.
-%
-%\begin{itemize}
-%\item Somewhere discuss that the dual of the homology of a link is the homology of the mirror link (hence KR homology can be reasonably called either \emph{homology} or \emph{cohomology}).
-%\item Be clear on the grading on the quotient algebra, i.e. we do not pre-shift it.
-%\end{itemize}
 
 
 \section{Preliminaries}
@@ -1494,61 +1283,6 @@ s_1 &= y_1 + y_2 - x_1 - x_2\,,\\
 s_2 &= y_1 y_2 - x_1 x_2\,.
 \end{align*}
 As in Lemma \ref{lemma:bimodules_as_algebras} we identify the graded $S$-bimodules $S \otimes_A S$ and $S$ with the graded $R$-modules $R/(\bs{s})$ and $R/(\bs{t})$. Both are killed by $W$ and therefore give $R/(W)$-modules. The stabilisations $\Xbul, \Xcirc$ of these graded $R/(W)$-modules exist and can be described using cyclic Koszul complexes. Note that
-%(\textbf{todo}) This is the potential associated with a crossing, and the factorisations $\Xcirc, \Xbul$ are each assigned to one of the two ways of resolving a crossing, as in the diagram
-%\begin{equation}
-%\label{delta2}
-%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-%\node (1) at (-2.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
-%\node (2) at (0.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
-%\node (3) at (0.1,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
-%\node (3) at (-2.5,-1.1) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
-%\draw[ ->, thick, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
-%\draw[ ->, thick ] (230:1) arc (230:130:1); 
-%\end{tikzpicture}
-%\widehat = \,
-%\Xcirc \, ,
-%\qquad 
-%\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle] {};
-%\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
-%\node (br) at (1,-1) [circle] {{\scriptsize $x^{N+1}_{l}$}};
-%\node (tl) at (-1,1) [circle] {{\scriptsize $x^{N+1}_{i}$}};
-%\node (tr) at (1,1) [circle] {{\scriptsize $x^{N+1}_{j}$}};
-%\draw[->,  thick] (bl) to [out=40,in=-40]  (tl); 
-%\draw[->,  thick] (br) to [out=140,in=220]  (tr); 
-%\end{tikzpicture}
-%\widehat = \,
-%\Xcirc \, ,
-%\qquad 
-%\begin{tikzpicture}[scale=0.8,baseline, inner sep=1mm, >=stealth]
-%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-%\node (bl) at (-1,-1) [circle] {{\scriptsize $x^{N+1}_{k}$}};
-%\node (br) at (1,-1) [circle] {{\scriptsize $x^{N+1}_{l}$}};
-%\node (tl) at (-1,1) [circle] {{\scriptsize $x^{N+1}_{i}$}};
-%\node (tr) at (1,1) [circle] {{\scriptsize $x^{N+1}_{j}$}};
-%\draw[-,  thick] (bl) -- (0); 
-%\draw[-,  thick] (br) -- (0); 
-%\draw[->, very  thick] (0) -- (tl); 
-%\draw[->,  thick] (0) -- (tr); 
-%\end{tikzpicture}
-%\begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
-%\node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{1}$};
-%\node (2) at (1.5,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$y^{N+1}_{2}$};
-%\node (3) at (1.5,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{2}$};
-%\node (3) at (-1.1,-1.2) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{1}$};
-%\node (0) at (0,0) [circle,inner sep=1.5pt, thin,draw=black,fill= black] {};
-%\node (bl) at (-1,-1) [circle] {};
-%\node (br) at (1,-1) [circle] {};
-%\node (tl) at (-1,1) [circle] {};
-%\node (tr) at (1,1) [circle] {};
-%\draw[-,  thick] (bl) -- (0); 
-%\draw[-,  thick] (br) -- (0); 
-%\draw[->,  thick] (0) -- (tl); 
-%\draw[->,  thick] (0) -- (tr); 
-%\end{tikzpicture}
-%\widehat = \,
-%\Xbul\,.
-%\end{equation}
 \begin{equation}\label{eq:cons1}
 W = w_1 t_1 + w_2 t_2 \, , \qquad w_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i} \, ,
 \end{equation}
@@ -2305,25 +2039,6 @@ We will now present some results for $\sln$ Khovanov-Rozansky homology of all pr
 As discussed in the introduction, our construction via the splitting of idempotents provides the first method to compute Khovanov-Rozansky invariants directly from the original definition in~\cite{kr0401268}. However, there have been previous results and proposals for Khovanov-Rozansky invariants for certain links which relied on indirect arguments. Before we will discuss our results for links whose Khovanov-Rozansky invariants had not been studied before, we shall first recall the known results and proposals, and compare them with our own direct computations. 
 
 The so far most extensive results were obtained in~\cite{r0508510, r0607544}. There it was shown that the reduced Khovanov-Rozansky invariants $\overline{\KR}_{N}$ of 2-bridge knots can be expressed in terms of their Homfly polynomial and signature (see e.\,g.~\cite{kawauchibook} for the definitions), and a similar result is true for 2-bridge links. Furthermore, explicit expressions were obtained for the unreduced invariants $\KR_{N}$ with $N>4$ for torus knots $T_{2,m}$ and the figure-eight knot $4_{1}$. For links with up to six crossings and small values of~$N$ we can verify these results and extend them to the cases $N=3$ and $N=4$ where necessary. We refer to Tables~\ref{unreducedKR} and~\ref{reducedKR} for further details. 
-
-%\begin{proposition}
-%\label{Prop:Rasmussen}
-%\begin{enumerate}
-%\item For prime knots with up to 6 crossings, the following relation holds for all $N\geqslant 2$:
-%$$
-%\overline{\KR}_{N} = (-1)^{\sigma/2} P(q^N t^{-1}, \I q t^{-1/2}) \, .
-%$$
-%\item For all $N\geqslant 2$ and $m\in\{3,4\}$ we have that
-%\begin{align*}
-%\KR_{N}(T_{2,m}) & = q^{(m-1)(N-1)} \Big( \frac{q^N-q^{-N}}{q-q^{-1}} + \frac{q^{N-1}-q^{-N+1}}{q-q^{-1}}\, q^{-1} (1+q^{2N}t^{-1})\sum_{j=1}^{(m-1)/2} q^{4j} t^{-2j} \Big) \, ,\\
-%\KR_{N}(4_{1}) & = \frac{q^N-q^{-N}}{q-q^{-1}} + \frac{q^{N-1}-q^{-N+1}}{q-q^{-1}} \Big( q^{2N+1}t^{-2} + q t^{-1} + q^{-1} t + q^{-2N-1} t^2 \Big) \, .
-%\end{align*}
-%\end{enumerate}
-%\end{proposition}
-%
-%\begin{proof}
-%Every prime knot with up to 6 crossings is 2-bridge, and for $N>4$ the above expressions are those of~\cite{r0508510}. It follows from our direct computations that they also hold for $N\leqslant 4$. 
-%\end{proof}
 
 The expressions for $\KR_{N}(T_{2,3})$ and $\KR_{N}(T_{2,5})$ were already given in~\cite{gsv0412243}, and explicit proposals for Khovanov-Rozansky invariants of further torus knots and the Hopf link were argued for in~\cite{dgr0505662, gikv0705.1368, as1105.5117}. For small numbers of crossings and small values of~$N$ our results verify all these proposals. 
 
@@ -3192,13 +2907,6 @@ $
 \end{longtable}
 }
 
-%Notes to self:
-%\begin{itemize}
-%\item unreduced $7_{1}$ not included because we only have $N=2$
-%\item unreduced $7_{1}^3$ not included because we only have $N=2$
-%\item reduced $7_{1}$ not included because we only have $N\leqslant 3$
-%\item reduced $7_{1}^3$ not included because we only have $N=2$
-%\end{itemize}
 
 \newpage
 \appendix
@@ -3508,8 +3216,8 @@ The map corresponding to $\sigma_\infty(1^* \otimes 1)$ makes (\ref{eq:cons5}) c
 % compared to skrh we use s_i instead of d_i, and pi_i instead of a_i
 \begin{align*}
 H \mu \sigma(1^* \otimes 1) &= H( d_{X^{\lor}} + \delta_{-})(1^* \otimes 1)\\
-&= H( -\theta_1^* \otimes s_1 - \theta_2^* \otimes s_2 + 1^* \otimes \pi_1 \theta_1 + 1^* \otimes \pi_2 \theta_2 )\\
-&= \theta_1^* \otimes H(s_1) + \theta_2^* \otimes H(s_2) + 1^* \otimes H(\pi_1 \theta_1) + 1^* \otimes H(\pi_2 \theta_2) \, .
+&= H( -\theta_1^* \otimes s_1 - \theta_2^* \otimes s_2 + 1^* \otimes w_1 \theta_1 + 1^* \otimes w_2 \theta_2 )\\
+&= \theta_1^* \otimes H(s_1) + \theta_2^* \otimes H(s_2) + 1^* \otimes H(w_1 \theta_1) + 1^* \otimes H(w_2 \theta_2) \, .
 \end{align*}
 By easy computations, for example
 \begin{align*}
@@ -3517,7 +3225,7 @@ H(s_1) &= \Omega_1\Big( \frac{\partial s_1}{\partial y_1} \Big) \theta_1 + \Omeg
 \end{align*}
 and
 \begin{align*}
-H(\pi_1 \theta_1) &= (\nabla \delta_{+} + \delta_{+} \nabla)^{-1} \nabla( \pi_1 \theta_1 ) = (\nabla \delta_{+} + \delta_{+} \nabla)^{-1}\Big( \frac{\partial \pi_1}{\partial y_2} \theta_2 \theta_1 \Big) = 0 \, ,
+H(w_1 \theta_1) &= (\nabla \delta_{+} + \delta_{+} \nabla)^{-1} \nabla( w_1 \theta_1 ) = (\nabla \delta_{+} + \delta_{+} \nabla)^{-1}\Big( \frac{\partial w_1}{\partial y_2} \theta_2 \theta_1 \Big) = 0 \, ,
 \end{align*}
 we find that
 $$
