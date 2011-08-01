@@ -160,9 +160,9 @@ We compute the categorified $\sln$ link invariants as defined by Khovanov and Ro
 
 \section{Introduction}
 
-In this paper we present and implement the first method to directly compute Khovanov and Rozansky's categorified $\sln$ link invariants for arbitrary links. This is made possible by a technology to explicitly fuse topological defects in Landau-Ginzburg models. In the following we shall explain how these two topics relate, and we try to put them into context. 
+In this paper we present the first method to directly compute Khovanov and Rozansky's categorified $\sln$ link invariants for arbitrary links. This is made possible by a technology to explicitly fuse topological defects in Landau-Ginzburg models, which we have implemented on the computer. As a special case this also allows to compute the action of functors on categories of matrix factorisations which are given by Fourier-Mukai kernels. 
 
-Let us begin by recalling some pieces of knot theory at the borderland of pure mathematics and mathematical physics. By knot theory we mean the study of isotopy classes of knotted and linked circles in $S^3$. One way to try and distinguish two given links is to compare their polynomial invariants like the Jones and Homfly polynomials~\cite{JonesPolynomialPaper, Homfly, HomflyPT}. Such invariants can be computed from the essentially \emph{two}-dimensional link diagram and the skein relations. 
+Let us try to expound the relation between categorified link invariants and topological defects, and put them into context. We begin by recalling some pieces of knot theory at the borderland of pure mathematics and mathematical physics. By knot theory we mean the study of isotopy classes of knotted and linked circles in $S^3$. One way to try and distinguish two given links is to compare their polynomial invariants like the Jones and Homfly polynomials~\cite{JonesPolynomialPaper, Homfly, HomflyPT}. Such invariants can be computed from the essentially \emph{two}-dimensional link diagram and the skein relations. 
 
 In the seminal work~\cite{wittenjones} it was explained how one can understand and compute such invariants as path integrals in a \emph{three}-dimensional topological field theory. More precisely, this theory is Chern-Simons theory, and the computability of link invariants in this framework is afforded by a relation to two-dimensional rational conformal field theories. These ideas and results together with those of~\cite{t1988YB} were formalised in~\cite{RT1990, RT1991, turaevbook} to produce link invariants from any modular tensor category (which is the representation category of the associated vertex operator algebra in the case of Chern-Simons theory). 
 
@@ -332,7 +332,7 @@ In a link diagram any oriented strand is incoming and outgoing with respect to s
 
 To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$; it is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the finite-rank splitting of~$\idem$ (up to shifts). This means that from the pair $B,\idem$ we can find a triple $F,f,g$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g=1_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
 
-Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. One of its applications is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
+Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular, see~\cite{cmWebCompileCode}. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. As a special case we can explicitly compute the action of any functor on categories of finite-rank matrix factorisations which is given by a Fourier-Mukai kernel. Another application is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
 
 Our method could as well be straightforwardly applied to the categorification~\cite{kr0701333} of the Kauffman polynomial and to virtual links; this will be discussed elsewhere. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
 
@@ -415,7 +415,7 @@ The remaining part of the present paper is organised as follows. In Section~\ref
 
 
 \begin{acknowledgements}
-TODO: We thank N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, I.~Runkel, and G.~Watts. also T.~Licata, C.~Stroppel, S.~Cautis,
+TODO: We thank N.~Behr, S.~Cautis, S.~Gukov, M.~Khovanov, T.~Licata, J.~Rasmussen, R.~Rouquier, I.~Runkel, C.~Stroppel, and G.~Watts. 
 \end{acknowledgements}
 
 
@@ -864,7 +864,7 @@ Instead of immediately moving on to the details of the categorification, let us 
 However, the general case is also of interest, e.\,g.~for the multiple fusion of topological defects in Landau-Ginzburg models. 
 
 \begin{definition}\label{defwebs}
-A \emph{web} $\cat{F}$ is an oriented graph with a nonempty set of vertices $V$ and a nonempty set of oriented edges $E$ where we allow edges to begin or end (but not both) on an auxiliary ``vertex'' which we call the \emph{boundary}. By convention the boundary is \emph{not} a vertex. We allow loops and multiple edges. An edge is \emph{internal} if it does not begin or end on the boundary, and \emph{external} otherwise. 
+A \emph{web} $\cat{F}$ is an oriented graph with a nonempty set of vertices $V$ and a nonempty set of oriented edges $E$. Edges are allowed to begin or end (but not both) on an auxiliary ``vertex'' which we call the \emph{boundary}, but we stress that whenever we refer to vertices we never mean the boundary. We allow loops and multiple edges. An edge is \emph{internal} if it does not begin or end on the boundary, and \emph{external} otherwise. 
 
 Let $k$ be a field of characteristic zero and $c \ge 0$. A \emph{decoration} of $\cat{F}$ is an assignment as follows:
 \begin{itemize}
@@ -942,9 +942,9 @@ then we obtain a closed oriented planar graph whose vertices are of types
 \end{tikzpicture}
 \end{minipage}. We define a decoration of this \emph{state web} by fixing an integer $N$ and assigning to each edge $i$ a single variable $x_{i}$ and the potential $x_{i}^{N+1}$. Next we choose two finite-rank graded matrix factorisations
 \[
-\Xcirc, \Xbul \in \hmf( k[x_i,x_j,x_k,x_l], x_{i}^{N+1} + x_{j}^{N+1} - x_{k}^{N+1} - x_{l}^{N+1} )
+\Xcirc, \Xbul \in \hmf( k[u,x,y,z], u^{N+1} +x^{N+1} - y^{N+1} - z^{N+1} )
 \]
-and make the following assignments of matrix factorisations to vertices: 
+(whose dependence on the variables we usually do not display) and make the following assignments of matrix factorisations to vertices: 
 \begin{equation}
 \label{MFcrossings}
 \begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
@@ -963,7 +963,7 @@ and make the following assignments of matrix factorisations to vertices:
 \draw[->,  thick] (0) -- (tr); 
 \end{tikzpicture}
 \widehat = \,
-\Xcirc \, ,
+\Xcirc(x_{i},x_{j},x_{k},x_{l}) \, ,
 \qquad 
 \begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
 \node (1) at (-1.1,1.0) [circle,inner sep=1.5pt, draw=white,fill= white] {$x^{N+1}_{i}$};
@@ -981,7 +981,7 @@ and make the following assignments of matrix factorisations to vertices:
 \draw[->,  thick] (0) -- (tr); 
 \end{tikzpicture}
 \widehat = \,
-\Xbul \, .
+\Xbul (x_{i},x_{j},x_{k},x_{l}) \, .
 \end{equation}
 Since the web is closed, the total matrix factorisation will be a finite-rank $(\ZZ \times \Ztwo)$-graded complex $C(\Gamma)$ over the polynomial ring of all edge variables. As we will see below, the cohomology $H(\Gamma)$ of this complex is finite-dimensional for general reasons.
 
@@ -1118,12 +1118,12 @@ With this notation:
 \begin{equation}
 \label{eq:compilation_main1}
 \xymatrix@C+3pc{
-\left(X/(\intvar^a X)\right)\{ n(c - 2a) \}\langle n \rangle \ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
+X/(\intvar^a X)\{ n(c - 2a) \}\langle n \rangle \ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
 }
 \end{equation}
 with $\vartheta \circ \psi = \idem$ and $\psi \circ \vartheta = 1_{\varphi_*(X)}$. That is, the pair
 \[
-\left(\left(X/(\intvar^a X)\right)\{ n(c - 2a) \}\langle n \rangle, \idem\right)
+\left(X/(\intvar^a X)\{ n(c - 2a) \}\langle n \rangle, \idem\right)
 \]
 compiles the decorated web $\cat{F}$.
 \end{theorem}
@@ -1242,7 +1242,7 @@ Now we make the jump to matrix factorisations. If $W$ is a homogeneous symmetric
 \hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, W) \ar@<1ex>[l]^{\varphi_*} \, .
 }
 \]
-Let us fix for example the polynomial $W = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite{RouquierMexico} applies (\textbf{todo}) to produce an interesting autoequivalence of $\K^b( \hmf(S, W) )$. Namely, tensoring with the complexes of graded bimodules
+Let us fix for example the polynomial $W = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite{RouquierMexico} applies to produce an interesting autoequivalence of $\K^b( \hmf(S, W) )$. Namely, tensoring with the complexes of graded bimodules
 \begin{equation}\label{eq:bimod_cpx1}
 \xymatrix{
 0 \ar[r] & S \otimes_A S \ar[r]^-{\varepsilon} & \underline{S} \ar[r] & 0 \, ,
@@ -1877,7 +1877,7 @@ $$
 \draw[->,  thick] (D) -- (b) node[midway,above] {$W$}; 
 \end{tikzpicture} 
 $$
-where we identify the invisible vertex on the left with the boundary of the web, see Definition~\ref{defwebs} and Example~\ref{example:defectonbrane}. The following code shows how to compile the web for the example $D=(\begin{smallmatrix} 0& x^2 \\ -x & 0\end{smallmatrix}) \otimes (\begin{smallmatrix} 0& y \\ y^4 & 0\end{smallmatrix})$, $Q=(\begin{smallmatrix} 0& x^2 \\ x & 0\end{smallmatrix})$, $W'=x^3$, and $W=y^5$.
+with the boundary to the left, see Definition~\ref{defwebs} and Example~\ref{example:defectonbrane}. The following code shows how to compile the web for the example $D=(\begin{smallmatrix} 0& x^2 \\ -x & 0\end{smallmatrix}) \otimes (\begin{smallmatrix} 0& y \\ y^4 & 0\end{smallmatrix})$, $Q=(\begin{smallmatrix} 0& x^2 \\ x & 0\end{smallmatrix})$, $W'=x^3$, and $W=y^5$.
 {\footnotesize
 \begin{verbatim}
     option(noredefine);option(noloadLib);option(redSB);
