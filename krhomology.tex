@@ -611,7 +611,7 @@ The remaining part of the present paper is organised as follows. In Section~\ref
 
 
 \begin{acknowledgements}
-TODO: We thank N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, I.~Runkel, and G.~Watts. 
+TODO: We thank N.~Behr, S.~Gukov, M.~Khovanov, J.~Rasmussen, R.~Rouquier, I.~Runkel, and G.~Watts. also T.~Licata, C.~Stroppel, S.~Cautis,
 \end{acknowledgements}
 
 %\section{Somewhat earlier, in the discussion of MOY}
@@ -700,7 +700,7 @@ Let us recall the definition of the cyclic Koszul complex from \cite[Section~2]{
 R \ar[r]^-{a} & R\{ c - \deg(a) \} \ar[r]^-{b} & R \, .
 }
 \]
-For two sequences $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ of homogeneous elements in $R$ satisfying $\deg(a_i) + \deg(b_i) = 2c$ for each $i$, we denote
+For two sequences $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ of homogeneous elements in $R$ satisfying $\deg(a_i) + \deg(b_i) = 2c$ for each $i$, we define
 \[
 \{ \bs{a}, \bs{b} \} := \{a_1,b_1\} \otimes \ldots \otimes \{a_n, b_n\}
 \]
@@ -1199,7 +1199,23 @@ Since the web is closed, the total matrix factorisation will be a finite rank $(
 The idea of \cite{kr0401268} is that for carefully chosen matrix factorisations $\Xbul, \Xcirc$ the complexes $C(\Gamma)$ categorify the MOY relations, i.\,e.~the cohomology $H(\Gamma)$ has trivial $\Ztwo$-grading and its $\ZZ$-graded Euler characteristic is $p_N(\Gamma)$, and categorical analogues of the identities \eqref{MOYdecomp1} hold. Following \cite{kr0401268} we will give the expressions for the $\Xcirc$ and $\Xbul$ which work in~\eqref{XbulXcirc} below; see also~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4}.
 \end{example}
 
-\begin{example} \textbf{todo} Put defect on boundary condition, defect on defect here, refer back to from example section. This helps motivate why we want to ignore the internal variables, or at least gives two motivations (computing cohomology, from KR example, and unphysical $y$-variable from defect example).
+\begin{example}\label{example:defectonbrane} Consider the web
+$$
+\begin{tikzpicture}[scale=1.0,baseline=-0.1cm, inner sep=1mm, >=stealth]
+\node (b) at (-2,0)  {};
+\node (D) at (0,0) [circle,draw=black,fill= white, thick] {$u$};
+\node (Q) at (2,0) [circle,draw=black,fill= white, thick] {$v$};
+\draw[->,  thick] (Q) -- (D) node[midway,above] {$e$}; 
+\draw[->,  thick] (D) -- (b) node[midway,above] {$f$}; 
+\end{tikzpicture} 
+$$
+with vertices $u,v$ and edges $e,f$ which are internal and external respectively. A decoration would consist of $f$-variables $\bs{x}$, $e$-variables $\bs{y}$ and homogeneous potentials $W \in k[\bs{y}], W' \in k[\bs{x}]$ with isolated singularities together with a matrix factorisation $D$ of $W' - W$ and $Q$ of $W$. 
+
+The total matrix factorisation $D \otimes Q$ is an object of $\hmf(k[\bs{x},\bs{y}], W')$ which can be viewed as an infinite rank matrix factorisation over $k[\bs{x}]$ of $W'$. In this way, if we were to fix $D$ and let $Q$ vary, we can view $D$ as a functor
+\[
+\HMF(k[\bs{y}], W) \lto \HMF(k[\bs{x}], W')\,.
+\]
+Alternatively, the tensor product $D \otimes Q$ can be viewed as the action of the defect $D$ (between two Landau-Ginzburg models with potentials $W, W'$) on the brane $Q$ (in the theory with potential $W$) to produce a new brane $D \otimes Q$ (in the theory with potential $W'$).
 \end{example}
 
 Putting aside for the moment the question of how to construct decorated webs with interesting total factorisations, let us consider instead how to \emph{compute} the total factorisation. For the remainder of this section we fix a general decorated web $\cat{F}$ and to avoid triviality we assume that there is at least one internal edge.
@@ -1332,7 +1348,7 @@ Next we index the variables $\intvar = \{x_1,x_2,\ldots,x_n\}$ and use \cite[Cor
 \[
 \idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \sum_{\tau \in S_n} \textup{sgn}(\tau)\left\{ \prod_{i=1}^n \lambda_{x_i} \right\}[\partial_{\tau(1)}, d_X] \cdots [\partial_{\tau(n)}, d_X]
 \]
-where $\partial_j = \partial_{x_j}$. Let $\sigma: X/\intvar^a X \lto X$ be the $k[\extvar]$-linear map defined by $\sigma( \bs{x}^\beta \xi_j ) = \bs{x}^\beta \xi_j$ and let $\pi: X \lto X/\intvar^a X$ be the projection. The commutator $[\partial_j, d_X]$ on $X/\intvar^a X$ is equal to toad the composite $\pi \circ \partial_j \circ d_X \circ \sigma$. Let $\textup{div}_j(f)$ denote the division of $f$ by $x_j^a$ without remainder and for any monomial $\bs{x}^\alpha$ in the internal variables let $L_{j,\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map on $k[\intvar]/(\intvar^a)$ which is multiplication by $\bs{x}^\alpha$ followed by $\textup{div}_j$. Since $\pi \circ \partial_j = \pi \circ \textup{div}_j$ (Lemma~\ref{lemma:division_woremainder}) the matrix of $[\partial_j, d_X]$ in the new basis is obtained from $D$ by writing every entry of $D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$ and then replacing such an entry by the matrix $\sum_{\alpha} p_{\alpha} L_{j,\bs{x}^\alpha}$.
+where $\partial_j = \partial_{x_j}$. Let $\sigma: X/\intvar^a X \lto X$ be the $k[\extvar]$-linear map defined by $\sigma( \bs{x}^\beta \xi_j ) = \bs{x}^\beta \xi_j$ and let $\pi: X \lto X/\intvar^a X$ be the projection. The commutator $[\partial_j, d_X]$ on $X/\intvar^a X$ is equal to the composite $\pi \circ \partial_j \circ d_X \circ \sigma$. Let $\textup{div}_j(f)$ denote the division of $f$ by $x_j^a$ without remainder and for any monomial $\bs{x}^\alpha$ in the internal variables let $L_{j,\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map on $k[\intvar]/(\intvar^a)$ which is multiplication by $\bs{x}^\alpha$ followed by $\textup{div}_j$. Since $\pi \circ \partial_j = \pi \circ \textup{div}_j$ (Lemma~\ref{lemma:division_woremainder}) the matrix of $[\partial_j, d_X]$ in the new basis is obtained from $D$ by writing every entry of $D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$ and then replacing such an entry by the matrix $\sum_{\alpha} p_{\alpha} L_{j,\bs{x}^\alpha}$.
 
 Multiplying together the matrices for the $\lambda_{x_j}$ and $[\partial_j, d_X]$ we have the matrix for $\idem$.
 \end{remark}
@@ -1555,7 +1571,6 @@ By construction these are both matrix factorisations of $W$ over $R$. In the $\m
 & \pi_{\bullet}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
 & \pi_{\circ}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
 \end{align*}
-The module $R/(\boldsymbol{t})$ is the diagonal $S$, and $R/(\bs{s})$ is $S \otimes_A S$. 
 
 \begin{proposition} The morphisms $\pi_{\bullet}$ and $\pi_{\circ}$ are the stabilisations of $R/(\bs{s})$ and $R/(\bs{t})$, respectively.
 \end{proposition}
@@ -2067,7 +2082,7 @@ and matrix factorisations $\Xcirc, \Xbul$, and we define the \emph{Khovanov-Roza
 $$
 C(D) = \bigotimes_{c\in\mathcal C} C[c] \, .
 $$
-Here the tensor product is over the polynomial ring~$R$ of all internal and external variables. By construction $C(D)$ is a $(\nZ\times\nZ\times\nZ_{2})$-graded complex of matrix factorisations of zero, an we denote its components of cohomological degree~$i$ and internal $\nZ$-degree~$j$ by $C^{i,j}(D)$. It is shown in~\cite{kr0401268} that the cohomology of $C(D)$ is concentrated in only one $\nZ_{2}$-degree which is given by the parity of~$L$. More importantly, it is independent of the choice of link diagram~$D$ of~$L$, and we call it the \emph{Khovanov-Rozansky homology $H(L)$}. Its Poincar\'e polynomial is the \emph{Khovanov-Rozansky invariant}
+Here the tensor product is over the polynomial ring~$R$ of all internal and external variables. By construction $C(D)$ is a $(\nZ\times\nZ\times\nZ_{2})$-graded complex of matrix factorisations of zero, and we denote its components of cohomological degree~$i$ and internal $\nZ$-degree~$j$ by $C^{i,j}(D)$. It is shown in~\cite{kr0401268} that the cohomology of $C(D)$ is concentrated in only one $\nZ_{2}$-degree which is given by the parity of~$L$. More importantly, it is independent of the choice of link diagram~$D$ of~$L$, and we call it the \emph{Khovanov-Rozansky homology $H(L)$}. Its Poincar\'e polynomial is the \emph{Khovanov-Rozansky invariant}
 $$
 \KR_{N}(L) = \sum_{i,j\in\nZ} t^{i} q^j \dim_{\nQ}(H^{i,j}(L)) \, . 
 $$
@@ -2108,7 +2123,7 @@ In this way we can compile every differential $d_{\chi}$ in $C(D)$ and compute K
 \section{Simple examples}
 \label{simpleexamples}
 
-In order to illustrate how our code can be used to compute Khovanov-Rozansky homology and the fusion of defects, we provide the following simple examples. 
+In order to illustrate how our code can be used to compute Khovanov-Rozansky homology and the fusion of defects, we provide the following simple examples. (\textbf{todo} refer back to Example \ref{example:defectonbrane}).
 
 \begin{example}(Defect action on brane) 
 A matrix factorisation~$D$ of $W-W'$ is the kernel for a functor $\MF(R',W')\longrightarrow \MF(R,W)$. Alternatively, the tensor product of~$D$ with $Q\in \MF(R',W')$ can be viewed as the action of the defect~$D$ (between two Landau-Ginzburg models with potentials $W,W'$) on the brane~$Q$ (in the theory with potential~$W'$) to produce a new brane $D\otimes Q$ (in the theory with potential~$W$). 
