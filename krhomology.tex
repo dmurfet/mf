@@ -514,17 +514,17 @@ Now the ``resolution''  mentioned before is given by assigning two-term complexe
 \end{equation}
 Here the underlined component has cohomological degree~$0$, $\chi_{0}$ and $\chi_{1}$ are certain morphisms, and we do not display shifts with respect to an internal grading of~$\Xcirc$ and~$\Xbul$ (see Section~\ref{KRconstruction} for the details). While we do not explicitly show it in the presentation~\eqref{resolutions}, we stress that for each crossing the matrices $\Xcirc,\Xbul,\chi_{0}$ or~$\chi_{1}$ depend only on the variables $x_{i},x_{j},x_{k},x_{l}$ of the incoming and outgoing potentials. 
 
-With the above ingredients we can now conclude our reminder of the construction of~\cite{kr0401268}. To each crossing in a link diagram of a link~$L$ one associates the appropriate complex in~\eqref{resolutions}, and then one takes the tensor product of all these complexes to produce the total complex $C(L)$. It has a bigrading which is induced by the cohomological grading of the two-term complexes~\eqref{resolutions} and the internal grading of the matrix factorisations involved. The main result of~\cite{kr0401268} can now be summarised by the fact that the cohomology $H(L)$ of $C(L)$ is an invariant of~$L$ which is conveniently encoded in the Poincar\'e polynomial
+With the above ingredients we can now conclude our reminder of the construction of~\cite{kr0401268}. To each crossing in a link diagram~$D$ of a link~$L$ one associates the appropriate complex in~\eqref{resolutions}, and then one takes the tensor product of all these complexes to produce the total complex $C(D)$. It has a bigrading which is induced by the cohomological grading of the two-term complexes~\eqref{resolutions} and the internal grading of the matrix factorisations involved. The main result of~\cite{kr0401268} can now be summarised by the fact that the cohomology $H(L)$ of $C(D)$ is an invariant of~$L$ which is conveniently encoded in the Poincar\'e polynomial
 $$
 \KR_{N}(L) = \sum_{i,j\in\nZ} t^{i} q^j \dim_{\nQ}(H^{i,j}(L)) \, . 
 $$
-This is indeed a more refined invariant than the uncategorified $\sln$ link invariant of~\cite{RT1990} which can be recovered as the graded Euler character $\KR_{N}(L)|_{t=-1}$. There is also a ``reduced'' version of the above construction which leads to link invariants $\overline{\KR}_{N}(L,K)$ that a priori depend on the choice of a component~$K$ of~$L$. These will also be described in Section~\ref{KRconstruction}. 
+This is indeed a more refined invariant than the uncategorified $\sln$ link invariant of~\cite{RT1990} which can be recovered as the graded Euler character $\KR_{N}(L)|_{t=-1}$. There is also a ``reduced'' version of the above construction which leads to link invariants $\overline{\KR}_{N}(L,K)$ that \emph{a priori} depend on the choice of a component~$K$ of~$L$. These will also be described in Section~\ref{KRconstruction}. 
 
 \medskip
 
 Since all the elements in the construction of Khovanov-Rozansky homology are explicitly given, one may expect that the invariants can be straightforwardly computed. However, there is one technical impediment that has prevented direct computations until now. This difficulty comes about via the properties of tensor products of matrix factorisations. 
 
-In a link diagram any oriented strand is incoming and outgoing with respect to some crossing, hence the complex $C(L)$ is a complex of matrix factorisations of zero. Yet nevertheless both these matrix factorisations and more importantly the differentials of $C(L)$ still depend on the variables~$x_{i}$. Hence $C(L)$ is of infinite rank over~$\nQ$, and its cohomology cannot be easily computed in general. The reason is that in practice computer algebra packages compute cohomology over polynomial rings by repeatedly determining Gr\"obner bases of certain ideals. In the case of Khovanov-Rozansky homology the number and the degrees of the generators involved are such that naive approaches tend to exhaust the available memory and computing power rather quickly, making it impossible to determine invariants in all but the very simplest examples this way. 
+In a link diagram any oriented strand is incoming and outgoing with respect to some crossing, hence the complex $C(D)$ is a complex of matrix factorisations of zero. Yet nevertheless both these matrix factorisations and more importantly the differentials of $C(D)$ still depend on the variables~$x_{i}$. Hence $C(D)$ is of infinite rank over~$\nQ$, and its cohomology cannot be easily computed in general. The reason is that in practice computer algebra packages compute cohomology over polynomial rings by repeatedly determining Gr\"obner bases of certain ideals. In the case of Khovanov-Rozansky homology the number and the degrees of the generators involved are such that naive approaches tend to exhaust the available memory and computing power rather quickly, making it impossible to determine invariants in all but the very simplest examples this way. 
 
 To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$; it is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the finite-rank splitting of~$\idem$ (up to shifts). This means that from the pair $B,\idem$ we can find a triple $F,f,g$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g=1_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
 
@@ -670,7 +670,7 @@ Following \cite{kr0401268} we use $\langle - \rangle$ rather than $[-]$ to denot
 \[
 \Hom_{\text{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i
 \]
-where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of degree $i$. This is a submodule of $\Hom_R(X,Y)$, and if $X$ is finitely generated then $\Hom_{\text{gr}}(X,Y) = \Hom_R(X,Y)$, in which case we use the latter notation. This graded module has a natural $\Ztwo$-decomposition into even and odd maps
+where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of degree $i$. This is a submodule of $\Hom_R(X,Y)$, and if $X$ is finitely generated then $\Hom_{\text{gr}}(X,Y) = \Hom_R(X,Y)$, in which case we use the latter notation. This graded module has a natural $\Ztwo$-decomposition into even and odd maps, 
 \begin{align*}
 \Hom_{\text{gr}}(X,Y) &= \left( \Hom_{\text{gr}}(X^0, Y^0) \oplus \Hom_{\text{gr}}(X^1, Y^1) \right)\\
 &\qquad \oplus \left( \Hom_{\text{gr}}(X^0, Y^1) \oplus \Hom_{\text{gr}}(X^1, Y^0) \right)\,.
@@ -697,12 +697,12 @@ The tensor product is functorial in each variable and has all the expected prope
 Let us recall the definition of the cyclic Koszul complex from \cite[Section~2]{kr0401268}. Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $a,b\in R$ are homogeneous with $\deg(a) + \deg(b) = 2c$ then $\{ a, b \}$ denotes the graded matrix factorisation of $ab$ given by
 \[
 \xymatrix{
-R \ar[r]^-{a} & R\{ c - \deg(a) \} \ar[r]^-{b} & R \, ,
+R \ar[r]^-{a} & R\{ c - \deg(a) \} \ar[r]^-{b} & R \, .
 }
 \]
 For two sequences $\bs{a} = (a_1,\ldots,a_n)$ and $\bs{b} = (b_1, \ldots, b_n)$ of homogeneous elements in $R$ satisfying $\deg(a_i) + \deg(b_i) = 2c$ for each $i$, we denote
 \[
-\{ \bs{a}, \bs{b} \} := \{a_1,b_1\} \otimes \ldots \otimes \{a_m, b_m\}
+\{ \bs{a}, \bs{b} \} := \{a_1,b_1\} \otimes \ldots \otimes \{a_n, b_n\}
 \]
 which is a graded matrix factorisation of $\sum_i a_i b_i \in R_{2c}$. A better way to present the differential on this tensor product is to introduce formal symbols $\theta_i$ of bidegree $(-1, \deg(a_i) - c)$, so that when we write $R \theta_i$ we mean $R\{ \deg(a_i) - c \}$ placed in cohomological degree $-1$. The graded free module $F = \bigoplus_i R\theta_i$ and its exterior algebra $\bigwedge F$ acquire both a $\ZZ$-grading from these cohomological degrees, and a grading in the usual sense. We define differentials $\delta_{\pm}$ on $\bigwedge F$ of bidegree $(\pm 1,c)$ by
 \[
@@ -1351,7 +1351,7 @@ In this section we give a description of Khovanov and Rozansky's $\sln$ link hom
 
 The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations that lift the MOY relations~\eqref{MOYdecomp1}. As announced in Example~\ref{MOYremark} this is done by upgrading~$\Gamma$ to a special kind of state web. In particular one assigns matrix factorisations~$\Xcirc$ and~$\Xbul$ to the two types of resolutions of crossings in a link diagram, and we will explain their origin. Tensoring together all matrix factorisations in the state web will produce a graded complex whose homology $H(\Gamma)$ is the desired graded vector space.
 
-In the second step one has to consider maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These are viewed as two-term complexes of matrix factorisations, and they correspond to the differences on the right-hand side of the identities in~\eqref{graphreduction} in the categorification. Associating these two-term complexes to the over- and under-crossings of a link diagram allows for the construction of the homological link invariant $H(L)$ as the cohomology of the total complex. This categorifies the $\sln$ polynomial $P_{N}(L)$ in the sense that the Poincar\'e polynomial $\KR_{N}(L)$ of $H(L)$ specialises to $P_{N}(L)=\KR_{N}(L)|_{t=-1}$. 
+In the second step one has to consider maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These are viewed as two-term complexes of matrix factorisations, and they correspond to the differences on the right-hand sides of the identities in~\eqref{graphreduction} in the categorification. Associating these two-term complexes to the over- and under-crossings of a link diagram allows for the construction of the homological link invariant $H(L)$ as the cohomology of the total complex. This categorifies the $\sln$ polynomial $P_{N}(L)$ in the sense that the Poincar\'e polynomial $\KR_{N}(L)$ of $H(L)$ specialises to $P_{N}(L)=\KR_{N}(L)|_{t=-1}$. 
 
 We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier~\cite{RouquierMexico}, one can build autoequivalences of triangulated categories out of the special kinds of adjunctions that we obtain. In this setting we will identify the two-term complexes $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$ as representations of the autoequivalences that give rise to categorified link invariants. 
 
@@ -1378,7 +1378,7 @@ Obviously we are free to choose the normalisation: the factors of $2$ will be ju
 \[
 \varphi^!(N) = \Hom_A(S,N) \cong \Hom_A(S,A) \otimes_A N \stackrel{\psi}{\cong} S \otimes_A N \{-2\} = \varphi^*(N)\{-2\} \, ,
 \]
-so that, up to a grading shift, the left and right adjoints of $\varphi_*$ are naturally isomorphic. One way to look at this is that the map $\psi$ has provided us with an adjunction $\xymatrix@1{\varphi_*\, \ar@{-|}[r] & \,\varphi^*\{-2\}}$. We say that the functors $\varphi_*, \varphi^*$ are \emph{biadjoint}. By a process of stabilisation (see the next section) this biadjunction will give rise to a biadjunction on the level of matrix factorisations, which is the starting point for the Khovanov-Rozansky construction.
+so that, up to a grading shift, the left and right adjoints of $\varphi_*$ are naturally isomorphic. One way to look at this is that the map $\psi$ has provided us with an adjunction $\xymatrix@1{\varphi_*\, \ar@{-|}[r] & \,\varphi^*\{-2\}}$. We say that the functors $\varphi_*, \varphi^*$ are \emph{biadjoint}. By a process of stabilisation (see the next subsection) this biadjunction will give rise to a biadjunction on the level of matrix factorisations, which is the starting point for the Khovanov-Rozansky construction.
 
 The units and counits of these adjunctions will give rise to the morphisms $\chi_0, \chi_1$ between $\Xbul, \Xcirc$ mentioned above. The units are described for a graded $A$-module $N$ and graded $S$-module $M$ by
 \begin{align*}
@@ -1426,7 +1426,7 @@ S \otimes_A S\{-2\} \ar[r]_-{\cong} & \QQ[x_1,x_2,y_1,y_2]/(y_1 + y_2 - x_1 - x_
 \end{equation}
 commute. In the first diagram the vertical map on the right comes about because $y_1 + y_2 - x_1 - x_2$ and $y_1 y_2 - x_1 x_2$ belong to the ideal generated by the $y_i - x_i$. We note that the right-hand vertical map in (\ref{eq:bimodalg2}) is the determinant of the matrix which writes the regular sequence $(y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2)$ in terms of $(y_1 - x_1, y_2 - x_2)$, and if one thinks in terms of Koszul complexes it is clear that (\ref{eq:bimodalg1}) is in some sense dual to (\ref{eq:bimodalg2}). This will be made explicit at the end of Section \ref{section:stabilisation}.
 
-Now we make the jump to matrix factorisations. If $W$ is a homogeneous symmetric polynomial of even degree then the functors $\varphi_*$ and $\varphi^*$ lift to a biadjoint pair on the triangulated categories of finite rank graded matrix factorisations
+Now we make the jump to matrix factorisations. If $W$ is a homogeneous symmetric polynomial of even degree then the functors $\varphi_*$ and $\varphi^*$ lift to a biadjoint pair on the triangulated categories of finite-rank graded matrix factorisations
 \[
 \xymatrix@C+2pc{
 \hmf(A, W) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, W) \ar@<1ex>[l]^{\varphi_*} \, .
@@ -1444,7 +1444,7 @@ and
 0 \ar[r] & \underline{S} \ar[r]^-{\eta'} & S \otimes_A S\{-2\} \ar[r] & 0
 }
 \end{equation}
-determine endofunctors on $\K^b( \hmf(S, W) )$ which are mutually inverse equivalences. In fact these equivalences are the ones associated by Khovanov and Rozansky to over- and under-crossings, so the whole theory is built out of (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}). But there is an additional step before we can phrase the construction in the original terms: writing $R = S/(W)$ there is an equivalence
+determines endofunctors on $\K^b( \hmf(S, W) )$ which are mutually inverse equivalences. In fact these equivalences are the ones associated by Khovanov and Rozansky to over- and under-crossings, so the whole theory is built out of (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}). But there is an additional step before we can phrase the construction in the original terms: writing $R = S/(W)$ there is an equivalence
 \[
 \hmf(S, W) \cong \qderu{b}{\textup{grmod}\, R}/\K^b(\textup{grproj}\, R)
 \]
@@ -1529,11 +1529,11 @@ As in Lemma \ref{lemma:bimodules_as_algebras} we identify the graded $S$-bimodul
 %\Xbul\,.
 %\end{equation}
 \begin{equation}\label{eq:cons1}
-W = \pi_1 t_1 + \pi_2 t_2 \, , \qquad w_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i} \, ,
+W = w_1 t_1 + w_2 t_2 \, , \qquad w_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i} \, ,
 \end{equation}
 and due to the symmetry of $W$ there are polynomials $u_1,u_2$ such that
 \begin{equation}\label{eq:cons2}
-W = u_1 ( y_1 + y_2 - x_1 - x_2 ) + u_2 ( y_1 y_2 - x_1 x_2 ) \, .
+W = u_1 \cdot ( y_1 + y_2 - x_1 - x_2 ) + u_2 \cdot ( y_1 y_2 - x_1 x_2 ) \, .
 \end{equation}
 Then in the notation of Section \ref{prelim:cyclic_koszul}, we define
 \begin{align}
@@ -1548,7 +1548,7 @@ Recall from Section \ref{prelim:cyclic_koszul} that the model of the Koszul comp
 \]
 where $s_1 = y_1 + y_2 - x_1 - x_2$ and $s_2 = y_1 y_2 - x_1 x_2$, and
 \[
-\Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \, , \qquad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-) \, , \qquad \delta_{-} = \Big(\sum_i \pi_i \theta_i\Big) \wedge (-) \, .
+\Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \, , \qquad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-) \, , \qquad \delta_{-} = \Big(\sum_i w_i \theta_i\Big) \wedge (-) \, .
 \]
 By construction these are both matrix factorisations of $W$ over $R$. In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
 \begin{align*}
@@ -1604,12 +1604,12 @@ in an unknown $z$ has a unique polynomial solution $\Omega_2(\gamma)$, and the m
 is a morphism of graded matrix factorisations, making the diagram (\ref{eq:cons5}) commute up to homotopy.
 \end{lemma}
 
-The only obstacle to having an explicit formula for $\chi_1$ is determining the solution $\Omega_2(\gamma)$ of the differential equation (\ref{eq:consfirst1}). Fortunately the solution has already been provided by Khovanov and Rozansky: up to a sign, it is the polynomial $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - \pi_2)/(x_1-y_1)$ of \cite[p.51]{kr0401268} (where we set the parameter~$\lambda$ of \cite{kr0401268} equal to~$\frac{1}{2}$).
+The only obstacle to having an explicit formula for $\chi_1$ is determining the solution $\Omega_2(\gamma)$ of the differential equation (\ref{eq:consfirst1}). Fortunately the solution has already been provided by Khovanov and Rozansky: up to a sign, it is the polynomial $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ of \cite[p.51]{kr0401268} (where we set the parameter~$\lambda$ of \cite{kr0401268} equal to~$\frac{1}{2}$).
 
 \begin{lemma} $\Omega_2(\gamma) = -a_2$.
 \end{lemma}
 \begin{proof}
-Setting $y_1 = x_1$ in (\ref{eq:cons2}) shows that $u_1 + y_1 u_2 - \pi_2$ is divisible by $x_1 - y_1$. We must show it is a solution of (\ref{eq:consfirst1}). All we know of the polynomials $u_i$ is that they satisfy (\ref{eq:cons2}), and indeed one shows that $-a_2$ is a solution of (\ref{eq:consfirst1}) by direct substitution using the $y_2$-derivative of (\ref{eq:cons2}) to obtain an expression for $u_1 + y_1 u_2$.
+Setting $y_1 = x_1$ in (\ref{eq:cons2}) shows that $u_1 + y_1 u_2 - w_2$ is divisible by $x_1 - y_1$. We must show it is a solution of (\ref{eq:consfirst1}). All we know of the polynomials $u_i$ is that they satisfy (\ref{eq:cons2}), and indeed one shows that $-a_2$ is a solution of (\ref{eq:consfirst1}) by direct substitution using the $y_2$-derivative of (\ref{eq:cons2}) to obtain an expression for $u_1 + y_1 u_2$.
 \end{proof}
 
 %In the basis $1, \theta_1\theta_2, \theta_1, \theta_2$ the matrix of the morphism $\chi_1$ is therefore
@@ -1634,7 +1634,7 @@ More carefully, we define $\chi_0'$ to be the morphism making the diagram
 \{ \bs{w}, \bs{t} \}\mdual = \Xcirc\mdual \ar[r]^-{\chi_1\mdual} & \Xbul\mdual = \{ \bs{u}, \bs{s} \}\mdual \ar[d]^-{(\ref{lemma:cyclickos1})}\\
 \{ -\bs{t}, \bs{w} \} \ar[u]^-{(\ref{lemma:cyclickos1})} & \{ -\bs{s}, \bs{u} \} \ar[d]^-{(\ref{lemma:cyclickos2})}\\
 \{ -\bs{w}, \bs{t} \} \ar[u]^-{(\ref{lemma:cyclickos2})} & \{ -\bs{u}, \bs{s} \} \ar[d]^-{(\ref{lemma:cyclickos3})}\\
-\{ \bs{w}, -\bs{t} \} \ar@{..>}[r]_-{\chi_0'} \ar[u]^-{(\ref{lemma:cyclickos3})} & \{ \bs{u}, -\bs{s} \}
+\{ \bs{w}, -\bs{t} \} \ar@{-->}[r]_-{\chi_0'} \ar[u]^-{(\ref{lemma:cyclickos3})} & \{ \bs{u}, -\bs{s} \}
 }
 \]
 commute, where each map is an isomorphism labelled by the corresponding lemma in Appendix~\ref{appendix:graded_mfs}. The matrix factorisations $\{ \bs{w}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams of type~\eqref{MFcrossings} with the orientations of the arrows reversed. Switching the role of the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
@@ -1653,7 +1653,7 @@ and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact tha
 \chi_0(\theta_2) &= \theta_2 - \frac{1}{2}(x_2 + y_2)\theta_1\, , \nonumber \\
 \chi_0(\theta_1\theta_2) &= \theta_1\theta_2\,, \label{eq:chi0defn}
 \end{align}
-where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - \pi_2)/(x_1-y_1)$ is as before, and we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given in \cite[p.50]{kr0401268} with their parameter~$\mu$ set to~$\frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
+where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ is as before, and we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given in \cite[p.50]{kr0401268} with their parameter~$\mu$ set to~$\frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
 
 \begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul$ defined by (\ref{eq:chi0defn}) is a morphism of graded matrix factorisations of degree two, which makes (\ref{eq:cons50}) commute.
 \end{lemma}
@@ -2072,7 +2072,7 @@ $$
 \KR_{N}(L) = \sum_{i,j\in\nZ} t^{i} q^j \dim_{\nQ}(H^{i,j}(L)) \, . 
 $$
 
-There is also a reduced version of Khovanov-Rozansky homology which a priori depends on the choice of a component~$K$ of the link~$L$. If~$i$ is a label assigned to an edge lying on~$K$ in the link diagram~$D$, then we set $\overline{C}(D,K)=\bigotimes_{c\in\mathcal C} C[c] \otimes_{R}(R/(x_{i}))$. The cohomology of $\overline{C}(D,K)$ is another link invariant, and we call it the \emph{reduced Khovanov-Rozansky homology $\overline{H}(L,K)$}. It is non-trivial in both $\nZ_{2}$-degrees, but there is a simple relation between them, as we will prove in Appendix~\ref{relationReducedUnreduced}: 
+There is also a reduced version of Khovanov-Rozansky homology which \emph{a priori} depends on the choice of a component~$K$ of the link~$L$. If~$i$ is a label assigned to an edge lying on~$K$ in the link diagram~$D$, then we set $\overline{C}(D,K)=\bigotimes_{c\in\mathcal C} C[c] \otimes_{R}(R/(x_{i}))$. The cohomology of $\overline{C}(D,K)$ is another link invariant, and we call it the \emph{reduced Khovanov-Rozansky homology $\overline{H}(L,K)$}. It is non-trivial in both $\nZ_{2}$-degrees, but there is a simple relation between them, as we will prove in Appendix~\ref{relationReducedUnreduced}: 
 \begin{lemma}
 \label{Z2gradingReduced}
 Let $\overline{H}^k(L,K)$ denote the component of $\overline{H}(L,K)$ in $\nZ_{2}$-degree~$k$. Then there is an isomorphism of $(\nZ\times\nZ)$-graded $\nQ$-vector spaces 
@@ -2147,7 +2147,7 @@ where we identify the invisible vertex on the left with the boundary of the web,
     
     // Define the web:
     list web = list(2, edgeList, mfs);                     // 2 for the number of vertices
-    webVerify(web);                                        // check web is a well-defined
+    webVerify(web);                                        // check web is well-defined
     
     // The compilation of this web gives the tensor product final = D x Q:
     // (A compilation strategy determines the order in which matrix factorisations are tensored, 
