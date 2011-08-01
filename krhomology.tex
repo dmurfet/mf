@@ -714,7 +714,7 @@ On the $\Ztwo$-folding of $\bigwedge F$ the map $\delta = \delta_+ + \delta_-$ h
 \section{Compiling decorated webs}
 \label{compilewebs}
 
-Khovanov-Rozansky homology is the categorification of the polynomial link invariant $P_{N}$ which was constructed from the representation theory of the $\sln$ quantum group in~\cite{RT1990}. $P_{N}$ is also the specialisation $\mathcal P|_{{a=q^N}}$ of the Homfly polynomial~$\mathcal P$. In this section we shall set the stage for the computation of $\KR_{N}$ by recalling how to calculate $P_{N}$ via the graph skein relations of~\cite{moy1998}. This will lead us to define the general notion of a web of matrix factorisations and its compilation, which we may think of as multiple defect fusion. 
+Khovanov-Rozansky homology is a categorification of the polynomial link invariant $P_{N}$ which was constructed from the representation theory of the $\sln$ quantum group in~\cite{RT1990} and is the specialisation $\mathcal P|_{{a=q^N}}$ of the Homfly polynomial~$\mathcal P$. In this section we set the stage for the computation of $\KR_{N}$ by recalling how to calculate $P_{N}$ via the graph skein relations of~\cite{moy1998}. This will lead us to define the general notion of a web of matrix factorisations and its compilation, which we may think of as multiple defect fusion. 
 
 According to~\cite{moy1998}, the construction of $P_{N}(L)$ for a link~$L$ is basically a two-step process. The first step starts from the link diagram of~$L$ and replaces each crossing 
 \begin{minipage}{0.48cm}
@@ -1090,9 +1090,9 @@ W_v = \sum_{e \in O_v} W_e - \sum_{e \in I_v} W_e \, .
 \]
 Let $\boldsymbol{x}_v$ denote the set of variables lying on edges incident to $v$, so that $W_v \in k[\boldsymbol{x}_v]$. Then $X_v$ is a finite rank graded matrix factorisation of $W_v$ over $k[\bs{x}_v]$, with a chosen homogeneous basis.
 \end{itemize}
-To any decoration we associate the total potential and total matrix factorisation, as follows. Let $\bs{x}$ be the set of all variables in the decoration. For each vertex $v$ there is the inclusion $\varphi_v: k[\bs{x}_v] \lto k[\bs{x}]$ and we define the \emph{total matrix factorisation} by fixing once and for all an ordering on the vertices, and thereby defining
+To any decoration we associate the total potential and total matrix factorisation, as follows. Let $\bs{x}$ be the set of all variables in the decoration. For each vertex $v$ there is the inclusion $\varphi_v: k[\bs{x}_v] \lto k[\bs{x}]$ and we define the \emph{total matrix factorisation} by fixing once and for all an ordering $V = \{ v_1, \ldots, v_s \}$ on the vertices, and thereby defining
 \[
-X := \bigotimes_v \varphi_v^*(X_v).
+X := \bigotimes_v \varphi_v^*(X_v) = X_{v_1} \otimes \cdots \otimes X_{v_s}\,.
 \]
 Let $O$ denote the set of edges ending on the boundary, and $I$ the edges beginning on the boundary. Since the internal potentials cancel, $X$ is a finite rank graded matrix factorisation over $k[\bs{x}]$ of the \emph{total potential}
 \[
@@ -1199,15 +1199,18 @@ Since the web is closed, the total matrix factorisation will be a finite rank $(
 The idea of \cite{kr0401268} is that for carefully chosen matrix factorisations $\Xbul, \Xcirc$ the complexes $C(\Gamma)$ categorify the MOY relations, i.\,e.~the cohomology $H(\Gamma)$ has trivial $\Ztwo$-grading and its $\ZZ$-graded Euler characteristic is $p_N(\Gamma)$, and categorical analogues of the identities \eqref{MOYdecomp1} hold. Following \cite{kr0401268} we will give the expressions for the $\Xcirc$ and $\Xbul$ which work in~\eqref{XbulXcirc} below; see also~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4}.
 \end{example}
 
+\begin{example} \textbf{todo} Put defect on boundary condition, defect on defect here, refer back to from example section. This helps motivate why we want to ignore the internal variables, or at least gives two motivations (computing cohomology, from KR example, and unphysical $y$-variable from defect example).
+\end{example}
+
 Putting aside for the moment the question of how to construct decorated webs with interesting total factorisations, let us consider instead how to \emph{compute} the total factorisation. For the remainder of this section we fix a general decorated web $\cat{F}$ and to avoid triviality we assume that there is at least one internal edge.
 
 Let $\intvar$ denote the set of all variables lying on internal edges (the \emph{internal} variables) and $\extvar$ the set of all variables lying on external edges (the \emph{external} variables). Clearly $W$ only depends on the external variables, so the canonical inclusion $\varphi: k[\extvar] \lto k[\bs{x}]$ induces a functor
 \[
 \varphi_*: \hmf(k[\bs{x}], W) \lto \HMF(k[\extvar], W)
 \]
-simply by taking a graded matrix factorisation of $W$ over $k[\bs{x}]$ and viewing it as a factorisation of $W$ over the smaller ring. We refer to this functor as the \emph{pushforward}. There are two things to note: firstly, that a finite-rank free module over $k[\bs{x}]$ will necessarily be of infinite-rank over $k[\extvar]$ so the pushforward produces infinite-rank matrix factorisations, and secondly that the case where $\extvar$ is empty, so $k[\extvar] = k$ and $W = 0$, is of primary interest for our later discussion of link homology.
+defined by taking a graded matrix factorisation of $W$ over $k[\bs{x}]$ and viewing it as a factorisation of $W$ over the smaller ring. We refer to this functor as the \emph{pushforward}. There are two things to note: firstly, that a finite-rank free module over $k[\bs{x}]$ will necessarily be of infinite-rank over $k[\extvar]$ so the pushforward produces infinite-rank matrix factorisations, and secondly that the case where $\extvar$ is empty and $W = 0$, so $k[\extvar] = k$, is of primary interest for our later discussion of link homology.
 
-It is well-known that because all involved singularities are isolated the pushforward of the total factorisation $\varphi_*(X)$, while infinite-rank, is still \emph{homotopy equivalent} to a finite-rank factorisation. Finding this equivalent finite-rank factorisation is what we mean by \emph{computing} the pushforward. The reader might like to consider the total factorisation $X = C(\Gamma)$ from Example \ref{MOYremark}, where $k[\extvar] = k$ and a finite-rank matrix factorisation equivalent to $\varphi_*(X)$ is the cohomology $H(\Gamma)$ viewed as a $(\ZZ \times \Ztwo)$-graded complex with zero differential. Since Khovanov-Rozansky homology will be built out of the $H(\Gamma)$'s, such computations (or rather, very similar computations of maps between $H(\Gamma)$'s induced by \emph{morphisms} of decorated webs) are the central motivation of this paper.
+It is well-known that because all involved singularities are isolated the pushforward of the total factorisation $\varphi_*(X)$, while infinite-rank, is still \emph{homotopy equivalent} to a finite-rank factorisation. Finding this equivalent finite-rank factorisation is what we mean by \emph{computing} the pushforward. The reader might like to consider the total factorisation $X = C(\Gamma)$ from Example \ref{MOYremark}, where $k[\extvar] = k$ and an example of a finite-rank matrix factorisation equivalent to $\varphi_*(X)$ is the cohomology $H(\Gamma)$ viewed as a $(\ZZ \times \Ztwo)$-graded complex with zero differential. Since Khovanov-Rozansky homology will be built out of the $H(\Gamma)$'s, such computations (or rather, very similar computations of maps between $H(\Gamma)$'s induced by \emph{morphisms} of decorated webs) are the central motivation of this paper.
 
 In practice this computation is hard to do, so we introduce an intermediate notion:
 
@@ -1220,94 +1223,123 @@ such that $\psi \circ \vartheta = 1_{\varphi_*(X)}$ and $\vartheta \circ \psi = 
 
 It is a short step from a compilation to a finite-rank representative for the pushforward:
 
-\begin{remark} Suppose that $(C, \idem)$ compiles $\cat{F}$. Since $W \in k[\extvar]$ is an isolated singularity the category $\hmf(k[\extvar],W)$ has split idempotents, so we can find a finite rank graded matrix factorisation $Y$ and morphisms $f,g$ as in the diagram
+\begin{remark} Suppose that $(C, \idem)$ compiles $\cat{F}$. The category $\hmf(k[\extvar],W)$ has split idempotents, and moreover idempotents in this category can be split algorithmically. So it is possible in practice to find a finite rank graded matrix factorisation $Y$ and morphisms $f,g$ as in the diagram
 \[
 \xymatrix@C+2pc{
-Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\varphi}
+Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
 }
 \]
-such that $f \circ g = 1_Y$ and $g \circ f = e$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence.
+such that $f \circ g = 1_Y$ and $g \circ f = e$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence. 
 \end{remark}
 
-We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But in a moment we will reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ which compiles $\cat{F}$. The point being that since~$C$ has finite rank we can algorithmically compute a splitting of~$\idem$ in $\operatorname{hmf}(k[\extvar],W)$, and this will give the sought-after finite-rank representative $Y$ of the previous remark.
+We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. The starting point for the construction is a long list of polynomials acting null-homotopically on $X$, and a corresponding list of null-homotopies.
 
-\newpage
+Let $v$ be a vertex, $e$ an edge beginning at $v$ and $x$ a variable lying on $e$. Then $(X_v, d_v)$ denotes the matrix factorisation assigned to $v$. Certainly none of the potentials associated to the other edges incident at $v$ involve $x$, so from the identity $d_v^2 = (\sum_{f \in O_v} W_f - \sum_{f \in I_v} W_f) \cdot 1_{X_v}$ we deduce that
+\[
+\partial_x(d_v) \cdot d_v + d_v \cdot \partial_x(d_v) = \partial_x(W_e) \cdot 1_{X_v}\,.
+\]
+That is, the polynomial $\partial_x(W_e)$ acts null-homotopically on $X_v$ with null-homotopy $\partial_x(d_v)$. But then the same is true of $X$, of which $X_v$ is a tensor factor, provided we interpret $\partial_x(d_v)$ as the map $1 \otimes \cdots \otimes \partial_x(d_v) \otimes \cdots \otimes 1$ on $X$ with suitable factors of the identity inserted, and Koszul signs.
 
-We claim that in $\operatorname{HMF}(R_{\text{ext}},W)$ the total matrix factorisation~$D$ is isomorphic to a direct summand of the finite-rank matrix factorisation $C=D\otimes_{R_{\text{int}}} J$, and we will obtain this summand as the splitting of an idempotent on~$C$. But let us first spell out how to explicitly obtain the finite-rank matrix factorisation~$C$ as the \emph{inflation of~$D$ by $J$}: In terms of the chosen bases, $D$ is a matrix of finite size with entries in $R=R_{\text{ext}}\otimes_{k}R_{\text{int}}$. Let us also choose a $k$-basis $\{\boldsymbol{x}_{\text{int}}^\alpha\}$ for $R_{\text{int}}$, and let $M_{\boldsymbol{x}_{\text{int}}^\alpha}$ be the scalar matrix representing the $k$-linear map of multiplication with $\boldsymbol{x}_{\text{int}}^\alpha$ on~$J$. We can write every entry of~$D$ in the form $\sum_{\alpha} p_{\alpha}  \boldsymbol{x}_{\text{int}}^\alpha$ with $p_{\alpha}\in R_{\text{ext}}$. Then the matrix $D\otimes _{R_{\text{int}}} J$ is obtained from~$D$ by replacing every such entry by the ``inflated'', matrix-valued entry $\sum_{\alpha} p_{\alpha} M_{\boldsymbol{x}_{\text{int}}^\alpha}$. 
+Let $I$ denote the ideal in $k[\intvar]$ generated by the set of polynomials $\bs{t} = \{\partial_x(W_e)\}_{x,e}$ where $e$ ranges over all \emph{internal} edges in the web and $x$ over each variable lying on $e$. We refer to $J = k[\intvar]/I$ as the \emph{internal Jacobi algebra} of the decorated web. It is obviously the tensor product over $k$ of the edge Jacobi algebras
+\[
+J = \bigotimes_{e} k[\bs{x}_e]/(\partial_{\bs{x}_e} W_e)
+\]
+where $e$ ranges over all internal edges, and so $J$ is finite-dimensional by hypothesis. Note that
+\[
+k[\bs{x}]/I = k[\extvar] \otimes_k J
+\]
+is a graded free $k[\extvar]$-module of finite rank, and consequently the quotient $X/\bs{t} X = X \otimes_{k[\bs{x}]} k[\bs{x}]/I$ is a finite rank graded matrix factorisation of $W$ over $k[\extvar]$. At this point we can apply the main result of \cite{dm1102.2957} to give an explicit idempotent
+\[
+\idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \prod_x \partial_x(d_v) \circ \At(X)^n\,,
+\]
+such that the pair $(X/\bs{t} X\langle n \rangle, \idem)$ compiles the web\footnote{Strictly speaking this is not correct, as the pair $(X/\bs{t} X\langle n \rangle, \idem)$ will split in the category of graded matrix factorisations not to $X$ but to $X\{ p \}$ for some nonzero integer $p$. We choose not to address this point since this is not the version of the idempotent that we actually compute with. In the second approach such subtleties will be taken into account.}. Here $n$ is the total number of internal variables, the product is over all internal variables $x$ lying on an edge with origin $v$, and $\At(X)$ is the Atiyah class. For theoretical purposes (for example if one wanted to pursue a residue formula for the Euler characteristic of $X$, or address the correlators of \cite{kr0404189}) this compilation is the right one. But for implementation on a computer it is better to choose the sequence $\bs{t}$ differently, so that the connections in the construction (see below) become very simple operations on polynomials.
+\\
 
-%Since the potentials are all isolated singularities, for each internal edge~$e$ there exists an integer $q_e > 0$ and a matrix $C_e$ over $k[\boldsymbol{x}_e]$ such that
-%\begin{equation}\label{eq:defnqsweb}
-%\boldsymbol{x}_e^{q_e} = C_e \cdot \partial_{\boldsymbol{x}_e} W_e \, ,
-%\end{equation}
-%where the left-hand side denotes a column matrix with $i$-th row $x_{e, i}^{q_e}$ and the right-hand side the product of $C_e$ with a column matrix with $i$-th row $\partial_{x_{e,i}} W_e$. In terms of these integers we define the finite-dimensional $k$-algebra
-%$$
-%J = R_{\text{int}}/(\boldsymbol{x}_{e}^{q_{e}})_{e\in E_{\text{int}}} \, .
-%$$
+Let $x$ be an internal variable lying on an edge $e$. Since $k[\bs{x}_e]/(\partial_{\bs{x}_e} W_e)$ is finite-dimensional, there is an integer $a > 0$ such that $x^a \in (\partial_{\bs{x}_e} W_e)$. For simplicity, let us assume that this $a$ has been chosen large enough so that it works for every internal variable\footnote{For $\sln$-homology, the integer $N$ will work: the partial derivatives $\partial_x(W_e)$ will be $N$-th powers of ring variables.}, and write
+\[
+x^a = \sum_{y \in \bs{x}_e} b_{xy} \cdot \partial_y(W_e)
+\]
+for some polynomials $b_{xy}$. If $e$ has origin $v$ and we define $\lambda_x = \sum_y b_{xy} \cdot \partial_y(d_v)$ then
+\[
+\lambda_x \cdot d_v + d_v \cdot \lambda_x = x^a \cdot 1_{X_v}\,.
+\]
+We also write $\lambda_x$ for the map $1 \otimes \cdots \otimes \lambda_x \otimes \cdots \otimes 1$ on $X$, which gives a null-homotopy for $x^a \cdot 1_X$. We can now apply the main theorem of \cite{dm1102.2957} to the sequence of polynomials $\intvar^a = \{ x^a \}_{x \in \intvar}$ and null-homotopies $\{ \lambda_x \}_{x \in \intvar}$. Again the formula for the idempotent will involve an Atiyah class, and to make this explicit we choose a connection on $X$. The algebra $k[\intvar]$ is a free module over subring $k[\intvar^a] = k[x_1^a, x_2^a, \ldots]$ with a basis given by monomials in the internal variables $\bs{x}^\beta$ where the degree of each variable $< a$, that is, $\beta_i < a$ for each $i$. From now on, let $\beta$ stand for such tuples of integers.
 
-%We claim that in $\operatorname{HMF}(R_{\text{ext}},W)$ the total matrix factorisation~$D$ is isomorphic to a direct summand of the finite-rank matrix factorisation $C=D\otimes_{R_{\text{int}}} J$, and we will obtain this summand as the splitting of an idempotent on~$C$. But let us first spell out how to explicitly obtain the finite-rank matrix factorisation~$C$ as the \emph{inflation of~$D$ by $J$}: In terms of the chosen bases, $D$ is a matrix of finite size with entries in $R=R_{\text{ext}}\otimes_{k}R_{\text{int}}$. Let us also choose a $k$-basis $\{\boldsymbol{x}_{\text{int}}^\alpha\}$ for $R_{\text{int}}$, and let $M_{\boldsymbol{x}_{\text{int}}^\alpha}$ be the scalar matrix representing the $k$-linear map of multiplication with $\boldsymbol{x}_{\text{int}}^\alpha$ on~$J$. We can write every entry of~$D$ in the form $\sum_{\alpha} p_{\alpha}  \boldsymbol{x}_{\text{int}}^\alpha$ with $p_{\alpha}\in R_{\text{ext}}$. Then the matrix $D\otimes _{R_{\text{int}}} J$ is obtained from~$D$ by replacing every such entry by the ``inflated'', matrix-valued entry $\sum_{\alpha} p_{\alpha} M_{\boldsymbol{x}_{\text{int}}^\alpha}$. 
+The K\"ahler differential on $k[\intvar^a]$ extends using this basis to a $k$-linear flat connection
+\[
+\nabla: k[\intvar] \lto k[\intvar] \otimes_{k[\intvar^a]} \Omega^1_{k[\intvar^a]/k}
+\]
+defined for a polynomial $f(\bs{x})$ in the internal variables by
+\[
+\nabla(f) = \sum_{x, \beta} \frac{\partial f_\beta}{\partial x^a} \bs{x}^\beta \ud (x^a)\,,
+\]
+where we write $f = \sum_\beta f_\beta \bs{x}^\beta$ for polynomials $f_\beta = f_\beta(\bs{x}^a)$ in $k[\intvar^a]$ and monomials $\bs{x}^\beta$ as above, restricted to degree $< a$ in each variable, and the sum is over all internal variables $x$. For example, if $x$ is an internal variable then
+\begin{align*}
+\nabla( 1 + x^2 + x^a + 2x^{a+2} ) &= \nabla( (1 + x^a) \cdot 1 + (1 + 2x^a) \cdot x^2 )\\
+&= (1 + 2x^2 ) \cdot \ud(x^a)\,.
+\end{align*}
+Tensoring with $k[\extvar]$ we get a flat $k$-linear connection (writing $\Omega^1$ for $\Omega^1_{k[\extvar,\intvar^a]/k[\extvar]}$)
+\[
+\nabla: k[\bs{x}] \lto k[\bs{x}] \otimes_{k[\extvar,\intvar^a]} \Omega^1\,,
+\]
+which is ``standard'' in the sense of \cite[Section 8.1]{dm1102.2957} (essentially, a hypothesis of zero characteristic). The upshot is that for each internal variable $x$ we have defined a $k[\extvar]$-linear operator $\partial_{x^a}$ on $k[\bs{x}]$. It is obvious that $\partial_{x^a}$ is, modulo $x^a$, just division by $x^a$ without remainder:
 
-%The reduction process from $D$ to the appropriate summand of $D\otimes_{R_{\text{int}}} J$ happens by differentiating~$D$ in all the ``internal directions''. There are two types of derivative, one associated to vertices lying on internal edges and another associated to internal edges themselves. For the first type we differentiate with respect to all the internal variables originating at a given vertex.
+\begin{lemma}\label{lemma:division_woremainder} Given $f \in k[\bs{x}]$ write $f = x^a g + h$ for a polynomial $h$ of $x$-degree $< a$. Then
+\[
+\partial_{x^a}(f) = x^a \cdot \partial_{x^a}(g) + g\,.
+\]
+\end{lemma}
 
-%\begin{definition} Let $v$ be a vertex with associated matrix factorisation $D_v$. Let $\{ \phi_1, \ldots, \phi_t \}$ denote the set of variables lying on internal edges with origin $v$. The $\phi_{i}$ are ordered using the total ordering on the edges. We define the following $R$-linear map on~$X$ of degree $t$:
-%$$
-%\partial_{\text{int}}(D_v)^{\wedge} = \frac{1}{t!} \sum_{\sigma \in S_t} \sgn(\sigma) \cdot %\partial_{\phi_{\sigma(1)}}(D_v) \circ \ldots \circ \partial_{\phi_{\sigma(t)}}(D_v) \, .
-%$$
-%We adopt the convention that if $t = 0$, so there are no internal edges with origin $v$, then $\partial_{\text{int}}(D_v)^{\wedge}$ just represents the identity map on~$X$.
-%\end{definition}
+Using our fixed homogeneous $k[\bs{x}]$-basis for $X$ we extend $\nabla$ to a flat $k$-linear connection
+\[
+\nabla: X \lto X \otimes_{k[\extvar,\intvar^a]} \Omega^1\,.
+\]
+The \emph{Atiyah class} $\At(X) := [d_X, \nabla]$ is a $k[\extvar,\intvar^a]$-linear morphism of matrix factorisations, which up to homotopy does not depend on the choice of connection. Composing the Atiyah class with itself $n$-times, where $n$ is the number of internal variables, gives a map $X \lto X \otimes \Omega^n \cong X$ where we implicitly choose an ordering $x_1, x_2, \ldots$ of the internal variables and identify $\ud(x_1^a) \wedge \ud(x_2^a) \wedge \cdots$ with $1$. This map $\At(X)^n$ induces a $k[\extvar]$-linear map on the quotient
+\[
+X/\intvar^a X = X \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\,
+\]
+which is a finite rank graded matrix factorisation of $W$ over $k[\extvar]$. The homotopies $\lambda_x$ also give $k[\extvar]$-linear maps on this quotient, and we define the $k[\extvar]$-linear endomorphism of $X/\intvar^a X$
+\begin{equation}
+\idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \prod_x \lambda_x \circ \At(X)^n\,.
+\end{equation}
+With this notation:
 
-%For the second type of derivative we need a way to index monomials in the internal variables. Each variable lies on some edge, and can therefore be indexed by a pair $(e,i)$ for some $i\in \{ 1,\ldots, n_{e}\}$. But we are going to mix variables from different edges, so it makes sense to define the set of all internal variables 
-%\[
-%\boldsymbol{\phi} = \{ \phi_1, \ldots, \phi_{\intvar} \} = \{ x_{e_1,1}, \ldots, x_{e_1,n_{e_1}}, x_{e_2,1}, \ldots, x_{e_2,n_{e_2}}, \ldots \}
-%\]
-%where we order the variables according to the edge ordering. Given a tuple $\alpha \in \mathds{N}^\intvar$ we write $\phi^\alpha$ for the corresponding monomial $\phi_1^{\alpha_1} \ldots \phi_\intvar^{\alpha_\intvar}$. In (\ref{eq:defnqsweb}) we produced a collection of integers $\{q_e\}_{e \in E_{\text{int}}}$, and a $k$-basis for~$J$ is formed by the monomials with sufficiently small degrees in each variable. Precisely, for $\alpha \in \mathds{N}^\intvar$ we write $\alpha < q$ if for each internal edge $e$ and each $i\in\{1,\ldots,n_{e}\}$ the integer associated to the variable $x_{e,i}$ by $\alpha$ is smaller than $ q_e$. Then it is clear that $\{ x^\alpha \}_{\alpha < q}$ forms a $k$-basis for~$J$, and we let $\pi: R_{\text{int}} \lto J$ be the projection and denote by
-%\begin{equation}
-%\sigma: J \lto R_{\text{int}}, \quad \sigma(x^\alpha) = x^\alpha \text{ for } \alpha < q
-%\end{equation}
-%the canonical $k$-linear embedding.  
+\begin{theorem}\label{theorem:compilation_main} There is a diagram in $\HMF(k[\extvar], W)$
+\begin{equation}
+\label{eq:compilation_main1}
+\xymatrix@C+3pc{
+\left(X/\intvar^a X\right)\{ n(c - 2a) \}\langle n \rangle \ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
+}
+\end{equation}
+with $\vartheta \circ \psi = \idem$ and $\psi \circ \vartheta = 1_{\varphi_*(X)}$. That is, the pair
+\[
+\left(\left(X/\intvar^a X\right)\{ n(c - 2a) \}\langle n \rangle, \idem\right)
+\]
+compiles the decorated web $\cat{F}$.
+\end{theorem}
+\begin{proof}
+This follows from main theorem of \cite{dm1102.2957}, with the caveat that the theorem just cited only discusses ungraded matrix factorisations. Let us justify why $\idem$ has degree zero; the same argument will show that specific maps $\vartheta$ and $\psi$ given in \emph{ibid.} both have degree zero.
 
-%\begin{definition} Given a variable $\phi_i$ lying on an internal edge $e$ let $g_i$ be the $k$-linear endomorphism of $R_{\text{int}}$ defined by
-%\[
-%g_i(f) = \text{division of $f$ by $\phi_i^{q_e}$ without remainder}. 
-%\]
-%This means that $g_{i}(f)$ is the polynomial determined by the unique decomposition $f=\phi_i^{q_e} g_i(f) + f'$ where~$f'$ has $\phi_i$-degree smaller than $ q_e$. 
-%\end{definition}
+For each internal variable $x$, $\lambda_x$ has bidegree $(-1, 2a - c)$ on $X$, so the product over $x$ has bidegree $(-n, n(2a - c))$. The degree of $\At(X)^n = [d_X, \nabla]^n$ has a contribution of $(n, nc)$ from the $n$ copies of $d_X$ plus a contribution from the operator $\partial_{x^a}$ for each internal variable; each such operator has degree $-2a$, so $\At(X)^n$ has bidegree $(n, n(c-2a))$ and the product $\idem$ has bidegree $(0,0)$.
+\end{proof}
 
-%\begin{definition} Given a matrix~$P$ representing an $R$-linear homogeneous map from~$X$ to itself there is a unique expression
-%\begin{equation}
-%P = \sum_{\alpha \in \mathds{N}^\intvar} P_\alpha \cdot \phi^\alpha
-%\end{equation}
-%where each $P_\alpha$ is a matrix over $\rext$. For an internal variable $\phi_i$ we define an $\rext$-linear map from $X \otimes_{R_{\text{int}}} J$ to itself of the same degree as~$P$ by its representative
-%$$
-%\delta_{\phi_i}(P) = \sum_{\alpha \in \mathds{N}^\intvar} P_\alpha \otimes \pi [g_i, \phi^\alpha] \sigma %\, ,
-%$$
-%in the chosen basis, and we set
-%$$
-%\delta(P)^{\wedge} = \frac{1}{n!} \sum_{\sigma \in S_n} \sgn(\sigma) \delta_{\phi_{\sigma(1)}}(P) \circ \ldots \circ \delta_{\phi_{\sigma(n)}}(P) \, .
-%$$
-%\end{definition}
+\begin{remark} A computer understands only matrices, so let us spell out how we write $\idem$ as a matrix. Let $\{ \xi_j \}_j$ denote our homogeneous basis for $X$ as a $k[\bs{x}]$-module and let $D$ be the matrix of $d_X$ in this basis. Then with $\bs{x}^\beta$ denoting a monomial in the internal variables with all exponents $\beta_i < a$, the set $\{\bs{x}^\beta\}_\beta$ gives a $k$-basis of $k[\intvar]/(\intvar^a)$ and therefore $\{ \bs{x}^\beta \xi_j \}_{\beta, j}$ is a $k[\extvar]$-basis for $X/\intvar^a X$.
 
-%To summarise, for each vertex $v$ we have produced a homogeneous $R$-linear map
-%$$
-%\partial_{\text{int}}(D_v)^{\wedge}: X \lto X \, ,
-%$$
-%and for each internal variable $\phi_i$ we have an odd $\rext$-linear map
-%$$
-%\delta_{\phi_i}(D): X \otimes_{R_{\text{int}}} J \lto X \otimes_{R_{\text{int}}} J \, .
-%$$
+The matrix $D'$ of the differential $d_X$ in this basis is obtained from $D$ by a process we call~\emph{inflation}: $D$ is a matrix of finite size with entries in $k[\bs{x}] = k[\extvar] \otimes_k k[\intvar]$. For any monomial $\bs{x}^\alpha$ in the internal variables let $M_{\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map of multiplication with $\bs{x}^\alpha$ on~$k[\intvar]/(\intvar^a)$. We can write every entry of~$D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$. Then $D'$ is obtained from $D$ by replacing every such entry by the ``inflated'', matrix-valued entry $\sum_{\alpha} p_{\alpha} M_{\bs{x}^\alpha}$. 
+The same kind of inflation gives us the matrix of $\lambda_x$ in the new basis.
 
-%We need only one more detail to state the result on the compilation of our web. Consider the permutation $\tau\in S_{n}$ with the property that $\{ \phi_{\tau(1)}, \ldots, \phi_{\tau(\intvar)} \}$ enumerates the internal variables so that if $i < j$ a variable lying on an edge beginning at $v_i$ always precedes a variable lying on an edge beginning at $v_j$, and if two edges $e_i, e_j$ with $i < j$ have the same origin then any variable lying on $e_i$ precedes every variable on $e_j$. 
+Next we index the variables $\intvar = \{x_1,x_2,\ldots,x_n\}$ and use \cite[Corollary 10.4]{dm1102.2957} to write
+\[
+\idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \sum_{\tau \in S_n} \textup{sgn}(\tau)\left\{ \prod_{i=1}^n \lambda_{x_i} \right\}[\partial_{\tau(1)}, d_X] \cdots [\partial_{\tau(n)}, d_X]
+\]
+where $\partial_j = \partial_{x_j}$. Let $\sigma: X/\intvar^a X \lto X$ be the $k[\extvar]$-linear map defined by $\sigma( \bs{x}^\beta \xi_j ) = \bs{x}^\beta \xi_j$ and let $\pi: X \lto X/\intvar^a X$ be the projection. The commutator $[\partial_j, d_X]$ on $X/\intvar^a X$ is equal to toad the composite $\pi \circ \partial_j \circ d_X \circ \sigma$. Let $\textup{div}_j(f)$ denote the division of $f$ by $x_j^a$ without remainder and for any monomial $\bs{x}^\alpha$ in the internal variables let $L_{j,\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map on $k[\intvar]/(\intvar^a)$ which is multiplication by $\bs{x}^\alpha$ followed by $\textup{div}_j$. Since $\pi \circ \partial_j = \pi \circ \textup{div}_j$ (Lemma~\ref{lemma:division_woremainder}) the matrix of $[\partial_j, d_X]$ in the new basis is obtained from $D$ by writing every entry of $D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$ and then replacing such an entry by the matrix $\sum_{\alpha} p_{\alpha} L_{j,\bs{x}^\alpha}$.
 
-%\begin{theorem}[(\cite{dm1102.2957})] The product
-%\begin{equation}
-%\label{idempotent}
-%\idem = (-1)^{\binom{n}{2}} \sgn(\tau) \cdot \Big( \prod_{e\in E_{\text{int}}} \det(C_{e})\Big) \cdot %\Big(\prod_{v \in V} \partial_{\text{int}}(D_v)^{\wedge}\Big) \cdot \delta(D)^{\wedge}
-%\end{equation}
-%is an endomorphism of $X \otimes_{R_{\text{int}}} J$ and the pair $(D \otimes_{R_{\text{int}}} J, \idem)\langle n\rangle$ compiles the web.
-%\end{theorem}
+Multiplying together the matrices for the $\lambda_{x_j}$ and $[\partial_j, d_X]$ we have the matrix for $\idem$.
+\end{remark}
 
 Note that in general~$\idem$ is an idempotent in $\operatorname{hmf}(k[\extvar],W)$, i.\,e.~only up to homotopy. However, we can for example use the method of~\cite[Section~3.6]{LambekRingsModules} to find a representative~$\idem'$ of the class of~$\idem$ that is strictly idempotent. Then one can compute a splitting of~$\idem'$ using standard methods. 
 
-We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a quasi-isomorphic finite-rank matrix factorisation. We have implemented this construction in the computer algebra system Singular, and we refer to~\cite{cmWebCompileCode} for a detailed description as well as several commented examples. In Section~\ref{simpleexamples} we will illustrate how our implementation can be put to work for a few simple webs and link invariants. 
+We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. We have implemented this construction in the computer algebra system Singular, and we refer to~\cite{cmWebCompileCode} for a detailed description as well as several commented examples. In Section~\ref{simpleexamples} we will illustrate how our implementation can be put to work for a few simple webs and link invariants. 
 
 As we will discuss in Section~\ref{compres} we have used this implementation to compute Khovanov-Rozansky homology for several links. We stress however that our construction can just as well compute invariants associated to arbitrary tangles in~\cite{kr0401268} (which are still special cases of decorated webs), and we can explicitly compute the fusion of any topological defects in any Landau-Ginzburg model with potentials that are isolated singularities.
 
@@ -3600,11 +3632,16 @@ M.~Khovanov, \emph{A categorification of the {J}ones polynomial}, Duke Math. J.
   \textbf{101} (2000), 359--426,
   \href{http://arxiv.org/abs/math/9908171}{[math.QA/9908171]}.
 
-\bibitem[KR07]{kr0701333}
+\bibitem[KR07a]{kr0701333}
 M.~Khovanov and L.~Rozansky, \emph{Virtual crossings, convolutions and a
   categorification of the {$\operatorname{SO}(2N)$} {K}auffman polynomial},
   Journal of G\"okova Geometry Topology \textbf{1} (2007), 116--214,
   \href{http://arxiv.org/abs/math/0701333}{[math.QA/0701333]}.
+
+\bibitem[KR07b]{kr0404189}
+M.~Khovanov and L.~Rozansky, \emph{Topological Landau-Ginzburg models on the world-sheet foam},
+  Adv. Theor. Math. Phys. \textbf{11} (2007), 233--259,
+  \href{http://arxiv.org/abs/hep-th/0404189}{[hep-th/0404189]}.
 
 \bibitem[KR08a]{kr0401268}
 M.~Khovanov and L.~Rozansky, \emph{Matrix factorizations and link homology}, Fund. Math.
