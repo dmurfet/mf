@@ -1159,11 +1159,13 @@ As we will discuss in Section~\ref{compres} we have used this implementation to 
 
 In this section we give a description of Khovanov and Rozansky's $\sln$ link homology. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, generalising the two-step approach of \cite{moy1998}. 
 
-The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations that lift the MOY relations~\eqref{MOYdecomp1}. As announced in Example~\ref{MOYremark} this is done by upgrading~$\Gamma$ to a special kind of state web. In particular one assigns matrix factorisations~$\Xcirc$ and~$\Xbul$ to the two types of resolutions of crossings in a link diagram, and we will explain their origin. Tensoring together all matrix factorisations in the state web will produce a graded complex whose homology $H(\Gamma)$ is the desired graded vector space.
+The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state graphs $\Gamma$, by constructing a graded $\QQ$-vector space $H(\Gamma)$ whose Euler characteristic is $p_N(\Gamma)$, and which satisfies certain relations that lift the MOY relations~\eqref{MOYdecomp1}. As announced in Example~\ref{MOYremark} this is done by upgrading~$\Gamma$ to a special kind of state web. We will explain the origin of the matrix factorisations~$\Xcirc$ and~$\Xbul$ assigned to the two types of resolutions of crossings in a link diagram, and the total matrix factorisation of the web constructed in this way will produce a graded complex whose homology $H(\Gamma)$ is the desired graded vector space.
 
-In the second step one has to consider maps $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. These are viewed as two-term complexes of matrix factorisations, and they correspond to the differences on the right-hand sides of the identities in~\eqref{graphreduction} in the categorification. Associating these two-term complexes to the over- and under-crossings of a link diagram allows for the construction of the homological link invariant $H(L)$ as the cohomology of the total complex. This categorifies the $\sln$ polynomial $P_{N}(L)$ in the sense that the Poincar\'e polynomial $\KR_{N}(L)$ of $H(L)$ specialises to $P_{N}(L)=\KR_{N}(L)|_{t=-1}$. 
+In the second step one considers morphisms of matrix factorisations $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. Viewed as two-term complexes of matrix factorisations these morphisms categorify the differences on the right-hand side of the identities in~\eqref{graphreduction}. Associating these two-term complexes to the over- and under-crossings of a link diagram allows for the construction of the homological link invariant $H(L)$ as the cohomology of the total complex. This categorifies the $\sln$ polynomial $P_{N}(L)$ in the sense that the Poincar\'e polynomial $\KR_{N}(L)$ of $H(L)$ specialises to $P_{N}(L)=\KR_{N}(L)|_{t=-1}$. 
 
-We are going to tell the story slightly differently to \cite{kr0401268}, by taking as our starting point an adjunction arising from symmetric polynomials. Following Rouquier~\cite{RouquierMexico}, one can build autoequivalences of triangulated categories out of the special kinds of adjunctions that we obtain. In this setting we will identify the two-term complexes $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$ as representations of the autoequivalences that give rise to categorified link invariants. 
+The construction as originally given in \cite{kr0401268} has many beautiful properties but can strike the newcomer as looking unmotivated. Why these matrix factorisations, and why these maps? Things becomes clearer as one reads on \cite{k0510265,RouquierMexico} but in order to make this apparent from the outset we are going to take as our starting point a simple adjunction involving symmetric polynomials. For the experts this will be a familiar story, but along the way there are some technical innovations which may still be of interest.
+
+% In this setting we will identify the two-term complexes $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$ as representations of the autoequivalences that give rise to categorified link invariants. 
 
 \subsection{Symmetric polynomials and adjunction}
 
@@ -1192,13 +1194,13 @@ so that, up to a grading shift, the left and right adjoints of $\varphi_*$ are n
 
 The units and counits of these adjunctions will give rise to the morphisms $\chi_0, \chi_1$ between $\Xbul, \Xcirc$ mentioned above. The units are described for a graded $A$-module $N$ and graded $S$-module $M$ by
 \begin{align*}
-\eta: N & \lto \varphi_* \varphi^*(N) = \varphi_*( S \otimes_A N ) \, , \qquad & n & \longmapsto 1 \otimes n \, ,\\
-\eta': M & \lto \varphi^* \varphi_*(M)\{-2\} = S \otimes_A \varphi_*(M) \{-2\} \, , \qquad & m & \longmapsto \frac{1}{2}(x_1-x_2) \otimes m + 1 \otimes \frac{1}{2}(x_1 - x_2) \cdot m
+\eta: N & \lto \varphi_* \varphi^*(N) \, , \qquad & n & \longmapsto 1 \otimes n \, ,\\
+\eta': M & \lto \varphi^* \varphi_*(M)\{-2\} \, , \qquad & m & \longmapsto \frac{1}{2}(x_1-x_2) \otimes m + 1 \otimes \frac{1}{2}(x_1 - x_2) \cdot m
 \end{align*}
 and the counits are given by
 \begin{align*}
-\varepsilon: S \otimes_A \varphi_*(M) = \varphi^* \varphi_*(M) & \lto M \, , \qquad & b \otimes m & \longmapsto b \cdot m \, ,\\
-\varepsilon': \varphi_*(S \otimes_A N)\{-2\} = \varphi_*\varphi^*(N)\{-2\} & \lto N \, , \qquad & b \otimes n & \longmapsto \psi(b)(1) \cdot n \, .
+\varepsilon: \varphi^* \varphi_*(M) & \lto M \, , \qquad & b \otimes m & \longmapsto b \cdot m \, ,\\
+\varepsilon': \varphi_*\varphi^*(N)\{-2\} & \lto N \, , \qquad & b \otimes n & \longmapsto \psi(b)(1) \cdot n \, .
 \end{align*}
 To make the transition from modules to matrix factorisations, we present the biadjunction in terms of graded bimodules and bimodule maps. It is clear that $\varphi^*$ is given by tensoring with the $S$-$A$-bimodule ${}_S S_A$, and likewise $\varphi_*$ is represented by the $A$-$S$-bimodule ${}_A S_S$. Hence the composite $\varphi^* \varphi_*$ is represented by ${}_S S \otimes_A S {}_S$ and $\varphi_* \varphi^*$ by ${}_A S {}_A$. Let us abuse notation and reuse $\eta, \eta', \varepsilon, \varepsilon'$ for the morphisms between these bimodules which represent the units
 \begin{align*}
@@ -1242,7 +1244,7 @@ Now we make the jump to matrix factorisations. If $V$ is a homogeneous symmetric
 \hmf(A, V) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, V) \ar@<1ex>[l]^{\varphi_*} \, .
 }
 \]
-Let us fix for example the polynomial $V = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite{RouquierMexico} applies to produce an interesting autoequivalence of $\K^b( \hmf(S, V) )$. Namely, tensoring with the complexes of graded bimodules
+Let us fix for example the polynomial $V = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite{RouquierMexico,rickard} applies to produce an interesting autoequivalence of $\K^b( \hmf(S, V) )$. Namely, tensoring with the complexes of graded bimodules
 \begin{equation}\label{eq:bimod_cpx1}
 \xymatrix{
 0 \ar[r] & S \otimes_A S \ar[r]^-{\varepsilon} & \underline{S} \ar[r] & 0 \, ,
@@ -1261,6 +1263,9 @@ determines endofunctors on $\K^b( \hmf(S, V) )$ which are mutually inverse equiv
 which says that a graded matrix factorisation of $V$ remembers the asymptotic part of a graded free resolution of a graded $R$-module. While it makes sense to define functors on $\hmf(S,V)$ in terms of tensoring with the graded bimodules $S \otimes_A S$ and $S$, the functors thus defined will only depend on the asymptotic part of the resolutions of these bimodules over $R$ (see Appendix \ref{subsection:kernelfunctors}). It is therefore more economical to replace the bimodules in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}) by the matrix factorisations which remember this asymptotic data, and the bimodule morphisms by the morphisms of matrix factorisations coming from the asymptotic part of the lifted morphism to the graded free resolutions.
 
 This process is known as \emph{stabilisation}, and will take place in the next subsection. We will stabilise $S \otimes_A S$ to a matrix factorisation $\Xbul$ and $S$ to $\Xcirc$. The morphisms $\varepsilon$ and $\eta'$ will stabilise to morphisms $\chi_1: \Xbul \lto \Xcirc$ and $\chi_0: \Xcirc \lto \Xbul$, respectively, and with these stabilisations in hand we will be ready to define the $\sln$ link homology.
+
+\begin{remark} The bimodule $S \otimes_A S$ is the simplest kind of \emph{Soergel bimodule}. The connection between the triply-graded $\sln$ link homology and Soergel bimodules was uncovered in \cite{k0510265} and similar ideas give the link to the bigraded $\sln$ link homology considered here; see Webster \cite[Section 2.3]{w0610650} where the theory is presented in terms of stabilisation of Soergel bimodules. The link to Soergel bimodules is also explained very clearly in \cite{b1105.0702}.
+\end{remark}
 
 %We can view the stabilisation as a kind of truncation of the bimodule picture elaborated above, and in fact these truncations together form a kind of filtration as we vary the integer $N$. Indeed if one proceeds in the above line, one will end up constructing the triply graded Khovanov-Rozansky homology of \cite{??}, and the relationship between this homology and the truncations at level $N$ (the $\sln$-homologies) is encoded by the spectral sequence of~\cite{r0607544}.
 
@@ -1311,12 +1316,10 @@ By construction these are both matrix factorisations of $W$ over $R$. In the $\m
 & \pi_{\circ}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
 \end{align*}
 
-We prove in Appendix \ref{section:morphismpert} that
-
 \begin{proposition} The morphisms $\pi_{\bullet}$ and $\pi_{\circ}$ are the stabilisations of $R/(\bs{s})$ and $R/(\bs{t})$, respectively.
 \end{proposition}
 
-More importantly, the functors determined by these matrix factorisations agree with the functors determined by the bimodules: we check in Appendix \ref{subsection:kernelfunctors} that both squares implicit in the diagram
+That $\pi_{\circ}$ stabilises the diagonal is a theorem of Dyckerhoff \cite{d0904.4713} and the same argument settles related cases like $\pi_{\bullet}$. We give a new proof in  Appendix \ref{section:morphismpert} using different methods; methods that will help us stabilise morphisms later. What Dyckerhoff actually shows (and we recall in Appendix \ref{subsection:kernelfunctors}) is that the functors determined by these matrix factorisations agree with the functors determined by the bimodules, that is, both squares implicit in the diagram
 \[
 \xymatrix@C+3pc@R+1pc{
 \hmf(\QQ[x_1,x_2], x_1^{N+1} + x_2^{N+1})\ar[d]_-{\inc}\ar@<1ex>[r]^-{- \otimes R/(\bs{s})}
@@ -1327,11 +1330,11 @@ More importantly, the functors determined by these matrix factorisations agree w
 & \HMF(\QQ[y_1,y_2], y_1^{N+1} + y_2^{N+1})
 }
 \]
-commute up to natural isomorphism. Recall that $- \otimes R/(\bs{t})$ is the identity functor (up to relabelling variables) and $- \otimes R/(\bs{s}) = \varphi^* \varphi_*$ is the result of restricting to symmetric polynomials and coming back up. Having now obtained a description of these two functors on $\hmf(S, x_1^{N+1} + x_2^{N+1})$ in terms of matrix factorisations, it remains to stabilise the complexes in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}), that is, we need to stabilise the maps $\varepsilon$ and $\eta'$. 
+commute up to natural isomorphism; see also \cite{b1105.0702}. Here $- \otimes R/(\bs{t})$ is the identity functor (up to relabelling variables) and $- \otimes R/(\bs{s}) = \varphi^* \varphi_*$ is the result of restricting to symmetric polynomials and coming back up. Having now obtained a description of these two functors on $\hmf(S, x_1^{N+1} + x_2^{N+1})$ in terms of matrix factorisations, it remains to stabilise the complexes in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}), that is, we need to stabilise the maps $\varepsilon$ and $\eta'$. 
 
 The first observation is that, by the proposition just stated, the map
 \[
-\Hom(1,\pi_{\circ}): \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/(\boldsymbol{t})) \,,
+\Hom(1,\pi_{\circ}): \Hom_R(\Xbul, \Xcirc) \lto \Hom_R(\Xbul, R/(\boldsymbol{t}))
 \]
 is a quasi-isomorphism. By definition the morphism $\chi_1: \Xbul \lto \Xcirc$ stabilising $\varepsilon$ is the cohomology class of $\Hom_R(\Xbul, \Xcirc)$ corresponding under the above quasi-isomorphism to the composite
 \begin{equation}\label{eq:cons4}
@@ -1347,11 +1350,11 @@ where the second map comes about because of the inclusion of ideals $(\boldsymbo
 }
 \end{equation}
 
-We know abstractly that $\chi_1$ exists. To write it down as a matrix one could study the equations which say that the matrix commutes with the differentials and makes (\ref{eq:cons5}) commute. This appears to be the approach of \cite{kr0401268}, where explicit matrices are presented without explanation. A more conceptual explanation was given in Khovanov and Rozansky's second paper on the subject~\cite{kr0505056} and in~\cite{w0907.0695}. But these constructions are rather specific to the special kind of Koszul factorisations that arise in Khovanov-Rozansky homology. 
+We know abstractly that $\chi_1$ exists. With patience one can construct by hand an explicit matrix for such a map, and this appears to be the approach of \cite{kr0401268} where the matrices are presented without explanation; see also ~\cite[Section 2]{kr0505056} and \cite[Example 2.3.7]{b1105.0702}. In~\cite[Section 7.5]{w0907.0695} a method is developed for stabilising module maps of the form $R/(\bs{r}) \lto R/(\bs{r}')$ where $\bs{r},\bs{r}'$ are regular sequences and $(\bs{r}) \subseteq (\bs{r}')$, and this can obviously be used to give an explicit matrix for $\chi_1$.
 
-We give another conceptual derivation by finding an explicit inverse of $\Hom(1,\pi_{\circ})$ and evaluating it on (\ref{eq:cons4}). Besides avoiding the need for explicit polynomials $u_i$ in the foundations, our approach has the advantage that it can be adapted to stabilise other morphisms into the diagonal.
+We are going to give yet another derivation, based on the observation that the same perturbation techniques of \cite{dm1102.2957} that go into the construction of the idempotent in Section \ref{compilewebs} also provide an explicit homotopy inverse of $\Hom(1,\pi_{\circ})$, and therefore a matrix for $\chi_1$. The techniques can be used to lift any morphism $Y \lto R/(\bs{t})$ to a morphism $Y \lto \Xcirc$, and with other applications in mind we feel it is worth including the argument here. The statement is given by the next lemma, but we have relegated the details to Appendix \ref{section:morphismpert}. 
 
-The proof of the following lemma is technical and we have relegated it to Appendix \ref{section:morphismpert}. For the statement we need to introduce the following polynomial:
+For the statement we need to introduce the following polynomial:
 \[
 \gamma = \frac{\partial u_1}{\partial y_1} - \frac{\partial u_1}{\partial y_2} - \frac{1}{2} \frac{\partial u_2}{\partial y_2}(x_2 + y_2) + \frac{1}{2} \frac{\partial u_2}{\partial y_1}(x_1 + y_1) \, .
 \]
@@ -3209,6 +3212,8 @@ Suppose that $R$ and $R/(\bb)$ are projective $S$-modules. Then the sequence of 
 is not just exact over $S$, but is even \emph{split} exact. From the numerous short split exact sequences we construct a map $\sigma$ and homotopy $h$ satisfying (\ref{eq:homotopycond}).
 \end{remark}
 
+As has already been mentioned, the next corollary (with a different proof) is due to Dyckerhoff \cite{d0904.4713}. There are related results in the literature on link homology; see \cite[Section 3.2]{r0607544} and \cite[Section 1.2]{w0610650}.
+
 \begin{corollary} If $R$ contains a field then $\pi: \{\bs{a},\bs{b}\} \lto R/(\bb)$ is a stabilisation. That is, for any finite rank matrix factorisation $Y$ of $W$ the map (\ref{eq:app_stab1}) is a quasi-isomorphism.
 \end{corollary}
 \begin{proof}
@@ -3344,6 +3349,10 @@ D.~Bar-Natan, \emph{Khovanov {H}omology for {K}nots and {L}inks with up to 11
   \href{http://www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}{http:%
 //www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}.
 
+\bibitem[Bec11]{b1105.0702}
+H.~Becker, \emph{Khovanov-Rozansky homology via Cohen-Macaulay approximations and Soergel bimodules},
+  \href{http://arxiv.org/abs/1105.0702}{[arXiv:1105.0702]}.
+
 \bibitem[BR07]{br0707.0922}
 I.~Brunner and D.~Roggenkamp, \emph{B-type defects in {L}andau-{G}inzburg
   models}, JHEP \textbf{0708} (2007), 093,
@@ -3388,6 +3397,10 @@ N.~M. Dunfield, S.~Gukov, and J.~Rasmussen, \emph{The {S}uperpolynomial for
 \bibitem[DKR]{dkr1107.0495}
 A.~Davydov, L.~Kong, and I.~Runkel, \emph{Field theories with defects and the
   centre functor}, \href{http://arxiv.org/abs/1107.0495}{[arXiv:1107.0495]}.
+
+\bibitem[Dyc]{d0904.4713}
+T.~Dyckerhoff, \emph{Compact generators in categories of matrix factorizations},
+  \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}
 
 \bibitem[DM]{dm1102.2957}
 T.~Dyckerhoff and D.~Murfet, \emph{Pushing forward matrix factorisations},
@@ -3443,6 +3456,11 @@ A.~Kawauchi, \emph{A {S}urvey of {K}not {T}heory}, Birkh\"auser, 1996.
 M.~Khovanov, \emph{A categorification of the {J}ones polynomial}, Duke Math. J.
   \textbf{101} (2000), 359--426,
   \href{http://arxiv.org/abs/math/9908171}{[math.QA/9908171]}.
+
+\bibitem[Kho07]{k0510265}
+M.~Khovanov, \emph{Triply-graded link homology and Hochschild homology of Soergel bimodules},
+  Int. Journal of Math. \textbf{18} (2007), 869--885,
+  \href{http://arxiv.org/abs/math/0510265}{[math.GT/0510265]}.
 
 \bibitem[KR07a]{kr0701333}
 M.~Khovanov and L.~Rozansky, \emph{Virtual crossings, convolutions and a
@@ -3552,7 +3570,11 @@ V.~Turaev, \emph{The {Y}ang-{B}axter equation and invariants of links}, Invent.
 V.~Turaev, \emph{Quantum invariants of knots and 3-manifolds}, de Gruyter, 2010,
   2nd edition.
 
-\bibitem[Web]{w1005.4559}
+\bibitem[Web06]{w0610650}
+B.~Webster, \emph{Khovanov-Rozansky homology via a canopolis formalism},
+  \href{http://arxiv.org/abs/math/0610650}{[math.GT/0610650]}.
+
+\bibitem[Web10]{w1005.4559}
 B.~Webster, \emph{Knot invariants and higher representation theory {II}: the
   categorification of quantum knot invariants},
   \href{http://arxiv.org/abs/1005.4559}{[arXiv:1005.4559]}.
