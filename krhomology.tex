@@ -1299,19 +1299,19 @@ and due to the symmetry of $W$ there are polynomials $u_1,u_2$ such that
 \begin{equation}\label{eq:cons2}
 W = u_1 \cdot ( y_1 + y_2 - x_1 - x_2 ) + u_2 \cdot ( y_1 y_2 - x_1 x_2 ) \, .
 \end{equation}
-Then in the notation of Section \ref{prelim:cyclic_koszul}, we define
+Then in the notation of Section \ref{prelim:cyclic_koszul}, we define graded matrix factorisations of $W$ over $R$ by
 \begin{align}
 \Xbul &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \} \, , \nonumber \\
 \Xcirc &= \{ (w_1, w_2) \, , (t_1, t_2) \}\,. \label{XbulXcirc}
 \end{align}
 Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x_{i}$'s with the $y_{i}$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$. We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just mentioned.
 
-Recall the model of the Koszul complex from Section \ref{prelim:cyclic_koszul}: we set $F = R \theta_1 \oplus R \theta_2$, where the $\theta_{i}$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
+Recall the model of the Koszul complex from Section \ref{prelim:cyclic_koszul}: we set $F = R \theta_1 \oplus R \theta_2$, where the $\theta_i$'s are formal symbols of $\Ztwo$-degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
 \begin{align*}
 \Xbul & = ( \bigwedge F, \beta_+ + \beta_{-}) \, , & \beta_+ & = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-) \, , & \beta_{-} & = \Big(\sum_i u_i \theta_i\Big) \wedge (-) \, , \\
 \Xcirc & = ( \bigwedge F, \delta_+ + \delta_{-}) \, , & \delta_+ & = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-) \, , & \delta_{-} & = \Big(\sum_i w_i \theta_i\Big) \wedge (-) \, .
 \end{align*}
-By construction these are both matrix factorisations of $W$ over $R$. In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
+In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
 \begin{align*}
 & \pi_{\bullet}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
 & \pi_{\circ}: \Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \lto {\bigwedge}^0 F/\Im(\delta_+^0) = R/(\boldsymbol{t}) \, .
@@ -1393,24 +1393,23 @@ Next we discuss the morphism $\chi_0$ stabilising $\eta'$. Recall that $\eta': S
 \Xbul\{-2\} \ar[r]_{\pi_{\bullet}} & R/(\boldsymbol{s})\{-2\} \, .
 }
 \end{equation}
-Rather than use perturbation theory, which is much more complicated in this case, we obtain $\chi_0$ by dualising $\chi_1$ to get a morphism $(\chi_1)\mdual: \Xcirc\mdual \lto \Xbul\mdual$. Using the standard properties of cyclic Koszul complexes collected in Appendix \ref{appendix:graded_mfs}, we can rewrite the dual of a cyclic Koszul complex as a cyclic Koszul complex; up to signs and a change of variables $\Xcirc$ and $\Xbul$ are self-dual, so we get a morphism $\Xcirc \lto \Xbul$. This will turn out to be the desired map $\chi_0$.
+Rather than use perturbation theory, which is much more complicated in this case, we obtain $\chi_0$ by dualising $\chi_1$ to get a morphism $(\chi_1)\mdual: \Xcirc\mdual \lto \Xbul\mdual$. Using the standard properties of cyclic Koszul complexes collected in Appendix \ref{appendix:graded_mfs}, we can rewrite the dual of a cyclic Koszul complex as a cyclic Koszul complex; up to signs, grading shifts, and a change of variables $\Xcirc$ and $\Xbul$ are self-dual, so we get a morphism $\Xcirc \lto \Xbul$. This will turn out to be the desired map $\chi_0$.
 
 More carefully, we define $\chi_0'$ to be the morphism making the diagram
-\[
-\xymatrix@C+2pc{
+\begin{equation}\label{eq:chi1dualischi0}
+\xymatrix@C+3pc{
 \{ \bs{w}, \bs{t} \}\mdual = \Xcirc\mdual \ar[r]^-{\chi_1\mdual} & \Xbul\mdual = \{ \bs{u}, \bs{s} \}\mdual \ar[d]^-{(\ref{lemma:cyclickos1})}\\
 \{ -\bs{t}, \bs{w} \} \ar[u]^-{(\ref{lemma:cyclickos1})} & \{ -\bs{s}, \bs{u} \} \ar[d]^-{(\ref{lemma:cyclickos2})}\\
-\{ -\bs{w}, \bs{t} \} \ar[u]^-{(\ref{lemma:cyclickos2})} & \{ -\bs{u}, \bs{s} \} \ar[d]^-{(\ref{lemma:cyclickos3})}\\
-\{ \bs{w}, -\bs{t} \} \ar@{-->}[r]_-{\chi_0'} \ar[u]^-{(\ref{lemma:cyclickos3})} & \{ \bs{u}, -\bs{s} \}
+\{ -\bs{w}, \bs{t} \}\{ 2N - 2 \} \ar[u]^-{(\ref{lemma:cyclickos2})} & \{ -\bs{u}, \bs{s} \} \{ 2N - 4 \} \ar[d]^-{(\ref{lemma:cyclickos3})}\\
+\{ \bs{w}, -\bs{t} \}\{ 2N - 2 \} \ar@{-->}[r]_-{\chi_0'} \ar[u]^-{(\ref{lemma:cyclickos3})} & \{ \bs{u}, -\bs{s} \}\{ 2N - 4 \}
 }
-\]
-commute, where each map is an isomorphism labelled by the corresponding lemma in Appendix~\ref{appendix:graded_mfs}. The matrix factorisations $\{ \bs{w}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams of type~\eqref{MFcrossings} with the orientations of the arrows reversed. Switching the role of the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
-% TODO: What to say about gradings? Also in \chi_1
+\end{equation}
+commute, where each map is an isomorphism labelled by the corresponding lemma in Appendix~\ref{appendix:graded_mfs}. The matrix factorisations $\{ \bs{w}, -\bs{t} \}$ and $\{ \bs{u}, -\bs{s} \}$ are what we would assign to the diagrams~\eqref{MFcrossings} with the orientation reversed. Switching the $x$'s and $y$'s will therefore give us a map between $\Xbul$ and $\Xcirc$.
 
-Let $\phi: R \lto R$ be the automorphism with $\phi(x_i) = y_i$ and $\phi(y_i) = x_i$. It is clear that $\phi$ sends $t_i$ to $-t_i$, $s_i$ to $-s_i$ and $W$ to $-W$, so that by pulling back along $\phi$ (equivalently, applying $\phi$ to the entries of all matrices) we get a morphism of matrix factorisations of $W$: 
+Let $\phi: R \lto R$ be the $k$-automorphism with $\phi(x_i) = y_i$ and $\phi(y_i) = x_i$. It is clear that $\phi$ sends $t_i$ to $-t_i$, $s_i$ to $-s_i$ and $W$ to $-W$, so that by pulling back along $\phi$ (equivalently, applying $\phi$ to the entries of all matrices) we get a morphism of matrix factorisations of $W$: 
 \[
 \xymatrix{
-\Xcirc = \{ \bs{w}, \bs{t} \} = \{ \phi\bs{w}, -\phi \bs{t} \} = \phi^*\{ \bs{w}, -\bs{t} \} \ar[rr]^-{\phi^* \chi'_0} & & \phi^*\{ \bs{u}, -\bs{s} \} = \{ \phi \bs{u}, -\phi \bs{s} \} = \{ \bs{u}, \bs{s} \} = \Xbul \, ,
+\Xcirc = \{ \phi\bs{w}, -\phi \bs{t} \} = \phi^*\{ \bs{w}, -\bs{t} \} \ar[rr]^-{\phi^* \chi'_0}\{-2\} & & \phi^*\{ \bs{u}, -\bs{s} \}\{2\} = \{ \phi \bs{u}, -\phi \bs{s} \}\{-2\} = \Xbul\{-2\} \, ,
 }
 \]
 and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact that we have chosen the $u_i$ such that $\phi(u_i) = u_i$. If one is careful with signs, it is straightforward to deduce from the above the explicit form of $\chi_0$:
@@ -1422,7 +1421,7 @@ and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact tha
 \end{align}
 where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ is as before, and we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given in \cite[p.50]{kr0401268} with their parameter~$\mu$ set to~$\frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
 
-\begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul$ defined by (\ref{eq:chi0defn}) is a morphism of graded matrix factorisations of degree two, which makes (\ref{eq:cons50}) commute.
+\begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul\{-2\}$ of (\ref{eq:chi0defn}) is a morphism of graded matrix factorisations making (\ref{eq:cons50}) commute.
 \end{lemma}
 
 \subsection{Khovanov-Rozansky homology}
@@ -1492,7 +1491,7 @@ we obtain a resolution~$\Gamma$ of~$D$, and if we associate matrix factorisation
 \draw[ -> ] (230:1) arc (230:130:1); 
 \end{tikzpicture}
 \end{minipage}  
-modulo 2. Similarly, the parity of a link is the parity of any resolution~$\Gamma$ of its link diagram. 
+modulo 2. The parity of a link is the parity of any of its resolutions~$\Gamma$.
 
 We noted in Example~\ref{MOYremark} that only special choices of matrix factorisations will lead to a categorification of the MOY relations~\eqref{MOYdecomp1}. As suggested by our notation and as proved in~\cite{kr0401268}, assigning~$\Xcirc$ to
 \begin{minipage}{0.48cm}
@@ -1509,7 +1508,7 @@ We noted in Example~\ref{MOYremark} that only special choices of matrix factoris
 \node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= white] {};
 \end{tikzpicture}
 \end{minipage} 
- and~$\Xbul$ to 
+ and~$\Xbul\{-1\}$ to 
 \begin{minipage}{0.48cm}
 \begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
 \node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= black] {};
@@ -1523,7 +1522,7 @@ We noted in Example~\ref{MOYremark} that only special choices of matrix factoris
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage} 
-does the job. Precisely, if we denote by $C(\Gamma)$ the total matrix factorisation of the state web~$\Gamma$, then the categorified version of~\eqref{MOYdecomp1} is
+does the job. That is, if we promote every resolution $\Gamma$ to a state web using these local assignments, and write $C(\Gamma)$ for the total matrix factorisation of the state web~$\Gamma$, then there are a series of homotopy equivalences of matrix factorisations which together give a categorified version of~\eqref{MOYdecomp1}
 \begin{align}
 \label{MOYcatDecomp1}&
 C \bigg( 
@@ -1786,7 +1785,7 @@ C[\begin{minipage}{0.48cm}
 \end{tikzpicture}
 \end{minipage}] & =\!\!
 \xymatrix{%
-\Big( 0 \vphantom{\underline{X}} \ar[r] & \underline{\Xcirc}\{1-N\} \ar[r]^-{\chi_{0}} & \Xbul\{-N\} \vphantom{\underline{X}} \ar[r] & 0 \vphantom{\underline{X}} \Big) 
+\Big( 0 \vphantom{\underline{X}} \ar[r] & \underline{\Xcirc}\{1-N\} \ar[r]^-{\chi_{0}} & \Xbul\{-N-1\} \vphantom{\underline{X}} \ar[r] & 0 \vphantom{\underline{X}} \Big) 
 }
 ,  \\
 C[\begin{minipage}{0.48cm}
@@ -1802,7 +1801,7 @@ C[\begin{minipage}{0.48cm}
 \end{tikzpicture}
 \end{minipage}] & =\!\!
 \xymatrix{%
-\Big(0 \vphantom{\underline{X}} \ar[r] & \Xbul \vphantom{\underline{X}}\{N\} \ar[r]^-{\chi_{1}} & \underline{\Xcirc} \{N-1\}\ar[r] & 0 \vphantom{\underline{X}} \Big) 
+\Big(0 \vphantom{\underline{X}} \ar[r] & \Xbul \vphantom{\underline{X}}\{N-1\} \ar[r]^-{\chi_{1}} & \underline{\Xcirc} \{N-1\}\ar[r] & 0 \vphantom{\underline{X}} \Big) 
 }
 \end{align*}
 where we suppress the variable dependence of the labelled crossings 
@@ -1830,7 +1829,7 @@ where we suppress the variable dependence of the labelled crossings
 \draw[->] (0) -- (tl); 
 \end{tikzpicture}
 \end{minipage} 
-and matrix factorisations $\Xcirc, \Xbul$, and we define the \emph{Khovanov-Rozansky complex}
+and matrix factorisations $\Xcirc, \Xbul$, and the grading shifts are inserted to match (\ref{graphreduction}). Finally, we define the \emph{Khovanov-Rozansky complex}
 $$
 C(D) = \bigotimes_{c\in\mathcal C} C[c] \, .
 $$
@@ -2931,8 +2930,6 @@ $
 
 \section{Properties of graded matrix factorisations}\label{appendix:graded_mfs}
 
-\textbf{todo} Cite relevant places in KR.
-
 Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank graded matrix factorisation of $W \in R_{2c}$ over $R$ then the \emph{dual factorisation} is $X\mdual = \Hom_R(X,R)$, which factorises $-W$. More explicitly, the dual factorisation is the pair
 \[
 \xymatrix@C+3pc{
@@ -2966,7 +2963,7 @@ In particular if $X, Y$ are finite-rank graded matrix factorisations we have
 &\cong \Hom_R(X, \Hom_R(Y,R)) \nonumber \\
 &\cong \Hom_R(X,R) \otimes \Hom_R(Y,R) = X\mdual \otimes Y\mdual \, . \label{eq:dual_tensor}
 \end{align}
-Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign: $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product with no signs.
+Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign: $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product.
 \\
 
 In the following let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring, and $\bs{a}, \bs{b}$ sequences of $n$ homogeneous elements in $R$ with $\deg(a_i) + \deg(b_i) = 2c$. If $\bs{a} = (a_1,\ldots,a_n)$ then $- \bs{a}$ denotes $(-a_1, \ldots, -a_n)$. In describing maps between cyclic Koszul complexes we use the symbols $\theta_i$ introduced in Section \ref{prelim:cyclic_koszul}.
@@ -2989,21 +2986,21 @@ Using Remark \ref{remark:dual_koszul_cyclic} we have
 \begin{lemma}\label{lemma:cyclickos2} There is a canonical isomorphism of graded matrix factorisations
 \begin{equation}
 \label{abba}
-\{ - \bs{a}, \bs{b} \} \cong \{ -\bs{b}, \bs{a} \}\langle n \rangle \Big\{ \sum_i \deg(a_i) - nc \Big\} \, .
+\{ - \bs{b}, \bs{a} \} \cong \{ -\bs{a}, \bs{b} \}\langle n \rangle \Big\{ \sum_i \deg(a_i) - nc \Big\} \, .
 \end{equation}
 \end{lemma}
 \begin{proof}
-Let us begin with $a,b$ homogeneous such that $\deg(a) + \deg(b) = 2c$. Then $\{ a, b \}\langle 1 \rangle$ is
+Let us begin with $a,b$ homogeneous such that $\deg(a) + \deg(b) = 2c$. Then $\{ b, a \}\langle 1 \rangle$ is
 \[
 \xymatrix{
 R\{ \deg(a) - c \} \ar[r]^-{-a} & R \ar[r]^-{-b} & R\{ \deg(a) - c \}
 }
 \]
-and shifting the grading by $\{ c - \deg(a) \}$ we have $\{ a, b \}\langle 1 \rangle\{ c - \deg(a) \}$ is equal to $\{ -b, -a \}$. Thus
+and shifting the grading by $\{ c - \deg(a) \}$ we have $\{ b, a \}\langle 1 \rangle\{ c - \deg(a) \}$ is equal to $\{ -a, -b \}$. Thus
 \begin{align*}
-\{ - \bs{a}, \bs{b} \} &\cong \{ -a_1, b_1 \} \otimes \ldots \otimes \{ -a_n, b_n \}\\
-&\cong \{ -b_1, a_1 \}\langle 1 \rangle\{ \deg(a_1) - c \} \otimes \ldots \otimes \{ -b_n, a_n \}\langle 1 \rangle\{ \deg(a_n) - c \}\\
-&\cong \{ -\bs{b}, \bs{a} \}\langle n \rangle\big\{ \sum_i \deg(a_i) - nc \big\}.
+\{ - \bs{b}, \bs{a} \} &\cong \{ -b_1, a_1 \} \otimes \ldots \otimes \{ -b_n, a_n \}\\
+&\cong \{ -a_1, b_1 \}\langle 1 \rangle\{ \deg(a_1) - c \} \otimes \ldots \otimes \{ -a_n, b_n \}\langle 1 \rangle\{ \deg(a_n) - c \}\\
+&\cong \{ -\bs{a}, \bs{b} \}\langle n \rangle\big\{ \sum_i \deg(a_i) - nc \big\}.
 \end{align*}
 \end{proof}
 
@@ -3160,9 +3157,9 @@ Given a braid graph $\Gamma$ suppose that we can find a region of type $\Gamma_{
 
 It remains to treat the case where we can only find a region of type $\Gamma_{\text{I}}$, the catch being that $x_i$ may not be an external variable to the decomposition: $i$ may be the loop contracted away by the MOY relation. But in this case we may assume that, apart from some circles which we may ignore, the edge $i$ is the rightmost edge in the braid graph. 
 
-In this situation we consider the dual braid graph $\Gamma^{\lor}$ where we reverse the orientation of all the edges. Note that for some sequences of polynomials $\boldsymbol{a},\boldsymbol{b}$ and an integer $c$ we have $C(\Gamma) = \{ \boldsymbol{a}, \boldsymbol{b} \}\{c\}$, and using~\eqref{abba} it follows that
+In this situation we consider the dual braid graph $\Gamma^{\lor}$ where we reverse the orientation of all the edges. Note that for some sequences of polynomials $\boldsymbol{a},\boldsymbol{b}$ and an integer $p$ we have $C(\Gamma) = \{ \boldsymbol{a}, \boldsymbol{b} \}\{c\}$, and using~\eqref{abba} it follows that (\textbf{todo} check here)
 \[
-C(\Gamma^{\lor}) = C(\Gamma)\mdual = \{ \boldsymbol{a}, \boldsymbol{b} \}\{c\}\mdual \cong \{ \bs{a}, -\bs{b} \}\{ \sum_i \deg(a_i) - m(N+1) - c \}\,.
+C(\Gamma^{\lor}) = C(\Gamma)\mdual = \{ \boldsymbol{a}, \boldsymbol{b} \}\{p\}\mdual \cong \{ \bs{a}, -\bs{b} \}\{ \sum_i \deg(a_i) - m(N+1) - p \}\,.
 \]
 But by~\eqref{Habba} $\{ \bs{a}, -\bs{b} \}$ has the same cohomology as $\{ \bs{a}, \bs{b} \}$, so up to grading shifts the cohomology of $\Gamma$ and $\Gamma^{\lor}$ agree. It therefore suffices to prove the claim for $\Gamma^{\lor}$. This follows by the above argument, since $i$ is the leftmost edge and can therefore never be involved in a $\Gamma_{\text{I}}$-relation.
 \end{proof}
