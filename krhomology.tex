@@ -334,7 +334,7 @@ To see the problem more clearly, let us consider the general situation of two ma
 
 Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular, see~\cite{cmWebCompileCode}. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. As a special case we can explicitly compute the action of any functor on categories of finite-rank matrix factorisations which is given by a kernel. Another application is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
 
-Our method could as well be straightforwardly applied to the categorification~\cite{kr0701333} of the Kauffman polynomial and to virtual links; this will be discussed elsewhere. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
+Our method could as well be straightforwardly applied to the categorification~\cite{kr0701333} of the Kauffman polynomial and to virtual links (TODO: check and mention Wu); this will be discussed elsewhere. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
 
 \medskip
 
@@ -400,7 +400,7 @@ From this point of view, once one has replaced each crossing in a link diagram w
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage}
-, we can interpret the resulting graph as a slice of a worldsheet with defect lines: To every edge~$i$ we associate a Landau-Ginzburg model with potential $x_{i}^{N+1}$, and to every point we associate a defect. To a point on an edge~$i$ we assign the invisible defect, i.\,e.~the unit object~$I$ of the monoidal category $\operatorname{MF}_{\text{bi}}(x_{i}^{N+1})$ of~\cite{cr0909.4381}, and to a point that is a vertex we associate the matrix factorisation~$\Xbul$ as before. This perspective coincides with the construction of~\cite{kr0401268} as the matrix factorisation~$\Xcirc$ associated to 
+, we can interpret the resulting graph as a slice of a worldsheet foam~\cite{kr0404189}(TODO: add [Mackaay, Stosic, Vaz]) with defect lines: To every edge~$i$ we associate a Landau-Ginzburg model with potential $x_{i}^{N+1}$, and to every point we associate a defect. To a point on an edge~$i$ we assign the invisible defect, i.\,e.~the unit object~$I$ of the monoidal category $\operatorname{MF}_{\text{bi}}(x_{i}^{N+1})$ of~\cite{cr0909.4381}, and to a point that is a vertex we associate the matrix factorisation~$\Xbul$ as before. This perspective coincides with the construction of~\cite{kr0401268} as the matrix factorisation~$\Xcirc$ associated to 
 \begin{minipage}{0.3cm}
 \begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
 \draw[ ->, shift={(-2.5,0)} ]  (-50:1) arc (-50:50:1); 
@@ -864,7 +864,7 @@ Instead of immediately moving on to the details of the categorification, let us 
 However, the general case is also of interest, e.\,g.~for the multiple fusion of topological defects in Landau-Ginzburg models. 
 
 \begin{definition}\label{defwebs}
-A \emph{web} $\cat{F}$ is an oriented graph with a nonempty set of vertices $V$ and a nonempty set of oriented edges $E$. Edges are allowed to begin or end (but not both) on an auxiliary ``vertex'' which we call the \emph{boundary}, but we stress that whenever we refer to vertices we never mean the boundary. We allow loops and multiple edges. An edge is \emph{internal} if it does not begin or end on the boundary, and \emph{external} otherwise. 
+A \emph{web} $\cat{F}$ is an oriented graph with a nonempty set of vertices $V$ and a nonempty set of oriented edges $E$. Edges are allowed to begin or end (but not both) on an auxiliary ``vertex'' which we call the \emph{boundary}, but we stress that whenever we refer to vertices we never mean the boundary. An edge is \emph{internal} if it does not begin or end on the boundary, and \emph{external} otherwise. 
 
 Let $k$ be a field of characteristic zero and $c \ge 0$. A \emph{decoration} of $\cat{F}$ is an assignment as follows:
 \begin{itemize}
@@ -1019,7 +1019,9 @@ It is well-known that because all involved singularities are isolated the pushfo
 
 In practice this computation is hard to do, so we introduce an intermediate notion:
 
-\begin{definition} Consider a pair $(C, \idem)$ consisting of a finite-rank graded matrix factorisation $C$ of $W$ over $k[\extvar]$ together with an idempotent endomorphism $\idem$ of $C$ (that is, $\idem^2$ is homotopy equivalent to $\idem$). We say that the decorated web $\mathcal F$ above \emph{compiles} to $(C,\idem)$ if there exist morphisms
+\begin{definition}
+\label{def:compilation}
+Consider a pair $(C, \idem)$ consisting of a finite-rank graded matrix factorisation $C$ of $W$ over $k[\extvar]$ together with an idempotent endomorphism $\idem$ of $C$ (that is, $\idem^2$ is homotopy equivalent to $\idem$). We say that the decorated web $\mathcal F$ above \emph{compiles} to $(C,\idem)$ if there exist morphisms
 \[
 \psi: C \lto \varphi_*(X) \, , \qquad \vartheta: \varphi_*(X) \lto C
 \]
@@ -1028,7 +1030,9 @@ such that $\psi \circ \vartheta = 1_{\varphi_*(X)}$ and $\vartheta \circ \psi = 
 
 It is a short step from a compilation to a finite-rank representative for the pushforward:
 
-\begin{remark} Suppose that $(C, \idem)$ compiles $\cat{F}$. The category $\hmf(k[\extvar],W)$ has split idempotents, and moreover idempotents in this category can be split algorithmically. So it is possible in practice to find a finite-rank graded matrix factorisation $Y$ and morphisms $f,g$ as in the diagram
+\begin{remark} 
+\label{compileAndSplit}
+Suppose that $(C, \idem)$ compiles $\cat{F}$. The category $\hmf(k[\extvar],W)$ has split idempotents, and moreover idempotents in this category can be split algorithmically. So it is possible in practice to find a finite-rank graded matrix factorisation $Y$ and morphisms $f,g$ as in the diagram
 \[
 \xymatrix@C+2pc{
 Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
@@ -1037,9 +1041,9 @@ Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) 
 such that $f \circ g = 1_Y$ and $g \circ f = \idem$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence. 
 \end{remark}
 
-We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. The starting point for the construction is a long list of polynomials acting null-homotopically on $X$, and a corresponding list of null-homotopies.
+We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Then we can always split~$\idem$ in as in $\hmf(k[\extvar],W)$, and hence we can explicitly compute the finite-rank reduction (called~$Y$ in Remark~\ref{compileAndSplit}) of tensor products of matrix factorisations. Since the main step to do this is the compilation, later we will use the phrase ``compiling a web'' synonymously for ``reducing the total (tensor product) matrix factorisation of a web to finite rank''. 
 
-Let $v$ be a vertex, $e$ an edge beginning at $v$ and $x$ a variable lying on $e$. Then $(X_v, d_v)$ denotes the matrix factorisation assigned to $v$. Certainly none of the potentials associated to the other edges incident at $v$ involve $x$, so from the identity $d_v^2 = (\sum_{f \in O_v} W_f - \sum_{f \in I_v} W_f) \cdot 1_{X_v}$ we deduce that
+The starting point for the construction is a long list of polynomials acting null-homotopically on $X$, and a corresponding list of null-homotopies. Let $v$ be a vertex, $e$ an edge beginning at $v$ and $x$ a variable lying on $e$. Then $(X_v, d_v)$ denotes the matrix factorisation assigned to $v$. Certainly none of the potentials associated to the other edges incident at $v$ involve $x$, so from the identity $d_v^2 = (\sum_{f \in O_v} W_f - \sum_{f \in I_v} W_f) \cdot 1_{X_v}$ we deduce that
 \[
 \partial_x(d_v) \cdot d_v + d_v \cdot \partial_x(d_v) = \partial_x(W_e) \cdot 1_{X_v}\,.
 \]
@@ -1280,7 +1284,7 @@ is a quasi-isomorphism for every finite-rank graded matrix factorisation $Y$ of 
 %The presentation of the matrix factorisations is standard, but we give a new approach to stabilisation of the morphisms by inverting a certain canonical quasi-isomorphism. Our construction is no better for computations: we simply recover the explicit maps of \cite{kr0401268}, but we feel it is worth including here since the \emph{ad hoc} nature of the maps in the originl paper is a major turn off for newbies (\emph{rephrase}).
 
 
-Clearly the stabilisation, if it exists, is unique up to homotopy equivalence. Take $S = \QQ[x_1,x_2]$ as before and $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \leftrightarrow x_4,x_3,x_1,x_2$. Fix an integer $N > 0$ and define
+Clearly the stabilisation, if it exists, is unique up to homotopy equivalence. Take $S = \QQ[x_1,x_2]$ as before and $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \longleftrightarrow x_4,x_3,x_1,x_2$. Fix an integer $N > 0$ and define
 \begin{align*}
 W &= y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}\,,\\
 t_i &= y_i - x_i\,,\\
@@ -1291,7 +1295,7 @@ As in Lemma \ref{lemma:bimodules_as_algebras} we identify $S \otimes_A S$ and $S
 \begin{equation}\label{eq:cons1}
 W = w_1 t_1 + w_2 t_2 \, , \qquad w_i = \frac{y_i^{N+1} - x_i^{N+1}}{y_i - x_i} \, ,
 \end{equation}
-and due to the symmetry of $W$ (see Appendix \ref{appendix:upoly}) there are polynomials $u_1,u_2$ such that
+and due to the symmetry of $W$ there are polynomials $u_1,u_2$ such that
 \begin{equation}\label{eq:cons2}
 W = u_1 \cdot ( y_1 + y_2 - x_1 - x_2 ) + u_2 \cdot ( y_1 y_2 - x_1 x_2 ) \, .
 \end{equation}
@@ -1300,16 +1304,13 @@ Then in the notation of Section \ref{prelim:cyclic_koszul}, we define
 \Xbul &= \{ (u_1, u_2)\, , (y_1 + y_2 - x_1 - x_2, y_1 y_2 - x_1 x_2) \} \, , \nonumber \\
 \Xcirc &= \{ (w_1, w_2) \, , (t_1, t_2) \}\,. \label{XbulXcirc}
 \end{align}
-Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x_{i}$'s with the $y_{i}$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$ for $i \in \{ 1,2 \}$ (see Appendix \ref{appendix:upoly}). We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just mentioned.
+Of course there is some indeterminacy in the choice of the $u_i$'s, but up to homotopy equivalence the factorisation $\Xbul$ does not depend on the choice of $u_i$'s (this is a standard fact, see for example \cite{??}, and will also be clear from our description of $\Xbul$ as the solution of a universal problem). Moreover, we can and do assume that the polynomials $u_i$ are invariant under interchanging the $x_{i}$'s with the $y_{i}$'s, that is, we arrange that $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$. We will manage to avoid discussing the explicit form of these polynomials, making use only of (\ref{eq:cons2}) and the symmetry just mentioned.
 
 Recall the model of the Koszul complex from Section \ref{prelim:cyclic_koszul}: we set $F = R \theta_1 \oplus R \theta_2$, where the $\theta_{i}$'s are formal symbols of degree $-1$. Then both $\Xbul$ and $\Xcirc$ have underlying $\Ztwo$-graded module $\bigwedge F$ and the differentials are given by
-\[
-\Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \, , \qquad \beta_+ = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-) \, , \qquad \beta_{-} = \Big(\sum_i u_i \theta_i\Big) \wedge (-) \, ,
-\]
-where $s_1 = y_1 + y_2 - x_1 - x_2$ and $s_2 = y_1 y_2 - x_1 x_2$, and
-\[
-\Xcirc = ( \bigwedge F, \delta_+ + \delta_{-}) \, , \qquad \delta_+ = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-) \, , \qquad \delta_{-} = \Big(\sum_i w_i \theta_i\Big) \wedge (-) \, .
-\]
+\begin{align*}
+\Xbul & = ( \bigwedge F, \beta_+ + \beta_{-}) \, , & \beta_+ & = \Big(\sum_i s_i \theta_i^*\Big) \neg\, (-) \, , & \beta_{-} & = \Big(\sum_i u_i \theta_i\Big) \wedge (-) \, , \\
+\Xcirc & = ( \bigwedge F, \delta_+ + \delta_{-}) \, , & \delta_+ & = \Big(\sum_i t_i \theta_i^*\Big) \neg\, (-) \, , & \delta_{-} & = \Big(\sum_i w_i \theta_i\Big) \wedge (-) \, .
+\end{align*}
 By construction these are both matrix factorisations of $W$ over $R$. In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $\pm$ increase/decrease degree, so it is clear that there are morphisms of linear factorisations (viewing modules as factorisations of zero)
 \begin{align*}
 & \pi_{\bullet}: \Xbul = ( \bigwedge F, \beta_+ + \beta_{-}) \lto {\bigwedge}^0 F/\Im(\beta_+^0) = R/(\boldsymbol{s}) \, ,\\
@@ -1319,18 +1320,18 @@ By construction these are both matrix factorisations of $W$ over $R$. In the $\m
 \begin{proposition} The morphisms $\pi_{\bullet}$ and $\pi_{\circ}$ are the stabilisations of $R/(\bs{s})$ and $R/(\bs{t})$, respectively.
 \end{proposition}
 
-That $\pi_{\circ}$ stabilises the diagonal is a theorem of Dyckerhoff \cite{d0904.4713} and the same argument settles related cases like $\pi_{\bullet}$. We give a new proof in  Appendix \ref{section:morphismpert} using different methods; methods that will help us stabilise morphisms later. What Dyckerhoff actually shows (and we recall in Appendix \ref{subsection:kernelfunctors}) is that the functors determined by these matrix factorisations agree with the functors determined by the bimodules, that is, both squares implicit in the diagram
+That $\pi_{\circ}$ stabilises the diagonal is a theorem of Dyckerhoff \cite{d0904.4713} and the same argument settles related cases like $\pi_{\bullet}$. We give a new proof in  Appendix \ref{section:morphismpert} using different methods; methods that will help us stabilise morphisms later. What Dyckerhoff actually shows (and we recall in Appendix \ref{subsection:kernelfunctors}) is that the functors determined by these matrix factorisations agree with the functors determined by the bimodules, that is, both squares implicit in the diagram (TODO: try to fix $X$'s below)
 \[
 \xymatrix@C+3pc@R+1pc{
-\hmf(\QQ[x_1,x_2], x_1^{N+1} + x_2^{N+1})\ar[d]_-{\inc}\ar@<1ex>[r]^-{- \otimes R/(\bs{s})}
-\ar@<-1ex>[r]_-{- \otimes R/(\bs{t})}
+\hmf(\QQ[x_1,x_2], x_1^{N+1} + x_2^{N+1})\ar[d]_-{\inc}\ar@<1ex>[r]^-{(-) \otimes R/(\bs{s})}
+\ar@<-1ex>[r]_-{(-) \otimes R/(\bs{t})}
 & \hmf(\QQ[y_1,y_2], y_1^{N+1} + y_2^{N+1})\ar[d]^-{\inc}\\
-\HMF(\QQ[x_1,x_2], x_1^{N+1} + x_2^{N+1})\ar@<1ex>[r]^-{- \otimes \Xbul}
-\ar@<-1ex>[r]_-{- \otimes \Xcirc}
+\HMF(\QQ[x_1,x_2], x_1^{N+1} + x_2^{N+1})\ar@<1ex>[r]^-{(-) \otimes \Xbul}
+\ar@<-1ex>[r]_-{(-) \otimes \Xcirc}
 & \HMF(\QQ[y_1,y_2], y_1^{N+1} + y_2^{N+1})
 }
 \]
-commute up to natural isomorphism; see also \cite{b1105.0702}. Here $- \otimes R/(\bs{t})$ is the identity functor (up to relabelling variables) and $- \otimes R/(\bs{s}) = \varphi^* \varphi_*$ is the result of restricting to symmetric polynomials and coming back up. Having now obtained a description of these two functors on $\hmf(S, x_1^{N+1} + x_2^{N+1})$ in terms of matrix factorisations, it remains to stabilise the complexes in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}), that is, we need to stabilise the maps $\varepsilon$ and $\eta'$. 
+commute up to natural isomorphism; see also \cite{b1105.0702}. Here $(-) \otimes R/(\bs{t})$ is the identity functor (up to relabelling variables) and $(-) \otimes R/(\bs{s}) = \varphi^* \varphi_*$ is the result of restricting to symmetric polynomials and coming back up. Having now obtained a description of these two functors on $\hmf(S, x_1^{N+1} + x_2^{N+1})$ in terms of matrix factorisations, it remains to stabilise the complexes in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}), that is, we need to stabilise the maps $\varepsilon$ and $\eta'$. 
 
 The first observation is that, by the proposition just stated, the map
 \[
@@ -1350,11 +1351,9 @@ where the second map comes about because of the inclusion of ideals $(\boldsymbo
 }
 \end{equation}
 
-We know abstractly that $\chi_1$ exists. With patience one can construct by hand an explicit matrix for such a map, and this appears to be the approach of \cite{kr0401268} where the matrices are presented without explanation; see also ~\cite[Section 2]{kr0505056} and \cite[Example 2.3.7]{b1105.0702}. In~\cite[Section 7.5]{w0907.0695} a method is developed for stabilising module maps of the form $R/(\bs{r}) \lto R/(\bs{r}')$ where $\bs{r},\bs{r}'$ are regular sequences and $(\bs{r}) \subseteq (\bs{r}')$, and this can obviously be used to give an explicit matrix for $\chi_1$.
+We know abstractly that $\chi_1$ exists. With patience one can construct by hand an explicit matrix for such a map, and this appears to be the approach of \cite{kr0401268} where the matrices are presented without explanation; see also~\cite[Section 2]{kr0505056} and \cite[Example 2.3.7]{b1105.0702}. In~\cite[Section 7.5]{w0907.0695} a method is developed for stabilising module maps of the form $R/(\bs{r}) \lto R/(\bs{r}')$ where $\bs{r},\bs{r}'$ are regular sequences and $(\bs{r}) \subseteq (\bs{r}')$, and this can obviously be used to give an explicit matrix for $\chi_1$.
 
-We are going to give yet another derivation, based on the observation that the same perturbation techniques of \cite{dm1102.2957} that go into the construction of the idempotent in Section \ref{compilewebs} also provide an explicit homotopy inverse of $\Hom(1,\pi_{\circ})$, and therefore a matrix for $\chi_1$. The techniques can be used to lift any morphism $Y \lto R/(\bs{t})$ to a morphism $Y \lto \Xcirc$, and with other applications in mind we feel it is worth including the argument here. The statement is given by the next lemma, but we have relegated the details to Appendix \ref{section:morphismpert}. 
-
-For the statement we need to introduce the following polynomial:
+We are going to give yet another derivation, based on the observation that the same perturbation techniques of \cite{dm1102.2957} that go into the construction of the idempotent in Section \ref{compilewebs} also provide an explicit homotopy inverse of $\Hom(1,\pi_{\circ})$, and therefore a matrix for $\chi_1$. The techniques can be used to lift any morphism $Y \lto R/(\bs{t})$ to a morphism $Y \lto \Xcirc$, and with other applications in mind we feel it is worth including the argument here. The statement is given by the next lemma (but we have relegated the details to Appendix~\ref{section:morphismpert}), for which we need to introduce the following polynomial:
 \[
 \gamma = \frac{\partial u_1}{\partial y_1} - \frac{\partial u_1}{\partial y_2} - \frac{1}{2} \frac{\partial u_2}{\partial y_2}(x_2 + y_2) + \frac{1}{2} \frac{\partial u_2}{\partial y_1}(x_1 + y_1) \, .
 \]
@@ -1873,6 +1872,9 @@ and we see that the \emph{compiled map} $g'\circ(\Phi\otimes 1)\circ f$ is what~
 
 In this way we can compile every differential $d_{\chi}$ in $C(D)$ and compute Khovanov-Rozansky homology $H(L)$. Its reduced version is obtained in the exact same fashion after one sets $x_{i}=0$ everywhere in $C(D)$. We have implemented these constructions to automatically compute the invariants $\KR_{N}$ and $\overline{\KR}_{N}$ in Singular, see~\cite{cmWebCompileCode} and Example~\ref{KRexample} below.
 
+(TODO: comment that one could also use categorified MOY relations to compute KR invariants, but webs are cooler\dots)
+
+
 \section{Simple examples}
 \label{simpleexamples}
 
@@ -1954,9 +1956,9 @@ This is done by the following code (which outputs the correct $(2\times 2)$-matr
 \begin{verbatim}
     option(noredefine);option(noloadLib);option(redSB);
     LIB "linkhom.lib";
-    ring RR=(0,r),(x(1),x(2),y(1),y(2)),dp;                // define ring Q[x1,x2,y1,y2] to which
-    minpoly = rootofUnity(3);                              // we adjoin a 3-rd root of unity r
-    poly minpolyblow = x(1)^2 + x(1) + 1;
+    ring RR=(0,r),(x(1),x(2),y(1),y(2)),dp;                // Define ring Q[x1,x2,y1,y2] to which
+    minpoly = rootofUnity(3);                              // we adjoin a 3-rd root of unity r, 
+    poly minpolyblow = x(1)^2 + x(1) + 1;                  // see blow.lib/usage guide.
     printlevel=1;
     
     // Define defects, and collect them into a list:
@@ -1966,10 +1968,10 @@ This is done by the following code (which outputs the correct $(2\times 2)$-matr
     list defectList = defect1, defect2, defect3;
     
     // Define edges and web:
-    list e1 = list(0, 1, list(y(1)), y(1)^3);
-    list e2 = list(1, 2, list(x(1)), x(1)^3);
-    list e3 = list(2, 3, list(x(2)), x(2)^3);
-    list e4 = list(3, 0, list(y(2)), y(2)^3);
+    list e1 = list(1, 0, list(y(1)), y(1)^3);
+    list e2 = list(2, 1, list(x(1)), x(1)^3);
+    list e3 = list(3, 2, list(x(2)), x(2)^3);
+    list e4 = list(0, 3, list(y(2)), y(2)^3);
     list web = list(3, list(e1, e2, e3, e4), defectList);
     webVerify(web);
     
@@ -1983,7 +1985,7 @@ This is done by the following code (which outputs the correct $(2\times 2)$-matr
 
 
 \begin{example}(Tensor product of graded matrix factorisations) 
-In the previous two examples we were not concerned with the grading of the matrix factorisations. As recalled in Section~\ref{preliminaries} we encode the grading of a matrix factorisation in the shifts~$m_{i}$ of their underlying free modules $\bigoplus_{i}R\{m_{i}\}$. If the shifts of matrix factorisations in a web are given to \texttt{webCompile} as a fourth (optional) argument, it also outputs the shifts of the compilation. 
+In the previous two examples we were not concerned with the grading of the matrix factorisations. We encode the grading of a matrix factorisation in the shifts~$m_{i}$ of their underlying free modules $\bigoplus_{i}R\{m_{i}\}$. If the shifts of matrix factorisations in a web are given to \texttt{webCompile} as a fourth (optional) argument, it also outputs the shifts of the compilation. 
 
 As a simple example let us consider $P_{a}(x,y)$ again. Viewed as a graded matrix factorisation it is the cyclic Koszul complex
 $$
@@ -2079,6 +2081,8 @@ However, for the 2-component links $4_{1}^2\,\text{{\footnotesize (v1)}}$, $4_{1
 An interesting question is whether Khovanov-Rozansky homology can distinguish mutant pairs of links. It is known that $\overline{\KR}_{N}$ for odd~$N$ is invariant under mutations~\cite{j1101.3302}, and that $\KR_{2}$ cannot resolve the simplest mutant pairs which have 11 crossings. Thus testing whether Khovanov-Rozansky homology can detect mutation is presently beyond the capabilities of our code when run on ordinary PCs. 
 \end{itemize}
 
+
+(TODO: try to make tables look nicer)
 
 \newpage
 
@@ -3038,36 +3042,36 @@ In particular for sequences $\bs{a}, \bs{b}$ we have
 H(\{ \bs{a}, \bs{b} \}) \cong H(\{\bs{a}, -\bs{b}\}) \, .
 \end{equation}
 
-\section{The $u$ polynomials}
-\label{appendix:upoly}
-
-This appendix concerns the polynomials $u_i$ of (\ref{eq:cons2}). We claimed in the text that polynomials with certain properties exist, and although we do not need the precise form of these polynomials, we will justify the existence claim here. We set
-\[
-W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}\,.
-\]
-Since $u^{N+1} + v^{N+1}$ is symmetric there is a polynomial $g$ with $g(u+v, uv) = u^{N+1} + v^{N+1}$ and this gives rise to two factorisations of $W$. The first is
-\begin{align*}
-W &= g(y_1+y_2,y_1y_2) - g(x_1+x_2,y_1y_2)\\
-&+ g(x_1+x_2,y_1y_2) - g(x_1+x_2,x_1x_2)\,
-\end{align*}
-which allows us to write
-\[
-W = u_1'(y_1 + y_2 - x_1 -x_2) + u_2'(y_1y_2 - x_1x_2)
-\]
-for some polynomials $u_1', u_2'$ (these are what \cite[p.48]{kr0401268} calls $u_1$ and $u_2$). Similarly the factorisation
-\begin{align*}
-W &= g(y_1+y_2,y_1y_2) - g(y_1+y_2,x_1x_2)\\
-&+ g(y_1+y_2,x_1x_2) - g(x_1+x_2,x_1x_2)
-\end{align*}
-allows us to write
-\[
-W = u_2''(y_1y_2-x_1x_2) + u_1''(y_1+y_2-x_1-x_2)
-\]
-for some $u_1'', u_2''$. It is clear that $u_i'(y_1,y_2,x_1,x_2) = u_i''(x_1,x_2,y_1,y_2)$. Hence if we define
-\[
-u_i = \frac{1}{2}u_i' + \frac{1}{2}u_i''
-\]
-Then $W = u_1(y_1 + y_2 - x_1 - x_2) + u_2(y_1y_2-x_1x_2)$ and $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$.
+%\section{The $u$ polynomials}
+%\label{appendix:upoly}
+%
+%This appendix concerns the polynomials $u_i$ of (\ref{eq:cons2}). We claimed in the text that polynomials with certain properties exist, and although we do not need the precise form of these polynomials, we will justify the existence claim here. We set
+%\[
+%W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}\,.
+%\]
+%Since $u^{N+1} + v^{N+1}$ is symmetric there is a polynomial $g$ with $g(u+v, uv) = u^{N+1} + v^{N+1}$ and this gives rise to two factorisations of $W$. The first is
+%\begin{align*}
+%W &= g(y_1+y_2,y_1y_2) - g(x_1+x_2,y_1y_2)\\
+%&+ g(x_1+x_2,y_1y_2) - g(x_1+x_2,x_1x_2)\,
+%\end{align*}
+%which allows us to write
+%\[
+%W = u_1'(y_1 + y_2 - x_1 -x_2) + u_2'(y_1y_2 - x_1x_2)
+%\]
+%for some polynomials $u_1', u_2'$ (these are what \cite[p.48]{kr0401268} calls $u_1$ and $u_2$). Similarly the factorisation
+%\begin{align*}
+%W &= g(y_1+y_2,y_1y_2) - g(y_1+y_2,x_1x_2)\\
+%&+ g(y_1+y_2,x_1x_2) - g(x_1+x_2,x_1x_2)
+%\end{align*}
+%allows us to write
+%\[
+%W = u_2''(y_1y_2-x_1x_2) + u_1''(y_1+y_2-x_1-x_2)
+%\]
+%for some $u_1'', u_2''$. It is clear that $u_i'(y_1,y_2,x_1,x_2) = u_i''(x_1,x_2,y_1,y_2)$. Hence if we define
+%\[
+%u_i = \frac{1}{2}u_i' + \frac{1}{2}u_i''
+%\]
+%Then $W = u_1(y_1 + y_2 - x_1 - x_2) + u_2(y_1y_2-x_1x_2)$ and $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$.
 
 \section{The relation between reduced and unreduced homology}
 \label{relationReducedUnreduced}
@@ -3176,15 +3180,15 @@ In fact $\pi$ is also morphism of linear factorisations $\{ \ba, \bb \} \lto R/(
 \begin{equation}\label{eq:app_stab1}
 \Hom(1, \pi): \Hom_R(Y, \{ \ba, \bb \}) \lto \Hom_R(Y, R/(\bb))
 \end{equation}
-is a quasi-isomorphism. That is, $\{ \ba, \bb \}$ \emph{stabilises} $R/(\bb)$. This is a standard fact \cite{tobythesis,eisenbud,rasmussen,webster} but the twist here is that we produce an explicit homotopy inverse using the language of deformation retracts and perturbation. Rather than repeat the basic facts about perturbation here, we direct the reader to \cite[Section 5]{dm1102.2957} and \cite{crainic} for a full discussion; from now on we use the notation of \emph{loc.\,cit.}
+is a quasi-isomorphism. That is, $\{ \ba, \bb \}$ \emph{stabilises} $R/(\bb)$. This is a standard fact but the twist here is that we produce an explicit homotopy inverse using the language of deformation retracts and perturbation. Rather than repeat the basic facts about perturbation here, we direct the reader to \cite[Section 5]{dm1102.2957} and \cite{c0403266} for a full discussion; from now on we use the notation of \emph{loc.\,cit.}
 
 Here are our hypotheses: suppose that $R$ is an $S$-algebra for some ring $S$ and that (\ref{eq:app_stab0}) is a homotopy equivalence of $\ZZ$-graded complexes over $S$. More precisely, suppose that we can find an $S$-linear morphism of complexes $\sigma: R/(\bb) \lto (\bigwedge F, \delta_+)$ and $S$-linear homotopy $h$ on $\bigwedge F$ such that
 \begin{equation}\label{eq:homotopycond}
-\delta_+ h + h \delta_+ = 1 - \sigma \pi\,, \quad h^2 = 0\,, \quad h \sigma = 0\,.
+\delta_+ h + h \delta_+ = 1 - \sigma \pi\,, \qquad h^2 = 0\,, \qquad h \sigma = 0\,.
 \end{equation}
 We will see later how to write down very explicit homotopies $h$ using connections. In any case, we deduce the claim about universality of $\pi$ from the following more general statement.
 
-\begin{proposition}\label{prop:pertapptechnical} If $X$ is a finite rank matrix factorisation of $V \in R$ over $R$, and the sum $V + W$ belongs to the image of the structure morphism $S \lto R$, then there is a deformation retract datum of linear factorisations of $V+ W$ over $S$
+\begin{proposition}\label{prop:pertapptechnical} If $X$ is a finite-rank matrix factorisation of $V \in R$ over $R$, and the sum $V + W$ belongs to the image of the structure morphism $S \lto R$, then there is a deformation retract datum of linear factorisations of $V+ W$ over $S$, 
 \begin{equation}\label{eq:pre_perturb_htm3}
 \xymatrix@C+2pc{
 (X \otimes R/(\bb), d_X \otimes 1) \ar@<-0.8ex>[r]_-{\sigma_\infty} & (X \otimes \bigwedge F, 1 \otimes \delta_+ + 1 \otimes \delta_{-} + d_X \otimes 1), \ar@<-0.8ex>[l]_-{1 \otimes \pi}
@@ -3193,7 +3197,7 @@ We will see later how to write down very explicit homotopies $h$ using connectio
 where $\mu = d_X \otimes 1 + 1 \otimes \delta_-$ and $\sigma_\infty = \sum_{m \ge 0} (-1)^m (h \mu)^m \sigma$.
 \end{proposition}
 \begin{proof}
-First let us note that the statement makes sense: the differential $d_X \otimes 1$ on $X \otimes R/(\bb)$ squares to multiplication by $V + W$, since $d_X^2 = V \cdot 1_X$ and $W$ acts as zero on $R/(\bb)$. We fix a homogeneous $R$-basis of $X$ and use it to extend $h, \sigma$ (with Koszul signs in the former case) to $S$-linear maps on and between $X \otimes \bigwedge F$ and $X \otimes R/(\bb)$. Then the conditions in (\ref{eq:homotopycond}) amount to the statement that we have a deformation retract datum of linear factorisations \emph{of zero} over $S$
+First let us note that the statement makes sense: the differential $d_X \otimes 1$ on $X \otimes R/(\bb)$ squares to multiplication by $V + W$, since $d_X^2 = V \cdot 1_X$ and $W$ acts as zero on $R/(\bb)$. We fix a homogeneous $R$-basis of $X$ and use it to extend $h, \sigma$ (with Koszul signs in the former case) to $S$-linear maps on and between $X \otimes \bigwedge F$ and $X \otimes R/(\bb)$. Then the conditions in (\ref{eq:homotopycond}) amount to the statement that we have a deformation retract datum of linear factorisations \emph{of zero} over $S$, 
 \[
 \xymatrix@C+2pc{
 (X \otimes R/(\bb), 0) \ar@<-0.8ex>[r]_{1 \otimes \sigma} & (X \otimes \bigwedge F, 1 \otimes \delta_+), \ar@<-0.8ex>[l]_{\pi}
@@ -3212,16 +3216,16 @@ Suppose that $R$ and $R/(\bb)$ are projective $S$-modules. Then the sequence of 
 is not just exact over $S$, but is even \emph{split} exact. From the numerous short split exact sequences we construct a map $\sigma$ and homotopy $h$ satisfying (\ref{eq:homotopycond}).
 \end{remark}
 
-As has already been mentioned, the next corollary (with a different proof) is due to Dyckerhoff \cite{d0904.4713}. There are related results in the literature on link homology; see \cite[Section 3.2]{r0607544} and \cite[Section 1.2]{w0610650}.
+As has already been mentioned, the next corollary (with a different proof) is due to Dyckerhoff \cite{d0904.4713}. There are related results in the literature on link homology, see \cite[Section 3.2]{r0607544} and \cite[Section 1.2]{w0610650}.
 
-\begin{corollary} If $R$ contains a field then $\pi: \{\bs{a},\bs{b}\} \lto R/(\bb)$ is a stabilisation. That is, for any finite rank matrix factorisation $Y$ of $W$ the map (\ref{eq:app_stab1}) is a quasi-isomorphism.
+\begin{corollary} If $R$ contains a field then $\pi: \{\bs{a},\bs{b}\} \lto R/(\bb)$ is a stabilisation. That is, for any finite-rank matrix factorisation $Y$ of $W$ the map (\ref{eq:app_stab1}) is a quasi-isomorphism.
 \end{corollary}
 \begin{proof}
-Let $S$ be a field contained in $R$. Then in light of the previous remark we can find $\sigma, h$ satisfying our hypotheses, and Proposition \ref{prop:pertapptechnical} applied to $X = Y\mdual, V = -W$ shows that the bottom row of the following commutative diagram is a homotopy equivalence over $S$
+Let $S$ be a field contained in $R$. Then in light of the previous remark we can find $\sigma, h$ satisfying our hypotheses, and Proposition \ref{prop:pertapptechnical} applied to $X = Y\mdual, V = -W$ shows that the bottom row of the following commutative diagram is a homotopy equivalence over $S$: 
 \begin{equation}\label{eq:cons3}
 \xymatrix@C+2pc{
 \Hom_R(Y, \{\ba, \bb\}) \ar[r]^-{\Hom(1,\pi)} & \Hom_R(Y, R/(\bb))\\
-Y^{\lor} \otimes \{ \ba, \bb \} \ar[u]^{\cong} \ar[r]_-{1 \otimes \pi} & Y^{\lor} \otimes R/(\bb) \ar@/^2pc/[l]^-{\sigma_\infty} \ar[u]_{\cong}
+Y^{\lor} \otimes \{ \ba, \bb \} \ar[u]^{\cong} \ar[r]_-{1 \otimes \pi} & Y^{\lor} \otimes R/(\bb) \, . \ar@/^2pc/[l]^-{\sigma_\infty} \ar[u]_{\cong}
 }
 \end{equation}
 But then the top row is also a homotopy equivalence over $S$, hence a quasi-isomorphism over $R$.
@@ -3231,27 +3235,27 @@ Here our interest splits two ways. In Section \ref{subsection:kernelfunctors} we
 
 \subsection{Kernel functors}\label{subsection:kernelfunctors}
 
-We want to interpret $\{ \bs{a}, \bs{b} \}, R/(\bb)$ as functors, and $\pi$ as a natural isomorphism. To this end, suppose that $k$ is a ring, $S,T$ are $k$-algebras and that our ring $R$ above is equal to $T \otimes_k S$. We view $R$-modules as $T$-$S$-bimodules, and make the following hypotheses:
+We want to interpret $\{ \bs{a}, \bs{b} \}$ and $R/(\bb)$ as functors, and $\pi$ as a natural isomorphism. To this end, suppose that $k$ is a ring, $S,T$ are $k$-algebras and that our ring $R$ above is equal to $T \otimes_k S$. We view $R$-modules as $T$-$S$-bimodules, and make the following hypotheses:
 \begin{itemize}
 \item $W = V - U$ for elements $U \in T$ and $V \in S$.
 \item $R$ is free as an $S$-module, and $R/(\bb)$ is free of finite rank on both sides, i.\,e.~as a right $S$-module and as a left $T$-module.
 \end{itemize}
-It follows from Remark \ref{remark:splitexactsequenceskos} that the hypotheses of Proposition \ref{prop:pertapptechnical} are satisfied; thus for any finite rank matrix factorisation $X$ of $U$ over $T$ the map
+It follows from Remark \ref{remark:splitexactsequenceskos} that the hypotheses of Proposition \ref{prop:pertapptechnical} are satisfied; thus for any finite-rank matrix factorisation $X$ of $U$ over $T$ the map
 \[
 \pi: X \otimes \{ \bs{a}, \bs{b} \} \lto X \otimes R/(\bb)
 \]
 is a homotopy equivalence over $S$. Hence the diagram of functors
 \[
 \xymatrix@C+2.5pc{
-\hmf(T, U) \ar[d]_-{\inc}\ar[r]^-{- \otimes R/(\bb)} & \hmf(S,V) \ar[d]^-{\inc}\\
-\HMF(T, U) \ar[r]_-{- \otimes \{ \bs{a}, \bs{b} \}} & \HMF(S,V)\,.
+\hmf(T, U) \ar[d]_-{\inc}\ar[r]^-{(-) \otimes R/(\bb)} & \hmf(S,V) \ar[d]^-{\inc}\\
+\HMF(T, U) \ar[r]_-{(-) \otimes \{ \bs{a}, \bs{b} \}} & \HMF(S,V)
 }
 \]
 commutes up to the natural isomorphism.
 
 \subsection{Lifting morphisms}\label{subsection:liftingmorphisms}
 
-Although the techniques work more generally, for simplicity let us specialise to situation of Section \ref{section:stabilisation}, where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \bs{w}, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\bs{w} = (w_1,w_2)$ is the one elaborated in Section \ref{section:stabilisation}. This means that we take $\bs{a}=\bs{w}$ and $\bb = \bs{t}$ in the above. 
+Although the techniques work more generally, for simplicity let us specialise to situation of Section~\ref{section:stabilisation}, where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \bs{w}, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\bs{w} = (w_1,w_2)$ is the one elaborated in Section \ref{section:stabilisation}. This means that we take $\bs{a}=\bs{w}$ and $\bb = \bs{t}$ in the above. 
 
 Since we are interested in morphisms $\Xbul \lto \Xcirc$, in addition we take $Y = \Xbul$. We can write $R$ as $S[t_1,t_2]$ so there is an $S$-linear standard (in the sense of \cite[Section 8.1]{dm1102.2957}) flat connection
 \begin{gather*}
@@ -3277,11 +3281,11 @@ p z + \frac{\partial z}{\partial y_1} (y_1 - x_1) + \frac{\partial z}{\partial y
 \end{itemize}
 \end{example}
 
-One defines a degree $-1$ $S$-linear map
+One defines an $S$-linear map
 \[
 H = (\nabla \delta_+ + \delta_+ \nabla)^{-1} \nabla
 \]
-on the module $\bigwedge F$. Each application of $H$ involves differentiation with respect to the $y_i$, and then solving a differential equation. Let $\sigma: S = R/(\boldsymbol{t}) \lto \bigwedge F$ be the inclusion of $\QQ[x_1,x_2]$ into $R$. One checks (see \cite[Section 8.1]{dm1102.2957}) that $H \delta_+ + \delta_+ H = 1 - \sigma \pi$, so that $\sigma$ is exhibited by $H$ as the $S$-linear homotopy inverse to the morphism $\pi: (\bigwedge F, \delta_+) \lto (R/(\boldsymbol{t}),0)$.
+of degree $-1$ on the module $\bigwedge F$. Each application of $H$ involves differentiation with respect to the $y_i$, and then solving a differential equation. Let $\sigma: S = R/(\boldsymbol{t}) \lto \bigwedge F$ be the inclusion of $\QQ[x_1,x_2]$ into $R$. One checks (see \cite[Section 8.1]{dm1102.2957}) that $H \delta_+ + \delta_+ H = 1 - \sigma \pi$, so that $\sigma$ is exhibited by $H$ as the $S$-linear homotopy inverse to the morphism $\pi: (\bigwedge F, \delta_+) \lto (R/(\boldsymbol{t}),0)$.
 
 As explained above, we tensor with $Y\mdual$ and perturb in the other differentials. The first step is to extend $H$ and $\sigma$ to $S$-linear maps
 \[
@@ -3389,6 +3393,10 @@ N.~Carqueville and I.~Runkel, \emph{On the monoidal structure of matrix bi-facto
   A: Math. Theor. \textbf{43} (2010), 275401,
   \href{http://arxiv.org/abs/0909.4381}{[arXiv:0909.4381]}.
 
+\bibitem[Cra]{c0403266}
+M.~Crainic, \emph{On the perturbation lemma, and deformations},
+  \href{http://arxiv.org/abs/math/0403266}{[math.AT/0403266]}.
+
 \bibitem[DGR06]{dgr0505662}
 N.~M. Dunfield, S.~Gukov, and J.~Rasmussen, \emph{The {S}uperpolynomial for
   {K}not {H}omologies}, Experimental Math. \textbf{15} (2006), 129--159,
@@ -3397,7 +3405,7 @@ N.~M. Dunfield, S.~Gukov, and J.~Rasmussen, \emph{The {S}uperpolynomial for
 \bibitem[DKR]{dkr1107.0495}
 A.~Davydov, L.~Kong, and I.~Runkel, \emph{Field theories with defects and the
   centre functor}, \href{http://arxiv.org/abs/1107.0495}{[arXiv:1107.0495]}.
-
+  
 \bibitem[Dyc]{d0904.4713}
 T.~Dyckerhoff, \emph{Compact generators in categories of matrix factorizations},
   \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}
@@ -3559,7 +3567,7 @@ C.~Stroppel, \emph{Categorification of the {T}emperley-{L}ieb category,
   (2005), 547--596.
 
 \bibitem[Sus]{s0701045}
-J~Sussan, \emph{Category {$\mathcal O$} and {$\mathfrak{sl}_k$} link
+J.~Sussan, \emph{Category {$\mathcal O$} and {$\mathfrak{sl}_k$} link
   invariants}, \href{http://arxiv.org/abs/math/0701045}{[math.QA/0701045]}.
 
 \bibitem[Tur88]{t1988YB}
