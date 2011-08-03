@@ -1250,7 +1250,7 @@ Now we make the jump to matrix factorisations. If $V$ is a homogeneous symmetric
 \hmf(A, V) \ar@<1ex>[r]^{\varphi^*} & \hmf(S, V) \ar@<1ex>[l]^{\varphi_*} \, .
 }
 \]
-Let us fix for example the polynomial $V = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite{RouquierMexico,rickard} applies to produce an interesting autoequivalence of $\K^b( \hmf(S, V) )$. Namely, tensoring with the complexes of graded bimodules
+Let us fix for example the polynomial $V = x_1^{N+1} + x_2^{N+1}$. These triangulated categories are algebraic, and the general theory of \cite[Section 8.1]{RouquierMexico} (see also \cite{rickard}) applies to produce an interesting autoequivalence of $\K^b( \hmf(S, V) )$. Namely, tensoring with the complexes of graded bimodules
 \begin{equation}\label{eq:bimod_cpx1}
 \xymatrix{
 0 \ar[r] & S \otimes_A S \ar[r]^-{\varepsilon} & \underline{S} \ar[r] & 0 \, ,
@@ -1262,11 +1262,11 @@ and
 0 \ar[r] & \underline{S} \ar[r]^-{\eta'} & S \otimes_A S\{-2\} \ar[r] & 0
 }
 \end{equation}
-determines endofunctors on $\K^b( \hmf(S, V) )$ which are mutually inverse equivalences. In fact these equivalences are the ones associated by Khovanov and Rozansky to over- and under-crossings, so the whole theory is built out of (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}). But there is an additional step before we can phrase the construction in the original terms: writing $R = S/(V)$ there is an equivalence
+determines endofunctors on $\K^b( \hmf(S, V) )$ which are mutually inverse equivalences. In fact these equivalences are the ones associated by Khovanov and Rozansky to over- and under-crossings, so the whole theory can be built out of (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}). But there is an additional step before we can phrase the construction in the original terms: writing $T = S/(V)$ there is an equivalence
 \[
-\hmf(S, V) \cong \qderu{b}{\textup{grmod}\, R}/\K^b(\textup{grproj}\, R)
+\hmf(S, V) \cong \qderu{b}{\textup{grmod}\, T}/\K^b(\textup{grproj}\, T)\,.
 \]
-which says that a graded matrix factorisation of $V$ remembers the asymptotic part of a graded free resolution of a graded $R$-module. While it makes sense to define functors on $\hmf(S,V)$ in terms of tensoring with the graded bimodules $S \otimes_A S$ and $S$, the functors thus defined will only depend on the asymptotic part of the resolutions of these bimodules over $R$ (see Appendix \ref{subsection:kernelfunctors}). It is therefore more economical to replace the bimodules in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}) by the matrix factorisations which remember this asymptotic data, and the bimodule morphisms by the morphisms of matrix factorisations coming from the asymptotic part of the lifted morphism to the graded free resolutions.
+The intuition is that a graded matrix factorisation of $V$ remembers the asymptotic part of a graded free resolution of a graded $T$-module. The functors defined on $\hmf(S,V)$ in terms of tensoring with the bimodules $S \otimes_A S$ and $S$ will only depend on the asymptotic part of the resolutions of these bimodules over $T$ (see Appendix \ref{subsection:kernelfunctors}). It is therefore more economical to replace the bimodules in (\ref{eq:bimod_cpx1}) and (\ref{eq:bimod_cpx2}) by the matrix factorisations which remember this asymptotic data, and the bimodule morphisms by the morphisms of matrix factorisations coming from the asymptotic part of the lifted morphism to the graded free resolutions.
 
 This process is known as \emph{stabilisation}, and will take place in the next subsection. We will stabilise $S \otimes_A S$ to a matrix factorisation $\Xbul$ and $S$ to $\Xcirc$. The morphisms $\varepsilon$ and $\eta'$ will stabilise to morphisms $\chi_1: \Xbul \lto \Xcirc$ and $\chi_0: \Xcirc \lto \Xbul\{-2\}$, respectively, and with these stabilisations in hand we will be ready to define the $\sln$ link homology.
 
@@ -1852,26 +1852,26 @@ In view of this we define the \emph{reduced Khovanov-Rozansky invariant $\overli
 
 \medskip
 
-Finally, let us convince ourselves that we can compute Khovanov-Rozansky homology by compiling appropriate webs. By definition, in each cohomological degree the components of $C(D)$ are direct sums of the matrix factorisations $C(\Gamma)$, where~$\Gamma$ is a resolution of the link diagram~$D$. As explained earlier we promote~$\Gamma$ to a state web by decorating it with potentials $x_{i}^{N+1}$ and matrix factorisations $\Xcirc, \Xbul$. Thus in order to compute Khovanov-Rozansky homology the first step is to compile these state webs, i.\,e.~to replace each cohomological component of $C(D)$ by the finite-dimensional $(\nZ\times\nZ)$-graded $\nQ$-vector spaces which are the direct sums of the compilations of the $C(\Gamma)$. 
+Finally, let us convince ourselves that we can compute Khovanov-Rozansky homology by compiling appropriate webs. By definition, in each cohomological degree the components of $C(D)$ are direct sums of the matrix factorisations $C(\Gamma)$ of zero, where~$\Gamma$ is a resolution of the link diagram~$D$. As explained earlier we promote~$\Gamma$ to a state web by decorating it with potentials $x_{i}^{N+1}$ and matrix factorisations $\Xcirc, \Xbul$. In order to compute Khovanov-Rozansky homology the first step is to compile these state webs, i.\,e.~to replace each cohomological component of $C(D)$ by the finite-dimensional $(\nZ\times\nZ)$-graded $\nQ$-vector spaces which are the direct sums of the compilations of the $C(\Gamma)$. 
 
-In a second step we now have to compile also the differentials (which we denote $d_{\chi}$) of $C(\Gamma)$, i.\,e.~to replace them by the maps that they induce on these finite-dimensional vector spaces and then simply take cohomology over~$\nQ$. Since by construction the differentials of $C(\Gamma)$ are direct sums of maps of the form $1\otimes\ldots\otimes 1\otimes\chi_{i}\otimes 1\otimes\ldots\otimes 1$, we can compile the $d_{\chi}$ as in the following general situation. 
+In the second step we have to compile the differentials (which we denote $d_{\chi}$) of $C(D)$, i.\,e.~ replace them by the maps that they induce on the compilations of the state webs; at this point we have a $\ZZ$-graded complex of $\ZZ$-graded $\QQ$-vector spaces, and we simply take cohomology to obtain the link invariant $H(L)$. Since by construction the differentials of $C(D)$ are direct sums of maps of the form $1\otimes\ldots\otimes 1\otimes\chi_{i}\otimes 1\otimes\ldots\otimes 1$, we can compile the $d_{\chi}$ as in the following general situation. 
 
 Let us consider two decorated webs with identical underlying graphs and edge assignments, and whose matrix factorisations $D_{v}$ at vertex~$v$ are the same for all but one vertex~$v_{i}$ to which the second web assigns $D'_{v_{i}}$. We further assume to be given a morphism $\phi:D_{v_{i}}\longrightarrow D'_{v_{i}}$ which induces a map $\Phi=1\otimes\ldots\otimes 1\otimes\phi\otimes 1\otimes\ldots\otimes 1$ between the total matrix factorisations
 \begin{align*}
 D & =D_{v_{1}}\otimes\ldots\otimes D_{v_{i-1}} \otimes D_{v_{i}} \otimes D_{v_{i+1}}\otimes\ldots\otimes D_{v_{s}} \, , \\
 D' & =D_{v_{1}}\otimes\ldots\otimes D_{v_{i-1}} \otimes D'_{v_{i}} \otimes D_{v_{i+1}}\otimes\ldots\otimes D_{v_{s}} \, .
 \end{align*}
-In the notation of Section~\ref{compilewebs} we have idempotents $\idem=\vartheta\circ\psi$ and $\idem'=\vartheta'\circ\psi'$ which we can split in $\hmf(R,W)$ by finding maps $f,g$ and a matrix factorisation~$Y$ such that $g\circ f= 1_{Y}$ and $f\circ g=\idem$, and analogously for~$\idem'$. Then there is a commutative diagram
+In the notation of Section~\ref{compilewebs} we have idempotents $\idem=\vartheta\circ\psi$ and $\idem'=\vartheta'\circ\psi'$ which can be split in $\hmf(k[\extvar],W)$ by morphisms $f,g$ and a matrix factorisation~$Y$ such that $f\circ g= 1_{Y}$ and $g\circ f=\idem$, and analogously for~$\idem'$. Since $\psi$ is natural (see \cite[Lemma 7.6]{dm1102.2957}) there is a commutative diagram (we omit grading shifts)
 $$
 \xymatrix@C+2pc{%
-D\langle n\rangle \ar[d]_{\vartheta}\ar[r]^{\Phi\langle n\rangle} & D'\langle n\rangle\ar[d]^{\vartheta'}\\
-D \otimes_{k[\intvar]} J \ar[d]_{g}\ar[r]^{\Phi \otimes 1} & D' \otimes_{k[\intvar]} J\ar[d]^{g'}\\
-Y \ar[r]^{g' \circ (\Phi \otimes 1) \circ f} & Y'
+D \ar[d]_{\vartheta}\ar[r]^{\Phi} & D'\ar[d]^{\vartheta'}\\
+D \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\langle n \rangle \ar[d]_{f}\ar[r]^{\Phi \otimes 1} & D' \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\langle n \rangle \ar[d]^{f'}\\
+Y \ar[r]^{f' \circ (\Phi \otimes 1) \circ g} & Y'
 }
 $$
-and we see that the \emph{compiled map} $g'\circ(\Phi\otimes 1)\circ f$ is what~$\Phi$ induces between the compilations~$Y$ and~$Y'$. Note that we need no knowledge of the maps $\vartheta,\psi$ from Theorem~\ref{theorem:compilation_main} to compute the compiled map. 
+and thus the \emph{compiled morphism} $f'\circ(\Phi\otimes 1)\circ g$ is what~$\Phi$ induces between the web compilations~$Y$ and~$Y'$. Note that we need no knowledge of the maps $\vartheta,\psi$ from Theorem~\ref{theorem:compilation_main} in this computation. 
 
-In this way we can compile every differential $d_{\chi}$ in $C(D)$ and compute Khovanov-Rozansky homology $H(L)$. Its reduced version is obtained in the exact same fashion after one sets $x_{i}=0$ everywhere in $C(D)$. We have implemented these constructions to automatically compute the invariants $\KR_{N}$ and $\overline{\KR}_{N}$ in Singular, see~\cite{cmWebCompileCode} and Example~\ref{KRexample} below. Another option to compute $H(L)$ would have been to use the MOY relations~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4} algorithmically and thus reduce every link diagram to unlinked circles, to which~\cite{kr0401268} associate a shift of the Jacobian of the potential $x^{N+1}$. We prefer our approach as it also allows to compile arbitrary webs, and may be straightforwardly applied to compute other categorified link invariants such as those of~\cite{kr0701333, w0907.0695}. 
+In this way we compile every differential $d_{\chi}$ in $C(D)$ and compute the $\sln$ link homology $H(L)$. Its reduced variant is obtained in the same fashion after one sets $x_{i}=0$ everywhere in $C(D)$. We have implemented this method to automatically compute the invariants $\KR_{N}$ and $\overline{\KR}_{N}$ in Singular, see~\cite{cmWebCompileCode} and Example~\ref{KRexample} below. Another option to compute $H(L)$ would have been to use the MOY relations~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4} algorithmically and thus reduce every link diagram to unlinked circles, to which~\cite{kr0401268} associate a shift of the Jacobian of the potential $x^{N+1}$. We prefer our approach as it allows us to compile arbitrary webs, and may be straightforwardly applied to compute other categorified link invariants such as those of~\cite{kr0701333, w0907.0695}. 
 
 
 \section{Simple examples}
@@ -3600,6 +3600,9 @@ J.~Rasmussen, \emph{Khovanov-{R}ozansky homology of two-bridge knots and links},
   Duke Math. J. \textbf{136} (2007), 551--583,
   \href{http://arxiv.org/abs/math/0508510}{[math.GT/0508510]}.
   
+\bibitem[Ric94]{rickard}
+J.~Rickard, \emph{Translation functors and equivalences of derived categories for blocks of algebraic groups}, in “Finite dimensional algebras and related topics”, Kluwer (2006) 255-–264.
+
 \bibitem[Rou06]{RouquierMexico}
 R.~Rouquier, \emph{Categorification of {$\mathfrak{sl}_{2}$} and braid groups},
   Trends in representation theory of algebras and related topics (2006),
