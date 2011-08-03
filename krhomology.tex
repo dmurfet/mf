@@ -332,7 +332,7 @@ In a link diagram any oriented strand is incoming and outgoing with respect to s
 
 To see the problem more clearly, let us consider the general situation of two matrix factorisations $D,D'$ of $W_{1}(\boldsymbol{x})-W_{2}(\boldsymbol{y})$ and $W_{2}(\boldsymbol{y})-W_{3}(\boldsymbol{z})$, respectively, where~$W_{2}$ has an isolated singularity at the origin. Then $D\otimes D'$ is a matrix factorisation of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$, but it is of infinite rank over $\nQ[\boldsymbol{x},\boldsymbol{z}]$ as it depends also on the variables~$\boldsymbol{y}$. It is a basic fact that $D\otimes D'$ is isomorphic to an object~$F$ of finite rank in the triangulated category of matrix factorisations of $W_{1}(\boldsymbol{x})-W_{3}(\boldsymbol{z})$ over $\nQ[\boldsymbol{x},\boldsymbol{z}]$. However, only recently a general construction of~$F$ as well as the isomorphism $D\otimes D'\longrightarrow F$ was given in~\cite{dm1102.2957}. We shall review and reformulate the details of the construction in Section~\ref{compilewebs}, but the main idea is as follows:  first one ``inflates'' the matrix $D\otimes D'$ by replacing each $y$-monomial by the matrix that represents its multiplication on the Jacobian $\nQ[\boldsymbol{y}]/(\partial_{y_{i}} W_{2})$ in some chosen basis. Let us denote the inflated matrix by~$B$; it is endowed with an idempotent $\idem=\vartheta\circ\psi$, where $\vartheta: D\otimes D'\longrightarrow B$, $\psi: B\longrightarrow D\otimes D'$, and~$F$ is given by the finite-rank splitting of~$\idem$ (up to shifts). This means that from the pair $B,\idem$ we can find a triple $F,f,g$ with $f:B\longrightarrow F$ and $g:F\longrightarrow B$ such that $f\circ g=1_{F}$ and $g\circ f=\idem$. The isomorphism $D\otimes D'\longrightarrow F$ is then given by $f\circ\vartheta$ (up to a shift). 
 
-Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular, see~\cite{cmWebCompileCode}. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. As a special case we can explicitly compute the action of any functor on categories of finite-rank matrix factorisations which is given by a kernel. Another application is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
+Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular, see~\cite{cmWebCompileCode}. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. As a special case we can explicitly compute the action of any functor on categories of finite-rank matrix factorisations which is given by a kernel. Another application is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to 6 crossings for various values of~$N$. 
 
 Our method could as well be straightforwardly applied to compute the coloured homological $\sln$ link invariants of~\cite{w0907.0695}, to the categorification of the Kauffman polynomial and to virtual links~\cite{kr0701333}. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
 
@@ -411,7 +411,7 @@ From this point of view, once one has replaced each crossing in a link diagram w
 
 \medskip
 
-The remaining part of the present paper is organised as follows. In Section~\ref{preliminaries} we briefly review basic facts about graded matrix factorisations and fix our notation. We start Section~\ref{compilewebs} with a preparation of our discussion of Khovanov-Rozansky homology by recalling the approach to $\sln$ link invariants via state graphs and their skein relations. Then we introduce the notion of a web decorated by matrix factorisations and its compilation, which will allow us to reduce tensor products of matrix factorisations to finite rank. This is the key ingredient of our explicit computations of Khovanov-Rozansky homology. We also offer a somewhat more conceptual look on it in terms of autoequivalences of triangulated categories arising from adjunctions of symmetric polynomials in Section~\ref{KRconstruction}. We illustrate how to use our computer implementation with several simple examples in Section~\ref{simpleexamples}, and we present a discussion of our results for Khovanov-Rozansky homology of links with up to six crossings and three components in Section~\ref{compres}. Several technical details are relegated to the appendices. 
+The remaining part of the present paper is organised as follows. In Section~\ref{preliminaries} we briefly review basic facts about graded matrix factorisations and fix our notation. We start Section~\ref{compilewebs} with a preparation of our discussion of Khovanov-Rozansky homology by recalling the approach to $\sln$ link invariants via state graphs and their skein relations. Then we introduce the notion of a web decorated by matrix factorisations and its compilation, which will allow us to reduce tensor products of matrix factorisations to finite rank. This is the key ingredient of our explicit computations of Khovanov-Rozansky homology. We also offer a somewhat more conceptual look on it in terms of autoequivalences of triangulated categories arising from adjunctions of symmetric polynomials in Section~\ref{KRconstruction}. We illustrate how to use our computer implementation with several simple examples in Section~\ref{simpleexamples}, and we present a discussion of our results for Khovanov-Rozansky homology of links with up to 6 crossings and three components in Section~\ref{compres}. Several technical details are relegated to the appendices. 
 
 
 \begin{acknowledgements}
@@ -2051,9 +2051,9 @@ We will now present some results for $\sln$ Khovanov-Rozansky homology of all pr
 
 As discussed in the introduction, our construction via the splitting of idempotents provides the first method to compute Khovanov-Rozansky invariants directly from the original definition in~\cite{kr0401268}. However, there have been previous results and proposals for Khovanov-Rozansky invariants for certain links which relied on indirect arguments. Before we will discuss our results for links whose Khovanov-Rozansky invariants had not been studied before, we shall first recall the known results and proposals, and compare them with our own direct computations. 
 
-The so far most extensive results were obtained in~\cite{r0508510, r0607544}. There it was shown that the reduced Khovanov-Rozansky invariants $\overline{\KR}_{N}$ of 2-bridge knots can be expressed in terms of their Homfly polynomial and signature (see e.\,g.~\cite{kawauchibook} for the definitions), and a similar result is true for 2-bridge links. Furthermore, explicit expressions were obtained for the unreduced invariants $\KR_{N}$ with $N>4$ for torus knots $T_{2,m}$ and the figure-eight knot $4_{1}$. For links with up to six crossings and small values of~$N$ we can verify these results and extend them to the cases $N=3$ and $N=4$ where necessary. We refer to Tables~\ref{unreducedKR} and~\ref{reducedKR} for further details. 
+The so far most extensive results were obtained in~\cite{r0508510, r0607544}. There it was shown that the reduced Khovanov-Rozansky invariants $\overline{\KR}_{N}$ of 2-bridge knots can be expressed in terms of their Homfly polynomial and signature (see e.\,g.~\cite{kawauchibook} for the definitions), and a similar result is true for 2-bridge links. Furthermore, explicit expressions were obtained for the unreduced invariants $\KR_{N}$ with $N>4$ for torus knots $T_{2,m}$ and the figure-eight knot $4_{1}$. For links with up to 6 crossings and small values of~$N$ we can verify these results and extend them to the cases $N=3$ and $N=4$ where necessary. We refer to Tables~\ref{unreducedKR} and~\ref{reducedKR} for further details. 
 
-The expressions for $\KR_{N}(T_{2,3})$ and $\KR_{N}(T_{2,5})$ were already given in~\cite{gsv0412243}. Explicit proposals were also presented for Khovanov-Rozansky invariants of further torus knots~\cite{dgr0505662, as1105.5117}, all prime knots with up to ten crossings~\cite{dgr0505662} and the Hopf link~\cite{gikv0705.1368}. For small numbers of crossings and small values of~$N$ our results verify all these proposals.
+The expressions for $\KR_{N}(T_{2,3})$ and $\KR_{N}(T_{2,5})$ were already given in~\cite{gsv0412243}. Explicit proposals were also presented for reduced Khovanov-Rozansky invariants of further torus knots~\cite{dgr0505662, as1105.5117} and all prime knots with up to ten crossings~\cite{dgr0505662}; unreduced invariants for the Hopf link were proposed in~\cite{gikv0705.1368}. For small numbers of crossings and small values of~$N$ our results verify all these proposals.
 
 \medskip
 
@@ -2065,7 +2065,7 @@ We conclude by listing some observations and comments on our results; we let the
 
 \begin{itemize}
 \item 
-In all our examples the choice of marked component for reduced Khovanov-Rozansky homology does not affect the invariants $\overline{\KR}_{N}$. 
+In all our examples the choice of marked component for reduced Khovanov-Rozansky homology does not affect the invariants, i.\,e.~$\overline{\KR}_{N}(L,K) = \overline{\KR}_{N}(L,K')$ for all components $K,K'$ of the link~$L$. 
 \item 
 Unreduced Khovanov-Rozansky homology is non-trivial only in one $\nZ_{2}$-degree, but reduced homology is non-trivial in both $\nZ_{2}$-degrees. In fact the even and odd components are the same up to a grading shift by $N-1$, see Lemma~\ref{Z2gradingReduced}. For this reason we defined and list the Poincar\'e polynomials $\overline{\KR}_{N}$ only for one $\nZ_{2}$-degree. The invariant for the opposite $\nZ_{2}$-degree is then obtained by multiplication with $q^{N-1}$. 
 \item 
@@ -2188,6 +2188,7 @@ $5_{2}$
 \includegraphics[scale=0.07,angle=0]{knot5_2.pdf} 
 & 
 $
+\newline 
 \displaystyle{%
 \KR_{2} = \frac{1}{q^3}+\frac{1}{q}+\frac{t}{q^3}+\frac{t^2}{q^7}+\frac{t^2}{q^5}+\frac{t^3}{q^9}+\frac{t^4}{q^9}+\frac{t^5}{q^{13}}
 }
@@ -2210,6 +2211,7 @@ $
 \qquad\qquad +\frac{t^4}{q^{19}}+\frac{t^4}{q^{17}}+\frac{t^4}{q^{15}}+\frac{t^5}{q^{27}}+\frac{t^5}{q^{25}}+\frac{t^5}{q^{23}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2255,6 +2257,7 @@ $
 $6_{2}$ 
 \includegraphics[scale=0.07,angle=0]{knot6_2.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{1}{q^3}+\frac{2}{q}+\frac{q^3}{t^2}+\frac{1}{q t}+\frac{t}{q^5}+\frac{t}{q^3}+\frac{t^2}{q^7}+\frac{t^2}{q^5}+\frac{t^3}{q^9}+\frac{t^3}{q^7}+\frac{t^4}{q^{11}}
@@ -2284,12 +2287,14 @@ $
 \qquad\qquad +\frac{t^2}{q^{15}}+\frac{t^2}{q^{13}}+\frac{t^2}{q^{11}}+\frac{t^2}{q^9}+\frac{t^2}{q^7}+\frac{t^3}{q^{19}}+\frac{t^3}{q^{17}}+\frac{t^3}{q^{15}}+\frac{t^3}{q^{13}}+\frac{t^3}{q^{11}}+\frac{t^3}{q^9}+\frac{t^4}{q^{21}}+\frac{t^4}{q^{19}}+\frac{t^4}{q^{17}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $6_{3}$ 
 \includegraphics[scale=0.07,angle=0]{knot6_3.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{2}{q}+2 q+\frac{q^7}{t^3}+\frac{q^3}{t^2}+\frac{q^5}{t^2}+\frac{q}{t}+\frac{q^3}{t}+\frac{t}{q^3}+\frac{t}{q}+\frac{t^2}{q^5}+\frac{t^2}{q^3}+\frac{t^3}{q^7}
@@ -2307,12 +2312,14 @@ $
 \qquad\qquad +\frac{t^2}{q^6}+\frac{t^2}{q^4}+\frac{t^2}{q^2}+\frac{t^3}{q^{10}}+\frac{t^3}{q^8}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $6_{1}^2\,\text{{\tiny (v1)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_1_2.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{1}{q^6}+\frac{1}{q^4}+\frac{t^2}{q^8}+\frac{t^3}{q^{12}}+\frac{t^4}{q^{12}}+\frac{t^5}{q^{16}}+\frac{t^6}{q^{18}}+\frac{t^6}{q^{16}}
@@ -2336,6 +2343,7 @@ $
 \qquad\qquad +\frac{t^5}{q^{28}}+\frac{t^6}{q^{34}}+\frac{2 t^6}{q^{32}}+\frac{3 t^6}{q^{30}}+\frac{3 t^6}{q^{28}}+\frac{2 t^6}{q^{26}}+\frac{t^6}{q^{24}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2361,6 +2369,7 @@ $
 $6_{1}^3\,\text{{\tiny (v1)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_1_3.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{1}{q^3}+\frac{1}{q}+\frac{2 t}{q^3}+\frac{2 t^2}{q^7}+\frac{t^2}{q^5}+\frac{t^3}{q^9}+\frac{3 t^4}{q^{11}}+\frac{3 t^4}{q^9}+\frac{t^5}{q^{11}}+\frac{t^6}{q^{15}}
@@ -2378,12 +2387,14 @@ $
 \qquad\qquad +\frac{t^5}{q^{14}}+\frac{t^6}{q^{24}}+\frac{3 t^6}{q^{22}}+\frac{3 t^6}{q^{20}}+\frac{t^6}{q^{18}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $6_{1}^3\,\text{{\tiny (v2)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_1_3.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{1}{q^3}+\frac{1}{q}+\frac{2 t}{q^3}+\frac{2 t^2}{q^7}+\frac{t^2}{q^5}+\frac{t^3}{q^9}+\frac{3 t^4}{q^{11}}+\frac{3 t^4}{q^9}+\frac{t^5}{q^{11}}+\frac{t^6}{q^{15}}
@@ -2401,12 +2412,14 @@ $
 \qquad\qquad +\frac{q^4}{t}+\frac{q^6}{t}+q^2 t+q^4 t+\frac{t^2}{q^4}+\frac{t^2}{q^2}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $6_{2}^2\,\text{{\tiny (v1)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_2_2.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{1}{q^4}+\frac{1}{q^2}+\frac{t}{q^4}+\frac{t^2}{q^8}+\frac{t^2}{q^6}+\frac{t^3}{q^{10}}+\frac{t^3}{q^8}+\frac{t^4}{q^{12}}+\frac{t^4}{q^{10}}+\frac{t^5}{q^{14}}+\frac{t^6}{q^{16}}+\frac{t^6}{q^{14}}
@@ -2424,12 +2437,14 @@ $
 \qquad\qquad +\frac{t^5}{q^{22}}+\frac{t^5}{q^{20}}+\frac{t^6}{q^{24}}+\frac{2 t^6}{q^{22}}+\frac{2 t^6}{q^{20}}+\frac{t^6}{q^{18}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $6_{2}^2\,\text{{\tiny (v2)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_2_2.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = q^2+q^4+\frac{q^{14}}{t^6}+\frac{q^{16}}{t^6}+\frac{q^{14}}{t^5}+\frac{q^{10}}{t^4}+\frac{q^{12}}{t^4}+\frac{q^8}{t^3}+\frac{q^{10}}{t^3}+\frac{q^6}{t^2}+\frac{q^8}{t^2}+\frac{q^4}{t}
@@ -2447,6 +2462,7 @@ $
 \qquad\qquad +\frac{q^{16}}{t^3}+\frac{q^8}{t^2}+\frac{q^{10}}{t^2}+\frac{q^{12}}{t^2}+\frac{q^{14}}{t^2}+\frac{q^6}{t}+\frac{q^8}{t}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2472,6 +2488,7 @@ $
 $6_{2}^3\,\text{{\tiny (v2)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_2_3.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{4}{q}+4 q+\frac{q^7}{t^3}+\frac{q^3}{t^2}+\frac{2 q^5}{t^2}+\frac{2 q}{t}+\frac{2 t}{q}+\frac{2 t^2}{q^5}+\frac{t^2}{q^3}+\frac{t^3}{q^7}
@@ -2489,6 +2506,7 @@ $
 \qquad\qquad +\frac{t^2}{q^4}+\frac{t^2}{q^2}+\frac{t^3}{q^{10}}+\frac{t^3}{q^8}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2515,6 +2533,7 @@ Checked up to $N=3$.
 $6_{3}^2\,\text{{\tiny (v2)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_3_2.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = q^2+q^4+\frac{q^{16}}{t^6}+\frac{q^{12}}{t^5}+\frac{q^{14}}{t^5}+\frac{2 q^{10}}{t^4}+\frac{q^{12}}{t^4}+\frac{2 q^{10}}{t^3}+\frac{2 q^6}{t^2}+\frac{q^8}{t^2}+\frac{q^4}{t}
@@ -2532,12 +2551,14 @@ $
 \qquad\qquad +\frac{2 q^8}{t^2}+\frac{2 q^{10}}{t^2}+\frac{q^{12}}{t^2}+\frac{q^{14}}{t^2}+\frac{q^6}{t}+\frac{q^8}{t}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $6_{3}^3\,\text{{\tiny (v1)}}$
 \includegraphics[scale=0.07,angle=0]{link6_3_3.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \KR_{2} = \frac{1}{q^5}+\frac{1}{q^3}+\frac{t^2}{q^7}+\frac{t^3}{q^{11}}+\frac{2 t^4}{q^{13}}+\frac{3 t^4}{q^{11}}+\frac{t^4}{q^9}
@@ -2555,6 +2576,7 @@ $
 \qquad\qquad +\frac{t^6}{q^{18}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2581,7 +2603,7 @@ $
 }
 
 
-
+\newpage
 
 {\footnotesize 
 \begin{longtable}{p{0.07\textwidth}|p{0.87\textwidth}} 
@@ -2866,6 +2888,7 @@ $
 $6_{2}^3\,\text{{\tiny (v2)}}$ 
 \includegraphics[scale=0.07,angle=0]{link6_2_3.pdf} 
 & 
+\newline 
 $
 \displaystyle{%
 \overline{\KR}_{2} = 4+\frac{q^6}{t^3}+\frac{3 q^4}{t^2}+\frac{2 q^2}{t}+\frac{2 t}{q^2}+\frac{3 t^2}{q^4}+\frac{t^3}{q^6}
@@ -2883,6 +2906,7 @@ $
 \overline{\KR}_{4} = 6+\frac{2}{q^4}+\frac{3}{q^2}+3 q^2+2 q^4+\frac{q^{10}}{t^3}+\frac{q^4}{t^2}+\frac{2 q^8}{t^2}+\frac{2 q^2}{t}+\frac{2 t}{q^2}+\frac{2 t^2}{q^8}+\frac{t^2}{q^4}+\frac{t^3}{q^{10}}
 }
 $
+\newline 
 \\
 \hline
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2967,7 +2991,7 @@ $
 
 \section{Properties of graded matrix factorisations}\label{appendix:graded_mfs}
 
-Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank graded matrix factorisation of $W \in R_{2c}$ over $R$ then the \emph{dual factorisation} is $X\mdual = \Hom_R(X,R)$, which factorises $-W$. More explicitly, the dual factorisation is the pair
+Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank graded matrix factorisation of $W \in R_{2c}$ over $R$ then the \emph{dual factorisation} is $X\mdual = \Hom_R(X,R)$, which factorises $-W$. More explicitly, the dual factorisation is given by
 \[
 \xymatrix@C+3pc{
 \Hom_R(X^0, R) \ar[r]^-{-\Hom(1, d^1_X)} & \Hom_R(X^1,R) \ar[r]^-{\Hom(1,d^0_X)} & \Hom_R(X^0, R) \, .
@@ -2979,7 +3003,7 @@ Let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring. If $X$ is a finite-rank grad
 
 We will need the following basic facts relating the graded tensor and Hom. The proofs are easy (the standard isomorphisms for graded modules commute with the differentials) and we omit them.
 
-\begin{lemma}\label{lemma:homdual} Given $W, W' \in R_{2c}$ and a finite-rank graded matrix factorisation $X$ of $W$ and a graded linear factorisation $Y$ of $W'$, there is a natural isomorphism
+\begin{lemma}\label{lemma:homdual} Given $W, W' \in R_{2c}$ and a finite-rank graded matrix factorisation~$X$ of~$W$ and a graded linear factorisation~$Y$ of~$W'$, there is a natural isomorphism
 \[
 \xi: X\mdual \otimes Y \lto \Hom_R(X,Y)
 \]
@@ -3000,7 +3024,7 @@ In particular if $X, Y$ are finite-rank graded matrix factorisations we have
 &\cong \Hom_R(X, \Hom_R(Y,R)) \nonumber \\
 &\cong \Hom_R(X,R) \otimes \Hom_R(Y,R) = X\mdual \otimes Y\mdual \, . \label{eq:dual_tensor}
 \end{align}
-Finally, we want to fix our sign conventions for suspensions in the tensor product. The isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign: $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product.
+We also note that the isomorphism $X\langle n \rangle \otimes Y \cong (X \otimes Y)\langle n \rangle$ involves no signs, but the isomorphism $X \otimes (Y \langle n \rangle) \cong (X \otimes Y)\langle n \rangle$ involves a sign: $x \otimes y \longmapsto (-1)^{n|x|} x \otimes y$ for $\Ztwo$-homogeneous $x$. Grading shifts $\{ m \}$ can be pulled out of either component of a tensor product.
 \\
 
 In the following let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring, and $\bs{a}, \bs{b}$ sequences of $n$ homogeneous elements in $R$ with $\deg(a_i) + \deg(b_i) = 2c$. If $\bs{a} = (a_1,\ldots,a_n)$ then $- \bs{a}$ denotes $(-a_1, \ldots, -a_n)$. In describing maps between cyclic Koszul complexes we use the symbols $\theta_i$ introduced in Section \ref{prelim:cyclic_koszul}.
@@ -3037,7 +3061,7 @@ and shifting the grading by $\{ c - \deg(a) \}$ we have $\{ b, a \}\langle 1 \ra
 \begin{align*}
 \{ - \bs{b}, \bs{a} \} &\cong \{ -b_1, a_1 \} \otimes \ldots \otimes \{ -b_n, a_n \}\\
 &\cong \{ -a_1, b_1 \}\langle 1 \rangle\{ \deg(a_1) - c \} \otimes \ldots \otimes \{ -a_n, b_n \}\langle 1 \rangle\{ \deg(a_n) - c \}\\
-&\cong \{ -\bs{a}, \bs{b} \}\langle n \rangle\big\{ \sum_i \deg(a_i) - nc \big\}.
+&\cong \{ -\bs{a}, \bs{b} \}\langle n \rangle\big\{ \sum_i \deg(a_i) - nc \big\} \, .
 \end{align*}
 \end{proof}
 
@@ -3112,7 +3136,7 @@ H(\{ \bs{a}, \bs{b} \}) \cong H(\{\bs{a}, -\bs{b}\}) \, .
 
 As was discussed in Section~\ref{KRconstruction}, to a state graph $\Gamma$ with $m$ edges Khovanov and Rozansky assign a $\Ztwo$-graded complex $\krc(\Gamma)$ over the polynomial ring $R = \QQ[\boldsymbol{x}]$ in the edge variables $\boldsymbol{x} = \{x_1,\ldots,x_m\}$, defined by tensoring together local matrix factorisations assigned to the singular crossings and smoothings of the state graph. The definition depends on a choice of integer $N > 1$, which we fix throughout and omit from the notation, so that all our homologies are $\sln$ homologies.
 
-The Khovanov-Rozansky complex $\krc(D)$ of a planar diagram $D$ of a link $L$ is defined by tensoring together two term complexes build from these $\krc(\Gamma)$'s, as $\Gamma$ varies over all resolutions of $D$, and recall that the unreduced and reduced Khovanov-Rozansky homology are defined respectively by
+The Khovanov-Rozansky complex $\krc(D)$ of a planar diagram $D$ of a link $L$ is defined by tensoring together two-term complexes build from these $\krc(\Gamma)$'s, as $\Gamma$ varies over all resolutions of $D$, and recall that the unreduced and reduced Khovanov-Rozansky homology are defined respectively by
 \begin{align*}
 H(L) &= H\big( H(\krc(D),\diffm), \diffh \big) \, ,\\
 \overline{H}(L, K) &= H\big( H( \krc(D) \otimes_{R} R/(x_i), \diffm), \diffh \big) \, ,
@@ -3180,7 +3204,7 @@ Now suppose that $\Gamma, \Gamma'$ are state graphs of $D$ for which there is a 
 \redh^{p+1}(\Gamma') \ar[r]_-{\cong} & \redh^p(\Gamma')\{N-1\}
 }
 \]
-commutes. Decompose $H(\Gamma), H(\Gamma')$ as in Lemma \ref{lemma:directsumalgebras} and let $\chi': \QQ[x_i]/(x_i^N) \lto \QQ[x_i]/(x_i^N)$ be one of the components of $\chi$. The corresponding component of $\redh^{p+1} \chi$ is the restriction of $\chi'$ to the ideal generated by $x_i^{N-1}$, and the component of $\redh^p \chi$ is the map induced by $\chi$ on the quotients by the ideal $(x_i)$. But since $\chi'$ is homogeneous it sends $1$ to $\lambda x_i^a$ for some $\lambda \in \QQ$ and $0 \le a \le N - 1$, and it is easy to see that if $a > 0$ then these components of $\redh^{p+1} \chi$ and $\redh^p \chi$ are both zero. On the other hand if $a = 0$ then the components are both multiplication by $\lambda$, and hence the diagram commutes. Since the differentials in $(H^p(C(D) \otimes_R R/(x_i),d), d_\chi)$ are built out of the $\chi$'s, we may conclude from this that $\redh^{p+1}(L,K) \cong \redh^{p}(L,K)\{N-1\}$, completing the proof.
+commutes. Decompose $H(\Gamma), H(\Gamma')$ as in Lemma \ref{lemma:directsumalgebras} and let $\chi': \QQ[x_i]/(x_i^N) \lto \QQ[x_i]/(x_i^N)$ be one of the components of $\chi$. The corresponding component of $\redh^{p+1} \chi$ is the restriction of $\chi'$ to the ideal generated by $x_i^{N-1}$, and the component of $\redh^p \chi$ is the map induced by $\chi$ on the quotients by the ideal $(x_i)$. But since $\chi'$ is homogeneous it sends $1$ to $\lambda x_i^a$ for some $\lambda \in \QQ$ and $a \in \{0,\ldots, N - 1\}$, and it is easy to see that if $a > 0$ then these components of $\redh^{p+1} \chi$ and $\redh^p \chi$ are both zero. On the other hand if $a = 0$ then the components are both multiplication by $\lambda$, and hence the diagram commutes. Since the differentials in $(H^p(C(D) \otimes_R R/(x_i),d), d_\chi)$ are built out of the $\chi$'s, we may conclude from this that $\redh^{p+1}(L,K) \cong \redh^{p}(L,K)\{N-1\}$, completing the proof.
 \end{proof}
 
 \begin{proof}[Proof of Lemma \ref{lemma:directsumalgebras}]
