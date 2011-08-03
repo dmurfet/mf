@@ -1153,9 +1153,11 @@ Multiplying together the matrices for the $\lambda_{x_j}$ and $[\partial_j, d_X]
 
 Note that in general~$\idem$ is an idempotent in $\operatorname{hmf}(k[\extvar],W)$, i.\,e.~only up to homotopy. However, we can for example use the method of~\cite[Section~3.6]{LambekRingsModules} to find a representative~$\idem'$ of the class of~$\idem$ that is strictly idempotent. Then one can compute a splitting of~$\idem'$ using standard methods. 
 
-We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. We have implemented this construction in the computer algebra system Singular, and we refer to~\cite{cmWebCompileCode} for a detailed description as well as several commented examples. In Section~\ref{simpleexamples} we will illustrate how our implementation can be put to work for a few simple webs and link invariants. 
+We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. Note that in practice it is more efficient not to compile a web by computing and splitting the idempotent associated to the total matrix factorisation, but rather to repeatedly apply the procedure locally, in order to minimise the size of the involved ``inflated'' matrices. For this we choose a path through the underlying graph and begin by reducing the tensor product of the first two matrix factorisations to finite rank (where we can apply Theorem~\ref{theorem:compilation_main} to reduce the pushforward one variable at a time); next we compute the tensor product of the result with the next matrix factorisation in the path along the same lines, and we iterate the procedure until the whole web is compiled. 
 
-As we will discuss in Section~\ref{compres} we have used this implementation to compute Khovanov-Rozansky homology for several links. We stress however that our construction can just as well compute invariants associated to arbitrary tangles in~\cite{kr0401268} (which are still special cases of decorated webs), and we can explicitly compute the fusion of any topological defects in any Landau-Ginzburg model with potentials that are isolated singularities.
+We have implemented this construction in the computer algebra system Singular, and we refer to~\cite{cmWebCompileCode} for a detailed description as well as several commented examples. In Section~\ref{simpleexamples} we will illustrate how our implementation can be put to work for a few simple webs and link invariants. 
+
+As we will discuss in Section~\ref{compres} we have used this implementation to compute Khovanov-Rozansky homology for several links. We stress however that our construction can just as well compute invariants associated to arbitrary tangles in~\cite{kr0401268} (which are still special cases of decorated webs), and we can explicitly compute the fusion of arbitrary topological defects in any Landau-Ginzburg model with potentials that are isolated singularities.
 
 \section{The construction}
 \label{KRconstruction}
@@ -3242,7 +3244,7 @@ We will see later how to write down very explicit homotopies $h$ using connectio
 \begin{proposition}\label{prop:pertapptechnical} If $X$ is a finite-rank matrix factorisation of $V \in R$ over $R$, and the sum $V + W$ belongs to the image of the structure morphism $S \lto R$, then there is a deformation retract datum of linear factorisations of $V+ W$ over $S$, 
 \begin{equation}\label{eq:pre_perturb_htm3}
 \xymatrix@C+2pc{
-(X \otimes R/(\bb), d_X \otimes 1) \ar@<-0.8ex>[r]_-{\sigma_\infty} & (X \otimes \bigwedge F, 1 \otimes \delta_+ + 1 \otimes \delta_{-} + d_X \otimes 1), \ar@<-0.8ex>[l]_-{1 \otimes \pi}
+(X \otimes R/(\bb), d_X \otimes 1) \ar@<-0.8ex>[r]_-{\sigma_\infty} & (X \otimes \bigwedge F, 1 \otimes \delta_+ + \mu), \ar@<-0.8ex>[l]_-{1 \otimes \pi}
 } \quad h_\infty\,,
 \end{equation}
 where $\mu = d_X \otimes 1 + 1 \otimes \delta_-$ and $\sigma_\infty = \sum_{m \ge 0} (-1)^m (h \mu)^m \sigma$.
@@ -3254,7 +3256,7 @@ First let us note that the statement makes sense: the differential $d_X \otimes 
 (X \otimes R/(\bb), 0) \ar@<-0.8ex>[r]_{1 \otimes \sigma} & (X \otimes \bigwedge F, 1 \otimes \delta_+), \ar@<-0.8ex>[l]_{\pi}
 } \quad - 1 \otimes h \, .
 \]
-Consider the perturbation $\mu$ of the differential on $X \otimes \bigwedge F$. The hypotheses of \cite[Proposition 6.1]{dm1102.2957} are easily checked, and the the conclusion is that the desired linear factorisation exists.
+Consider the perturbation $\mu$ of the differential on $X \otimes \bigwedge F$. The hypotheses of \cite[Proposition 6.1]{dm1102.2957} are easily checked, and the conclusion is that the desired linear factorisation exists.
 \end{proof}
 
 \begin{remark}\label{remark:splitexactsequenceskos}
@@ -3306,7 +3308,7 @@ commutes up to the natural isomorphism.
 
 \subsection{Lifting morphisms}\label{subsection:liftingmorphisms}
 
-Although the techniques work more generally, for simplicity let us specialise to situation of Section~\ref{section:stabilisation}, where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \bs{w}, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\bs{w} = (w_1,w_2)$ is the one elaborated in Section \ref{section:stabilisation}. This means that we take $\bs{a}=\bs{w}$ and $\bb = \bs{t}$ in the above. 
+Although the techniques work more generally, for simplicity let us specialise to situation of Section~\ref{section:stabilisation}, where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \bs{w}, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\bs{w} = (w_1,w_2)$ is defined in~\eqref{eq:cons1}. This means that we take $\bs{a}=\bs{w}$ and $\bb = \bs{t}$ in the above. 
 
 Since we are interested in morphisms $\Xbul \lto \Xcirc$, in addition we take $Y = \Xbul$. We can write $R$ as $S[t_1,t_2]$ so there is an $S$-linear standard (in the sense of \cite[Section 8.1]{dm1102.2957}) flat connection
 \begin{gather*}
