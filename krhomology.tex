@@ -334,7 +334,7 @@ To see the problem more clearly, let us consider the general situation of two ma
 
 Using an algorithm to split arbitrary idempotents in the triangulated category of matrix factorisations, we have implemented the above construction using the computer algebra system Singular, see~\cite{cmWebCompileCode}. This is a practical solution to the problem of computing arbitrary tensor products of finite-rank matrix factorisations of isolated singularities. As a special case we can explicitly compute the action of any functor on categories of finite-rank matrix factorisations which is given by a kernel. Another application is that this solution affords a direct computation of Khovanov-Rozansky homology. We shall spell out the details of the construction in Sections~\ref{compilewebs} and~\ref{KRconstruction}, and in Section~\ref{compres} we will present some of the results for the categorified $\sln$ link invariants that we have obtained in this way. In particular we compute unreduced and reduced Khovanov-Rozansky homology for all prime links with up to six crossings for various values of~$N$. 
 
-Our method could as well be straightforwardly applied to the categorification~\cite{kr0701333} of the Kauffman polynomial and to virtual links (TODO: check and mention Wu); this will be discussed elsewhere. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
+Our method could as well be straightforwardly applied to compute the coloured homological $\sln$ link invariants of~\cite{w0907.0695}, to the categorification of the Kauffman polynomial and to virtual links~\cite{kr0701333}. We also note that our approach is not applicable to the categorification~\cite{kr0505056} of the Homfly polynomial as the potentials that occur in this theory are not isolated singularities. 
 
 \medskip
 
@@ -415,7 +415,7 @@ The remaining part of the present paper is organised as follows. In Section~\ref
 
 
 \begin{acknowledgements}
-TODO: We thank N.~Behr, S.~Cautis, S.~Gukov, M.~Khovanov, T.~Licata, J.~Rasmussen, R.~Rouquier, I.~Runkel, C.~Stroppel, and G.~Watts. 
+We thank N.~Behr, S.~Cautis, S.~Gukov, M.~Khovanov, T.~Licata, J.~Rasmussen, R.~Rouquier, I.~Runkel, C.~Stroppel, and G.~Watts. 
 \end{acknowledgements}
 
 
@@ -1041,7 +1041,7 @@ Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) 
 such that $f \circ g = 1_Y$ and $g \circ f = \idem$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence. 
 \end{remark}
 
-We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Then we can always split~$\idem$ in as in $\hmf(k[\extvar],W)$, and hence we can explicitly compute the finite-rank reduction (called~$Y$ in Remark~\ref{compileAndSplit}) of tensor products of matrix factorisations. Since the main step to do this is the compilation, later we will use the phrase ``compiling a web'' synonymously for ``reducing the total (tensor product) matrix factorisation of a web to finite rank''. 
+We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Then we can always split~$\idem$ in $\hmf(k[\extvar],W)$, and hence we can explicitly compute the finite-rank reduction (called~$Y$ in Remark~\ref{compileAndSplit}) of tensor products of matrix factorisations. Since the main step to do this is the compilation, later we will use the phrase ``compiling a web'' synonymously for ``reducing the total matrix factorisation of a web to finite rank''. 
 
 The starting point for the construction is a long list of polynomials acting null-homotopically on $X$, and a corresponding list of null-homotopies. Let $v$ be a vertex, $e$ an edge beginning at $v$ and $x$ a variable lying on $e$. Then $(X_v, d_v)$ denotes the matrix factorisation assigned to $v$. Certainly none of the potentials associated to the other edges incident at $v$ involve $x$, so from the identity $d_v^2 = (\sum_{f \in O_v} W_f - \sum_{f \in I_v} W_f) \cdot 1_{X_v}$ we deduce that
 \[
@@ -1320,7 +1320,7 @@ In the $\mathds{Z}$-grading on $\bigwedge F$ the differentials with subscripts $
 \begin{proposition} The morphisms $\pi_{\bullet}$ and $\pi_{\circ}$ are the stabilisations of $R/(\bs{s})$ and $R/(\bs{t})$, respectively.
 \end{proposition}
 
-That $\pi_{\circ}$ stabilises the diagonal is a theorem of Dyckerhoff \cite{d0904.4713} and the same argument settles related cases like $\pi_{\bullet}$. We give a new proof in  Appendix \ref{section:morphismpert} using different methods; methods that will help us stabilise morphisms later. What Dyckerhoff actually shows (and we recall in Appendix \ref{subsection:kernelfunctors}) is that the functors determined by these matrix factorisations agree with the functors determined by the bimodules, that is, both squares implicit in the diagram (TODO: try to fix $X$'s below)
+That $\pi_{\circ}$ stabilises the diagonal is a theorem of Dyckerhoff \cite{d0904.4713} and the same argument settles related cases like $\pi_{\bullet}$. We give a new proof in  Appendix \ref{section:morphismpert} using different methods; methods that will help us stabilise morphisms later. What Dyckerhoff actually shows (and we recall in Appendix \ref{subsection:kernelfunctors}) is that the functors determined by these matrix factorisations agree with the functors determined by the bimodules, that is, both squares implicit in the diagram 
 \[
 \xymatrix@C+3pc@R+1pc{
 \hmf(\QQ[x_1,x_2], x_1^{N+1} + x_2^{N+1})\ar[d]_-{\inc}\ar@<1ex>[r]^-{(-) \otimes R/(\bs{s})}
@@ -1522,7 +1522,7 @@ We noted in Example~\ref{MOYremark} that only special choices of matrix factoris
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage} 
-does the job. That is, if we promote every resolution $\Gamma$ to a state web using these local assignments, and write $C(\Gamma)$ for the total matrix factorisation of the state web~$\Gamma$, then there are a series of homotopy equivalences of matrix factorisations which together give a categorified version of~\eqref{MOYdecomp1}
+does the job. That is, if we promote every resolution $\Gamma$ to a state web using these local assignments, and write $C(\Gamma)$ for the total matrix factorisation of the state web~$\Gamma$, then there are a series of homotopy equivalences of matrix factorisations which together give a categorified version of~\eqref{MOYdecomp1}: 
 \begin{align}
 \label{MOYcatDecomp1}&
 C \bigg( 
@@ -1869,9 +1869,7 @@ C \ar[r]^{g' \circ (\Phi \otimes 1) \circ f} & C'
 $$
 and we see that the \emph{compiled map} $g'\circ(\Phi\otimes 1)\circ f$ is what~$\Phi$ induces between the compilations~$C$ and~$C'$. Note that we need no knowledge of the maps $\vartheta,\psi$ from Theorem~\ref{theorem:compilation_main} to compute the compiled map. 
 
-In this way we can compile every differential $d_{\chi}$ in $C(D)$ and compute Khovanov-Rozansky homology $H(L)$. Its reduced version is obtained in the exact same fashion after one sets $x_{i}=0$ everywhere in $C(D)$. We have implemented these constructions to automatically compute the invariants $\KR_{N}$ and $\overline{\KR}_{N}$ in Singular, see~\cite{cmWebCompileCode} and Example~\ref{KRexample} below.
-
-(TODO: comment that one could also use categorified MOY relations to compute KR invariants, but webs are cooler\dots)
+In this way we can compile every differential $d_{\chi}$ in $C(D)$ and compute Khovanov-Rozansky homology $H(L)$. Its reduced version is obtained in the exact same fashion after one sets $x_{i}=0$ everywhere in $C(D)$. We have implemented these constructions to automatically compute the invariants $\KR_{N}$ and $\overline{\KR}_{N}$ in Singular, see~\cite{cmWebCompileCode} and Example~\ref{KRexample} below. Another option to compute $H(L)$ would have been to use the MOY relations~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4} algorithmically and thus reduce every link diagram to unlinked circles, to which~\cite{kr0401268} associate a shift of the Jacobian of the potential $x^{N+1}$. We prefer our approach as it also allows to compile arbitrary webs, and may be straightforwardly applied to compute other categorified link invariants such as those of~\cite{kr0701333, w0907.0695}. 
 
 
 \section{Simple examples}
