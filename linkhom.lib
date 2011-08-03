@@ -571,7 +571,7 @@ proc linkNumberOfVariables(list linkData)
 // Given a link (as returned by linkLibrary) returns the parity, in
 // the sense of [KR]. Namely, we replace all crossings with the smooth
 // resolution and count the number of circles in the resulting link.
-// The "parity" is this integer modulo 2.
+// The "parity" is this integer modulo 2. i.e. we return 0 or 1.
 
 proc linkParity(list linkData)
 {
@@ -615,7 +615,7 @@ proc linkParity(list linkData)
         kill i,j,thisComp;
     }
     
-    int parity = size(componentList);
+    int parity = size(componentList) mod 2;
     return(parity);
 }
 
