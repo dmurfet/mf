@@ -546,7 +546,7 @@ According to~\cite{moy1998}, the construction of $P_{N}(L)$ for a link~$L$ is ba
 \draw[ -> ] (230:1) arc (230:130:1); 
 \end{tikzpicture}
 \end{minipage}, 
-where both strands of a smoothing are actually divided by a bivalent vertex called a \emph{mark} that we do not explicitly show in  our graphs.\footnote{As  mentioned in the introduction, instead of introducing labelled edges already at this point as in~\cite{moy1998}, or wide edges with three-valent vertices as in~\cite{kr0401268}, we prefer to formulate the construction in terms of the vertex  \begin{minipage}{0.38cm}
+where both strands of a smoothing are actually divided by a bivalent vertex called a \emph{mark} that we do not explicitly show in our graphs.\footnote{As mentioned in the introduction, instead of introducing labelled edges already at this point as in~\cite{moy1998}, or wide edges with three-valent vertices as in~\cite{kr0401268}, we prefer to formulate the construction in terms of the vertex  \begin{minipage}{0.38cm}
 \begin{tikzpicture}[scale=0.18,baseline, inner sep=0.1mm, >=stealth]
 \node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= black] {};
 \node (bl) at (-1,-1) [circle] {};
@@ -559,7 +559,7 @@ where both strands of a smoothing are actually divided by a bivalent vertex call
 \draw[->] (0) -- (tr); 
 \end{tikzpicture}
 \end{minipage}.} 
-From a link diagram with~$s$ crossings we thus produce $2^s$ oriented planar graphs~$\Gamma$ whose vertices are either bivalent with one incoming and one outgoing edge, or four-valent of type 
+From a link diagram with~$s$ crossings this produces $2^s$ oriented planar graphs~$\Gamma$ whose vertices are either bivalent with one incoming and one outgoing edge, or four-valent of type 
  \begin{minipage}{0.48cm}
 \begin{tikzpicture}[scale=0.23,baseline, inner sep=0.1mm, >=stealth]
 \node (0) at (0,0) [circle,inner sep=0.7pt, thin,draw=black,fill= black] {};
@@ -745,7 +745,7 @@ p_{N} \Bigg( \;
 \end{align}
 As is customary in each of the above identities we only show those parts of the graphs~$\Gamma$ which differ in the arguments of the $p_{N}$'s. 
 
-In the second step, the link invariant $P_{N}(L)$ is obtained as follows. To produce the $2^s$ graphs $\Gamma_{j}$, each crossing in the link diagram is resolved according to
+In the second step one produces the $2^s$ graphs $\Gamma_{j}$ by resolving each crossing in the link diagram according to
 \begin{equation}
 \label{graphreduction}
 \begin{tikzpicture}[scale=0.5,baseline, inner sep=1mm, >=stealth]
@@ -806,7 +806,7 @@ q^{N-1} \,
 \draw[->,  thick] (0) -- (tr); 
 \end{tikzpicture} \, .
 \end{equation}
-Denoting by $q^{\alpha_j}$ the product of the~$s$ $q$-monomials associated to the graph $\Gamma_{j}$ by~\eqref{graphreduction}, the link invariant is computed as
+Denoting by $q^{\alpha_j}$ the product of the~$s$ $q$-monomials associated to the graph $\Gamma_{j}$ by~\eqref{graphreduction}, the link invariant is defined by
 $$
 P_{N}(L) = \sum_{j=1}^{2^c} q^{\alpha_j} p_{N}(\Gamma_{j}) \, .
 $$
@@ -938,7 +938,7 @@ then we obtain a closed oriented planar graph whose vertices are of types
 \[
 \Xcirc, \Xbul \in \hmf( k[u,x,y,z], u^{N+1} +x^{N+1} - y^{N+1} - z^{N+1} )
 \]
-(whose dependence on the variables we usually do not display) and make the following assignments of matrix factorisations to vertices: 
+(whose dependence on the variables we do not usually display) and make the following assignments of matrix factorisations to vertices: 
 \begin{equation}
 \label{MFcrossings}
 \begin{tikzpicture}[scale=0.7,baseline, inner sep=1mm, >=stealth]
@@ -1035,13 +1035,13 @@ Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) 
 such that $f \circ g = 1_Y$ and $g \circ f = \idem$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence. 
 \end{remark}
 
-We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Then we can always split~$\idem$ in $\hmf(k[\extvar],W)$, and hence we can explicitly compute the finite-rank reduction (called~$Y$ in Remark~\ref{compileAndSplit}) of tensor products of matrix factorisations. Since the main step to do this is the compilation, later we will use the phrase ``compiling a web'' synonymously for ``reducing the total matrix factorisation of a web to finite rank''. 
+We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Since it is straightforward to split an idempotent and therefore compute the finite-rank reduction $Y$ from $(C, \idem)$, we will use the phrase ``compiling a web'' synonymously for ``reducing the total matrix factorisation of a web to finite rank''. 
 
 The starting point for the construction is a long list of polynomials acting null-homotopically on $X$, and a corresponding list of null-homotopies. Let $v$ be a vertex, $e$ an edge beginning at $v$ and $x$ a variable lying on $e$. Then $(X_v, d_v)$ denotes the matrix factorisation assigned to $v$. Certainly none of the potentials associated to the other edges incident at $v$ involve $x$, so from the identity $d_v^2 = (\sum_{f \in O_v} W_f - \sum_{f \in I_v} W_f) \cdot 1_{X_v}$ we deduce that
 \[
 \partial_x(d_v) \cdot d_v + d_v \cdot \partial_x(d_v) = \partial_x(W_e) \cdot 1_{X_v}\,.
 \]
-That is, the polynomial $\partial_x(W_e)$ acts null-homotopically on $X_v$ with null-homotopy $\partial_x(d_v)$. But then the same is true of $X$, of which $X_v$ is a tensor factor, provided we interpret $\partial_x(d_v)$ as the map $1 \otimes \ldots \otimes 1\otimes \partial_x(d_v) \otimes 1\otimes \ldots \otimes 1$ on $X$ with suitable factors of the identity inserted, and Koszul signs.
+That is to say, $\partial_x(W_e)$ acts null-homotopically on $X_v$ with null-homotopy $\partial_x(d_v)$. But then the same is true of $X$, of which $X_v$ is a tensor factor, provided we interpret $\partial_x(d_v)$ as $1 \otimes \ldots \otimes 1\otimes \partial_x(d_v) \otimes 1\otimes \ldots \otimes 1$ on $X$ with suitable factors of the identity inserted, and Koszul signs.
 
 Let $I$ denote the ideal in $k[\intvar]$ generated by the set of polynomials $\bs{\delta} = \{\partial_x(W_e)\}_{x,e}$ where $e$ ranges over all \emph{internal} edges in the web and $x$ over each variable lying on $e$. We refer to $J = k[\intvar]/I$ as the \emph{internal Jacobi algebra} of the decorated web. It is obviously the tensor product over $k$ of the edge Jacobi algebras, 
 \[
@@ -1055,7 +1055,7 @@ is a graded free $k[\extvar]$-module of finite rank, and consequently the quotie
 \[
 \bar\idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \Big(\prod_x \partial_x(d_v)\Big) \circ \At(X)^n\,,
 \]
-such that the pair $(X/(\bs{\delta} X)\langle n \rangle, \bar\idem)$ compiles the web.\footnote{Strictly speaking this is not correct, as the pair $(X/(\bs{\delta} X)\langle n \rangle, \bar\idem)$ will split in the category of graded matrix factorisations not to $X$ but to $X\{ p \}$ for some nonzero integer $p$. We choose not to address this point since this is not the version of the idempotent that we actually compute with. In our approach below such subtleties will be taken into account.} Here $n$ is the total number of internal variables, the product is over all internal variables $x$ lying on an edge with origin $v$, and $\At(X)$ is the Atiyah class, see~\eqref{Atiyahclass} below. For theoretical purposes (for example if one wanted to pursue a residue formula for the Euler characteristic of $X$, or address the correlators of \cite{kr0404189}) this compilation is the right one. But for implementation on a computer it is better to choose the sequence $\bs{\delta}$ differently, so that the connections in the construction (see below) become very simple operations on polynomials.
+such that the pair $(X/(\bs{\delta} X)\langle n \rangle, \bar\idem)$ compiles the web.\footnote{Strictly speaking this is not correct, as the pair $(X/(\bs{\delta} X)\langle n \rangle, \bar\idem)$ will split in the category of graded matrix factorisations not to $X$ but to $X\{ p \}$ for some nonzero integer $p$. We choose not to address this point since this is not the version of the idempotent that we actually compute with. In our approach below such subtleties will be taken into account.} Here $n$ is the total number of internal variables, the product is over all internal variables $x$ lying on an edge with origin $v$, and $\At(X)$ is the Atiyah class, see~\eqref{Atiyahclass} below. For theoretical purposes (for example if one wanted to pursue a residue formula for the Euler characteristic of $X$, or the correlators of \cite{kr0404189}) this compilation is the right one. But for implementation on a computer it is better to choose the sequence $\bs{\delta}$ differently, so that the connections in the construction (see below) become simple operations on polynomials.
 \\
 
 Let $x$ be an internal variable lying on an edge $e$. Since $k[\bs{x}_e]/(\partial_{\bs{x}_e} W_e)$ is finite-dimensional, there is an integer $a > 0$ such that $x^a \in (\partial_{\bs{x}_e} W_e)$. For simplicity, let us assume that this $a$ has been chosen large enough so that it works for every internal variable,\footnote{For $\sln$ homology, the integer $N$ will work: the partial derivatives $\partial_x(W_e)$ will be $N$-th powers of ring variables.} and write
@@ -1106,7 +1106,7 @@ is a $k[\extvar,\intvar^a]$-linear morphism of matrix factorisations, which up t
 \[
 X/(\intvar^a X) = X \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\,
 \]
-which is a finite-rank graded matrix factorisation of $W$ over $k[\extvar]$. The homotopies $\lambda_x$ also give $k[\extvar]$-linear maps on this quotient, and we define a $k[\extvar]$-linear endomorphism of $X/(\intvar^a X)$ as 
+which is a finite-rank graded matrix factorisation of $W$ over $k[\extvar]$. The homotopies $\lambda_x$ also give $k[\extvar]$-linear maps on this quotient, and we define a $k[\extvar]$-linear endomorphism of $X/(\intvar^a X)$ by
 \begin{equation}
 \idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \Big(\prod_x \lambda_x \Big) \circ \At(X)^n\,.
 \end{equation}
@@ -1145,9 +1145,9 @@ where $\partial_j = \partial_{x_j}$. Let $\sigma: X/(\intvar^a X) \lto X$ be the
 Multiplying together the matrices for the $\lambda_{x_j}$ and $[\partial_j, d_X]$ we have the matrix for $\idem$.
 \end{remark}
 
-Note that in general~$\idem$ is an idempotent in $\operatorname{hmf}(k[\extvar],W)$, i.\,e.~only up to homotopy. However, we can for example use the method of~\cite[Section~3.6]{LambekRingsModules} to find a representative~$\idem'$ of the class of~$\idem$ that is strictly idempotent. Then one can compute a splitting of~$\idem'$ using standard methods. 
+Note that in general~$\idem$ is only an idempotent in the homotopy category: the identity $\idem^2 = \idem$ holds not on the level of functions, but only up to homotopy. However, we can use the method of lifting modulo a nilpotent ideal~\cite[Section~3.6]{LambekRingsModules} to find an explicit representative~$\idem'$ of the class of~$\idem$ that is strictly idempotent. Then one can compute a splitting of~$\idem'$ using standard methods. 
 
-We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. Note that in practice it is more efficient to compile a web by repeatedly computing and splitting idempotents locally instead of doing it for the total matrix factorisation. This minimises the size of the involved ``inflated'' matrices and hence the computing time, and can be done as follows: We choose a path through the underlying graph that connects all vertices, and we begin by reducing the tensor product of the first two matrix factorisations to finite rank (where we can apply Theorem~\ref{theorem:compilation_main} to reduce the pushforward one variable at a time). Then we compute the tensor product of the result with the next matrix factorisation in the path along the same lines, and we iterate the procedure until the whole web is compiled. 
+The conclusion is that we can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. In practice it is more efficient to compile a web by repeatedly computing and splitting idempotents locally instead of doing it ``all at once'' for the total matrix factorisation. This minimises the size of the involved ``inflated'' matrices and hence the computing time, and can be done as follows: we choose a path through the underlying graph that connects all vertices, and begin by reducing the tensor product of the first two matrix factorisations to finite rank (where we can apply Theorem~\ref{theorem:compilation_main} to reduce the pushforward one variable at a time). Then we compute the tensor product of the result with the next matrix factorisation in the path along the same lines, and iterate the procedure until the whole web is compiled. 
 
 We have implemented this construction in the computer algebra system Singular, and we refer to~\cite{cmWebCompileCode} for a detailed description as well as several commented examples. In Section~\ref{simpleexamples} we will illustrate how our implementation can be put to work for a few simple webs and link invariants. 
 
