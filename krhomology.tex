@@ -1,7 +1,5 @@
  % Authors:  Nils Carqueville, Daniel Murfet
-
-% TODO: References are to arXiv version of [KR]
-
+ 
 \documentclass{compositio}
 \usepackage{stmaryrd}
 \usepackage{amsmath, amscd, amssymb, mathrsfs, accents, amsfonts}
@@ -188,12 +186,10 @@ Let us now recall the basic ideas of Khovanov and Rozansky's construction, and d
 If it has~$m$ strands, then one arbitrarily associates distinct ``potentials'', i.\,e.~in this case monomials $x_{i}^{N+1}$, $i\in\{1,\ldots,m\}$, to each strand. In the example of the Hopf link we can decorate the link diagram as follows:
 $$
 \begin{tikzpicture}[scale=1.0,baseline, inner sep=1mm, >=stealth]
-% potentials as labels:
 \node (1) at (-2.9,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{1}$}};
 \node (2) at (-1.5,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{2}$}};
 \node (3) at (0.15,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{3}$}};
 \node (4) at (1.55,0) [circle,inner sep=1.5pt, draw=white,fill= white] {{\normalsize $x^{N+1}_{4}$}};
-% Hopf link:
 \draw[ ->, thick, shift={(-1.4,0)} ]  (-41:1) arc (-41:310:1); 
 \draw[ ->, thick ] (140:1) arc (-220:130:1); 
 \end{tikzpicture}
@@ -421,8 +417,6 @@ We thank N.~Behr, S.~Cautis, S.~Gukov, M.~Khovanov, T.~Licata, J.~Rasmussen, R.~
 
 \section{Preliminaries}
 \label{preliminaries}
-
-% In this section we recall our notation. In most cases we are consistent with \cite{kr0401268} (\textbf{todo}).
 
 \subsection{Graded matrix factorisations}
 
@@ -1153,7 +1147,7 @@ Multiplying together the matrices for the $\lambda_{x_j}$ and $[\partial_j, d_X]
 
 Note that in general~$\idem$ is an idempotent in $\operatorname{hmf}(k[\extvar],W)$, i.\,e.~only up to homotopy. However, we can for example use the method of~\cite[Section~3.6]{LambekRingsModules} to find a representative~$\idem'$ of the class of~$\idem$ that is strictly idempotent. Then one can compute a splitting of~$\idem'$ using standard methods. 
 
-We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. Note that in practice it is more efficient not to compile a web by computing and splitting the idempotent associated to the total matrix factorisation, but rather to repeatedly apply the procedure locally, in order to minimise the size of the involved ``inflated'' matrices. For this we choose a path through the underlying graph and begin by reducing the tensor product of the first two matrix factorisations to finite rank (where we can apply Theorem~\ref{theorem:compilation_main} to reduce the pushforward one variable at a time); next we compute the tensor product of the result with the next matrix factorisation in the path along the same lines, and we iterate the procedure until the whole web is compiled. 
+We thus arrive at the result that one can algorithmically compile any decorated web, i.\,e.~for arbitrary tensor products of matrix factoriations one can explicitly compute a homotopy equivalent finite-rank matrix factorisation. Note that in practice it is more efficient to compile a web by repeatedly computing and splitting idempotents locally instead of doing it for the total matrix factorisation. This minimises the size of the involved ``inflated'' matrices and hence the computing time, and can be done as follows: We choose a path through the underlying graph that connects all vertices, and we begin by reducing the tensor product of the first two matrix factorisations to finite rank (where we can apply Theorem~\ref{theorem:compilation_main} to reduce the pushforward one variable at a time). Then we compute the tensor product of the result with the next matrix factorisation in the path along the same lines, and we iterate the procedure until the whole web is compiled. 
 
 We have implemented this construction in the computer algebra system Singular, and we refer to~\cite{cmWebCompileCode} for a detailed description as well as several commented examples. In Section~\ref{simpleexamples} we will illustrate how our implementation can be put to work for a few simple webs and link invariants. 
 
@@ -1161,7 +1155,6 @@ As we will discuss in Section~\ref{compres} we have used this implementation to 
 
 \section{The construction}
 \label{KRconstruction}
-% notes: skrh, skrh2, ptons
 
 In this section we give a description of Khovanov and Rozansky's $\sln$ link homology. This invariant categorifies a specialisation of the Homfly polynomial, and as outlined in the previous section the categorification happens in two steps, generalising the two-step approach of \cite{moy1998}. 
 
@@ -1170,8 +1163,6 @@ The first step is to categorify the polynomial invariant $p_N(\Gamma)$ of state 
 In the second step one considers morphisms of matrix factorisations $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$. Viewed as two-term complexes of matrix factorisations these morphisms categorify the differences on the right-hand side of the identities in~\eqref{graphreduction}. Associating these two-term complexes to the over- and under-crossings of a link diagram allows for the construction of the homological link invariant $H(L)$ as the cohomology of the total complex. This categorifies the $\sln$ polynomial $P_{N}(L)$ in the sense that the Poincar\'e polynomial $\KR_{N}(L)$ of $H(L)$ specialises to $P_{N}(L)=\KR_{N}(L)|_{t=-1}$. 
 
 The construction as originally given in \cite{kr0401268} has many beautiful properties but can strike the newcomer as looking unmotivated. Why these matrix factorisations, and why these maps? Things becomes clearer as one reads on \cite{k0510265,RouquierMexico} but in order to make this apparent from the outset we are going to take as our starting point a simple adjunction involving symmetric polynomials. For the experts this will be a familiar story, but along the way there are some technical innovations which may still be of interest.
-
-% In this setting we will identify the two-term complexes $\Xcirc \lto \Xbul$ and $\Xbul \lto \Xcirc$ as representations of the autoequivalences that give rise to categorified link invariants. 
 
 \subsection{Symmetric polynomials and adjunction}
 
@@ -1188,7 +1179,7 @@ of symmetric polynomials in all polynomials. We give the variables $x_i$ degree 
 \varphi^* \ar@{-|}[r] & \varphi_* \ar@{-|}[r] & \varphi^!\,.
 }
 \]
-Here $\varphi_*$ denotes restriction of scalars, $\varphi^* = (-) \otimes_A S$ is extension of scalars and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ can be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of graded $A$-modules (here $\{ m \}$ denotes shifting the grading \emph{up} by $m$)
+Here $\varphi_*$ denotes restriction of scalars, $\varphi^* = S \otimes_A (-)$ is extension of scalars and $\varphi^! = \Hom_A(S, -)$. Now any polynomial $f \in S$ can be written uniquely as $f_1 + f_2(x_1-x_2)$ for symmetric polynomials $f_i$, so $S$ is a free $A$-module on the basis $\{1, x_1 - x_2\}$ and we write $1^*, (x_1-x_2)^*$ for the corresponding dual basis of $\Hom_A(S,A)$ as an $A$-module. The important point is that there is an isomorphism of graded $A$-modules (here $\{ m \}$ denotes shifting the grading \emph{up} by $m$)
 \[
 \psi: S \lto \Hom_A(S,A)\{2\} \, , \qquad \psi(1) = 2(x_1-x_2)^* \, , \qquad \psi(x_1-x_2) = 2 \cdot 1^* \, .
 \]
@@ -1273,7 +1264,6 @@ This process is known as \emph{stabilisation}, and will take place in the next s
 \begin{remark} The bimodule $S \otimes_A S$ is the simplest kind of \emph{Soergel bimodule}. The connection between the triply-graded $\sln$ link homology and Soergel bimodules was uncovered in \cite{k0510265} and similar ideas give the connection to the bigraded $\sln$ link homology considered here; see Webster \cite[Section 2.3]{w0610650} where the theory is presented in terms of stabilisation of Soergel bimodules. The relation to Soergel bimodules is also explained very clearly in \cite{b1105.0702}.
 \end{remark}
 
-%We can view the stabilisation as a kind of truncation of the bimodule picture elaborated above, and in fact these truncations together form a kind of filtration as we vary the integer $N$. Indeed if one proceeds in the above line, one will end up constructing the triply graded Khovanov-Rozansky homology of \cite{??}, and the relationship between this homology and the truncations at level $N$ (the $\sln$-homologies) is encoded by the spectral sequence of~\cite{r0607544}.
 
 \subsection{Stabilisation}\label{section:stabilisation}
 
@@ -1282,9 +1272,6 @@ We will now present the explicit matrix factorisations and morphisms which stabi
 \Hom_R(Y, X_M) \lto \Hom_R(Y, M)
 \]
 is a quasi-isomorphism for every finite-rank graded matrix factorisation $Y$ of $W$.
-
-%The presentation of the matrix factorisations is standard, but we give a new approach to stabilisation of the morphisms by inverting a certain canonical quasi-isomorphism. Our construction is no better for computations: we simply recover the explicit maps of \cite{kr0401268}, but we feel it is worth including here since the \emph{ad hoc} nature of the maps in the originl paper is a major turn off for newbies (\emph{rephrase}).
-
 
 Clearly the stabilisation, if it exists, is unique up to homotopy equivalence. Take $S = \QQ[x_1,x_2]$ as before and $R = \QQ[x_1,x_2,y_1,y_2]$. The reader wanting to compare with \cite[Section 6]{kr0401268} should make the change of variables $x_1,x_2,y_1,y_2 \longleftrightarrow x_4,x_3,x_1,x_2$. Fix an integer $N > 0$ and define
 \begin{align*}
@@ -1373,7 +1360,7 @@ in an unknown $z$ has a unique polynomial solution $\Omega_2(\gamma)$, and the m
 is a morphism of graded matrix factorisations, making the diagram (\ref{eq:cons5}) commute up to homotopy.
 \end{lemma}
 
-The only obstacle to having an explicit formula for $\chi_1$ is determining the solution $\Omega_2(\gamma)$ of the differential equation (\ref{eq:consfirst1}). Fortunately the solution has already been provided by Khovanov and Rozansky: up to a sign, it is the polynomial $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ of \cite[p.51]{kr0401268} (where we set the parameter~$\lambda$ of \cite{kr0401268} equal to~$\frac{1}{2}$).
+The only obstacle to having an explicit formula for $\chi_1$ is determining the solution $\Omega_2(\gamma)$ of the differential equation (\ref{eq:consfirst1}). Fortunately the solution has already been provided by Khovanov and Rozansky: up to a sign, it is the polynomial $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ of \cite[Section~6]{kr0401268} (where we set the parameter~$\lambda$ of \cite{kr0401268} equal to~$\frac{1}{2}$).
 
 \begin{lemma} $\Omega_2(\gamma) = -a_2$.
 \end{lemma}
@@ -1381,12 +1368,9 @@ The only obstacle to having an explicit formula for $\chi_1$ is determining the 
 Setting $y_1 = x_1$ in (\ref{eq:cons2}) shows that $u_1 + y_1 u_2 - w_2$ is divisible by $x_1 - y_1$. We must show it is a solution of (\ref{eq:consfirst1}). All we know of the polynomials $u_i$ is that they satisfy (\ref{eq:cons2}), and indeed one shows that $-a_2$ is a solution of (\ref{eq:consfirst1}) by direct substitution using the $y_2$-derivative of (\ref{eq:cons2}) to obtain an expression for $u_1 + y_1 u_2$.
 \end{proof}
 
-%In the basis $1, \theta_1\theta_2, \theta_1, \theta_2$ the matrix of the morphism $\chi_1$ is therefore
-%\[
-%(\chi_1)^0 = \begin{pmatrix} 1 & 0 \\ -a_2 & \frac{1}{2}(x_1+y_1-x_2-y_2)\end{pmatrix}, \qquad (\chi_1)^1 = \begin{pmatrix} 1 & \frac{1}{2}(x_2+y_2) \\ 1 & \frac{1}{2}(x_1+y_1) \end{pmatrix}.
-%\]
-The $\chi_1$ given above agrees with the definition given in \cite[p.51]{kr0401268} for $\lambda = \frac{1}{2}$, up to a sign which arises because they write their differentials and maps in the basis $\{1, \theta_2 \theta_1 = - \theta_1 \theta_2, \theta_1, \theta_2\}$.
-\\
+The $\chi_1$ given above agrees with the definition given in \cite{kr0401268} for $\lambda = \frac{1}{2}$, up to a sign which arises because they write their differentials and maps in the basis $\{1, \theta_2 \theta_1 = - \theta_1 \theta_2, \theta_1, \theta_2\}$.
+
+\medskip
 
 Next we discuss the morphism $\chi_0$ stabilising $\eta'$. Recall that $\eta': S \lto S \otimes_A S\{-2\}$ corresponds to the map $R/(\bs{t}) \lto R/(\bs{s})\{-2\}$ given by multiplication with $\frac{1}{2}(x_1 + y_1 - x_2 - y_2)$. So by definition $\chi_0$ is the unique (up to homotopy) morphism making the following diagram commute:
 \begin{equation}\label{eq:cons50}
@@ -1416,12 +1400,12 @@ Let $\phi: R \lto R$ be the $\nQ$-automorphism with $\phi(x_i) = y_i$ and $\phi(
 \]
 and we define $\chi_0$ to be this map $\phi^* \chi'_0$. Here we use the fact that we have chosen the $u_i$ such that $\phi(u_i) = u_i$. If one is careful with signs, it is straightforward to deduce from the above the explicit form of $\chi_0$:
 \begin{align}
-\chi_0(1) &= \frac{1}{2}(x_1 + y_1 - x_2 - y_2) \cdot 1 + a_2 \theta_1 \theta_2 \, ,\nonumber \\
-\chi_0(\theta_1) &= -\theta_2 + \frac{1}{2}(x_1 + y_1) \theta_1\, ,\nonumber \\
-\chi_0(\theta_2) &= \theta_2 - \frac{1}{2}(x_2 + y_2)\theta_1\, , \nonumber \\
+\chi_0(1) &= \frac{1}{2}(x_1 + y_1 - x_2 - y_2) \cdot 1 + a_2 \cdot \theta_1 \theta_2 \, ,\nonumber \\
+\chi_0(\theta_1) &= -\theta_2 + \frac{1}{2}(x_1 + y_1) \cdot \theta_1\, ,\nonumber \\
+\chi_0(\theta_2) &= \theta_2 - \frac{1}{2}(x_2 + y_2) \cdot \theta_1\, , \nonumber \\
 \chi_0(\theta_1\theta_2) &= \theta_1\theta_2\,, \label{eq:chi0defn}
 \end{align}
-where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ is as before, and we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given in \cite[p.50]{kr0401268} with their parameter~$\mu$ set to~$\frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
+where $a_2 = \frac{1}{2}u_2 + (u_1 + y_1 u_2 - w_2)/(x_1-y_1)$ is as before, and we have used the fact that $\phi(a_2) = -a_2$. Again, keeping in mind the change of basis discussed above, this agrees with the explicit matrices for $\chi_0$ given in \cite[Section~6]{kr0401268} with their parameter~$\mu$ set to~$\frac{1}{2}$. So far we have just produced a morphism, but it is clear from the explicit form given above that this morphism actually stabilises the relevant map of bimodules:
 
 \begin{lemma} The map $\chi_0: \Xcirc \lto \Xbul\{-2\}$ of (\ref{eq:chi0defn}) is a morphism of graded matrix factorisations making (\ref{eq:cons50}) commute.
 \end{lemma}
@@ -2081,8 +2065,6 @@ An interesting question is whether Khovanov-Rozansky homology can distinguish mu
 \end{itemize}
 
 
-\newpage
-
 {\footnotesize 
 \begin{longtable}{p{0.07\textwidth}|p{0.87\textwidth}} 
 \caption{Unreduced Khovanov-Rozansky $\sln$ invariants for prime links up to 6 crossings}
@@ -2605,8 +2587,6 @@ $
 }
 
 
-\newpage
-
 {\footnotesize 
 \begin{longtable}{p{0.07\textwidth}|p{0.87\textwidth}} 
 \caption{Reduced Khovanov-Rozansky $\sln$ invariants for prime links up to 6 crossings} \\
@@ -3011,14 +2991,12 @@ We will need the following basic facts relating the graded tensor and Hom. The p
 \]
 of graded linear factorisations of $W' - W$, defined for $\Ztwo$-homogeneous elements $\nu \in X\mdual, y \in Y$ and $x \in X$ by $\xi( \nu \otimes y )(x) = (-1)^{|y||\nu|} \nu(x) \cdot y$.
 \end{lemma}
-% see NGMF
 
 \begin{lemma} Given $X,Y,Z$ which are graded linear factorisations of $W, W', W'' \in R_{2c}$, respectively, there is a natural isomorphism of graded linear factorisations of $W'' - W' - W$
 \[
 \Hom_{\text{gr}}(X \otimes Y, Z) \lto \Hom_{\text{gr}}(X, \Hom_{\text{gr}}(Y,Z)) \, .
 \]
 \end{lemma}
-% see NGMF
 
 In particular if $X, Y$ are finite-rank graded matrix factorisations we have
 \begin{align}
@@ -3044,7 +3022,6 @@ Using Remark \ref{remark:dual_koszul_cyclic} we have
 &\cong \{ -b_1, a_1 \} \otimes \ldots \otimes \{ -b_n, a_n \} = \{ - \bs{b}, \bs{a} \} \, .
 \end{align*}
 \end{proof}
-% see ngkos
 
 \begin{lemma}\label{lemma:cyclickos2} There is a canonical isomorphism of graded matrix factorisations
 \begin{equation}
@@ -3091,7 +3068,6 @@ T: (C_{\Ztwo}, d_{+} + d_{-}) \lto (C_{\Ztwo}, -d_{+} + d_{-})_{-}
 \]
 defined by $T|_{C^i} = (-1)^{\frac{1}{2}i(i+1)}$. This induces an isomorphism $H(C_{\Ztwo}, d_{+} + d_{-}) \lto H(C_{\Ztwo}, -d_{+} + d_{-})$.
 \end{lemma}
-% see the note comfa
 
 In particular for sequences $\bs{a}, \bs{b}$ we have
 \begin{equation}
@@ -3099,36 +3075,7 @@ In particular for sequences $\bs{a}, \bs{b}$ we have
 H(\{ \bs{a}, \bs{b} \}) \cong H(\{\bs{a}, -\bs{b}\}) \, .
 \end{equation}
 Obviously if $R$ is a graded ring and each $C^i$ is a graded module such that $d_{\pm}$ have degree $c$ then $d_{\text{tot}}$ has bidegree $(1,c)$ on $C_{\Ztwo}$, the cohomology is naturally bigraded, and (\ref{Habba}) preserves the bigrading.
-%\section{The $u$ polynomials}
-%\label{appendix:upoly}
-%
-%This appendix concerns the polynomials $u_i$ of (\ref{eq:cons2}). We claimed in the text that polynomials with certain properties exist, and although we do not need the precise form of these polynomials, we will justify the existence claim here. We set
-%\[
-%W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}\,.
-%\]
-%Since $u^{N+1} + v^{N+1}$ is symmetric there is a polynomial $g$ with $g(u+v, uv) = u^{N+1} + v^{N+1}$ and this gives rise to two factorisations of $W$. The first is
-%\begin{align*}
-%W &= g(y_1+y_2,y_1y_2) - g(x_1+x_2,y_1y_2)\\
-%&+ g(x_1+x_2,y_1y_2) - g(x_1+x_2,x_1x_2)\,
-%\end{align*}
-%which allows us to write
-%\[
-%W = u_1'(y_1 + y_2 - x_1 -x_2) + u_2'(y_1y_2 - x_1x_2)
-%\]
-%for some polynomials $u_1', u_2'$ (these are what \cite[p.48]{kr0401268} calls $u_1$ and $u_2$). Similarly the factorisation
-%\begin{align*}
-%W &= g(y_1+y_2,y_1y_2) - g(y_1+y_2,x_1x_2)\\
-%&+ g(y_1+y_2,x_1x_2) - g(x_1+x_2,x_1x_2)
-%\end{align*}
-%allows us to write
-%\[
-%W = u_2''(y_1y_2-x_1x_2) + u_1''(y_1+y_2-x_1-x_2)
-%\]
-%for some $u_1'', u_2''$. It is clear that $u_i'(y_1,y_2,x_1,x_2) = u_i''(x_1,x_2,y_1,y_2)$. Hence if we define
-%\[
-%u_i = \frac{1}{2}u_i' + \frac{1}{2}u_i''
-%\]
-%Then $W = u_1(y_1 + y_2 - x_1 - x_2) + u_2(y_1y_2-x_1x_2)$ and $u_i(y_1,y_2,x_1,x_2) = u_i(x_1,x_2,y_1,y_2)$.
+
 
 \section{The relation between reduced and unreduced homology}
 \label{relationReducedUnreduced}
@@ -3220,8 +3167,8 @@ It remains to treat the case where we can only find a region of type $\Gamma_{\t
 In this situation we consider the dual braid graph $\Gamma^{\lor}$ where we reverse the orientation of all the edges. Note that for some sequences of polynomials $\boldsymbol{a},\boldsymbol{b}$ and an integer $p$ we have $C(\Gamma) = \{ \boldsymbol{a}, \boldsymbol{b} \}\{p\}$ and therefore $C(\Gamma^{\lor}) = \{ \bs{a}, - \bs{b} \}\{p\}$. But by~\eqref{Habba} $\{ \bs{a}, -\bs{b} \}$ has the same cohomology as $\{ \bs{a}, \bs{b} \}$, so the cohomology of $\Gamma$ and $\Gamma^{\lor}$ agree. It therefore suffices to prove the claim for $\Gamma^{\lor}$. This follows by the above argument, since $i$ is the leftmost edge and can therefore never be involved in a $\Gamma_{\text{I}}$-relation.
 \end{proof}
 
+
 \section{Stabilisation and perturbation}\label{section:morphismpert}
-% dcct, skrh, ptons, ons
 
 In this appendix we use perturbation techniques to study stabilisation. For simplicity graded matrix factorisations will not feature here: this means that we work throughout with matrix factorisations in the usual sense. One nonstandard piece of terminology is that for us a \emph{linear factorisation} of~$W \in R$ is an arbitrary $\Ztwo$-graded $R$-module with an odd differential squaring to multiplication by $W$. One can tensor and Hom such things in the obvious way; see for example \cite[Section 2]{dm1102.2957}.
 
@@ -3359,7 +3306,6 @@ on $Y\mdual \otimes \bigwedge F$, viewed as a perturbation of the differential o
 
 \begin{proof}[Proof of Lemma \ref{lemma:consfirst}]
 The map corresponding to $\sigma_\infty(1^* \otimes 1)$ makes (\ref{eq:cons5}) commute, so we need to evaluate this tensor and show that it has the explicit form given in the statement of the lemma. The notation becomes a little involved: throughout recall that we are producing tensors in $Y\mdual \otimes \bigwedge F$, an $R$-basis of which is given by tensors $\theta_1^* \otimes 1, 1^* \otimes \theta_1\theta_2$, etc. Clearly $\sigma(1^* \otimes 1)$ is just $1^* \otimes 1$, and
-% compared to skrh we use s_i instead of d_i, and pi_i instead of a_i
 \begin{align*}
 H \mu \sigma(1^* \otimes 1) &= H( d_{X^{\lor}} + \delta_{-})(1^* \otimes 1)\\
 &= H( -\theta_1^* \otimes s_1 - \theta_2^* \otimes s_2 + 1^* \otimes w_1 \theta_1 + 1^* \otimes w_2 \theta_2 )\\
@@ -3386,9 +3332,6 @@ Applying $H\mu$ again we obtain after some work an expression for $H\mu H\mu\sig
 The image under the canonical isomorphism $\xi: \Xbul\mdual \otimes \Xcirc \lto \Hom_R(\Xbul, \Xcirc)$ is our morphism $\chi_1 := \xi \sigma_\infty(1^* \otimes 1)$, which has the desired form (the signs get corrected by Koszul signs in $\xi$).
 \end{proof}
 
-
-%\bibliographystyle{amsalpha}
-%\bibliography{/Users/nils/Uni/literatur}
 
 
 \newcommand{\etalchar}[1]{$^{#1}$}
@@ -3461,7 +3404,7 @@ A.~Davydov, L.~Kong, and I.~Runkel, \emph{Field theories with defects and the
   
 \bibitem[Dyc]{d0904.4713}
 T.~Dyckerhoff, \emph{Compact generators in categories of matrix factorizations},
-  \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}
+  \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}. 
 
 \bibitem[DM]{dm1102.2957}
 T.~Dyckerhoff and D.~Murfet, \emph{Pushing forward matrix factorisations},
@@ -3480,7 +3423,7 @@ P.~Freyd, D.~Yetter, J.~Hoste, W.~B.~R. Lickorish, K.~Millett, and A.~Ocneanu,
 
 \bibitem[GIKV10]{gikv0705.1368}
 S.~Gukov, A.~Iqbal, C.~Koz\c{c}az, and C.~Vafa, \emph{Link {H}omologies and the
-  {R}efined {T}opological {V}ertex}, Commun. Math. Phys. \textbf{298} (2010),
+  {R}efined {T}opological {V}ertex}, Comm. Math. Phys. \textbf{298} (2010),
   757--785, \href{http://arxiv.org/abs/0705.1368}{[arXiv:0705.1368]}.
 
 \bibitem[GSV05]{gsv0412243}
@@ -3601,7 +3544,7 @@ J.~Rasmussen, \emph{Khovanov-{R}ozansky homology of two-bridge knots and links},
   \href{http://arxiv.org/abs/math/0508510}{[math.GT/0508510]}.
   
 \bibitem[Ric94]{rickard}
-J.~Rickard, \emph{Translation functors and equivalences of derived categories for blocks of algebraic groups}, in “Finite dimensional algebras and related topics”, Kluwer (2006) 255-–264.
+J.~Rickard, \emph{Translation functors and equivalences of derived categories for blocks of algebraic groups}, in “Finite dimensional algebras and related topics”, Kluwer (1994), 255-–264.
 
 \bibitem[Rou06]{RouquierMexico}
 R.~Rouquier, \emph{Categorification of {$\mathfrak{sl}_{2}$} and braid groups},
