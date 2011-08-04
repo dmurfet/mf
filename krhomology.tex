@@ -3014,12 +3014,7 @@ In the following let $R = \bigoplus_{i \ge 0} R_i$ be a graded ring, and $\bs{a}
 \]
 \end{lemma}
 \begin{proof}
-Using Remark \ref{remark:dual_koszul_cyclic} we have
-\begin{align*}
-\{ \bs{a}, \bs{b} \}\mdual &\cong \left( \{ a_1, b_1 \} \otimes \ldots \otimes \{ a_n, b_n \} \right)\mdual\\
-&\cong \{ a_1, b_1 \}\mdual \otimes \ldots \otimes \{ a_n, b_n \}\mdual\\
-&\cong \{ -b_1, a_1 \} \otimes \ldots \otimes \{ -b_n, a_n \} = \{ - \bs{b}, \bs{a} \} \, .
-\end{align*}
+Clear from Remark \ref{remark:dual_koszul_cyclic}.
 \end{proof}
 
 \begin{lemma}\label{lemma:cyclickos2} There is a canonical isomorphism of graded matrix factorisations
@@ -3171,11 +3166,11 @@ In this situation we consider the dual braid graph $\Gamma^{\lor}$ where we reve
 
 In this appendix we use perturbation techniques to study stabilisation. For simplicity graded matrix factorisations will not feature here: this means that we work throughout with matrix factorisations in the usual sense. One nonstandard piece of terminology is that for us a \emph{linear factorisation} of~$W \in R$ is an arbitrary $\Ztwo$-graded $R$-module with an odd differential squaring to multiplication by $W$. One can tensor and Hom such things in the obvious way; see for example \cite[Section 2]{dm1102.2957}.
 
-Let $R$ be a noetherian ring, $\ba = (a_1,\ldots,a_n)$ and $\bb = (b_1, \ldots, b_n)$ sequences in $R$ with~$\bs{b}$ regular, and set $W = \sum_i a_i b_i$. We define the matrix factorisation $\{ \ba, \bb \}$ of $W$ as in Section \ref{prelim:cyclic_koszul} so $F = \bigoplus_i R \theta_1$ with $|\theta_i| = -1$ and $\bigwedge F$ has two differentials $\delta_+$ and $\delta_{-}$ such that $\{ \ba, \bb \} = (\bigwedge F, \delta_+ + \delta_{-})$. If we use only the differential $\delta_+$ then this is just the Koszul complex on the $b_i$, so there is a morphism of complexes from the Koszul complex to its cohomology
+Let $R$ be a noetherian ring, $\ba = (a_1,\ldots,a_n)$ and $\bb = (b_1, \ldots, b_n)$ sequences in $R$ with~$\bs{b}$ regular, and set $W = \sum_i a_i b_i$. We define the matrix factorisation $\{ \ba, \bb \}$ of $W$ as in Section \ref{prelim:cyclic_koszul} so $F = \bigoplus_i R \theta_i$ with $|\theta_i| = -1$ and $\bigwedge F$ has two differentials $\delta_+$ and $\delta_{-}$ such that $\{ \ba, \bb \} = (\bigwedge F, \delta_+ + \delta_{-})$. If we use only the differential $\delta_+$ then this is just the Koszul complex on the $b_i$, so there is a morphism of complexes from the Koszul complex to its cohomology
 \begin{equation}\label{eq:app_stab0}
 \pi: ( \bigwedge F, \delta_+ ) \lto R/(\bb)\,.
 \end{equation}
-In fact $\pi$ is also morphism of linear factorisations $\{ \ba, \bb \} \lto R/(\bb)$. The task we give ourselves here is to show that under some mild hypotheses this map is universal, in the following sense: for any finite-rank matrix factorisation $Y$ of $W$ we claim that the map
+In fact $\pi$ is also a morphism of linear factorisations $\{ \ba, \bb \} \lto R/(\bb)$. The task we give ourselves here is to show that under some mild hypotheses this map is universal, in the following sense: for any finite-rank matrix factorisation $Y$ of $W$ we claim that the map
 \begin{equation}\label{eq:app_stab1}
 \Hom(1, \pi): \Hom_R(Y, \{ \ba, \bb \}) \lto \Hom_R(Y, R/(\bb))
 \end{equation}
@@ -3254,7 +3249,7 @@ commutes up to the natural isomorphism.
 
 \subsection{Lifting morphisms}\label{subsection:liftingmorphisms}
 
-Although the techniques work more generally, for simplicity let us specialise to situation of Section~\ref{section:stabilisation}, where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \bs{w}, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\bs{w} = (w_1,w_2)$ is defined in~\eqref{eq:cons1}. This means that we take $\bs{a}=\bs{w}$ and $\bb = \bs{t}$ in the above. 
+The techniques work more generally, but for simplicity we specialise to the situation of Section~\ref{section:stabilisation} where $S = \QQ[x_1, x_2], R = \QQ[x_1,x_2,y_1,y_2]$ and $W = y_1^{N+1} + y_2^{N+1} - x_1^{N+1} - x_2^{N+1}$. The cyclic Koszul complex of interest is $\Xcirc = \{ \bs{w}, \bs{t} \}$, where $t_i = y_i - x_i$ and the sequence $\bs{w} = (w_1,w_2)$ is defined in~\eqref{eq:cons1}. This means that we take $\bs{a}=\bs{w}$ and $\bb = \bs{t}$ in the above. 
 
 Since we are interested in morphisms $\Xbul \lto \Xcirc$, in addition we take $Y = \Xbul$. We can write $R$ as $S[t_1,t_2]$ so there is an $S$-linear standard (in the sense of \cite[Section 8.1]{dm1102.2957}) flat connection
 \begin{gather*}
@@ -3298,7 +3293,7 @@ Next we consider the $R$-linear map
 \[
 \mu = d_{Y\mdual} \otimes 1 + 1 \otimes \delta_{-}
 \]
-on $Y\mdual \otimes \bigwedge F$, viewed as a perturbation of the differential on $(Y\mdual \otimes \bigwedge, 1 \otimes \delta_{+})$. The total differential $\mu + 1 \otimes \delta_{+}$ is the usual differential on the tensor product, and the perturbation lemma tells us that the $S$-linear map $\sigma_\infty = \sum_{m \ge 0} (-1)^m (H \mu)^m \sigma$ is an $S$-homotopy inverse to $1 \otimes \pi$. Composing with the vertical isomorphisms in (\ref{eq:cons3}) we have the desired inverse of $\Hom(1,\pi)$. The morphism (\ref{eq:cons4}) corresponds to the tensor $1^* \otimes 1 \in Y\mdual \otimes R/(\boldsymbol{t})$, so to find $\chi_1$ we are left with the task of evaluating
+on $Y\mdual \otimes \bigwedge F$, viewed as a perturbation of the differential on $(Y\mdual \otimes \bigwedge F, 1 \otimes \delta_{+})$. The total differential $\mu + 1 \otimes \delta_{+}$ is the usual differential on the tensor product, and the perturbation lemma tells us that the $S$-linear map $\sigma_\infty = \sum_{m \ge 0} (-1)^m (H \mu)^m \sigma$ is an $S$-homotopy inverse to $1 \otimes \pi$. Composing with the vertical isomorphisms in (\ref{eq:cons3}) we have the desired inverse of $\Hom(1,\pi)$. The morphism (\ref{eq:cons4}) corresponds to the tensor $1^* \otimes 1 \in Y\mdual \otimes R/(\boldsymbol{t})$, so to find $\chi_1$ we are left with the task of evaluating
 \[
 \sigma_\infty(1^* \otimes 1) = \sigma(1^* \otimes 1) - H \mu \sigma(1^* \otimes 1) + H \mu H \mu(1^* \otimes 1) \, .
 \]
