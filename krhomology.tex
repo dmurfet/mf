@@ -1880,7 +1880,7 @@ with the boundary to the left, see Definition~\ref{defwebs} and Example~\ref{exa
 {\footnotesize
 \begin{verbatim}
     option(noredefine);option(noloadLib);option(redSB);
-    LIB "linkhom.lib";                                     // load our library
+    LIB "mfweb.lib";                                       // load our library
     ring rr=0,(x,y),dp;                                    // define ring Q[x,y]
     printlevel=1;
 
@@ -1938,7 +1938,7 @@ This is done by the following code (which outputs the correct $(2\times 2)$-matr
 {\footnotesize
 \begin{verbatim}
     option(noredefine);option(noloadLib);option(redSB);
-    LIB "linkhom.lib";
+    LIB "mfweb.lib";
     ring RR=(0,r),(x(1),x(2),y(1),y(2)),dp;                // Define ring Q[x1,x2,y1,y2] to which
     minpoly = rootofUnity(3);                              // we adjoin a 3-rd root of unity r, 
     poly minpolyblow = x(1)^2 + x(1) + 1;                  // see blow.lib/usage guide.
@@ -2015,8 +2015,7 @@ To compute the unreduced and reduced link invariants $\KR_{N}$ and $\overline{\K
     
     list cp = imap(rr,cp);
     list cohom = computeCohomology(cp);
-    number poincare = gradedPoincare(cohom, q, t);
-    poincare;                                     // KR homology, encoded as Poincare polynomial
+    gradedPoincare(cohom, q, t);                  // KR homology, encoded in the Poincare polynomial
 \end{verbatim}
 }
 \noindent To compute the reduced invariant, only one line needs to be changed in the above code: instead of using \texttt{linkCompile} to define the list~\texttt{h} we write: 
@@ -2033,11 +2032,11 @@ To compute the unreduced and reduced link invariants $\KR_{N}$ and $\overline{\K
 \section{Computational results}
 \label{compres}
 
-We will now present some results for $\sln$ Khovanov-Rozansky homology of all prime links with up to~6 crossings. The explicit Poincar\'e polynomials are listed in Tables~\ref{unreducedKR} and~\ref{reducedKR}. 
+We now present our results for the $\sln$ Khovanov-Rozansky homology of all prime links with up to~6 crossings. The explicit Poincar\'e polynomials are listed in Tables~\ref{unreducedKR} and~\ref{reducedKR}. 
 
 As discussed in the introduction, our construction via the splitting of idempotents provides the first method to compute Khovanov-Rozansky invariants directly from the original definition in~\cite{kr0401268}. However, there have been previous results and proposals for Khovanov-Rozansky invariants for certain links which relied on indirect arguments. Before we will discuss our results for links whose Khovanov-Rozansky invariants had not been studied before, we shall first recall the known results and proposals, and compare them with our own direct computations. 
 
-The so far most extensive results were obtained in~\cite{r0508510, r0607544}. There it was shown that the reduced Khovanov-Rozansky invariants $\overline{\KR}_{N}$ of 2-bridge knots can be expressed in terms of their Homfly polynomial and signature (see e.\,g.~\cite{kawauchibook} for the definitions), and a similar result is true for 2-bridge links. Furthermore, explicit expressions were obtained for the unreduced invariants $\KR_{N}$ with $N>4$ for torus knots $T_{2,m}$ and the figure-eight knot $4_{1}$. For links with up to 6 crossings and small values of~$N$ we can verify these results and extend them to the cases $N=3$ and $N=4$ where necessary. We refer to Tables~\ref{unreducedKR} and~\ref{reducedKR} for further details. 
+So far the most extensive results were obtained in~\cite{r0508510, r0607544}. There it was shown that the reduced Khovanov-Rozansky invariants $\overline{\KR}_{N}$ of 2-bridge knots can be expressed in terms of their Homfly polynomial and signature (see e.\,g.~\cite{kawauchibook} for the definitions), and a similar result is true for 2-bridge links. Furthermore, explicit expressions were obtained for the unreduced invariants $\KR_{N}$ with $N>4$ for torus knots $T_{2,m}$ and the figure-eight knot $4_{1}$. For links with up to 6 crossings and small values of~$N$ we can verify these results and extend them to the cases $N=3$ and $N=4$ where necessary. We refer to Tables~\ref{unreducedKR} and~\ref{reducedKR} for further details. 
 
 The expressions for $\KR_{N}(T_{2,3})$ and $\KR_{N}(T_{2,5})$ were already given in~\cite{gsv0412243}. Explicit proposals were also presented for reduced Khovanov-Rozansky invariants of further torus knots~\cite{dgr0505662, as1105.5117} and all prime knots with up to ten crossings~\cite{dgr0505662}; unreduced invariants for the Hopf link were proposed in~\cite{gikv0705.1368}. For small numbers of crossings and small values of~$N$ our results verify all these proposals.
 
@@ -2045,7 +2044,7 @@ The expressions for $\KR_{N}(T_{2,3})$ and $\KR_{N}(T_{2,5})$ were already given
 
 Let us now move on to a discussion of Khovanov-Rozansky invariants that have not been previously studied in the literature. Our method allows to compute reduced and unreduced homologies alike, and it does not discriminate against any types of links. The main limiting factors for the computations to finish on the ordinary PCs we had access to are the number of crossings and the value of~$N$. In the language of Section~\ref{compilewebs}, these determine the number of vertices in the webs to be compiled and the size of ``inflated'' matrices, respectively. Currently this allows us to calculate Khovanov-Rozansky invariants for links with up to 6 crossings and 3 components; future computer generations will push these limits further. 
 
-The unreduced and reduced Khovanov-Rozansky invariants that we obtained are collected in the tables below. For links with more than one component it matters how the components are oriented \emph{relatively} to one another. We indicate this by referring to different ``versions'' of all the links with at least two components in the tables. For example, $4_{1}^2\,\text{{\footnotesize (v1)}}$ and $4_{1}^2\,\text{{\footnotesize (v2)}}$ denote the two versions of Solomon's link. Note also that we do not list their mirrors separately as the reversal of the orientation of \emph{all} components of any link simply leads to the same  Khovanov-Rozansky invariants after the substitutions $q\longmapsto q^{-1}$, $t\longmapsto t^{-1}$. 
+The unreduced and reduced Khovanov-Rozansky invariants that we obtained are collected in the tables below. For links with more than one component it matters how the components are oriented \emph{relatively} to one another. We indicate this by referring to different ``versions'' of all the links with at least two components in the tables. For example, $4_{1}^2\,\text{{\footnotesize (v1)}}$ and $4_{1}^2\,\text{{\footnotesize (v2)}}$ denote the two versions of Solomon's link. Note also that we do not list their mirrors separately as the mirror has the same Khovanov-Rozansky invariant after the substitutions $q\longmapsto q^{-1}$, $t\longmapsto t^{-1}$. 
 
 We conclude by listing some observations and comments on our results; we let the Tables~\ref{unreducedKR} and~\ref{reducedKR} speak for themselves otherwise. 
 
