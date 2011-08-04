@@ -875,11 +875,11 @@ Let $\boldsymbol{x}_v$ denote the set of variables lying on edges incident to $v
 \end{itemize}
 To any decoration we associate the total potential and total matrix factorisation, as follows. Let $\bs{x}$ be the set of all variables in the decoration. For each vertex $v$ there is the inclusion $\varphi_v: k[\bs{x}_v] \lto k[\bs{x}]$ and we define the \emph{total matrix factorisation} by fixing once and for all an ordering $V = \{ v_1, \ldots, v_s \}$ on the vertices, and thereby defining
 \[
-X := \bigotimes_v \varphi_v^*(X_v) = X_{v_1} \otimes \ldots \otimes X_{v_s}\,.
+X := \bigotimes_{v\in V} \varphi_v^*(X_v) = X_{v_1} \otimes \ldots \otimes X_{v_s}\,.
 \]
 Let $O$ denote the set of edges ending on the boundary, and $I$ the edges beginning on the boundary. Since the internal potentials cancel, $X$ is a finite-rank graded matrix factorisation over $k[\bs{x}]$ of the \emph{total potential}
 \[
-W := \sum_v W_v = \sum_{e \in O} W_e - \sum_{e \in I} W_e\,.
+W := \sum_{v\in V} W_v = \sum_{e \in O} W_e - \sum_{e \in I} W_e\,.
 \]
 The chosen homogeneous bases of the $X_v$ determine a homogeneous basis of $X$. Notice that if the original web is \emph{closed}, meaning that $I$ and $O$ are both empty, then $W = 0$ and $X$ is a $(\ZZ \times \Ztwo)$-graded complex.
 \end{definition}
@@ -993,7 +993,7 @@ $$
 \draw[->,  thick] (D) -- (b) node[midway,above] {$e$}; 
 \end{tikzpicture} 
 $$
-with vertices $u,v$ and edges $e,e'$ which are external and internal, respectively. A decoration would consist of $e$-variables $\bs{x}$, $e'$-variables $\bs{x'}$ and homogeneous potentials $W \in k[\bs{x}], W' \in k[\bs{x'}]$ with isolated singularities together with a matrix factorisation $D$ of $W - W'$ and $Q$ of $W'$. 
+with vertices $u,v$ and edges $e,e'$ which are external and internal, respectively, and we imagine the boundary to the left. A decoration would consist of $e$-variables $\bs{x}$, $e'$-variables $\bs{x'}$ and homogeneous potentials $W \in k[\bs{x}], W' \in k[\bs{x'}]$ with isolated singularities together with a matrix factorisation $D$ of $W - W'$ and $Q$ of $W'$. 
 
 The total matrix factorisation $D \otimes Q$ is an object of $\hmf(k[\bs{x},\bs{x'}], W)$ which can be viewed as an infinite-rank matrix factorisation over $k[\bs{x}]$ of $W$. In this way, if we were to fix $D$ and let $Q$ vary, we can view $D$ as a functor
 \[
@@ -1026,16 +1026,16 @@ It is a short step from a compilation to a finite-rank representative for the pu
 
 \begin{remark} 
 \label{compileAndSplit}
-Suppose that $(C, \idem)$ compiles $\cat{F}$. The category $\hmf(k[\extvar],W)$ has split idempotents, and moreover idempotents in this category can be split algorithmically. So it is possible in practice to find a finite-rank graded matrix factorisation $Y$ and morphisms $f,g$ as in the diagram
+Suppose that $(C, \idem)$ compiles $\cat{F}$. The category $\hmf(k[\extvar],W)$ has split idempotents, and moreover idempotents in this category can be split algorithmically. So it is possible in practice to find a finite-rank graded matrix factorisation $F$ and morphisms $f,g$ as in the diagram
 \[
 \xymatrix@C+2pc{
-Y \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
+F \ar@<-1ex>[r]_-{g} & C \ar@<-1ex>[l]_-{f}\ar@<-1ex>[r]_-{\psi} & \varphi_*(X) \ar@<-1ex>[l]_-{\vartheta}
 }
 \]
-such that $f \circ g = 1_Y$ and $g \circ f = \idem$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence. 
+such that $f \circ g = 1_F$ and $g \circ f = \idem$ in $\hmf(k[\extvar], W)$. Then $f \circ \vartheta$ is a homotopy equivalence. 
 \end{remark}
 
-We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Since it is straightforward to split an idempotent and therefore compute the finite-rank reduction $Y$ from $(C, \idem)$, we will use the phrase ``compiling a web'' synonymously for ``reducing the total matrix factorisation of a web to finite rank''. 
+We do not know how to write down directly the differential on a finite-rank matrix factorisation homotopy equivalent to $\varphi_*(X)$. But we will now reformulate a result of~\cite{dm1102.2957} which in our situation explicitly constructs a pair $(C, \idem)$ compiling $\cat{F}$. Since it is straightforward to split an idempotent and therefore compute the finite-rank reduction $F$ from $(C, \idem)$, we will use the phrase ``compiling a web'' synonymously for ``computing the pushforward of the total matrix factorisation of a web''. 
 
 The starting point for the construction is a long list of polynomials acting null-homotopically on $X$, and a corresponding list of null-homotopies. Let $v$ be a vertex, $e$ an edge beginning at $v$ and $x$ a variable lying on $e$. Then $(X_v, d_v)$ denotes the matrix factorisation assigned to $v$. Certainly none of the potentials associated to the other edges incident at $v$ involve $x$, so from the identity $d_v^2 = (\sum_{f \in O_v} W_f - \sum_{f \in I_v} W_f) \cdot 1_{X_v}$ we deduce that
 \[
@@ -1053,7 +1053,7 @@ k[\bs{x}]/I = k[\extvar] \otimes_k J
 \]
 is a graded free $k[\extvar]$-module of finite rank, and consequently the quotient $X/\bs{\delta} X = X \otimes_{k[\bs{x}]} k[\bs{x}]/I$ is a finite-rank graded matrix factorisation of $W$ over $k[\extvar]$. At this point we can apply the main result of \cite{dm1102.2957} to give an explicit idempotent
 \[
-\bar\idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \Big(\prod_x \partial_x(d_v)\Big) \circ \At(X)^n\,,
+\bar\idem = \frac{1}{n!}(-1)^{\binom{n+1}{2}} \Big(\prod_{x,v} \partial_x(d_v)\Big) \circ \At(X)^n\,,
 \]
 such that the pair $(X/(\bs{\delta} X)\langle n \rangle, \bar\idem)$ compiles the web.\footnote{Strictly speaking this is not correct, as the pair $(X/(\bs{\delta} X)\langle n \rangle, \bar\idem)$ will split in the category of graded matrix factorisations not to $X$ but to $X\{ p \}$ for some nonzero integer $p$. We choose not to address this point since this is not the version of the idempotent that we actually compute with. In our approach below such subtleties will be taken into account.} Here $n$ is the total number of internal variables, the product is over all internal variables $x$ lying on an edge with origin $v$, and $\At(X)$ is the Atiyah class, see~\eqref{Atiyahclass} below. For theoretical purposes (for example if one wanted to pursue a residue formula for the Euler characteristic of $X$, or the correlators of \cite{kr0404189}) this compilation is the right one. But for implementation on a computer it is better to choose the sequence $\bs{\delta}$ differently, so that the connections in the construction (see below) become simple operations on polynomials.
 \\
@@ -1102,7 +1102,7 @@ The \emph{Atiyah class}
 \label{Atiyahclass}
 \At(X) := [d_X, \nabla]
 \end{equation}
-is a $k[\extvar,\intvar^a]$-linear morphism of matrix factorisations, which up to homotopy does not depend on the choice of connection. Composing the Atiyah class with itself $n$-times, where $n$ is the number of internal variables, gives a map $X \lto X \otimes \Omega^n \cong X$ where we implicitly choose an ordering $x_1, x_2, \ldots,x_n$ of the internal variables and identify $\ud(x_1^a) \wedge \ud(x_2^a) \wedge \ldots \wedge \ud(x_n^a)$ with $1$. This map $\At(X)^n$ induces a $k[\extvar]$-linear map on the quotient
+is a $k[\extvar,\intvar^a]$-linear morphism of matrix factorisations, which up to homotopy does not depend on the choice of connection. Composing the Atiyah class with itself $n$~times, where $n$ is the number of internal variables, gives a map $X \lto X \otimes \Omega^n \cong X$ where we implicitly choose an ordering $x_1, x_2, \ldots,x_n$ of the internal variables and identify $\ud(x_1^a) \wedge \ud(x_2^a) \wedge \ldots \wedge \ud(x_n^a)$ with $1$. This map $\At(X)^n$ induces a $k[\extvar]$-linear map on the quotient
 \[
 X/(\intvar^a X) = X \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\,
 \]
@@ -1121,7 +1121,7 @@ X/(\intvar^a X)\{ n(c - 2a) \}\langle n \rangle \ar@<-1ex>[r]_-{\psi} & \varphi_
 \end{equation}
 with $\vartheta \circ \psi = \idem$ and $\psi \circ \vartheta = 1_{\varphi_*(X)}$. That is, the pair
 \[
-\left(X/(\intvar^a X)\{ n(c - 2a) \}\langle n \rangle, \idem\right)
+\big(X/(\intvar^a X)\{ n(c - 2a) \}\langle n \rangle, \idem\big)
 \]
 compiles the decorated web $\cat{F}$.
 \end{theorem}
@@ -1845,15 +1845,15 @@ Let us consider two decorated webs with identical underlying graphs and edge ass
 D & =D_{v_{1}}\otimes\ldots\otimes D_{v_{i-1}} \otimes D_{v_{i}} \otimes D_{v_{i+1}}\otimes\ldots\otimes D_{v_{s}} \, , \\
 D' & =D_{v_{1}}\otimes\ldots\otimes D_{v_{i-1}} \otimes D'_{v_{i}} \otimes D_{v_{i+1}}\otimes\ldots\otimes D_{v_{s}} \, .
 \end{align*}
-In the notation of Section~\ref{compilewebs} we have idempotents $\idem=\vartheta\circ\psi$ and $\idem'=\vartheta'\circ\psi'$ which can be split in $\hmf(k[\extvar],W)$ by morphisms $f,g$ and a matrix factorisation~$Y$ such that $f\circ g= 1_{Y}$ and $g\circ f=\idem$, and analogously for~$\idem'$. Since $\psi$ is natural (see \cite[Lemma 7.6]{dm1102.2957}) there is a commutative diagram (we omit grading shifts)
+In the notation of Section~\ref{compilewebs} we have idempotents $\idem=\vartheta\circ\psi$ and $\idem'=\vartheta'\circ\psi'$ which can be split in $\hmf(k[\extvar],W)$ by morphisms $f,g$ and a matrix factorisation~$F$ such that $f\circ g= 1_{F}$ and $g\circ f=\idem$, and analogously for~$\idem'$. Since $\psi$ is natural (see \cite[Lemma 7.6]{dm1102.2957}) there is a commutative diagram (where we omit grading shifts)
 $$
 \xymatrix@C+2pc{%
 D \ar[d]_{\vartheta}\ar[r]^{\Phi} & D'\ar[d]^{\vartheta'}\\
 D \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\langle n \rangle \ar[d]_{f}\ar[r]^{\Phi \otimes 1} & D' \otimes_{k[\intvar]} k[\intvar]/(\intvar^a)\langle n \rangle \ar[d]^{f'}\\
-Y \ar[r]^{f' \circ (\Phi \otimes 1) \circ g} & Y'
+F \ar[r]^{f' \circ (\Phi \otimes 1) \circ g} & F'
 }
 $$
-and thus the \emph{compiled morphism} $f'\circ(\Phi\otimes 1)\circ g$ is what~$\Phi$ induces between the web compilations~$Y$ and~$Y'$. Note that we need no knowledge of the maps $\vartheta,\psi$ from Theorem~\ref{theorem:compilation_main} in this computation. 
+and thus the \emph{compiled morphism} $f'\circ(\Phi\otimes 1)\circ g$ is what~$\Phi$ induces between the web compilations~$F$ and~$F'$. Note that we need no knowledge of the maps $\vartheta,\psi$ from Theorem~\ref{theorem:compilation_main} in this computation. 
 
 In this way we compile every differential $d_{\chi}$ in $C(D)$ and compute the $\sln$ link homology $H(L)$. Its reduced variant is obtained in the same fashion after one sets $x_{i}=0$ everywhere in $C(D)$. We have implemented this method to automatically compute the invariants $\KR_{N}$ and $\overline{\KR}_{N}$ in Singular, see~\cite{cmWebCompileCode} and Example~\ref{KRexample} below. Another option to compute $H(L)$ would have been to use the MOY relations~\eqref{MOYcatDecomp1}--\eqref{MOYcatDecomp4} algorithmically and thus reduce every link diagram to unlinked circles, to which~\cite{kr0401268} associate a shift of the Jacobian of the potential $x^{N+1}$. We prefer our approach as it allows us to compile arbitrary webs, and may be straightforwardly applied to compute other categorified link invariants such as those of~\cite{kr0701333, w0907.0695}. 
 
