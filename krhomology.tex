@@ -3,7 +3,10 @@
 % -- added [DBM+11] reference, cited on page 26
 % -- change reference [Dyc] to published version
 % -- fixed sign error in Remark 3.8
-
+% -- p.27 "we defined and list" changed to "we define and list"
+% -- p.13 minor change, added $\partial_{x^a} = \partial/\partial x^a$
+% -- p.14 typo fixed, now reads $\partial_j = \partial_{{x_j}^a}$
+% -- p.38 typo, said "desired linear factorisation exists", meant to be "desired deformation retract exists"
 
  % Authors:  Nils Carqueville, Daniel Murfet
  
@@ -1092,7 +1095,7 @@ Tensoring with $k[\extvar]$ we get a flat $k$-linear connection (writing $\Omega
 \[
 \nabla: k[\bs{x}] \lto k[\bs{x}] \otimes_{k[\extvar,\intvar^a]} \Omega^1\,,
 \]
-which is ``standard'' in the sense of \cite[Section 8.1]{dm1102.2957} (essentially, a hypothesis of zero characteristic). The upshot is that for each internal variable $x$ we have defined a $k[\extvar]$-linear operator $\partial_{x^a}$ on $k[\bs{x}]$. It is obvious that $\partial_{x^a}$ is, modulo $x^a$, just division by $x^a$ without remainder:
+which is ``standard'' in the sense of \cite[Section 8.1]{dm1102.2957} (essentially, a hypothesis of zero characteristic). The upshot is that for each internal variable $x$ we have defined a $k[\extvar]$-linear operator $\partial_{x^a} = \partial/\partial x^a$ on $k[\bs{x}]$. Modulo $x^a$, this operator is just division by $x^a$ without remainder:
 
 \begin{lemma}\label{lemma:division_woremainder} Given $f \in k[\bs{x}]$ write $f = x^a g + h$ for a polynomial $h$ of $x$-degree smaller than~$a$. Then
 \[
@@ -1138,7 +1141,7 @@ This follows from the main theorem of \cite{dm1102.2957}, with the caveat that t
 For each internal variable $x$, $\lambda_x$ has bidegree $(-1, 2a - c)$ on $X$, so the product over $x$ has bidegree $(-n, n(2a - c))$. The degree of $\At(X)^n = [d_X, \nabla]^n$ has a contribution of $(n, nc)$ from the $n$ copies of $d_X$ plus a contribution from the operator $\partial_{x^a}$ for each internal variable; each such operator has degree $-2a$, so $\At(X)^n$ has bidegree $(n, n(c-2a))$ and the product $\idem$ has bidegree $(0,0)$.
 \end{proof}
 
-\begin{remark} A computer understands only matrices, so let us spell out how we write $\idem$ as a matrix. Let $\{ \xi_j \}_j$ denote our homogeneous basis for $X$ as a $k[\bs{x}]$-module and let $D$ be the matrix of $d_X$ in this basis. Then with $\bs{x}^\beta$ denoting a monomial in the internal variables with all exponents $\beta_i < a$, we see that $\{\bs{x}^\beta\}_\beta$ gives a $k$-basis of $k[\intvar]/(\intvar^a)$ and therefore $\{ \bs{x}^\beta \xi_j \}_{\beta, j}$ is a $k[\extvar]$-basis for $X/(\intvar^a X)$.
+\begin{remark} A computer only understands matrices, so let us spell out how we write $\idem$ as a matrix. Let $\{ \xi_j \}_j$ denote our homogeneous basis for $X$ as a $k[\bs{x}]$-module and let $D$ be the matrix of $d_X$ in this basis. Then with $\bs{x}^\beta$ denoting a monomial in the internal variables with all exponents $\beta_i < a$, we see that $\{\bs{x}^\beta\}_\beta$ gives a $k$-basis of $k[\intvar]/(\intvar^a)$ and therefore $\{ \bs{x}^\beta \xi_j \}_{\beta, j}$ is a $k[\extvar]$-basis for $X/(\intvar^a X)$.
 
 The matrix $D'$ of the differential $d_X$ in this basis is obtained from $D$ by a process we call~\emph{inflation}: $D$ is a matrix of finite size with entries in $k[\bs{x}] = k[\extvar] \otimes_k k[\intvar]$. For any monomial $\bs{x}^\alpha$ in the internal variables let $M_{\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map of multiplication with $\bs{x}^\alpha$ on~$k[\intvar]/(\intvar^a)$. We can write every entry of~$D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$. Then $D'$ is obtained from $D$ by replacing every such entry by the ``inflated'', matrix-valued entry $\sum_{\alpha} p_{\alpha} M_{\bs{x}^\alpha}$. 
 The same kind of inflation gives us the matrix of $\lambda_x$ in the new basis.
@@ -1147,7 +1150,7 @@ Next we index the variables $\intvar = \{x_1,x_2,\ldots,x_n\}$ and use \cite[Cor
 \[
 \idem = \frac{1}{n!}(-1)^{\binom{n}{2}} \sum_{\tau \in S_n} \textup{sgn}(\tau)\Big( \prod_{i=1}^n \lambda_{x_i} \Big) [\partial_{\tau(1)}, d_X] \ldots [\partial_{\tau(n)}, d_X]
 \]
-where $\partial_j = \partial_{x_j}$. Let $\sigma: X/(\intvar^a X) \lto X$ be the $k[\extvar]$-linear map defined by $\sigma( \bs{x}^\beta \xi_j ) = \bs{x}^\beta \xi_j$ and let $\pi: X \lto X/(\intvar^a X)$ be the projection. The commutator $[\partial_j, d_X]$ on $X/(\intvar^a X)$ is equal to the composite $\pi \circ \partial_j \circ d_X \circ \sigma$. Let $\textup{div}_j(f)$ denote the division of $f$ by $x_j^a$ without remainder and for any monomial $\bs{x}^\alpha$ in the internal variables let $L_{j,\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map on $k[\intvar]/(\intvar^a)$ which is multiplication by $\bs{x}^\alpha$ followed by $\textup{div}_j$. Since $\pi \circ \partial_j = \pi \circ \textup{div}_j$ (Lemma~\ref{lemma:division_woremainder}) the matrix of $[\partial_j, d_X]$ in the new basis is obtained from $D$ by writing every entry of $D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$ and then replacing such an entry by the matrix $\sum_{\alpha} p_{\alpha} L_{j,\bs{x}^\alpha}$.
+where $\partial_j = \partial_{{x_j}^a}$. Let $\sigma: X/(\intvar^a X) \lto X$ be the $k[\extvar]$-linear map defined by $\sigma( \bs{x}^\beta \xi_j ) = \bs{x}^\beta \xi_j$ and let $\pi: X \lto X/(\intvar^a X)$ be the projection. The commutator $[\partial_j, d_X]$ on $X/(\intvar^a X)$ is equal to the composite $\pi \circ \partial_j \circ d_X \circ \sigma$. Let $\textup{div}_j(f)$ denote the division of $f$ by $x_j^a$ without remainder and for any monomial $\bs{x}^\alpha$ in the internal variables let $L_{j,\bs{x}^\alpha}$ be the scalar matrix representing the $k$-linear map on $k[\intvar]/(\intvar^a)$ which is multiplication by $\bs{x}^\alpha$ followed by $\textup{div}_j$. Since $\pi \circ \partial_j = \pi \circ \textup{div}_j$ (Lemma~\ref{lemma:division_woremainder}) the matrix of $[\partial_j, d_X]$ in the new basis is obtained from $D$ by writing every entry of $D$ in the form $\sum_{\alpha} p_{\alpha} \bs{x}^\alpha$ with $p_{\alpha}\in k[\extvar]$ and then replacing such an entry by the matrix $\sum_{\alpha} p_{\alpha} L_{j,\bs{x}^\alpha}$.
 
 Multiplying together the matrices for the $\lambda_{x_j}$ and $[\partial_j, d_X]$ we have the matrix for $\idem$.
 \end{remark}
@@ -2059,7 +2062,7 @@ We conclude by listing some observations and comments on our results; we let the
 \item 
 In all our examples the choice of marked component for reduced Khovanov-Rozansky homology does not affect the invariants, i.\,e.~$\overline{\KR}_{N}(L,K) = \overline{\KR}_{N}(L,K')$ for all components $K,K'$ of the link~$L$. 
 \item 
-Unreduced Khovanov-Rozansky homology is non-trivial only in one $\nZ_{2}$-degree, but reduced homology is non-trivial in both $\nZ_{2}$-degrees. In fact the even and odd components are the same up to a grading shift by $N-1$, see Lemma~\ref{Z2gradingReduced}. For this reason we defined and list the Poincar\'e polynomials $\overline{\KR}_{N}$ only for the $\nZ_{2}$-degree given by the parity of the link. The invariant for the opposite $\nZ_{2}$-degree is then obtained by multiplication with $q^{N-1}$. 
+Unreduced Khovanov-Rozansky homology is non-trivial only in one $\nZ_{2}$-degree, but reduced homology is non-trivial in both $\nZ_{2}$-degrees. In fact the even and odd components are the same up to a grading shift by $N-1$, see Lemma~\ref{Z2gradingReduced}. For this reason we define and list the Poincar\'e polynomials $\overline{\KR}_{N}$ only for the $\nZ_{2}$-degree given by the parity of the link. The invariant for the opposite $\nZ_{2}$-degree is then obtained by multiplication with $q^{N-1}$. 
 \item 
 The choice of relative orientation of components, called the version of a link above, can be detected by Khovanov-Rozansky homology for some but not all links. More precisely, both the reduced and unreduced invariants depend on the version in the case of the links $4_{1}^2, 6_{1}^2, 6_{2}^2, 6_{3}^2, 6_{1}^3, 6_{2}^3, 6_{3}^3$ in our examples. 
 \item 
@@ -3204,7 +3207,7 @@ First let us note that the statement makes sense: the differential $d_X \otimes 
 (X \otimes R/(\bb), 0) \ar@<-0.8ex>[r]_{1 \otimes \sigma} & (X \otimes \bigwedge F, 1 \otimes \delta_+), \ar@<-0.8ex>[l]_{\pi}
 } \quad - 1 \otimes h \, .
 \]
-Consider the perturbation $\mu$ of the differential on $X \otimes \bigwedge F$. The hypotheses of \cite[Proposition 6.1]{dm1102.2957} are easily checked, and the conclusion is that the desired linear factorisation exists.
+Consider the perturbation $\mu$ of the differential on $X \otimes \bigwedge F$. The hypotheses of \cite[Proposition 6.1]{dm1102.2957} are easily checked, and the conclusion is that the desired deformation retract exists.
 \end{proof}
 
 \begin{remark}\label{remark:splitexactsequenceskos}
