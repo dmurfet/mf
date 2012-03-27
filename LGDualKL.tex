@@ -251,13 +251,14 @@ commutes up to homotopy.
 \begin{lemma} An operator $\Phi$ is adjoint to $\Psi$ if and only if $\Psi$ is adjoint to $\Phi$.
 \end{lemma}
 \begin{proof}
-This follows from naturality of the graded twist $\tau$ and the cyclicity axiom for $c_{XY}$.
+By naturality of the graded twist $\tau$ and the cyclicity axiom for $c_{XY}$.
 \end{proof}
 
 \begin{lemma} Any operator $\Phi$ admits an adjoint, which is unique up to homotopy. 
 \end{lemma}
 \begin{proof}
-If $\Phi$ is adjoint to $\Psi$ then from the previous lemma and (\ref{eq:lemadjointdia}) we deduce that $\Psi$ is homotopic to $\zeta^{-1} \circ \Phi^* \circ \zeta$ and from this both claims are clear.
+This follows from commutativity of (\ref{eq:lemadjointdia}).
+%If $\Phi$ is adjoint to $\Psi$ then from the previous lemma and (\ref{eq:lemadjointdia}) we deduce that $\Psi$ is homotopic to $\zeta^{-1} \circ \Phi^* \circ \zeta$ and from this both claims are clear.
 \end{proof}
 
 \begin{definition} Given an operator $\Phi$ we denote by $\Phi^{\dagger}$ the adjoint of $\Phi$.
@@ -355,23 +356,48 @@ The Atiyah class is $k[f]$-linear and is easily seen to be a morphism of complex
 
 For each pair of objects $X,Y$ in $\cat{C}$ we have defined a family of operators $\At_i$ on $\cat{C}(X,Y)$, defined using a choice of basis but independent of this choice up to homotopy. Conceptually, duality in the dg-category of matrix factorisations rests on the fact that these operators are anti-self-adjoint. To prove this we need the following Leibniz rule for Atiyah classes.
 
-\begin{lemma}\label{lemma:leibnizatiyah} Leibniz rule.
+\begin{lemma}\label{lemma:leibnizatiyah} For homogeneous $\alpha \in \Hom(Y,Z)$ and $\beta \in \Hom(X,Y)$
+\begin{equation}\label{eq:leibnizcompos}
+\At_i( \alpha \circ \beta ) = \At_i(\alpha) \circ \beta + (-1)^{|\alpha|} \alpha \circ \At_i(\beta) + [g,D]( \alpha \otimes \beta)
+\end{equation}
+where $g( \alpha \otimes \beta ) = \partial_i(\alpha) \circ \beta + \alpha \circ \partial_i(\beta) - \partial_i( \alpha \circ \beta )$.
 \end{lemma}
 \begin{proof}
-Cite Ragnar's paper for basic facts, apply to composition map.
+If $\nabla_{YZ}$ denotes the connection on $\Hom(Y,Z)$ and $\nabla_{XY}$ the connection on $\Hom(X,Y)$ then
+\[
+\nabla_{YZ,XY}(\alpha \otimes \beta) = \nabla_{YZ}(\alpha) \otimes \beta + \alpha \otimes \nabla_{XY}(\beta)
+\]
+defines a connection on $\Hom(Y,Z) \otimes_{k[f]} \Hom(X,Y)$. With $\At_{YZ,XY} = [D, \nabla_{YZ,XY}]$ it follows from naturality of the Atiyah class \cite{??} that the diagram
+\[
+\xymatrix{
+\Hom(Y,Z) \otimes_{k[f]} \Hom(X,Y) \ar[d]_{\At_{YZ,XY}}\ar[r]^-{\kappa} & \Hom(X,Z) \ar[d]^{\At_{XZ}}\\
+\Hom(Y,Z) \otimes_{k[f]} \Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k} \ar[r]_-{\kappa} & \Hom(X,Z) \otimes_{k[f]} \Omega^1_{k[f]/k}
+}
+\]
+commutes up to homotopy, where $\kappa$ is the composition map. Specifically, if $g = [\kappa, \nabla] = \kappa \circ \nabla_{YZ,XY} - \nabla_{XZ} \circ \kappa$ then a simple calculation using the graded Jacobi identity shows that
+\[
+\At_{XZ} \circ \kappa - \kappa \circ \At_{YZ,XY} = [g,D]\,.
+\]
+Applying both sides to $\alpha \otimes \beta$ and projecting to the $\ud f_i$ component yields (\ref{eq:leibnizcompos}).
 \end{proof}
 
-\begin{lemma}\label{lemma:stratiyahzero} $\langle \str( \At_i( - ) ) \rangle = 0$.
+\begin{lemma}\label{lemma:stratiyahzero} For any $\alpha \in \Hom(X,X)$ we have $\str( \At_i( \alpha ) ) = 0$ in $R$.
 \end{lemma}
+\begin{proof}
+Consider the diagram
+\[
+\xymatrix@C+1pc{
+\Hom(X,X) \ar[d]_{\At_{XX}} \ar[r]^-{\str} & R \ar[d]^{\At = 0}\\
+\Hom(X,X) \otimes_{k[f]} \Omega^1_{k[f]/k} \ar[r]_-{\str} & R \otimes_{k[f]} \Omega^1_{k[f]/k}\,.
+}
+\]
+By the graded Jacobi identity $\str \circ \At_{XX} = [\str, \At] = [g,D]$ where $g: \Hom(X,X) \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}$ is $g = [\str, \nabla]$. But from the way we have defined our connections, it is clear that $\str$ and $\nabla$ commute, so $g = 0$ and $\str \circ \At_{XX} = 0$.
+\end{proof}
 
 \begin{proposition} The operator $\At_i$ on $\Hom(\overline{X}, \overline{Y})$ is adjoint to $-\At_i$ on $\Hom(\overline{Y}, \overline{X})$.
 \end{proposition}
 \begin{proof}
-By Lemma \ref{lemma:leibnizatiyah} we have for $\alpha, \beta$ homogeneous composable maps the identity
-\[
-\At_i( \alpha \circ \beta ) = \At_i(\alpha) \circ \beta + (-1)^{|\alpha|} \alpha \circ \At_i(\beta) + [g,D]( \alpha \otimes \beta)\,.
-\]
-If we apply $\langle \str( - ) \rangle$ to both sides and use Lemma \ref{lemma:stratiyahzero} this yields
+If we apply $\langle \str( - ) \rangle$ to both sides of (\ref{eq:leibnizcompos}) and use Lemma \ref{lemma:stratiyahzero} we find that
 \begin{align*}
 \langle \At_i(\alpha), \beta \rangle = -(-1)^{|\alpha|} \langle \alpha,  \At_i(\beta) \rangle - \langle \str( gD(\alpha \otimes \beta) ) \rangle\,.
 \end{align*}
@@ -410,7 +436,7 @@ with $\psi \circ \vartheta = 1$ and $\vartheta \circ \psi = e$ (equalities meani
 \Hom(\overline{Y}, \overline{X}) \ar@<-0.5ex>[r]_-{\psi'} & \Hom(Y,X) \ar@<-0.5ex>[l]_-{\vartheta'}
 }
 \]
-with $\psi' \circ \vartheta' = 1$ and $\vartheta' \circ \psi' = e'$. The precise form of $\psi, \psi'$ is not important for us, but we will need to know that $\vartheta'$ is simply the quotient map, and
+with $\psi' \circ \vartheta' = 1$ and $\vartheta' \circ \psi' = e'$. A concrete description of $\psi, \psi'$ is not important for us, but we will need to know that $\vartheta'$ is simply the quotient map, and that
 \[
 \vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} \textup{sgn}(\sigma) \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^{\bullet}\,.
 \]
@@ -453,8 +479,13 @@ where $\zeta_{KL} = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate
 which completes the proof.
 \end{proof}
 
-\begin{remark} The expression for $e$ is really straight from the old paper, but $e'$ needs some serious effort. This should go in an Appendix (maybe $3$ pages).
-\end{remark}
+\section{Details on idempotent}
+
+Review briefly what is done, i.e. for general $X$ discuss that there is a $k$-linear homotopy equivalence between $X \otimes K(t)$ and $X/tX$. Then there are two ways to split
+\[
+0 \lto X \lto X \otimes K(t) \lto X[1] \lto 0
+\]
+Iterating these two splittings produces two idempotents. Then we need to use the commutation relation to turn the second idempotent into the form used above.
 
 \newpage
 
