@@ -142,9 +142,9 @@ Given $W \in R$ and two finite rank matrix factorisations $X,Y$ of $W$ let $\Hom
 \[
 \langle -, - \rangle_{\textup{KL}}: \Hom(X,Y) \otimes_k \Hom(Y,X) \lto k[n]
 \]
-by the following formula, where $\lambda_i = \partial_{x_i}(D_Y)$
+by the following formula, where $\lambda_i = \partial_{x_i}(D_Y)$ and $\ud \underline{x} = \ud x_1 \cdots \ud x_n$
 \[
-\langle \varphi, \psi \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} \sgn(\sigma) \Ress{R/k}\begin{bmatrix} \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} ) \ud \bs{x} \\ \partial_{x_1} W, \ldots, \partial_{x_n} W \end{bmatrix}\,.
+\langle \varphi, \psi \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} \sgn(\sigma) \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} )\, \ud \underline{x} }{ \partial_{x_1} W, \ldots, \partial_{x_n} W } \Bigg]\,.
 \]
 We say this pairing is \emph{homotopically nondegenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
 \begin{gather*}
@@ -153,25 +153,29 @@ We say this pairing is \emph{homotopically nondegenerate} if the adjoint morphis
 \end{gather*}
 is a homotopy equivalence over $k$. The main theorem of this section is that under some reasonable hypotheses on $R$ and $W$, the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate. This nondegeneracy is used in Section \ref{??} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
 
-\begin{theorem} Suppose that the following conditions are satisfied
+\begin{theorem}\label{theorem:generalkl} Suppose that the following conditions are satisfied
 \begin{itemize}
-\item[(H1)] The partial derivatives $f_i = \partial_{x_i} W$ form a quasi-regular sequence $\bs{f} = \{f_1,\ldots,f_n\}$ in $R$.
-\item[(H2)] As a $k[\bs{f}]$-module, $R$ admits a $k$-linear connection which is standard (TODO: explain).
-\item[(H3)] $\overline{R} = R/\bs{f}R$ is a finitely generated projective $k$-module.
+\item[(H1)] The partial derivatives $f_i = \partial_{x_i} W$ form a quasi-regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$.
+\item[(H2)] As a module over $k[f] = k[f_1,\ldots,f_n]$, $R$ admits a flat $k$-linear connection
+\[
+\nabla: R \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}
+\]
+which is standard.
+\item[(H3)] $\overline{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
 \item[(H4)] The $R$-linear map
 \begin{gather*}
 \overline{R} \lto \Hom_k( \overline{R}, k)\,\\
-r \mapsto \Ress{R/k}\begin{bmatrix} r \cdot (-) \ud \bs{x} \\ f_1, \ldots, f_n \end{bmatrix}
+r \mapsto \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]
 \end{gather*}
-is an isomorphism, where $\ud \bs{x} = \ud x_1 \cdots \ud x_n$.
+is an isomorphism.
 \end{itemize}
 Then the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate.
 \end{theorem}
 
-\begin{remark} If $k$ is a field we need the Jacobi algebra $\overline{R}$ to be Frobenius over $k$, and the important part of the above assumptions is that this continues to be true; also everything would work equally well if $R = k\llbracket \bs{x} \rrbracket$ (TODO).
-\end{remark}
+%\begin{remark} If $k$ is a field we need the Jacobi algebra $\overline{R}$ to be Frobenius over $k$, and the important part of the above assumptions is that this continues to be true; also everything would work equally well if $R = k\llbracket \bs{x} \rrbracket$ (TODO).
+%\end{remark}
 
-For the rest of this section, assume that (H1)-(H4) hold. The proof of the theorem will be given in Section \ref{??} after we have prepared some background material. The key point is that up to homotopy equivalence over $k$, the complex $\Hom(X,Y)[n]$ can be recovered from
+For the rest of this section, assume that (H1)-(H4) hold. The proof of the theorem will be given in Section \ref{??} after we have prepared some background material. The key point is that up to homotopy equivalence over $k$, the complex $\Hom(X,Y)[n]$ can be recovered from the mapping complex between the quotients $\overline{X} = X \otimes_R \overline{R}$ and $\overline{Y} = Y \otimes_R \overline{R}$, namely
 \[
 \Hom(\overline{X},\overline{Y}) = \Hom(X,Y) \otimes_R \overline{R}
 \]
@@ -179,10 +183,7 @@ as the splitting of a certain idempotent $e$ on this complex. Similarly $\Hom(Y,
 \begin{equation}\label{eq:frobnondeg}
 \Hom(\overline{X}, \overline{Y}) \cong \Hom_k( \Hom(\overline{Y}, \overline{X}), k)
 \end{equation}
-of complexes, under which the idempotent $e$ is identified up to homotopy with $(e')^*$. From this the theorem follows immediately. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\overline{R}$ is Frobenius over $k$. The hard work lies in showing that $e$ corresponds under this isomorphism to the dual of $e'$, and for this we need to carefully study adjointness between operators on the dg-category formed by the complexes $\Hom(\overline{X}, \overline{Y})$. Part of the argument can be formulated abstractly, so we begin with this.
-
-\begin{remark} Put here the proof of (\ref{eq:frobnondeg})
-\end{remark}
+of complexes, under which the idempotent $e$ is identified up to homotopy with $(e')^*$. From this the theorem follows immediately. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\overline{R}$ is Frobenius over $k$. The hard work lies in showing that $e$ corresponds under this isomorphism to the dual of $e'$, and for this we need to carefully study adjointness between operators on the dg-category formed by the complexes $\Hom(\overline{X}, \overline{Y})$.
 
 \subsection{Adjoint operators on dg-categories}
 
@@ -190,9 +191,11 @@ In this section $\otimes$ denotes $\otimes_k$. Let $\cat{C}$ be a $\mathbb{Z}_2$
 \[
 c_{XY}: \cat{C}(X,Y) \otimes \cat{C}(Y,X) \lto k\,.
 \]
-When it is convenient we write $\langle \alpha, \beta \rangle$ for $c_{XY}(\alpha \otimes \beta)$. The differentials on the $\cat{C}(X,Y)$ and their tensor products are denoted $D$. The pairing is required to satisfy two axioms:
+When it is convenient we write $\langle \alpha, \beta \rangle$ for $c_{XY}(\alpha \otimes \beta)$. Throughout the differentials on the $\cat{C}(X,Y)$ and their tensor products are denoted $D$, with additional subscripts if necessary.
+
+\begin{definition}\label{defn:nondegpair} We say that the pairing $\{ c_{XY} \}_{X,Y \in \cat{C}}$ is
 \begin{itemize}
-\item \textbf{Cyclicity:} for all $X,Y$ the diagram
+\item[(i)] \emph{Cyclic} if for all $X,Y$ the diagram
 \[
 \xymatrix{
 \cat{C}(X,Y) \otimes \cat{C}(Y,X) \ar[dr]_{c_{XY}}\ar[rr]^\tau & & \cat{C}(Y,X) \otimes \cat{C}(X,Y) \ar[dl]^{c_{YX}}\\
@@ -200,23 +203,23 @@ When it is convenient we write $\langle \alpha, \beta \rangle$ for $c_{XY}(\alph
 }
 \]
 commutes, where $\tau$ is the graded twist $\tau( \varphi \otimes \psi) = (-1)^{|\varphi||\psi|} \psi \circ \varphi$. 
-\item \textbf{Nondegeneracy:} for all $X,Y$ the morphism
+\item[(ii)] \emph{Nondegenerate} if for all $X,Y$ the morphism
 \begin{gather*}
 \zeta_{XY}: \cat{C}(X,Y) \lto \Hom_k( \cat{C}(Y,X), k)\,,\\
 \varphi \mapsto c_{XY}( \varphi \otimes - )
 \end{gather*}
 is an isomorphism of complexes.
 \end{itemize}
+\end{definition}
 
-\begin{example} The example we have in mind is the dg-category $\cat{C}$ whose objects are the finite rank matrix factorisations of $W$ over $R$ with $\cat{C}(X,Y) = \Hom(\overline{X},\overline{Y})$.
-\end{example}
+%\begin{remark} \textbf{todo}. Probably this all works for a weaker form of nondegeneracy, where $\zeta$ is just a homotopy equivalence, but we don't need this. In what generality should we state things, then? Maybe we also only need cyclicity up to homotopy.
+%\end{remark}
 
-\begin{remark} \textbf{todo}. Probably this all works for a weaker form of nondegeneracy, where $\zeta$ is just a homotopy equivalence, but we don't need this. In what generality should we state things, then? Maybe we also only need cyclicity up to homotopy.
-\end{remark}
+From now on we assume $\cat{C}$ is equipped with a cyclic nondegenerate pairing. In this section an \emph{operator} is a closed homogeneous $k$-linear operator on some mapping complex $\cat{C}(X,Y)$ in $\cat{C}$, that is, a closed homogeneous element of the complex $\Hom_k( \cat{C}(X,Y), \cat{C}(X,Y) )$. We are interested in linear operators on the $\cat{C}(X,Y)$ and adjunctions between them, with respect to the pairing.
 
-We are interested in linear operators on the $\cat{C}(X,Y)$ and relations among them. In this section an \emph{operator} is a closed homogeneous $k$-linear operator on some $\cat{C}(X,Y)$, that is, a closed homogeneous element of the complex $\Hom_k( \cat{C}(X,Y), \cat{C}(X,Y) )$. Recall that if $\Psi$ is homogeneous then $1 \otimes \Psi$ acts on tensors with Koszul signs.
+Recall that if $\Psi$ is homogeneous then $1 \otimes \Psi$ acts on tensors with Koszul signs.
 
-\begin{definition} An operator $\Phi$ on $\cat{C}(X,Y)$ is \emph{adjoint} to an operator $\Psi$ on $\cat{C}(Y,X)$ if both $\Phi$ and $\Psi$ are homogeneous of the same degree and the diagram
+\begin{definition}\label{defn:adjointop} An operator $\Phi$ on $\cat{C}(X,Y)$ is \emph{adjoint} to an operator $\Psi$ on $\cat{C}(Y,X)$ if both $\Phi$ and $\Psi$ are homogeneous of the same degree and the diagram
 \[
 \xymatrix@C+1pc@R+0.5pc{
 \cat{C}(X,Y) \otimes \cat{C}(Y,X) \ar[d]_{\Phi \otimes 1} \ar[r]^{1 \otimes \Psi} & \cat{C}(X,Y) \otimes \cat{C}(Y,X) \ar[d]^{c_{XY}}\\
@@ -228,9 +231,9 @@ commutes up to homotopy. Equivalently, there is a $k$-linear degree $|\Phi|+1$ m
 \mu: \cat{C}(X,Y) \otimes \cat{C}(Y,X) \lto k
 \]
 with the property that $[D, \mu] = c_{XY} \circ (1 \otimes \Psi) - c_{XY} \circ ( \Phi \otimes 1)$. Evaluated on homogeneous morphisms $\alpha, \beta$ this identity reads
-\[
+\begin{equation}\label{eq:adjointopeq}
 (-1)^{|\Phi|} \mu D(\alpha \otimes \beta) = (-1)^{|\alpha||\Psi|}\langle \alpha, \Psi(\beta) \rangle - \langle \Phi(\alpha) , \beta \rangle.
-\]
+\end{equation}
 \end{definition}
 
 We will show in a moment that adjointness is symmetric in $\Phi, \Psi$ so there is no need to distinguish between left and right adjoints. If $\Psi$ is a homogeneous operator on $\cat{C}(Y,X)$ then $\Psi^*$ is the operator on $\Hom_k(\cat{C}(Y,X),k)$ defined by $\Psi^*(f) = (-1)^{|f||\Psi|} f \circ \Psi$. It is easy to see that
@@ -254,20 +257,13 @@ This follows from naturality of the graded twist $\tau$ and the cyclicity axiom 
 \begin{lemma} Any operator $\Phi$ admits an adjoint, which is unique up to homotopy. 
 \end{lemma}
 \begin{proof}
-If $\Phi$ is adjoint to $\Psi$ then by the previous lemma and (\ref{eq:lemadjointdia}) there is a commutative diagram in the homotopy category
-\[
-\xymatrix@C+2pc{
-\cat{C}(X,Y) \ar[d]_\Psi \ar[r]^-{\zeta} & \Hom_k( \cat{C}(Y,X), k ) \ar[d]^{\Phi^*}\\
-\cat{C}(X,Y) \ar[r]_-{\zeta} & \Hom_k( \cat{C}(Y,X), k)\,.
-}
-\]
-We deduce that $\Psi$ is homotopic to $\zeta^{-1} \circ \Phi^* \circ \zeta$ and from this both claims are clear.
+If $\Phi$ is adjoint to $\Psi$ then from the previous lemma and (\ref{eq:lemadjointdia}) we deduce that $\Psi$ is homotopic to $\zeta^{-1} \circ \Phi^* \circ \zeta$ and from this both claims are clear.
 \end{proof}
 
 \begin{definition} Given an operator $\Phi$ we denote by $\Phi^{\dagger}$ the adjoint of $\Phi$.
 \end{definition}
 
-Since the adjoint is only well-defined up to homotopy it is implicit that in any identities involving the dagger notation we are working in the homotopy category of $\mathbb{Z}_2$-graded complexes.
+Since the adjoint is only well-defined up to homotopy it is implicit that in any identities involving the dagger notation we are working in the homotopy category of $\mathbb{Z}_2$-graded complexes. The following basic properties of adjoints are easily checked.
 
 \begin{lemma} 
 \begin{itemize}
@@ -275,9 +271,190 @@ Since the adjoint is only well-defined up to homotopy it is implicit that in any
 \[
 (\Phi_2 \circ \Phi_1)^{\dagger} = (-1)^{|\Phi_1||\Phi_2|} \Phi_1^{\dagger} \circ \Phi_2^{\dagger}\,.
 \]
-\item[(ii)] If $\Phi_1, \Phi_2$ are operators on $\cat{C}(X,Y)$ of the same degree, $(\Phi_1 + \Phi_2)^{\dagger} = \Phi_1^{\dagger} + \Phi_2^{\dagger}$.
+\item[(ii)] If $\Phi_1, \Phi_2$ are operators on $\cat{C}(X,Y)$ of the same degree, then $(\Phi_1 + \Phi_2)^{\dagger} = \Phi_1^{\dagger} + \Phi_2^{\dagger}$.
 \end{itemize}
 \end{lemma}
+
+So much for the general theory; from now on $\cat{C}$ denotes the dg-category whose objects are finite rank matrix factorisations of $W$ and whose mapping complexes are given by the quotients
+\[
+\cat{C}(X,Y) = \Hom(\overline{X}, \overline{Y}) = \Hom(X,Y) \otimes_R \overline{R}\,.
+\]
+While the ordinary dg-category of matrix factorisations only admits a pairing which is homotopically nondegenerate, this (linear) quotient $\cat{C}$ admits a cyclic nondegenerate pairing in the stronger sense explained above. To define it, let
+\[
+\langle - \rangle: R \lto k
+\]
+denote the $k$-linear map
+\[
+\langle r \rangle = \Ress{R/k}\Bigg[ \frac{r \cdot \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]\,.
+\]
+This annihilates the ideal $(f_1,\ldots,f_n)R$ and therefore factors via a $k$-linear map $\overline{R} \lto k$.
+
+\begin{proposition}\label{prop:barnondeg} The pairing on $\cat{C}$ defined by
+\begin{gather*}
+\langle -, - \rangle: \Hom(\overline{X}, \overline{Y}) \otimes \Hom(\overline{Y}, \overline{X}) \lto k\,,\\
+\langle \varphi, \psi \rangle = \langle \str( \varphi \circ \psi ) \rangle
+\end{gather*}
+is cyclic and nondegenerate in the sense of Definition \ref{defn:nondegpair}.
+\end{proposition}
+\begin{proof}
+The pairing factors as
+\begin{equation}\label{eq:barnondeg}
+\xymatrix@C+1pc{
+\Hom(\overline{X}, \overline{Y}) \otimes \Hom(\overline{Y}, \overline{X}) \ar[r]^-{-\circ-} & \Hom(\overline{Y}, \overline{Y}) \ar[r]^-{\str} & \overline{R} \ar[r]^-{\langle - \rangle} & k
+}
+\end{equation}
+so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Nondegeneracy follows from hypothesis (H4) and the following calculation, in which the first step is adjoint to the composite of the first two maps in (\ref{eq:barnondeg})
+\begin{align*}
+\Hom_R(\overline{X}, \overline{Y}) &\cong \Hom_R( \Hom(\overline{Y}, \overline{X}), \overline{R} )\,\\
+&\cong \Hom_R( \Hom(\overline{Y}, \overline{X}), \Hom_k( \overline{R}, k) )\\
+&\cong \Hom_k( \Hom(\overline{Y}, \overline{X}), k )\,.
+\end{align*}
+\end{proof}
+
+We have in mind two special classes of operators on the dg-category $\cat{C}$. The first arise because the partial derivatives $f_i$ act as zero on the cohomology of $\cat{C}$ but via nonzero maps on the dg-level. In what follows let $X,Y$ denote finite rank matrix factorisations of $W$.
+
+\begin{definition} Given a null-homotopy $\lambda_i$ for the action of $f_i$ on $Y$, that is, a map $\lambda_i \in \Hom(Y,Y)$ of degree one with $[D, \lambda_i] = f_i \cdot 1_Y$, we define the odd operator $\lambda_i^\bullet$ on $\Hom(\overline{X},\overline{Y})$ by
+\[
+\lambda_i^\bullet(\varphi) = \lambda_i \circ \varphi\,
+\]
+and the odd operator ${\lambda_i}_\bullet$ on $\Hom(\overline{Y}, \overline{X})$ by
+\[
+{\lambda_i}_\bullet(\varphi) = (-1)^{|\varphi|} \varphi \circ \lambda_i \,.
+\]
+\end{definition}
+
+Observe that composition with $\lambda_i$ is not a closed map on $\Hom(X,Y)$ but is closed as an operator on $\Hom(\overline{X}, \overline{Y})$. These operators give the simplest example of an adjoint pair.
+
+\begin{lemma} The operator $\lambda_i^\bullet$ is adjoint to ${\lambda_i}_\bullet$.
+\end{lemma}
+\begin{proof}
+The identity (\ref{eq:adjointopeq}) holds with $\mu = 0$, since
+\begin{align*}
+\langle {\lambda_i}_\bullet(\alpha), \beta \rangle &= \langle \str( {\lambda_i}_\bullet(\alpha) \circ \beta ) \rangle\\
+&= (-1)^{|\varphi|} \langle \str( \alpha \circ \lambda_i \circ \beta ) \rangle\\
+&= (-1)^{|\varphi|} \langle \alpha, \lambda_i^\bullet(\beta) \rangle\,.
+\end{align*}
+\end{proof}
+
+The second class of operators are the components of the Atiyah class. Recall that by hypothesis (H2) the ring $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module. The $n$ components of this connection define $k$-linear operators $\partial_{f_i} = (\ud f_i)^* \circ \nabla$ on $R$ with the property that $[\partial_{f_i}, f_j] = \delta_{ij}$.
+
+Any free $R$-module admits a $k$-linear connection over $k[f]$. For convenience choose homogeneous $R$-bases $\{ e_i \}_{i \in I}$ for $X$ and $\{ e_j \}_{j \in J}$ for $Y$ respectively. Then the maps $e_{ji} = e_j \circ e_i^*$ form an $R$-basis for $\Hom(X,Y)$ and the induced $k$-linear connection over $k[f]$ is defined by
+\begin{gather*}
+\nabla = \nabla_{XY}: \Hom(X,Y) \lto \Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}\,,\\
+\nabla_{XY}( r e_{ji} ) = e_{ji} \otimes \nabla(r)\,.
+\end{gather*}
+This connection connection has components $\partial_{f_i}$ defined by $\partial_{f_i}( r e_{ji} ) = \partial_{f_i}(r) \cdot e_{ji}$ which are $k$-linear operators on $\Hom(X,Y)$. The \emph{Atiyah class} of $\Hom(X,Y)$ is the commutator
+\[
+\At = \At_{XY} = [D, \nabla] = D \circ \nabla - \nabla \circ D: \Hom(X,Y) \lto \Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}\,.
+\]
+The Atiyah class is $k[f]$-linear and is easily seen to be a morphism of complexes from $\Hom(X,Y)$ to the shift $\Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}[1]$. Moreover the homotopy class of this morphism is independent of the choice of connection, and in this sense choosing a basis for $X,Y$ is harmless. In terms of the components this means
+
+
+\begin{definition} For $1 \le i \le n$ the components $\At_i = [D, \partial_{f_i}]$ of the Atiyah class define $k$-linear closed operators of degree one on $\Hom(\overline{X}, \overline{Y})$.
+\end{definition}
+
+For each pair of objects $X,Y$ in $\cat{C}$ we have defined a family of operators $\At_i$ on $\cat{C}(X,Y)$, defined using a choice of basis but independent of this choice up to homotopy. Conceptually, duality in the dg-category of matrix factorisations rests on the fact that these operators are anti-self-adjoint. To prove this we need the following Leibniz rule for Atiyah classes.
+
+\begin{lemma}\label{lemma:leibnizatiyah} Leibniz rule.
+\end{lemma}
+\begin{proof}
+Cite Ragnar's paper for basic facts, apply to composition map.
+\end{proof}
+
+\begin{lemma}\label{lemma:stratiyahzero} $\langle \str( \At_i( - ) ) \rangle = 0$.
+\end{lemma}
+
+\begin{proposition} The operator $\At_i$ on $\Hom(\overline{X}, \overline{Y})$ is adjoint to $-\At_i$ on $\Hom(\overline{Y}, \overline{X})$.
+\end{proposition}
+\begin{proof}
+By Lemma \ref{lemma:leibnizatiyah} we have for $\alpha, \beta$ homogeneous composable maps the identity
+\[
+\At_i( \alpha \circ \beta ) = \At_i(\alpha) \circ \beta + (-1)^{|\alpha|} \alpha \circ \At_i(\beta) + [g,D]( \alpha \otimes \beta)\,.
+\]
+If we apply $\langle \str( - ) \rangle$ to both sides and use Lemma \ref{lemma:stratiyahzero} this yields
+\begin{align*}
+\langle \At_i(\alpha), \beta \rangle = -(-1)^{|\alpha|} \langle \alpha,  \At_i(\beta) \rangle - \langle \str( gD(\alpha \otimes \beta) ) \rangle\,.
+\end{align*}
+So $\mu( \alpha \otimes \beta ) = \langle \str( g( \alpha \otimes \beta ) ) \rangle$ is a homotopy expressing $\At_i$ as adjoint to $-\At_i$.
+\end{proof}
+
+\subsection{Idempotents}
+
+In the previous section we constructed operators $\lambda_i^\bullet, {\lambda_i}_\bullet$ and $\At_i$ on the dg-category $\cat{C}$. Now we use these operators to define idempotent endomorphisms of the complex
+\[
+\cat{C}(X,Y) = \Hom(\overline{X}, \overline{Y})
+\]
+which split in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes to give $\Hom(X,Y)$. In this way the dg-category of matrix factorisations can be recovered from the quotient $\cat{C}$ and the nondegenerate pairing defined above induces the homotopically nondegenerate pairing $\langle -, - \rangle_{\textup{KL}}$.
+
+The main result of \cite{??} is that if $V$ is the free $k$-module on the basis $\theta_1,\ldots,\theta_n$ then there is a homotopy equivalence
+\[
+\Hom(\overline{X}, \overline{Y}) \cong \Hom(X,Y) \otimes_k \bigwedge V\,.
+\]
+There are consequently $2^n$ ways to embed $\Hom(X,Y)$ in the homotopy category of $k$-complexes as a direct summand in $\Hom(\overline{X}, \overline{Y})$. The ``top degree'' embedding, corresponding to the form $\theta_1 \cdots \theta_n$, is determined by the following idempotent endomorphism of $\Hom(\overline{X}, \overline{Y})$
+\[
+e = \frac{1}{(n!)^2} (-1)^{\binom{n}{2}}\sum_{\sigma,\tau \in S_n} \textup{sgn}(\sigma\tau) \cdot \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)}\,.
+\]
+The embedding corresponding to the $0$-form $1$ in $\bigwedge V$ was not discussed in \cite{??} but we give the details in Appendix \ref{??}. The upshot is that this embedding is determined by the idempotent
+\[
+e' = \frac{1}{(n!)^2} (-1)^{\binom{n+1}{2}}\sum_{\sigma, \tau \in S_n} \textup{sgn}(\sigma\tau) \cdot \At_{\tau(1)} \cdots \At_{\tau(n)} {\lambda_{\sigma(1)}}_\bullet \cdots {\lambda_{\sigma(n)}}_\bullet\,.
+\]
+To be precise, there is a diagram of degree zero $k$-linear morphisms of complexes
+\[
+\xymatrix@C+2pc{
+\Hom(\overline{X}, \overline{Y}) \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta}
+}
+\]
+with $\psi \circ \vartheta = 1$ and $\vartheta \circ \psi = e$ (equalities meaning equal up to $k$-linear homotopy) and a diagram
+\[
+\xymatrix@C+2pc{
+\Hom(\overline{Y}, \overline{X}) \ar@<-0.5ex>[r]_-{\psi'} & \Hom(Y,X) \ar@<-0.5ex>[l]_-{\vartheta'}
+}
+\]
+with $\psi' \circ \vartheta' = 1$ and $\vartheta' \circ \psi' = e'$. The precise form of $\psi, \psi'$ is not important for us, but we will need to know that $\vartheta'$ is simply the quotient map, and
+\[
+\vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} \textup{sgn}(\sigma) \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^{\bullet}\,.
+\]
+
+\begin{proposition}\label{prop:eadjointeprime} The idempotent $e$ is adjoint to $(-1)^n e'$. Equivalently, the diagram
+\begin{equation}\label{eq:eadjointeprime}
+\xymatrix@C+2pc{
+\Hom(\overline{X}, \overline{Y}) \ar[d]_-{e} \ar[r]^-{\zeta}_-{\cong} & \Hom_k(\Hom(\overline{Y},\overline{X}),k) \ar[d]^-{(-1)^n (e')^*}\\
+\Hom(\overline{X}, \overline{Y}) \ar[r]_-{\zeta}^-{\cong} & \Hom_k( \Hom(\overline{Y}, \overline{X}), k )
+}
+\end{equation}
+commutes up to homotopy.
+\end{proposition}
+\begin{proof} 
+Observe that by the (anti-)self-adjointness established in the previous section
+\begin{align*}
+\left( \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)} \right)^{\dagger} &= (-1)^n \At^\dagger_{\tau(n)} \cdots \At^\dagger_{\tau(1)} (\lambda_{\sigma(n)}^\bullet)^\dagger \cdots (\lambda_{\sigma(1)}^\bullet)^{\dagger}\\
+&= \At_{\tau(n)} \cdots \At_{\tau(1)} {\lambda_{\sigma(n)}}_{\bullet} \cdots {\lambda_{\sigma(1)}}_{\bullet}\,,
+\end{align*}
+from which it is immediate that $e^{\dagger} = (-1)^n e'$.
+\end{proof}
+
+Commutativity of (\ref{eq:eadjointeprime}) means that $e$ and $(-1)^n (e')^*$ may be viewed as homotopic idempotents on the same complex $\Hom(\overline{X}, \overline{Y})$. It follows that the splittings of these idempotents are homotopy equivalent, and this yields the desired homotopic nondegeneracy of the Kapustin-Li pairing.
+
+\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Consider the diagram
+\[
+\xymatrix@C+2pc{
+\Hom(\overline{X},\overline{Y}) \ar[d]_-{\zeta}^-{\cong} \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta} \ar@{.>}[d]^{\zeta_{\textup{KL}}}\\
+\Hom_k(\Hom(\overline{Y}, \overline{X},k) \ar@<-0.5ex>[r]_-{(\vartheta')^*} & \Hom_k( \Hom(Y,X), k) \ar@<-0.5ex>[l]_-{(\psi')^*}
+}
+\]
+where $\zeta_{KL} = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate from commutativity of (\ref{eq:eadjointeprime}) up to homotopy that $\zeta_{\textup{KL}}$ is a homotopy equivalence with inverse $(-1)^n \psi \circ \zeta^{-1} \circ (\psi')^*$. To prove the theorem it only remains to observe that $\zeta_{\textup{KL}}(\alpha)$ is the functional $\langle \alpha, - \rangle_{\textup{KL}}$. But
+\begin{align*}
+\zeta_{\textup{KL}}(\alpha) &= (\vartheta')^* \zeta \vartheta( \alpha )\\
+&= (\vartheta')^* \zeta\left( \frac{1}{n!} \sum_{\sigma \in S_n} \textup{sgn}(\sigma) \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} \circ \alpha \right)\\
+&= \frac{1}{n!} (-1)^n \sum_{\sigma \in S_n} \textup{sgn}(\sigma) \langle \str( \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} \circ \alpha \circ (-) ) \rangle\\
+&= \frac{1}{n!} \sum_{\sigma \in S_n} \textup{sgn}(\sigma) \langle \str(  \alpha \circ (-) \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} ) \rangle\\
+&= \langle \alpha, - \rangle_{\textup{KL}}
+\end{align*}
+which completes the proof.
+\end{proof}
+
+\begin{remark} The expression for $e$ is really straight from the old paper, but $e'$ needs some serious effort. This should go in an Appendix (maybe $3$ pages).
+\end{remark}
 
 \newpage
 
