@@ -30,6 +30,7 @@
 \def\Res{\res\!}
 \newcommand{\Ress}[1]{\res_{#1}\!}
 \def\eval{\operatorname{ev}}
+\def\kos{\operatorname{K}}
 \def\coev{\operatorname{coev}}
 \def\res{\operatorname{Res}}
 \def\sg{\operatorname{sg}}
@@ -112,7 +113,6 @@
 \def\krc{C}
 \def\diffm{d}
 \def\diffh{d_{\chi}}
-\def\redh{\overline{H}}
 \def\ZZ{\mathds{Z}}
 \def\bs{\boldsymbol}
 \def\Ztwo{\mathds{Z}_2}
@@ -126,45 +126,43 @@
 \def\nQ{\mathds{Q}}
 \def\nR{\mathds{R}}
 \def\nC{\mathds{C}}
-\def\Bar{\mathds{B}}
-\def\cBar{\widehat{\mathds{B}}}
 \def\Ae{A^{\operatorname{e}}}
+\def\ul{\underline}
+\def\ori{o}
+\def\dual{\lor}
 
-\title{General Kapustin-Li}
+\title{Adjoints in the bicategory of matrix factorisations}
 
 \maketitle
 
-\section{Nondegenerate pairings}
+\section{Duality via adjoint operators}\label{section:dualityadjointop}
+% All rings are commutative by default unless they are called "associative"
+% TODO match generality to dviat5
 
-Let $k$ be a commutative $\mathbb{Q}$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a nondegenerate pairing on the morphism spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove a relative version of the Kapustin-Li formula, which works even if the base $k$ is not a field; in particular, since the morphism spaces of the triangulated category need not be flat over $k$, we must work instead with dg-categories instead of triangulated categories.
+Let $k$ be a noetherian $\mathbb{Q}$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a nondegenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
 
-Given $W \in R$ and two finite rank matrix factorisations $X,Y$ of $W$ let $\Hom(X,Y) = \Hom_R(X,Y)$ denote the $\mathbb{Z}_2$-graded Hom-complex. We can define a natural $k$-bilinear pairing
+Given $W \in R$ and two finite rank matrix factorisations $X,Y$ of $W$ let $\Hom(X,Y) = \Hom_R(X,Y)$ denote the $\mathbb{Z}_2$-graded Hom-complex. We define a natural $k$-bilinear pairing
 \[
 \langle -, - \rangle_{\textup{KL}}: \Hom(X,Y) \otimes_k \Hom(Y,X) \lto k[n]
 \]
-by the following formula, where $\lambda_i = \partial_{x_i}(D_Y)$ and $\ud \underline{x} = \ud x_1 \cdots \ud x_n$
-\[
-\langle \varphi, \psi \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} \sgn(\sigma) \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} )\, \ud \underline{x} }{ \partial_{x_1} W, \ldots, \partial_{x_n} W } \Bigg]\,.
-\]
-We say this pairing is \emph{homotopically nondegenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
+by the following formula, where $\lambda_i = \partial_{x_i}(D_Y), \omega = \ud x_1 \cdots \ud x_n$ and $f_i = \partial_{x_i} W$
+\begin{equation}\label{eq:generalklpairing}
+\langle \varphi, \psi \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} \sgn(\sigma) \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1,\ldots,f_n } \Bigg]\,.
+\end{equation}
+Such a pairing is \emph{homotopically nondegenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
 \begin{gather*}
 \Hom(X,Y) \lto \Hom_k( \Hom(Y,X), k )[n]\,,\\
 \varphi \mapsto \langle \varphi, - \rangle_{\textup{KL}}
 \end{gather*}
-is a homotopy equivalence over $k$. The main theorem of this section is that under some reasonable hypotheses on $R$ and $W$, the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate. This nondegeneracy is used in Section \ref{??} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
+is a homotopy equivalence over $k$. The main theorem here is that under some reasonable hypotheses the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate. This nondegeneracy is used in Section \ref{??} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
 
 \begin{theorem}\label{theorem:generalkl} Suppose that the following conditions are satisfied
 \begin{itemize}
-\item[(H1)] The partial derivatives $f_i = \partial_{x_i} W$ form a quasi-regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$.
-\item[(H2)] As a module over $k[f] = k[f_1,\ldots,f_n]$, $R$ admits a flat $k$-linear connection
-\[
-\nabla: R \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}
-\]
-which is standard.
-\item[(H3)] $\overline{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
-\item[(H4)] The $R$-linear map
+\item[(H1)] The partial derivatives $f_i = \partial_{x_i} W$ form a regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$.
+\item[(H2)] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
+\item[(H3)] The $R$-linear map
 \begin{gather*}
-\overline{R} \lto \Hom_k( \overline{R}, k)\,\\
+\bar{R} \lto \Hom_k( \bar{R}, k)\,\\
 r \mapsto \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]
 \end{gather*}
 is an isomorphism.
@@ -172,20 +170,42 @@ is an isomorphism.
 Then the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate.
 \end{theorem}
 
-%\begin{remark} If $k$ is a field we need the Jacobi algebra $\overline{R}$ to be Frobenius over $k$, and the important part of the above assumptions is that this continues to be true; also everything would work equally well if $R = k\llbracket \bs{x} \rrbracket$ (TODO).
+%\begin{remark} If $k$ is a field we need the Jacobi algebra $\bar{R}$ to be Frobenius over $k$, and the important part of the above assumptions is that this continues to be true; also everything would work equally well if $R = k\llbracket \bs{x} \rrbracket$ (TODO).
 %\end{remark}
 
-For the rest of this section, assume that (H1)-(H4) hold. The proof of the theorem will be given in Section \ref{??} after we have prepared some background material. The key point is that up to homotopy equivalence over $k$, the complex $\Hom(X,Y)[n]$ can be recovered from the mapping complex between the quotients $\overline{X} = X \otimes_R \overline{R}$ and $\overline{Y} = Y \otimes_R \overline{R}$, namely
+The proof takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they split idempotents on
 \[
-\Hom(\overline{X},\overline{Y}) = \Hom(X,Y) \otimes_R \overline{R}
+\Hom(\bar{X},\bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}
 \]
-as the splitting of a certain idempotent $e$ on this complex. Similarly $\Hom(Y,X)$ splits an idempotent $e'$ on the complex $\Hom(\overline{Y}, \overline{X})$ and we prove the theorem by showing that there is an isomorphism
+and
+\[
+\Hom_k( \Hom(\bar{Y}, \bar{X}), k) = \Hom_k( \Hom(Y,X) \otimes_R \bar{R}, k )
+\]
+respectively, in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes. There is an isomorphism
 \begin{equation}\label{eq:frobnondeg}
-\Hom(\overline{X}, \overline{Y}) \cong \Hom_k( \Hom(\overline{Y}, \overline{X}), k)
+\Hom(\bar{X}, \bar{Y}) \cong \Hom_k( \Hom(\bar{Y}, \bar{X}), k)
 \end{equation}
-of complexes, under which the idempotent $e$ is identified up to homotopy with $(e')^*$. From this the theorem follows immediately. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\overline{R}$ is Frobenius over $k$. The hard work lies in showing that $e$ corresponds under this isomorphism to the dual of $e'$, and for this we need to carefully study adjointness between operators on the dg-category formed by the complexes $\Hom(\overline{X}, \overline{Y})$.
+of complexes which identify these idempotents, and from this the theorem follows. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\bar{R}$ is Frobenius over $k$. The hard work lies in showing that this isomorphism identifies the two idempotents, and for this we need to carefully study adjointness between operators on dg-categories. Thus the first part of the proof, in Section \ref{section:adjointopdg}, consists in formalising this kind of adjointness.
 
-\subsection{Adjoint operators on dg-categories}
+In fact it will be convenient to prove the theorem slightly more generally, since in order to equip $R$ with a connection we may need to pass to the $fR$-adic completion. Consequently, for the rest of this section $R$ is an arbitrary noetherian $k$-algebra, $W \in R$, and our actual hypotheses are:
+\begin{itemize}
+\item[(H1')] $f = \{ f_1,\ldots,f_n \}$ is any regular sequence in $R$ with the property that multiplication by $f_i$ is a null-homotopic endomorphism of $X,Y \in \hmf(R,W)$ for $1 \le i \le n$.
+\item[(H2')] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
+\item[(H3')] $R$ admits a flat $k$-linear connection
+\[
+\nabla: R \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}
+\]
+as a $k[f]$-module, which is standard in the sense of \cite{??}.
+\item[(H4')] There is an $n$-form $\omega \in \Omega^n_{R/k}$ such that the $R$-linear map
+\begin{gather*}
+\bar{R} \lto \Hom_k( \bar{R}, k)\,\\
+r \mapsto \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1, \ldots, f_n} \Bigg]
+\end{gather*}
+is an isomorphism.
+\end{itemize}
+In this situation one can still write down the pairing (\ref{eq:generalklpairing}) and we prove that this is homotopically nondegenerate (Proposition \ref{??}). The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H1')-(H4') above even if the polynomial ring does not.
+
+\subsection{Adjoint operators on dg-categories}\label{section:adjointopdg}
 
 In this section $\otimes$ denotes $\otimes_k$. Let $\cat{C}$ be a $\mathbb{Z}_2$-graded dg-category over $k$ equipped with the data of a $k$-linear morphism of complexes for each pair of objects $X,Y$ in $\cat{C}$
 \[
@@ -278,7 +298,7 @@ Since the adjoint is only well-defined up to homotopy it is implicit that in any
 
 So much for the general theory; from now on $\cat{C}$ denotes the dg-category whose objects are finite rank matrix factorisations of $W$ and whose mapping complexes are given by the quotients
 \[
-\cat{C}(X,Y) = \Hom(\overline{X}, \overline{Y}) = \Hom(X,Y) \otimes_R \overline{R}\,.
+\cat{C}(X,Y) = \Hom(\bar{X}, \bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}\,.
 \]
 While the ordinary dg-category of matrix factorisations only admits a pairing which is homotopically nondegenerate, this (linear) quotient $\cat{C}$ admits a cyclic nondegenerate pairing in the stronger sense explained above. To define it, let
 \[
@@ -286,13 +306,13 @@ While the ordinary dg-category of matrix factorisations only admits a pairing wh
 \]
 denote the $k$-linear map
 \[
-\langle r \rangle = \Ress{R/k}\Bigg[ \frac{r \cdot \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]\,.
+\langle r \rangle = \Ress{R/k}\Bigg[ \frac{r \cdot \omega}{ f_1, \ldots, f_n} \Bigg]\,.
 \]
-This annihilates the ideal $(f_1,\ldots,f_n)R$ and therefore factors via a $k$-linear map $\overline{R} \lto k$.
+This annihilates the ideal $(f_1,\ldots,f_n)R$ and therefore factors via a $k$-linear map $\bar{R} \lto k$.
 
 \begin{proposition}\label{prop:barnondeg} The pairing on $\cat{C}$ defined by
 \begin{gather*}
-\langle -, - \rangle: \Hom(\overline{X}, \overline{Y}) \otimes \Hom(\overline{Y}, \overline{X}) \lto k\,,\\
+\langle -, - \rangle: \Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \lto k\,,\\
 \langle \varphi, \psi \rangle = \langle \str( \varphi \circ \psi ) \rangle
 \end{gather*}
 is cyclic and nondegenerate in the sense of Definition \ref{defn:nondegpair}.
@@ -301,30 +321,30 @@ is cyclic and nondegenerate in the sense of Definition \ref{defn:nondegpair}.
 The pairing factors as
 \begin{equation}\label{eq:barnondeg}
 \xymatrix@C+1pc{
-\Hom(\overline{X}, \overline{Y}) \otimes \Hom(\overline{Y}, \overline{X}) \ar[r]^-{-\circ-} & \Hom(\overline{Y}, \overline{Y}) \ar[r]^-{\str} & \overline{R} \ar[r]^-{\langle - \rangle} & k
+\Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \ar[r]^-{-\circ-} & \Hom(\bar{Y}, \bar{Y}) \ar[r]^-{\str} & \bar{R} \ar[r]^-{\langle - \rangle} & k
 }
 \end{equation}
-so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Nondegeneracy follows from hypothesis (H4) and the following calculation, in which the first step is adjoint to the composite of the first two maps in (\ref{eq:barnondeg})
+so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Nondegeneracy follows from hypothesis (H4') and the following calculation, in which the first step is adjoint (\textbf{todo} not really!) to the composite of the first two maps in (\ref{eq:barnondeg})
 \begin{align*}
-\Hom_R(\overline{X}, \overline{Y}) &\cong \Hom_R( \Hom(\overline{Y}, \overline{X}), \overline{R} )\,\\
-&\cong \Hom_R( \Hom(\overline{Y}, \overline{X}), \Hom_k( \overline{R}, k) )\\
-&\cong \Hom_k( \Hom(\overline{Y}, \overline{X}), k )\,.
+\Hom_R(\bar{X}, \bar{Y}) &\cong \Hom_R( \Hom(\bar{Y}, \bar{X}), \bar{R} )\,\\
+&\cong \Hom_R( \Hom(\bar{Y}, \bar{X}), \Hom_k( \bar{R}, k) )\\
+&\cong \Hom_k( \Hom(\bar{Y}, \bar{X}), k )\,.
 \end{align*}
 \end{proof}
 
 We have in mind two special classes of operators on the dg-category $\cat{C}$. The first arise because the partial derivatives $f_i$ act as zero on the cohomology of $\cat{C}$ but via nonzero maps on the dg-level. In what follows let $X,Y$ denote finite rank matrix factorisations of $W$.
 
-\begin{definition} Given a null-homotopy $\lambda_i$ for the action of $f_i$ on $Y$, that is, a map $\lambda_i \in \Hom(Y,Y)$ of degree one with $[D, \lambda_i] = f_i \cdot 1_Y$, we define the odd operator $\lambda_i^\bullet$ on $\Hom(\overline{X},\overline{Y})$ by
+\begin{definition} Given a null-homotopy $\lambda_i$ for the action of $f_i$ on $Y$, that is, a map $\lambda_i \in \Hom(Y,Y)$ of degree one with $[D, \lambda_i] = f_i \cdot 1_Y$, we define the odd operator $\lambda_i^\bullet$ on $\Hom(\bar{X},\bar{Y})$ by
 \[
 \lambda_i^\bullet(\varphi) = \lambda_i \circ \varphi\,
 \]
-and the odd operator ${\lambda_i}_\bullet$ on $\Hom(\overline{Y}, \overline{X})$ by
+and the odd operator ${\lambda_i}_\bullet$ on $\Hom(\bar{Y}, \bar{X})$ by
 \[
 {\lambda_i}_\bullet(\varphi) = (-1)^{|\varphi|} \varphi \circ \lambda_i \,.
 \]
 \end{definition}
 
-Observe that composition with $\lambda_i$ is not a closed map on $\Hom(X,Y)$ but is closed as an operator on $\Hom(\overline{X}, \overline{Y})$. These operators give the simplest example of an adjoint pair.
+Observe that composition with $\lambda_i$ is not a closed map on $\Hom(X,Y)$ but is closed as an operator on $\Hom(\bar{X}, \bar{Y})$. These operators give the simplest example of an adjoint pair.
 
 \begin{lemma} The operator $\lambda_i^\bullet$ is adjoint to ${\lambda_i}_\bullet$.
 \end{lemma}
@@ -337,7 +357,7 @@ The identity (\ref{eq:adjointopeq}) holds with $\mu = 0$, since
 \end{align*}
 \end{proof}
 
-The second class of operators are the components of the Atiyah class. Recall that by hypothesis (H2) the ring $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module. The $n$ components of this connection define $k$-linear operators $\partial_{f_i} = (\ud f_i)^* \circ \nabla$ on $R$ with the property that $[\partial_{f_i}, f_j] = \delta_{ij}$.
+The second class of operators are the components of the Atiyah class. Recall that by hypothesis (H2') the ring $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module. The $n$ components of this connection define $k$-linear operators $\partial_{f_i} = (\ud f_i)^* \circ \nabla$ on $R$ with the property that $[\partial_{f_i}, f_j] = \delta_{ij}$.
 
 Any free $R$-module admits a $k$-linear connection over $k[f]$. For convenience choose homogeneous $R$-bases $\{ e_i \}_{i \in I}$ for $X$ and $\{ e_j \}_{j \in J}$ for $Y$ respectively. Then the maps $e_{ji} = e_j \circ e_i^*$ form an $R$-basis for $\Hom(X,Y)$ and the induced $k$-linear connection over $k[f]$ is defined by
 \begin{gather*}
@@ -351,7 +371,7 @@ This connection connection has components $\partial_{f_i}$ defined by $\partial_
 The Atiyah class is $k[f]$-linear and is easily seen to be a morphism of complexes from $\Hom(X,Y)$ to the shift $\Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}[1]$. Moreover the homotopy class of this morphism is independent of the choice of connection, and in this sense choosing a basis for $X,Y$ is harmless. In terms of the components this means
 
 
-\begin{definition} For $1 \le i \le n$ the components $\At_i = [D, \partial_{f_i}]$ of the Atiyah class define $k$-linear closed operators of degree one on $\Hom(\overline{X}, \overline{Y})$.
+\begin{definition} For $1 \le i \le n$ the components $\At_i = [D, \partial_{f_i}]$ of the Atiyah class define $k$-linear closed operators of degree one on $\Hom(\bar{X}, \bar{Y})$.
 \end{definition}
 
 For each pair of objects $X,Y$ in $\cat{C}$ we have defined a family of operators $\At_i$ on $\cat{C}(X,Y)$, defined using a choice of basis but independent of this choice up to homotopy. Conceptually, duality in the dg-category of matrix factorisations rests on the fact that these operators are anti-self-adjoint. To prove this we need the following Leibniz rule for Atiyah classes.
@@ -394,7 +414,7 @@ Consider the diagram
 By the graded Jacobi identity $\str \circ \At_{XX} = [\str, \At] = [g,D]$ where $g: \Hom(X,X) \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}$ is $g = [\str, \nabla]$. But from the way we have defined our connections, it is clear that $\str$ and $\nabla$ commute, so $g = 0$ and $\str \circ \At_{XX} = 0$.
 \end{proof}
 
-\begin{proposition} The operator $\At_i$ on $\Hom(\overline{X}, \overline{Y})$ is adjoint to $-\At_i$ on $\Hom(\overline{Y}, \overline{X})$.
+\begin{proposition} The operator $\At_i$ on $\Hom(\bar{X}, \bar{Y})$ is adjoint to $-\At_i$ on $\Hom(\bar{Y}, \bar{X})$.
 \end{proposition}
 \begin{proof}
 If we apply $\langle \str( - ) \rangle$ to both sides of (\ref{eq:leibnizcompos}) and use Lemma \ref{lemma:stratiyahzero} we find that
@@ -404,19 +424,19 @@ If we apply $\langle \str( - ) \rangle$ to both sides of (\ref{eq:leibnizcompos}
 So $\mu( \alpha \otimes \beta ) = \langle \str( g( \alpha \otimes \beta ) ) \rangle$ is a homotopy expressing $\At_i$ as adjoint to $-\At_i$.
 \end{proof}
 
-\subsection{Idempotents}
+\subsection{Idempotents}\label{section:idempkl}
 
 In the previous section we constructed operators $\lambda_i^\bullet, {\lambda_i}_\bullet$ and $\At_i$ on the dg-category $\cat{C}$. Now we use these operators to define idempotent endomorphisms of the complex
 \[
-\cat{C}(X,Y) = \Hom(\overline{X}, \overline{Y})
+\cat{C}(X,Y) = \Hom(\bar{X}, \bar{Y})
 \]
 which split in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes to give $\Hom(X,Y)$. In this way the dg-category of matrix factorisations can be recovered from the quotient $\cat{C}$ and the nondegenerate pairing defined above induces the homotopically nondegenerate pairing $\langle -, - \rangle_{\textup{KL}}$.
 
 The main result of \cite{??} is that if $V$ is the free $k$-module on the basis $\theta_1,\ldots,\theta_n$ then there is a homotopy equivalence
 \[
-\Hom(\overline{X}, \overline{Y}) \cong \Hom(X,Y) \otimes_k \bigwedge V\,.
+\Hom(\bar{X}, \bar{Y}) \cong \Hom(X,Y) \otimes_k \bigwedge V\,.
 \]
-There are consequently $2^n$ ways to embed $\Hom(X,Y)$ in the homotopy category of $k$-complexes as a direct summand in $\Hom(\overline{X}, \overline{Y})$. The ``top degree'' embedding, corresponding to the form $\theta_1 \cdots \theta_n$, is determined by the following idempotent endomorphism of $\Hom(\overline{X}, \overline{Y})$
+There are consequently $2^n$ ways to embed $\Hom(X,Y)$ in the homotopy category of $k$-complexes as a direct summand in $\Hom(\bar{X}, \bar{Y})$. The ``top degree'' embedding, corresponding to the form $\theta_1 \cdots \theta_n$, is determined by the following idempotent endomorphism of $\Hom(\bar{X}, \bar{Y})$
 \[
 e = \frac{1}{(n!)^2} (-1)^{\binom{n}{2}}\sum_{\sigma,\tau \in S_n} \textup{sgn}(\sigma\tau) \cdot \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)}\,.
 \]
@@ -427,13 +447,13 @@ e' = \frac{1}{(n!)^2} (-1)^{\binom{n+1}{2}}\sum_{\sigma, \tau \in S_n} \textup{s
 To be precise, there is a diagram of degree zero $k$-linear morphisms of complexes
 \[
 \xymatrix@C+2pc{
-\Hom(\overline{X}, \overline{Y}) \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta}
+\Hom(\bar{X}, \bar{Y}) \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta}
 }
 \]
 with $\psi \circ \vartheta = 1$ and $\vartheta \circ \psi = e$ (equalities meaning equal up to $k$-linear homotopy) and a diagram
 \[
 \xymatrix@C+2pc{
-\Hom(\overline{Y}, \overline{X}) \ar@<-0.5ex>[r]_-{\psi'} & \Hom(Y,X) \ar@<-0.5ex>[l]_-{\vartheta'}
+\Hom(\bar{Y}, \bar{X}) \ar@<-0.5ex>[r]_-{\psi'} & \Hom(Y,X) \ar@<-0.5ex>[l]_-{\vartheta'}
 }
 \]
 with $\psi' \circ \vartheta' = 1$ and $\vartheta' \circ \psi' = e'$. A concrete description of $\psi, \psi'$ is not important for us, but we will need to know that $\vartheta'$ is simply the quotient map, and that
@@ -444,8 +464,8 @@ with $\psi' \circ \vartheta' = 1$ and $\vartheta' \circ \psi' = e'$. A concrete 
 \begin{proposition}\label{prop:eadjointeprime} The idempotent $e$ is adjoint to $(-1)^n e'$. Equivalently, the diagram
 \begin{equation}\label{eq:eadjointeprime}
 \xymatrix@C+2pc{
-\Hom(\overline{X}, \overline{Y}) \ar[d]_-{e} \ar[r]^-{\zeta}_-{\cong} & \Hom_k(\Hom(\overline{Y},\overline{X}),k) \ar[d]^-{(-1)^n (e')^*}\\
-\Hom(\overline{X}, \overline{Y}) \ar[r]_-{\zeta}^-{\cong} & \Hom_k( \Hom(\overline{Y}, \overline{X}), k )
+\Hom(\bar{X}, \bar{Y}) \ar[d]_-{e} \ar[r]^-{\zeta}_-{\cong} & \Hom_k(\Hom(\bar{Y},\bar{X}),k) \ar[d]^-{(-1)^n (e')^*}\\
+\Hom(\bar{X}, \bar{Y}) \ar[r]_-{\zeta}^-{\cong} & \Hom_k( \Hom(\bar{Y}, \bar{X}), k )
 }
 \end{equation}
 commutes up to homotopy.
@@ -459,13 +479,13 @@ Observe that by the (anti-)self-adjointness established in the previous section
 from which it is immediate that $e^{\dagger} = (-1)^n e'$.
 \end{proof}
 
-Commutativity of (\ref{eq:eadjointeprime}) means that $e$ and $(-1)^n (e')^*$ may be viewed as homotopic idempotents on the same complex $\Hom(\overline{X}, \overline{Y})$. It follows that the splittings of these idempotents are homotopy equivalent, and this yields the desired homotopic nondegeneracy of the Kapustin-Li pairing.
-
-\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Consider the diagram
+\begin{proposition}\label{prop:almostkltheorem} The pairing (\ref{eq:generalklpairing}) is homotopically nondegenerate.
+\end{proposition}
+\begin{proof} Consider the diagram
 \[
 \xymatrix@C+2pc{
-\Hom(\overline{X},\overline{Y}) \ar[d]_-{\zeta}^-{\cong} \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta} \ar@{.>}[d]^{\zeta_{\textup{KL}}}\\
-\Hom_k(\Hom(\overline{Y}, \overline{X},k) \ar@<-0.5ex>[r]_-{(\vartheta')^*} & \Hom_k( \Hom(Y,X), k) \ar@<-0.5ex>[l]_-{(\psi')^*}
+\Hom(\bar{X},\bar{Y}) \ar[d]_-{\zeta}^-{\cong} \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta} \ar@{.>}[d]^{\zeta_{\textup{KL}}}\\
+\Hom_k(\Hom(\bar{Y}, \bar{X},k) \ar@<-0.5ex>[r]_-{(\vartheta')^*} & \Hom_k( \Hom(Y,X), k) \ar@<-0.5ex>[l]_-{(\psi')^*}
 }
 \]
 where $\zeta_{KL} = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate from commutativity of (\ref{eq:eadjointeprime}) up to homotopy that $\zeta_{\textup{KL}}$ is a homotopy equivalence with inverse $(-1)^n \psi \circ \zeta^{-1} \circ (\psi')^*$. To prove the theorem it only remains to observe that $\zeta_{\textup{KL}}(\alpha)$ is the functional $\langle \alpha, - \rangle_{\textup{KL}}$. But
@@ -479,13 +499,100 @@ where $\zeta_{KL} = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate
 which completes the proof.
 \end{proof}
 
-\section{Details on idempotent}
+Let us now abandon the general setting, and return to the situation of the main theorem where $R = k[x_1,\ldots,x_n]$, and (H1)-(H3) are satisfied for $f_i = \partial_{x_i} W$ and $\omega = \ud x_1 \cdots \ud x_n$.
 
-Review briefly what is done, i.e. for general $X$ discuss that there is a $k$-linear homotopy equivalence between $X \otimes K(t)$ and $X/tX$. Then there are two ways to split
+\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Set $I = (f_1,\ldots,f_n)R$ and let $\widehat{R}$ denote the $I$-adic completion of $R$. Then by \cite{??} this algebra admits a flat standard connection as a $k[f]$-module, and the other axioms among (H1')-(H4') follow for $\widehat{R}$ from our hypotheses about $R$ with $\omega = \ud x_1 \cdots \ud x_n$ (here we use that residues for $R/k$ and $\widehat{R}/k$ agree). Note that in (H1') we only need that the $f_i$ act null-homotopically on the matrix factorisations
 \[
-0 \lto X \lto X \otimes K(t) \lto X[1] \lto 0
+\widehat{X} = X \otimes_R \widehat{R}, \qquad \widehat{Y} = Y \otimes_R \widehat{R}
 \]
-Iterating these two splittings produces two idempotents. Then we need to use the commutation relation to turn the second idempotent into the form used above.
+extended from $R$. Consider the diagram
+\[
+\xymatrix@C+2pc{
+\Hom_R(X,Y) \ar[d]_{\can} \ar[r] & \Hom_k( \Hom_R(Y,X), k )[n]\\
+\Hom_{\widehat{R}}(\widehat{X}, \widehat{Y}) \ar[r] & \Hom_k( \Hom_{\widehat{R}}(\widehat{X}, \widehat{Y}), k)[n] \ar[u]_{\can}
+}
+\]
+where the columns are the canonical maps, and the rows are adjoint to the two versions of the pairing (\ref{eq:generalklpairing}). It is easy to see that this diagram commutes, and as the bottom row is a homotopy equivalence by Proposition \ref{prop:almostkltheorem}, to prove the theorem it is enough to argue that the canonical map
+\[
+\Hom_R(X,Y) \lto \Hom_{\widehat{R}}(\widehat{X}, \widehat{Y})
+\]
+is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$. But this is a consequence of the general fact that the ``pushforward commutes with flat base change'', see \cite[Remark 7.7]{??}.
+\end{proof}
+
+\section{Symmetrised idempotents}\label{section:symidem}
+
+In Section \ref{section:dualityadjointop} we used the idempotent pushforward construction of \cite{dm1102.2957} to establish a relative form of duality for matrix factorisations. We needed slightly more than what is stated in \emph{loc.cit.} and in this appendix we provide the necessary additions. With later applications in mind we work in the same generality as the original construction, but the reader should keep in mind that for Section \ref{section:dualityadjointop} we only need the case $Z = \Hom_R(X,Y)$ and $W = 0$ of the following.
+
+Let $k$ be a commutative $\mathbb{Q}$-algebra and $R$ a $k$-algebra with a quasi-regular sequence $\{ f_1, \ldots, f_n \}$ such that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module. Let $W \in k$ be given and let $Z$ be a finite rank matrix factorisation of $W$ over $R$ with each $f_i$ acting null-homotopically on $Z$, moreover let $\lambda_i \in \Hom_R(Z,Z)$ be odd maps with $[D, \lambda_i] = f_i \cdot 1_Z$ for each $1 \le i \le n$.
+
+Suppose that $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module which is standard in the sense of \cite{??}. If $K(f) = K(f_1,\ldots,f_n)$ denotes the usual Koszul complex then by hypothesis the map $K(f) \lto \bar{R}$ is a quasi-isomorphism and by \cite[Section 10]{dm1102.2957} the projection
+\begin{equation}\label{eq:symidem1}
+\pi: Z \otimes_R K(f) \lto Z \otimes_R \bar{R} = \bar{Z}
+\end{equation}
+is a homotopy equivalence over $k$. 
+
+As a graded $R$-algebra $K(f)$ is the exterior algebra $\bigwedge F$ where $F$ is $R$-free on symbols $\theta_1,\ldots,\theta_n$ placed in degree $-1$. Since the $f_i$ all act null-homotopically on $Z$ it is easy to see that $Z \otimes_R K(f)$ is homotopy equivalent over $R$ to the tensor product $Z \otimes_R \bigwedge F$, with no differential placed on the exterior component. This is just a direct sum of $2^n$ copies of $Z$ and $Z[1]$. In light of (\ref{eq:symidem1}) this means that in the homotopy category of linear factorisations of $W$ over $k$, there is a homotopy equivalence
+\[
+\bar{Z} \cong Z \otimes_k \bigwedge (k\theta_1 \oplus \cdots \oplus k\theta_n)
+\]
+and to this direct sum decomposition corresponds $2^n$ orthogonal idempotents on $\bar{Z}$.
+
+To describe these idempotents, consider the case of a single $f_i$, so there is an exact sequence
+\[
+\xymatrix{
+0 \ar[r] & Z \ar[r]^-{\kappa_i} & Z \otimes K(f_i) \ar[r]^-{\varepsilon_i} & Z[1] \ar[r] & 0
+}
+\]
+where $\kappa_i(x) = x \otimes 1$ is the inclusion and $\varepsilon_i( x \theta_i ) = (-1)^{|x|} x$. This sequence is split exact, and choosing a splitting is equivalent to choosing a null-homotopy on $X$ for action of $f_i$. The maps
+\[
+\rho_i(x + y \theta_i) = x + (-1)^{|y|} \lambda_i(y), \qquad \vartheta_i(x) = (-1)^{|x|} x \theta_i - \lambda_i(x)
+\]
+satisfy $\kappa_i \circ \rho_i + \vartheta_i \circ \varepsilon_i = 1$ and $\rho_i \circ \kappa_i = 1, \varepsilon_i \circ \theta_i = 1$ and $\rho_i \circ \vartheta_i = 0$. That is, they equip $Z \otimes_R K(f_i)$ with the structure of a biproduct $X \oplus X[1]$. It will be convenient to have a more compact definition of $\vartheta$. Let us agree that left multiplication by $\theta_i$ on $X \otimes_R K(f)$ comes with signs $\theta_i \cdot (x \otimes \eta) = (-1)^{|x|} x \otimes \theta_i \eta$ so that multiplication by $\theta_i$ defines a map $\theta_i: X \lto X \otimes_R K(f_i)$ and $\vartheta_i = \theta_i - \lambda_i$.
+
+To construct idempotents on $X \otimes_R K(f)$ we can inductively apply either the projections $\varepsilon$ or $\rho$ until we reach form degree zero, e.g. in the first step
+\[
+X \otimes_R K(f_1,\ldots,f_n) = (X \otimes_R K(f_1,\ldots,f_{n-1})) \otimes_R K(f_n) \xlto{\varepsilon} (X \otimes_R K(f_1,\ldots,f_{n-1}))[1]\,,
+\]
+and applying $\varepsilon$ $(n-1)$ more times we obtain a split epimorphism $\varepsilon: X \otimes_R K(f) \lto X[n]$ defined by $\varepsilon(x \theta_1 \cdots \theta_n) = (-1)^{n|x|} x$ with left inverse $\vartheta$. The formula given in \cite[Section 4]{dm1102.2957} depends on a chosen ordering of the $\lambda$'s, but we can symmetrise over all permutations to obtain the left inverse
+\[
+\vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} \textup{sgn}(\sigma) (\theta_{\sigma(1)} - \lambda_{\sigma(1)}) \circ \cdots \circ (\theta_{\sigma(n)} - \lambda_{\sigma(n)})
+\]
+to $\varepsilon$. One checks directly that $\varepsilon \circ \vartheta = 1$, so $\vartheta \circ \varepsilon$ is an idempotent on $X \otimes_R K(f)$ splitting to $X[n]$.
+
+If instead we project out with $\rho$ at each step we obtain the split epimorphism
+\[
+\rho: X \otimes_R K(f) \lto X, \qquad \rho(x) = ...
+\]
+with left inverse the inclusion $\kappa(x) = x \otimes 1$. Again, symmetrising.
+
+So we have produced the two idempotents on $X \otimes_R K(f)$ corresponding to top form degree and bottom form degree. Let us now shift these to idempotents on $\bar{Z}$. $e$ is taken care of in \cite{??} so we worry only about $e'$.
+\[
+\xymatrix{
+\bar{Z} \ar@<-0.5ex>[r]_-{\sigma_\infty} & Z \otimes_R K(f) \ar@<-0.5ex>[l]_-{\pi} \ar@<-0.5ex>[r]_-{\rho} & Z \ar@<-0.5ex>[l]_-{\kappa}
+}
+\]
+Here $\sigma_\infty$ is described by
+
+\begin{lemma} We have
+\[
+\sigma_\infty = \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+\]
+\end{lemma}
+\begin{proof}
+By construction modulo the $f_i$ we have ($\nabla_{gr}$ has degree one for commutators)
+\begin{align*}
+\sigma_\infty &= \sum_{m \ge 0} (-1)^m (\tau^{-1} \nabla_{gr} D) \cdots (\tau^{-1} \nabla_{gr} D) \,\\
+&= \sum_{m \ge 0} (-1)^m \frac{1}{m!} [ D, \nabla_{gr} ]^m \\
+&= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\tau(1)} \cdots \At_{\tau(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+\end{align*}
+\end{proof}
+
+It follows that
+\begin{align*}
+e' &= \pi \circ \kappa \circ \rho \circ \sigma_\infty\\
+&= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \rho \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+&= the good formula
+\end{align*}
 
 \newpage
 
@@ -493,6 +600,7 @@ Iterating these two splittings produces two idempotents. Then we need to use the
 
 \begin{itemize}
 \item How to write dg-categories?
+\item Notation for composition of 1-morphisms?
 \end{itemize}
 
 \newcommand{\etalchar}[1]{$^{#1}$}
@@ -572,10 +680,10 @@ T.~Dyckerhoff, \emph{Compact generators in categories of matrix factorizations},
   Duke Math. J. \textbf{159} (2011), 223--274,
   \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}.
 
-%\bibitem[DM]{dm1102.2957}
-%T.~Dyckerhoff and D.~Murfet, \emph{Pushing forward matrix factorisations},
-%  \href{http://arxiv.org/abs/1102.2957}{[arXiv:1102.2957]}.
-%
+\bibitem[DM]{dm1102.2957}
+T.~Dyckerhoff and D.~Murfet, \emph{Pushing forward matrix factorisations},
+  \href{http://arxiv.org/abs/1102.2957}{[arXiv:1102.2957]}.
+
 %\bibitem[FFRS07]{ffrs0607247}
 %J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \emph{Duality and
 %  defects in rational conformal field theory}, Nucl. Phys. B \textbf{763}
@@ -786,3 +894,56 @@ T.~Dyckerhoff, \emph{Compact generators in categories of matrix factorizations},
 \end{thebibliography}
 
 \end{document}
+
+\section{Notation}
+% need noetherian?
+
+Let $k$ be a noetherian $\mathbb{Q}$-algebra and $\cat{L} = \cat{L}_k$ the bicategory of Landau-Ginzburg models over $k$. So the objects of $\cat{L}$ are pairs $(\underline{x}, W)$ where $x = \{ x_1,\ldots, x_n \}$ is a set of variables and $W \in k[x]$ satisfies the following two conditions
+\begin{itemize}
+\item[(i)] The sequence $\partial_{x_1} W, \ldots, \partial_{x_n} W$ is regular in $k[x]$.
+\item[(ii)] The algebra $k[x]/(\partial_{x_1} W, \ldots, \partial_{x_n} W)$ is a finitely generated projective $k$-module.
+\end{itemize}
+The $1$-morphisms and $2$-morphisms are defined by
+\[
+\cat{L}((x,W), (y,V)) = \hmf(k[x,y], V - W)\,.
+\]
+If it seems unlikely to cause confusion we abbreviate this to $\cat{L}(V,W)$. We define a functor $(-)^{\dagger}: \cat{L}(V,W) \lto \cat{L}(W,V)$ on objects by
+\[
+X^{\dagger} = \Hom_{k[x,y]}( X, k[x,y] )\,.
+\]
+Let $\Delta_W$ denote the identity in $\cat{L}(W,W)$.
+
+\begin{remark} Throughout this paper $k$ is a noetherian $\mathbb{Q}$-algebra?
+\end{remark}
+
+\section{Coevaluation}
+
+Let $\cat{L}$ denote the bicategory of Landau-Ginzburg models over $k$. Given a $1$-morphism $X: W \lto V$ in $\cat{L}$ we aim in this section to define a canonical $2$-morphism
+\[
+\eta: \bar_W \lto X^{\dagger}[n] \circ X\,.
+\]
+where $\bar_W$ is the Bar model for the diagional given in Section \ref{??}. We will prove later that $\eta$ is the counit of an adjunction between $X$ and $X^{\dagger}[n]$, but the for the moment $\eta$ is characterised as being the unique homotopy class corresponding to the identity under a canonical quasi-isomorphism. Recall that there is an augmentation
+\[
+\bar_W \lto k[x]
+\]
+which is a morphism of linear factorisations if $k[x]$ is equipped with the zero differential.
+
+\begin{theorem} There is a canonical isomorphism
+\[
+H^*\Hom(X,X) \lto H^*\Hom(\bar_W, X^{\dagger}[n] \circ X)
+\]
+under which $1_X$ corresponds to the morphism $\eta$ defined by
+\[
+\eta(\gamma) = o( \gamma \times \sum_{i \ge 0} (-1)^i (\At^i_{X^{\dagger}} \otimes 1)( \iota_E ) )
+\]
+\end{theorem}
+
+The notation here deserves some explanation. Since $A = k[x]$ is a polynomial ring the Hochschild homology $H_n(A, A^e)$ is a free $A$-module of rank one, and choosing a generator amounts to choosing a representing cocycle $\ori$ in $\Hom_{A^e}(\bar_{A/k}, A)$, that is, an $A$-bilinear map $\ori: \bar_n \lto A^e$. We call such a generator an \emph{orientation} since $H_\bullet(A,A^e)$ is an exterior algebra and we are choosing a basis for the top degree. 
+
+We write $\iota_E$ for the tensor corresponding to the identity under the canonical isomorphism
+\[
+\Hom(X,X) \cong X^{\dual} \otimes X\,.
+\]
+
+\begin{remark} Somewhere we want to distinguish between the \emph{left} and \emph{right} coevaluations.
+\end{remark}
