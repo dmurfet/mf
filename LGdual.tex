@@ -296,7 +296,7 @@ $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ satisfy the coheren
 
 One of the main results of the present paper is that $\LG$ is endowed with an additional duality structure. Let us recall the relevant notion. 
 
-\begin{definition}
+\begin{definition}\label{def:bicatduals}
 We say a bicategory~$\mathcal B$ \textsl{has duals} (or equivalently, that \textsl{every} 1-cell is \textsl{dualisable}) if for each 1-cell $X\in \mathcal B(A,B)$ there exists a 1-cell $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
 \be\label{evcoev}
 \eval_X : X^\dual \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes X^\dual
@@ -329,7 +329,7 @@ $$
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture} , 
 \qquad
-\coev_{A} = 
+\coev_{X} = 
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_B$}}
@@ -347,7 +347,7 @@ $$
 \end{tikzpicture} \, . 
 $$
 Note that such diagrams are always to be read from bottom to top. Then the defining relations~\eqref{uglyZorro1} and~\eqref{uglyZorro2} translate into the \textsl{Zorro moves}
-$$
+\be\label{Zorros}
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
 (-1,1.25) node[line width=0pt] (A) {{\small $X$}}
@@ -381,9 +381,80 @@ $$
 (0,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
-$$
+\ee
 
-TODO: mention the ``other'' (co)evaluations and Zorro moves here? 
+The dual~$X^\dual$ of~$X$ as described in Definition~\ref{def:bicatduals} is more precisely called the~\textsl{right dual} to~$X$, though we will mostly continue to simply speak of duals without a further attribute. However, let us mention that~$X^\dual$ is called the \textsl{left dual} to~$X$ if there are maps 
+$$
+\widetilde\eval_{X} = 
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
+\draw[line width=0pt] 
+(2.5,1.6) node[line width=0pt] (I) {{\small$1_B$}}
+(3,0) node[line width=0pt] (D) {{\small $X^\dual\vphantom{X^\dual}$}}
+(2,0) node[line width=0pt] (s) {\small{$X\vphantom{X^\dual}$}}; 
+\draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
+\draw[dashed] (2.5,0.81) -- (I);
+\end{tikzpicture}
+\equiv
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
+\draw[line width=0pt] 
+(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+\draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
+\end{tikzpicture} , 
+\qquad
+\widetilde\coev_{X} = 
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
+\draw[line width=0pt] 
+(2.5,1.6) node[line width=0pt] (I) {{\small$1_A$}}
+(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\draw[dashed] (2.5,0.81) -- (I);
+\end{tikzpicture}
+\equiv
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
+\draw[line width=0pt] 
+(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\end{tikzpicture}
+$$
+satisfying the associated Zorro moves
+\be\label{otherZorros}
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(1,1.25) node[line width=0pt] (A) {{\small $X$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
+\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
+\draw (-1,0) -- (A2); 
+\draw (1,0) -- (A); 
+\end{tikzpicture}
+=
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(0,1.25) node[line width=0pt] (A) {{\small $X$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
+\draw (A2) -- (A); 
+\end{tikzpicture}
+\, , \qquad
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(-1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
+(1,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
+\draw (-1,0) -- (A); 
+\draw (1,0) -- (A2); 
+\end{tikzpicture}
+=
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(0,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+\draw (A2) -- (A); 
+\end{tikzpicture} \, .
+\ee
 
 Checking that the Zorro moves hold in $\LG$ with the evaluation and coevaluation maps~\eqref{TODO} and duals $X^\dual = X^\vee[n]$ (all to be discussed in detail in Section~\ref{TODO}) is no easy task. Instead of tackling it directly we will in an intermediate step first prove the Zorro moves using a different model for the unit matrix factorisation, namely the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on non-commutative forms. 
 
@@ -482,9 +553,9 @@ where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetil
 
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{TODO} are satisfied. 
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\dual[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
 
-Let us consider the identity~\eqref{TODO} in more detail: 
+Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 
@@ -560,7 +631,7 @@ Here we indicated our choices for variable names in the various domains, as well
 
 \end{tikzpicture}
 \ee
-where $\iota = \sum_j (-1)^{|e_j|} e_j^* \otimes e_j$ for an $k[z,x]$-basis $\{e_j\}$ of~$X$ in~$\gamma_1$, and the twist map~$\gamma_2$ produces Koszul signs coming from commuting non-commutative forms from the left to the very right. 
+where $\iota = \sum_j (-1)^{|e_j|} e_j^* \otimes e_j$ for an $k[z,x]$-basis $\{e_j\}$ of~$X$ corresponds to $1_E\in\End(X)$ in~$\gamma_1$, and the twist map~$\gamma_2$ produces Koszul signs coming from commuting non-commutative forms from the left to the very right. 
 
 To prove that~\eqref{Zorro1superdetail} is indeed homotopic to the identity we first concentrate on the map 
 $$
@@ -605,7 +676,7 @@ $$
 $$
 We will denote equality modulo the derivatives $f_i(y):= \partial_{y_i}W$ and $g_i(z):= \partial_{z_i}V$ by ``$\equiv$'', and we write $\langle\!\langle-\rangle\!\rangle$ for the map $\cBar\longrightarrow k[z,y]$ which acts as
 $$
-\langle\!\langle-\rangle\!\rangle : \beta \longmapsto (-1)^{n+1\choose 2} \Res_{k_[x',y,z]/k[y,z]} \left[ \frac{(\varepsilon\circ\Psi)(\beta) \underline{\operatorname{d}\!x'}}{\partial_{x'_1}W \ldots \partial_{x'_n} W} \right] .
+\langle\!\langle-\rangle\!\rangle : \beta \longmapsto (-1)^{n+1\choose 2} \Res_{k[x',y,z]/k[y,z]} \left[ \frac{(\varepsilon\circ\Psi)(\beta) \underline{\operatorname{d}\!x'}}{\partial_{x'_1}W \ldots \partial_{x'_n} W} \right] .
 $$
 Then we can compute 
 \begin{align}
