@@ -150,6 +150,8 @@
 \end{tikzpicture}%
 }
 
+\allowdisplaybreaks
+
 \usetikzlibrary{arrows,calc,decorations.pathreplacing,decorations.markings,shapes.geometric,shadows}
 \tikzset{
     string/.style={draw=#1, postaction={decorate}, decoration={markings,mark=at position .51 with {\arrow[draw=#1]{>}}}},
@@ -188,7 +190,7 @@
   \tikzset{current plane/.prefix style={scale=#1}}
   \pgfmathsetmacro\angVis{atan(sin(#2)*cos(\angEl)/sin(\angEl))} %
   \draw[redirected,current plane,color=blue!50!black, very thick] (\angVis:1) arc (\angVis:\angVis+180:1);
-  \draw[current plane,dashed,color=blue!50!black, very thick] (\angVis-180:1) arc (\angVis-180:\angVis:1);
+  \draw[current plane,dotted,color=blue!50!gray, very thick] (\angVis-180:1) arc (\angVis-180:\angVis:1);
 }
 \newcommand\DrawLatitudeCircle[2][1]{
   \LatitudePlane{\angEl}{#2}
@@ -196,7 +198,7 @@
   \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
   \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
   \draw[directed,current plane, color=blue!50!black] (\angVis:1) arc (\angVis:-\angVis-180:1);
-  \draw[current plane,dashed, color=blue!50!black] (180-\angVis:1) arc (180-\angVis:\angVis:1);
+  \draw[current plane,dashed, color=blue!50!gray] (180-\angVis:1) arc (180-\angVis:\angVis:1);
 }
 \newcommand\DrawLatitudeCircleU[2][1]{
   \LatitudePlane{\angEl}{#2}
@@ -204,7 +206,7 @@
   \pgfmathsetmacro\sinVis{sin(#2)/cos(#2)*sin(\angEl)/cos(\angEl)}
   \pgfmathsetmacro\angVis{asin(min(1,max(\sinVis,-1)))}
   \draw[redirected,current plane, color=blue!50!black] (\angVis:1) arc (\angVis:-\angVis-180:1);
-  \draw[current plane,dashed, color=blue!50!black] (180-\angVis:1) arc (180-\angVis:\angVis:1);
+  \draw[current plane,dashed, color=blue!50!gray] (180-\angVis:1) arc (180-\angVis:\angVis:1);
 }
 
 
@@ -235,7 +237,7 @@ They take over.
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
-Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is finitely generated over~$k$ and the $\partial_{x_i}W$ form a regular sequence. 
+Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is finitely generated projective over~$k$ and the $\partial_{x_i}W$ form a regular sequence. 
 
 A \textsl{linear factorisation} of a potential $W\in R$ is a $\nZ_2$-graded $R$-module $X=X^0\oplus X^1$ together with an odd $R$-linear endomorphism~$d_X$ such that $d_X^2=W\cdot 1_X$. If~$X$ is a free $R$-module then the pair $(X,d_X)$ is called a \textsl{matrix factorisation}, and we often refer to it simply by~$X$ without explicitly mentioning the \textsl{differential} $d_X$. 
 
@@ -247,7 +249,7 @@ Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factoris
 $$
 \Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
 $$
-as an $\Re$-module. We write $\pi: \Delta_W \lra \Re$ for the projection to the $\theta$-degree~$0$ component and $\mu:\Re \lra R$ for multiplication. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
+as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write $\pi: \Delta_W \lra \Re$ for the projection to the $\theta$-degree~$0$ component and $\mu:\Re \lra R$ for multiplication. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
 $$
 {}^{t_i}(-): k[x,y] \lra k[x,y] \, , \qquad p \lmt p\big|_{x_i\lmt y_i}
 $$
@@ -256,9 +258,9 @@ $$
 \partial_{[i]}: k[x,y] \lra k[x,y] \, , \qquad p \lmt \frac{{}^{t_1\ldots t_{i-1}}p - {}^{t_1\ldots t_i}p}{x_i-y_i} \, . 
 $$
 In terms of these the differential on $\Delta_W$ is given by
-$$
-d_{\Delta_W} = \sum_{i=1}^n \Big( (x_i-y_i) \cdot \theta_i^* + \partial_{[i]}W\cdot \theta_i \Big) \,. 
-$$
+\be\label{DeltaW}
+d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-y_i) \cdot \theta_i^*  \,. 
+\ee
 
 TODO: Put lemma on Leibniz rule for $\partial_{[i]}$ here or later? 
 
@@ -293,7 +295,7 @@ $$
 \end{definition}
 
 \begin{proposition}[\cite{McNameethesis, Calinetal, cr0909.4381}] 
-$\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ satisfy the coherence axioms for bicategories. 
+$\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorphisms up to homotopy, and they satisfy the coherence axioms for bicategories. 
 \end{proposition}
 
 One of the main results of the present paper is that $\LG$ is endowed with an additional duality structure. Let us recall the relevant notion. 
@@ -460,7 +462,7 @@ satisfying the associated Zorro moves
 
 Checking that the Zorro moves hold in $\LG$ with the evaluation and coevaluation maps~\eqref{TODO} and duals $X^\dual = X^\vee[n]$ (all to be discussed in detail in Section~\ref{TODO}) is no easy task. Instead of tackling it directly we will in an intermediate step first prove the Zorro moves using a different model for the unit matrix factorisation, namely the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on non-commutative forms. 
 
-\subsection{Non-commutative forms}\label{subsec:NCforms}
+\subsection{Bar complex}\label{subsec:Bar}
 
 Let us for the moment be slightly more general and consider an arbitrary unital associative $k$-algebra~$A$. In our applications to matrix factorisations we will set $A=R=k[x]$. 
 
@@ -488,7 +490,7 @@ A central role is played by the \textsl{(normalised) bar complex}
 $$
 \Bar = \bigoplus_{n\geq 0} \Bar_n \, , \qquad \Bar_n = \Omega^n A \otimes A \, .
 $$
-Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$ as well. 
+It is an $(A^{\text{op}} \otimes A)$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$ as well. 
 
 There is a second differential graded structure on~$\Bar$ if the algebra~$A$ is commutative. To describe it let us first recall that (still for arbitrary~$A$) the bar complex is the standard resolution 
 $$
@@ -497,6 +499,7 @@ $$
 }%
 $$
 of~$A$, where the degree-lowering differential~$b'$ is the $A$-bilinear map
+% TODO: shall we keep only the second description of b'? 
 $$
 b': (a_0,\ldots,a_n)\otimes a_{n+1} \lmt \sum_{i=0}^{n-1} (-1)^i (a_0,\ldots,a_i a_{i+1},\ldots, a_n) \otimes a_{n+1} + (-1)^n (a_0,\ldots,a_{n-1}) \otimes a_n a_{n+1} \, . 
 $$
@@ -530,7 +533,7 @@ $(\Bar,d_{\Bar})$ is a linear factorisation of $\widetilde W\in \Re$.
 \end{lemma}
 
 \begin{proof}
-Since~$b'$ and~$\times$ are both $R$-bilinear, $d_{\Bar}$ is indeed $\Re$-linear. Furthermore, we have $b'^2=0$ and $d\widetilde W \times d\widetilde W = (dW\otimes 1) \times (dW\otimes 1) = dWdW\otimes 1 - dWdW \otimes 1 = 0$, so that for $\omega\in\Bar$ we find 
+The bar complex $\Bar=\Bar^0 \oplus \Bar^1$ is $\nZ_2$-graded with $\Bar^i = \bigoplus_{n\in 2\nN+i}\Bar_n$. Since~$b'$ and~$\times$ are both $R$-bilinear, $d_{\Bar}$ is indeed $\Re$-linear. Furthermore, we have $b'^2=0$ and $d\widetilde W \times d\widetilde W = (dW\otimes 1) \times (dW\otimes 1) = dWdW\otimes 1 - dWdW \otimes 1 = 0$, so that for $\omega\in\Bar$ we find 
 \begin{align*}
 d_{\Bar}^2 (\omega) & = b'(d\widetilde W \times \omega) + d\widetilde W \times b'(\omega) \\
 & = b'(d\widetilde W) \times \omega - d\widetilde W \times b'(\omega) + d\widetilde W \times b'(\omega) \\
@@ -540,6 +543,84 @@ d_{\Bar}^2 (\omega) & = b'(d\widetilde W \times \omega) + d\widetilde W \times b
 where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetilde W)=0$. 
 \end{proof}
 
+Next we wish to compare the bar complex~$\Bar$ to~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now the unit matrix factorisation $(\Delta_W, d_{\Delta_W})$ reduces to the Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
+
+There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be important to us: 
+\begin{align*}
+\Phi & : \Delta \lra \Bar \, , \qquad \theta_{i_1}\ldots \theta_{i_p} \lmt \sum_{\sigma\in S_p} (-1)^{|\sigma|} dx_{i_{\sigma(1)}} \ldots dx_{i_{\sigma(p)}} \otimes 1 \, , \\
+\Psi & : \Bar \lra \Delta \, , \qquad df_1\ldots df_p \otimes 1 \lmt \sum_{1\leq i_1<\ldots<i_p\leq n} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \, \theta_{i_1} \ldots \theta_{i_p} \, .
+\end{align*}
+These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$. 
+
+\begin{lemma}\label{PhiPsiDG}
+Both~$\Phi$ and~$\Psi$ are maps of differential graded algebras between $(\Delta, \delta_-, \wedge)$ and $(\Bar, b', \times)$. 
+\end{lemma}
+
+\begin{proof}
+We refer to~\cite{sw0911.0917} for the case of~$\Phi$; since our expression for~$\Psi$ is not manifestly the same as in loc.~cit.~we spell out the proof. Let us first show that~$\Psi$ is compatible with the differentials. On the one hand we compute $(\delta_- \Psi) (df_1\ldots df_p \otimes 1)$ to be 
+\begin{align}
+& \delta_ -\Big( \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \theta_{i_p} \Big) \nonumber \\
+& =  \sum_{j=1}^n \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \cdot (x_j - y_j) \sum_{k=1}^p (-1)^{k+1} \delta_{j i_k} \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
+& = \sum_{k=1}^p (-1)^{k+1}\sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1\ldots t_{i_{k}}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
+& = \sum_{2\leq t_2<\ldots< i_p} (f_1 - {}^{t_1\ldots t_{i_{2}-1}} f_1) (\partial_{[i_2]} f_2) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_2} \ldots \theta_{i_p} \nonumber \\
+& \qquad + \sum_{k=2}^{p-1} (-1)^{k+1}\sum_{i_1,\ldots,i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1\ldots t_{i_{k+1}-1}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
+& \qquad + (-1)^{p+1} \sum_{i_1<\ldots< i_{p-1}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) ({}^{t_1\ldots t_{i_{p-1}}} f_p - {}^{t_1\ldots t_n} f_p)  \, \theta_{i_1} \ldots \theta_{i_{p-1}} \nonumber \\
+& = \sum_{2\leq t_2<\ldots <i_p} f_1 (\partial_{[i_2]} f_2) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_2} \ldots \theta_{i_p} \nonumber \\
+& \qquad + (-1)^{p} \sum_{i_1<\ldots< i_{p-1}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) \, {}^{t_1\ldots t_n} f_p  \, \theta_{i_1} \ldots \theta_{i_{p-1}}  \label{delPsi} 
+\end{align}
+while on the other hand $(\Psi b') (df_1\ldots df_p \otimes 1)$ equals
+\begin{align*}
+& \Psi \Big( f_1 df_2 \ldots df_p \otimes 1 + \sum_{k=1}^{p-1} (-1)^k df_1 \ldots d(f_k f_{k+1}) \ldots df_p \otimes 1 + (-1)^p df_1 \ldots df_{p-1} \otimes f_p \Big) \\
+& = \sum_{i_1<\ldots< i_{p-1}} f_1 (\partial_{[i_1]} f_2) \ldots (\partial_{[i_{p-1}]} f_p) \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\
+& \qquad + \sum_{k=1}^{p-1} (-1)^k \sum_{i_1<\ldots< i_{p-1}} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_k]} (f_k f_{k+1}) )\ldots (\partial_{[i_{p-1}]} f_p) \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\
+& \qquad + (-1)^p \sum_{i_1<\ldots< i_{p-1}} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) \, {}^{t_1\ldots t_n} f_p \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\
+& = \sum_{2\leq i_1<\ldots< i_{p-1}} f_1 (\partial_{[i_1]} f_2) \ldots (\partial_{[i_{p-1}]} f_p) \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\ 
+& \qquad + \sum_{2\leq i_2 \ldots< i_{p-1}} f_1 (\partial_{[1]} f_2) (\partial_{[i_2]} f_3) \ldots (\partial_{[i_{p-1}]} f_p) \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\ 
+& \qquad + \sum_{k=1}^{p-1} (-1)^k \sum_{i_1<\ldots< i_{p-1}} (\partial_{[i_1]} f_1) \ldots \big\{ ({}^{t_1\ldots t_{i_k -1}}f_k)(\partial_{[i_k]} f_{k+1}) \\
+& \qquad\quad + (\partial_{[i_k]} f_k) ({}^{t_1\ldots t_{i_k}} f_{k+1}) \big\} \ldots (\partial_{[i_{p-1}]} f_p) \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\
+& \qquad + (-1)^p \sum_{i_1<\ldots< i_{p-1}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) \, {}^{t_1\ldots t_n} f_p \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\
+& \qquad\quad + (-1)^p \sum_{i_1<\ldots< i_{p-2}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) \, {}^{t_1\ldots t_n} f_p \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\
+& = \sum_{2\leq i_1<\ldots< i_{p-1}} f_1 (\partial_{[i_1]} f_2) \ldots (\partial_{[i_{p-1}]} f_p) \, \theta_{i_1} \ldots \theta_{i_{p-1}} \\ 
+& \qquad + (-1)^p \sum_{i_1<\ldots< i_{p-1}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) \, {}^{t_1\ldots t_n} f_p \, \theta_{i_1} \ldots \theta_{i_{p-1}} 
+\end{align*}
+which agrees with~\eqref{delPsi}. 
+
+Now we prove compatibility with the products: 
+\begin{align*}
+& \Psi( df_1\ldots df_p \otimes 1) \wedge \Psi( df_{p+1}\ldots df_{p+q} \otimes 1) \\ 
+=\, & \Big\{ \sum_{i_1<\ldots< i_p} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \theta_{i_1} \ldots \theta_{i_p}\Big\} 
+\wedge 
+\Big\{ \sum_{i_{p+1}<\ldots< i_{p+q}} \Big( \prod_{k=p+1}^{p+q} \partial_{[i_k]} f_k \Big) \theta_{i_{p+1}} \ldots \theta_{i_{p+q}} \Big\} \\
+= \, & \sum_{i_1<\ldots< i_p} \sum_{i_{p+1}<\ldots< i_{p+q}} \Big( \prod_{k=1}^{p+q} \partial_{[i_k]} f_k \Big) \theta_{i_{1}} \ldots \theta_{i_{p+q}} \\
+= \, & \sum_{i_1<\ldots< i_{p+q}} \sum_{\sigma\in\operatorname{Sh}(p,q)} (-1)^{|\sigma|} \Big( \prod_{k=1}^{p+q} \partial_{[i_{\sigma(k)}]} f_k \Big) \theta_{i_{1}} \ldots \theta_{i_{p+q}} \\
+= \, & \Psi \big((df_1\ldots df_p \otimes 1) \times( df_{p+1}\ldots df_{p+q} \otimes 1) \big)
+\end{align*}
+where in the third step the anti-commutativity of the~$\theta_i$ allowed us to sum over the longer sequences $i_1<\ldots< i_{p+q}$ by introducing an additional sum over shuffles. 
+\end{proof}
+
+Now we come back to consider any potential $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
+\begin{lemma}\label{PsiHF}
+$\Psi: (\Bar, d_\Bar) \lra (\Delta_W, d_{\Delta_W})$ is a morphism in $\HF(\Re,\widetilde W)$. 
+\end{lemma}
+
+\begin{proof}
+We need to show $d_{\Delta_W} \Psi = \Psi d_\Bar$. But since $d_{\Delta_W} = \delta_+ + \delta_-$ and $d_\Bar = b' + d\widetilde W \times (-)$ by Lemma~\eqref{PhiPsiDG} what remains to be checked is $\delta_+ \Psi = \Psi (d\widetilde W\times (-))$. This can be done: 
+$$
+\delta_+ \Psi = \Big( \sum_{i=1}^n \partial_{[i]} W \cdot \theta_i^* \Big) \wedge \Psi(-) = \Psi(dW\otimes 1) \wedge \Psi(-) = \Psi (d\widetilde W\times (-)) \, . 
+$$
+\end{proof}
+
+
+TODO: Say something about $\Phi$ here too
+
+
+\begin{remark}
+Instead of the bar complex $\Bar = \bigoplus_{n\geq 0} \Bar_n$ one can also consider its completed version
+$$
+\cBar = \prod_{n\geq 0} \Bar_n \, .
+$$
+It has differential graded structures $(\cBar,d,\cdot)$ and $(\cBar,b',\times)$ analogous to~$\Bar$, and the maps~$\Phi$ and~$\Psi$ lift to maps to and from the completed bar complex~$\cBar$ with the same properties as in Lemmas~\ref{PhiPsiDG} and~\ref{PsiHF}. 
+\end{remark}
 
 
 
@@ -633,7 +714,7 @@ Here we indicated our choices for variable names in the various domains, as well
 
 \end{tikzpicture}
 \ee
-where $\iota = \sum_j (-1)^{|e_j|} e_j^* \otimes e_j$ for an $k[z,x]$-basis $\{e_j\}$ of~$X$ corresponds to $1_E\in\End(X)$ in~$\gamma_1$, and the twist map~$\gamma_2$ produces Koszul signs coming from commuting non-commutative forms from the left to the very right. 
+where $\iota = \sum_j (-1)^{|e_j|} e_j^* \otimes e_j$, with $\{e_j\}$ a $k[z,x]$-basis of~$X$, corresponds to $1_E\in\End(X)$ in~$\gamma_1$, and the twist map~$\gamma_2$ produces Koszul signs coming from commuting non-commutative forms from the left to the very right. 
 
 To prove that~\eqref{Zorro1superdetail} is indeed homotopic to the identity we first concentrate on the map 
 $$
@@ -733,7 +814,7 @@ $$
 \str(\mathcal Z\psi) \equiv \sum_{j_2<j_1} \sum_{\sigma\in S_2} (-1)^{j_1+j_2 + |\sigma|} 
 \Big\langle\!\!\Big\langle \nabla \Big\{ f_{j_{\sigma(1)}} \nabla \Big\{ f_{j_{\sigma(2)}} \str\big( \underline\lambda'_{j_{\sigma(1)} j_{\sigma(1)}} (\At_{X\otimes X^\dual})^{n-2}(\psi) \big) \Big\} \Big\} \Big\rangle\!\!\Big\rangle \, .
 $$
-Continuing in this fasion we find that 
+Continuing in this fashion we find that 
 \begin{align}
 \str(\mathcal Z\psi) & \equiv \sum_{j_n<\ldots<j_1} \sum_{\sigma\in S_n} (-1)^{j_1+\ldots+j_n + |\sigma|} 
 \Big\langle\!\!\Big\langle \nabla \Big\{ f_{j_{\sigma(1)}} \nabla \Big\{ f_{j_{\sigma(2)}} \nabla \Big\{ \ldots \nabla \Big\{ f_{j_{\sigma(n)}} \str\big( \psi \big) \Big\} \ldots \Big\}\Big\} \Big\} \Big\rangle\!\!\Big\rangle \nonumber \\
@@ -848,8 +929,8 @@ Using the ``folding trick'' (which relates defects to boundary conditions in a p
 \begin{proposition}
 For any $X\in \hmf(k[z_1,\ldots,z_m,x_1,\ldots,x_n], V-W)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
 \begin{align*}
-\mathcal D_l(X)(\phi) & = (-1)^{{m+1\choose 2} + {n+1\choose 2} + n} \Res_{k[z,x]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] \, , \\
-\mathcal D_r(X)(\psi) & = (-1)^{m + {m+1\choose 2} + {n+1\choose 2}} \Res_{k[z,x]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
+\mathcal D_l(X)(\phi) & = (-1)^{{m+1\choose 2} + {n\choose 2}} \Res_{k[z,x]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] \, , \\
+\mathcal D_r(X)(\psi) & = (-1)^{{m\choose 2} + {n+1\choose 2}} \Res_{k[z,x]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
 \end{align*}
 \end{proposition}
 
@@ -861,13 +942,13 @@ In the lower part of the expression for $\mathcal D_l(X)(\phi)$ in~\eqref{defect
 \widetilde\coev (1) & = \sum_j (-1)^{|e_j|} (\varepsilon\Psi) \left( (-\At_{X})^n (e_j^*\otimes e_j) \right) \nonumber \\
 & = \sum_j (-1)^{|e_j| + n} (-1)^{(|e_j| + 1)+\ldots +(|e_j| + n) + n|e_j|} e^*_{j} \otimes e_{k_n} \otimes (\varepsilon\Psi) \left( d(d_{X})_{k_n k_{n-1}} \ldots d(d_{X})_{k_1 j} \right) \nonumber \\
 & = \sum_j (-1)^{|e_j|(|e_j| + n) + {n+1\choose 2} + n} e_j^* \otimes e_{k_n}\big( \partial_{[1]} d_{X} \ldots \partial_{[n]} d_{X} \big)_{k_n j} \nonumber \\
-& = \sum_j (-1)^{|e_j|(|e_j| + n) + {n+1\choose 2} + n} e_j^* \otimes \big( \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X} \big) (e_{j}) \label{coevtilde1}
+& = \sum_j (-1)^{|e_j|(|e_j| + n) + {n\choose 2}} e_j^* \otimes \big( \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X} \big) (e_{j}) \label{coevtilde1}
 \end{align}
-which we identify with $(-1)^{{n+1\choose 2} + n} \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X}$ in $\End(X)$. Note that in the last step leading to~\eqref{coevtilde1} we set $\partial_{[i]} d_{X}(x,z) = \partial_{x_i} d_{X}(x,z)$ since $x=y$ in $\End(\Delta_W)$. 
+which we identify with $(-1)^{{n\choose 2}} \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X}$ in $\End(X)$. Note that in the last step leading to~\eqref{coevtilde1} we set $\partial_{[i]} d_{X}(x,z) = \partial_{x_i} d_{X}(x,z)$ since $x=y$ in $\End(\Delta_W)$. 
 
 Next we apply the upper part of $\mathcal D_l(X)(\phi)$ in~\eqref{defectaction} to~\eqref{coevtilde1} to get
 $$
-\mathcal D_l(X)(\phi) = (-1)^{{m+1\choose 2} + {n+1\choose 2} + n} \Res_{k[z,x]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] + \mathcal O(\theta) \, . 
+\mathcal D_l(X)(\phi) = (-1)^{{m+1\choose 2} + {n\choose 2}} \Res_{k[z,x]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] + \mathcal O(\theta) \, . 
 $$
 Here we collectively denote the contributions from $\eval_X$ of non-zero degree in the Koszul complex $\Delta_W$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_l(X)(\phi)$ is a morphism in $\End_{\hmf(k[x,y], \widetilde W)}(\Delta_W) = k[x]/(\partial_{x_i}W)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
 \end{proof}
@@ -925,161 +1006,161 @@ $$
 \begin{thebibliography}{FYH{\etalchar{+}}85}
 
 %\bibitem[AS]{as1105.5117}
-%M.~Aganagic and S.~Shakirov, \emph{Knot {H}omology from {R}efined
+%M.~Aganagic and S.~Shakirov, \textsl{Knot {H}omology from {R}efined
 %  {C}hern-{S}imons {T}heory},
 %  \href{http://arxiv.org/abs/1105.5117}{[arXiv:1105.5117]}.
 %
 %\bibitem[BN]{bnKhovanov11crossings}
-%D.~Bar-Natan, \emph{Khovanov {H}omology for {K}nots and {L}inks with up to 11
+%D.~Bar-Natan, \textsl{Khovanov {H}omology for {K}nots and {L}inks with up to 11
 %  {C}rossings}, available at
 %  \href{http://www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}{http:%
 %//www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}.
 %
 %\bibitem[Bec]{b1105.0702}
-%H.~Becker, \emph{Khovanov-Rozansky homology via Cohen-Macaulay approximations and Soergel bimodules},
+%H.~Becker, \textsl{Khovanov-Rozansky homology via Cohen-Macaulay approximations and Soergel bimodules},
 %  \href{http://arxiv.org/abs/1105.0702}{[arXiv:1105.0702]}.
 %
 %\bibitem[BR07]{br0707.0922}
-%I.~Brunner and D.~Roggenkamp, \emph{B-type defects in {L}andau-{G}inzburg
+%I.~Brunner and D.~Roggenkamp, \textsl{B-type defects in {L}andau-{G}inzburg
 %  models}, JHEP \textbf{0708} (2007), 093,
 %  \href{http://arxiv.org/abs/0707.0922}{[arXiv:0707.0922]}.
 %
 %\bibitem[CF94]{cf9405183}
-%L.~Crane and I.~B. Frenkel, \emph{Four dimensional topological quantum field
+%L.~Crane and I.~B. Frenkel, \textsl{Four dimensional topological quantum field
 %  theory, {H}opf categories, and the canonical bases}, J. Math. Phys.
 %  \textbf{35} (1994), 5136--5154,
 %  \href{http://arxiv.org/abs/hep-th/9405183}{[hep-th/9405183]}.
 %
 %\bibitem[CK08a]{ck0701194}
-%S.~Cautis and J.~Kamnitzer, \emph{Knot homology via derived categories of
+%S.~Cautis and J.~Kamnitzer, \textsl{Knot homology via derived categories of
 %  coherent sheaves {I}, {$sl(2)$} case}, Duke Math. J. \textbf{142} (2008),
 %  511--588, \href{http://arxiv.org/abs/math/0701194}{[math.AG/0701194]}.
 %
 %\bibitem[CK08b]{ck0710.3216}
-%S.~Cautis and J.~Kamnitzer, \emph{Knot homology via derived categories of coherent sheaves {II},
+%S.~Cautis and J.~Kamnitzer, \textsl{Knot homology via derived categories of coherent sheaves {II},
 %  {$sl(m)$} case}, Invent. Math. \textbf{174} (2008), 165--232,
 %  \href{http://arxiv.org/abs/math/0710.3216}{[math.AG/0710.3216]}.
 %
 %\bibitem[CM]{cmWebCompileCode}
-%N.~Carqueville and D.~Murfet, \emph{Code to compute {K}hovanov-{R}ozansky
+%N.~Carqueville and D.~Murfet, \textsl{Code to compute {K}hovanov-{R}ozansky
 %  homology and defect fusion in {L}andau-{G}inzburg models},
 %  \href{http://www.carqueville.net/nils/webCompilations}{http://www.carqueville.net/nils/webCompilations}.
 
 \bibitem[CR10]{cr0909.4381}
-N.~Carqueville and I.~Runkel, \emph{On the monoidal structure of matrix bi-factorisations}, J. Phys.
+N.~Carqueville and I.~Runkel, \textsl{On the monoidal structure of matrix bi-factorisations}, J. Phys.
   A: Math. Theor. \textbf{43} (2010), 275401,
   \href{http://arxiv.org/abs/0909.4381}{[arXiv:0909.4381]}.
 
 \bibitem[CR12]{cr1006.5609}
-N.~Carqueville and I.~Runkel, \emph{Rigidity and defect actions in
+N.~Carqueville and I.~Runkel, \textsl{Rigidity and defect actions in
   Landau-Ginzburg models}, Comm. Math. Phys. \textbf{310} (2012) 135--179, 
   \href{http://arxiv.org/abs/1006.5609}{[arXiv:1006.5609]}.
 
 %\bibitem[Cra]{c0403266}
-%M.~Crainic, \emph{On the perturbation lemma, and deformations},
+%M.~Crainic, \textsl{On the perturbation lemma, and deformations},
 %  \href{http://arxiv.org/abs/math/0403266}{[math.AT/0403266]}.
 %
 %\bibitem[DGR06]{dgr0505662}
-%N.~M. Dunfield, S.~Gukov, and J.~Rasmussen, \emph{The {S}uperpolynomial for
+%N.~M. Dunfield, S.~Gukov, and J.~Rasmussen, \textsl{The {S}uperpolynomial for
 %  {K}not {H}omologies}, Experimental Math. \textbf{15} (2006), 129--159,
 %  \href{http://arxiv.org/abs/math/0505662}{[math.GT/0505662]}.
 %
 %\bibitem[DKR]{dkr1107.0495}
-%A.~Davydov, L.~Kong, and I.~Runkel, \emph{Field theories with defects and the
+%A.~Davydov, L.~Kong, and I.~Runkel, \textsl{Field theories with defects and the
 %  centre functor}, \href{http://arxiv.org/abs/1107.0495}{[arXiv:1107.0495]}.
 %
 %\bibitem[DBM{\etalchar{+}}11]{dbmmss1106.4305}
-%P.~Dunin-Barkowski, A.~Mironov, A.~Morozov, A.~Sleptsov, A.~Smirnov, \emph{Superpolynomials for toric knots from evolution induced by cut-and-join operators},
+%P.~Dunin-Barkowski, A.~Mironov, A.~Morozov, A.~Sleptsov, A.~Smirnov, \textsl{Superpolynomials for toric knots from evolution induced by cut-and-join operators},
 %  \href{http://arxiv.org/abs/1106.4305}{[arXiv:1106.4305]}. 
 %  
-\bibitem[Dyc]{d0904.4713}
-T.~Dyckerhoff, \emph{Compact generators in categories of matrix factorizations},
+\bibitem[Dyc11]{d0904.4713}
+T.~Dyckerhoff, \textsl{Compact generators in categories of matrix factorizations},
   Duke Math. J. \textbf{159} (2011), 223--274,
   \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}.
 
 %\bibitem[DM]{dm1102.2957}
-%T.~Dyckerhoff and D.~Murfet, \emph{Pushing forward matrix factorisations},
+%T.~Dyckerhoff and D.~Murfet, \textsl{Pushing forward matrix factorisations},
 %  \href{http://arxiv.org/abs/1102.2957}{[arXiv:1102.2957]}.
 %
 %\bibitem[FFRS07]{ffrs0607247}
-%J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \emph{Duality and
+%J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
 %  defects in rational conformal field theory}, Nucl. Phys. B \textbf{763}
 %  (2007), 354--430,
 %  \href{http://arxiv.org/abs/hep-th/0607247}{[hep-th/0607247]}.
 %
 %\bibitem[FYH{\etalchar{+}}85]{Homfly}
 %P.~Freyd, D.~Yetter, J.~Hoste, W.~B.~R. Lickorish, K.~Millett, and A.~Ocneanu,
-%  \emph{A new polynomial invariant of knots and links}, Bull. Amer. Math. Soc.
+%  \textsl{A new polynomial invariant of knots and links}, Bull. Amer. Math. Soc.
 %  \textbf{12} (1985), 239--246.
 %
 %\bibitem[GIKV10]{gikv0705.1368}
-%S.~Gukov, A.~Iqbal, C.~Koz\c{c}az, and C.~Vafa, \emph{Link {H}omologies and the
+%S.~Gukov, A.~Iqbal, C.~Koz\c{c}az, and C.~Vafa, \textsl{Link {H}omologies and the
 %  {R}efined {T}opological {V}ertex}, Comm. Math. Phys. \textbf{298} (2010),
 %  757--785, \href{http://arxiv.org/abs/0705.1368}{[arXiv:0705.1368]}.
 %
 %\bibitem[GSV05]{gsv0412243}
-%S.~Gukov, A.~Schwarz, and C.~Vafa, \emph{Khovanov-{R}ozansky {H}omology and
+%S.~Gukov, A.~Schwarz, and C.~Vafa, \textsl{Khovanov-{R}ozansky {H}omology and
 %  {T}opological {S}trings}, Lett. Math. Phys. \textbf{74} (2005), 53--74,
 %  \href{http://arxiv.org/abs/hep-th/0412243}{[hep-th/0412243]}.
 %
 %\bibitem[GV99]{gv9811131}
-%R.~Gopakumar and C.~Vafa, \emph{On the {G}auge {T}heory/{G}eometry
+%R.~Gopakumar and C.~Vafa, \textsl{On the {G}auge {T}heory/{G}eometry
 %  {C}orrespondence}, Adv. Theor. Math. Phys. \textbf{3} (1999), 1415--1443,
 %  \href{http://arxiv.org/abs/hep-th/9811131}{[hep-th/9811131]}.
 %
 %\bibitem[GW]{gw0512298}
-%S.~Gukov and J.~Walcher, \emph{Matrix {F}actorizations and {K}auffman
+%S.~Gukov and J.~Walcher, \textsl{Matrix {F}actorizations and {K}auffman
 %  {H}omology}, \href{http://arxiv.org/abs/hep-th/0512298}{[hep-th/0512298]}.
 %
 %\bibitem[Jae]{j1101.3302}
-%T.~C. Jaeger, \emph{Khovanov-{R}ozansky {H}omology and {C}onway {M}utation},
+%T.~C. Jaeger, \textsl{Khovanov-{R}ozansky {H}omology and {C}onway {M}utation},
 %  \href{http://arxiv.org/abs/1101.3302}{[arXiv:1101.3302]}.
 %
 %\bibitem[Jon85]{JonesPolynomialPaper}
-%V.~F.~R. Jones, \emph{A polynomial invariant for knots via von {N}eumann
+%V.~F.~R. Jones, \textsl{A polynomial invariant for knots via von {N}eumann
 %  algebras}, Bull. Amer. Math. Soc. \textbf{12} (1985), 103--111.
 %
 %\bibitem[Kap]{k1004.2307}
-%A.~Kapustin, \emph{Topological {F}ield {T}heory, {H}igher {C}ategories, and
+%A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
 %  {T}heir {A}pplications},
 %  \href{http://arxiv.org/abs/1004.2307}{[arXiv:1004.2307]}.
 %
 %\bibitem[Kaw96]{kawauchibook}
-%A.~Kawauchi, \emph{A {S}urvey of {K}not {T}heory}, Birkh\"auser, 1996.
+%A.~Kawauchi, \textsl{A {S}urvey of {K}not {T}heory}, Birkh\"auser, 1996.
 %
 %\bibitem[Kho00]{k9908171}
-%M.~Khovanov, \emph{A categorification of the {J}ones polynomial}, Duke Math. J.
+%M.~Khovanov, \textsl{A categorification of the {J}ones polynomial}, Duke Math. J.
 %  \textbf{101} (2000), 359--426,
 %  \href{http://arxiv.org/abs/math/9908171}{[math.QA/9908171]}.
 %
 %\bibitem[Kho07]{k0510265}
-%M.~Khovanov, \emph{Triply-graded link homology and Hochschild homology of Soergel bimodules},
+%M.~Khovanov, \textsl{Triply-graded link homology and Hochschild homology of Soergel bimodules},
 %  Int. Journal of Math. \textbf{18} (2007), 869--885,
 %  \href{http://arxiv.org/abs/math/0510265}{[math.GT/0510265]}.
 %
 %\bibitem[KR07a]{kr0701333}
-%M.~Khovanov and L.~Rozansky, \emph{Virtual crossings, convolutions and a
+%M.~Khovanov and L.~Rozansky, \textsl{Virtual crossings, convolutions and a
 %  categorification of the {$\operatorname{SO}(2N)$} {K}auffman polynomial},
 %  Journal of G\"okova Geometry Topology \textbf{1} (2007), 116--214,
 %  \href{http://arxiv.org/abs/math/0701333}{[math.QA/0701333]}.
 %
 %\bibitem[KR07b]{kr0404189}
-%M.~Khovanov and L.~Rozansky, \emph{Topological Landau-Ginzburg models on the world-sheet foam},
+%M.~Khovanov and L.~Rozansky, \textsl{Topological Landau-Ginzburg models on the world-sheet foam},
 %  Adv. Theor. Math. Phys. \textbf{11} (2007), 233--259,
 %  \href{http://arxiv.org/abs/hep-th/0404189}{[hep-th/0404189]}.
 %
 %\bibitem[KR08a]{kr0401268}
-%M.~Khovanov and L.~Rozansky, \emph{Matrix factorizations and link homology}, Fund. Math.
+%M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology}, Fund. Math.
 %  \textbf{199} (2008), 1--91,
 %  \href{http://arxiv.org/abs/math/0401268}{[math/0401268]}.
 %
 %\bibitem[KR08b]{kr0505056}
-%M.~Khovanov and L.~Rozansky, \emph{Matrix factorizations and link homology {II}}, Geometry \&
+%M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology {II}}, Geometry \&
 %  Topology \textbf{12} (2008), 1387--1425,
 %  \href{http://arxiv.org/abs/math/0505056}{[math.QA/0505056]}.
 %
 %\bibitem[Lam86]{LambekRingsModules}
-%J.~Lambek, \emph{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
+%J.~Lambek, \textsl{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
 
 \bibitem[LM]{Calinetal}
 C.~I. Lazaroiu and D.~McNamee, unpublished.
@@ -1088,126 +1169,130 @@ C.~I. Lazaroiu and D.~McNamee, unpublished.
 J.-L. Loday, \textsl{Cyclic homology}, Springer, 1997.
 
 %\bibitem[LMnV00]{lmv0010102}
-%J.~M.~F. Labastida, M.~Mari\~{n}o, and C.~Vafa, \emph{Knot {I}nvariants and
+%J.~M.~F. Labastida, M.~Mari\~{n}o, and C.~Vafa, \textsl{Knot {I}nvariants and
 %  {T}opological {S}trings}, JHEP \textbf{0011} (2000), 007,
 %  \href{http://arxiv.org/abs/hep-th/0010102}{[hep-th/0010102]}.
 %
 %\bibitem[MSV09]{msv0708.2228}
-%M.~Mackaay, M.~Sto\v{s}i\'{c}, and P.~Vaz, \emph{$\mathfrak{sl}(N)$ link homology ($N\geq 4$) using foams and the Kapustin-Li formula}, Geometry \& Topology \textbf{13} (2009), 1075--1128,
+%M.~Mackaay, M.~Sto\v{s}i\'{c}, and P.~Vaz, \textsl{$\mathfrak{sl}(N)$ link homology ($N\geq 4$) using foams and the Kapustin-Li formula}, Geometry \& Topology \textbf{13} (2009), 1075--1128,
 %  \href{http://arxiv.org/abs/0708.2228}{[arXiv:0708.2228]}.
 %
 %\bibitem[Man07]{m0601629}
-%C.~Manolescu, \emph{Link homology theories from symplectic geometry}, Adv. in
+%C.~Manolescu, \textsl{Link homology theories from symplectic geometry}, Adv. in
 %  Math. \textbf{211} (2007), 363--416,
 %  \href{http://www.arxiv.org/abs/math.AG/0601629}{[math.SG/0601629]}.
 
 \bibitem[McN09]{McNameethesis}
-D.~McNamee, \emph{On the mathematical structure of topological defects in
+D.~McNamee, \textsl{On the mathematical structure of topological defects in
   {L}andau-{G}inzburg models}, MSc Thesis, Trinity College Dublin, 2009.
 
 %\bibitem[Mn05]{marinoknotbook}
-%M.~Mari\~{n}o, \emph{Chern-{S}imons {T}heory, {M}atrix {M}odels, and
+%M.~Mari\~{n}o, \textsl{Chern-{S}imons {T}heory, {M}atrix {M}odels, and
 %  {T}opological s{t}rings}, Oxford University Press, 2005.
 %
 %\bibitem[MOY98]{moy1998}
-%H.~Murakami, T.~Ohtsuki, and S.~Yamada, \emph{Homfly polynomial via an
+%H.~Murakami, T.~Ohtsuki, and S.~Yamada, \textsl{Homfly polynomial via an
 %  invariant of colored plane graphs}, Enseign. Math. \textbf{44} (1998),
 %  325--360.
 %
 %\bibitem[MS]{ms0709.1971}
-%V.~Manzorchuck and C.~Stroppel, \emph{A combinatorial approach to functorial
+%V.~Manzorchuck and C.~Stroppel, \textsl{A combinatorial approach to functorial
 %  quantum {$\mathfrak{sl}_k$} knot invariants},
 %  \href{http://arxiv.org/abs/0709.1971}{[arXiv:0709.1971]}.
 %
 %\bibitem[OV00]{ov9912123}
-%H.~Ooguri and C.~Vafa, \emph{Knot {I}nvariants and {T}opological {S}trings},
+%H.~Ooguri and C.~Vafa, \textsl{Knot {I}nvariants and {T}opological {S}trings},
 %  Nucl. Phys. B \textbf{577} (2000), 419--438,
 %  \href{http://arxiv.org/abs/hep-th/9912123}{[hep-th/9912123]}.
 %
 %\bibitem[PT87]{HomflyPT}
-%J.~Przytycki and P.~Traczyk, \emph{Conway algebras and skein equivalence of
+%J.~Przytycki and P.~Traczyk, \textsl{Conway algebras and skein equivalence of
 %  links}, Proc. Amer. Math. Soc. \textbf{100} (1987), 744--748.
 %
 %\bibitem[Ras]{r0607544}
-%J.~Rasmussen, \emph{Some differentials on {K}hovanov-{R}ozansky homology},
+%J.~Rasmussen, \textsl{Some differentials on {K}hovanov-{R}ozansky homology},
 %  \href{http://arxiv.org/abs/math/0607544}{[math.GT/0607544]}.
 %
 %\bibitem[Ras07]{r0508510}
-%J.~Rasmussen, \emph{Khovanov-{R}ozansky homology of two-bridge knots and links},
+%J.~Rasmussen, \textsl{Khovanov-{R}ozansky homology of two-bridge knots and links},
 %  Duke Math. J. \textbf{136} (2007), 551--583,
 %  \href{http://arxiv.org/abs/math/0508510}{[math.GT/0508510]}.
 %  
 %\bibitem[Ric94]{rickard}
-%J.~Rickard, \emph{Translation functors and equivalences of derived categories for blocks of algebraic groups}, in “Finite dimensional algebras and related topics”, Kluwer (1994), 255-–264.
+%J.~Rickard, \textsl{Translation functors and equivalences of derived categories for blocks of algebraic groups}, in “Finite dimensional algebras and related topics”, Kluwer (1994), 255-–264.
 %
 %\bibitem[Rou06]{RouquierMexico}
-%R.~Rouquier, \emph{Categorification of {$\mathfrak{sl}_{2}$} and braid groups},
+%R.~Rouquier, \textsl{Categorification of {$\mathfrak{sl}_{2}$} and braid groups},
 %  Trends in representation theory of algebras and related topics (2006),
 %  137--167.
 %
 %\bibitem[RT90]{RT1990}
-%N.~Reshetikhin and V.~Turaev, \emph{Ribbon graphs and their invariants derived
+%N.~Reshetikhin and V.~Turaev, \textsl{Ribbon graphs and their invariants derived
 %  from quantum groups}, Comm. Math. Phys. \textbf{127} (190), 1--26.
 %
 %\bibitem[RT91]{RT1991}
-%N.~Reshetikhin and V.~Turaev, \emph{Invariants of 3-manifolds via link polynomials and quantum
+%N.~Reshetikhin and V.~Turaev, \textsl{Invariants of 3-manifolds via link polynomials and quantum
 %  groups}, Invent. Math. \textbf{103} (1991), 547--597.
 %
 %\bibitem[SS06]{ss0405089}
-%P.~Seidel and I.~Smith, \emph{A link invariant from the symplectic geometry of
+%P.~Seidel and I.~Smith, \textsl{A link invariant from the symplectic geometry of
 %  nilpotent slices}, Duke Math. J. \textbf{134} (2006), 453--514,
 %  \href{http://arxiv.org/abs/math/0405089}{[math.SG/0405089]}.
-%
+
+\bibitem[SW11]{sw0911.0917}
+C.~V.~Shepler and S.~Witherspoon, \textsl{Quantum differentiation and chain maps of bimodule complexes}, Algebra and Number Theory \textbf{5}-3 (2011), 339--360, 
+\href{http://arxiv.org/abs/0911.0917}{[arXiv:0911.0917]}. 
+
 %\bibitem[Str05]{sCatTLcTCpf}
-%C.~Stroppel, \emph{Categorification of the {T}emperley-{L}ieb category,
+%C.~Stroppel, \textsl{Categorification of the {T}emperley-{L}ieb category,
 %  tangles, and cobordisms via projective functors}, Duke Math. J. \textbf{126}
 %  (2005), 547--596.
 %
 %\bibitem[Sus]{s0701045}
-%J.~Sussan, \emph{Category {$\mathcal O$} and {$\mathfrak{sl}_k$} link
+%J.~Sussan, \textsl{Category {$\mathcal O$} and {$\mathfrak{sl}_k$} link
 %  invariants}, \href{http://arxiv.org/abs/math/0701045}{[math.QA/0701045]}.
 %
 %\bibitem[Tur88]{t1988YB}
-%V.~Turaev, \emph{The {Y}ang-{B}axter equation and invariants of links}, Invent.
+%V.~Turaev, \textsl{The {Y}ang-{B}axter equation and invariants of links}, Invent.
 %  Math. \textbf{92} (1988), 527--553.
 %
 %\bibitem[Tur10]{turaevbook}
-%V.~Turaev, \emph{Quantum invariants of knots and 3-manifolds}, de Gruyter, 2010,
+%V.~Turaev, \textsl{Quantum invariants of knots and 3-manifolds}, de Gruyter, 2010,
 %  2nd edition.
 %
 %\bibitem[Weba]{w0610650}
-%B.~Webster, \emph{Khovanov-Rozansky homology via a canopolis formalism},
+%B.~Webster, \textsl{Khovanov-Rozansky homology via a canopolis formalism},
 %  \href{http://arxiv.org/abs/math/0610650}{[math.GT/0610650]}.
 %
 %\bibitem[Webb]{w1005.4559}
-%B.~Webster, \emph{Knot invariants and higher representation theory {II}: the
+%B.~Webster, \textsl{Knot invariants and higher representation theory {II}: the
 %  categorification of quantum knot invariants},
 %  \href{http://arxiv.org/abs/1005.4559}{[arXiv:1005.4559]}.
 %
 %\bibitem[Wit]{w1101.3216}
-%E.~Witten, \emph{Fivebranes and {K}nots},
+%E.~Witten, \textsl{Fivebranes and {K}nots},
 %  \href{http://arxiv.org/abs/1101.3216}{[arXiv:1101.3216]}.
 %
 %\bibitem[Wit89]{wittenjones}
-%E.~Witten, \emph{Quantum field theory and the {J}ones polynomial}, Comm. Math.
+%E.~Witten, \textsl{Quantum field theory and the {J}ones polynomial}, Comm. Math.
 %  Phys. \textbf{121} (1989), 351--399.
 %
 %\bibitem[Wit95]{w9207094}
-%E.~Witten, \emph{Chern-{S}imons {G}auge {T}heory {A}s {A} {S}tring {T}heory},
+%E.~Witten, \textsl{Chern-{S}imons {G}auge {T}heory {A}s {A} {S}tring {T}heory},
 %  Prog. Math. \textbf{133} (1995), 637--678,
 %  \href{http://arxiv.org/abs/hep-th/9207094}{[hep-th/9207094]}.
 %
 %\bibitem[Wu]{w0907.0695}
-%H.~Wu, \emph{A colored {$\mathfrak{sl}(N)$}-homology for links in {$S^3$}},
+%H.~Wu, \textsl{A colored {$\mathfrak{sl}(N)$}-homology for links in {$S^3$}},
 %  \href{http://arxiv.org/abs/0907.0695}{[arXiv:0907.0695]}.
 %
 %\bibitem[Wu08]{w0508064}
-%H.~Wu, \emph{Braids, {T}ransversal links and the {K}hovanov-{R}ozansky {T}heory},
+%H.~Wu, \textsl{Braids, {T}ransversal links and the {K}hovanov-{R}ozansky {T}heory},
 %  \href{http://arxiv.org/abs/math/0508064}{[math.GT/0508064]}, Trans. Amer. Math. Soc. \textbf{360}
 %  (2008), 3365--3389.
 %
 %\bibitem[Yon]{y0906.0220}
-%Y.~Yonezawa, \emph{Quantum {$(\mathfrak{sl}_n, \wedge V_n)$} link invariant and
+%Y.~Yonezawa, \textsl{Quantum {$(\mathfrak{sl}_n, \wedge V_n)$} link invariant and
 %  matrix factorizations},
 %  \href{http://arxiv.org/abs/0906.0220}{[arXiv:0906.0220]}.
 
