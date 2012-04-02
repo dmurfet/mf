@@ -170,10 +170,7 @@ is an isomorphism.
 Then the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate.
 \end{theorem}
 
-%\begin{remark} If $k$ is a field we need the Jacobi algebra $\bar{R}$ to be Frobenius over $k$, and the important part of the above assumptions is that this continues to be true; also everything would work equally well if $R = k\llbracket \bs{x} \rrbracket$ (TODO).
-%\end{remark}
-
-The proof takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they split idempotents on
+There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they split idempotents on
 \[
 \Hom(\bar{X},\bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}
 \]
@@ -520,13 +517,67 @@ where the columns are the canonical maps, and the rows are adjoint to the two ve
 is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$. But this is a consequence of the general fact that the ``pushforward commutes with flat base change'', see \cite[Remark 7.7]{??}.
 \end{proof}
 
+\subsection{Graded duality}\label{section:gradedduality}
+
+In this section we collect together the modifications necessary in order to make Theorem \ref{theorem:generalkl} compatible with an additional $\mathbb{Z}$-grading on matrix factorisations. Our conventions for graded modules and matrix factorisations are contained in Section \ref{??}.
+
+Let $k$ be a noetherian $\mathbb{Q}$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$ and let $X,Y$ be finite rank graded matrix factorisations of $W$ over $R$. Define
+\[
+a = \sum_{i=1}^n |x_i| - nc.
+\]
+Then the graded analogue of the earlier theorem is
+
+\begin{theorem}\label{theorem:generalklgraded} Under the conditions (H1)-(H3) of Theorem \ref{theorem:generalkl} the pairing $\langle -, - \rangle_{\textup{KL}}$ is adjoint to a homotopy equivalence of $\mathbb{Z} \times \mathbb{Z}_2$-graded complexes over $k$
+\[
+\Hom(X,Y) \lto \Hom^{gr}_k( \Hom(Y,X), k )[n](a)\,.
+\]
+\end{theorem}
+
+Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is a need to distinguish between $\Hom_k$ and $\Hom_k^{gr}$. For the proof we need the following fact about residues.
+
+\begin{lemma}\label{lemma:residuesarehomog} If $f_1,\ldots,f_n$ is a regular sequence in $R$ of homogeneous elements, then the map
+\[
+\Ress{R/k}\Bigg[ \frac{(-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]: R \lto k
+\]
+is homogeneous of degree $\sum_{i=1}^n( |x_i| - |f_i| )$.
+\end{lemma}
+\begin{proof}
+(\textbf{todo}) Follows from the determinantal formula for residues in Lipman's book.
+\end{proof}
+
+\begin{proof}[Proof of Theorem \ref{theorem:generalklgraded}]
+Consider the following diagram of $\mathbb{Z}_2$-graded complexes
+\[
+\xymatrix@C+2pc{
+\Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{gr}} \ar[r]^-{\zeta_{KL}} & \Hom(\Hom(Y,X),k)[n]\\
+& \Hom^{gr}_k( \Hom(Y,X), k)[n](a) \ar[u]_{\iota = \inc}
+}
+\]
+where $\zeta_{KL}$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\zeta_{KL}$ lies in the subspace of homogeneous maps, and we let $\zeta_{gr}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{gr}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{gr}$ is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes (forgetting the $\mathbb{Z}$-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
+
+It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes. This would be a tautology if $\Hom(Y,X)$ were a finitely generated $k$-module, and in general we use the fact that $\Hom(Y,X)$ embeds up to homotopy in a finitely generated complex. That is: by \cite[Section ??]{blah} we have a diagram
+\begin{equation}\label{eq:generalklgraded}
+\xymatrix@C+2pc{
+\Hom(\bar{Y}, \bar{X}) \ar@<-0.5ex>[r]_-{\psi} & \Hom(Y,X)[n] \ar@<-0.5ex>[l]_-{\vartheta}
+}
+\end{equation}
+of $\mathbb{Z}_2$-graded complexes over $k$ with $\psi \circ \vartheta \simeq 1$. But if one examines the explicit expressions for $\vartheta, \psi$ given in \emph{loc.cit.} it is clear that $\vartheta$ has degree $-a$, $\psi$ has degree $a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{gr}(-,k)$ to (\ref{eq:generalklgraded}) we obtain a diagram
+\[
+\xymatrix@C+2pc{
+\Hom_k( \Hom(\bar{Y}, \bar{X}), k ) \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k(\Hom(Y,X),k)[n] \ar@<-0.5ex>[l]_-{\psi^*}\\
+\Hom_k^{gr}(\Hom(\bar{Y}, \bar{X}), k) \ar[u]^{=} \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k^{gr}(\Hom(Y,X),k)[n](a) \ar@<-0.5ex>[l]_-{\psi^*} \ar[u]_{\iota}
+}
+\]
+in which both of the implict squares commute up to homotopy, and from this we deduce that $\iota$ is a homotopy equivalence with inverse $\vartheta^* \circ \psi^*$.
+\end{proof}
+
 \section{Symmetrised idempotents}\label{section:symidem}
 
 In Section \ref{section:dualityadjointop} we used the idempotent pushforward construction of \cite{dm1102.2957} to establish a relative form of duality for matrix factorisations. We needed slightly more than what is stated in \emph{loc.cit.} and in this appendix we provide the necessary additions. With later applications in mind we work in the same generality as the original construction, but the reader should keep in mind that for Section \ref{section:dualityadjointop} we only need the case $Z = \Hom_R(X,Y)$ and $W = 0$ of the following.
 
 Let $k$ be a commutative $\mathbb{Q}$-algebra and $R$ a $k$-algebra with a quasi-regular sequence $\{ f_1, \ldots, f_n \}$ such that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module. Let $W \in k$ be given and let $Z$ be a finite rank matrix factorisation of $W$ over $R$ with each $f_i$ acting null-homotopically on $Z$, moreover let $\lambda_i \in \Hom_R(Z,Z)$ be odd maps with $[D, \lambda_i] = f_i \cdot 1_Z$ for each $1 \le i \le n$.
 
-The aim is to present $Z$, up to $k$-linear homotopy equivalence, as the splitting of an idempotent on the quotient $\bar{Z} = Suppose that $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module which is standard in the sense of \cite{??}. If $K(f) = K(f_1,\ldots,f_n)$ denotes the usual Koszul complex then by hypothesis the map $K(f) \lto \bar{R}$ is a quasi-isomorphism and by \cite[Section 10]{dm1102.2957} the projection
+The aim is to present $Z$, up to $k$-linear homotopy equivalence, as the splitting of an idempotent on the quotient $\bar{Z} = Z \otimes_R \bar{R}$. Suppose that $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module which is standard in the sense of \cite{??}. If $K(f) = K(f_1,\ldots,f_n)$ denotes the usual Koszul complex then by hypothesis the map $K(f) \lto \bar{R}$ is a quasi-isomorphism and by \cite[Section 10]{dm1102.2957} the projection
 \begin{equation}\label{eq:symidem1}
 \pi: Z \otimes_R K(f) \lto Z \otimes_R \bar{R} = \bar{Z}
 \end{equation}
