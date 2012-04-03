@@ -222,8 +222,6 @@
 \email{daniel.murfet@math.ucla.edu}
 \address{Department of Mathematics, UCLA}
 
-\author{Ragnar?}
-
 \classification{TODO}
 
 \begin{abstract}
@@ -272,25 +270,25 @@ together with the differential
 $$
 d_{Y\otimes X} = d_Y \otimes 1 + 1 \otimes d_X
 $$
-where the second term comes with the usual Koszul signs when applied to elements. Note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. 
+where the second term comes with the usual Koszul signs when applied to elements. We  observe that e.\,g.~by the argument of~\cite[Section~12]{dm1102.2957} the tensor product does not lead out of the categories $\hmf(R_i \otimes_k R_j, W_j - W_i)$. Also note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. 
 
 Now we can be more specific about the tensor action of the unit matrix factorisation. For $X\in \hmf(R_1 \otimes_k R_2,W_2-W_1)$ there are natural maps
-\begin{align*}
+\be\label{lambdarho}
 \lambda_X = \mu\pi \otimes 1_X: \Delta_{W_2} \otimes X \lra X \, , \qquad \rho_X = 1_X \otimes \mu\pi : X \otimes \Delta_{W_1} \lra X
-\end{align*}
+\ee
 which are isomorphisms in $\hmf(R_1 \otimes_k R_2,W_2-W_1)$. Later in Section~\ref{TODO} we will give a description of their explicit homotopy inverses. 
 
 \begin{definition}
 The \textsl{bicategory of Landau-Ginzburg models} $\LG$ consists of the following data: 
 \begin{itemize}
-\item 0-cells are pairs $(R,W)$ with $W\in R=k[x]$ a potential. %If we are confident that there is no confusion we only use~$W$ to refer to a 0-cell. 
-\item 1- and 2-cells are the objects and morphisms of the categories $\hmf(R_1 \otimes_k R_2,W_2-W_1)$, respectively. 
-\item The unit objects are $\Delta_W \in \hmf(\Re,\widetilde W)$. 
+\item Objects are pairs $(R,W)$ with $W\in R=k[x]$ a potential. 
+\item 1- and 2-morphisms are the objects and morphisms of the categories $\hmf(R_1 \otimes_k R_2,W_2-W_1)$, respectively. 
+\item The unit 1-morphisms are $\Delta_W \in \hmf(\Re,\widetilde W)$. 
 \item The composition functor is the tensor product
 $$
 \otimes : \hmf(R_2 \otimes_k R_3,W_3-W_2) \times \hmf(R_2 \otimes_k R_3,W_3-W_2) \lra \hmf(R_1 \otimes_k R_3,W_3-W_1) \, .
 $$
-\item There are natural isomorphisms $\alpha, \lambda, \rho$ as above. 
+\item There are natural 2-isomorphisms $\alpha, \lambda, \rho$ as above. 
 \end{itemize}•
 \end{definition}
 
@@ -301,7 +299,7 @@ $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorp
 One of the main results of the present paper is that $\LG$ is endowed with an additional duality structure. Let us recall the relevant notion. 
 
 \begin{definition}\label{def:bicatduals}
-We say a bicategory~$\mathcal B$ \textsl{has duals} (or equivalently, that \textsl{every} 1-cell is \textsl{dualisable}) if for each 1-cell $X\in \mathcal B(A,B)$ there exists a 1-cell $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
+We say a bicategory~$\mathcal B$ \textsl{has duals} (or equivalently, that \textsl{every} 1-morphism is \textsl{dualisable}) if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
 \be\label{evcoev}
 \eval_X : X^\dual \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes X^\dual
 \ee
@@ -311,8 +309,6 @@ satisfying
 \lambda_{X^\dual} \circ (\eval_X \otimes 1_{X^\dual}) \circ \alpha^{-1}_{X^\dual,X,X^\dual} \circ (1_{X^\dual} \otimes \coev_X) \circ \rho_{X^\dual}^{-1} & = 1_{X^\dual} \, . \label{uglyZorro2}
 \end{align}
 \end{definition}
-
-%Note that the special case of a bicategory with duals that has only one 0-cell is a rigid monoidal category. 
 
 It is convenient (and also suggested by the motivation discussed in the Introduction) to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{TODO} for more details. In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
 $$
@@ -499,14 +495,13 @@ $$
 }%
 $$
 of~$A$, where the degree-lowering differential~$b'$ is the $A$-bilinear map
-% TODO: shall we keep only the second description of b'? 
 $$
 b': (a_0,\ldots,a_n)\otimes a_{n+1} \lmt \sum_{i=0}^{n-1} (-1)^i (a_0,\ldots,a_i a_{i+1},\ldots, a_n) \otimes a_{n+1} + (-1)^n (a_0,\ldots,a_{n-1}) \otimes a_n a_{n+1} \, . 
 $$
-Equivalently, in differential form notation~$b'$ acts as
-$$
-b': da_0\ldots da_n\otimes a_{n+1} \lmt (-1)^{n-1} a_0da_1\ldots da_{n-1} \cdot a_n \otimes a_{n+1} + (-1)^n a_0 da_1\ldots da_{n-1} \otimes a_n a_{n+1} \, . 
-$$
+%Equivalently, in differential form notation~$b'$ acts as
+%$$
+%b': da_0\ldots da_n\otimes a_{n+1} \lmt (-1)^{n-1} a_0da_1\ldots da_{n-1} \cdot a_n \otimes a_{n+1} + (-1)^n a_0 da_1\ldots da_{n-1} \otimes a_n a_{n+1} \, . 
+%$$
 From this it is straightforward to check that we have the identity
 \be\label{b'd+db'}
 b'd+db'=1_{\Bar} \, .
@@ -543,7 +538,7 @@ d_{\Bar}^2 (\omega) & = b'(d\widetilde W \times \omega) + d\widetilde W \times b
 where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetilde W)=0$. 
 \end{proof}
 
-Next we wish to compare the bar complex~$\Bar$ to~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now the unit matrix factorisation $(\Delta_W, d_{\Delta_W})$ reduces to the Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
+If we use~$\pi$ also to denote the projection $\Bar \lra \Bar_0 = \Re$, then $\mu\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \mu\pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{TODO}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
 
 There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be important to us: 
 \begin{align*}
@@ -585,7 +580,7 @@ while on the other hand $(\Psi b') (df_1\ldots df_p \otimes 1)$ equals
 \end{align*}
 which agrees with~\eqref{delPsi}. 
 
-Now we prove compatibility with the products: 
+To establish compatibility with the products we compute 
 \begin{align*}
 & \Psi( df_1\ldots df_p \otimes 1) \wedge \Psi( df_{p+1}\ldots df_{p+q} \otimes 1) \\ 
 =\, & \Big\{ \sum_{i_1<\ldots< i_p} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \theta_{i_1} \ldots \theta_{i_p}\Big\} 
@@ -636,7 +631,7 @@ It has differential graded structures $(\cBar,d,\cdot)$ and $(\cBar,b',\times)$ 
 
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\dual[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
@@ -678,7 +673,7 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 \draw (A2) -- (A); 
 \end{tikzpicture}
 \ee
-Here we indicated our choices for variable names in the various domains, as well as the fact that we use the completed bar complex~$\cBar$ as a model for the unit endomorphism of the 0-cell~$W$. Writing out the coevaluation~\eqref{TODO} the left-hand side of~\eqref{Zorro1detail} becomes 
+Here we indicated our choices for variable names in the various domains, as well as the fact that we use the completed bar complex~$\cBar$ as a model for the unit endomorphism of the object~$W$. Writing out the coevaluation~\eqref{TODO} the left-hand side of~\eqref{Zorro1detail} becomes 
 \be\label{Zorro1superdetail}
 \mathcal Z := 
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=1.7cm,line/.style={&gt;=latex}]
@@ -848,9 +843,9 @@ TODO: $\LG$ has duals\ldots
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
-In any bicategory with duals there are natural maps between the endomorphism spaces of unit 1-cells. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-cell inside a loop labelled by an arbitrary 1-cell (and its dual). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
+In any bicategory with duals there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its dual). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
-Let $X\in \hmf(k[z,x], V-W)$ as before. We define maps 
+Let $X\in \hmf(k[z,x], V-W)$ as before. In this section when we write $\End$ we mean the spaces of 2-endomorphisms in $\LG$. We define maps 
 $$
 \mathcal D_l(X): \End(\Delta_V) \longrightarrow \End(\Delta_W) \, , \qquad
 \mathcal D_r(X): \End(\Delta_W) \longrightarrow \End(\Delta_V)
@@ -950,7 +945,7 @@ Next we apply the upper part of $\mathcal D_l(X)(\phi)$ in~\eqref{defectaction} 
 $$
 \mathcal D_l(X)(\phi) = (-1)^{{m+1\choose 2} + {n\choose 2}} \Res_{k[z,x]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] + \mathcal O(\theta) \, . 
 $$
-Here we collectively denote the contributions from $\eval_X$ of non-zero degree in the Koszul complex $\Delta_W$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_l(X)(\phi)$ is a morphism in $\End_{\hmf(k[x,y], \widetilde W)}(\Delta_W) = k[x]/(\partial_{x_i}W)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
+Here we collectively denote the contributions from $\eval_X$ of non-zero degree in the Koszul complex $\Delta_W$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_l(X)(\phi)$ is a morphism in $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
 \end{proof}
 
 \begin{corollary}
@@ -1078,10 +1073,10 @@ T.~Dyckerhoff, \textsl{Compact generators in categories of matrix factorizations
   Duke Math. J. \textbf{159} (2011), 223--274,
   \href{http://arxiv.org/abs/0904.4713}{[arXiv:0904.4713]}.
 
-%\bibitem[DM]{dm1102.2957}
-%T.~Dyckerhoff and D.~Murfet, \textsl{Pushing forward matrix factorisations},
-%  \href{http://arxiv.org/abs/1102.2957}{[arXiv:1102.2957]}.
-%
+\bibitem[DM]{dm1102.2957}
+T.~Dyckerhoff and D.~Murfet, \textsl{Pushing forward matrix factorisations},
+  \href{http://arxiv.org/abs/1102.2957}{[arXiv:1102.2957]}.
+
 %\bibitem[FFRS07]{ffrs0607247}
 %J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
 %  defects in rational conformal field theory}, Nucl. Phys. B \textbf{763}
