@@ -1,4 +1,4 @@
- % Authors:  Nils Carqueville, Daniel Murfet
+% Authors:  Nils Carqueville, Daniel Murfet
  
 \documentclass{compositio}
 \usepackage{stmaryrd}
@@ -1079,10 +1079,10 @@ for all $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$.
 \end{corollary}
 
 \begin{remark}
-We recall the physical interpretation of the relation~\eqref{Dadjoint}. Both sides of this equation are two-point correlators on the Riemann sphere, with a defect line labelled by~$X$ wrapped around counterclockwise the bulk field~$\phi$, or wrapped around~$\psi$ in clockwise fashion. That both correlators should be equal follows from the fact that the topological defect can be moved around the sphere at now cost: 
+We recall the physical interpretation of the relation~\eqref{Dadjoint}. Both sides of this equation are two-point correlators on the Riemann sphere, with a defect line labelled by~$X$ wrapped around counterclockwise the bulk field~$\phi$, or wrapped around~$\psi$ in clockwise fashion. That both correlators should be equal follows from the fact that the topological defect can be moved around the sphere at no cost: 
 $$
 \left\langle
-\begin{tikzpicture}[baseline]
+\begin{tikzpicture}[baseline=-0.1cm]
 \def\R{1.85}
 \def\angEl{45}
 \filldraw[ball color= white!77!blue,draw=white] (0,0) circle (\R);
@@ -1093,7 +1093,7 @@ $$
 \right\rangle
 =
 \left\langle
-\begin{tikzpicture}[baseline]
+\begin{tikzpicture}[baseline=-0.1cm]
 \def\R{1.85}
 \def\angEl{45}
 \filldraw[ball color= white!77!blue,draw=white] (0,0) circle (\R);
@@ -1104,7 +1104,7 @@ $$
 \right\rangle
 =
 \left\langle
-\begin{tikzpicture}[baseline]
+\begin{tikzpicture}[baseline=-0.1cm]
 \def\R{1.85}
 \def\angEl{45}
 \filldraw[ball color= white!77!blue,draw=white] (0,0) circle (\R);
@@ -1114,6 +1114,89 @@ $$
 \end{tikzpicture}\right\rangle .
 $$
 \end{remark}
+
+
+\section{Shadows}
+
+The duality structure of $\LG$ affords us the construction of the bicategorical trace in terms of a shadows~\cite{p0807.1471}. We will also see that the shadow functor allows to recover the boundary-bulk and bulk-boundary maps of the two-dimensional topological field theories based on Landau-Ginzburg models. 
+
+\begin{definition}
+A bicategory~$\mathcal B$ \textsl{has shadows} if there is a category~$\mathcal C$ together with functors
+$$
+\langle\!\langle - \rangle\!\rangle : \mathcal B(A,A) \lra \mathcal C 
+$$
+for every object $A\in \mathcal B$ such that there are natural isomorphisms $\theta : \langle\!\langle X \otimes Y \rangle\!\rangle \lra \langle\!\langle Y \otimes X \rangle\!\rangle$ for every pair of composable 1-morphisms $X,Y$, and the diagrams
+$$
+\xymatrix{%
+\langle\!\langle (X \otimes Y) \otimes Z \rangle\!\rangle \ar[r]^-{\theta} \ar[d]_-{\langle\!\langle \alpha \rangle\!\rangle} & 
+\langle\!\langle Z \otimes (X \otimes Y) \rangle\!\rangle \ar[r]^-{\langle\!\langle \alpha^{-1} \rangle\!\rangle} & 
+\langle\!\langle (Z \otimes X) \otimes Y \rangle\!\rangle \\
+\langle\!\langle X \otimes (Y \otimes Z) \rangle\!\rangle \ar[r]^-{\theta} & 
+\langle\!\langle (Y \otimes Z) \otimes X \rangle\!\rangle \ar[r]^-{\langle\!\langle \alpha \rangle\!\rangle} & 
+\langle\!\langle Y \otimes (Z \otimes X) \rangle\!\rangle \ar[u]_-{\theta}
+}%
+$$
+and
+$$
+\xymatrix{%
+\langle\!\langle X \otimes 1_A \rangle\!\rangle \ar[r]^-{\theta} \ar[dr]_-{\langle\!\langle \rho \rangle\!\rangle} & 
+\langle\!\langle 1_A \otimes X \rangle\!\rangle \ar[r]^-{\theta} \ar[d]^-{\langle\!\langle \lambda \rangle\!\rangle} & 
+\langle\!\langle X \otimes 1_A \rangle\!\rangle \ar[dl]^-{\langle\!\langle \rho \rangle\!\rangle}  \\
+ & 
+\langle\!\langle X \rangle\!\rangle & 
+}%
+$$
+commute whenever they make sense. 
+\end{definition}
+
+\begin{proposition}
+The bicategory $\LG$ has shadows given by 
+\begin{align*}
+\langle\!\langle - \rangle\!\rangle : \LG \big( (R,W), (R,W) \big) & \lra \hmf(k,0) \, , \\
+Z & \lmt Z\otimes_{\Re} R
+\end{align*}
+with the isomorphism $\theta: \langle\!\langle X \otimes Y \rangle\!\rangle \lra \langle\!\langle Y\otimes X  \rangle\!\rangle$ induced by the graded twist map $X \otimes Y \lra Y \otimes X$. 
+\end{proposition}
+
+The proof is a straightforward check of the axioms, made especially easy by the fact that $\langle\!\langle - \rangle\!\rangle$ is simply defined as tensoring with the actual diagonal~$R$. Note however that this is homotopy equivalent to tensoring with the unit matrix factorisation $\Delta_W$. 
+
+Since $\LG$ is a bicategory with  duals and shadows it is automatically equipped with a 2-categorical trace operation as introduced and discussed at length in~\cite{p0807.1471, ps0910.1306}. We only quote the definition: 
+
+\begin{definition}
+Let~$\mathcal B$ be a bicategory with shadows and a dualisable 1-morphism~$Y$. Then the \textsl{trace} of a 2-morphism $\psi: X\otimes Y \lra Y \otimes Z$ is the map 
+$$
+\xymatrix{%
+\langle\!\langle X \rangle\!\rangle \ar[rr]^-{\langle\!\langle1\otimes \coev_Y\rangle\!\rangle} && 
+\langle\!\langle X \otimes Y \otimes Y^\dual \rangle\!\rangle \ar[r]^-{\langle\!\langle\psi \otimes 1\rangle\!\rangle} & 
+\langle\!\langle Y \otimes Z \otimes Y^\dual \rangle\!\rangle \ar[r]^-{\theta} &
+\langle\!\langle Y^\dual \otimes Y \otimes Z \rangle\!\rangle \ar[rr]^-{\langle\!\langle\eval_Y \otimes 1\rangle\!\rangle} && 
+\langle\!\langle Z \rangle\!\rangle 
+}%
+\, . 
+$$
+\end{definition}
+
+Next we wish to point out a connection between the shadow functor and the structure of two-dimensional open/closed topological field theory (TFT) for Landau-Ginzburg models. Recall that a TFT is the data of a commutative Frobenius algebra~$C$, a Calabi-Yau category~$\mathcal O$, bulk-boundary maps $\beta_A: C \lra \End_{\mathcal O}(A)$, and boundary-bulk maps $\beta^A: \End_{\mathcal O}(A) \lra C$ for all $A\in\mathcal O$. These data are subject to several consistency conditions, see e.\,g.~\cite{Kock}. 
+
+Every Landau-Ginzburg model with potential $W\in R = k[x_1,\ldots,x_n]$ gives rise to a TFT with $C=R/(\partial W)$, $\mathcal O = \hmf(R,W)$ and
+$$
+\beta_Q : \phi \lmt \phi \cdot 1_Q \, , \qquad 
+\beta^Q : \psi \lmt (-1)^{n\choose 2} \str(\psi \, \partial_{x_1} d_Q \ldots \partial_{x_n} d_Q) \, . 
+$$
+[TODO: give references for this?] We note that these maps can be recovered from the duality and shadow structure of $\LG$ as follows. On the one hand we have 
+$$
+\langle\!\langle \Delta_W \rangle\!\rangle = R/(\partial W)[n]
+$$
+since $\langle\!\langle \Delta_W \rangle\!\rangle = \Delta_W \otimes_{\Re} R = (\bigwedge (\bigoplus_{i=1}^n R \theta_i), \sum_{i=1}^n \partial_{x_i}W \theta_i)$ which is homotopy equivalent (and therefore equal in $\hmf(k,0)$) to $R/(\partial W)[n]$. On the other hand $\langle\!\langle Q^\dual \otimes Q \rangle\!\rangle = Q^\vee \otimes_k Q \otimes_{\Re} R = \End_R(Q)$. Thus from the explicit expressions~\eqref{TODO} and~\eqref{TODO} we find that $\beta_Q = \langle\!\langle \widetilde\coev_Q \rangle\!\rangle$ and $\beta^Q = \langle\!\langle \eval_Q \rangle\!\rangle$ (up to a sign, TODO?). 
+
+Motivated by the above this construction can be extended to any 1-morphism in $\LG$: for $X \in \hmf(R_1 \otimes_k R_2, W_1 - W_2)$ we define the \textsl{generalised bulk-boundary} and \textsl{boundary-bulk maps} to be
+$$
+\langle\!\langle \widetilde\coev_X \rangle\!\rangle : \langle\!\langle \Delta_{W_2} \rangle\!\rangle \lra \langle\!\langle X^\dual \otimes X \rangle\!\rangle
+\, , \qquad 
+\langle\!\langle \eval_X \rangle\!\rangle : \langle\!\langle X^\dual \otimes X \rangle\!\rangle \lra \langle\!\langle \Delta_{W_2} \rangle\!\rangle \, , 
+$$
+respectively. 
+
 
 
 
@@ -1275,7 +1358,10 @@ T.~Dyckerhoff and D.~Murfet, \textsl{Pushing forward matrix factorisations},
 %M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology {II}}, Geometry \&
 %  Topology \textbf{12} (2008), 1387--1425,
 %  \href{http://arxiv.org/abs/math/0505056}{[math.QA/0505056]}.
-%
+
+\bibitem[Ko]{Kock}
+J.~Kock, \textsl{Frobenius Algebras and 2D Topological Quantum Field Theories}, Cambridge University Press, 2003.
+
 %\bibitem[Lam86]{LambekRingsModules}
 %J.~Lambek, \textsl{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
 
@@ -1321,7 +1407,16 @@ D.~McNamee, \textsl{On the mathematical structure of topological defects in
 %H.~Ooguri and C.~Vafa, \textsl{Knot {I}nvariants and {T}opological {S}trings},
 %  Nucl. Phys. B \textbf{577} (2000), 419--438,
 %  \href{http://arxiv.org/abs/hep-th/9912123}{[hep-th/9912123]}.
-%
+
+\bibitem[P10]{p0807.1471}
+K.~Ponto, \textsl{Shadows and traces in bicategories}, 
+Ast\'erisque, (333), 2010, 
+\href{http://arxiv.org/abs/0807.1471}{[arXiv:0807.1471]}. 
+
+\bibitem[PS]{ps0910.1306}
+K.~Ponto and M.~Shulman, \textsl{Shadows and traces in bicategories}, 
+\href{http://arxiv.org/abs/0910.1306}{[arXiv:0910.1306]}. 
+
 %\bibitem[PT87]{HomflyPT}
 %J.~Przytycki and P.~Traczyk, \textsl{Conway algebras and skein equivalence of
 %  links}, Proc. Amer. Math. Soc. \textbf{100} (1987), 744--748.
