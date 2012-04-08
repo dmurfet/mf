@@ -135,6 +135,11 @@
 \def\lmt{\longmapsto}
 \def\LG{\mathcal{LG}_k}
 \def\dual{\dagger}
+\def\dlangle{\big\langle\!\big\langle}
+\def\drangle{\big\rangle\!\big\rangle}
+\def\bigdlangle{\Big\langle\!\Big\langle}
+\def\bigdrangle{\Big\rangle\!\Big\rangle}
+
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
 \def\Xcirc{%
@@ -625,33 +630,36 @@ It has differential graded structures $(\cBar,d,\cdot)$ and $(\cBar,b',\times)$ 
 
 
 
+\begin{itemize}
+\item It's silly to have both $y$ and $x$ in the same domain, this is some artifact of bad decisions in the notes.
+\item Dropped subscripts from $\rho, \lambda$ in the diagram.
+\end{itemize}
 
 \newpage
 
-
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[z,x]$-basis of $X$ and $e_i^*$ the dual basis of $X^\vee$.
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 
-\fill (0.2,1.6) circle (0pt) node {{\small $\cBar$}};
-\fill (-0.2,-1.6) circle (0pt) node {{\small $\cBar$}};
+\fill (0.2,1.6) circle (0pt) node {{\small $\Delta$}};
+\fill (-0.2,-1.6) circle (0pt) node {{\small $\Delta$}};
 
-\fill (1,1.8) circle (2.5pt) node[right] {{\small $\lambda_X$}};
-\fill (-1,-1.8) circle (2.5pt) node[left] {{\small $\rho_X^{-1}$}};
+\fill (1,1.8) circle (2.5pt) node[right] {{\small $\lambda$}};
+\fill (-1,-1.8) circle (2.5pt) node[left] {{\small $\rho^{-1}$}};
 
 \fill (-1.25,-2.25) circle (0pt) node {{\footnotesize $z$}};
-\fill (-0.75,-2.25) circle (0pt) node {{\footnotesize $x$}};
+\fill (-0.75,-2.25) circle (0pt) node {{\footnotesize $x'$}};
 
 \fill (-1.5,0) circle (0pt) node {{\footnotesize $z\vphantom{z'}$}};
-\fill (-0.5,0) circle (0pt) node {{\footnotesize $x'$}};
+\fill (-0.5,0) circle (0pt) node {{\footnotesize $x$}};
 \fill (0.5,0) circle (0pt) node {{\footnotesize $z'$}};
-\fill (1.5,0) circle (0pt) node {{\footnotesize $y\vphantom{z'}$}};
+\fill (1.5,0) circle (0pt) node {{\footnotesize $x'\vphantom{z'}$}};
 
-\fill (1.25,2.25) circle (0pt) node {{\footnotesize $y$}};
+\fill (1.25,2.25) circle (0pt) node {{\footnotesize $x'$}};
 \fill (0.75,2.25) circle (0pt) node {{\footnotesize $z\vphantom{y}$}};
 
 \draw[dashed] (-0.5,0.75) .. controls +(0,0.75) and +(-0.25,-0.75) .. (1,1.8);
@@ -673,7 +681,211 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 \draw (A2) -- (A); 
 \end{tikzpicture}
 \ee
-Here we indicated our choices for variable names in the various domains, as well as the fact that we use the completed bar complex~$\cBar$ as a model for the unit endomorphism of the object~$W$. Writing out the coevaluation~\eqref{TODO} the left-hand side of~\eqref{Zorro1detail} becomes 
+Here we have indicated the variable names in the various domains (\textbf{fix} we are still very messy with the variables). We call the left hand side of (\ref{Zorro1detail}) the \emph{Zorro map} and denote it $\mathcal Z$. It is the composite
+\be\label{eq:zorro1a1}
+\xymatrix@C+2pc{
+X \ar[r]^-{\rho^{-1}} & X \otimes \Delta \ar[r]^-{1 \otimes \coev} & X \otimes X^{\dagger} \otimes X \ar[r]^-{\eval \otimes 1} & \Delta \otimes X \ar[r]^-{\lambda} & X\,,
+}
+\ee
+which we prove is homotopic to the identity on $X$. Our strategy is to use the nondegenerate pairing on $\hmf(k[z,x], V-W)$. If $k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The upshot is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
+\be
+\Hom_{k[z,x]}(X,X) \lto \Hom_k( \Hom_{k[z,x]}(X,X), k )[m+n]\,, \qquad \varphi \mapsto \langle \varphi, - \rangle_{\textup{KL}}\,.
+\ee
+To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ on $\Hom_{k[z,x]}(X,X)$ are \emph{homotopic}. When $k$ is a field this equivalent to showing that the two functionals take the same value on any closed endomorphism of $X$, and in general it amounts to showing that $\langle \mathcal{Z}, \varphi \rangle_{\textup{KL}}$ and $\langle 1_X, \varphi \rangle_{\textup{KL}}$ differ, as functionals of $\varphi$, by a functional of $D(\varphi)$. In light of the formula for $\langle -, - \rangle_{\textup{KL}}$ it is natural that our first step should therefore be to understand the map $\str( \mathcal{Z} \circ - )$.
+
+Let us introduce the notation
+$$
+\langle\!\langle-\rangle\!\rangle = (-1)^{n+1\choose 2} \Res_{k[x,y,z]/k[y,z]} \left[ \frac{ \varepsilon\Psi(-) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: \Bar \lto k[z,y]\,.
+$$
+where $\varepsilon\Psi: \Bar \lto k[z,y][n]$ is the chain map of Section \ref{??} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X) \otimes_{k[x]} \Bar$. Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(z,x)$, and set $\underline\lambda=\lambda_1\ldots \lambda_n$. Our first order of business is to establish the following expression for the Zorro map.
+
+\begin{lemma}\label{lemma:Zorrointermediate}
+\be\label{Zorrointermediate}
+\mathcal Z(-) = \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
+\ee
+\end{lemma}
+
+%Given the explicit formula for the pairing in (\ref{??}) it is certainly enough to prove that the closed $k$-linear map
+%\[
+%\str(\mathcal{Z} \circ -): \Hom_{k[z,x]}(X,X) \lto k[z,x]/(\partial_{x_i} W, \partial_{z_i} V)
+%\]
+%is homotopic to $\str(-)$. That is, we prove that modulo the ideal generated by the partial derivatives $\partial_{y_i} W, \partial_{z_i} V$, the difference between $\str(\mathcal{Z} \circ -)$ and $\str(-)$ factors via a degree one $k$-linear operator on $\Hom_{k[z,x]}(X,X)$. The first step is to find an explicit formula for $\mathcal{Z}$.
+
+%We will denote equality modulo the derivatives $f_i(y):= \partial_{y_i}W$ and $g_i(z):= \partial_{z_i}V$ by ``$\equiv$'',
+
+ Before proceeding with the proof, let us recall the explicit formulas for the maps involved
+\begin{align*}
+\rho^{-1}: X \lto X \otimes \Delta, \qquad \rho^{-1}(a) &= \sum_{i \ge 0}(-1)^i \Psi\! \At^i_X(a)\,,\\
+\coev: \Delta \lto X^{\dagger} \otimes X, \qquad \coev(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{i \ge 0}(-1)^i (\Psi\!\At^i_{X^{\dagger}} \otimes 1)(\iota_X) \Big)\,,\\
+&= \sum_{i,j} (-1)^{i+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At^i_{X^{\dagger}}( e_j^* ) \otimes e_j \Big)\\
+\eval: X \otimes X^{\dagger} \lto \Delta, \qquad \eval(\alpha) &= (-1)^{\binom{n+1}{2}}\Res_{k[x,y,z]/k[y,z]}\! \left[ \frac{\str ( \alpha|_{z=z'} \underline{\lambda}) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\end{align*}
+Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more}) and $\mathcal{O}(\theta)$ denotes higher order terms which do not survive $\lambda$ and therefore may be ignored for present purposes. Also define $\nabla$ and Atiyah classes (\textbf{todo}).
+
+Let us consider the image of a basis element $e_q$ under the first two maps of (\ref{eq:zorro1a1})
+\begin{align}
+(1 \otimes \coev) \circ \rho^{-1}( e_q ) &= \sum_{i,k,j} (-1)^{i+k} \varepsilon\Big( \Psi\! \At^i_X( e_q ) \wedge \Psi \!\At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
+&= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
+&= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
+\end{align} 
+In the last step we use the following lemma about associative Atiyah classes.
+
+\begin{lemma} $\At \times \At = \At$.
+\end{lemma}
+
+The proof is given at the end of this section. 
+
+\begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
+Applying $\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of identifying $z$ with $z'$. This changes the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
+\begin{align}
+\mathcal{Z}(e_q) &= \lambda \circ (\eval \otimes 1) \circ (1 \otimes \coev) \circ \rho^{-1}( e_q )\\
+&= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \underline{\lambda} \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
+\end{align}
+Since the Zorro map~$\mathcal Z$ is $k[z,x]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
+\end{proof}
+
+Then we can compute for $\varphi \in \End(X)$ homogeneous
+\begin{align}
+\str(\mathcal Z\varphi) & = \sum_i (-1)^{|e_i|} e^*_i \big( \mathcal Z(\varphi(e_i)) \big) \nonumber \\
+& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n} e^*_i \Big( \big\langle\!\big\langle \str( \underline\lambda \At^n (\varphi(e_i)\otimes e^*_j \otimes e_j)) \big\rangle\!\big\rangle \Big) \nonumber \\
+& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n + n|e_j|} e^*_i \Big( \big\langle\!\big\langle \str( \underline\lambda \At^n (\varphi(e_i)\otimes e^*_j )) \big\rangle\!\big\rangle e_j \Big) \nonumber \\
+& = \big\langle\!\big\langle \str \big( \underline\lambda \At^n \big(\sum_i \varphi(e_i)\otimes e^*_j \big)\big) \big\rangle\!\big\rangle \nonumber \\
+& = \big\langle\!\big\langle \str \big( \underline\lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle \label{strlambdaAtn} \, .
+\end{align}
+The next step of the proof that $\mathcal{Z} \simeq 1_X$ is to show that $\str(\mathcal{Z} \circ -)$ is homotopic to $\str(-)$. In outline, here is the argument: the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$, so
+\begin{equation}\label{eq:trueproofeq}
+\str(\mathcal{Z} \circ -) = \big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \underline\lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
+\end{equation}
+We will see that $\At^n( \underline\lambda )$ is a transition determinant in the sense of the calculus of residues, so that the right hand side can be identified with $\str(-)$. Conceptually this parallels the proof of nondegeneracy of the Kapustin-Li formula given in Section \ref{??}. However we proceed a little differently here, since we are working with noncommutative differential forms and this introduces various subtleties.
+
+The form of self-adjointness of the Atiyah class that we will use is contained in the next result. The $p = 0$ case is the statement that
+\[
+\big\langle\!\big\langle \str( \lambda_1 \cdots \lambda_n \circ \At(\varphi) ) \big\rangle\!\big\rangle = \sum_{i=1}^n (-1)^{i-1} \Big\langle\!\Big\langle \nabla \left\{ f_i \str( \lambda_1 \cdots \widehat{\lambda_i} \cdots \lambda_n \circ \varphi ) \right\} \Big\rangle\!\Big\rangle\,,
+\]
+where as usual $\widehat{\lambda_i}$ means that $\lambda_i$ is omitted. Applying the lemma inductively will interpolate between the left and right hand sides of (\ref{eq:trueproofeq}). For the general statement we will need some notation: given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $[1,n]$ (not necessarily in ascending order) we define
+\[
+\ell(\bs{i}) = p, \qquad w(\bs{i}) = i_1 + \cdots + i_p, \qquad |\bs{i}| = \sum_{1 \le a < b \le n} \delta_{i_a > i_b}\, \qquad \gamma(\bs{i}) = w(\bs{i}) + |\bs{i}| + \binom{p+1}{2}\,.
+\]
+We write $\underline{\lambda}_{i_1,\ldots,i_p}$ for the product $\underline{\lambda} = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted. We deliberately confuse an endomorphism of $X$ with the operator on $\End(X) \otimes_{k[x]} \Bar$ which acts by post-composition with the endomorphism. Let $D$ denote the differential on $\End(X)$.
+
+\begin{lemma}\label{lemma:zorromain} For $\varphi \in \End(X) \otimes_{k[x]} \Bar$ and $0 \le p < n$ we have
+\begin{align*}
+\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) + p} & \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_p} \str\big( \underline{\lambda}_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \Big\rangle\!\Big\rangle\\
+&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i}) + p+1} \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_{p+1}} \str\big( \underline{\lambda}_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \Big\rangle\!\Big\rangle + h_p( D( \varphi ) )
+\end{align*}
+where the sums are over all sequences of length $p, p+1$ respectively and
+\[
+h_p( \psi ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla](\psi) \big) \Big\rangle\!\Big\rangle\,.
+\]
+\end{lemma}
+\begin{proof}
+Fix a sequence $\bs{i}$ of length $p$. The super Jacobi identity for operators on $\End(X) \otimes \Bar$ gives
+\be\label{superJacobi}
+\big[ \underline{\lambda}_{i_1,\ldots,i_p}, \At \big] = (-1)^{n-p} \big[ D, \big[ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla \big] \big] - \big[ \nabla, \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] \big]\,.
+\ee
+It is easy to see that $\str \circ \nabla = \nabla \circ \str$ and hence $\str \circ \At = 0$ so if we apply the previous identity to $\varphi$ and then apply $\dlangle \eta \str( - ) \drangle$, with $\eta = \nabla \circ f_{i_1} \circ \cdots \circ \nabla \circ f_{i_p}$, we have
+\begin{align}
+\dlangle \eta \str\big( \underline{\lambda}_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \drangle &= (-1)^{n-p} \dlangle \eta \str\big( \big[ D, \big[ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla \big] \big] \varphi \big) \drangle \nonumber\\
+&\qquad - \dlangle \eta \str\big( \big[ \nabla, \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] \big] \varphi \big) \drangle \nonumber\\
+&= \dlangle \eta \str\big( \big[ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla \big] ( D\varphi ) \big) \drangle \label{eq:hutch1}\\
+&\qquad- \dlangle \eta \nabla \str\big( \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] \varphi \big) \drangle \label{eq:hutch2}\\
+&\qquad+ (-1)^{n-p+1} \bigdlangle \eta \str\big( \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big]( \nabla \varphi ) \big) \drangle \label{eq:hutch3}
+\end{align}
+For compactness let us write $f_i = \partial_{x_i} W$. Since $[d_X, \lambda_i] = f_i$ we have
+\[
+\big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] = \sum_{a \notin \{ i_1, \ldots, i_p \} } (-1)^{a-1 + \#\{ b \l i_b < a \}} f_{a} \cdot \underline{\lambda}_{i_1,\ldots,i_p,a}
+\]
+where the sign counts the number of $\lambda$'s to the left of $\lambda_a$ in $\underline{\lambda}_{i_1,\ldots,i_p}$. Subsituting, the last summand (\ref{eq:hutch3}) in the above is, up to a sign
+\[
+\sum_{a \notin \{ i_1,\ldots, i_p \}} (-1)^{a-1 + \#\{ b \l i_b < a \}} \bigdlangle \nabla f_{i_1} \cdots \nabla f_{i_p} f_a \str\big( \big[ D, \underline{\lambda}_{i_1,\ldots,i_p,a} \big]( \nabla \varphi ) \big) \bigdrangle
+\]
+If we sum over all sequences $\bs{i}$ with the signs given in the statement of the lemma it is straightforward to check that the above term vanishes, because $f_{i_p} f_a$ and $f_a f_{i_p}$ appear in the sum with opposite signs. This completes the proof, since the sum over $\bs{i}$ of (\ref{eq:hutch1}) and (\ref{eq:hutch2}) gives us the right hand side of the equation in the statement of the lemma.
+\end{proof}
+
+For the proof of the main theorem we will also need the following.
+
+\begin{lemma}
+Let $\omega\in\Omega(k[x_1,\ldots,x_n])$ be and $n$-form. Then $\Psi(\omega f)=\Psi(\omega) f(y)$ for any $f\in k[x]$. 
+\end{lemma}
+
+\begin{proof}
+We may assume that $\omega$ is of the form $da_1\ldots da_n$ for some $a_i\in k[x]$. Then
+\begin{align*}
+\Psi(\omega f) & = \Psi \Big( \sum_{i=1}^n (-1)^{n-i} da_1\ldots da_{i-1} d(a_i a_{i+1}) da_{i+2}\ldots da_n df + (-1)^n a_1 da_2\ldots da_n df \Big) \\
+& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \partial_{[i]} (a_i a_{i+1}) \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
+& \qquad + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
+& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \Big(\partial_{[i]} a_i {}	^{t_1\ldots t_i}a_{i+1} + {}^{t_1\ldots t_{i-1}} a_i \partial_{[i]} a_{i+1} \Big) \\
+& \qquad \cdot  \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
+& = \partial_{[1]} a_1 \ldots \partial_{[n]} a_n f(y) \\
+& = \Psi(\omega) f(y) \, ,
+\end{align*}
+where we used Lemma~\ref{TODO} in the third step. 
+\end{proof}
+
+\begin{theorem}\label{theorem:mainzorro} The Zorro map $\mathcal{Z}$ is homotopic to $1_X$.
+\end{theorem}
+\begin{proof}
+Applying Lemma \ref{lemma:zorromain} repeatedly and using (\ref{strlambdaAtn} we find that for $\varphi \in \End(X)$
+\begin{align*}
+\str( \mathcal{Z} \varphi ) &= \big\langle\!\big\langle \str \big( \underline\lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle\\
+&= (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \big\langle\!\big\langle \nabla f_{\sigma(1)} \cdots \nabla f_{\sigma(n)} \str(\varphi) \big\rangle\!\big\rangle + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
+\end{align*}
+%where 
+%$$
+%\delta = 
+%\det 
+%\begin{pmatrix}
+%df_1 & df_2 & \cdots & df_n \\
+%\vdots & \vdots & & \vdots \\
+%df_1 & df_2 & \cdots & df_n 
+%\end{pmatrix} .
+%$$
+%This concludes the proof that the Zorro map~\eqref{Zorro1superdetail} is homotopic to the identity. 
+But by a small argument involving transition determinants this shows that
+\[
+\str( \mathcal{Z} \varphi ) = \str( \varphi )|_{x \mapsto y} + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) ).
+\]
+This shows that $\str( \mathcal{Z} \circ - )$ is homotopic to $\str( - )$ but this is not quite what we need. After all
+\begin{equation}\label{eq:bracketkl}
+\langle -, - \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} \textup{sgn}(\sigma) \Res_{k[y,z]/k} \left[ \frac{ \str( - \circ - \circ \underline{\lambda} \underline{\mu}) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_n} V} \right]
+\end{equation}
+But given $\varphi' \in \End(X)$ if we set $\varphi = \varphi' \circ \underline{\lambda} \underline{\mu}$ and substitute in (\ref{??}) we find that the two functionals $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ differ by a term which is an expression in residues of
+\begin{equation}\label{eq:mainzorro1}
+h_p( D \At^{n-p-1}(\varphi) ) = h_p( D \At^{n-p-1}(\varphi' \underline{\lambda} \underline{\mu}) )
+\end{equation}
+with a sum over all $p$. So to prove that these two functionals are homotopic, it is enough to prove that the residue of (\ref{eq:mainzorro1}) is a function of $D(\varphi')$. But $\At$ is closed, so
+\begin{align}
+h_p( D \At^{n-p-1}(\varphi' \underline{\lambda} \underline{\mu}) ) &= h_p \At^{n-p-1}D(\varphi' \underline{\lambda} \underline{\mu}) ) \nonumber\\
+&= h_p \At^{n-p-1}\big( D(\varphi') \underline{\lambda} \underline{\mu} )\\
+&\qquad + h_p \At^{n-p-1}\big( \varphi' D(\underline{\lambda}) \underline{\mu} ) \label{eq:mainzorro4}\\
+&\qquad + h_p \At^{n-p-1}\big( \varphi' \underline{\lambda} D(\underline{\mu}) ) \label{eq:mainzorro5}
+\end{align}
+Now $D(\underline{\mu})$ is a linear combination of terms divisible by the $\partial_{z_j} V$, and since $h_p$ and $\At$ are $k[z]$-linear these coefficients pass through to annihilate with the denominator in the residue in  (\ref{eq:bracketkl}). 
+
+Similarly $\varphi' D(\underline{\lambda}) \underline{\mu}$ is a sum of terms of the form $f_j \alpha$ for various $j$. But the Atiyah class and the commutator $[\underline{\lambda}_{i_1,\ldots,i_p}, \nabla]$ are right linear (explain right action on $\Bar$) so
+\begin{align*}
+h_p \At^{n-p-1}\big( \alpha f_j ) &= h_p\left( \At^{n-p-1}(\alpha) \cdot f_j \right)\\
+&= \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla \left\{ f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla]\At^{n-p-1}(\alpha) \big) \cdot f_j \right\} \Big\rangle\!\Big\rangle\,.
+\end{align*}
+But $\nabla( f_{i_1} \beta f_j ) = f_{i_1} \nabla( \beta f_j ) + df_{i_1} \beta f_j$. The first summand vanishes in the residue for obvious reasons, and the second vanishes since by Lemma \ref{??}
+\[
+\dlangle - \cdot f_j \drangle = \dlangle - \drangle \cdot f_j(y)
+\]
+which vanishes in the residue.
+
+The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contribute under the residue, so that
+\[
+\langle \mathcal{Z}, - \rangle_{\textup{KL}} - \langle 1_X, - \rangle_{\textup{KL}} = 
+\frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} \textup{sgn}(\sigma) \Res_{k[y,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \underline{\lambda} \underline{\mu} ) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_n} V} \right]\,.
+\]
+This proves that $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ are homotopic functionals, and so by the nondegeneracy of Theorem \ref{??} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
+\end{proof}
+
+The three other Zorro moves are proven analogously. What remains to be done is to show that the same is true if we replace the completed bar complex~$\cBar$ by the unit object~$\Delta_W$ of the monoidal category $\HMF(k[x,y], \widetilde W)$.
+
+\newpage
+
+, as well as the fact that we use the completed bar complex~$\cBar$ as a model for the unit endomorphism of the object~$W$. Writing out the coevaluation~\eqref{TODO} the left-hand side of~\eqref{Zorro1detail} becomes 
 \be\label{Zorro1superdetail}
 \mathcal Z := 
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=1.7cm,line/.style={&gt;=latex}]
@@ -738,101 +950,11 @@ e_q & \stackrel{\rho_X^{-1}}{\longmapsto} \sum_{a\geq 0} (-1)^a \At_X^a(e_q) \no
 To understand the penultimate step we note that the sign $(-1)^{a|e_q| + {a+1\choose 2} + {n-a+1\choose 2} + a(n-a)}$ with $\sigma=\operatorname{id}$ in~\eqref{31} is precisely that of the contribution to~\eqref{32} where $\At_{X^\dual}$ first acts $n-a$ times on $e_q\otimes e^*_j\otimes e_j$, followed by $\At_X^a$. The sign $(-1)^{|\sigma|}$ appears in~\eqref{32} if some $\At_X$ acts before some of the $\At_{X^\dual}$. 
 \end{proof}
 
-Since the Zorro map~$\mathcal Z$ is $k[z,x]$-linear it is fixed by its action on basis elements~$e_q$, so we find 
-\be\label{Zorrointermediate}
-\mathcal Z = \sum_j (-1)^{|e_j| + n + {n+1\choose 2}} \Res_{k[x',y,z]/k[y,z]} \left[ \frac{\str (\underline\lambda' (\varepsilon\circ\Psi) (\At_{X\otimes X^\dual})^n (-\otimes e_j^* \otimes e_j) ) \underline{\operatorname{d}\! x'}}{\partial_{x'_1}W \ldots \partial_{x'_n} W} \right]
-\ee
-where $\underline{\operatorname{d}\!x'}=\operatorname{d}\!x'_1\ldots \operatorname{d}\!x'_n$ and $\underline\lambda'=\lambda'_1\ldots \lambda'_n$ with $\lambda'_i=\partial_{x'_i}d_X(z,x')$. To arrive at the above expression for~$\mathcal Z$ we also used that by naturality we have $(\widetilde\eval_X \otimes 1_X)\circ \gamma_4 = (1_{\cBar}\otimes 1_X \otimes(\varepsilon \Psi))\circ (\widetilde\eval_X \otimes 1_X \otimes 1_{\cBar})$. 
 
-The Zorro map~\eqref{Zorrointermediate} will generally be the identity on~$X$ up to homotopy, but determining this homotopy directly is not easy. However, we can and will make use of the fact that the Kapustin-Li trace~\eqref{TODO} is non-degenerate, so~$\mathcal Z$ equals~$1_X$ up to homotopy if
-\be\label{ZorroinKL}
-\langle \mathcal Z \psi' \rangle_X = \langle \psi' \rangle_X
-\ee
-for all closed endomorphisms~$\psi'$ of~$X$. If we write $\psi:=\psi'\underline\lambda\underline\mu$ with $\lambda_i=\partial_{x_i}d_X(z,x)$ and $\mu_i=\partial_{z_i}d_X(z,x)$ then~\eqref{ZorroinKL} holds if
-$$
-\str(\mathcal Z\psi) = \str(\psi) \qquad \mod \partial_{y_i} W, \partial_{z_i} V \, .
-$$
-We will denote equality modulo the derivatives $f_i(y):= \partial_{y_i}W$ and $g_i(z):= \partial_{z_i}V$ by ``$\equiv$'', and we write $\langle\!\langle-\rangle\!\rangle$ for the map $\cBar\longrightarrow k[z,y]$ which acts as
-$$
-\langle\!\langle-\rangle\!\rangle : \beta \longmapsto (-1)^{n+1\choose 2} \Res_{k[x',y,z]/k[y,z]} \left[ \frac{(\varepsilon\circ\Psi)(\beta) \underline{\operatorname{d}\!x'}}{\partial_{x'_1}W \ldots \partial_{x'_n} W} \right] .
-$$
-Then we can compute 
-\begin{align}
-\str(\mathcal Z\psi) & = \sum_i (-1)^{|e_i|} e^*_i \big( \mathcal Z(\psi(e_i)) \big) \nonumber \\
-& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n} e^*_i \Big( \big\langle\!\big\langle \str( \underline\lambda' (\At_{X\otimes X^\dual})^n (\psi(e_i)\otimes e^*_j \otimes e_j)) \big\rangle\!\big\rangle \Big) \nonumber \\
-& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n + n|e_j|} e^*_i \Big( \big\langle\!\big\langle \str( \underline\lambda' (\At_{X\otimes X^\dual})^n (\psi(e_i)\otimes e^*_j )) \big\rangle\!\big\rangle e_j \Big) \nonumber \\
-& = \big\langle\!\big\langle \str \big( \underline\lambda' (\At_{X\otimes X^\dual})^n \big(\sum_i \psi(e_i)\otimes e^*_j \big)\big) \big\rangle\!\big\rangle \nonumber \\
-& = \big\langle\!\big\langle \str \big( \underline\lambda' (\At_{X\otimes X^\dual})^n (\psi)\big) \big\rangle\!\big\rangle \label{strlambdaAtn} \, .
-\end{align}
-To see that this is indeed equal to $\str(\psi)$ the idea is to convert the action of Atiyah classes on~$\psi$ to an action on $\underline\lambda'$ instead. More precisely, we will repeatedly use the super Jacobi identity
-\be\label{superJacobi}
-\big[ \varphi, \At_{X\otimes X^\dual} \big] = (-1)^{|\varphi|} \big[ d_{X\otimes X^\dual}, \big[ \varphi, \nabla \big] \big] - \big[ \nabla, \big[ d_{X\otimes X^\dual}, \varphi \big] \big] 
-\ee
-for homogeneous $\varphi\in \End X$, together with the fact that the Atiyah class precomposed with the supertrace is zero. 
 
-In the first step we apply~\eqref{superJacobi} with $\varphi=\underline\lambda'$ to see that~\eqref{strlambdaAtn} equals 
-\be\label{2strterms}
-\Big\langle\!\!\Big\langle \str\Big( \Big\{ (-1)^{n} \big[ d_{X\otimes X^\dual}, \big[ \underline\lambda', \nabla \big] \big] - \big[ \nabla, \big[ d_{X\otimes X^\dual}, \underline\lambda' \big] \big] \Big\} \big((\At_{X\otimes X^\dual})^{n-1}(\psi) \big) \Big) \Big\rangle\!\!\Big\rangle \, .
-\ee
-Since we defined $\psi=\psi'\underline\lambda\underline\mu$ with $[d_{X\otimes X^\dual}, \psi']=0$ we have $[d_{X\otimes X^\dual}, \psi]= \sum_i(\zeta_i f_i(x) + \xi_i g_i(z))$ for some maps~$\zeta_i$ and~$\xi_i$. Thus by cyclicity of $\str$ the first term in~\eqref{2strterms} is
-\begin{align}
-& \, \Big\langle\!\!\Big\langle \str\Big( \big[ \underline\lambda', \nabla \big] \big( \big[ d_{X\otimes X^\dual}, (\At_{X\otimes X^\dual})^{n-1}(\psi) \big] \big) \Big) \Big\rangle\!\!\Big\rangle \nonumber \\
-= & \, \Big\langle\!\!\Big\langle \str\Big( \big[ \underline\lambda', \nabla \big] \Big( \sum_i (\At_{X\otimes X^\dual})^{n-1}\big( \zeta_i f_i(x) + \xi_i g_i(z)) \Big)\Big) \Big\rangle\!\!\Big\rangle \equiv \, 0 \, . \label{willdieinquotient} 
-\end{align}
-Here the last step follows immediately for the terms involving $g_i(z)=\partial_{z_i}V(z)$ as they are modded out by. The argument for the terms with $f_i(x) = \partial_{x_i}W(x)$ is slightly more subtle as they depend on the $x$-variables and not the $y$-variables featuring in the residue expression for the Kapustin-Li trace. However, the $f_i(x)$ in~\eqref{willdieinquotient} act as zero-forms multiplying $n$-forms (in the image under $(\varepsilon\circ\Psi)$ in $\langle\!\langle-\rangle\!\rangle$) from the right. Hence by the following lemma this is the same as scalar multiplication with $f_i(y)$, which does not survive the quotient. 
 
-\begin{lemma}
-Let $\omega\in\Omega(k[x_1,\ldots,x_n])$ be and $n$-form. Then $\Psi(\omega f)=\Psi(\omega) f(y)$ for any $f\in k[x]$. 
-\end{lemma}
 
-\begin{proof}
-We may assume that $\omega$ is of the form $da_1\ldots da_n$ for some $a_i\in k[x]$. Then
-\begin{align*}
-\Psi(\omega f) & = \Psi \Big( \sum_{i=1}^n (-1)^{n-i} da_1\ldots da_{i-1} d(a_i a_{i+1}) da_{i+2}\ldots da_n df + (-1)^n a_1 da_2\ldots da_n df \Big) \\
-& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \partial_{[i]} (a_i a_{i+1}) \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
-& \qquad + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
-& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \Big(\partial_{[i]} a_i {}	^{t_1\ldots t_i}a_{i+1} + {}^{t_1\ldots t_{i-1}} a_i \partial_{[i]} a_{i+1} \Big) \\
-& \qquad \cdot  \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
-& = \partial_{[1]} a_1 \ldots \partial_{[n]} a_n f(y) \\
-& = \Psi(\omega) f(y) \, ,
-\end{align*}
-where we used Lemma~\ref{TODO} in the third step. 
-\end{proof}
 
-Thus we find that only the second term in~\eqref{2strterms} remains. It is equal to 
-\begin{align}
-& \, -\Big\langle\!\!\Big\langle \str\Big( \nabla \Big( \big[ d_{X\otimes X^\dual}, \underline\lambda' \big] \big((\At_{X\otimes X^\dual})^{n-1}(\psi) \big) \Big)\Big) \Big\rangle\!\!\Big\rangle \nonumber \\
-= & \, -\sum_{j=1}^n (-1)^{j+1} \Big\langle\!\!\Big\langle \nabla \Big\{ f_j \str\big( \underline\lambda'_j (\At_{X\otimes X^\dual})^{n-1}(\psi) \big) \Big\} \Big\rangle\!\!\Big\rangle \label{sumfj}
-\end{align}
-where $\underline\lambda'_j := \lambda'_1\ldots \lambda'_{j-1} \widehat{\lambda'_j}\lambda'_{j+1}\ldots\lambda'_n$. Now we are in a similar situation as we were in~\eqref{strlambdaAtn}, only this time the relevant term $\str( \underline\lambda'_j (\At_{X\otimes X^\dual})^{n-1}(\psi))$ has one Atiyah class less. Again we use $\str\circ \At=0$, apply the super Jacobi identity (now with $\varphi=\underline\lambda'_j$) and see that the first term on its right-hand side gives no contribution for the same reason as before, leading to
-$$
-\str(\mathcal Z\psi) \equiv \sum_{j_2<j_1} \sum_{\sigma\in S_2} (-1)^{j_1+j_2 + |\sigma|} 
-\Big\langle\!\!\Big\langle \nabla \Big\{ f_{j_{\sigma(1)}} \nabla \Big\{ f_{j_{\sigma(2)}} \str\big( \underline\lambda'_{j_{\sigma(1)} j_{\sigma(1)}} (\At_{X\otimes X^\dual})^{n-2}(\psi) \big) \Big\} \Big\} \Big\rangle\!\!\Big\rangle \, .
-$$
-Continuing in this fashion we find that 
-\begin{align}
-\str(\mathcal Z\psi) & \equiv \sum_{j_n<\ldots<j_1} \sum_{\sigma\in S_n} (-1)^{j_1+\ldots+j_n + |\sigma|} 
-\Big\langle\!\!\Big\langle \nabla \Big\{ f_{j_{\sigma(1)}} \nabla \Big\{ f_{j_{\sigma(2)}} \nabla \Big\{ \ldots \nabla \Big\{ f_{j_{\sigma(n)}} \str\big( \psi \big) \Big\} \ldots \Big\}\Big\} \Big\} \Big\rangle\!\!\Big\rangle \nonumber \\
-& \equiv (-1)^{n+1\choose 2} \sum_{\sigma\in S_n} (-1)^{|\sigma|} 
-\Big\langle\!\!\Big\langle df_{\sigma(1)} df_{\sigma(2)} \ldots df_{\sigma(n)} \str(\psi) \Big\rangle\!\!\Big\rangle \nonumber \\
-% Isn't it psi = psi(y) already at this next step, before taking the residue? 
-& = \Res_{k[x',y,z]/k[y,z]} \left[ \frac{(\varepsilon\circ\Psi) \str \left( \delta
-\psi \right) \underline{\operatorname{d}\!x}}{f_1(x')\ldots f_n(x')} \right] \nonumber \\
-& = \str(\psi)\Big|_{x'\longmapsto y} \nonumber
-\end{align}
-where 
-$$
-\delta = 
-\det 
-\begin{pmatrix}
-df_1 & df_2 & \cdots & df_n \\
-\vdots & \vdots & & \vdots \\
-df_1 & df_2 & \cdots & df_n 
-\end{pmatrix} .
-$$
-This concludes the proof that the Zorro map~\eqref{Zorro1superdetail} is homotopic to the identity. 
-
-The three other Zorro moves are proven analogously. What remains to be done is to show that the same is true if we replace the completed bar complex~$\cBar$ by the unit object~$\Delta_W$ of the monoidal category $\HMF(k[x,y], \widetilde W)$. 
 
 [TODO: better write this bit only once the section on $\cBar$ as a MF is in place] 
 
