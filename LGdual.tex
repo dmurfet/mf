@@ -622,6 +622,110 @@ $$
 It has differential graded structures $(\cBar,d,\cdot)$ and $(\cBar,b',\times)$ analogous to~$\Bar$, and the maps~$\Phi$ and~$\Psi$ lift to maps to and from the completed bar complex~$\cBar$ with the same properties as in Lemmas~\ref{PhiPsiDG} and~\ref{PsiHF}. 
 \end{remark}
 
+\newpage
+
+\section{Derivation of $\lambda$ and $\rho$}
+
+Do this first so as to give us a chance to work through perturbation, how Atiyah classes entire perturbations. Then we can use this in the next section.
+
+\section{Derivation of the coevaluation}\label{sec:derivcoeval}
+
+In this section we derive explicit formulas for the coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[z,x], V-W)$. In graphical notation the coevaluation is a morphism
+$$
+\widetilde\coev_{X} = 
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
+\draw[line width=0pt] 
+(2.5,1.6) node[line width=0pt] (I) {{\small$\Delta$}}
+(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\draw[dashed] (2.5,0.81) -- (I);
+\end{tikzpicture}
+$$
+That is, (Job for \textbf{Nils the Tikz fairy}: variable labels)
+\[
+\widetilde\coev_X: \Delta \lto X^\dual \otimes X\,.
+\]
+As recalled in Section \ref{??} there are two coevaluation $2$-morphisms associated with $X$. The details in each case are the same, so we give the full details for $\widetilde\coev_X$ and leave $\coev_X$ to the reader. Here we need to discuss $\Delta = \Delta^y_x$ and $\Delta^x_y$ as defined in (\emph{coevc}). We fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $e_i^*$.
+
+A natural candidate for $\widetilde\coev_X$ is the inverse image of the identity $1_X$ under the homotopy equivalence of the next proposition. For the moment we concentrate on explaining the detailed formula for this candidate; then, in Section \ref{??}, we show that this candidate is actually the unit of an adjunction by proving the Zorro moves.
+
+\begin{proposition}\label{prop:isogivescoev} There is a canonical homotopy equivalence of $\mathbb{Z}_2$-graded $k$-complexes
+\begin{equation}
+\Hom_{k[x,y]}( \Delta, X^\dual \otimes X ) \lto \Hom_{k[z,x]}(X,X)\,. \label{eq:isogivescoev}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Recall that the graded free $k[x,y]$-module underlying $\Delta$ is the exterior algebra on symbols $\theta_1, \ldots, \theta_n$. Let $K$ denote the usual $\mathbb{Z}_2$-graded Koszul complex with the same underlying graded module, but only the differential $\delta_{-}$ of (\ref{??}). Then the product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-graded complexes
+\[
+\Delta^x_y \otimes_{k[x,y]} \Delta^y_x \lto K\,.
+\]
+Composing with the natural morphism $\varepsilon: K \lto k[x,y][n]$ and taking the adjoint we have a canonical isomorphism of matrix factorisations
+\[
+\Delta^x_y \lto (\Delta^y_x)^\vee [n]\, \qquad \omega \mapsto \varepsilon( \omega \wedge - )\,.
+\]
+Combining this with various canonical maps and the projection $\pi: \Delta^x_y \lto k[x]$ we have the following diagram
+\begin{equation}
+\xymatrix{
+\Hom_{k[x,y]}( \Delta^y_x, X^\vee[n] \otimes_{k[z]} X)\\
+(\Delta^y_x)^\vee \otimes_{k[x,y]} \left( X^\vee[n] \otimes_{k[z]} X \right) \ar[u]_-{\cong}\\
+\left( X^\vee[n] \otimes_{k[z]} X \right) \otimes_{k[x,y]} (\Delta^y_x)^\vee \ar[u]_-{\cong}\\
+\left( X^\vee \otimes_{k[z]} X \right) \otimes_{k[x,y]} (\Delta^y_x)^\vee[n] \ar[u]_-{\cong}\\
+\left( X^\vee \otimes_{k[z]} X \right) \otimes_{k[x,y]} \Delta^x_y \ar[u]_-{\cong} \ar[d]^-{1 \otimes \pi}\\
+\left( X^\vee \otimes_{k[z]} X \right) \otimes_{k[x,y]} k[x] \ar[d]^-{\cong}\\
+\Hom_{k[z,x]}(X,X)\,.
+}\label{eq:isogivescoev2}
+\end{equation}
+\end{proof}
+
+\begin{definition} The \emph{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(k[x,y], W(x) - W(y))$ mapping to $1_X$ under (\ref{eq:isogivescoev})\,.
+\end{definition}
+
+Clearly to give a representative chain map for the coevaluation we need to begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to find a homotopy inverse for $1 \otimes \pi$. In fact we will need to present two different homotopy inverses, which lead to two different (but homotopic) formulas for the coevaluation.
+
+On the tensor product
+\[
+\Bar \otimes_{k[x,y]} ( X^\dual \otimes X)\,
+\]
+we consider the operator $\At_{X^\dual \otimes X} = [d, d_{X^\dual \otimes X}]$ and its powers. Since $d$ is $k[y]$-linear, this is actually $[d, d_{X^\dual}]$ and for this reason we abuse notation and write $\At_{X^\dual}$ for $\At_{X^\dual \otimes X}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+\[
+\xymatrix{
+X^\dual \otimes X \ar[r]^-{\At^i_{X^\dual}} & \Bar \otimes_{k[x,y]} ( X^\dual \otimes X ) \ar[r]^-{\Psi} & K \otimes_{k[x,y]} (X^\dual \otimes X)
+}
+\]
+which we can apply to the tensor $\iota_X = \sum_{i} (-1)^|e_i| e_i^* \otimes e_i$.
+
+\begin{theorem} A representative for the coevaluation morphism is the chain map
+\[
+\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{i \ge 0} (-1)^i \Psi \At^i_{X^\dual}( \iota_X ) \right)\,.
+\]
+\end{theorem}
+\begin{proof}
+As long as the Bar perturbation stuff is done previously, this is straightforward.
+\end{proof}
+
+There is an alternative presentation which we will also need. On the tensor product
+\[
+( X^\dual \otimes X) \otimes_{k[x,y]} \Bar
+\]
+we consider the operator $\At_{X^\dual \otimes X, k[x,y]/k[x]} = [s, d_{X^\dual \otimes X}]$ and its powers. Since $s$ is $k[x]$-linear, this is actually $[s, d_{X}]$ and for this reason we abuse notation and write $\At_{X, k[x,y]/k[x]}$ for $\At_{X^\dual \otimes X, k[x,y]/k[x]}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+\[
+\xymatrix{
+X^\dual \otimes X \ar[r]^-{\At^i_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otimes_{k[x,y]} \Bar \ar[r]^-{\Psi} & (X^\dual \otimes X)\otimes_{k[x,y]} K\,.
+}
+\]
+
+\begin{theorem} A representative for the coevaluation morphism is the chain map
+\[
+\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{i \ge 0} (-1)^i \Psi \At^i_{X,k[x,y]/k[x]}( \iota_X ) \wedge \gamma \right)\,.
+\]
+\end{theorem}
+
+\begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
+\end{example}
+
+\newpage
+
 \section{Zorro moves}\label{sec:Zorro}
 
 In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[z,x], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[z,x], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[z,x]$-basis of $X$ and $e_i^*$ the dual basis of $X^\vee$.
