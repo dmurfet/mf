@@ -528,7 +528,7 @@ We now return to the $k$-algebra $A=R=k[x_1,\ldots,x_n]$. Earlier we set $\widet
 $$
 d_{\Bar} = b' + d\widetilde W \times (-) \, . 
 $$
-\begin{lemma}
+\begin{lemma}\label{lemma:barisafactorisation}
 $(\Bar,d_{\Bar})$ is a linear factorisation of $\widetilde W\in \Re$. 
 \end{lemma}
 
@@ -546,10 +546,10 @@ where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetil
 If we use~$\pi$ also to denote the projection $\Bar \lra \Bar_0 = \Re$, then $\mu\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \mu\pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{TODO}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
 
 There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be important to us: 
-\begin{align*}
-\Phi & : \Delta \lra \Bar \, , \qquad \theta_{i_1}\ldots \theta_{i_p} \lmt \sum_{\sigma\in S_p} (-1)^{|\sigma|} dx_{i_{\sigma(1)}} \ldots dx_{i_{\sigma(p)}} \otimes 1 \, , \\
-\Psi & : \Bar \lra \Delta \, , \qquad df_1\ldots df_p \otimes 1 \lmt \sum_{1\leq i_1<\ldots<i_p\leq n} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \, \theta_{i_1} \ldots \theta_{i_p} \, .
-\end{align*}
+\begin{align}
+\Phi & : \Delta \lra \Bar \, , \qquad \theta_{i_1}\ldots \theta_{i_p} \lmt \sum_{\sigma\in S_p} (-1)^{|\sigma|} dx_{i_{\sigma(1)}} \ldots dx_{i_{\sigma(p)}} \otimes 1 \, , \label{intro_phi}\\
+\Psi & : \Bar \lra \Delta \, , \qquad df_1\ldots df_p \otimes 1 \lmt \sum_{1\leq i_1<\ldots<i_p\leq n} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \, \theta_{i_1} \ldots \theta_{i_p} \, \label{intro_psi}.
+\end{align}
 These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$. 
 
 \begin{lemma}\label{PhiPsiDG}
@@ -598,7 +598,7 @@ To establish compatibility with the products we compute
 where in the third step the anti-commutativity of the~$\theta_i$ allowed us to sum over the longer sequences $i_1<\ldots< i_{p+q}$ by introducing an additional sum over shuffles. 
 \end{proof}
 
-Now we come back to consider any potential $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
+Now we come back to consider any potential $W\in R$ (\textbf{note} be careful, potential has a precise meaning). The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
 \begin{lemma}\label{PsiHF}
 $\Psi: (\Bar, d_\Bar) \lra (\Delta_W, d_{\Delta_W})$ is a morphism in $\HF(\Re,\widetilde W)$. 
 \end{lemma}
@@ -622,11 +622,222 @@ $$
 It has differential graded structures $(\cBar,d,\cdot)$ and $(\cBar,b',\times)$ analogous to~$\Bar$, and the maps~$\Phi$ and~$\Psi$ lift to maps to and from the completed bar complex~$\cBar$ with the same properties as in Lemmas~\ref{PhiPsiDG} and~\ref{PsiHF}. 
 \end{remark}
 
-\newpage
+\subsection{Perturbation}
 
-\section{Derivation of $\lambda$ and $\rho$}
+A crucial role will be played by the homological perturbation lemma, which we will use to promote homotopy equivalences of complexes (arising from the Bar and Koszul resolutions of the diagonal) to homotopy equivalences of associated matrix factorisations. More importantly, the perturbation lemma provides explicit homotopy inverses in terms of Atiyah classes.
 
-Do this first so as to give us a chance to work through perturbation, how Atiyah classes entire perturbations. Then we can use this in the next section.
+Let $R$ be a ring and $W \in R$. An $R$-linear \emph{deformation retract datum} is a diagram
+\begin{equation}\label{eq:perturbeddiagr1}
+\xymatrix@C+2pc{
+(L,b) \ar@<-1ex>[r]_-{\sigma} & (M,b) \ar@<-1ex>[l]_-{\pi}, \quad h\,,
+}
+\end{equation}
+in which $(L,b)$ and $(M,b)$ are linear factorisations of $W$, $\pi, \sigma$ are morphisms of linear factorisations and $h: M \lto M$ is a degree one $R$-linear map such that
+\begin{itemize}
+\item[(i)] $\pi \sigma = 1$.
+\item[(ii)] $\sigma \pi = 1 + bh + hb$.
+\end{itemize}
+A degree one morphism $\delta: M \lto M$ is a \emph{small perturbation} of the deformation retract datum if $1_M - \delta h$ is an isomorphism of $R$-modules. In this case we define
+\[
+A = (1- \delta h)^{-1} \delta
+\]
+and consider the new ``perturbed'' diagram
+\begin{equation}\label{eq:perturbeddiagr}
+\xymatrix@C+2pc{
+(L,b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (M,b+\delta) \ar@<-1ex>[l]_-{\pi_\infty}, \quad h_\infty\,,
+}
+\end{equation}
+where
+\begin{align*}
+\sigma_\infty &= \sigma + hA\sigma & h_\infty &= h + h A h\,,\\
+\pi_\infty &= \pi + \pi A h & b_\infty &= b + \pi A \sigma\,.
+\end{align*}
+
+\begin{proposition}\label{prop:pertlemma} Suppose that $h \sigma = 0, \pi h = 0$ and $h^2 = 0$. If $\delta$ is a small perturbation of (\ref{eq:perturbeddiagr1}) such that $(b + \delta)^2 = W' \cdot 1_M$ for some $W' \in R$ then (\ref{eq:perturbeddiagr}) is a deformation retract datum of linear factorisations of $W'$ over $R$.
+\end{proposition}
+\begin{proof}
+Just reference Crainic.
+\end{proof}
+
+In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, and so $A = \sum_{m \ge 0} (\delta h)^m \delta$ and
+\[
+\sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
+\]
+
+\section{Perturbation and homotopy inverses}
+
+The fundamental technical result of this paper is the calculation, using the perturbation lemma, of homotopy inverses for a certain class of morphisms of matrix factorisations.
+
+In outline, let $\Bar$ be the linear factorisation of $\widetilde{W}$ given in Lemma \ref{PsiHF} and $\Delta$ the Koszul factorisation of $\widetilde{W}$. For any finite rank matrix factorisation $X \in \hmf(k[z,x], V - W)$ there is a $k[z]$-$k[x]$-bilinear homotopy equivalence
+\[
+\rho: X \otimes \Delta \lto X\,.
+\]
+This homotopy equivalence is part of the data of the bicategory $\LG$. In order to derive the evaluation and coevaluation maps and prove the Zorro moves we will need explicit homotopy inverses for $\rho$, and similar maps. These we construct using commutative diagrams of the form
+\begin{equation}\label{eq:pertdia1}
+\xymatrix{
+X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho_{\Bar}}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta \ar[dl]^-{\rho}\\
+& X
+}
+\end{equation}
+where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho_{\Bar}$ is explained below. Rather than inverting $\rho$ directly, it turns out to be advantageous to invert $\rho_{\Bar}$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho_{\Bar}$ is the geometric series in powers of the associative Atiyah class of $X$ and we make use of a completion of $X \otimes_R \Bar$ in order to guarantee that this geometric series converges.
+
+The bulk of the argument is given in the following setting: $k$ is an arbitrary commutative ring, $A, R, S$ are $k$-algebras and we assume given a morphism of $k$-algebras $\theta: R \lto A^e$ and
+\[
+X \in \HMF(S \otimes_k R, V)
+\]
+together with a homogeneous basis $\{ e_i \}_{i \in I}$ of $X$ over $S \otimes_k R$. Let $D$ denote the differential on $X$. The two cases of interest are when $R = A^e, S = k[z]$ and $\theta$ is the identity, or, the situation of (\ref{eq:pertdia1}) where $R = A$ and $\theta(a) = a \otimes 1$. We return to these examples at the end of the section.
+
+Let $W \in A$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in A^e$. For convenience in distinguishing between the left and right copy of $A$ in $A^e = A \otimes_k A^{op}$ we write $A^{op}$ even though $A$ is commutative. We assume that $V + \widetilde{W}$ belongs to the image of $S \otimes_k A^{op}$ in $S \otimes_k A^e$, where $V$ denotes the image of $V$ under $S \otimes_k R \lto S \otimes_k A^e$ via $\theta$.
+
+Consider the $S \otimes_k A^e$-module
+\[
+X \,\widehat{\otimes}_R\, \Bar := \prod_{m \ge 0} X \otimes_R \Bar_m
+\]
+with the $\mathbb{Z}_2$-grading
+\[
+\big( X \,\widehat{\otimes}_R\, \Bar \big)^i = \left( \prod_{m \in \mathbb{Z}} X^i \otimes_R \Bar_{2m} \right) \oplus \left( \prod_{m \in \mathbb{Z}} X^{i+1} \otimes_R \Bar_{2m+1} \right)
+\]
+As a $\mathbb{Z}_2$-graded $S \otimes_k A^e$-module, $X \,\widehat{\otimes}_R\, \Bar$ is the inverse limit of the system
+\[
+\cdots \lto X \otimes_R \Bar/\Bar_{\ge 2} \lto X \otimes_R \Bar/\Bar_{\ge 1}
+\]
+where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$. Our first observation is that this graded module can be equipped as a linear factorisation of $V + \widetilde{W}$ over $S \otimes_k A^e$. One checks that there are well-defined operators
+\begin{align*}
+D(x_0, x_1, \ldots) &= (D(x_0), D(x_1), \ldots)\\
+b'(x_0, x_1, \ldots) &= (b'(x_1),b'(x_2),\ldots)\\
+d(x_0,x_1,\ldots) &= (0, d(x_0), d(x_1),\ldots)\\
+d \widetilde{W} \times (x_0,x_1,\ldots) &= (0, d \widetilde{W} \times x_0, d \widetilde{W} \times x_1, \ldots)
+\end{align*}
+on $X \,\widehat{\otimes}_R\, \Bar$, where $d$ is extended to an $S \otimes_k A^{op}$-linear operator on $X \otimes_R \Bar$ by the rule
+\[
+d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d(\omega)\,.
+\]
+
+\begin{lemma} $( X \, \widehat{\otimes}_R\, \Bar, D + b' + d\widetilde{W} \times (-) )$ is a linear factorisation of $V + \widetilde{W}$ over $S \otimes_k A^e$.
+\end{lemma}
+\begin{proof}
+This can be checked on the inverse system, where it follows from Lemma \ref{lemma:barisafactorisation}.
+\end{proof}
+
+There is a morphism of linear factorisations
+\[
+\pi: X \, \widehat{\otimes}_R\, \Bar = \prod_{m \ge 0} X \otimes_R \Bar_m \lto X \otimes_R \Bar_0 \lto X \otimes_R A\,.
+\]
+where the first map is the projection and the second is the product $A^e \lto A$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of the Atiyah class $\At_X = [d, D]$ on $X \otimes_R \Bar$. When $R = A$ and $\theta(a) = a \otimes 1$ this map $\pi$ is the morphism $\rho_{\Bar}$ mentioned above.
+
+We begin with the deformation retract which exists due to the defining relation of $d$ with $b'$.
+
+\begin{lemma}\label{lemma:firstdefo} There is an $S \otimes_k A^{op}$-linear deformation retract datum of $\mathbb{Z}_2$-graded complexes
+\[
+\xymatrix@C+2pc{
+(X \otimes_R A, 0) \ar@<-1ex>[r]_-{\sigma} & (X \, \widehat{\otimes}_R \, \Bar, b') \ar@<-1ex>[l]_-{\pi}, \quad -d\,.
+}
+\]
+where $\sigma(e_i \otimes a ) = e_i \otimes (1 \otimes a)$.
+\end{lemma}
+\begin{proof}
+The required identity $b' d + d b' = 1 - \sigma \pi$ follows immedlatey from (\ref{b'd+db'}).
+\end{proof}
+
+\begin{lemma}\label{lemma:smallpertde} The perturbation $\delta = D + d\widetilde{W} \times (-)$ is small on $X\,\widehat{\otimes}_R \, \Bar$, that is, $1 + \delta d$ is invertible.
+\end{lemma}
+\begin{proof}
+Let us write $h = -d$. Because we are working with $\prod_{m \ge 0} X \otimes_R \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}_R\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
+\end{proof}
+
+\begin{proposition}\label{prop:finalpertdefo} There is a deformation retract datum of linear factorisations of $V + \widetilde{W}$ over $S \otimes_k A^{op}$
+\[
+\xymatrix@C+2pc{
+(X \otimes_R A, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes}_R \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
+}
+\]
+where
+\[
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \big[d, D \big]^m \sigma\,.
+\]
+In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
+\end{proposition}
+\begin{proof}
+It follows from the perturbation lemma (Propostiion \ref{prop:pertlemma}) with Lemma \ref{lemma:firstdefo}, Lemma \ref{lemma:smallpertde} that
+\[
+\xymatrix@C+2pc{
+(X \otimes_R A, b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes}_R \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi_\infty}
+}
+\]
+is a deformation retract datum, where $A = \sum_{m \ge 0} (-1)^m (\delta d) \delta$ and
+\begin{align*}
+\sigma_\infty &= \sum_{m \ge 0} (-1)^m (d \delta)^m \sigma,\\
+\pi_\infty &= \pi + \pi A h,\\
+b_\infty &= \pi A \sigma\,.
+\end{align*}
+Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi A = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum of the stated form, where we may use $d^2 = 0$ and $d \sigma = 0$ to write
+\[
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \big[ d, \delta \big]^m \sigma = \sum_{m \ge 0} (-1)^m [d, D + d\widetilde{W} \times (-)]^m \sigma\,.
+\]
+Expanding this yields $\sum_{m \ge 0} [d, D]^m \sigma$ plus terms involving factors of the form
+\begin{equation}\label{eq:finalpertdefo2}
+[d, d\widetilde{W} \times (-)] [d,D]^i \sigma
+\end{equation}
+for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ leaves a tensor whose form component is of the type $da_0 \cdots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ has the form given in the statement of the proposition.
+\end{proof}
+
+\begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(\omega)$.
+\end{lemma}
+\begin{proof}
+\textbf{todo}
+\end{proof}
+
+Now we turn to the Koszul stabilisation of the diagonal. Assume that $A = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section \ref{??} where $d_{\Delta} = \delta_{+} + \delta_{-}$. There is a morphism of linear factorisations
+\[
+\pi: X \otimes_R \Delta \lto X \otimes_R A^e \lto X \otimes_R A
+\] 
+where the first map is the projection to $\Delta_0 = A^e$ and the second map is the product. This is compatible with the map $\pi$ defined for the Bar resolution of the diagonal in the sense that there is a commutative diagram
+\[
+\xymatrix{
+X \,\widehat{\otimes}_R\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \otimes_R \Delta \ar[dl]^-{\pi}\\
+& X\,.
+}
+\]
+in which every side is a homotopy equivalence. This follows from
+
+\begin{lemma} The map $\pi: X \otimes_R \Delta \lto X \otimes_R A$ is an $S \otimes_k A^{op}$-linear homotopy equivalence of linear factorisations of $V + \widetilde{W}$ over $S \otimes_k A^{op}$.
+\end{lemma}
+\begin{proof}
+There is an exact sequence of free $k[y]$-modules
+\[
+0 \lto \Delta_n \lto \cdots \lto \Delta_0 \lto A \lto 0
+\]
+which splits, and provides the necessary $k[y]$-linear $\sigma: A \lto \Delta$ and homotopy $h$ on $\Delta$ to make
+\[
+\xymatrix@C+2pc{
+(X \otimes_R A, 0) \ar@<-1ex>[r]_-{\sigma} & (X \otimes_R \Delta, 1 \otimes \delta_{-}) \ar@<-1ex>[l]_-{\pi}, \qquad -h
+}
+\]
+into an $S \otimes_k A^{op}$-linear deformation retract datum. Moreover $\delta = D \otimes 1 + 1 \otimes \delta_{+}$ is a small perturbation and the perturbation lemma applies to show that $\pi$ is a homotopy equivalence.
+\end{proof}
+
+\begin{corollary} An $S \otimes_k A^{op}$-linear homotopy inverse to $\pi: X \otimes_R \Delta \lto X \otimes_R A$ is given by
+\[
+\pi^{-1} = \sum_{m \ge 0} (-1)^m \Psi [d, D]^m \sigma\,.
+\]
+\end{corollary}
+
+Let us finish this section as we began, with the structural morphisms $\rho$ and $\lambda$ of the bicategory of Landau-Ginzburg models. So we take $S = k[z]$ and $R = A = k[x], \theta(a) = a \otimes 1$ in the above, to obtain a commutative diagram of homotopy equivalences
+\[
+\xymatrix{
+X \,\widehat{\otimes}_{k[x]}\, \Bar \ar[dr]_-{\rho_{\Bar}}\ar[rr]^{1 \otimes \Psi} & & X \otimes_{k[x]} \Delta \ar[dl]^-{\rho}\\
+& X
+}
+\]
+where we write $\rho_{\Bar}$ and $\rho$ for the maps $\pi$. A $k[z]$-$k[x]$-bilinear homotopy inverse for $\rho$ is given by
+\[
+\rho^{-1} = \sum_{m \ge 0} (-1)^m \Psi [d, D]^m \sigma\,.
+\]
+
+\begin{itemize}
+\item Inverses for $\lambda$ and $\rho$.
+\item Other inverse using $s$.
+\end{itemize}
 
 \section{Derivation of the coevaluation}\label{sec:derivcoeval}
 
