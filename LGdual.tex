@@ -649,8 +649,8 @@ and consider the new ``perturbed'' diagram
 \end{equation}
 where
 \begin{align*}
-\sigma_\infty &= \sigma + hA\sigma & h_\infty &= h + h A h\,,\\
-\pi_\infty &= \pi + \pi A h & b_\infty &= b + \pi A \sigma\,.
+\sigma_\infty &= \sigma + hA\sigma, & h_\infty &= h + h A h\,,\\
+\pi_\infty &= \pi + \pi A h, & b_\infty &= b + \pi A \sigma\,.
 \end{align*}
 
 \begin{proposition}\label{prop:pertlemma} Suppose that $h \sigma = 0, \pi h = 0$ and $h^2 = 0$. If $\delta$ is a small perturbation of (\ref{eq:perturbeddiagr1}) such that $(b + \delta)^2 = W' \cdot 1_M$ for some $W' \in R$ then (\ref{eq:perturbeddiagr}) is a deformation retract datum of linear factorisations of $W'$ over $R$.
@@ -664,7 +664,7 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
 \]
 
-\section{Perturbation and homotopy inverses}
+\section{Perturbation and homotopy inverses}\label{section:pertandhtpy}
 
 The fundamental technical result of this paper is the calculation, using the perturbation lemma, of homotopy inverses for a certain class of morphisms of matrix factorisations.
 
@@ -736,7 +736,7 @@ We begin with the deformation retract which exists due to the defining relation 
 where $\sigma(e_i \otimes a ) = e_i \otimes (1 \otimes a)$.
 \end{lemma}
 \begin{proof}
-The required identity $b' d + d b' = 1 - \sigma \pi$ follows immedlatey from (\ref{b'd+db'}).
+The required identity $b' d + d b' = 1 - \sigma \pi$ follows immediately from (\ref{b'd+db'}).
 \end{proof}
 
 \begin{lemma}\label{lemma:smallpertde} The perturbation $\delta = D + d\widetilde{W} \times (-)$ is small on $X\,\widehat{\otimes}_R \, \Bar$, that is, $1 + \delta d$ is invertible.
@@ -745,7 +745,7 @@ The required identity $b' d + d b' = 1 - \sigma \pi$ follows immedlatey from (\r
 Let us write $h = -d$. Because we are working with $\prod_{m \ge 0} X \otimes_R \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}_R\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-\begin{proposition}\label{prop:finalpertdefo} There is a deformation retract datum of linear factorisations of $V + \widetilde{W}$ over $S \otimes_k A^{op}$
+\begin{proposition}\label{prop:finalpertdefo} There is an $S \otimes_k A^{op}$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes_R A, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes}_R \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
@@ -788,26 +788,26 @@ for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ l
 \end{proof}
 
 Now we turn to the Koszul stabilisation of the diagonal. Assume that $A = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section \ref{??} where $d_{\Delta} = \delta_{+} + \delta_{-}$. There is a morphism of linear factorisations
-\[
+\begin{equation}\label{eq:koszulpi}
 \pi: X \otimes_R \Delta \lto X \otimes_R A^e \lto X \otimes_R A
-\] 
+\end{equation}
 where the first map is the projection to $\Delta_0 = A^e$ and the second map is the product. This is compatible with the map $\pi$ defined for the Bar resolution of the diagonal in the sense that there is a commutative diagram
 \[
 \xymatrix{
 X \,\widehat{\otimes}_R\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \otimes_R \Delta \ar[dl]^-{\pi}\\
-& X\,.
+& X \otimes_R A
 }
 \]
 in which every side is a homotopy equivalence. This follows from
 
-\begin{lemma} The map $\pi: X \otimes_R \Delta \lto X \otimes_R A$ is an $S \otimes_k A^{op}$-linear homotopy equivalence of linear factorisations of $V + \widetilde{W}$ over $S \otimes_k A^{op}$.
+\begin{lemma}\label{lemma:koszulstab1} The map $\pi$ of (\ref{eq:koszulpi}) is an $S \otimes_k A^{op}$-linear homotopy equivalence.
 \end{lemma}
 \begin{proof}
-There is an exact sequence of free $k[y]$-modules
+There is an exact sequence of free right $A$-modules
 \[
 0 \lto \Delta_n \lto \cdots \lto \Delta_0 \lto A \lto 0
 \]
-which splits, and provides the necessary $k[y]$-linear $\sigma: A \lto \Delta$ and homotopy $h$ on $\Delta$ to make
+which splits, and provides the necessary right $A$-linear $\sigma: A \lto \Delta$ and homotopy $h$ on $\Delta$ to make
 \[
 \xymatrix@C+2pc{
 (X \otimes_R A, 0) \ar@<-1ex>[r]_-{\sigma} & (X \otimes_R \Delta, 1 \otimes \delta_{-}) \ar@<-1ex>[l]_-{\pi}, \qquad -h
@@ -816,7 +816,7 @@ which splits, and provides the necessary $k[y]$-linear $\sigma: A \lto \Delta$ a
 into an $S \otimes_k A^{op}$-linear deformation retract datum. Moreover $\delta = D \otimes 1 + 1 \otimes \delta_{+}$ is a small perturbation and the perturbation lemma applies to show that $\pi$ is a homotopy equivalence.
 \end{proof}
 
-\begin{corollary} An $S \otimes_k A^{op}$-linear homotopy inverse to $\pi: X \otimes_R \Delta \lto X \otimes_R A$ is given by
+\begin{corollary}\label{corollary:koszulstab2} An $S \otimes_k A^{op}$-linear homotopy inverse to $\pi$ of (\ref{eq:koszulpi}) is given by
 \[
 \pi^{-1} = \sum_{m \ge 0} (-1)^m \Psi [d, D]^m \sigma\,.
 \]
@@ -839,9 +839,21 @@ where we write $\rho_{\Bar}$ and $\rho$ for the maps $\pi$. A $k[z]$-$k[x]$-bili
 \item Other inverse using $s$.
 \end{itemize}
 
+\section{Paen to battle with variable labels}
+
+There is something really silly about taking a factorisation $X$ over $k[z,x]$, tensoring with $\Delta$ which is a factorisation over $k[x,y]$ and noting that the canonical map
+\[
+\rho: X \otimes \Delta \lto X
+\]
+is left $k[z]$-linear but sends $k[x]$ to $k[y]$ on the right. Maybe in detailed calculations like the section on the Zorro move have labels for the variables is convenient, but otherwise we should try to avoid talking about variables and simply refer to $\Delta$ as an $A$-$A$-bimodule, so that $\rho$ is just $k[z]$-$A$-bilinear and there is no opportunity for confusion.
+
+\newpage
+
 \section{Derivation of the coevaluation}\label{sec:derivcoeval}
 
-In this section we derive explicit formulas for the coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[z,x], V-W)$. In graphical notation the coevaluation is a morphism
+In this section we derive explicit formulas for the coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[z,x], V-W)$. We fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $e_i^*$. 
+
+In graphical notation the coevaluation is a morphism
 $$
 \widetilde\coev_{X} = 
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
@@ -853,66 +865,96 @@ $$
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
 $$
-That is, (Job for \textbf{Nils the Tikz fairy}: variable labels)
+That is,
 \[
-\widetilde\coev_X: \Delta \lto X^\dual \otimes X\,.
+\widetilde\coev_X: \Delta \lto X^\dual \otimes_{k[z]} X\,.
 \]
-As recalled in Section \ref{??} there are two coevaluation $2$-morphisms associated with $X$. The details in each case are the same, so we give the full details for $\widetilde\coev_X$ and leave $\coev_X$ to the reader. Here we need to discuss $\Delta = \Delta^y_x$ and $\Delta^x_y$ as defined in (\emph{coevc}). We fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $e_i^*$.
+As recalled in Section \ref{??} there are two coevaluation $2$-morphisms associated with $X$. The details in each case are the same, so we give the full details for $\widetilde\coev_X$ and leave $\coev_X$ to the reader. Recall that $\Delta$ and $X^\dual \otimes X$ are $k[x]$-$k[x]$-bimodules and the coevaluation is $k[x]$-$k[x]$-bilinear.
 
-A natural candidate for $\widetilde\coev_X$ is the inverse image of the identity $1_X$ under the homotopy equivalence of the next proposition. For the moment we concentrate on explaining the detailed formula for this candidate; then, in Section \ref{??}, we show that this candidate is actually the unit of an adjunction by proving the Zorro moves.
+At this point the coevaluation morphism we construct would be more accurately described as a \emph{candidate} for the coevaluation, as it is only later in Section \ref{??} that we show that our candidate is actually the unit of an adjunction by proving the Zorro moves.
 
 \begin{proposition}\label{prop:isogivescoev} There is a canonical homotopy equivalence of $\mathbb{Z}_2$-graded $k$-complexes
 \begin{equation}
-\Hom_{k[x,y]}( \Delta, X^\dual \otimes X ) \lto \Hom_{k[z,x]}(X,X)\,. \label{eq:isogivescoev}
+\Hom_{k[x]-k[x]-\textup{Bimod}}( \Delta, X^\dual \otimes_{k[z]} X ) \lto \Hom_{k[z,x]}(X,X)\,. \label{eq:isogivescoev}
 \end{equation}
 \end{proposition}
 \begin{proof}
-Recall that the graded free $k[x,y]$-module underlying $\Delta$ is the exterior algebra on symbols $\theta_1, \ldots, \theta_n$. Let $K$ denote the usual $\mathbb{Z}_2$-graded Koszul complex with the same underlying graded module, but only the differential $\delta_{-}$ of (\ref{??}). Then the product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-graded complexes
+Let $\Delta'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta$ but with the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in just the same way that $\Delta$ approximates it as a factorisation of $\widetilde{W}$. Also let $K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta$, but the differential $\delta_{-}$, so $K$ is the usual Koszul complex of $x_1 - y_1, \ldots, x_n - y_n$.
+
+The product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-graded complexes $(R = k[x])$
 \[
-\Delta^x_y \otimes_{k[x,y]} \Delta^y_x \lto K\,.
+\Delta' \otimes_{R^e} \Delta \lto K\,.
 \]
-Composing with the natural morphism $\varepsilon: K \lto k[x,y][n]$ and taking the adjoint we have a canonical isomorphism of matrix factorisations
+Composing with the natural morphism $\varepsilon: K \lto R^e[n]$ and taking the adjoint,
 \[
-\Delta^x_y \lto (\Delta^y_x)^\vee [n]\, \qquad \omega \mapsto \varepsilon( \omega \wedge - )\,.
+\zeta: \Delta' \lto \Delta^\vee [n]\, \qquad \omega \mapsto \varepsilon( \omega \wedge - )
 \]
-Combining this with various canonical maps and the projection $\pi: \Delta^x_y \lto k[x]$ we have the following diagram
+is an isomorphism of matrix factorisations. Combining this with various canonical maps and the morphism $\pi: \Delta' \lto \Delta'_0 = R^e \lto R$ we have the following diagram of \emph{right} $R$-linear morphisms of complexes
 \begin{equation}
 \xymatrix{
-\Hom_{k[x,y]}( \Delta^y_x, X^\vee[n] \otimes_{k[z]} X)\\
-(\Delta^y_x)^\vee \otimes_{k[x,y]} \left( X^\vee[n] \otimes_{k[z]} X \right) \ar[u]_-{\cong}\\
-\left( X^\vee[n] \otimes_{k[z]} X \right) \otimes_{k[x,y]} (\Delta^y_x)^\vee \ar[u]_-{\cong}\\
-\left( X^\vee \otimes_{k[z]} X \right) \otimes_{k[x,y]} (\Delta^y_x)^\vee[n] \ar[u]_-{\cong}\\
-\left( X^\vee \otimes_{k[z]} X \right) \otimes_{k[x,y]} \Delta^x_y \ar[u]_-{\cong} \ar[d]^-{1 \otimes \pi}\\
-\left( X^\vee \otimes_{k[z]} X \right) \otimes_{k[x,y]} k[x] \ar[d]^-{\cong}\\
+\Hom_{R^e}( \Delta, X^\vee[n] \otimes_{k[z]} X)\\
+\Delta^\vee \otimes_{R^e} \left( X^\vee[n] \otimes_{k[z]} X \right) \ar[u]^-{\cong}_-{\xi}\\
+\left( X^\vee[n] \otimes_{k[z]} X \right) \otimes_{R^e} \Delta^\vee \ar[u]^-{\cong}_-{\textup{twist}}\\
+\left( X^\vee \otimes_{k[z]} X \right) \otimes_{R^e} \Delta^\vee[n] \ar[u]^-{\cong}\\
+\left( X^\vee \otimes_{k[z]} X \right) \otimes_{R^e} \Delta' \ar[u]^-{\cong}_-{\zeta} \ar[d]^-{\pi}\\
+\left( X^\vee \otimes_{k[z]} X \right) \otimes_{R^e} R \ar[d]_-{\cong}\ar[d]^-{\kappa}\\
 \Hom_{k[z,x]}(X,X)\,.
 }\label{eq:isogivescoev2}
 \end{equation}
+where for $\eta \in \Delta^\vee, f \in X^\vee \otimes_{k[z]} X$ and $\tau \in \Delta$
+\[
+\xi( \eta \otimes x )( f ) = (-1)^{|\eta||x|} \eta(f) \cdot x\,,
+\]
+and for $f \in X^\vee$ and $g,g' \in X$
+\[
+\kappa( f \otimes g )(g') = (-1)^{|f||g|} f(g') \cdot g\,.
+\]
+So to complete the proof we need only to show that the step marked $\pi$ is a right $R$-linear homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1} with $A = k[x], R = A^e$ and $\theta$ the identity.
 \end{proof}
 
-\begin{definition} The \emph{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(k[x,y], W(x) - W(y))$ mapping to $1_X$ under (\ref{eq:isogivescoev})\,.
+\begin{definition} The \emph{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(R^e, \widetilde{W})$ mapping to $1_X$ under (\ref{eq:isogivescoev})\,.
 \end{definition}
 
-Clearly to give a representative chain map for the coevaluation we need to begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to find a homotopy inverse for $1 \otimes \pi$. In fact we will need to present two different homotopy inverses, which lead to two different (but homotopic) formulas for the coevaluation.
+To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
 On the tensor product
 \[
-\Bar \otimes_{k[x,y]} ( X^\dual \otimes X)\,
+\Bar \otimes_{R^e} ( X^\dual \otimes_{k[z]} X)\,
 \]
-we consider the operator $\At_{X^\dual \otimes X} = [d, d_{X^\dual \otimes X}]$ and its powers. Since $d$ is $k[y]$-linear, this is actually $[d, d_{X^\dual}]$ and for this reason we abuse notation and write $\At_{X^\dual}$ for $\At_{X^\dual \otimes X}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+we consider the operator $\At_{X^\dual \otimes X} = [d, d_{X^\dual \otimes X}]$. Here $d$ is extended to the tensor product by
 \[
-\xymatrix{
-X^\dual \otimes X \ar[r]^-{\At^i_{X^\dual}} & \Bar \otimes_{k[x,y]} ( X^\dual \otimes X ) \ar[r]^-{\Psi} & K \otimes_{k[x,y]} (X^\dual \otimes X)
+d( \omega \otimes e_i^* \otimes e_j ) = d(\omega) \otimes e_i^* \otimes e_j\,.
+\]
+For the purposes of forming tensor products we view $\Bar$ as a right $R^e$-module in the usual way for a module over a commutative ring, that is, $R^e$ acts on the right via \emph{left} form multiplication (there is possibility for confusion since \emph{right} form multiplication equips $\Bar$ with a different right $R^e$-module structure). With this convention, we may interchangeably write $\Bar$ to the left or right of $X^\dual \otimes_{k[z]} X$ (as it appears in Section \ref{section:pertandhtpy}) provided we keep track of the relevant signs.
+
+Since $d$ is right $R$-linear, $[d, d_{X^\dual \otimes X}] = [d, d_{X^\dual}]$ and so we abuse notation and write $\At_{X^\dual}$ for $\At_{X^\dual \otimes X}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+\[
+\xymatrix@C+1pc{
+X^\dual \otimes_{k[z]} X \ar[r]^-{\At^i_{X^\dual}} & \Bar \otimes_{R^e} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{R^e} (X^\dual \otimes_{k[z]} X)
 }
 \]
-which we can apply to the tensor $\iota_X = \sum_{i} (-1)^|e_i| e_i^* \otimes e_i$.
+which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
 
-\begin{theorem} A representative for the coevaluation morphism is the chain map
-\[
-\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{i \ge 0} (-1)^i \Psi \At^i_{X^\dual}( \iota_X ) \right)\,.
-\]
+\begin{theorem}\label{theorem:coev1} A representative for the coevaluation morphism is the chain map
+\begin{equation}\label{eq:coev10}
+\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^i \Psi \At^m_{X^\dual}( \iota_X ) \right)\,.
+\end{equation}
+where the Atiyah class sends forms to the left, as explained above.
 \end{theorem}
 \begin{proof}
-As long as the Bar perturbation stuff is done previously, this is straightforward.
+Let us chase $1_X$ upwards through (\ref{eq:isogivescoev2}), noting that $\iota_X = \kappa^{-1}(1_X)$. With $A = k[x], R = A^e$ and $\theta$ the identity we may apply Corollary \ref{corollary:koszulstab2} to describe a homotopy inverse to $\pi$ in terms of the Atiyah class $[d, d_{X^\dual \otimes X}]$. In light of the observations preceeding the statement of the theorem
+\begin{equation}\label{eq:coev11}
+\pi^{-1} \kappa^{-1}(1_X) = \sum_{m \ge 0} (-1)^m \Psi \big[d, d_{X^\dual}\big]^m( \iota_X )\,.
+\end{equation}
+A summand $f \otimes \theta_{\bs{i}}$ in (\ref{eq:coev11}), with $f \in X^\dual \otimes X$ and $\theta_{\bs{i}} = \theta_{i_1} \cdots \theta_{i_p}$ for $i_1 < \cdots < i_p$, maps under $\zeta$ to
+\[
+f \otimes \zeta( \theta_{i_1} \cdots \theta_{i_p} ) = f \otimes \varepsilon\big( \theta_{\bs{i}} \wedge - \big)
+\]
+and then to the function $\Delta \lto X^\dagger \otimes X$ defined by
+\[
+\gamma \mapsto (-1)^{|\omega||f|} \varepsilon\big( \gamma \wedge \omega \otimes f \big)\,,
+\]
+and so (\ref{eq:coev10}) follows from (\ref{eq:coev11}).
 \end{proof}
 
 There is an alternative presentation which we will also need. On the tensor product
@@ -952,15 +994,15 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 \fill (-1,-1.8) circle (2.5pt) node[left] {{\small $\rho^{-1}$}};
 
 \fill (-1.25,-2.25) circle (0pt) node {{\footnotesize $z$}};
-\fill (-0.75,-2.25) circle (0pt) node {{\footnotesize $x'$}};
+\fill (-0.75,-2.25) circle (0pt) node {{\footnotesize $x$}};
 
-\fill (-1.5,0) circle (0pt) node {{\footnotesize $z\vphantom{z'}$}};
+\fill (-1.5,0) circle (0pt) node {{\footnotesize $z\vphantom{z}$}};
 \fill (-0.5,0) circle (0pt) node {{\footnotesize $x$}};
-\fill (0.5,0) circle (0pt) node {{\footnotesize $z'$}};
-\fill (1.5,0) circle (0pt) node {{\footnotesize $x'\vphantom{z'}$}};
+\fill (0.5,0) circle (0pt) node {{\footnotesize $z$}};
+\fill (1.5,0) circle (0pt) node {{\footnotesize $x\vphantom{z}$}};
 
-\fill (1.25,2.25) circle (0pt) node {{\footnotesize $x'$}};
-\fill (0.75,2.25) circle (0pt) node {{\footnotesize $z\vphantom{y}$}};
+\fill (1.25,2.25) circle (0pt) node {{\footnotesize $x$}};
+\fill (0.75,2.25) circle (0pt) node {{\footnotesize $z\vphantom{x}$}};
 
 \draw[dashed] (-0.5,0.75) .. controls +(0,0.75) and +(-0.25,-0.75) .. (1,1.8);
 \draw[dashed] (0.5,-0.75) .. controls +(0,-0.75) and +(0.25,0.75) .. (-1,-1.8);
@@ -981,29 +1023,47 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 \draw (A2) -- (A); 
 \end{tikzpicture}
 \ee
-Here we have indicated the variable names in the various domains (\textbf{fix} we are still very messy with the variables). We call the left hand side of (\ref{Zorro1detail}) the \emph{Zorro map} and denote it $\mathcal Z$. It is the composite
+We call the left hand side of (\ref{Zorro1detail}) the \emph{Zorro map} and denote it $\mathcal Z$. It is the composite
 \be\label{eq:zorro1a1}
 \xymatrix@C+2pc{
 X \ar[r]^-{\rho^{-1}} & X \otimes \Delta \ar[r]^-{1 \otimes \coev} & X \otimes X^{\dagger} \otimes X \ar[r]^-{\eval \otimes 1} & \Delta \otimes X \ar[r]^-{\lambda} & X\,,
 }
 \ee
-which we prove is homotopic to the identity on $X$. Our strategy is to use the nondegenerate pairing on $\hmf(k[z,x], V-W)$. If $k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The upshot is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
-\be
-\Hom_{k[z,x]}(X,X) \lto \Hom_k( \Hom_{k[z,x]}(X,X), k )[m+n]\,, \qquad \varphi \mapsto \langle \varphi, - \rangle_{\textup{KL}}\,.
-\ee
-To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ on $\Hom_{k[z,x]}(X,X)$ are \emph{homotopic}. When $k$ is a field this equivalent to showing that the two functionals take the same value on any closed endomorphism of $X$, and in general it amounts to showing that $\langle \mathcal{Z}, \varphi \rangle_{\textup{KL}}$ and $\langle 1_X, \varphi \rangle_{\textup{KL}}$ differ, as functionals of $\varphi$, by a functional of $D(\varphi)$. In light of the formula for $\langle -, - \rangle_{\textup{KL}}$ it is natural that our first step should therefore be to understand the map $\str( \mathcal{Z} \circ - )$.
+which we prove is homotopic to the identity on $X$. 
+
+In (\ref{Zorro1detail}) we have indicated variable names in the various domains. We keep in mind that there are two distinct $\Delta$'s which appear: if we write $R = k[x]$ and $S = k[z]$ then one of the $\Delta$'s is an $R$-$R$-bimodule, and the other is an $S$-$S$-bimodule. It is sometimes convenient to identify $R^e$ with $k[x,y]$ so that the right $R$-action is via polynomials in the $y$-variables.
 
 Let us introduce the notation
 $$
-\langle\!\langle-\rangle\!\rangle = (-1)^{n+1\choose 2} \Res_{k[x,y,z]/k[y,z]} \left[ \frac{ \varepsilon\Psi(-) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: \Bar \lto k[z,y]\,.
+\langle\!\langle-\rangle\!\rangle = (-1)^{n+1\choose 2} \Res_{k[x,y,z]/k[y,z]} \left[ \frac{ \varepsilon\Psi(-) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 $$
-where $\varepsilon\Psi: \Bar \lto k[z,y][n]$ is the chain map of Section \ref{??} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X) \otimes_{k[x]} \Bar$. Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(z,x)$, and set $\underline\lambda=\lambda_1\ldots \lambda_n$. Our first order of business is to establish the following expression for the Zorro map.
+for the map $S \otimes_k \Bar \lto S \otimes_k R = k[z,y]$ defined using the map $\varepsilon\Psi: \Bar \lto S \otimes_k R$ of Section \ref{??} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. Here $\Bar$ is the Bar complex of $R$ over $k$, and the two copies of $R$ play very different roles in $\langle\!\langle - \rangle\!\rangle$. The left copy (i.e. $k[x]$) is integrated out, and the map is linear with respect to the right action, so that overall $\langle\!\langle - \rangle\!\rangle$ is $k[z,y]$-linear.
+
+Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X) \otimes_{k[x]} \Bar$. Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(z,x)$, and set $\underline\lambda=\lambda_1\ldots \lambda_n$. Our first order of business is to establish the following expression for the Zorro map.
 
 \begin{lemma}\label{lemma:Zorrointermediate}
 \be\label{Zorrointermediate}
 \mathcal Z(-) = \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
 \ee
 \end{lemma}
+
+But before doing so, let us sketch the argument that this morphism is homotopic to the identity. In outline, the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$
+\begin{equation}\label{eq:trueproofeq}
+\big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \underline\lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
+\end{equation}
+We will see that $\At^n( \underline\lambda )$ is a transition determinant in the sense of the calculus of residues, so that the right hand side of (\ref{eq:trueproofeq}) can be identified with $\str(-)$. Hence
+\begin{equation}\label{eq:trueproofeq2}
+\mathcal Z(-) \simeq \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j \simeq \sum_j \str(e_j^* \circ -) \cdot e_j = 1_X\,.
+\end{equation}
+The reader will appreciate the parallel with the argument for duality in the monoidal category of vector spaces, with the new feature here being the Atiyah class and its anti-self-adjointness.
+
+There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of nondegeneracy in Section \ref{??} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$'' and so in practice the proof diverges slightly from the strategy presented above. 
+
+The idea is to use the nondegenerate pairing on $\hmf(k[z,x], V-W)$ to prove that $\mathcal{Z} \simeq 1_X$. If $k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The upshot is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
+\be
+\Hom_{k[z,x]}(X,X) \lto \Hom_k( \Hom_{k[z,x]}(X,X), k )[m+n]\,, \qquad \varphi \mapsto \langle \varphi, - \rangle_{\textup{KL}}\,.
+\ee
+To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ on $\Hom_{k[z,x]}(X,X)$ are \emph{homotopic}. When $k$ is a field this equivalent to showing that the two functionals take the same value on any closed endomorphism of $X$, and in general it amounts to showing that $\langle \mathcal{Z}, \varphi \rangle_{\textup{KL}}$ and $\langle 1_X, \varphi \rangle_{\textup{KL}}$ differ, as functionals of $\varphi$, by a functional of $D(\varphi)$. This will follow from a careful study of the map $\str( \mathcal{Z} \circ - )$ with the key point being an appropriate interpretation of (\ref{eq:trueproofeq}).
 
 %Given the explicit formula for the pairing in (\ref{??}) it is certainly enough to prove that the closed $k$-linear map
 %\[
@@ -1013,7 +1073,7 @@ where $\varepsilon\Psi: \Bar \lto k[z,y][n]$ is the chain map of Section \ref{??
 
 %We will denote equality modulo the derivatives $f_i(y):= \partial_{y_i}W$ and $g_i(z):= \partial_{z_i}V$ by ``$\equiv$'',
 
- Before proceeding with the proof, let us recall the explicit formulas for the maps involved
+For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved
 \begin{align*}
 \rho^{-1}: X \lto X \otimes \Delta, \qquad \rho^{-1}(a) &= \sum_{i \ge 0}(-1)^i \Psi\! \At^i_X(a)\,,\\
 \coev: \Delta \lto X^{\dagger} \otimes X, \qquad \coev(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{i \ge 0}(-1)^i (\Psi\!\At^i_{X^{\dagger}} \otimes 1)(\iota_X) \Big)\,,\\
@@ -1052,11 +1112,9 @@ Then we can compute for $\varphi \in \End(X)$ homogeneous
 & = \big\langle\!\big\langle \str \big( \underline\lambda \At^n \big(\sum_i \varphi(e_i)\otimes e^*_j \big)\big) \big\rangle\!\big\rangle \nonumber \\
 & = \big\langle\!\big\langle \str \big( \underline\lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle \label{strlambdaAtn} \, .
 \end{align}
-The next step of the proof that $\mathcal{Z} \simeq 1_X$ is to show that $\str(\mathcal{Z} \circ -)$ is homotopic to $\str(-)$. In outline, here is the argument: the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$, so
-\begin{equation}\label{eq:trueproofeq}
-\str(\mathcal{Z} \circ -) = \big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \underline\lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
-\end{equation}
-We will see that $\At^n( \underline\lambda )$ is a transition determinant in the sense of the calculus of residues, so that the right hand side can be identified with $\str(-)$. Conceptually this parallels the proof of nondegeneracy of the Kapustin-Li formula given in Section \ref{??}. However we proceed a little differently here, since we are working with noncommutative differential forms and this introduces various subtleties.
+The next step of the proof that $\mathcal{Z} \simeq 1_X$ is to show that $\str(\mathcal{Z} \circ -)$ is homotopic to $\str(-)$. 
+
+
 
 The form of self-adjointness of the Atiyah class that we will use is contained in the next result. The $p = 0$ case is the statement that
 \[
