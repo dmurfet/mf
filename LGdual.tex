@@ -8,7 +8,9 @@
 \usepackage{longtable}
 \usepackage{dsfont}
 \usepackage{tikz}
+\def\nicecolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=blue!50!black, dashed]}
 \def\nicenocolourscheme{\shadedraw[top color=gray!2, bottom color=gray!25, draw=gray!50!black, dashed]}
+\def\nicereallynocolourscheme{\shadedraw[top color=white!2, bottom color=white!25, draw=white!50!white, dashed]}
 \definecolor{Myblue}{rgb}{0,0,0.6}
 \usepackage[a4paper,colorlinks,citecolor=Myblue,linkcolor=Myblue,urlcolor=Myblue,pdfpagemode=None]{hyperref}
 
@@ -1462,7 +1464,7 @@ $$
 \end{remark}
 
 
-\section{Shadows}
+\section{Shadows}\label{sec:shadows}
 
 The duality structure of $\LG$ affords us the construction of the bicategorical trace in terms of shadow functors~\cite{p0807.1471}. We will also see that shadows allow to recover and generalise the boundary-bulk and bulk-boundary maps of the two-dimensional topological field theories based on Landau-Ginzburg models. 
 
@@ -1556,9 +1558,122 @@ respectively. Substituting the expressions~\eqref{TODO} and~\eqref{TODO} we find
 
 \section{Cardy condition}\label{sec:CardyCondition}
 
-TODO: draw some pictures, explain how Riemann-Roch and Cardy immediately follow from defect on bulk formulas and/or eval and coeval
+As another application of our explicit expressions for adjunctions in $\LG$ in this section we present a new proof of the Cardy condition. This deep result long eluded rigorous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluations and coevaluations in $\LG$ it will follow effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, such as $k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
 
-TODO: maybe first KL section, then Cardy section? 
+Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factorisations $X,Y \in \hmf(k[x], W)$, and also two maps $\varphi: X\lra X$, $\psi: Y\lra Y$. We interpret~$X$ and~$Y$ as 1-morphisms $(k,0)\lra (k[x],W)$ in $\LG$, and in this way we obtain the 2-morphism (where here and below we do no longer display dashed lines for unit 1-endomorphisms)
+\be\label{annulus}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {{\small$\eval_Y$}}; 
+\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {{\small$\widetilde\coev_Y$}}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0,1) -- (0.001,1) node[above] {{\small$\widetilde\eval_X$}}; 
+\draw[->, very thick] (0,-1) -- (-0.001,-1) node[below] {{\small$\coev_X$}}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ee
+which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This in not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
+
+To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions~\eqref{TODO} for evaluations and coevaluations we find 
+\begin{align}
+& \widetilde\eval_X = \str_k(-) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str_k( \, - \circ \Lambda_Y)}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
+& \coev_X: 1 \lmt \Lambda_X \, , \qquad  \widetilde\coev_Y: 1\lmt 1_Y \label{evcoeveasy}
+\end{align}
+where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$. 
+
+We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collpase its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str_k(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
+$$
+C 
+= 
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
+\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0,1) -- (0.001,1) node[above] {}; 
+\draw[->, very thick] (0,-1) -- (-0.001,-1) node[below] {}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\end{tikzpicture} 
+= 
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
+\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
+\end{tikzpicture} 
+= 
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str_k \big( \str_k( \varphi \Lambda_X) \psi \Lambda_Y \big)}{\partial_1 W \ldots \partial_n W} \right] \, .
+$$
+Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str_k(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str_k(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
+\be\label{C1}
+C = 
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
+\ee
+
+On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by $X^\dual\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
+$$
+\eval_{X^\dual \otimes Y} = \str_k(-) \, , \qquad \widetilde\coev_{X^\dual \otimes Y} : 1 \lmt 1_{\End(X^\dual \otimes Y)}
+$$
+to arrive at
+\be\label{C2}
+C 
+= 
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
+\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0,1) -- (0.001,1) node[above] {}; 
+\draw[->, very thick] (0,-1) -- (-0.001,-1) node[below] {}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\end{tikzpicture} 
+= 
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\draw (0,0) circle (2);
+\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
+\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
+\fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
+\end{tikzpicture} 
+= 
+\str_k (\psi \circ (-) \circ \varphi ) \, .
+\ee
+Here the second step follows from the general calculus of bicategories with duals; see e.\,g.~\cite[Lemma~3.1(iii)]{cr1006.5609} for a detailed proof. Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
+
+\begin{theorem}
+The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have
+$$
+\str_k (\psi \circ (-) \circ \varphi )
+= 
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
+$$
+\end{theorem}
+
+TODO: The sign is wrong, it should only be $(-1)^n$. 
+
+TODO: Mention HRR as special example, more discussion needed? 
+
 
 
 \section{Duality via adjoint operators}\label{section:dualityadjointop}
