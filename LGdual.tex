@@ -1582,12 +1582,12 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This in not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
 
 To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions~\eqref{TODO} for evaluations and coevaluations we find \begin{align}
-& \widetilde\eval_X = \str_k(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str_k( \, - \circ \Lambda_Y)}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
+& \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y)}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
 & \coev_X: 1 \lmt \Lambda_X \, , \qquad  \widetilde\coev_Y: 1\lmt 1_Y \label{evcoeveasy}
 \end{align}
 where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$. 
 
-We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collpase its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str_k(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
+We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collpase its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
 $$
 C 
 = 
@@ -1617,9 +1617,9 @@ C
 \fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
 \end{tikzpicture} 
 = 
-(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str_k \big( \str_k( \varphi \Lambda_X) \psi \Lambda_Y \big)}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big)}{\partial_1 W \ldots \partial_n W} \right] \, .
 $$
-Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str_k(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str_k(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
+Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
 \be\label{C1}
 C = 
 (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
@@ -1627,7 +1627,7 @@ C =
 
 On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by $X^\dual\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
 $$
-\eval_{X^\dual \otimes Y} = \str_k(-) \, , \qquad \widetilde\coev_{X^\dual \otimes Y} : 1 \lmt 1_{X^\dual \otimes Y}
+\eval_{X^\dual \otimes Y} = \str(-) \, , \qquad \widetilde\coev_{X^\dual \otimes Y} : 1 \lmt 1_{X^\dual \otimes Y}
 $$
 to arrive at
 \be\label{C2}
@@ -1656,14 +1656,14 @@ C
 \fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
 \end{tikzpicture} 
 = 
-\str_k (\psi \circ (-) \circ \varphi ) \, .
+\str (\psi \circ (-) \circ \varphi ) \, .
 \ee
 Here the second step follows from the general calculus of bicategories with duals; see e.\,g.~\cite[Lemma~3.1(iii)]{cr1006.5609} for a detailed proof [TODO: only if we have pivotality! Need to prove that!]. Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
 
 \begin{theorem}
 The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have
 $$
-\str_k (\psi \circ (-) \circ \varphi )
+\str (\psi \circ (-) \circ \varphi )
 = 
 (-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
 $$
