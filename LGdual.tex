@@ -874,33 +874,26 @@ where we write $\rho_{\Bar}$ and $\rho$ for the maps $\pi$. A $k[z]$-$k[x]$-bili
 
 \newpage
 
-\section{Derivation of the coevaluation}\label{sec:derivcoeval}
+\section{Derivation of the evaluation and coevaluation}\label{sec:derivcoeval}
+% TODO independence of choice of lambdas and ordering
 
-In this section we derive explicit formulas for the coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[x,z], V-W)$. We also fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $e_i^*$. 
+In this section we derive formulas for the evaluation and coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix two potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[x,z], V-W)$. We also fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $e_i^*$. 
 
-%In graphical notation the coevaluation is a morphism
-%$$
-%\widetilde\coev_{X} = 
-%\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
-%\draw[line width=0pt] 
-%(2.5,1.6) node[line width=0pt] (I) {{\small$\Delta$}}
-%(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
-%(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
-%\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-%\draw[dashed] (2.5,0.81) -- (I);
-%\end{tikzpicture}
-%$$
-%That is,
-%\[
-%\widetilde\coev_X: \Delta \lto X^\dual \otimes_{k[z]} X\,.
-%\]
-As recalled in Section~\ref{subsec:bicatLG} there are two coevaluation $2$-morphisms associated with~$X$. The derivation is very similar in both cases, so we give the full details for 
+As recalled in Section~\ref{subsec:bicatLG} there are two kinds of evaluation and coevaluation $2$-morphisms associated with~$X$. The derivation is very similar in both cases, so we give the full details for 
 \[
 \widetilde\coev_X: \Delta_W \lto X^\dual \otimes_{k[z]} X
 \]
-and leave $\coev_X$ to the reader. Recall that $\Delta_W$ and $X^\dual \otimes X$ are $k[x]$-bimodules and the coevaluation is $k[x]$-bilinear. In the remained of this section often allow ourselves to simply write~$\Delta$ for $\Delta_W$. 
+and
+\[
+\widetilde\eval_X: X \otimes_{k[x]} X^\dual \lto \Delta_V
+\]
+while simply stating the formulas for $\coev_X$ and $\eval_X$, with the details left to the reader. Recall that $\Delta_W$ and $X^\dual \otimes X$ are $k[x]$-bimodules and the coevaluation is $k[x]$-bilinear, while $\Delta_V$ and $X \otimes X^\dual$ are $k[z]$-bimodules and the evaluation is $k[z]$-bilinear. The differential on the matrix factorisations $\Delta_V, \Delta_W$ is given by \eqref{DeltaW}.
 
-At this point the coevaluation morphism we construct would be more accurately described as a \textsl{candidate} for the coevaluation, as it is only later in Section~\ref{sec:Zorro} that we show that our candidate is actually the unit of an adjunction by proving the Zorro moves.
+At this point the evaluation and coevaluation morphisms we construct would be more accurately described as a \textsl{candidates}, as it is only later in Section~\ref{sec:Zorro} that we show that our candidates are actually the counit and unit of an adjunction by proving the Zorro moves.
+
+\subsection{Coevaluation}\label{subsec:derivcoeval}
+
+In this section $\Delta$ denotes $\Delta_W$.
 
 \begin{proposition}\label{prop:isogivescoev} There is a canonical homotopy equivalence of $\mathbb{Z}_2$-graded $k$-complexes
 \begin{equation}
@@ -1005,6 +998,48 @@ X^\dual \otimes X \ar[r]^-{\At^i_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otim
 
 \begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
 \end{example}
+
+\newpage
+
+\subsection{Evaluation}\label{subsec:eval}
+
+In this section we write $B = k[z]$ and $B^e = B \otimes_k B$ so that $\widetilde\eval_X$ is a morphism of (infinite rank) matrix factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ over $B^e$. The polynomials $\partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{k[x,z]}(X,X)$ denote a degree-one map with $[D, \lambda_i] = f_i \cdot 1_X$. For example $\lambda_i = \partial_{x_i} D$ would do, but it will be important to allow other choices.
+
+The evaluation map will be produced by a perturbation whose initial data is the morphism $\eval_0$ of the next proposition.
+
+\begin{proposition} There is a morphism of linear factorisations of $\widetilde{V}$ over $B^e$
+\[
+\eval_0: X \otimes_{k[x]} X^\dual \lto B\,,
+\]
+defined by
+\[
+\eval_0( f \otimes \nu ) = (-1)^{\binom{n}{2} + n|f|} \Res_{k[x,z]/k[z]} \left[ \frac{ \str( \lambda_1 \cdots \lambda_n \circ f \circ \nu) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\]
+\end{proposition}
+\begin{proof}
+To describe this map we set
+\[
+\Hom_{k[x,z]}(\bar{X}, \bar{X}) = \Hom_{k[x,z]}(X, X) \otimes_{k[x]} k[x]/(f_1,\ldots,f_n)\,.
+\]
+Then for each $1 \le i \le n$ we have a closed, odd $k[x,z]$-linear operator $\lambda_i^\bullet$ on $\Hom_{k[x,z]}(\bar{X}, \bar{X})$
+\[
+\lambda_i^\bullet(\alpha) = \lambda_i \circ \alpha\,.
+\]
+There is a chain of $B^e$-linear morphisms of linear factorisations of $\widetilde{V}$
+\begin{equation}
+\xymatrix{
+X \otimes_{k[x]} (X^\vee [n]) \ar[d]_-{\cong}\\
+(X \otimes_{k[x]} X^\vee)[n] \ar[d]^-{\textup{quotient}} \ar[d]_-{\cong}\\
+\big( B \otimes_{B^e} (X \otimes_{k[x]} X^\vee)\big)[n] \ar[d]^-{\kappa} \ar[d]_-{\cong}\\
+\Hom_{k[x,z]}(X,X)[n] \ar[d]^-{\lambda_1^\bullet \cdots \lambda_n^\bullet}\\
+\Hom_{k[x,z]}(\bar{X},\bar{X})[n]
+}
+\end{equation}
+which composed with the supertrace and residue gives the desired morphism. Here $\kappa$ is defined by
+\[
+\kappa(1 \otimes f \otimes \nu)(s) = \nu(s) \cdot t\,.
+\]
+\end{proof}
 
 \newpage
 
@@ -2118,9 +2153,9 @@ in which both of the implict squares commute up to homotopy, and from this we de
 
 In Section \ref{section:dualityadjointop} we used the idempotent pushforward construction of \cite{dm1102.2957} to establish a relative form of duality for matrix factorisations. We needed slightly more than what is stated in \textsl{loc.cit.} and in this appendix we provide the necessary additions. With later applications in mind we work in the same generality as the original construction, but the reader should keep in mind that for Section \ref{section:dualityadjointop} we only need the case $Z = \Hom_R(X,Y)$ and $W = 0$ of the following.
 
-Let $k$ be a commutative $\mathbb{Q}$-algebra and $R$ a $k$-algebra with a quasi-regular sequence $\{ f_1, \ldots, f_n \}$ such that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module. Let $W \in k$ be given and let $Z$ be a finite rank matrix factorisation of $W$ over $R$ with each $f_i$ acting null-homotopically on $Z$, and moreover let $\lambda_i \in \Hom_R(Z,Z)$ be odd maps with $[D, \lambda_i] = f_i \cdot 1_Z$ for each $1 \le i \le n$. Unless specified otherwise, $\otimes = \otimes_R$.
+Let $k$ be a commutative $\mathbb{Q}$-algebra and $R$ a $k$-algebra with a quasi-regular sequence $\{ f_1, \ldots, f_n \}$ such that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module. Let $W \in k$ be given and let $Z$ be a finite rank matrix factorisation of $W$ over $R$ with each $f_i$ acting null-homotopically on $Z$, and moreover let $\lambda_i \in \Hom_R(Z,Z)$ be odd maps with $[D, \lambda_i] = f_i \cdot 1_Z$ for each $1 \le i \le n$ where $D = d_Z$. Unless specified otherwise, $\otimes = \otimes_R$.
 
-The aim is to present $Z$, up to $k$-linear homotopy equivalence, as the splitting of an idempotent on the quotient $\bar{Z} = Z \otimes \bar{R}$. Suppose that $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module which is standard in the sense of \cite{??}. If $K(f) = K(f_1,\ldots,f_n)$ denotes the usual Koszul complex then by hypothesis the map $K(f) \lto \bar{R}$ is a quasi-isomorphism and by \cite[Section 10]{dm1102.2957} the projection
+The aim is to write $Z$, up to $k$-linear homotopy equivalence, as the splitting of an idempotent on the quotient $\bar{Z} = Z \otimes \bar{R}$. Suppose that $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module which is standard in the sense of \cite{??}. If $K(f) = K(f_1,\ldots,f_n)$ denotes the usual Koszul complex then by hypothesis the map $K(f) \lto \bar{R}$ is a quasi-isomorphism and by \cite[Section 10]{dm1102.2957} the projection
 \begin{equation}\label{eq:symidem1}
 \pi: Z \otimes K(f) \lto Z \otimes \bar{R} = \bar{Z}
 \end{equation}
@@ -2130,9 +2165,9 @@ As a graded $R$-algebra $K(f)$ is the exterior algebra $\bigwedge F$ where $F$ i
 \[
 \bar{Z} \cong Z \otimes_k \bigwedge (k\theta_1 \oplus \cdots \oplus k\theta_n)
 \]
-and to this direct sum decomposition corresponds $2^n$ orthogonal $k$-linear idempotents on $\bar{Z}$.
+between $\bar{Z}$ and a direct sum of shifted copies of $Z$, and to this direct sum decomposition corresponds $2^n$ orthogonal $k$-linear idempotents on $\bar{Z}$. Our aim is to describe the idempotents corresponding to the top degree summand $Z \theta_1 \cdots \theta_n$ and the bottom degree summand $Z \cdot 1$.
 
-To describe these idempotents, consider the case of a single $f_i$, so there is an exact sequence
+To this end consider the case of a single $f_i$, so there is an exact sequence
 \[
 \xymatrix{
 0 \ar[r] & Z \ar[r]^-{\kappa_i} & Z \otimes K(f_i) \ar[r]^-{\varepsilon_i} & Z\theta_i \ar[r] & 0
@@ -2144,25 +2179,23 @@ where $Z\theta_i = Z[1]$, $\kappa_i(x) = x \otimes 1$ is the inclusion and $\var
 \]
 satisfy $\kappa_i \circ \rho_i + \vartheta_i \circ \varepsilon_i = 1$ and $\rho_i \circ \kappa_i = 1, \varepsilon_i \circ \theta_i = 1$ and $\rho_i \circ \vartheta_i = 0$. That is, they equip $Z \otimes K(f_i)$ with the structure of a biproduct $Z \oplus Z\theta_i$. It will be convenient to have a more compact definition of $\vartheta_i$. Let us agree that left multiplication by $\theta_i$ on $X \otimes K(f)$ comes with signs $\theta_i \cdot (x \otimes \eta) = (-1)^{|x|} x \otimes \theta_i \eta$ so that multiplication by $\theta_i$ defines a map $\theta_i: X \lto X \otimes K(f_i)$ and $\vartheta_i = \theta_i - \lambda_i$.
 
-To construct idempotents on $Z \otimes K(f)$ we can inductively apply either of the projections $\varepsilon$ or $\rho$ until we reach form degree zero, e.g. in the first step we can choose to keep $\theta_n$
+To construct idempotents on $Z \otimes K(f)$ we can inductively apply either of the projections $\varepsilon$ or $\rho$ until we reach form degree zero, e.g. in the first step we can choose to ``keep'' $\theta_n$
 \[
 Z \otimes K(f_1,\ldots,f_n) \cong (Z \otimes K(f_1,\ldots,f_{n-1})) \otimes K(f_n) \xlto{\varepsilon} Z \otimes K(f_1,\ldots,f_{n-1})\theta_n\,,
 \]
-or we can choose to project out $\theta_n$ by applying $\rho$ instead. If after ``keeping'' $\theta_n$ we proceed to apply the $\varepsilon$ projections for $\theta_{n-1},\ldots,\theta_1$ in that order, we obtain a split epimorphism $\varepsilon: Z \otimes K(f) \lto Z[n]$ defined by $\varepsilon(x \theta_1 \cdots \theta_n) = (-1)^{n|x|} x$ with left inverse $\vartheta$. The formula given in \cite[Section 4]{dm1102.2957} depends on a chosen ordering of the $\lambda$'s, but we can symmetrise over all permutations to obtain the left inverse
+or we can choose to project out $\theta_n$ by applying $\rho$ instead. If after keeping $\theta_n$ we proceed to apply the $\varepsilon$ projections for the rest of the $\theta_i$, we obtain a split epimorphism $\varepsilon: Z \otimes K(f) \lto Z[n]$ defined by $\varepsilon(x \theta_1 \cdots \theta_n) = (-1)^{n|x|} x$ with left inverse $\vartheta$ defined by concatenating all the $\vartheta_i$. This left inverse depends on the order in which we project out the $\theta_i$, but if we symmetrise over all permutations we obtain the left inverse
 \[
 \vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} (\theta_{\sigma(1)} - \lambda_{\sigma(1)}) \circ \cdots \circ (\theta_{\sigma(n)} - \lambda_{\sigma(n)})
 \]
 to $\varepsilon$. One checks directly that $\varepsilon \circ \vartheta = 1$, so $\vartheta \circ \varepsilon$ is an idempotent on $Z \otimes K(f)$ splitting to $Z[n]$.
 
-If instead we project out with $\rho$ at each step we obtain a split epimorphism
+At the other extreme we can choose at each stage to project out the $\theta_i$ using $\rho$ to obtain a split epimorphism $Z \otimes K(f) \lto Z$ with left inverse the inclusion $\kappa(x) = x \otimes 1$. The precise formula for this epimorphism depends on the order in which we choose to project out the $\theta_i$. If we symmetrise over all permutations we arrive at the morphism
 \[
-Z \otimes K(f) \lto Z,
+\rho: Z \otimes K(f) \lto Z
 \]
-with left inverse the inclusion $\kappa(x) = x \otimes 1$. The precise formula depends on the order in which we choose to project out the $\theta_i$. If for $\sigma \in S_n$ we project 
-
- and if we symmetrise over all possible permutations we obtain the morphism defined for $i_1 < \cdots < i_p$ and $x \in Z$ by
+defined for $i_1 < \cdots < i_p$ by
 \[
-\rho( x \theta_{i_1} \cdots \theta_{i_p} ) = (-1)^{p|x| + \binom{p}{2}} 
+\rho( x \theta_{i_1} \cdots \theta_{i_p} ) = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{p|x| + \binom{p}{2} + |\tau|} 
 \]
 
 So we have produced the two idempotents on $Z \otimes K(f)$ corresponding to top form degree and bottom form degree. Let us now shift these to idempotents on $\bar{Z}$. $e$ is taken care of in \cite{??} so we worry only about $e'$.
