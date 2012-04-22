@@ -301,7 +301,7 @@ The \textsl{bicategory of Landau-Ginzburg models} $\LG$ consists of the followin
 \item The unit 1-morphisms are $\Delta_W \in \hmf(\Re,\widetilde W)$. 
 \item The composition functor is the tensor product
 $$
-\otimes : \hmf(R_2 \otimes_k R_3,W_3-W_2) \times \hmf(R_2 \otimes_k R_3,W_3-W_2) \lra \hmf(R_1 \otimes_k R_3,W_3-W_1) \, .
+\otimes : \hmf(R_2 \otimes_k R_3,W_3-W_2) \times \hmf(R_1 \otimes_k R_2,W_2-W_1) \lra \hmf(R_1 \otimes_k R_3,W_3-W_1) \, .
 $$
 \item There are natural 2-isomorphisms $\alpha, \lambda, \rho$ as above. 
 \end{itemize}¥
@@ -314,7 +314,7 @@ $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorp
 One of the main results of the present paper is that $\LG$ is endowed with an additional duality structure. Let us recall the relevant notion. 
 
 \begin{definition}\label{def:bicatduals}
-We say a bicategory~$\mathcal B$ \textsl{has duals} (or equivalently, that \textsl{every} 1-morphism is \textsl{dualisable}) if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
+We say a bicategory~$\mathcal B$ \textsl{has adjoints} (or equivalently, that \textsl{every} 1-morphism is \textsl{dualisable}) if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
 \be\label{evcoev}
 \eval_X : X^\dual \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes X^\dual
 \ee
@@ -534,7 +534,7 @@ We use them to define the $A$-bilinear \textsl{shuffle product}~$\times$ on~$\Ba
 & \qquad 
 = \sum_{\sigma_{\operatorname{Sh}(m,n)}} (-1)^{|\sigma|} a_0 b_0 \, \sigma_\bullet (da_1\ldots da_m db_1 \ldots db_n) \otimes a_{m+1} b_{n+1}
 \end{align*}
-where $\sigma_\bullet(da_1\ldots da_j) = da_{\sigma(1)}\ldots da_{\sigma(j)}$. One finds that $(\Bar,b',\times)$ is a graded-commutative differential graded algebra. Note that for $\omega\in A\otimes A=\Bar_0$ it follows immediately that $\omega\times(-) = \omega\cdot(-)$. 
+where $\sigma_\bullet(da_1\ldots da_j) = da_{\sigma^{-1}(1)}\ldots da_{\sigma^{-1}(j)}$. One finds that $(\Bar,b',\times)$ is a graded-commutative differential graded algebra. Note that for $\omega\in A\otimes A=\Bar_0$ it follows immediately that $\omega\times(-) = \omega\cdot(-)$. 
 
 We now return to the $k$-algebra $A=R=k[x_1,\ldots,x_n]$. Earlier we set $\widetilde W = W\otimes 1 - 1\otimes W \in \Re$ for a potential $W\in R$, in terms of which we now define the bar complex endomorphism
 $$
@@ -610,7 +610,7 @@ To establish compatibility with the products we compute
 where in the third step the anti-commutativity of the~$\theta_i$ allowed us to sum over the longer sequences $i_1<\ldots< i_{p+q}$ by introducing an additional sum over shuffles. 
 \end{proof}
 
-Now we come back to consider any potential $W\in R$ (\textbf{note} be careful, potential has a precise meaning). The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
+Now we come back to consider any $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
 \begin{lemma}\label{PsiHF}
 $\Psi: (\Bar, d_\Bar) \lra (\Delta_W, d_{\Delta_W})$ is a morphism in $\HF(\Re,\widetilde W)$. 
 \end{lemma}
@@ -858,6 +858,7 @@ where we write $\rho_{\Bar}$ and $\rho$ for the maps $\pi$. A $k[z]$-$k[x]$-bili
 \rho^{-1} = \sum_{m \ge 0} (-1)^m \Psi [d, D]^m \sigma\,.
 \]
 
+TODO: 
 \begin{itemize}
 \item Inverses for $\lambda$ and $\rho$.
 \item Other inverse using $s$.
@@ -916,7 +917,7 @@ is an isomorphism of matrix factorisations. Combining this with various canonica
 \xymatrix{
 \Hom_{\Re}( \Delta, X^\vee[n] \otimes_{k[z]} X)\\
 \Delta^\vee \otimes_{\Re} \left( X^\vee[n] \otimes_{k[z]} X \right) \ar[u]^-{\cong}_-{\xi}\\
-\left( X^\vee[n] \otimes_{k[z]} X \right) \otimes_{\Re} \Delta^\vee \ar[u]^-{\cong}_-{\textup{twist}}\\
+\left( X^\vee[n] \otimes_{k[z]} X \right) \otimes_{\Re} \Delta^\vee \ar[u]^-{\cong}_-{\textup{swap}}\\
 \left( X^\vee \otimes_{k[z]} X \right) \otimes_{\Re} \Delta^\vee[n] \ar[u]^-{\cong}\\
 \left( X^\vee \otimes_{k[z]} X \right) \otimes_{\Re} \Delta' \ar[u]^-{\cong}_-{\zeta} \ar[d]^-{\pi}\\
 \left( X^\vee \otimes_{k[z]} X \right) \otimes_{\Re} R \ar[d]_-{\cong}\ar[d]^-{\kappa}\\
@@ -1045,7 +1046,7 @@ which composed with the supertrace and residue gives the desired morphism. Here 
 
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has duals for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[x,z]$-basis of $X$ and $e_i^*$ the dual basis of $X^\vee$.
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[x,z]$-basis of $X$ and $e_i^*$ the dual basis of $X^\vee$.
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
@@ -1342,9 +1343,11 @@ This proves that $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X
 The three other Zorro moves are proven analogously (\textbf{todo}).
 
 \begin{theorem}
-TODO: $\LG$ has duals\ldots
+TODO: $\LG$ has adjoints\ldots
 \end{theorem}
 
+
+[TODO: Show that canonical definition of dual 2-morphism gives the same as naive definition; that's the same as proving the morphism-migration property (say for evaluation, here it follows directly from pre-/post-composition etc.)]
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
@@ -1433,6 +1436,8 @@ For any $X\in \hmf(k[z_1,\ldots,z_m,x_1,\ldots,x_n], V-W)$, $\phi\in \End(\Delta
 \mathcal D_r(X)(\psi) & = (-1)^{{m\choose 2} + {n+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
 \end{align*}
 \end{proposition}
+
+[TODO: point out that qdim$(\Delta)=1$, define what left and right quantum dimensions are]
 
 \begin{proof}
 We treat the case of $\mathcal D_l(X)$ in detail, the argument for $\mathcal D_r(X)$ works analogously. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to set $x=y$ and $z=z'$ at appropriate places, cf.~\eqref{defectaction}. Furthermore, $\lambda_X$ will project out all non-zero degree contributions coming from the action of $\lambda_X^{-1}$, so $\lambda_X\circ (\phi \otimes 1_X)\circ \lambda_X^{-1}$ is simply multiplication by the polynomial $\phi(z)$. 
@@ -1617,12 +1622,12 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This in not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
 
 To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions~\eqref{TODO} for evaluations and coevaluations we find \begin{align}
-& \widetilde\eval_X = \str_k(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str_k( \, - \circ \Lambda_Y)}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
+& \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y)}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
 & \coev_X: 1 \lmt \Lambda_X \, , \qquad  \widetilde\coev_Y: 1\lmt 1_Y \label{evcoeveasy}
 \end{align}
 where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$. 
 
-We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collpase its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str_k(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
+We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collpase its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
 $$
 C 
 = 
@@ -1652,9 +1657,9 @@ C
 \fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
 \end{tikzpicture} 
 = 
-(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str_k \big( \str_k( \varphi \Lambda_X) \psi \Lambda_Y \big)}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big)}{\partial_1 W \ldots \partial_n W} \right] \, .
 $$
-Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str_k(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str_k(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
+Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
 \be\label{C1}
 C = 
 (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
@@ -1662,7 +1667,7 @@ C =
 
 On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by $X^\dual\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
 $$
-\eval_{X^\dual \otimes Y} = \str_k(-) \, , \qquad \widetilde\coev_{X^\dual \otimes Y} : 1 \lmt 1_{X^\dual \otimes Y}
+\eval_{X^\dual \otimes Y} = \str(-) \, , \qquad \widetilde\coev_{X^\dual \otimes Y} : 1 \lmt 1_{X^\dual \otimes Y}
 $$
 to arrive at
 \be\label{C2}
@@ -1691,14 +1696,14 @@ C
 \fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
 \end{tikzpicture} 
 = 
-\str_k (\psi \circ (-) \circ \varphi ) \, .
+\str (\psi \circ (-) \circ \varphi ) \, .
 \ee
 Here the second step follows from the general calculus of bicategories with duals; see e.\,g.~\cite[Lemma~3.1(iii)]{cr1006.5609} for a detailed proof [TODO: only if we have pivotality! Need to prove that!]. Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
 
 \begin{theorem}
 The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have
 $$
-\str_k (\psi \circ (-) \circ \varphi )
+\str (\psi \circ (-) \circ \varphi )
 = 
 (-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
 $$
