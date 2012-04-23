@@ -134,6 +134,7 @@
 \def\cBar{\widehat{\mathds{B}}}
 \def\Re{R^{\operatorname{e}}}
 \def\Ae{A^{\operatorname{e}}}
+\def\Be{B^{\operatorname{e}}}
 \def\Aop{A^{\operatorname{op}}}
 \def\lra{\longrightarrow}
 \def\lmt{\longmapsto}
@@ -244,7 +245,7 @@ They take over.
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
-Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is finitely generated projective over~$k$ and the $\partial_{x_i}W$ form a regular sequence. 
+Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is finitely generated projective over~$k$ and the $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space. 
 
 A \textsl{linear factorisation} of a potential $W\in R$ is a $\nZ_2$-graded $R$-module $X=X^0\oplus X^1$ together with an odd $R$-linear endomorphism~$d_X$ such that $d_X^2=W\cdot 1_X$. If~$X$ is a free $R$-module then the pair $(X,d_X)$ is called a \textsl{matrix factorisation}, and we often refer to it simply by~$X$ without explicitly mentioning the \textsl{differential} $d_X$. 
 
@@ -258,7 +259,7 @@ $$
 $$
 as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
 $$
-\pi: \Delta_W \lra \Re
+\pi: \Delta_W \lra R
 $$
 for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
 $$
@@ -314,7 +315,7 @@ $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorp
 One of the main results of the present paper is that $\LG$ is endowed with an additional duality structure. Let us recall the relevant notion. 
 
 \begin{definition}\label{def:bicatduals}
-We say a bicategory~$\mathcal B$ \textsl{has adjoints} (or equivalently, that \textsl{every} 1-morphism is \textsl{dualisable}) if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
+We say a bicategory~$\mathcal B$ \textsl{has adjoints} if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
 \be\label{evcoev}
 \eval_X : X^\dual \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes X^\dual
 \ee
@@ -398,7 +399,7 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 \end{tikzpicture} \, .
 \ee
 
-The dual~$X^\dual$ of~$X$ as described in Definition~\ref{def:bicatduals} is more precisely called the~\textsl{right dual} to~$X$, though we will mostly continue to simply speak of duals without a further attribute. However, let us mention that~$X^\dual$ is called the \textsl{left dual} to~$X$ if there are maps 
+The adjoint~$X^\dual$ of~$X$ as described in Definition~\ref{def:bicatduals} is more precisely called \textsl{right adjoint} to~$X$, and one says that~$X^\dual$ is \textsl{left adjoint} to~$X$ if there are maps 
 $$
 \widetilde\eval_{X} = 
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
@@ -470,8 +471,9 @@ satisfying the associated Zorro moves
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
 \ee
+We will mostly continue to simply speak of adjoints without a further attribute as we will see that in $\LG$ left and right adjoints coincide. 
 
-Checking that the Zorro moves hold in $\LG$ with the evaluation and coevaluation maps~\eqref{TODO} and duals $X^\dual = X^\vee[n]$ (all to be discussed in detail in Section~\ref{TODO}) is no easy task. Instead of tackling it directly we will in an intermediate step first prove the Zorro moves using a different model for the unit matrix factorisation, namely the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on non-commutative forms. 
+Checking that the Zorro moves hold in $\LG$ with the evaluation and coevaluation maps~\eqref{TODO} and duals $X^\dual = X^\vee[n]$ (all to be discussed in detail in Section~\ref{sec:derivcoeval}) is no easy task. Instead of tackling it directly we will in an intermediate step first prove the Zorro moves using a different model for the unit matrix factorisation, namely the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on non-commutative forms. 
 
 TODO: graded stuff
 
@@ -555,7 +557,7 @@ d_{\Bar}^2 (\omega) & = b'(d\widetilde W \times \omega) + d\widetilde W \times b
 where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetilde W)=0$. 
 \end{proof}
 
-If we use~$\pi$ also to denote the projection $\Bar \lra \Bar_0 = \Re$, then $\mu\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \mu\pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{TODO}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
+If we use~$\pi$ also to denote the projection $\Bar \lra \Bar_0 = \Re$ composed with multiplication $\Re \lra R$, then $\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{TODO}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
 
 There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be important to us: 
 \begin{align}
@@ -648,10 +650,10 @@ Let $R$ be a ring and $W \in R$. An $R$-linear \textsl{deformation retract datum
 }%
 \end{equation}
 in which $(X,d_X)$ and $(Y,d_Y)$ are linear factorisations of $W$, $\pi, \sigma$ are morphisms of linear factorisations and $h: Y \lto Y$ is a degree one $R$-linear map such that
-\begin{itemize}
-\item[(i)] $\pi \sigma = 1$.
-\item[(ii)] $\sigma \pi = 1 + d_Yh + hd_Y$.
-\end{itemize}
+$$
+\pi \sigma = 1 \, , \qquad
+\sigma \pi = 1 + d_Yh + hd_Y \, .
+$$
 A degree one morphism $\delta: Y \lto Y$ is a \textsl{small perturbation} of the deformation retract datum if $1_M - \delta h$ is an isomorphism of $R$-modules. In this case we define
 \[
 \tau = (1- \delta h)^{-1} \delta
@@ -677,7 +679,7 @@ where
 Just reference Crainic.
 \end{proof}
 
-In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, and so $\tau = \sum_{m \ge 0} (\delta h)^m \delta$ and
+In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, so that $\tau = \sum_{m \ge 0} (\delta h)^m \delta$ and
 \[
 \sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
 \]
@@ -688,22 +690,22 @@ The fundamental technical result of this paper is the calculation, using the per
 
 In outline, let $\Bar$ be the linear factorisation of $\widetilde{W}$ given in Lemma \ref{PsiHF} and $\Delta$ the Koszul factorisation of $\widetilde{W}$. For any finite rank matrix factorisation $X \in \hmf(k[x,z], V - W)$ there is a $k[z]$-$k[x]$-bilinear homotopy equivalence
 \[
-\rho: X \otimes \Delta \lto X\,.
+\rho: X \otimes \Delta \lto X 
 \]
-This homotopy equivalence is part of the data of the bicategory $\LG$. In order to derive the evaluation and coevaluation maps and prove the Zorro moves we will need explicit homotopy inverses for $\rho$, and similar maps. These we construct using commutative diagrams of the form
+as in~\eqref{lambdarho}. This homotopy equivalence is part of the data of the bicategory $\LG$. In order to derive the evaluation and coevaluation maps and prove the Zorro moves we will need explicit homotopy inverses for $\rho$, and similar maps. These we construct using commutative diagrams of the form
 \begin{equation}\label{eq:pertdia1}
 \xymatrix{
-X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho_{\Bar}}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta \ar[dl]^-{\rho}\\
+X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta \ar[dl]^-{\rho}\\
 & X
 }
 \end{equation}
-where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho_{\Bar}$ is explained below. Rather than inverting $\rho$ directly, it turns out to be advantageous to invert $\rho_{\Bar}$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho_{\Bar}$ is the geometric series in powers of the associative Atiyah class of $X$ and we make use of a completion of $X \otimes_R \Bar$ in order to guarantee that this geometric series converges.
+where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho'$ is explained below. Rather than inverting $\rho$ directly, it turns out to be advantageous to invert $\rho'$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the associative Atiyah class of $X$ and we make use of a completion of $X \otimes_R \Bar$ in order to guarantee that this geometric series converges.
 
 The bulk of the argument is given in the following setting: $k$ is an arbitrary commutative ring, $A, R, S$ are $k$-algebras and we assume given a morphism of $k$-algebras $\theta: R \lto \Ae$ and
 \[
 X \in \HMF(S \otimes_k R, V)
 \]
-together with a homogeneous basis $\{ e_i \}_{i \in I}$ of $X$ over $S \otimes_k R$. Let $D$ denote the differential on $X$. The two cases of interest are when $R = \Ae, S = k[z]$ and $\theta$ is the identity, or, the situation of (\ref{eq:pertdia1}) where $R = A$ and $\theta(a) = a \otimes 1$. We return to these examples at the end of the section.
+together with a homogeneous basis $\{ e_i \}_{i \in I}$ of $X$ over $S \otimes_k R$. Let $D$ denote the differential on $X$. The two cases of interest are when $R = \Ae, S = k[z]$ and $\theta$ is the identity, or when $R = A$ and $\theta(a) = a \otimes 1$ which the situation of~\eqref{eq:pertdia1}. We return to these examples at the end of the section.
 
 Let $W \in A$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in \Ae$. For convenience in distinguishing between the left and right copy of $A$ in $\Ae = A \otimes_k \Aop$ we write $\Aop$ even though $A$ is commutative. We assume that $V + \widetilde{W}$ belongs to the image of $S \otimes_k \Aop$ in $S \otimes_k \Ae$, where $V$ denotes the image of $V$ under $S \otimes_k R \lto S \otimes_k \Ae$ via $\theta$.
 
@@ -713,17 +715,17 @@ X \,\widehat{\otimes}_R\, \Bar := \prod_{m \ge 0} X \otimes_R \Bar_m
 \]
 with the $\mathbb{Z}_2$-grading
 \[
-\big( X \,\widehat{\otimes}_R\, \Bar \big)^i = \left( \prod_{m \in \mathbb{Z}} X^i \otimes_R \Bar_{2m} \right) \oplus \left( \prod_{m \in \mathbb{Z}} X^{i+1} \otimes_R \Bar_{2m+1} \right)
+\big( X \,\widehat{\otimes}_R\, \Bar \big)^i = \left( \prod_{m \in \mathbb{Z}} X^i \otimes_R \Bar_{2m} \right) \oplus \left( \prod_{m \in \mathbb{Z}} X^{i+1} \otimes_R \Bar_{2m+1} \right) . 
 \]
-As a $\mathbb{Z}_2$-graded $S \otimes_k \Ae$-module, $X \,\widehat{\otimes}_R\, \Bar$ is the inverse limit of the system
+As a $(\mathbb{Z}_2)$-graded $S \otimes_k \Ae$-module, $X \,\widehat{\otimes}_R\, \Bar$ is the inverse limit of the system
 \[
 \cdots \lto X \otimes_R \Bar/\Bar_{\ge 2} \lto X \otimes_R \Bar/\Bar_{\ge 1}
 \]
 where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$. Our first observation is that this graded module can be equipped as a linear factorisation of $V + \widetilde{W}$ over $S \otimes_k \Ae$. One checks that there are well-defined operators
 \begin{align*}
-D(x_0, x_1, \ldots) &= (D(x_0), D(x_1), \ldots)\\
-b'(x_0, x_1, \ldots) &= (b'(x_1),b'(x_2),\ldots)\\
-d(x_0,x_1,\ldots) &= (0, d(x_0), d(x_1),\ldots)\\
+D(x_0, x_1, \ldots) &= (D(x_0), D(x_1), \ldots) \, , \\
+b'(x_0, x_1, \ldots) &= (b'(x_1),b'(x_2),\ldots) \, , \\
+d(x_0,x_1,\ldots) &= (0, d(x_0), d(x_1),\ldots) \, , \\
 d \widetilde{W} \times (x_0,x_1,\ldots) &= (0, d \widetilde{W} \times x_0, d \widetilde{W} \times x_1, \ldots)
 \end{align*}
 on $X \,\widehat{\otimes}_R\, \Bar$, where $d$ is extended to an $S \otimes_k \Aop$-linear operator on $X \otimes_R \Bar$ by the rule
@@ -739,13 +741,13 @@ This can be checked on the inverse system, where it follows from Lemma \ref{lemm
 
 There is a morphism of linear factorisations
 \[
-\pi: X \, \widehat{\otimes}_R\, \Bar = \prod_{m \ge 0} X \otimes_R \Bar_m \lto X \otimes_R \Bar_0 \lto X \otimes_R A\,.
+\pi: X \, \widehat{\otimes}_R\, \Bar = \prod_{m \ge 0} X \otimes_R \Bar_m \lto X \otimes_R \Bar_0 \lto X \otimes_R A 
 \]
-where the first map is the projection and the second is the product $\Ae \lto A$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of the Atiyah class $\At_X = [d, D]$ on $X \otimes_R \Bar$. When $R = A$ and $\theta(a) = a \otimes 1$ this map $\pi$ is the morphism $\rho_{\Bar}$ mentioned above.
+where the first map is the projection and the second is the product $\Ae \lto A$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of the Atiyah class $\At_X = [d, D]$ on $X \otimes_R \Bar$. When $R = A$ and $\theta(a) = a \otimes 1$ this map $\pi$ is the morphism $\rho'$ appearing in~\eqref{eq:pertdia1}.
 
 We begin with the deformation retract which exists due to the defining relation of $d$ with $b'$.
 
-\begin{lemma}\label{lemma:firstdefo} There is an $S \otimes_k \Aop$-linear deformation retract datum of $\mathbb{Z}_2$-graded complexes
+\begin{lemma}\label{lemma:firstdefo} There is an $(S \otimes_k \Aop)$-linear deformation retract datum of $\mathbb{Z}_2$-graded complexes
 \[
 \xymatrix@C+2pc{
 (X \otimes_R A, 0) \ar@<-1ex>[r]_-{\sigma} & (X \, \widehat{\otimes}_R \, \Bar, b') \ar@<-1ex>[l]_-{\pi}
@@ -766,7 +768,7 @@ The required identity $b' d + d b' = 1 - \sigma \pi$ follows immediately from (\
 Let us write $h = -d$. Because we are working with $\prod_{m \ge 0} X \otimes_R \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}_R\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-\begin{proposition}\label{prop:finalpertdefo} There is an $S \otimes_k \Aop$-linear deformation retract datum
+\begin{proposition}\label{prop:finalpertdefo} There is an $(S \otimes_k \Aop)$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes_R A, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes}_R \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
@@ -779,7 +781,7 @@ where
 In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
-It follows from the perturbation lemma (Propostiion \ref{prop:pertlemma}) with Lemma \ref{lemma:firstdefo}, Lemma \ref{lemma:smallpertde} that
+It follows from the perturbation lemma (Propostiion \ref{prop:pertlemma}) with Lemmas~\ref{lemma:firstdefo} and~\ref{lemma:smallpertde} that
 \[
 \xymatrix@C+2pc{
 (X \otimes_R A, b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes}_R \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi_\infty}
@@ -799,7 +801,7 @@ Expanding this yields $\sum_{m \ge 0} [d, D]^m \sigma$ plus terms involving fact
 \begin{equation}\label{eq:finalpertdefo2}
 [d, d\widetilde{W} \times (-)] [d,D]^i \sigma
 \end{equation}
-for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ leaves a tensor whose form component is of the type $da_0 \cdots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ has the form given in the statement of the proposition.
+for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ leaves a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ has the form given in the statement of the proposition.
 \end{proof}
 
 \begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$.
@@ -808,7 +810,7 @@ for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ l
 \textbf{todo}
 \end{proof}
 
-Now we turn to the Koszul stabilisation of the diagonal. Assume that $A = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section \ref{??} where $d_{\Delta} = \delta_{+} + \delta_{-}$. There is a morphism of linear factorisations
+Now we turn to the Koszul stabilisation of the diagonal. Assume that $A = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. There is a morphism of linear factorisations
 \begin{equation}\label{eq:koszulpi}
 \pi: X \otimes_R \Delta \lto X \otimes_R \Ae \lto X \otimes_R A
 \end{equation}
@@ -819,9 +821,9 @@ X \,\widehat{\otimes}_R\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \oti
 & X \otimes_R A
 }
 \]
-in which every side is a homotopy equivalence. This follows from
+in which every side is a homotopy equivalence: 
 
-\begin{lemma}\label{lemma:koszulstab1} The map $\pi$ of (\ref{eq:koszulpi}) is an $S \otimes_k \Aop$-linear homotopy equivalence.
+\begin{lemma}\label{lemma:koszulstab1} The map $\pi$ of (\ref{eq:koszulpi}) is an $(S \otimes_k \Aop)$-linear homotopy equivalence.
 \end{lemma}
 \begin{proof}
 There is an exact sequence of free right $A$-modules
@@ -837,10 +839,10 @@ which splits, and provides the necessary right $A$-linear $\sigma: A \lto \Delta
 {}\ar@(ur,dr)[]^{-h}
 }%
 \]
-into an $S \otimes_k \Aop$-linear deformation retract datum. Moreover $\delta = D \otimes 1 + 1 \otimes \delta_{+}$ is a small perturbation and the perturbation lemma applies to show that $\pi$ is a homotopy equivalence.
+into an $(S \otimes_k \Aop)$-linear deformation retract datum. Moreover $\delta = D \otimes 1 + 1 \otimes \delta_{+}$ is a small perturbation and the perturbation lemma applies to show that $\pi$ is a homotopy equivalence.
 \end{proof}
 
-\begin{corollary}\label{corollary:koszulstab2} An $S \otimes_k \Aop$-linear homotopy inverse to $\pi$ of (\ref{eq:koszulpi}) is given by
+\begin{corollary}\label{corollary:koszulstab2} An $(S \otimes_k \Aop)$-linear homotopy inverse to $\pi$ of (\ref{eq:koszulpi}) is given by
 \[
 \pi^{-1} = \sum_{m \ge 0} (-1)^m \Psi [d, D]^m \sigma\,.
 \]
@@ -849,7 +851,7 @@ into an $S \otimes_k \Aop$-linear deformation retract datum. Moreover $\delta = 
 Let us finish this section as we began, with the structural morphisms $\rho$ and $\lambda$ of the bicategory of Landau-Ginzburg models. So we take $S = k[z]$ and $R = A = k[x], \theta(a) = a \otimes 1$ in the above, to obtain a commutative diagram of homotopy equivalences
 \[
 \xymatrix{
-X \,\widehat{\otimes}_{k[x]}\, \Bar \ar[dr]_-{\rho_{\Bar}}\ar[rr]^{1 \otimes \Psi} & & X \otimes_{k[x]} \Delta \ar[dl]^-{\rho}\\
+X \,\widehat{\otimes}_{k[x]}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \otimes_{k[x]} \Delta \ar[dl]^-{\rho}\\
 & X
 }
 \]
@@ -862,7 +864,6 @@ TODO:
 \begin{itemize}
 \item Inverses for $\lambda$ and $\rho$.
 \item Other inverse using $s$.
-\item Derivation of evaluation
 \end{itemize}
 
 %\section{Paen to battle with variable labels}
@@ -878,17 +879,15 @@ TODO:
 \section{Derivation of the evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
 
-In this section we derive formulas for the evaluation and coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix two potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[x,z], V-W)$. We also fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $e_i^*$. 
+In this section we derive formulas for the evaluation and coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models over a noetherian $\mathbb{Q}$-algebra $k$. We fix two potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[x,z], V-W)$. We also fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $\{ e_i^* \}_{i \in I}$. 
 
-As recalled in Section~\ref{subsec:bicatLG} there are two kinds of evaluation and coevaluation $2$-morphisms associated with~$X$. The derivation is very similar in both cases, so we give the full details for 
+We set $X^\dual = X^\vee[n]$ where $(-)^\vee$ denotes taking the dual module. As recalled in Section~\ref{subsec:bicatLG} there are two kinds of evaluation and coevaluation $2$-morphisms associated with~$X$. The derivation is very similar in both cases, so we give the full details for 
 \[
 \widetilde\coev_X: \Delta_W \lto X^\dual \otimes_{k[z]} X
-\]
-and
-\[
+\, , \qquad
 \widetilde\eval_X: X \otimes_{k[x]} X^\dual \lto \Delta_V
 \]
-while simply stating the formulas for $\coev_X$ and $\eval_X$, with the details left to the reader. Recall that $\Delta_W$ and $X^\dual \otimes X$ are $k[x]$-bimodules and the coevaluation is $k[x]$-bilinear, while $\Delta_V$ and $X \otimes X^\dual$ are $k[z]$-bimodules and the evaluation is $k[z]$-bilinear. The differential on the matrix factorisations $\Delta_V, \Delta_W$ is given by \eqref{DeltaW}.
+while simply stating the formulas for $\coev_X$ and $\eval_X$, with the details left to the reader. Recall that $\Delta_W$ and $X^\dual \otimes X$ are $k[x]$-bimodules and the coevaluation is $k[x]$-bilinear, while $\Delta_V$ and $X \otimes X^\dual$ are $k[z]$-bimodules and the evaluation is $k[z]$-bilinear. The differentials on the matrix factorisations $\Delta_V, \Delta_W$ is given by \eqref{DeltaW}.
 
 At this point the evaluation and coevaluation morphisms we construct would be more accurately described as a \textsl{candidates}, as it is only later in Section~\ref{sec:Zorro} that we show that our candidates are actually the counit and unit of an adjunction by proving the Zorro moves.
 
@@ -902,17 +901,17 @@ In this section $\Delta$ denotes $\Delta_W$.
 \end{equation}
 \end{proposition}
 \begin{proof}
-Let $\Delta'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta$ but with the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in just the same way that $\Delta$ approximates it as a factorisation of $\widetilde{W}$. Also let $K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta$, but the differential $\delta_{-}$, so $K$ is the usual Koszul complex of $x_1 - y_1, \ldots, x_n - y_n$.
+Let $\Delta'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta$ but with the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in just the same way that $\Delta$ approximates it as a factorisation of $\widetilde{W}$. Also let~$K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta$, but the differential~$\delta_{-}$, so~$K$ is the usual Koszul complex of $x_1 - y_1, \ldots, x_n - y_n$.
 
 The product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-graded complexes $(R = k[x])$
 \[
 \Delta' \otimes_{\Re} \Delta \lto K\,.
 \]
-Composing with the natural morphism $\varepsilon: K \lto \Re[n]$ and taking the adjoint,
+Composing with the natural morphism $\varepsilon: K \lto \Re[n]$ and taking the adjoint, we obtain the map
 \[
 \zeta: \Delta' \lto \Delta^\vee [n]\, , \qquad \omega \lmt \varepsilon( \omega \wedge - )
 \]
-is an isomorphism of matrix factorisations. Combining this with various canonical maps and the morphism $\pi: \Delta' \lto \Delta'_0 = \Re \lto R$ we have the following diagram of \textsl{right} $R$-linear morphisms of complexes: 
+which is an isomorphism of matrix factorisations. Combining this with various canonical maps and the morphism $\pi: \Delta' \lto \Delta'_0 = \Re \lto R$ we have the following diagram of \textsl{right} $R$-linear morphisms of complexes: 
 \begin{equation}
 \xymatrix{
 \Hom_{\Re}( \Delta, X^\vee[n] \otimes_{k[z]} X)\\
@@ -960,18 +959,18 @@ which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes 
 
 \begin{theorem}\label{theorem:coev1} A representative for the coevaluation morphism is the chain map
 \begin{equation}\label{eq:coev10}
-\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^i \Psi \At^m_{X^\dual}( \iota_X ) \right)\,.
+\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{i \ge 0} (-1)^i \Psi \At^i_{X^\dual}( \iota_X ) \right)\
 \end{equation}
 where the Atiyah class sends forms to the left, as explained above.
 \end{theorem}
 \begin{proof}
-Let us chase $1_X$ upwards through (\ref{eq:isogivescoev2}), noting that $\iota_X = \kappa^{-1}(1_X)$. With $A = k[x], R = \Ae$ and $\theta$ the identity we may apply Corollary \ref{corollary:koszulstab2} to describe a homotopy inverse to $\pi$ in terms of the Atiyah class $[d, d_{X^\dual \otimes X}]$. In light of the observations preceeding the statement of the theorem
+Let us chase $1_X$ upwards through (\ref{eq:isogivescoev2}), noting that $\iota_X = \kappa^{-1}(1_X)$. With $A = k[x], R = \Ae$ and $\theta$ the identity we may apply Corollary \ref{corollary:koszulstab2} to describe a homotopy inverse to $\pi$ in terms of the Atiyah class $[d, d_{X^\dual \otimes X}]$. In light of the observations preceeding the statement of the theorem we have
 \begin{equation}\label{eq:coev11}
 \pi^{-1} \kappa^{-1}(1_X) = \sum_{m \ge 0} (-1)^m \Psi \big[d, d_{X^\dual}\big]^m( \iota_X )\,.
 \end{equation}
-A summand $f \otimes \theta_{\bs{i}}$ in (\ref{eq:coev11}), with $f \in X^\dual \otimes X$ and $\theta_{\bs{i}} = \theta_{i_1} \cdots \theta_{i_p}$ for $i_1 < \cdots < i_p$, maps under $\zeta$ to
+A summand $f \otimes \theta_{\bs{i}}$ in (\ref{eq:coev11}), with $f \in X^\dual \otimes X$ and $\theta_{\bs{i}} = \theta_{i_1} \ldots \theta_{i_p}$ for $i_1 < \ldots < i_p$, maps under $\zeta$ to
 \[
-f \otimes \zeta( \theta_{i_1} \cdots \theta_{i_p} ) = f \otimes \varepsilon\big( \theta_{\bs{i}} \wedge - \big)
+f \otimes \zeta( \theta_{i_1} \ldots \theta_{i_p} ) = f \otimes \varepsilon\big( \theta_{\bs{i}} \wedge - \big)
 \]
 and then to the function $\Delta \lto X^\dagger \otimes X$ defined by
 \[
@@ -1004,11 +1003,11 @@ X^\dual \otimes X \ar[r]^-{\At^i_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otim
 
 \subsection{Evaluation}\label{subsec:eval}
 
-In this section we write $B = k[z]$ and $B^e = B \otimes_k B$ so that $\widetilde\eval_X$ is a morphism of (infinite rank) matrix factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ over $B^e$. The polynomials $\partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{k[x,z]}(X,X)$ denote a degree-one map with $[D, \lambda_i] = f_i \cdot 1_X$. For example $\lambda_i = \partial_{x_i} D$ would do, but it will be important to allow other choices.
+In this section we write $B = k[z]$ and $\Be = B \otimes_k B$ so that $\widetilde\eval_X$ is a morphism of (infinite rank) matrix factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ over $\Be$. The polynomials $\partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{k[x,z]}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. For example $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices.
 
 The evaluation map will be produced by a perturbation whose initial data is the morphism $\eval_0$ of the next proposition.
 
-\begin{proposition} There is a morphism of linear factorisations of $\widetilde{V}$ over $B^e$
+\begin{proposition} There is a morphism of linear factorisations of $\widetilde{V}$ over $\Be$, 
 \[
 \eval_0: X \otimes_{k[x]} X^\dual \lto B\,,
 \]
@@ -1020,13 +1019,13 @@ defined by
 \begin{proof}
 To describe this map we set
 \[
-\Hom_{k[x,z]}(\bar{X}, \bar{X}) = \Hom_{k[x,z]}(X, X) \otimes_{k[x]} k[x]/(f_1,\ldots,f_n)\,.
+\Hom_{k[x,z]}(\bar{X}, \bar{X}) = \Hom_{k[x,z]}(X, X) \otimes_{k[x]} k[x]/(\partial_{x_1}W, \ldots, \partial_{x_n}W)\,.
 \]
 Then for each $1 \le i \le n$ we have a closed, odd $k[x,z]$-linear operator $\lambda_i^\bullet$ on $\Hom_{k[x,z]}(\bar{X}, \bar{X})$
 \[
 \lambda_i^\bullet(\alpha) = \lambda_i \circ \alpha\,.
 \]
-There is a chain of $B^e$-linear morphisms of linear factorisations of $\widetilde{V}$
+There is a chain of $\Be$-linear morphisms of linear factorisations of $\widetilde{V}$
 \begin{equation}
 \xymatrix{
 X \otimes_{k[x]} (X^\vee [n]) \ar[d]_-{\cong}\\
@@ -1046,7 +1045,7 @@ which composed with the supertrace and residue gives the desired morphism. Here 
 
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its dual $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[x,z]$-basis of $X$ and $e_i^*$ the dual basis of $X^\vee$.
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its adjoint $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[x,z]$-basis of $X$ and $\{ e_i^* \}_{i \in I}$ the dual basis of $X^\vee$.
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
@@ -1094,45 +1093,48 @@ Here we also label the two domains to the left and right of the 1-morphism~$X$ b
 X \ar[r]^-{\rho^{-1}} & X \otimes \Delta_W \ar[r]^-{1 \otimes\,\widetilde{\coev}} & X \otimes X^{\dagger} \otimes X \ar[r]^-{\widetilde{\eval}\, \otimes 1} & \Delta_V \otimes X \ar[r]^-{\lambda} & X\,,
 }
 \ee
-which we prove is homotopic to the identity on $X$. Note that here we already started to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. 
+which we prove is homotopic to the identity on $X$. Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. 
 
 We keep in mind that there are two distinct $\Delta$'s which appear: if we write $R = k[x]$ and $S = k[z]$ then one of the $\Delta$'s is an $R$-$R$-bimodule, and the other is an $S$-$S$-bimodule. It is sometimes convenient to identify $\Re$ with $k[x,y]$ so that the right $R$-action is via polynomials in the $y$-variables.
 
-Let us introduce the notation (TODO: keep or change due to clash with shadows?)
+Let us introduce the notation
 $$
 \langle\!\langle-\rangle\!\rangle = (-1)^{n+1\choose 2} \Res_{k[x,y,z]/k[y,z]} \left[ \frac{ \varepsilon\Psi(-) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 $$
 for the map $S \otimes_k \Bar \lto S \otimes_k R = k[y,z]$ defined using the map $\varepsilon\Psi: \Bar \lto S \otimes_k R$ of Section \ref{??} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. Here $\Bar$ is the bar complex of $R$ over $k$, and the two copies of $R$ play very different roles in $\langle\!\langle - \rangle\!\rangle$. The left copy (i.\,e.~$k[x]$) is integrated out, and the map is linear with respect to the right action, so that overall $\langle\!\langle - \rangle\!\rangle$ is $k[y,z]$-linear.
 
-Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X) \otimes_{k[x]} \Bar$. Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set $\underline\lambda=\lambda_1\ldots \lambda_n$ (TODO: use $\Lambda$ instead of $\lambda$ everywhere for these homotopies?). Our first order of business is to establish the following expression for the Zorro map.
+Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X) \otimes_{k[x]} \Bar$. Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set $\Lambda=\lambda_1\ldots \lambda_n$. Our first order of business is to establish the following expression for the Zorro map.
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
-\mathcal Z = \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
+\mathcal Z = \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
 \ee
 where for $f \in X$, the endomorphism $f \circ e_j^*$ sends $g$ to $e_j^*(g) \cdot f$.
 \end{lemma}
 
 Before giving the proof of the lemma, let us sketch the argument that this morphism is homotopic to the identity. In outline, the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
 \begin{equation}\label{eq:trueproofeq}
-\big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \underline\lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
+\big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \Lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
 \end{equation}
-We will see that $\At^n( \underline\lambda )$ is a transition determinant in the sense of the calculus of residues, so that the right -hand side of~(\ref{eq:trueproofeq}) can be identified with $\str(-)$. Hence
+We will see that $\At^n( \Lambda )$ is a transition determinant in the sense of the calculus of residues, so that the right-hand side of~(\ref{eq:trueproofeq}) can be identified with $\str(-)$. Hence
 \begin{equation}\label{eq:trueproofeq2}
 \mathcal{Z} \simeq \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j = \sum_j \str(e_j^* \circ -) \cdot e_j = 1_X\,.
 \end{equation}
 The reader will appreciate the parallel with the argument for duality in the monoidal category of vector spaces, with the new feature here being the Atiyah class and its anti-self-adjointness.
 
-There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of nondegeneracy in Section \ref{??} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
+There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus non-commutative differential forms (compare with the proof of non-degeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
-\rho^{-1}: X \lto X \otimes \Delta, \qquad \rho^{-1}(a) &= \sum_{i \ge 0}(-1)^i \Psi\! \At^i_X(a)\,,\\
-\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X, \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{i \ge 0}(-1)^i (\Psi\!\At^i_{X^{\dagger}} \otimes 1)(\iota_X) \Big)\,,\\
+\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1}(a) &= \sum_{i \ge 0}(-1)^i \Psi\! \At^i_X(a)\,,\\
+\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{i \ge 0}(-1)^i (\Psi\!\At^i_{X^{\dagger}} \otimes 1)(\iota_X) \Big)\,,\\
 &= \sum_{i,j} (-1)^{i+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At^i_{X^{\dagger}}( e_j^* ) \otimes e_j \Big)\\
-\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta, \qquad \widetilde{\eval}(\alpha) &= (-1)^{\binom{n+1}{2}}\Res_{k[x,y,z]/k[y,z]}\! \left[ \frac{\str ( \alpha|_{z=z'} \underline{\lambda}) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\alpha) &= (-1)^{\binom{n+1}{2}}\Res_{k[x,y,z]/k[y,z]}\! \left[ \frac{\str ( \alpha
+%|_{z=z'}
+ \Lambda) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
-Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) and $\mathcal{O}(\theta)$ denotes higher order terms which do not survive $\lambda$ and therefore may be ignored for present purposes. Also define $\nabla$ and Atiyah classes (\textbf{todo}).
+%Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) 
+Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes. Also define $\nabla$ and Atiyah classes (\textbf{todo}).
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
 Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq:zorro1a1}): 
@@ -1141,10 +1143,12 @@ Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq
 &= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
 \end{align} 
-In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of identifying $z$ with $z'$ (TODO: not necessary). This changes the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
+In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of 
+%identifying $z$ with $z'$ (TODO: not necessary). This changes 
+changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
 \begin{align}
 \mathcal{Z}(e_q) &= \lambda \circ (\eval \otimes 1) \circ (1 \otimes \coev) \circ \rho^{-1}( e_q )\\
-&= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \underline{\lambda} \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
+&= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \Lambda \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
 \end{align}
 Since the Zorro map~$\mathcal Z$ is $k[x,z]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
@@ -1178,58 +1182,58 @@ TODO: $\At \times \At = \At$.
 
 The form of self-adjointness of the Atiyah class that we will use is contained in the next result. The $p = 0$ case is the statement that for $\varphi \in \End(X) \otimes_{k[x]} \Bar$ we have
 \[
-\big\langle\!\big\langle \str( \lambda_1 \cdots \lambda_n \circ \At(\varphi) ) \big\rangle\!\big\rangle = \sum_{i=1}^n (-1)^{i-1} \Big\langle\!\Big\langle \nabla \left\{ f_i \str( \lambda_1 \cdots \widehat{\lambda_i} \cdots \lambda_n \circ \varphi ) \right\} \Big\rangle\!\Big\rangle + h_0( D(\varphi))
+\big\langle\!\big\langle \str( \lambda_1 \ldots \lambda_n \circ \At(\varphi) ) \big\rangle\!\big\rangle = \sum_{i=1}^n (-1)^{i-1} \Big\langle\!\Big\langle \nabla \left\{ f_i \str( \lambda_1 \ldots \widehat{\lambda_i} \ldots \lambda_n \circ \varphi ) \right\} \Big\rangle\!\Big\rangle + h_0( D(\varphi))
 \]
-for some function $h_0$, where as usual $\widehat{\lambda_i}$ means that $\lambda_i$ is omitted. Applying the lemma inductively will interpolate between the left- and right-hand sides of (\ref{eq:trueproofeq}). For the general statement we will need some notation: given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $[1,n]$ (not necessarily in ascending order) let
+for some function $h_0$, where as usual $\widehat{\lambda_i}$ means that $\lambda_i$ is omitted. Applying the lemma inductively will interpolate between the left- and right-hand sides of (\ref{eq:trueproofeq}). For the general statement we will need some notation: given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1, \ldots, n\}$ (not necessarily in ascending order) let
 \[
-\ell(\bs{i}) = p, \qquad w(\bs{i}) = i_1 + \cdots + i_p, \qquad |\bs{i}| = \sum_{1 \le a < b \le n} \delta_{i_a > i_b}\, \qquad \gamma(\bs{i}) = w(\bs{i}) + |\bs{i}| + \binom{p+1}{2}\,.
+\ell(\bs{i}) = p, \qquad w(\bs{i}) = i_1 + \ldots + i_p, \qquad |\bs{i}| = \sum_{1 \le a < b \le n} \delta_{i_a > i_b}\, \qquad \gamma(\bs{i}) = w(\bs{i}) + |\bs{i}| + \binom{p+1}{2}\,.
 \]
-The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\underline{\lambda}_{i_1,\ldots,i_p}$ for the product $\underline{\lambda} = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted. We deliberately confuse an endomorphism of $X$ with the operator on $\End(X) \otimes_{k[x]} \Bar$ which acts by post-composition with the endomorphism. 
+The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted. We deliberately confuse an endomorphism of $X$ with the operator on $\End(X) \otimes_{k[x]} \Bar$ which acts by post-composition with the endomorphism. 
 %Let $D$ denote the differential on $\End(X)$, i.\,e.~the commutator with~$d_X$.
 
 \begin{lemma}\label{lemma:zorromain} For $\varphi \in \End(X) \otimes_{k[x]} \Bar$ and $0 \le p < n$ we have
 \begin{align*}
-\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) + p} & \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_p} \str\big( \underline{\lambda}_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \Big\rangle\!\Big\rangle\\
-&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i}) + p+1} \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_{p+1}} \str\big( \underline{\lambda}_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \Big\rangle\!\Big\rangle + h_p( D( \varphi ) )
+\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) + p} & \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_p} \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \Big\rangle\!\Big\rangle\\
+&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i}) + p+1} \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_{p+1}} \str\big( \Lambda_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \Big\rangle\!\Big\rangle + h_p( D( \varphi ) )
 \end{align*}
 where $f_i = \partial_{x_i} W$, $D=[d_X,-]$ is the differential on $\End(X)$, and the sums are over all sequences of length $p, p+1$, respectively, and
 \[
-h_p( \psi ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla](\psi) \big) \Big\rangle\!\Big\rangle\,.
+h_p( \psi ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}, \nabla](\psi) \big) \Big\rangle\!\Big\rangle\,.
 \]
 \end{lemma}
 \begin{proof}
 Fix a sequence $\bs{i}$ of length $p$. The super Jacobi identity for operators on $\End(X) \otimes \Bar$ gives
 \be\label{superJacobi}
-\big[ \underline{\lambda}_{i_1,\ldots,i_p}, \At \big] = (-1)^{n-p} \big[ D, \big[ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla \big] \big] - \big[ \nabla, \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] \big]\,.
+\big[ \Lambda_{i_1,\ldots,i_p}, \At \big] = (-1)^{n-p} \big[ D, \big[ \Lambda_{i_1,\ldots,i_p}, \nabla \big] \big] - \big[ \nabla, \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \big]\,.
 \ee
 It is easy to see that $\str \circ \nabla = \nabla \circ \str$ and hence $\str \circ \At = 0$ so if we apply~\eqref{superJacobi} to~$\varphi$ and then apply $\dlangle \eta \str( - ) \drangle$ with $\eta = \nabla \circ f_{i_1} \circ \cdots \circ \nabla \circ f_{i_p}$, we have
 \begin{align}
-\dlangle \eta \str\big( \underline{\lambda}_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \drangle &= (-1)^{n-p} \dlangle \eta \str\big( \big[ D, \big[ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla \big] \big] \varphi \big) \drangle \nonumber\\
-&\qquad - \dlangle \eta \str\big( \big[ \nabla, \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] \big] \varphi \big) \drangle \nonumber\\
-&= \dlangle \eta \str\big( \big[ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla \big] ( D\varphi ) \big) \drangle \label{eq:hutch1}\\
-&\qquad- \dlangle \eta \nabla \str\big( \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] \varphi \big) \drangle \label{eq:hutch2}\\
-&\qquad+ (-1)^{n-p+1} \bigdlangle \eta \str\big( \big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big]( \nabla \varphi ) \big) \drangle \, . \label{eq:hutch3}
+\dlangle \eta \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \drangle &= (-1)^{n-p} \dlangle \eta \str\big( \big[ D, \big[ \Lambda_{i_1,\ldots,i_p}, \nabla \big] \big] \varphi \big) \drangle \nonumber\\
+&\qquad - \dlangle \eta \str\big( \big[ \nabla, \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \big] \varphi \big) \drangle \nonumber\\
+&= \dlangle \eta \str\big( \big[ \Lambda_{i_1,\ldots,i_p}, \nabla \big] ( D\varphi ) \big) \drangle \label{eq:hutch1}\\
+&\qquad- \dlangle \eta \nabla \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \varphi \big) \drangle \label{eq:hutch2}\\
+&\qquad+ (-1)^{n-p+1} \bigdlangle \eta \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p} \big]( \nabla \varphi ) \big) \drangle \, . \label{eq:hutch3}
 \end{align}
 Since $[d_X, \lambda_i] = f_i$ we have
 \[
-\big[ D, \underline{\lambda}_{i_1,\ldots,i_p} \big] = \sum_{a \notin \{ i_1, \ldots, i_p \} } (-1)^{a-1 + \#\{ b \l i_b < a \}} f_{a} \cdot \underline{\lambda}_{i_1,\ldots,i_p,a}
+\big[ D, \Lambda_{i_1,\ldots,i_p} \big] = \sum_{a \notin \{ i_1, \ldots, i_p \} } (-1)^{a-1 + \#\{ b \l i_b < a \}} f_{a} \cdot \Lambda_{i_1,\ldots,i_p,a}
 \]
-where the sign counts the number of $\lambda$'s to the left of $\lambda_a$ in $\underline{\lambda}_{i_1,\ldots,i_p}$. Substituting, the last summand (\ref{eq:hutch3}) in the above is, up to a sign, 
+where the sign counts the number of $\lambda$'s to the left of $\lambda_a$ in $\Lambda_{i_1,\ldots,i_p}$. Substituting, the last summand (\ref{eq:hutch3}) in the above is, up to a sign, 
 \[
-\sum_{a \notin \{ i_1,\ldots, i_p \}} (-1)^{a-1 + \#\{ b \l i_b < a \}} \bigdlangle \nabla f_{i_1} \cdots \nabla f_{i_p} f_a \str\big( \big[ D, \underline{\lambda}_{i_1,\ldots,i_p,a} \big]( \nabla \varphi ) \big) \bigdrangle \, .
+\sum_{a \notin \{ i_1,\ldots, i_p \}} (-1)^{a-1 + \#\{ b \l i_b < a \}} \bigdlangle \nabla f_{i_1} \cdots \nabla f_{i_p} f_a \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p,a} \big]( \nabla \varphi ) \big) \bigdrangle \, .
 \]
 If we sum over all sequences $\bs{i}$ with the signs given in the statement of the lemma it is straightforward to check that the above term vanishes, because $f_{i_p} f_a$ and $f_a f_{i_p}$ appear in the sum with opposite signs. This completes the proof, since the sum over $\bs{i}$ of (\ref{eq:hutch1}) and (\ref{eq:hutch2}) gives us the right-hand side of the equation in the statement of the lemma.
 \end{proof}
 
 \begin{lemma}\label{lemma:langlecalc1} For $\varphi \in \End(X)$ we have
 \[
-\big\langle\!\big\langle \str \big( \underline\lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle = \str(\varphi)\big|_{x \lmt y} + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
+\big\langle\!\big\langle \str \big( \Lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle = \str(\varphi)\big|_{x \lmt y} + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
 \]
 \end{lemma}
 \begin{proof}
 Applying Lemma \ref{lemma:zorromain} repeatedly yields
 \begin{align*}
-\big\langle\!\big\langle \str \big( \underline\lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle = (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \big\langle\!\big\langle \nabla f_{\sigma(1)} \cdots \nabla f_{\sigma(n)} \str(\varphi) \big\rangle\!\big\rangle + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
+\big\langle\!\big\langle \str \big( \Lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle = (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \big\langle\!\big\langle \nabla f_{\sigma(1)} \cdots \nabla f_{\sigma(n)} \str(\varphi) \big\rangle\!\big\rangle + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
 \end{align*}
 %where 
 %$$
@@ -1250,7 +1254,7 @@ But by a small argument involving transition determinants (\textbf{todo}) this e
 
 The upshot is that, by the previous lemma and Lemma \ref{lemma:Zorrointermediate},
 \begin{align*}
-\mathcal{Z} &= \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \underline\lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\\
+\mathcal{Z} &= \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\\
 &= \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j + H\\
 &= \sum_j \str(e_j^* \circ -) \cdot e_j + H\\
 &= 1_X + H
@@ -1261,24 +1265,24 @@ H = \sum_j \sum_{p=0}^{n-1} (-1)^{|e_j|} h_i( D \At^{n-p-1}(- \circ e_j^*) ) \cd
 \]
 As the difference of two closed maps $H = \mathcal{Z} - 1_X$ is a closed endomorphism of $X$, and to complete the proof that $\mathcal{Z} \simeq 1_X$ it remains to prove that $H$ is null-homotopic. 
 
-The idea is to use the nondegenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$ (TODO: write $\langle \varphi, - \rangle_{X}$ instead of $\langle \varphi, - \rangle_{\textup{KL}}$ everywhere?)
+The idea is to use the non-degenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
 \be
-\Hom_{k[x,z]}(X,X) \lto \Hom_k( \Hom_{k[x,z]}(X,X), k )[m+n]\,, \qquad \varphi \lmt \langle \varphi, - \rangle_{\textup{KL}}\,.
+\Hom_{k[x,z]}(X,X) \lto \Hom_k( \Hom_{k[x,z]}(X,X), k )[m+n]\,, \qquad \varphi \lmt \langle \varphi, - \rangle_X\,.
 \ee
 induced by the pairing
 \begin{equation}\label{eq:bracketkl}
-\langle -, - \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Res_{k[y,z]/k} \left[ \frac{ \str( - \circ - \circ \underline{\lambda} \underline{\mu}) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_n} V} \right]
+\langle -, - \rangle_X = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Res_{k[y,z]/k} \left[ \frac{ \str( - \circ - \circ \Lambda^{(x)} \Lambda^{(z)}) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_m} V} \right]
 \end{equation}
-where $\underline{\lambda} = ??$ and $\underline{\mu} = ??$. To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ on $\Hom_{k[x,z]}(X,X)$ are homotopic, or what is the same, that $\langle H, \varphi \rangle_{\textup{KL}}$ can be written as a function of $D(\varphi)$. This will follow from a careful study of the map $\str( H \circ - )$.
+where $=\Lambda=\Lambda^{(x)}$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)}$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ on $\Hom_{k[x,z]}(X,X)$ are homotopic, or what is the same, that $\langle H, \varphi \rangle_X$ can be written as a function of $D(\varphi)=[d_X,\varphi]$. This will follow from a careful study of the map $\str( H \circ - )$.
 
 We compute for a homogeneous element $\varphi \in \End(X)$ that
 \begin{align}
 \str(H \varphi) &= \str( \mathcal{Z} \varphi ) - \str(\varphi) \nonumber\\
 &= \sum_i (-1)^{|e_i|} e^*_i \big( \mathcal Z(\varphi(e_i)) \big) - \str(\varphi)\nonumber \\
-& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n} e^*_i \Big( \big\langle\!\big\langle \str( \underline\lambda \At^n (\varphi(e_i)\otimes e^*_j \otimes e_j)) \big\rangle\!\big\rangle \Big) - \str(\varphi)\nonumber \\
-& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n + n|e_j|} e^*_i \Big( \big\langle\!\big\langle \str( \underline\lambda \At^n (\varphi(e_i)\otimes e^*_j )) \big\rangle\!\big\rangle e_j \Big) - \str(\varphi)\nonumber \\
-& = \big\langle\!\big\langle \str \big( \underline\lambda \At^n \big(\sum_i \varphi(e_i)\otimes e^*_j \big)\big) \big\rangle\!\big\rangle - \str(\varphi)\nonumber \\
-& = \big\langle\!\big\langle \str \big( \underline\lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle - \str(\varphi) \nonumber\\
+& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n} e^*_i \Big( \big\langle\!\big\langle \str( \Lambda \At^n (\varphi(e_i)\otimes e^*_j \otimes e_j)) \big\rangle\!\big\rangle \Big) - \str(\varphi)\nonumber \\
+& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n + n|e_j|} e^*_i \Big( \big\langle\!\big\langle \str( \Lambda \At^n (\varphi(e_i)\otimes e^*_j )) \big\rangle\!\big\rangle e_j \Big) - \str(\varphi)\nonumber \\
+& = \big\langle\!\big\langle \str \big( \Lambda \At^n \big(\sum_i \varphi(e_i)\otimes e^*_j \big)\big) \big\rangle\!\big\rangle - \str(\varphi)\nonumber \\
+& = \big\langle\!\big\langle \str \big( \Lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle - \str(\varphi) \nonumber\\
 &= \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) ) \label{strlambdaAtn}
 \end{align}
 where in the last step we use Lemma \ref{lemma:langlecalc1}. For the final steps in the argument we will need the following lemma.
@@ -1304,27 +1308,27 @@ where we used Lemma~\ref{lem:LeibnizForDQO} in the third step.
 \begin{theorem}\label{theorem:mainzorro} The Zorro map $\mathcal{Z}$ is homotopic to $1_X$.
 \end{theorem}
 \begin{proof}
-As we have already mentioned, it suffices by nondegeneracy of \eqref{eq:bracketkl} to prove that $\langle H, - \rangle_{\textup{KL}}$ is a null-homotopic function $\Hom_{k[x,z]}(X,X) \lto k$. For $\varphi' \in \End(X)$ the numerator in the residue which computes $\langle H, \varphi' \rangle_{\textup{KL}}$ is, using \eqref{strlambdaAtn}, a differential form multiplied by
+As we have already mentioned, it suffices by non-degeneracy of \eqref{eq:bracketkl} to prove that $\langle H, - \rangle_X$ is a null-homotopic function $\Hom_{k[x,z]}(X,X) \lto k$. For $\varphi' \in \End(X)$ the numerator in the residue which computes $\langle H, \varphi' \rangle_X$ is, using \eqref{strlambdaAtn}, a differential form multiplied by
 \[
-\str( H \varphi' \underline{\lambda} \underline{\mu}) = \sum_{p=0}^{n-1} h_p( D \At^{n-p-1}(\varphi' \underline{\lambda} \underline{\mu}) )
+\str( H \varphi' \Lambda^{(x)} \Lambda^{(z)}) = \sum_{p=0}^{n-1} h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) )
 \]
-But given $\varphi' \in \End(X)$ if we set $\varphi = \varphi' \circ \underline{\lambda} \underline{\mu}$ and substitute in (\ref{??}) we find that the two functionals $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ differ by a term which is an expression in residues of
+But given $\varphi' \in \End(X)$ if we set $\varphi = \varphi' \circ \Lambda^{(x)} \Lambda^{(z)}$ and substitute in (\ref{??}) we find that the two functionals $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ differ by a term which is an expression in residues of
 \begin{equation}\label{eq:mainzorro1}
-h_p( D \At^{n-p-1}(\varphi) ) = h_p( D \At^{n-p-1}(\varphi' \underline{\lambda} \underline{\mu}) )\,.
+h_p( D \At^{n-p-1}(\varphi) ) = h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) )\,.
 \end{equation}
 But $\At$ is closed, so 
 \begin{align}
-h_p( D \At^{n-p-1}(\varphi' \underline{\lambda} \underline{\mu}) ) &= h_p \At^{n-p-1}D(\varphi' \underline{\lambda} \underline{\mu}) ) \nonumber\\
-&= h_p \At^{n-p-1}\big( D(\varphi') \underline{\lambda} \underline{\mu} )\\
-&\qquad + (-1)^{|\phi'|} h_p \At^{n-p-1}\big( \varphi' D(\underline{\lambda}) \underline{\mu} ) \label{eq:mainzorro4}\\
-&\qquad + (-1)^{|\phi'| + n} h_p \At^{n-p-1}\big( \varphi' \underline{\lambda} D(\underline{\mu}) ) \, . \label{eq:mainzorro5}
+h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) ) &= h_p \At^{n-p-1}D(\varphi' \Lambda^{(x)} \Lambda^{(z)}) ) \nonumber\\
+&= h_p \At^{n-p-1}\big( D(\varphi') \Lambda^{(x)} \Lambda^{(z)} )\\
+&\qquad + (-1)^{|\phi'|} h_p \At^{n-p-1}\big( \varphi' D(\Lambda^{(x)}) \Lambda^{(z)} ) \label{eq:mainzorro4}\\
+&\qquad + (-1)^{|\phi'| + n} h_p \At^{n-p-1}\big( \varphi' \Lambda^{(x)} D(\Lambda^{(z)}) ) \, . \label{eq:mainzorro5}
 \end{align}
-Now $D(\underline{\mu})$ is a linear combination of terms divisible by the $\partial_{z_j} V$, and since $h_p$ and $\At$ are $k[z]$-linear these coefficients pass through to annihilate with the denominator in the residue in  (\ref{eq:bracketkl}). 
+Now $D(\Lambda^{(z)})$ is a linear combination of terms divisible by the $\partial_{z_j} V$, and since $h_p$ and $\At$ are $k[z]$-linear these coefficients pass through to annihilate with the denominator in the residue in  (\ref{eq:bracketkl}). 
 
-Similarly $\varphi' D(\underline{\lambda}) \underline{\mu}$ is a sum of terms of the form $f_j \alpha$ for various $j$. But the Atiyah class and the commutator $[\underline{\lambda}_{i_1,\ldots,i_p}, \nabla]$ are right linear (explain right action on $\Bar$) so
+Similarly $\varphi' D(\Lambda^{(x)}) \Lambda^{(z)}$ is a sum of terms of the form $f_j \alpha$ for various $j$. But the Atiyah class and the commutator $[\Lambda_{i_1,\ldots,i_p}, \nabla]$ are right linear (TODO: explain right action on $\Bar$?) so
 \begin{align*}
 h_p \At^{n-p-1}\big( \alpha f_j ) &= h_p\left( \At^{n-p-1}(\alpha) \cdot f_j \right)\\
-&= \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla \left\{ f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \underline{\lambda}_{i_1,\ldots,i_p}, \nabla]\At^{n-p-1}(\alpha) \big) \cdot f_j \right\} \Big\rangle\!\Big\rangle\,.
+&= \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla \left\{ f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}, \nabla]\At^{n-p-1}(\alpha) \big) \cdot f_j \right\} \Big\rangle\!\Big\rangle\,.
 \end{align*}
 But $\nabla( f_{i_1} \beta f_j ) = f_{i_1} \nabla( \beta f_j ) + df_{i_1} \beta f_j$. The first summand vanishes in the residue for obvious reasons, and the second vanishes since by Lemma~\ref{lem:PsiToTheRight}
 \[
@@ -1334,10 +1338,10 @@ which vanishes in the residue.
 
 The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contribute under the residue, so that
 \[
-\langle H, - \rangle_{\textup{KL}} = 
-\frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[y,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \underline{\lambda} \underline{\mu} ) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_n} V} \right]\,.
+\langle H, - \rangle_X = 
+\frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[y,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \Lambda^{(x)} \Lambda^{(z)} ) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_m} V} \right]\,.
 \]
-This proves that $\langle \mathcal{Z}, - \rangle_{\textup{KL}}$ and $\langle 1_X, - \rangle_{\textup{KL}}$ are homotopic functionals, and so by the nondegeneracy of Theorem \ref{??} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
+This proves that $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals, and so by the non-degeneracy of Theorem \ref{??} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
 \end{proof}
 
 The three other Zorro moves are proven analogously (\textbf{todo}).
@@ -1349,20 +1353,24 @@ TODO: $\LG$ has adjoints\ldots
 
 [TODO: Show that canonical definition of dual 2-morphism gives the same as naive definition; that's the same as proving the morphism-migration property (say for evaluation, here it follows directly from pre-/post-composition etc.)]
 
+TODO: show that $\LG$ is pivotal in the right sense
+
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
-In any bicategory with duals there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its dual). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
+In any bicategory with adjoints there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its adjoint). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
 Let $X\in \hmf(k[x,z], V-W)$ as before. In this section when we write $\End$ we mean the spaces of 2-endomorphisms in $\LG$. We define maps 
 $$
 \mathcal D_l(X): \End(\Delta_V) \longrightarrow \End(\Delta_W) \, , \qquad
 \mathcal D_r(X): \End(\Delta_W) \longrightarrow \End(\Delta_V)
 $$
-in terms of the morphisms encoding the monoidal and duality structures as follows. For $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we set
+in terms of the morphisms encoding the monoidal and adjunction structures as follows. For $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we set
 \begin{align*}
 \mathcal D_l(X)(\phi) & = \eval_X \circ (1_{X^\dual}\otimes (\lambda_X \circ (\phi\otimes 1_X)\circ \lambda_X^{-1})) \circ \widetilde\coev_X \, , \\ 
-\mathcal D_r(X)(\phi) & = \widetilde\eval_X \circ (1_{X}\otimes (\lambda_{X^\dual} \circ (\phi\otimes 1_{X^\dual})\circ \lambda_{X^\dual}^{-1})) \circ \coev_X \, .
+\mathcal D_r(X)(\psi) & = \widetilde\eval_X \circ (1_{X}\otimes (\lambda_{X^\dual} \circ (\phi\otimes 1_{X^\dual})\circ \lambda_{X^\dual}^{-1})) \circ \coev_X \, .
 \end{align*}
+In the special case $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
+
 Diagrammatically these definitions read 
 \be\label{defectaction}
 \mathcal D_l(X)(\phi) = 
@@ -1427,7 +1435,7 @@ $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(
 describes two-point correlators. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
 \end{remark}
 
-Using the ``folding trick'' (which relates defects to boundary conditions in a product theory) one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$. This was done in~\cite{cr1006.5609} for the case $V=W$. Here we use the duality structure to directly prove it for the general case: 
+Using the ``folding trick'' (which relates defects to boundary conditions in a product theory) one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$. This was done in~\cite{cr1006.5609} for the case $V=W$. Here we use our adjunction formulas to directly prove it for the general case: 
 
 \begin{proposition}
 For any $X\in \hmf(k[z_1,\ldots,z_m,x_1,\ldots,x_n], V-W)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
@@ -1436,8 +1444,6 @@ For any $X\in \hmf(k[z_1,\ldots,z_m,x_1,\ldots,x_n], V-W)$, $\phi\in \End(\Delta
 \mathcal D_r(X)(\psi) & = (-1)^{{m\choose 2} + {n+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
 \end{align*}
 \end{proposition}
-
-[TODO: point out that qdim$(\Delta)=1$, define what left and right quantum dimensions are]
 
 \begin{proof}
 We treat the case of $\mathcal D_l(X)$ in detail, the argument for $\mathcal D_r(X)$ works analogously. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to set $x=y$ and $z=z'$ at appropriate places, cf.~\eqref{defectaction}. Furthermore, $\lambda_X$ will project out all non-zero degree contributions coming from the action of $\lambda_X^{-1}$, so $\lambda_X\circ (\phi \otimes 1_X)\circ \lambda_X^{-1}$ is simply multiplication by the polynomial $\phi(z)$. 
@@ -1506,7 +1512,7 @@ $$
 
 \section{Shadows}\label{sec:shadows}
 
-The duality structure of $\LG$ affords us the construction of the bicategorical trace in terms of shadow functors~\cite{p0807.1471}. We will also see that shadows allow to recover and generalise the boundary-bulk and bulk-boundary maps of the two-dimensional topological field theories based on Landau-Ginzburg models. 
+The adjunctions in $\LG$ afford us the construction of a bicategorical trace in terms of shadow functors~\cite{p0807.1471}. We will also see that shadows allow to recover and generalise the boundary-bulk and bulk-boundary maps of the two-dimensional topological field theories based on Landau-Ginzburg models. 
 
 \begin{definition}
 A bicategory~$\mathcal B$ \textsl{has shadows} if there is a category~$\mathcal C$ together with functors
@@ -1543,15 +1549,15 @@ The bicategory $\LG$ has shadows given by
 \langle\!\langle - \rangle\!\rangle : \LG \big( (R,W), (R,W) \big) & \lra \hmf(k,0) \, , \\
 Z & \lmt Z\otimes_{\Re} R
 \end{align*}
-with the isomorphism $\theta: \langle\!\langle X \otimes Y \rangle\!\rangle \lra \langle\!\langle Y\otimes X  \rangle\!\rangle$ induced by the graded twist map $X \otimes Y \lra Y \otimes X$. 
+with the isomorphism $\theta: \langle\!\langle X \otimes Y \rangle\!\rangle \lra \langle\!\langle Y\otimes X  \rangle\!\rangle$ induced by the graded swap map $X \otimes Y \lra Y \otimes X$. 
 \end{proposition}
 
 The proof is a straightforward check of the axioms, made especially easy by the fact that $\langle\!\langle - \rangle\!\rangle$ is simply defined as tensoring with the actual diagonal~$R$. Note however that this is homotopy equivalent to tensoring with the unit matrix factorisation $\Delta_W$. 
 
-Since $\LG$ is a bicategory with  duals and shadows it is automatically equipped with a 2-categorical trace operation as introduced and discussed at length in~\cite{p0807.1471, ps0910.1306}. We only quote the definition: 
+Since $\LG$ is a bicategory with adjoints and shadows it is automatically equipped with a 2-categorical trace operation as introduced and discussed at length in~\cite{p0807.1471, ps0910.1306}. We only quote the definition: 
 
 \begin{definition}
-Let~$\mathcal B$ be a bicategory with shadows and a dualisable 1-morphism~$Y$. Then the \textsl{trace} of a 2-morphism $\psi: X\otimes Y \lra Y \otimes Z$ is the map 
+Let~$\mathcal B$ be a bicategory with shadows and 1-morphism~$Y$ with adjoint~$Y^\dual$. Then the \textsl{trace} of a 2-morphism $\psi: X\otimes Y \lra Y \otimes Z$ is the map 
 $$
 \xymatrix{%
 \langle\!\langle X \rangle\!\rangle \ar[rr]^-{\langle\!\langle1\otimes \coev_Y\rangle\!\rangle} && 
@@ -1564,7 +1570,7 @@ $$
 $$
 \end{definition}
 
-Next we wish to point out a connection between shadows and the structure of two-dimensional open/closed topological field theory (TFT) for Landau-Ginzburg models. Recall that a TFT is the data of a commutative Frobenius algebra~$C$, a Calabi-Yau category~$\mathcal O$, bulk-boundary maps $\beta_A: C \lra \End_{\mathcal O}(A)$, and boundary-bulk maps $\beta^A: \End_{\mathcal O}(A) \lra C$ for all $A\in\mathcal O$. These data are subject to several consistency conditions, see e.\,g.~\cite{Kock}. 
+Next we wish to point out a connection between shadows and the structure of two-dimensional open/closed topological field theory (TFT) for Landau-Ginzburg models. Recall that a TFT is the data of a commutative Frobenius algebra~$C$, a Calabi-Yau category~$\mathcal O$, bulk-boundary maps $\beta_A: C \lra \End_{\mathcal O}(A)$, and boundary-bulk maps $\beta^A: \End_{\mathcal O}(A) \lra C$ for all $A\in\mathcal O$. These data are subject to several consistency conditions, see e.\,g.~\cite{TODO: Lazaroiu and Moore-Segal}. 
 
 Every Landau-Ginzburg model with potential $W\in R = k[x_1,\ldots,x_n]$ gives rise to a TFT with $C=R/(\partial W)$, $\mathcal O = \hmf(R,W)$ and
 \be\label{betaQ}
@@ -1573,24 +1579,24 @@ Every Landau-Ginzburg model with potential $W\in R = k[x_1,\ldots,x_n]$ gives ri
 \ee
 The hardest part in establishing this result is to prove the non-degeneracy of the Kapustin-Li pairing and that the Cardy condition holds; this was first done in~\cite{m0912.1629} and~\cite{pv1002.2116}, respectively, in the case where~$k$ is a field. In Sections~\ref{section:dualityadjointop} and~\ref{sec:CardyCondition} we will give new proofs for the general case. 
 
-We note that the maps~\eqref{betaQ} can be recovered from the duality and shadow structure of $\LG$ as follows. On the one hand we have 
+We note that the maps~\eqref{betaQ} can be recovered from the adjunction and shadow structure of $\LG$ as follows. On the one hand we have 
 $$
 \langle\!\langle \Delta_W \rangle\!\rangle = R/(\partial W)[n]
 $$
 since $\langle\!\langle \Delta_W \rangle\!\rangle = \Delta_W \otimes_{\Re} R = (\bigwedge (\bigoplus_{i=1}^n R \theta_i), \sum_{i=1}^n \partial_{x_i}W \theta_i)$ which is homotopy equivalent (and therefore equal in $\hmf(k,0)$) to $R/(\partial W)[n]$. On the other hand $\langle\!\langle Q^\dual \otimes Q \rangle\!\rangle = Q^\vee \otimes_k Q \otimes_{\Re} R = \End_R(Q)$. Thus from the explicit expressions~\eqref{TODO} and~\eqref{TODO} we find that $\beta_Q = \langle\!\langle \widetilde\coev_Q \rangle\!\rangle$ and $\beta^Q = \langle\!\langle \eval_Q \rangle\!\rangle$ (up to a sign, TODO?). 
 
-Motivated by the above this construction can be extended to any 1-morphism in $\LG$: for $X \in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], W_1 - W_2)$ we define the \textsl{generalised bulk-boundary} and \textsl{boundary-bulk maps} to be
+Motivated by the above this construction can be extended to any 1-morphism in $\LG$: for $X \in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ we define the \textsl{generalised bulk-boundary} and \textsl{boundary-bulk maps} to be
 $$
-\beta_X= \langle\!\langle \widetilde\coev_X \rangle\!\rangle : \langle\!\langle \Delta_{W_2} \rangle\!\rangle \lra \langle\!\langle X^\dual \otimes X \rangle\!\rangle
+\beta_X= \langle\!\langle \widetilde\coev_X \rangle\!\rangle : \langle\!\langle \Delta_{W} \rangle\!\rangle \lra \langle\!\langle X^\dual \otimes X \rangle\!\rangle
 \, , \qquad 
-\beta^X= \langle\!\langle \eval_X \rangle\!\rangle : \langle\!\langle X^\dual \otimes X \rangle\!\rangle \lra \langle\!\langle \Delta_{W_2} \rangle\!\rangle \, , 
+\beta^X= \langle\!\langle \eval_X \rangle\!\rangle : \langle\!\langle X^\dual \otimes X \rangle\!\rangle \lra \langle\!\langle \Delta_{W} \rangle\!\rangle \, , 
 $$
 respectively. Substituting the expressions~\eqref{TODO} and~\eqref{TODO} we find that the form of $\beta_X$ stays the same while for $m\neq 0$ the generalised boundary-bulk map $\beta^X$  involves a residue and additional derivatives $\partial_{z_i} d_X$: 
 \begin{align*}
-\beta_X : k[x]/(\partial W_1)[n] & \lra \End_{k[x,z]}(X)[m] \, , \\
+\beta_X : k[x]/(\partial V)[n] & \lra \End_{k[x,z]}(X)[m] \, , \\
 \phi & \lmt \phi \cdot 1_{X}[m] \, , \\
-\beta^X : \End_{k[x,z]}(X)[m] & \lra k[x]/(\partial W_1)[n] \, , \\
-\psi & \lmt (-1)^{m+1\choose 2} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\, \partial_{z_1} d_X \ldots \partial_{z_m} d_X \partial_{x_1} d_X \ldots \partial_{x_n} d_X \right) \underline{\operatorname{d}\!z}}{\partial_{z_1} W_2 \ldots \partial_{z_m} W_2} \right] \, . 
+\beta^X : \End_{k[x,z]}(X)[m] & \lra k[x]/(\partial V)[n] \, , \\
+\psi & \lmt (-1)^{m+1\choose 2} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\, \partial_{z_1} d_X \ldots \partial_{z_m} d_X \partial_{x_1} d_X \ldots \partial_{x_n} d_X \right) \underline{\operatorname{d}\!z}}{\partial_{z_1} W \ldots \partial_{z_m} W} \right] \, . 
 \end{align*}
 
 [TODO: comment on relation to defect action??]
@@ -1608,13 +1614,13 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \nicereallynocolourscheme (0,0) circle (1);
 \fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
 \draw (0,0) circle (2);
-\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {{\small$\eval_Y$}}; 
-\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {{\small$\widetilde\coev_Y$}}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {{\small$\eval_Y$}}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {{\small$\widetilde\coev_Y$}}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \draw (0,0) circle (1);
-\draw[->, very thick] (0,1) -- (0.001,1) node[above] {{\small$\widetilde\eval_X$}}; 
-\draw[->, very thick] (0,-1) -- (-0.001,-1) node[below] {{\small$\coev_X$}}; 
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {{\small$\widetilde\eval_X$}}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1627,7 +1633,7 @@ To put ourselves in a position to better understand and manipulate~\eqref{annulu
 \end{align}
 where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$. 
 
-We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collpase its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
+We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
 $$
 C 
 = 
@@ -1636,13 +1642,13 @@ C
 \nicereallynocolourscheme (0,0) circle (1);
 \fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
 \draw (0,0) circle (2);
-\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
-\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \draw (0,0) circle (1);
-\draw[->, very thick] (0,1) -- (0.001,1) node[above] {}; 
-\draw[->, very thick] (0,-1) -- (-0.001,-1) node[below] {}; 
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 \end{tikzpicture} 
 = 
@@ -1650,8 +1656,8 @@ C
 \nicecolourscheme (0,0) circle (2);
 \fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
 \draw (0,0) circle (2);
-\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
-\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
@@ -1678,27 +1684,27 @@ C
 \nicereallynocolourscheme (0,0) circle (1);
 \fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
 \draw (0,0) circle (2);
-\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
-\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \draw (0,0) circle (1);
-\draw[->, very thick] (0,1) -- (0.001,1) node[above] {}; 
-\draw[->, very thick] (0,-1) -- (-0.001,-1) node[below] {}; 
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 \end{tikzpicture} 
 = 
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
 \draw (0,0) circle (2);
-\draw[->, very thick] (0,2) -- (-0.001,2) node[above] {}; 
-\draw[->, very thick] (0,-2) -- (0.001,-2) node[below] {}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
 \fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
 \end{tikzpicture} 
 = 
 \str (\psi \circ (-) \circ \varphi ) \, .
 \ee
-Here the second step follows from the general calculus of bicategories with duals; see e.\,g.~\cite[Lemma~3.1(iii)]{cr1006.5609} for a detailed proof [TODO: only if we have pivotality! Need to prove that!]. Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
+Here the second step follows from the general calculus of bicategories with duals; see e.\,g.~\cite[Lemma~3.1(iii)]{cr1006.5609} for a detailed proof [TODO: only if we have pivotality! Need to prove that first!]. Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
 
 \begin{theorem}
 The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have
@@ -1719,35 +1725,35 @@ TODO: Mention HRR as special example, more discussion needed?
 % All rings are commutative by default unless they are called "associative"
 % TODO match generality to dviat5
 
-Let $k$ be a noetherian $\mathbb{Q}$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a nondegenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
+Let $k$ be a noetherian $\mathbb{Q}$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a non-degenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
 
 Given $W \in R$ and two finite rank matrix factorisations $X,Y$ of $W$ let $\Hom(X,Y) = \Hom_R(X,Y)$ denote the $\mathbb{Z}_2$-graded Hom-complex. We define a natural $k$-bilinear pairing
 \[
-\langle -, - \rangle_{\textup{KL}}: \Hom(X,Y) \otimes_k \Hom(Y,X) \lto k[n]
+\langle -, - \rangle: \Hom(X,Y) \otimes_k \Hom(Y,X) \lto k[n]
 \]
-by the following formula, where $\lambda_i = \partial_{x_i}(D_Y), \omega = \ud x_1 \cdots \ud x_n$ and $f_i = \partial_{x_i} W$
+by the following formula, where $\lambda_i = \partial_{x_i}d_Y, \omega = \ud x_1 \ldots \ud x_n$ and $f_i = \partial_{x_i} W$: 
 \begin{equation}\label{eq:generalklpairing}
-\langle \varphi, \psi \rangle_{\textup{KL}} = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1,\ldots,f_n } \Bigg]\,.
+\langle \varphi, \psi \rangle = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1,\ldots,f_n } \Bigg]\,.
 \end{equation}
-Such a pairing is \textsl{homotopically nondegenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
-\begin{gather*}
-\Hom(X,Y) \lto \Hom_k( \Hom(Y,X), k )[n]\,,\\
-\varphi \lmt \langle \varphi, - \rangle_{\textup{KL}}
-\end{gather*}
-is a homotopy equivalence over $k$. The main theorem here is that under some reasonable hypotheses the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate. This nondegeneracy is used in Section \ref{??} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
+Such a pairing is \textsl{homotopically non-degenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
+\begin{align*}
+\Hom(X,Y) & \lto \Hom_k( \Hom(Y,X), k )[n]\,,\\
+\varphi & \lmt \langle \varphi, - \rangle
+\end{align*}
+is a homotopy equivalence over $k$. The main theorem here is that under some reasonable hypotheses the pairing $\langle -, - \rangle$ is homotopically non-degenerate. This non-degeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
 
 \begin{theorem}\label{theorem:generalkl} Suppose that the following conditions are satisfied
 \begin{itemize}
 \item[(H1)] The partial derivatives $f_i = \partial_{x_i} W$ form a regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$.
 \item[(H2)] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
 \item[(H3)] The $R$-linear map
-\begin{gather*}
-\bar{R} \lto \Hom_k( \bar{R}, k)\,\\
-r \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]
-\end{gather*}
+\begin{align*}
+\bar{R} & \lto \Hom_k( \bar{R}, k)\, , \\
+r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]
+\end{align*}
 is an isomorphism.
 \end{itemize}
-Then the pairing $\langle -, - \rangle_{\textup{KL}}$ is homotopically nondegenerate.
+Then the pairing $\langle -, - \rangle$ is homotopically non-degenerate.
 \end{theorem}
 
 There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they split idempotents on
@@ -1764,60 +1770,61 @@ respectively, in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes. T
 \end{equation}
 of complexes which identify these idempotents, and from this the theorem follows. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\bar{R}$ is Frobenius over $k$. The hard work lies in showing that this isomorphism identifies the two idempotents, and for this we need to carefully study adjointness between operators on dg-categories. Thus the first part of the proof, in Section \ref{section:adjointopdg}, consists in formalising this kind of adjointness.
 
-In fact it will be convenient to prove the theorem slightly more generally, since in order to equip $R$ with a connection we may need to pass to the $fR$-adic completion. Consequently, for the rest of this section $R$ is an arbitrary noetherian $k$-algebra, $W \in R$, and our actual hypotheses are:
+In fact it will be convenient to prove the theorem slightly more generally, since in order to equip~$R$ with a connection we may need to pass to the $fR$-adic completion. Consequently, for the rest of this section $R$ is an arbitrary noetherian $k$-algebra, $W \in R$, and our actual hypotheses are:
 \begin{itemize}
-\item[(H1')] $f = \{ f_1,\ldots,f_n \}$ is any regular sequence in $R$ with the property that multiplication by $f_i$ is a null-homotopic endomorphism of $X,Y \in \hmf(R,W)$ for $1 \le i \le n$.
-\item[(H2')] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
-\item[(H3')] $R$ admits a flat $k$-linear connection
+\item[(H1$'$)] $f = \{ f_1,\ldots,f_n \}$ is any regular sequence in $R$ with the property that multiplication by $f_i$ is a null-homotopic endomorphism of $X,Y \in \hmf(R,W)$ for $1 \le i \le n$.
+\item[(H2$'$)] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
+\item[(H3$'$)] $R$ admits a flat $k$-linear connection
 \[
 \nabla: R \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}
 \]
 as a $k[f]$-module, which is standard in the sense of \cite{??}.
-\item[(H4')] There is an $n$-form $\omega \in \Omega^n_{R/k}$ such that the $R$-linear map
-\begin{gather*}
-\bar{R} \lto \Hom_k( \bar{R}, k)\,\\
-r \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1, \ldots, f_n} \Bigg]
-\end{gather*}
+\item[(H4$'$)] There is an $n$-form $\omega \in \Omega^n_{R/k}$ such that the $R$-linear map
+\begin{align*}
+\bar{R} & \lto \Hom_k( \bar{R}, k)\,\\
+r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1, \ldots, f_n} \Bigg]
+\end{align*}
 is an isomorphism.
 \end{itemize}
-In this situation one can still write down the pairing (\ref{eq:generalklpairing}) and we prove that this is homotopically nondegenerate (Proposition \ref{prop:almostkltheorem}). The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H3') above even if the polynomial ring does not.
+In this situation one can still write down the pairing (\ref{eq:generalklpairing}) and we prove that this is homotopically non-degenerate (Proposition \ref{prop:almostkltheorem}). The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H3$'$) above even if the polynomial ring does not.
 
 \subsection{Adjoint operators on dg-categories}\label{section:adjointopdg}
 % TODO: Point out that these Atiyah classes are from connections over k[f], not k like in the associative case.
 
-In this section $\otimes$ denotes $\otimes_k$. Let $\cat{C}$ be a $\mathbb{Z}_2$-graded dg-category over $k$ equipped with the data of a $k$-linear morphism of complexes for each pair of objects $X,Y$ in $\cat{C}$
+In this section $\otimes$ denotes $\otimes_k$. Let $\cat{C}$ be a $\mathbb{Z}_2$-graded dg-category over $k$ equipped with the data of a $k$-linear morphism of complexes 
 \[
-c_{XY}: \cat{C}(X,Y) \otimes \cat{C}(Y,X) \lto k\,.
+c_{XY}: \cat{C}(X,Y) \otimes \cat{C}(Y,X) \lto k
 \]
+for each pair of objects $X,Y$ in $\cat{C}$. 
 When it is convenient we write $\langle \alpha, \beta \rangle$ for $c_{XY}(\alpha \otimes \beta)$. Throughout the differentials on the $\cat{C}(X,Y)$ and their tensor products are denoted $D$, with additional subscripts if necessary.
 
 \begin{definition}\label{defn:nondegpair} We say that the pairing $\{ c_{XY} \}_{X,Y \in \cat{C}}$ is
 \begin{itemize}
-\item[(i)] \textsl{Cyclic} if for all $X,Y$ the diagram
+\item[(i)] \textsl{cyclic} if for all $X,Y$ the diagram
 \[
 \xymatrix{
 \cat{C}(X,Y) \otimes \cat{C}(Y,X) \ar[dr]_{c_{XY}}\ar[rr]^\tau & & \cat{C}(Y,X) \otimes \cat{C}(X,Y) \ar[dl]^{c_{YX}}\\
 & k
 }
 \]
-commutes, where $\tau$ is the graded twist $\tau( \varphi \otimes \psi) = (-1)^{|\varphi||\psi|} \psi \circ \varphi$. 
-\item[(ii)] \textsl{Nondegenerate} if for all $X,Y$ the morphism
-\begin{gather*}
-\zeta_{XY}: \cat{C}(X,Y) \lto \Hom_k( \cat{C}(Y,X), k)\,,\\
-\varphi \lmt c_{XY}( \varphi \otimes - )
-\end{gather*}
+commutes, where $\tau$ is the graded twist $\tau( \varphi \otimes \psi) = (-1)^{|\varphi||\psi|} \psi \circ \varphi$; 
+\item[(ii)] \textsl{non-degenerate} if for all $X,Y$ the morphism
+\begin{align*}
+\zeta_{XY}: \cat{C}(X,Y) & \lto \Hom_k( \cat{C}(Y,X), k)\,,\\
+\varphi & \lmt c_{XY}( \varphi \otimes - )
+\end{align*}
 is an isomorphism of complexes.
 \end{itemize}
 \end{definition}
 
-%\begin{remark} \textbf{todo}. Probably this all works for a weaker form of nondegeneracy, where $\zeta$ is just a homotopy equivalence, but we don't need this. In what generality should we state things, then? Maybe we also only need cyclicity up to homotopy.
+%\begin{remark} \textbf{todo}. Probably this all works for a weaker form of non-degeneracy, where $\zeta$ is just a homotopy equivalence, but we don't need this. In what generality should we state things, then? Maybe we also only need cyclicity up to homotopy.
 %\end{remark}
 
-From now on we assume $\cat{C}$ is equipped with a cyclic nondegenerate pairing. In this section an \textsl{operator} is a closed homogeneous $k$-linear operator on some mapping complex $\cat{C}(X,Y)$ in $\cat{C}$, that is, a closed homogeneous element of the complex $\Hom_k( \cat{C}(X,Y), \cat{C}(X,Y) )$. We are interested in linear operators on the $\cat{C}(X,Y)$ and adjunctions between them, with respect to the pairing.
+From now on we assume $\cat{C}$ is equipped with a cyclic non-degenerate pairing. In this section an \textsl{operator} is a closed homogeneous $k$-linear operator on some mapping complex $\cat{C}(X,Y)$ in $\cat{C}$, that is, a closed homogeneous element of the complex $\Hom_k( \cat{C}(X,Y), \cat{C}(X,Y) )$. We are interested in linear operators on the $\cat{C}(X,Y)$ and adjunctions between them, with respect to the pairing.
 
 Recall that if $\Psi$ is homogeneous then $1 \otimes \Psi$ acts on tensors with Koszul signs.
 
-\begin{definition}\label{defn:adjointop} An operator $\Phi$ on $\cat{C}(X,Y)$ is \textsl{adjoint} to an operator $\Psi$ on $\cat{C}(Y,X)$ if both $\Phi$ and $\Psi$ are homogeneous of the same degree and the diagram
+\begin{definition}\label{defn:adjointop} An operator $\Phi$ on $\cat{C}(X,Y)$ is \textsl{adjoint} to an operator $\Psi$ on $\cat{C}(Y,X)$ if both~$\Phi$ and~$\Psi$ are homogeneous of the same degree and the diagram
 \[
 \xymatrix@C+1pc@R+0.5pc{
 \cat{C}(X,Y) \otimes \cat{C}(Y,X) \ar[d]_{\Phi \otimes 1} \ar[r]^{1 \otimes \Psi} & \cat{C}(X,Y) \otimes \cat{C}(Y,X) \ar[d]^{c_{XY}}\\
@@ -1830,11 +1837,12 @@ commutes up to homotopy. Equivalently, there is a $k$-linear degree $|\Phi|+1$ m
 \]
 with the property that $[D, \mu] = c_{XY} \circ (1 \otimes \Psi) - c_{XY} \circ ( \Phi \otimes 1)$. Evaluated on homogeneous morphisms $\alpha, \beta$ this identity reads
 \begin{equation}\label{eq:adjointopeq}
-(-1)^{|\Phi|} \mu D(\alpha \otimes \beta) = (-1)^{|\alpha||\Psi|}\langle \alpha, \Psi(\beta) \rangle - \langle \Phi(\alpha) , \beta \rangle.
+(-1)^{|\Phi|} \mu D(\alpha \otimes \beta) = (-1)^{|\alpha||\Psi|}\langle \alpha, \Psi(\beta) \rangle - \langle \Phi(\alpha) , \beta \rangle \, .
 \end{equation}
 \end{definition}
 
-We will show in a moment that adjointness is symmetric in $\Phi, \Psi$ so there is no need to distinguish between left and right adjoints. If $\Psi$ is a homogeneous operator on $\cat{C}(Y,X)$ then $\Psi^*$ is the operator on $\Hom_k(\cat{C}(Y,X),k)$ defined by $\Psi^*(f) = (-1)^{|f||\Psi|} f \circ \Psi$. It is easy to see that
+We will show in a moment that this type of adjointness is symmetric in $\Phi, \Psi$ so there is no need to distinguish between left and right adjoints. If $\Psi$ is a homogeneous operator on $\cat{C}(Y,X)$ then $\Psi^*$ is the operator on $\Hom_k(\cat{C}(Y,X),k)$ defined by $\Psi^*(f) = (-1)^{|f||\Psi|} f \circ \Psi$. 
+%It is easy to see that: 
 
 \begin{lemma} An operator $\Phi$ is adjoint to $\Psi$ if and only if the diagram
 \begin{equation}\label{eq:lemadjointdia}
@@ -1865,20 +1873,20 @@ This follows from commutativity of (\ref{eq:lemadjointdia}).
 Since the adjoint is only well-defined up to homotopy it is implicit that in any identities involving the dagger notation we are working in the homotopy category of $\mathbb{Z}_2$-graded complexes. The following basic properties of adjoints are easily checked.
 
 \begin{lemma} 
-\begin{itemize}
-\item[(i)] Let $\Phi_1, \Phi_2$ be operators on $\cat{C}(X,Y)$ and $\cat{C}(Y,Z)$ respectively. Then
+\begin{enumerate}
+\item Let $\Phi_1, \Phi_2$ be operators on $\cat{C}(X,Y)$ and $\cat{C}(Y,Z)$ respectively. Then
 \[
 (\Phi_2 \circ \Phi_1)^{\dagger} = (-1)^{|\Phi_1||\Phi_2|} \Phi_1^{\dagger} \circ \Phi_2^{\dagger}\,.
 \]
-\item[(ii)] If $\Phi_1, \Phi_2$ are operators on $\cat{C}(X,Y)$ of the same degree, then $(\Phi_1 + \Phi_2)^{\dagger} = \Phi_1^{\dagger} + \Phi_2^{\dagger}$.
-\end{itemize}
+\item If $\Phi_1, \Phi_2$ are operators on $\cat{C}(X,Y)$ of the same degree, then $(\Phi_1 + \Phi_2)^{\dagger} = \Phi_1^{\dagger} + \Phi_2^{\dagger}$.
+\end{enumerate}
 \end{lemma}
 
 So much for the general theory; from now on $\cat{C}$ denotes the dg-category whose objects are finite rank matrix factorisations of $W$ and whose mapping complexes are given by the quotients
 \[
 \cat{C}(X,Y) = \Hom(\bar{X}, \bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}\,.
 \]
-While the ordinary dg-category of matrix factorisations only admits a pairing which is homotopically nondegenerate, this (linear) quotient $\cat{C}$ admits a cyclic nondegenerate pairing in the stronger sense explained above. To define it, let
+While the ordinary dg-category of matrix factorisations only admits a pairing which is homotopically non-degenerate, this (linear) quotient $\cat{C}$ admits a cyclic non-degenerate pairing in the stronger sense explained above. To define it, let
 \[
 \langle - \rangle: R \lto k
 \]
@@ -1889,11 +1897,11 @@ denote the $k$-linear map
 This annihilates the ideal $(f_1,\ldots,f_n)R$ and therefore factors via a $k$-linear map $\bar{R} \lto k$.
 
 \begin{proposition}\label{prop:barnondeg} The pairing on $\cat{C}$ defined by
-\begin{gather*}
-\langle -, - \rangle: \Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \lto k\,,\\
+\begin{align*}
+\langle -, - \rangle: \Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \lto k\,, \qquad
 \langle \varphi, \psi \rangle = \langle \str( \varphi \circ \psi ) \rangle
-\end{gather*}
-is cyclic and nondegenerate in the sense of Definition \ref{defn:nondegpair}.
+\end{align*}
+is cyclic and non-degenerate in the sense of Definition \ref{defn:nondegpair}.
 \end{proposition}
 \begin{proof}
 The pairing factors as
@@ -1902,7 +1910,7 @@ The pairing factors as
 \Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \ar[r]^-{-\circ-} & \Hom(\bar{Y}, \bar{Y}) \ar[r]^-{\str} & \bar{R} \ar[r]^-{\langle - \rangle} & k
 }
 \end{equation}
-so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Nondegeneracy follows from hypothesis (H4') and the following calculation, in which the first step is adjoint (\textbf{todo} not really!) to the composite of the first two maps in (\ref{eq:barnondeg})
+so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Non-degeneracy follows from hypothesis (H4$'$) and the following calculation, in which the first step is adjoint (\textbf{todo} not really!) to the composite of the first two maps in (\ref{eq:barnondeg})
 \begin{align*}
 \Hom_R(\bar{X}, \bar{Y}) &\cong \Hom_R( \Hom(\bar{Y}, \bar{X}), \bar{R} )\,\\
 &\cong \Hom_R( \Hom(\bar{Y}, \bar{X}), \Hom_k( \bar{R}, k) )\\
@@ -1910,7 +1918,7 @@ so it is clear that it is a closed $k$-linear map, and moreover cyclicity follow
 \end{align*}
 \end{proof}
 
-We have in mind two special classes of operators on the dg-category $\cat{C}$. The first arise because the partial derivatives $f_i$ act as zero on the cohomology of $\cat{C}$ but via nonzero maps on the dg-level. In what follows let $X,Y$ denote finite rank matrix factorisations of $W$.
+We have in mind two special classes of operators on the dg-category $\cat{C}$. The first arises because the partial derivatives $f_i=\partial_{x_i}W$ act as zero on the cohomology of $\cat{C}$ but via nonzero maps on the dg-level. In what follows let $X,Y$ denote finite rank matrix factorisations of $W$.
 
 \begin{definition} Given a null-homotopy $\lambda_i$ for the action of $f_i$ on $Y$, that is, a map $\lambda_i \in \Hom(Y,Y)$ of degree one with $[D, \lambda_i] = f_i \cdot 1_Y$, we define the odd operator $\lambda_i^\bullet$ on $\Hom(\bar{X},\bar{Y})$ by
 \[
@@ -1922,7 +1930,7 @@ and the odd operator ${\lambda_i}_\bullet$ on $\Hom(\bar{Y}, \bar{X})$ by
 \]
 \end{definition}
 
-Observe that composition with $\lambda_i$ is not a closed map on $\Hom(X,Y)$ but is closed as an operator on $\Hom(\bar{X}, \bar{Y})$. These operators give the simplest example of an adjoint pair.
+Observe that composition with $\lambda_i$ is not a closed map on $\Hom(X,Y)$ but is closed as an operator on $\Hom(\bar{X}, \bar{Y})$. These operators give the simplest example of an adjoint pair: 
 
 \begin{lemma} The operator $\lambda_i^\bullet$ is adjoint to ${\lambda_i}_\bullet$.
 \end{lemma}
@@ -1935,19 +1943,18 @@ The identity (\ref{eq:adjointopeq}) holds with $\mu = 0$, since
 \end{align*}
 \end{proof}
 
-The second class of operators are the components of the Atiyah class. Recall that by hypothesis (H2') the ring $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module. The $n$ components of this connection define $k$-linear operators $\partial_{f_i} = (\ud f_i)^* \circ \nabla$ on $R$ with the property that $[\partial_{f_i}, f_j] = \delta_{ij}$.
+The second class of operators are the components of the Atiyah class. Recall that by hypothesis (H2$'$) the ring $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module. The $n$ components of this connection define $k$-linear operators $\partial_{f_i} = (\ud f_i)^* \circ \nabla$ on $R$ with the property that $[\partial_{f_i}, f_j] = \delta_{ij}$.
 
 Any free $R$-module admits a $k$-linear connection over $k[f]$. For convenience choose homogeneous $R$-bases $\{ e_i \}_{i \in I}$ for $X$ and $\{ e_j \}_{j \in J}$ for $Y$ respectively. Then the maps $e_{ji} = e_j \circ e_i^*$ form an $R$-basis for $\Hom(X,Y)$ and the induced $k$-linear connection over $k[f]$ is defined by
-\begin{gather*}
-\nabla = \nabla_{XY}: \Hom(X,Y) \lto \Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}\,,\\
-\nabla_{XY}( r e_{ji} ) = e_{ji} \otimes \nabla(r)\,.
-\end{gather*}
-This connection connection has components $\partial_{f_i}$ defined by $\partial_{f_i}( r e_{ji} ) = \partial_{f_i}(r) \cdot e_{ji}$ which are $k$-linear operators on $\Hom(X,Y)$. The \textsl{Atiyah class} of $\Hom(X,Y)$ is the commutator
+\begin{align*}
+\nabla = \nabla_{XY}: \Hom(X,Y) & \lto \Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}\,,\\
+r e_{ji} & \lmt e_{ji} \otimes \nabla(r)\,.
+\end{align*}
+This connection has components $\partial_{f_i}$ defined by $\partial_{f_i}( r e_{ji} ) = \partial_{f_i}(r) \cdot e_{ji}$ which are $k$-linear operators on $\Hom(X,Y)$. The \textsl{Atiyah class} of $\Hom(X,Y)$ is the commutator
 \[
 \At = \At_{XY} = [D, \nabla] = D \circ \nabla - \nabla \circ D: \Hom(X,Y) \lto \Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}\,.
 \]
-The Atiyah class is $k[f]$-linear and is easily seen to be a morphism of complexes from $\Hom(X,Y)$ to the shift $\Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}[1]$. Moreover the homotopy class of this morphism is independent of the choice of connection, and in this sense choosing a basis for $X,Y$ is harmless. In terms of the components this means
-
+The Atiyah class is $k[f]$-linear and is easily seen to be a morphism of complexes from $\Hom(X,Y)$ to the shift $\Hom(X,Y) \otimes_{k[f]} \Omega^1_{k[f]/k}[1]$. Moreover the homotopy class of this morphism is independent of the choice of connection, and in this sense choosing a basis for $X,Y$ is harmless. In terms of the components this means: 
 
 \begin{definition} For $1 \le i \le n$ the components $\At_i = [D, \partial_{f_i}]$ of the Atiyah class define $k$-linear closed operators of degree one on $\Hom(\bar{X}, \bar{Y})$.
 \end{definition}
@@ -2008,13 +2015,13 @@ In the previous section we constructed operators $\lambda_i^\bullet, {\lambda_i}
 \[
 \cat{C}(X,Y) = \Hom(\bar{X}, \bar{Y})
 \]
-which split in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes to give $\Hom(X,Y)$. In this way the dg-category of matrix factorisations can be recovered from the quotient $\cat{C}$ and the nondegenerate pairing defined above induces the homotopically nondegenerate pairing $\langle -, - \rangle_{\textup{KL}}$.
+which split in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes to give $\Hom(X,Y)$. In this way the dg-category of matrix factorisations can be recovered from the quotient $\cat{C}$ and the non-degenerate pairing defined above induces the homotopically non-degenerate pairing $\langle -, - \rangle$.
 
 The main result of \cite{??} is that if $V$ is the free $k$-module on the basis $\theta_1,\ldots,\theta_n$ then there is a homotopy equivalence
 \[
 \Hom(\bar{X}, \bar{Y}) \cong \Hom(X,Y) \otimes_k \bigwedge V\,.
 \]
-There are consequently $2^n$ ways to embed $\Hom(X,Y)$ in the homotopy category of $k$-complexes as a direct summand in $\Hom(\bar{X}, \bar{Y})$. The ``top degree'' embedding, corresponding to the form $\theta_1 \cdots \theta_n$, is determined by the following idempotent endomorphism of $\Hom(\bar{X}, \bar{Y})$
+There are consequently $2^n$ ways to embed $\Hom(X,Y)$ in the homotopy category of $k$-complexes as a direct summand in $\Hom(\bar{X}, \bar{Y})$. The ``top degree'' embedding, corresponding to the form $\theta_1 \ldots \theta_n$, is determined by the following idempotent endomorphism of $\Hom(\bar{X}, \bar{Y})$: 
 \[
 e = \frac{1}{(n!)^2} (-1)^{\binom{n}{2}}\sum_{\sigma,\tau \in S_n} (-1)^{|\sigma\tau|} \cdot \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)}\,.
 \]
@@ -2057,31 +2064,31 @@ Observe that by the (anti-)self-adjointness established in the previous section
 from which it is immediate that $e^{\dagger} = (-1)^n e'$.
 \end{proof}
 
-\begin{proposition}\label{prop:almostkltheorem} The pairing (\ref{eq:generalklpairing}) is homotopically nondegenerate.
+\begin{proposition}\label{prop:almostkltheorem} The pairing (\ref{eq:generalklpairing}) is homotopically non-degenerate.
 \end{proposition}
 \begin{proof} Consider the diagram
 \[
 \xymatrix@C+2pc{
-\Hom(\bar{X},\bar{Y}) \ar[d]_-{\zeta}^-{\cong} \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta} \ar@{.>}[d]^{\zeta_{\textup{KL}}}\\
+\Hom(\bar{X},\bar{Y}) \ar[d]_-{\zeta}^-{\cong} \ar@<-0.5ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.5ex>[l]_-{\vartheta} \ar@{.>}[d]^{\xi}\\
 \Hom_k(\Hom(\bar{Y}, \bar{X},k) \ar@<-0.5ex>[r]_-{(\vartheta')^*} & \Hom_k( \Hom(Y,X), k) \ar@<-0.5ex>[l]_-{(\psi')^*}
 }
 \]
-where $\zeta_{KL} = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate from commutativity of (\ref{eq:eadjointeprime}) up to homotopy that $\zeta_{\textup{KL}}$ is a homotopy equivalence with inverse $(-1)^n \psi \circ \zeta^{-1} \circ (\psi')^*$. To prove the theorem it only remains to observe that $\zeta_{\textup{KL}}(\alpha)$ is the functional $\langle \alpha, - \rangle_{\textup{KL}}$. But
+where $\xi = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate from commutativity of~\eqref{eq:eadjointeprime} up to homotopy that $\xi$ is a homotopy equivalence with inverse $(-1)^n \psi \circ \zeta^{-1} \circ (\psi')^*$. To prove the theorem it only remains to observe that $\xi(\alpha)$ is the functional $\langle \alpha, - \rangle$. But
 \begin{align*}
-\zeta_{\textup{KL}}(\alpha) &= (\vartheta')^* \zeta \vartheta( \alpha )\\
+\xi(\alpha) &= (\vartheta')^* \zeta \vartheta( \alpha )\\
 &= (\vartheta')^* \zeta\left( \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} \circ \alpha \right)\\
 &= \frac{1}{n!} (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \langle \str( \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} \circ \alpha \circ (-) ) \rangle\\
 &= \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \langle \str(  \alpha \circ (-) \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} ) \rangle\\
-&= \langle \alpha, - \rangle_{\textup{KL}}
+&= \langle \alpha, - \rangle
 \end{align*}
 which completes the proof.
 \end{proof}
 
-Let us now abandon the general setting, and return to the situation of the main theorem where $R = k[x_1,\ldots,x_n]$, and (H1)-(H3) are satisfied for $f_i = \partial_{x_i} W$ and $\omega = \ud x_1 \cdots \ud x_n$.
+Let us now abandon the general setting, and return to the situation of the main theorem where $R = k[x_1,\ldots,x_n]$, and (H1)--(H3) are satisfied for $f_i = \partial_{x_i} W$ and $\omega = \ud x_1 \ldots \ud x_n$.
 
-\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Set $I = (f_1,\ldots,f_n)R$ and let $\widehat{R}$ denote the $I$-adic completion of $R$. Then by \cite{??} this algebra admits a flat standard connection as a $k[f]$-module, and the other axioms among (H1')-(H4') follow for $\widehat{R}$ from our hypotheses about $R$ with $\omega = \ud x_1 \cdots \ud x_n$ (here we use that residues for $R/k$ and $\widehat{R}/k$ agree). Note that in (H1') we only need that the $f_i$ act null-homotopically on the matrix factorisations
+\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Set $I = (f_1,\ldots,f_n)R$ and let $\widehat{R}$ denote the $I$-adic completion of $R$. Then by \cite{??} this algebra admits a flat standard connection as a $k[f]$-module, and the other axioms among (H1$'$)--(H4$'$) follow for $\widehat{R}$ from our hypotheses about $R$ with $\omega = \ud x_1 \cdots \ud x_n$ (here we use that residues for $R/k$ and $\widehat{R}/k$ agree). Note that in (H1$'$) we only need that the $f_i$ act null-homotopically on the matrix factorisations
 \[
-\widehat{X} = X \otimes_R \widehat{R}, \qquad \widehat{Y} = Y \otimes_R \widehat{R}
+\widehat{X} = X \otimes_R \widehat{R} \, , \qquad \widehat{Y} = Y \otimes_R \widehat{R}
 \]
 extended from $R$. Consider the diagram
 \[
@@ -2103,17 +2110,18 @@ In this section we collect together the modifications necessary in order to make
 
 Let $k$ be a noetherian $\mathbb{Q}$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$ and let $X,Y$ be finite rank graded matrix factorisations of $W$ over $R$. Define
 \[
-a = \sum_{i=1}^n |x_i| - nc.
+a = \sum_{i=1}^n |x_i| - nc \, . 
 \]
-Then the graded analogue of the earlier theorem is
+Then the graded analogue of the earlier theorem is:
 
-\begin{theorem}\label{theorem:generalklgraded} Under the conditions (H1)-(H3) of Theorem \ref{theorem:generalkl} the pairing $\langle -, - \rangle_{\textup{KL}}$ is adjoint to a homotopy equivalence of $\mathbb{Z} \times \mathbb{Z}_2$-graded complexes over $k$
+\begin{theorem}\label{theorem:generalklgraded} 
+Under the conditions (H1)--(H3) of Theorem \ref{theorem:generalkl} the pairing $\langle -, - \rangle$ is adjoint to a homotopy equivalence of $\mathbb{Z} \times \mathbb{Z}_2$-graded complexes over $k$
 \[
-\Hom(X,Y) \lto \Hom^{gr}_k( \Hom(Y,X), k )[n](a)\,.
+\Hom(X,Y) \lto \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k )[n](a)\,.
 \]
 \end{theorem}
 
-Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is a need to distinguish between $\Hom_k$ and $\Hom_k^{gr}$. For the proof we need the following fact about residues.
+Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is a need to distinguish between $\Hom_k$ and $\Hom_k^{\operatorname{gr}}$. For the proof we need the following fact about residues.
 
 \begin{lemma}\label{lemma:residuesarehomog} If $f_1,\ldots,f_n$ is a regular sequence in $R$ of homogeneous elements, then the map
 \[
@@ -2129,11 +2137,11 @@ is homogeneous of degree $\sum_{i=1}^n( |x_i| - |f_i| )$.
 Consider the following diagram of $\mathbb{Z}_2$-graded complexes
 \[
 \xymatrix@C+2pc{
-\Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{gr}} \ar[r]^-{\zeta_{KL}} & \Hom(\Hom(Y,X),k)[n]\\
+\Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{\operatorname{gr}}} \ar[r]^-{\xi} & \Hom(\Hom(Y,X),k)[n]\\
 & \Hom^{gr}_k( \Hom(Y,X), k)[n](a) \ar[u]_{\iota = \inc}
 }
 \]
-where $\zeta_{KL}$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\zeta_{KL}$ lies in the subspace of homogeneous maps, and we let $\zeta_{gr}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{gr}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{gr}$ is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes (forgetting the $\mathbb{Z}$-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
+where $\xi$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\xi$ lies in the subspace of homogeneous maps, and we let $\zeta_{\operatorname{gr}}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{gr}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{\operatorname{gr}}$ is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes (forgetting the $\mathbb{Z}$-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
 
 It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes. This would be a tautology if $\Hom(Y,X)$ were a finitely generated $k$-module, and in general we use the fact that $\Hom(Y,X)$ embeds up to homotopy in a finitely generated complex. That is: by \cite[Section ??]{blah} we have a diagram
 \begin{equation}\label{eq:generalklgraded}
@@ -2141,11 +2149,11 @@ It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\m
 \Hom(\bar{Y}, \bar{X}) \ar@<-0.5ex>[r]_-{\psi} & \Hom(Y,X)[n] \ar@<-0.5ex>[l]_-{\vartheta}
 }
 \end{equation}
-of $\mathbb{Z}_2$-graded complexes over $k$ with $\psi \circ \vartheta \simeq 1$. But if one examines the explicit expressions for $\vartheta, \psi$ given in \textsl{loc.cit.} it is clear that $\vartheta$ has degree $-a$, $\psi$ has degree $a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{gr}(-,k)$ to (\ref{eq:generalklgraded}) we obtain a diagram
+of $\mathbb{Z}_2$-graded complexes over $k$ with $\psi \circ \vartheta \simeq 1$. But if one examines the explicit expressions for $\vartheta, \psi$ given in loc.\,cit.~it is clear that $\vartheta$ has degree $-a$, $\psi$ has degree $a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{\operatorname{gr}}(-,k)$ to (\ref{eq:generalklgraded}) we obtain a diagram
 \[
 \xymatrix@C+2pc{
 \Hom_k( \Hom(\bar{Y}, \bar{X}), k ) \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k(\Hom(Y,X),k)[n] \ar@<-0.5ex>[l]_-{\psi^*}\\
-\Hom_k^{gr}(\Hom(\bar{Y}, \bar{X}), k) \ar[u]^{=} \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k^{gr}(\Hom(Y,X),k)[n](a) \ar@<-0.5ex>[l]_-{\psi^*} \ar[u]_{\iota}
+\Hom_k^{\operatorname{gr}}(\Hom(\bar{Y}, \bar{X}), k) \ar[u]^{=} \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k^{\operatorname{gr}}(\Hom(Y,X),k)[n](a) \ar@<-0.5ex>[l]_-{\psi^*} \ar[u]_{\iota}
 }
 \]
 in which both of the implict squares commute up to homotopy, and from this we deduce that $\iota$ is a homotopy equivalence with inverse $\vartheta^* \circ \psi^*$.
@@ -2391,10 +2399,10 @@ T.~Dyckerhoff and D.~Murfet, \textsl{Pushing forward matrix factorisations},
 %M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology {II}}, Geometry \&
 %  Topology \textbf{12} (2008), 1387--1425,
 %  \href{http://arxiv.org/abs/math/0505056}{[math.QA/0505056]}.
-
-\bibitem[Ko]{Kock}
-J.~Kock, \textsl{Frobenius Algebras and 2D Topological Quantum Field Theories}, Cambridge University Press, 2003.
-
+%
+%\bibitem[Ko]{Kock}
+%J.~Kock, \textsl{Frobenius Algebras and 2D Topological Quantum Field Theories}, Cambridge University Press, 2003.
+%
 %\bibitem[Lam86]{LambekRingsModules}
 %J.~Lambek, \textsl{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
 
