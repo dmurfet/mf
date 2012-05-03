@@ -248,7 +248,7 @@ They take over.
 TODO
 
 \begin{acknowledgements}
-TODO: Ragnar Buchweitz, who else? 
+TODO: especially Ragnar Buchweitz, also Ingo Runkel and who else? 
 \end{acknowledgements}
 
 
@@ -708,6 +708,8 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
 \]
 
+\newpage
+
 \section{Inverting the unit actions}\label{section:pertandhtpy}
 
 As part of the structure of the bicategory $\LG$ we have specified, for any finite rank matrix factorisation $X \in \hmf(k[x,z], V - W)$, a pair of $k[z]$-$k[x]$-bilinear homotopy equivalences
@@ -927,9 +929,8 @@ For $X\in \hmf(k[x,z], V-W)$ we set $X^\dual = X^\vee[n] \in \hmf(k[x,z], W-V)$ 
 $$
 d_{X^\dual} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[n] 
 $$ 
-where $(-)^\vee$ denotes taking the dual module and dual map.
+where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules.
 \end{definition}
-
 
 
 As recalled in Section~\ref{subsec:bicatLG} there are two kinds of evaluation and coevaluation $2$-morphisms associated with~$X$. The derivation is very similar in both cases, so we give the full details for 
@@ -1108,6 +1109,8 @@ which composed with the supertrace and residue gives the desired morphism. Here 
 \kappa(1 \otimes f \otimes \nu)(s) = \nu(s) \cdot t\,.
 \]
 \end{proof}
+
+TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
 
 \newpage
 
@@ -1415,9 +1418,11 @@ This proves that $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_
 The three other Zorro moves are proven analogously (\textbf{todo}).
 
 \begin{theorem}
-The becategory $\LG$ has adjoints. Explicit expressions for the evaluation and coevaluation maps are given by~\eqref{TODO}. 
+The bicategory $\LG$ has adjoints. Explicit expressions for the evaluation and coevaluation maps are given by~\eqref{TODO}. 
 \end{theorem}
 
+
+\subsection{TODO}
 
 We end this section by listing a few properties of the adjunction maps. For a morphism $\varphi: X \lra Y$ between matrix factorisations $X\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x))$ and $Y\in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))$ we define its adjoint to be
 $$
@@ -1522,7 +1527,7 @@ $$
 \end{proposition}
 
 \begin{proof}
-The first identity follows immediately from the explicit expression for the evaluation in terms of the supertrace. To prove the second and third identity we only have to apply the Zorro move twice: 
+The first identity follows immediately from the explicit expression for the evaluation in terms of the supertrace. To prove the third identity we only have to apply the Zorro move and use part~(i), and then the third identity follows by appending another upwards-oriented $Y$-line to the left and another Zorro move: 
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
@@ -1666,6 +1671,12 @@ $$
 \begin{proof}
 TODO
 \end{proof}
+
+TODO: definition of pivotal in bicategory with right adjoints: monoidal natural 2-isomorphism, or equivalently: two diagram identities
+
+TODO: Lemma: pivotal equivalent to having (co)ev and (co)ev-tilde. 
+
+TODO: Proposition: $\LG$ is pivotal (this will incorportate what is now Proposition~\ref{prop:monoidalproperty})
 
 
 
@@ -1830,6 +1841,7 @@ $$
 
 \begin{proposition}\label{prop:defectactionproperties}
 \begin{enumerate}
+\item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$, 
 \item $\mathcal D_l(X) = \mathcal D_r(X^\dual)$, 
 \item $\mathcal D_l(Y \otimes X) = \mathcal D_l(X) \circ \mathcal D_l(Y)$, 
 \item $\mathcal D_r(Y \otimes X) = \mathcal D_r(Y) \circ \mathcal D_r(X)$. 
@@ -1837,9 +1849,11 @@ $$
 \end{proposition}
 
 \begin{proof}
-(i): In the proof of the explicit formula for $\mathcal D_l(X)$ in Proposition~\ref{prop:defectaction} we could also have used the alternative representations for $\eval_X$ and $\widetilde\coev_X$ in terms of $d_{X^\dual}$. Then the assertion immediately follows. 
+(i) TODO: either cite Polishchuk-Vaintrob and/or use $\coev_\Delta= \lambda^{-1}_\Delta$ etc.
 
-(ii) \& (iii): These relations follow from Proposition~\ref{prop:monoidalproperty} and a straightforward calculation with string diagrams, see e.\,g.~the proof of~\cite[Lemma~3.1]{cr1006.5609}. 
+(ii): In the proof of the explicit formula for $\mathcal D_l(X)$ in Proposition~\ref{prop:defectaction} we could also have used the alternative representations for $\eval_X$ and $\widetilde\coev_X$ in terms of $d_{X^\dual}$. Then the assertion immediately follows. 
+
+(iii) \& (iv): These relations follow from Proposition~\ref{prop:monoidalproperty} and a straightforward calculation with string diagrams, see e.\,g.~the proof of~\cite[Lemma~3.1]{cr1006.5609}. 
 \end{proof}
 
 
@@ -1962,7 +1976,7 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This in not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
 
 To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions~\eqref{TODO} for evaluations and coevaluations we find \begin{align}
-& \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y)}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
+& \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y) \underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
 & \coev_X: 1 \lmt \Lambda_X \, , \qquad  \widetilde\coev_Y: 1\lmt 1_Y \label{evcoeveasy}
 \end{align}
 where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$. 
@@ -1997,12 +2011,12 @@ C
 \fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
 \end{tikzpicture} 
 = 
-(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big)}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] \, .
 $$
 Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
 \be\label{C1}
 C = 
-(-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] \, .
 \ee
 
 On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by $X^\dual\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
@@ -2045,7 +2059,7 @@ The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,
 $$
 \str (\psi \circ (-) \circ \varphi )
 = 
-(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi)}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] \, .
 $$
 \end{theorem}
 
@@ -2083,7 +2097,7 @@ is a homotopy equivalence over $k$. The main theorem here is that under some rea
 \item[(H3)] The $R$-linear map
 \begin{align*}
 \bar{R} & \lto \Hom_k( \bar{R}, k)\, , \\
-r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]
+r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \underline{\ud x}}{ f_1, \ldots, f_n} \Bigg]
 \end{align*}
 is an isomorphism.
 \end{itemize}
