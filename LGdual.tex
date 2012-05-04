@@ -351,7 +351,7 @@ satisfying
 \end{align}
 \end{definition}
 
-It is convenient (and also suggested by the motivation discussed in the Introduction) to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{TODO} for more details. In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
+It is convenient (and also suggested by the motivation discussed in the Introduction) to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{TODO} for more details (\textbf{todo} So we fix specific adjunctions for each $X$). In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
 $$
 \eval_{X} = 
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
@@ -566,6 +566,8 @@ We now return to the $k$-algebra $A=R=k[x_1,\ldots,x_n]$. Earlier we set $\widet
 $$
 d_{\Bar} = b' + d\widetilde W \times (-) \, . 
 $$
+(\textbf{todo} Cite other places where this Bar model of the diagonal appears)
+
 \begin{lemma}\label{lemma:barisafactorisation}
 $(\Bar,d_{\Bar})$ is a linear factorisation of $\widetilde W\in \Re$. 
 \end{lemma}
@@ -1004,14 +1006,14 @@ For the purposes of forming tensor products we view $\Bar$ as a right $\Re$-modu
 Since $d$ is right $R$-linear, $[d, d_{X^\dual \otimes X}] = [d, d_{X^\dual}\otimes 1_X]$ and so we abuse notation and write $\At_{X^\dual}$ for $\At_{X^\dual \otimes X}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
 \[
 \xymatrix@C+1pc{
-X^\dual \otimes_{k[z]} X \ar[r]^-{\At^i_{X^\dual}} & \Bar \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
+X^\dual \otimes_{k[z]} X \ar[r]^-{\At^m_{X^\dual}} & \Bar \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
 }
 \]
 which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
 
 \begin{theorem}\label{theorem:coev1} A representative for the coevaluation morphism is the chain map
 \begin{equation}\label{eq:coev10}
-\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{i \ge 0} (-1)^i \Psi \At^i_{X^\dual}( \iota_X ) \right)\
+\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^m \Psi \At^m_{X^\dual}( \iota_X ) \right)\
 \end{equation}
 where the Atiyah class sends forms to the left, as explained above.
 \end{theorem}
@@ -1038,15 +1040,17 @@ There is an alternative presentation which we will also need. On the tensor prod
 we consider the operator $\At_{X^\dual \otimes X, k[x,y]/k[x]} = [s, d_{X^\dual \otimes X}]$ and its powers. Since $s$ is $k[x]$-linear, this is actually $[s, d_{X}]$ and for this reason we abuse notation and write $\At_{X, k[x,y]/k[x]}$ for $\At_{X^\dual \otimes X, k[x,y]/k[x]}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
 \[
 \xymatrix{
-X^\dual \otimes X \ar[r]^-{\At^i_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otimes_{k[x,y]} \Bar \ar[r]^-{\Psi} & (X^\dual \otimes X)\otimes_{k[x,y]} K\,.
+X^\dual \otimes X \ar[r]^-{\At^m_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otimes_{k[x,y]} \Bar \ar[r]^-{\Psi} & (X^\dual \otimes X)\otimes_{k[x,y]} K\,.
 }
 \]
 
 \begin{theorem} A representative for the coevaluation morphism is the chain map
 \[
-\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{i \ge 0} (-1)^i \Psi \At^i_{X,k[x,y]/k[x]}( \iota_X ) \wedge \gamma \right)\,.
+\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{m \ge 0} (-1)^m \Psi \At^m_{X,k[x,y]/k[x]}( \iota_X ) \wedge \gamma \right)\,.
 \]
 \end{theorem}
+
+(\textbf{todo} Left and right facing Atiyah classes)
 
 \begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
 \end{example}
@@ -1183,7 +1187,7 @@ Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X)
 where for $f \in X$, the endomorphism $f \circ e_j^*$ sends $g$ to $e_j^*(g) \cdot f$.
 \end{lemma}
 
-Before giving the proof of the lemma, let us sketch the argument that this morphism is homotopic to the identity. In outline, the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
+Before giving the proof of the lemma, let us sketch the argument that $\mathcal Z$ is homotopic to the identity. In outline, the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
 \begin{equation}\label{eq:trueproofeq}
 \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \Lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
 \end{equation}
@@ -1197,7 +1201,7 @@ There are two subtleties which complicate the proof. The first is that we must d
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
-\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1}(a) &= \sum_{i \ge 0}(-1)^i \Psi\! \At^i_X(a)\,,\\
+\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1}(a) &= \sum_{m \ge 0}(-1)^m \Psi\! \At^m_X(a)\,,\\
 \widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{i \ge 0}(-1)^i (\Psi\!\At^i_{X^{\dagger}} \otimes 1)(\iota_X) \Big)\,,\\
 &= \sum_{i,j} (-1)^{i+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At^i_{X^{\dagger}}( e_j^* ) \otimes e_j \Big)\\
 \widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\alpha) &= (-1)^{\binom{n+1}{2}}\Res_{k[x,y,z]/k[y,z]}\! \left[ \frac{\str ( \alpha
@@ -1205,12 +1209,13 @@ For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit 
  \Lambda) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
 %Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) 
-Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes. Also define $\nabla$ and Atiyah classes (\textbf{todo}).
+(\textbf{todo} the variable $y$ has no meaning here) Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes. Also define $\nabla$ and Atiyah classes (\textbf{todo}).
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
 Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq:zorro1a1}): 
 \begin{align}
-(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= \sum_{i,k,j} (-1)^{i+k} \varepsilon\Big( \Psi\! \At^i_X( e_q ) \wedge \Psi \!\At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
+(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= \textup{another line of explanation}\\
+&= \sum_{i,k,j} (-1)^{i+k} \varepsilon\Big( \Psi\! \At^i_X( e_q ) \wedge \Psi \!\At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
 \end{align} 
@@ -1218,7 +1223,7 @@ In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ w
 %identifying $z$ with $z'$ (TODO: not necessary). This changes 
 changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
 \begin{align}
-\mathcal{Z}(e_q) &= \lambda \circ (\eval \otimes 1) \circ (1 \otimes \coev) \circ \rho^{-1}( e_q )\\
+\mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
 &= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \Lambda \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
 \end{align}
 Since the Zorro map~$\mathcal Z$ is $k[x,z]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
@@ -1359,7 +1364,7 @@ We compute for a homogeneous element $\varphi \in \End(X)$ that
 where in the last step we use Lemma \ref{lemma:langlecalc1}. For the final steps in the argument we will need the following lemma.
 
 \begin{lemma}\label{lem:PsiToTheRight}
-Let $\omega\in\Omega(k[x_1,\ldots,x_n])$ be and $n$-form. Then $\Psi(\omega f)=\Psi(\omega) f(y)$ for any $f\in k[x]$. 
+Let $\omega\in\Omega(k[x_1,\ldots,x_n])$ be an $n$-form. Then $\Psi(\omega f)=\Psi(\omega) f(y)$ for any $f\in k[x]$. 
 \end{lemma}
 
 \begin{proof}
@@ -1412,7 +1417,7 @@ The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contri
 \langle H, - \rangle_X = 
 \frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[y,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \Lambda^{(x)} \Lambda^{(z)} ) \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_m} V} \right]\,.
 \]
-This proves that $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals, and so by the non-degeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
+This proves that $\langle H, - \rangle_X$ is null-homotopic, and thus $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals. Hence by the non-degeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
 \end{proof}
 
 The three other Zorro moves are proven analogously (\textbf{todo}).
@@ -1696,7 +1701,7 @@ in terms of the morphisms encoding the monoidal and adjunction structures as fol
 \end{align*}
 In the special case $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
 
-Diagrammatically these definitions read 
+Diagrammatically these definitions read (\textbf{todo} loops should be labelled by $X$?)
 \be\label{defectaction}
 \mathcal D_l(X)(\phi) = 
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
@@ -2104,7 +2109,7 @@ is an isomorphism.
 Then the pairing $\langle -, - \rangle$ is homotopically non-degenerate.
 \end{theorem}
 
-There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they split idempotents on
+There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
 \[
 \Hom(\bar{X},\bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}
 \]
@@ -2112,11 +2117,11 @@ and
 \[
 \Hom_k( \Hom(\bar{Y}, \bar{X}), k) = \Hom_k( \Hom(Y,X) \otimes_R \bar{R}, k )
 \]
-respectively, in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes. There is an isomorphism
+in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes. There is an isomorphism
 \begin{equation}\label{eq:frobnondeg}
 \Hom(\bar{X}, \bar{Y}) \cong \Hom_k( \Hom(\bar{Y}, \bar{X}), k)
 \end{equation}
-of complexes which identify these idempotents, and from this the theorem follows. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\bar{R}$ is Frobenius over $k$. The hard work lies in showing that this isomorphism identifies the two idempotents, and for this we need to carefully study adjointness between operators on dg-categories. Thus the first part of the proof, in Section \ref{section:adjointopdg}, consists in formalising this kind of adjointness.
+of complexes which identify these idempotents, and from this the theorem will follow. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\bar{R}$ is Frobenius over $k$. The hard work lies in showing that this isomorphism identifies the two idempotents, and for this we need to carefully study adjointness between operators on dg-categories. Thus the first part of the proof, in Section \ref{section:adjointopdg}, consists in formalising this kind of adjointness.
 
 In fact it will be convenient to prove the theorem slightly more generally, since in order to equip~$R$ with a connection we may need to pass to the $fR$-adic completion. Consequently, for the rest of this section $R$ is an arbitrary noetherian $k$-algebra, $W \in R$, and our actual hypotheses are:
 \begin{itemize}
@@ -2307,6 +2312,7 @@ The Atiyah class is $k[f]$-linear and is easily seen to be a morphism of complex
 \begin{definition} For $1 \le i \le n$ the components $\At_i = [D, \partial_{f_i}]$ of the Atiyah class define $k$-linear closed operators of degree one on $\Hom(\bar{X}, \bar{Y})$.
 \end{definition}
 
+(\textbf{todo} Distinguish this from the associative Atiyah class)
 For each pair of objects $X,Y$ in $\cat{C}$ we have defined a family of operators $\At_i$ on $\cat{C}(X,Y)$, defined using a choice of basis but independent of this choice up to homotopy. Conceptually, duality in the dg-category of matrix factorisations rests on the fact that these operators are anti-self-adjoint. To prove this we need the following Leibniz rule for Atiyah classes.
 
 \begin{lemma}\label{lemma:leibnizatiyah} For homogeneous $\alpha \in \Hom(Y,Z)$ and $\beta \in \Hom(X,Y)$
@@ -2316,7 +2322,7 @@ For each pair of objects $X,Y$ in $\cat{C}$ we have defined a family of operator
 where $g( \alpha \otimes \beta ) = \partial_i(\alpha) \circ \beta + \alpha \circ \partial_i(\beta) - \partial_i( \alpha \circ \beta )$.
 \end{lemma}
 \begin{proof}
-If $\nabla_{YZ}$ denotes the connection on $\Hom(Y,Z)$ and $\nabla_{XY}$ the connection on $\Hom(X,Y)$ then
+If $\nabla_{YZ}, \nabla_{XY}$ respectively denote the connections on $\Hom(Y,Z)$ and $\Hom(X,Y)$ then
 \[
 \nabla_{YZ,XY}(\alpha \otimes \beta) = \nabla_{YZ}(\alpha) \otimes \beta + \alpha \otimes \nabla_{XY}(\beta)
 \]
