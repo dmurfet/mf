@@ -2371,7 +2371,7 @@ The main result of \cite{??} is that if $V$ is the free $k$-module on the basis 
 \]
 There are consequently $2^n$ ways to embed $\Hom(X,Y)$ in the homotopy category of $k$-complexes as a direct summand in $\Hom(\bar{X}, \bar{Y})$. The ``top degree'' embedding, corresponding to the form $\theta_1 \ldots \theta_n$, is determined by the following idempotent endomorphism of $\Hom(\bar{X}, \bar{Y})$: 
 \[
-e = \frac{1}{(n!)^2} (-1)^{\binom{n}{2}}\sum_{\sigma,\tau \in S_n} (-1)^{|\sigma\tau|} \cdot \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)}\,.
+e = \frac{1}{(n!)^2} (-1)^{\binom{n+1}{2}}\sum_{\sigma,\tau \in S_n} (-1)^{|\sigma\tau|} \cdot \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)}\,.
 \]
 The embedding corresponding to the $0$-form $1$ in $\bigwedge V$ was not discussed in \cite{??} but we give the details in Appendix \ref{??}. The upshot is that this embedding is determined by the idempotent
 \[
@@ -2394,10 +2394,10 @@ with $\psi' \circ \vartheta' = 1$ and $\vartheta' \circ \psi' = e'$. A concrete 
 \vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^{\bullet}\,.
 \]
 
-\begin{proposition}\label{prop:eadjointeprime} The idempotent $e$ is adjoint to $(-1)^n e'$. Equivalently, the diagram
+\begin{proposition}\label{prop:eadjointeprime} The idempotent $e$ is adjoint to $e'$. Equivalently, the diagram
 \begin{equation}\label{eq:eadjointeprime}
 \xymatrix@C+2pc{
-\Hom(\bar{X}, \bar{Y}) \ar[d]_-{e} \ar[r]^-{\zeta}_-{\cong} & \Hom_k(\Hom(\bar{Y},\bar{X}),k) \ar[d]^-{(-1)^n (e')^*}\\
+\Hom(\bar{X}, \bar{Y}) \ar[d]_-{e} \ar[r]^-{\zeta}_-{\cong} & \Hom_k(\Hom(\bar{Y},\bar{X}),k) \ar[d]^-{(e')^*}\\
 \Hom(\bar{X}, \bar{Y}) \ar[r]_-{\zeta}^-{\cong} & \Hom_k( \Hom(\bar{Y}, \bar{X}), k )
 }
 \end{equation}
@@ -2409,7 +2409,7 @@ Observe that by the (anti-)self-adjointness established in the previous section
 \left( \lambda_{\sigma(1)}^\bullet \cdots \lambda_{\sigma(n)}^\bullet \At_{\tau(1)} \cdots \At_{\tau(n)} \right)^{\dagger} &= (-1)^n \At^\dagger_{\tau(n)} \cdots \At^\dagger_{\tau(1)} (\lambda_{\sigma(n)}^\bullet)^\dagger \cdots (\lambda_{\sigma(1)}^\bullet)^{\dagger}\\
 &= \At_{\tau(n)} \cdots \At_{\tau(1)} {\lambda_{\sigma(n)}}_{\bullet} \cdots {\lambda_{\sigma(1)}}_{\bullet}\,,
 \end{align*}
-from which it is immediate that $e^{\dagger} = (-1)^n e'$.
+from which it is immediate that $e^{\dagger} = e'$.
 \end{proof}
 
 \begin{proposition}\label{prop:almostkltheorem} The pairing (\ref{eq:generalklpairing}) is homotopically non-degenerate.
@@ -2514,7 +2514,7 @@ in which both of the implict squares commute up to homotopy, and from this we de
 
 In Section \ref{section:dualityadjointop} we used the idempotent pushforward construction of \cite{dm1102.2957} to establish a relative form of duality for matrix factorisations. We needed slightly more than what is stated in \textsl{loc.cit.} and in this appendix we provide the necessary additions. With later applications in mind we work in the same generality as the original construction, but the reader should keep in mind that for Section \ref{section:dualityadjointop} we only need the case $Z = \Hom_R(X,Y)$ and $W = 0$ of the following.
 
-Let $k$ be a commutative $\mathbb{Q}$-algebra and $R$ a $k$-algebra with a quasi-regular sequence $\{ f_1, \ldots, f_n \}$ such that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module. Let $W \in k$ be given and let $Z$ be a finite rank matrix factorisation of $W$ over $R$ with each $f_i$ acting null-homotopically on $Z$, and moreover let $\lambda_i \in \Hom_R(Z,Z)$ be odd maps with $[D, \lambda_i] = f_i \cdot 1_Z$ for each $1 \le i \le n$ where $D = d_Z$. Unless specified otherwise, $\otimes = \otimes_R$.
+Let $k$ be a $\mathbb{Q}$-algebra and $R$ a $k$-algebra with a quasi-regular sequence $\{ f_1, \ldots, f_n \}$ such that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module. Let $W \in k$ be given and let $Z$ be a finite rank matrix factorisation of $W$ over $R$ with each $f_i$ acting null-homotopically on $Z$, and moreover let $\lambda_i \in \Hom_R(Z,Z)$ be odd maps with $[D, \lambda_i] = f_i \cdot 1_Z$ for each $1 \le i \le n$ where $D = d_Z$. We fix a homogeneous basis for $Z$ and, unless specified otherwise, $\otimes = \otimes_R$.
 
 The aim is to write $Z$, up to $k$-linear homotopy equivalence, as the splitting of an idempotent on the quotient $\bar{Z} = Z \otimes \bar{R}$. Suppose that $R$ admits a flat $k$-linear connection $\nabla$ as a $k[f]$-module which is standard in the sense of \cite{??}. If $K(f) = K(f_1,\ldots,f_n)$ denotes the usual Koszul complex then by hypothesis the map $K(f) \lto \bar{R}$ is a quasi-isomorphism and by \cite[Section 10]{dm1102.2957} the projection
 \begin{equation}\label{eq:symidem1}
@@ -2527,6 +2527,14 @@ As a graded $R$-algebra $K(f)$ is the exterior algebra $\bigwedge F$ where $F$ i
 \bar{Z} \cong Z \otimes_k \bigwedge (k\theta_1 \oplus \cdots \oplus k\theta_n)
 \]
 between $\bar{Z}$ and a direct sum of shifted copies of $Z$, and to this direct sum decomposition corresponds $2^n$ orthogonal $k$-linear idempotents on $\bar{Z}$. Our aim is to describe the idempotents corresponding to the top degree summand $Z \theta_1 \cdots \theta_n$ and the bottom degree summand $Z \cdot 1$.
+
+The strategy is to construct a pair of $R$-linear idempotents on $Z \otimes K(f)$, and then transfer these idempotents to $\bar{Z}$. More precisely, we will construct a diagram
+\begin{equation}\label{eq:twoidempotents}
+\xymatrix@C+2pc{
+Z[n] \ar@<0.7ex>[r]^-{\vartheta} & Z \otimes K(f) \ar@<0.7ex>[l]^-{\varepsilon}\ar@<0.7ex>[r]^-{\rho} & Z \ar@<0.7ex>[l]^-{\kappa}
+}
+\end{equation}
+in which the maps are $R$-linear morphisms of linear factorisations satisfying $\rho \circ \kappa = 1$ and $\varepsilon \circ \vartheta = 1$. The composites $\kappa \circ \rho$ and $\vartheta \circ \varepsilon$ will be the desired pair of idempotents on $Z \otimes K(f)$ corresponding to top and bottom degree.
 
 To this end consider the case of a single $f_i$, so there is an exact sequence
 \[
@@ -2544,50 +2552,63 @@ To construct idempotents on $Z \otimes K(f)$ we can inductively apply either of 
 \[
 Z \otimes K(f_1,\ldots,f_n) \cong (Z \otimes K(f_1,\ldots,f_{n-1})) \otimes K(f_n) \xlto{\varepsilon} Z \otimes K(f_1,\ldots,f_{n-1})\theta_n\,,
 \]
-or we can choose to project out $\theta_n$ by applying $\rho$ instead. If after keeping $\theta_n$ we proceed to apply the $\varepsilon$ projections for the rest of the $\theta_i$, we obtain a split epimorphism $\varepsilon: Z \otimes K(f) \lto Z[n]$ defined by $\varepsilon(x \theta_1 \cdots \theta_n) = (-1)^{n|x|} x$ with left inverse $\vartheta$ defined by concatenating all the $\vartheta_i$. This left inverse depends on the order in which we project out the $\theta_i$, but if we symmetrise over all permutations we obtain the left inverse
+or we can choose to project out $\theta_n$ by applying $\rho$ instead. If after keeping $\theta_n$ we proceed to apply the $\varepsilon$ projections for the rest of the $\theta_i$, we obtain a split epimorphism $\varepsilon: Z \otimes K(f) \lto Z[n]$ defined by $\varepsilon(x \theta_1 \cdots \theta_n) = (-1)^{n|x|} x$ with left inverse $\vartheta$ defined by concatenating all the $\vartheta_i$. This left inverse depends on the order in which we project out the $\theta_i$, but if we symmetrise over all permutations we obtain the following left inverse to $\varepsilon$
 \[
-\vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} (\theta_{\sigma(1)} - \lambda_{\sigma(1)}) \circ \cdots \circ (\theta_{\sigma(n)} - \lambda_{\sigma(n)})
+\vartheta = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} (\theta_{\sigma(1)} - \lambda_{\sigma(1)}) \circ \cdots \circ (\theta_{\sigma(n)} - \lambda_{\sigma(n)})\,.
 \]
-to $\varepsilon$. One checks directly that $\varepsilon \circ \vartheta = 1$, so $\vartheta \circ \varepsilon$ is an idempotent on $Z \otimes K(f)$ splitting to $Z[n]$.
+The reader may safely ignore this derivation, and instead check directly that $\vartheta$ commutes with the differentials and satisfies $\varepsilon \circ \vartheta = 1$, so that $\vartheta \circ \varepsilon$ is an idempotent on $Z \otimes K(f)$ splitting to $Z[n]$.
 
 At the other extreme we can choose at each stage to project out the $\theta_i$ using $\rho$ to obtain a split epimorphism $Z \otimes K(f) \lto Z$ with left inverse the inclusion $\kappa(x) = x \otimes 1$. The precise formula for this epimorphism depends on the order in which we choose to project out the $\theta_i$. If we symmetrise over all permutations we arrive at the morphism
-\[
+\begin{equation}\label{eq:rhoformula1}
 \rho: Z \otimes K(f) \lto Z
-\]
+\end{equation}
 defined for $i_1 < \cdots < i_p$ by
-\[
-\rho( x \theta_{i_1} \cdots \theta_{i_p} ) = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{p|x| + \binom{p}{2} + |\tau|} 
-\]
+% see syme3
+\begin{equation}\label{eq:rhoformula2}
+\rho( x \theta_{i_1} \cdots \theta_{i_p} ) = \frac{1}{p!} (-1)^{p|x|} \sum_{\sigma \in S_p} (-1)^{|\sigma|} \lambda_{i_{\sigma(1)}} \ldots \lambda_{i_{\sigma(p)}}(x)\,.
+\end{equation}
+Again one may ignore this derivation and check directly that $\rho$ commutes with the differentials and satisfies $\rho \circ \kappa = 1$, so that $\kappa \circ \rho$ is an idempotent splitting to $Z$.
 
-So we have produced the two idempotents on $Z \otimes K(f)$ corresponding to top form degree and bottom form degree. Let us now shift these to idempotents on $\bar{Z}$. $e$ is taken care of in \cite{??} so we worry only about $e'$.
+Having constructed the maps in \eqref{eq:twoidempotents} we now proceed to transfer these two idempotents to $\bar{Z}$. We do this via the $k$-linear homotopy inverse $\sigma_\infty$ to $\pi$ which is described in \cite[Section 10]{dm1102.2957} (with $S = k$ and $X = Z$). In the notation given there
 \[
-\xymatrix{
-\bar{Z} \ar@<-0.5ex>[r]_-{\sigma_\infty} & Z \otimes_R K(f) \ar@<-0.5ex>[l]_-{\pi} \ar@<-0.5ex>[r]_-{\rho} & Z \ar@<-0.5ex>[l]_-{\kappa}
+\sigma_\infty = \sum_{m \ge 0} (-1)^m (\tau^{-1} \nabla_{gr} D)^m \sigma\,.
+\]
+Consider now the diagram
+\[
+\xymatrix@C+2pc{
+& & Z[n] \ar@<-0.7ex>[dl]_-{\vartheta}\\
+\bar{Z} \ar@<-0.7ex>[r]_-{\sigma_\infty} & Z \otimes K(f) \ar@<-0.7ex>[ur]_-{\varepsilon}\ar@<-0.7ex>[l]_-{\pi} \ar@<-0.7ex>[dr]_-{\rho}\\
+& & Z \ar@<-0.7ex>[ul]_-{\kappa}
 }
 \]
-Here $\sigma_\infty$ is described by
-
-\begin{lemma} We have
+The $k$-linear idempotent on $\bar{Z}$ corresponding to top degree is the transfer $e = \pi \circ \vartheta \circ \varepsilon \circ \sigma_\infty$ while the bottom degree idempotent is $e' = \pi \circ \kappa \circ \rho \circ \sigma_\infty$. The former is described by symmetrising the content of \cite[Corollary 10.4]{dm1102.2957}
 \[
-\sigma_\infty = \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+e = \frac{1}{(n!)^2} (-1)^{\binom{n+1}{2}} \sum_{\sigma, \tau \in S_n} (-1)^{|\sigma\tau|} \lambda_{\sigma(1)} \ldots \lambda_{\sigma(n)} \At_{\tau(1)} \ldots \At_{\tau(n)}
 \]
-\end{lemma}
+where $\At_i = [D, \partial_{f_i}]$ is the $i$th component of the Atiyah class.
+
+\begin{proposition}\label{prop:otheridempotent} There is a $k$-linear homotopy
+\[
+e' \simeq \frac{1}{(n!)^2} (-1)^{\binom{n+1}{2}} \sum_{\sigma, \tau \in S_n} (-1)^{|\sigma\tau|} \At_{\tau(1)} \ldots \At_{\tau(n)} \lambda_{\sigma(1)} \ldots \lambda_{\sigma(n)}\,.
+\]
+\end{proposition}
 \begin{proof}
-By construction modulo the $f_i$ we have ($\nabla_{gr}$ has degree one for commutators)
+Working modulo the $f_i$ and using the tricks in the discussion preceeding \cite[Theorem 10.1]{dm1102.2957} we have
 \begin{align*}
-\sigma_\infty &= \sum_{m \ge 0} (-1)^m (\tau^{-1} \nabla_{gr} D) \cdots (\tau^{-1} \nabla_{gr} D) \,\\
-&= \sum_{m \ge 0} (-1)^m \frac{1}{m!} [ D, \nabla_{gr} ]^m \\
-&= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\tau(1)} \cdots \At_{\tau(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+\sigma_\infty &= \sum_{m \ge 0} (-1)^m \frac{1}{m!} \big[ D, \nabla_{gr} \big]^m \\
 \end{align*}
+where $\nabla_{gr}$ has odd degree for the purpose of writing commutators. Expanding each of these commutators in its components $\At_i$ yields a sum
+\begin{align*}
+&= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+\end{align*}
+over all injective functions $S_{m,n}$ from $[1,m]$ to $[1,n]$. Here $\theta_i$ denotes left multiplication by $\theta_i$ with attendant Koszul signs. Using \eqref{eq:rhoformula2}
+% see syme2
+\begin{align*}
+e' &= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \rho \At_{\tau(1)} \cdots \At_{\tau(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}\\
+&= \sum_{\substack{p \ge 0\\q_1 < \cdots < q_p}} \sum_{\sigma, \tau \in S_p} (-1)^{\binom{p}{2}} \frac{1}{(p!)^2} (-1)^{|\tau|} \lambda_{q_{\sigma(1)}} \ldots \lambda_{q_{\sigma(p)}} \At_{q_{\sigma \tau(1)}} \ldots \At_{q_{\sigma \tau(p)}}\,.
+\end{align*}
+(\textbf{todo}) It remains to argue that we can commute the Atiyah classes through.
 \end{proof}
-
-It follows that
-\begin{align*}
-e' &= \pi \circ \kappa \circ \rho \circ \sigma_\infty\\
-&= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \rho \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
-&= the good formula
-\end{align*}
-
 
 
 \newcommand{\etalchar}[1]{$^{#1}$}
