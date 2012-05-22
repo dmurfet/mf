@@ -427,7 +427,7 @@ $$
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 \end{tikzpicture} 
 $$
-in $\LG$ (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition. [TODO: maybe say in more detail what this means]
+in $\LG$ (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition. 
 
 [TODO: mention new, more general Kapustin-Li proof here or somewhere else]
 
@@ -461,9 +461,9 @@ A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even 
 The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of matrix factorisations whose objects are isomorphic to matrix factorisations with finitely-generated underlying $R$-modules. These three categories have standard triangulated structures whose shift functor we denote as~$[1]$. 
 
 Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factorisation} $\Delta_W \in \hmf(\Re, \widetilde W)$ where $\Re = R\otimes_k R$ and $\widetilde W = W\otimes 1 - 1\otimes W$. Introducing~$n$ formal symbols $\theta_i$ as a convenient notational device, we have 
-$$
+\be\label{DeltaW}
 \Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
-$$
+\ee
 as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
 $$
 \pi: \Delta_W \lra R
@@ -519,7 +519,7 @@ $$
 $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorphisms up to homotopy, and they satisfy the coherence axioms for bicategories. 
 \end{proposition}
 
-\begin{remark}
+\begin{remark}\label{remark:gradedbicategory}
 An analogous statement is also true of the bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$. Its objects are pairs $(R,W)$ as above but with the additional requirement that~$R$ is a $\nZ$-graded ring and~$W$ is homogeneus of some degree $2c$. A graded linear factorisation is then a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. As shown in~\cite{cr0909.4381} this is in particular true of the structure maps $\alpha, \lambda, \rho$. 
 
 As a relevant example let us discuss the graded Hom. For graded linear factorisations $X,Y$ of $W,W' \in R_{2c}$, respectively, we can form the $\nZ$-graded $R$-module $\Hom_{\mathrm{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i$, where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of $\nZ$-degree~$i$. This is a submodule of $\Hom_R(X,Y)$, and if~$X,Y$ are finitely generated then $\Hom_{\mathrm{gr}}(X,Y) = \Hom_R(X,Y)$. This graded module has a $\nZ_2$-decomposition into even and odd maps, 
@@ -719,9 +719,9 @@ where $a_i\in A$. We will write $(a_0,a_1,\ldots,a_n)$ also as $a_0da_1\ldots da
 More generally one can consider relative non-commutative forms: for a subalgebra $B\subset A$ they are elements in $\Omega_B A = \bigoplus_{n\geq 0} A\otimes_B (A/B)^{\otimes_B n}$, which has a differential graded structure analogous to $\Omega A = \Omega_k A$. We refer to the book~\cite{Loday} for further details. 
 
 A central role is played by the \textsl{(normalised) bar complex} 
-$$
+\be\label{BarComplex}
 \Bar = \bigoplus_{n\geq 0} \Bar_n \, , \qquad \Bar_n = \Omega^n A \otimes A \, .
-$$
+\ee
 It is an $(A^{\text{op}} \otimes A)$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. 
 
 There is a second differential graded structure on~$\Bar$ if the algebra~$A$ is commutative. To describe it let us first recall that (still for arbitrary~$A$) the bar complex is the standard resolution 
@@ -1178,7 +1178,8 @@ and for $f \in X^\vee$ and $g,g' \in X$:
 So to complete the proof we need only to show that the step marked $\pi$ is a right $R$-linear homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1} with $A = k[x], R = \Ae$ and $\theta$ the identity.
 \end{proof}
 
-\begin{definition} The \textsl{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(\Re, \widetilde{W})$ mapping to $1_X$ under (\ref{eq:isogivescoev})\,.
+\begin{definition}\label{def:coeval}
+The \textsl{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(\Re, \widetilde{W})$ mapping to $1_X$ under~\eqref{eq:isogivescoev}.
 \end{definition}
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
@@ -1411,9 +1412,7 @@ Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq
 &= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
 \end{align} 
-In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of 
-%identifying $z$ with $z'$ (TODO: not necessary). This changes 
-changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
+In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
 \begin{align}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
 &= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \Lambda \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
@@ -1617,6 +1616,12 @@ The three other Zorro moves are proven analogously (\textbf{todo}).
 \begin{theorem}
 The bicategory $\LG$ has left and right adjoints. Explicit expressions for the evaluation and coevaluation maps are given by~\eqref{TODO}. 
 \end{theorem}
+
+
+\begin{remark}
+The same result also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
+\end{remark}
+
 
 
 \subsection{Pivotality}
@@ -2092,7 +2097,9 @@ $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(
 \be\label{bulktopmet}
 \langle \phi, \psi \rangle_W = (-1)^n \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right]
 \ee
-describes two-point correlators. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
+describes two-point correlators on the sphere. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
+
+We also note that in the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
 \end{remark}
 
 Using the ``folding trick'' (which relates defects to boundary conditions in a product theory) one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$. This was done in~\cite{cr1006.5609} for the case $V=W$. Here we use our adjunction formulas to directly prove it for the general case: 
