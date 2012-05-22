@@ -10,6 +10,7 @@
 \usepackage{tikz}
 \def\nicedashedcolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=gray, dashed]}
 \def\nicecolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=white]}
+\def\nicepalecolourscheme{\shadedraw[top color=blue!12, bottom color=blue!12, draw=white]}
 \def\nicenocolourscheme{\shadedraw[top color=gray!2, bottom color=gray!25, draw=white]}
 \def\nicereallynocolourscheme{\shadedraw[top color=white!2, bottom color=white!25, draw=white]}
 \definecolor{Myblue}{rgb}{0,0,0.6}
@@ -340,7 +341,7 @@ But regardless of the conceptual origins of the adjunction property of $\LG$, in
 \ee
 where $\partial_{[i]}$ denotes the difference quotient operator for the $i$-th variable in $k[x]=k[x_1,\ldots,x_n]$, see~\eqref{diffquotop}. The mixture of explicitness and conceptual control rather effortlessly affords various applications which are of importance in their own right. We shall discuss some of them in later parts of this paper, and we briefly mention two of them already now. 
 
-Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation~$X$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as [TODO: \textsl{always} colour-code domains with non-trivial potentials?]
+Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation~$X$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
 \begin{align*}
 \mathcal D_r(X)(\psi) = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -365,6 +366,11 @@ Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ i
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
+%
 \fill (180:2) circle (0pt) node[left] {{\small$X$}};
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
@@ -385,6 +391,11 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \equiv\;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
+%
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
@@ -416,7 +427,7 @@ $$
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 \end{tikzpicture} 
 $$
-in $\LG$ (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition. [TODO: maybe say in more detail what this means]
+in $\LG$ (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition. 
 
 [TODO: mention new, more general Kapustin-Li proof here or somewhere else]
 
@@ -450,29 +461,29 @@ A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even 
 The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of matrix factorisations whose objects are isomorphic to matrix factorisations with finitely-generated underlying $R$-modules. These three categories have standard triangulated structures whose shift functor we denote as~$[1]$. 
 
 Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factorisation} $\Delta_W \in \hmf(\Re, \widetilde W)$ where $\Re = R\otimes_k R$ and $\widetilde W = W\otimes 1 - 1\otimes W$. Introducing~$n$ formal symbols $\theta_i$ as a convenient notational device, we have 
-$$
+\be\label{DeltaW}
 \Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
-$$
+\ee
 as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
 $$
 \pi: \Delta_W \lra R
 $$
 for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
 $$
-{}^{t_i}(-): k[x,y] \lra k[x,y] \, , \qquad f \lmt f\big|_{x_i\lmt y_i}
+{}^{t_i}(-): k[x,x'] \lra k[x,x'] \, , \qquad f \lmt f\big|_{x_i\lmt x'_i}
 $$
 in terms of which we can define difference quotient operators
 \be\label{diffquotop}
-\partial_{[i]}: k[x,y] \lra k[x,y] \, , \qquad f \lmt \frac{{}^{t_1\ldots t_{i-1}}f - {}^{t_1\ldots t_i}f}{x_i-y_i} \, . 
+\partial_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_1\ldots t_{i-1}}f - {}^{t_1\ldots t_i}f}{x_i-x'_i} \, . 
 \ee
 It is easy to check that the $\partial_{[i]}$ satisfy the following kind of Leibniz rule: 
 \begin{lemma}\label{lem:LeibnizForDQO}
-For $f,g \in k[x,y]$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
+For $f,g \in k[x,x']$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
 \end{lemma}
 
 The differential on $\Delta_W$ is given by
 \be\label{DeltaW}
-d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-y_i) \cdot \theta_i^*  \,. 
+d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*  \,. 
 \ee
 We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. For our purposes it will be sufficient to consider matrix factorisations $X\in \HMF(R_1\otimes_k R_2, W_2-W_1)$ and $Y\in \HMF(R_2\otimes_k R_3, W_3-W_2)$ (where of course $R_i = k$ is a possibility for any~$i$). Then the \textsl{tensor product matrix factorisation} $Y\otimes X \in \HMF(R_1\otimes_k R_3, W_3-W_1)$ is the module 
 $$
@@ -508,7 +519,7 @@ $$
 $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorphisms up to homotopy, and they satisfy the coherence axioms for bicategories. 
 \end{proposition}
 
-\begin{remark}
+\begin{remark}\label{remark:gradedbicategory}
 An analogous statement is also true of the bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$. Its objects are pairs $(R,W)$ as above but with the additional requirement that~$R$ is a $\nZ$-graded ring and~$W$ is homogeneus of some degree $2c$. A graded linear factorisation is then a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. As shown in~\cite{cr0909.4381} this is in particular true of the structure maps $\alpha, \lambda, \rho$. 
 
 As a relevant example let us discuss the graded Hom. For graded linear factorisations $X,Y$ of $W,W' \in R_{2c}$, respectively, we can form the $\nZ$-graded $R$-module $\Hom_{\mathrm{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i$, where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of $\nZ$-degree~$i$. This is a submodule of $\Hom_R(X,Y)$, and if~$X,Y$ are finitely generated then $\Hom_{\mathrm{gr}}(X,Y) = \Hom_R(X,Y)$. This graded module has a $\nZ_2$-decomposition into even and odd maps, 
@@ -708,9 +719,9 @@ where $a_i\in A$. We will write $(a_0,a_1,\ldots,a_n)$ also as $a_0da_1\ldots da
 More generally one can consider relative non-commutative forms: for a subalgebra $B\subset A$ they are elements in $\Omega_B A = \bigoplus_{n\geq 0} A\otimes_B (A/B)^{\otimes_B n}$, which has a differential graded structure analogous to $\Omega A = \Omega_k A$. We refer to the book~\cite{Loday} for further details. 
 
 A central role is played by the \textsl{(normalised) bar complex} 
-$$
+\be\label{BarComplex}
 \Bar = \bigoplus_{n\geq 0} \Bar_n \, , \qquad \Bar_n = \Omega^n A \otimes A \, .
-$$
+\ee
 It is an $(A^{\text{op}} \otimes A)$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. 
 
 There is a second differential graded structure on~$\Bar$ if the algebra~$A$ is commutative. To describe it let us first recall that (still for arbitrary~$A$) the bar complex is the standard resolution 
@@ -765,7 +776,7 @@ d_{\Bar}^2 (\omega) & = b'(d\widetilde W \times \omega) + d\widetilde W \times b
 where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetilde W)=0$. 
 \end{proof}
 
-If we use~$\pi$ also to denote the projection $\BarÊ\lra \Bar_0 = \Re$ composed with multiplication $\Re \lra R$, then $\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{TODO}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
+If we use~$\pi$ also to denote the projection $\BarÊ\lra \Bar_0 = \Re$ composed with multiplication $\Re \lra R$, then $\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{section:pertandhtpy}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}
 
 There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be important to us: 
 \begin{align}
@@ -782,7 +793,7 @@ Both~$\Phi$ and~$\Psi$ are maps of differential graded algebras between $(\Delta
 We refer to~\cite{sw0911.0917} for the case of~$\Phi$; since our expression for~$\Psi$ is not manifestly the same as in loc.~cit.~we spell out the proof. Let us first show that~$\Psi$ is compatible with the differentials. On the one hand we compute $(\delta_- \Psi) (df_1\ldots df_p \otimes 1)$ to be 
 \begin{align}
 & \delta_ -\Big( \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \theta_{i_p} \Big) \nonumber \\
-& =  \sum_{j=1}^n \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \cdot (x_j - y_j) \sum_{k=1}^p (-1)^{k+1} \delta_{j i_k} \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
+& =  \sum_{j=1}^n \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \cdot (x_j - x'_j) \sum_{k=1}^p (-1)^{k+1} \delta_{j i_k} \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
 & = \sum_{k=1}^p (-1)^{k+1}\sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1\ldots t_{i_{k}}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
 & = \sum_{2\leq t_2<\ldots< i_p} (f_1 - {}^{t_1\ldots t_{i_{2}-1}} f_1) (\partial_{[i_2]} f_2) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_2} \ldots \theta_{i_p} \nonumber \\
 & \qquad + \sum_{k=2}^{p-1} (-1)^{k+1}\sum_{i_1,\ldots,i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1\ldots t_{i_{k+1}-1}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
@@ -831,9 +842,6 @@ $$
 \delta_+ \Psi = \Big( \sum_{i=1}^n \partial_{[i]} W \cdot \theta_i^* \Big) \wedge \Psi(-) = \Psi(dW\otimes 1) \wedge \Psi(-) = \Psi (d\widetilde W\times (-)) \, . 
 $$
 \end{proof}
-
-
-TODO: Say something about $\Phi$ here too
 
 
 %\begin{remark}
@@ -1137,7 +1145,7 @@ In this section $\Delta$ denotes $\Delta_W$.
 \end{equation}
 \end{proposition}
 \begin{proof}
-Let $\Delta'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta$ but with the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in just the same way that $\Delta$ approximates it as a factorisation of $\widetilde{W}$. Also let~$K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta$, but the differential~$\delta_{-}$, so~$K$ is the usual Koszul complex of $x_1 - y_1, \ldots, x_n - y_n$.
+Let $\Delta'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta$ but with the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in just the same way that $\Delta$ approximates it as a factorisation of $\widetilde{W}$. Also let~$K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta$, but the differential~$\delta_{-}$, so~$K$ is the usual Koszul complex of $x_1 - x'_1, \ldots, x_n - x'_n$.
 
 The product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-graded complexes $(R = k[x])$
 \[
@@ -1170,7 +1178,8 @@ and for $f \in X^\vee$ and $g,g' \in X$:
 So to complete the proof we need only to show that the step marked $\pi$ is a right $R$-linear homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1} with $A = k[x], R = \Ae$ and $\theta$ the identity.
 \end{proof}
 
-\begin{definition} The \textsl{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(\Re, \widetilde{W})$ mapping to $1_X$ under (\ref{eq:isogivescoev})\,.
+\begin{definition}\label{def:coeval}
+The \textsl{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dual \otimes X$ in the homotopy category $\hmf(\Re, \widetilde{W})$ mapping to $1_X$ under~\eqref{eq:isogivescoev}.
 \end{definition}
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
@@ -1241,7 +1250,7 @@ X^\dual \otimes X \ar[r]^-{\At^m_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otim
 
 \subsection{Evaluation}\label{subsec:eval}
 
-In this section we write $B = k[z]$ and $\Be = B \otimes_k B$ so that $\widetilde\eval_X$ is a morphism of (infinite rank) matrix factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ over $\Be$. The polynomials $\partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{k[x,z]}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. For example $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices.
+In this section we write $B = k[z]$ [TODO: better always use either $R,S$ or $A,B$] and $\Be = B \otimes_k B$ so that $\widetilde\eval_X$ is a morphism of (infinite rank) matrix factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ over $\Be$. The polynomials $\partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{k[x,z]}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. For example $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices.
 
 The evaluation map will be produced by a perturbation whose initial data is the morphism $\eval_0$ of the next proposition. As its main ingredient is the residue symbol, we briefly recall some of its basic properties; see~\cite{TODO} for more details. Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x]$ it is the $k[y]$-linear map that sends a polynomial $g\in k[x,y]$ to the expression
 $$
@@ -1258,7 +1267,7 @@ f'_i = \sum_{j=1}^n C_{ij} f_j
 \, , \qquad
 C_{ij} \in k[x,y] \, ,
 $$
-together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\operatorname{d}\! x}/(x_1^{a_1} \ldots x_n^{a_n}) \right] = \delta_{a_1,-1}\ldots \delta_{a_n,-1}$. 
+together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\operatorname{d}\! x}/(x_1^{a_1} \ldots x_n^{a_n}) \right] = \delta_{a_1,1}\ldots \delta_{a_n,1}$. 
 
 \begin{proposition} There is a morphism of linear factorisations of $\widetilde{V}$ over $\Be$, 
 \[
@@ -1403,9 +1412,7 @@ Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq
 &= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
 \end{align} 
-In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of 
-%identifying $z$ with $z'$ (TODO: not necessary). This changes 
-changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
+In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
 \begin{align}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
 &= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \Lambda \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
@@ -1611,6 +1618,12 @@ The bicategory $\LG$ has left and right adjoints. Explicit expressions for the e
 \end{theorem}
 
 
+\begin{remark}
+The same result also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
+\end{remark}
+
+
+
 \subsection{Pivotality}
 
 We end this section by listing a few properties of the adjunction maps. For a morphism $\varphi: X \lra Y$ between matrix factorisations $X\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x))$ and $Y\in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))$ we define its adjoint to be
@@ -1635,7 +1648,7 @@ $$
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
 \draw (3,0.65) -- (3,0)
-node[below] {{{\small$X$}}};
+node[below] {{{\small$X\vphantom{Y^\dual}$}}};
 \draw (2,0.65) -- (2,0)
 node[below] {{{\small$Y^\dual$}}};
 \end{tikzpicture} 
@@ -1649,7 +1662,7 @@ node[below] {{{\small$Y^\dual$}}};
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \fill (2,0.5) circle (2.5pt) node[left] {{\small $\varphi^\dual$}};
 \draw (3,0.65) -- (3,0)
-node[below] {{{\small$X$}}};
+node[below] {{{\small$X\vphantom{Y^\dual}$}}};
 \draw (2,0.65) -- (2,0)
 node[below] {{{\small$Y^\dual$}}};
 \end{tikzpicture} 
@@ -1734,7 +1747,7 @@ node[below] {{{\small$Y^\dual$}}};
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (1,0.5) circle (1.5pt) node[right] {{\small $\varphi^\dual$}};
+\fill (1,0.5) circle (2.5pt) node[right] {{\small $\varphi^\dual$}};
 \draw (2,0.32) -- (2,0.68);
 \draw[line width=0pt] 
 (2,0.5) node[line width=0pt] (D) {}
@@ -1974,6 +1987,11 @@ Diagrammatically these definitions read
 \mathcal D_l(X)(\phi) =
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$W$}};
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
+%
 \fill (180:2) circle (0pt) node[left] {{\small$x\vphantom{z'}$}};
 \fill (180:2) circle (0pt) node[right] {{\small$z\vphantom{z'}$}};
 \fill (0:2) circle (0pt) node[left] {{\small$z'\vphantom{z'}$}};
@@ -2022,6 +2040,11 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \mathcal D_r(X)(\psi) = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
+%
 \fill (180:2) circle (0pt) node[left] {{\small$z\vphantom{z'}$}};
 \fill (180:2) circle (0pt) node[right] {{\small$x\vphantom{z'}$}};
 \fill (0:2) circle (0pt) node[left] {{\small$x'\vphantom{z'}$}};
@@ -2074,7 +2097,9 @@ $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(
 \be\label{bulktopmet}
 \langle \phi, \psi \rangle_W = (-1)^n \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right]
 \ee
-describes two-point correlators. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
+describes two-point correlators on the sphere. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
+
+We also note that in the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
 \end{remark}
 
 Using the ``folding trick'' (which relates defects to boundary conditions in a product theory) one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$. This was done in~\cite{cr1006.5609} for the case $V=W$. Here we use our adjunction formulas to directly prove it for the general case: 
@@ -2123,6 +2148,7 @@ This directly follows from the explicit expressions for $\mathcal D_l(X)$, $\mat
 We recall the physical interpretation of the relation~\eqref{Dadjoint}. Both sides of this equation are two-point correlators on the Riemann sphere, with a defect line labelled by~$X$ wrapped around counterclockwise the bulk field~$\phi$, or wrapped around~$\psi$ in clockwise fashion. That both correlators should be equal follows from the fact that the topological defect can be moved around the sphere at no cost: 
 $$
 \left\langle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[baseline=-0.1cm]
 \def\R{1.85}
 \def\angEl{45}
@@ -2131,9 +2157,11 @@ $$
 \fill (-0.95,-0.83) circle (1pt) node[above] {{\small$\phi$}}; 
 \fill (0.95,-0.83) circle (1pt) node[above] {{\small$\psi$}}; 
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \right\rangle
 =
 \left\langle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[baseline=-0.1cm]
 \def\R{1.85}
 \def\angEl{45}
@@ -2142,9 +2170,11 @@ $$
 \fill (-0.95,-0.83) circle (1pt) node[above] {{\small$\phi$}}; 
 \fill (0.95,-0.83) circle (1pt) node[above] {{\small$\psi$}}; 
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \right\rangle
 =
 \left\langle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[baseline=-0.1cm]
 \def\R{1.85}
 \def\angEl{45}
@@ -2152,7 +2182,9 @@ $$
 \DrawLatitudeCircle[\R,rotate=-130, very thick, blue]{65}
 \fill (-0.95,-0.83) circle (1pt) node[above] {{\small$\phi$}}; 
 \fill (0.95,-0.83) circle (1pt) node[above] {{\small$\psi$}}; 
-\end{tikzpicture}\right\rangle .
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\right\rangle .
 $$
 \end{remark}
 
