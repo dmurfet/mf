@@ -539,7 +539,7 @@ We say a bicategory~$\mathcal B$ \textsl{has adjoints} if for each 1-morphism $X
 \ee
 satisfying 
 \begin{align}
-\rho_X \circ (1_X \otimes \eval_X) \circ \alpha_{X,X^\dual,X} \circ (\coev_X \otimes 1_X) \lambda_X^{-1} & = 1_X \, , \label{uglyZorro1}\\
+\rho_X \circ (1_X \otimes \eval_X) \circ \alpha_{X,X^\dual,X} \circ (\coev_X \otimes 1_X) \circ \lambda_X^{-1} & = 1_X \, , \label{uglyZorro1}\\
 \lambda_{X^\dual} \circ (\eval_X \otimes 1_{X^\dual}) \circ \alpha^{-1}_{X^\dual,X,X^\dual} \circ (1_{X^\dual} \otimes \coev_X) \circ \rho_{X^\dual}^{-1} & = 1_{X^\dual} \, . \label{uglyZorro2}
 \end{align}
 \end{definition}
@@ -1837,8 +1837,9 @@ The obvious analogous identities for $\widetilde\eval$ and $\widetilde\coev$ fol
 
 
 \begin{proposition}\label{prop:monoidalproperty}
-In $\LG$ we have
-$$
+For two matrix factorisations $X\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x))$ and $Y\in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))$ we have
+\be\label{eq:monoidalproperty}
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
 \draw[line width=1pt] 
 (-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
@@ -1852,7 +1853,9 @@ $$
 \draw[dotted] (0,0) -- (1,0);
 \draw (2,0) -- (XY);
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 =
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
 \draw[line width=1pt] 
 (2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
@@ -1866,12 +1869,64 @@ $$
 \draw[dotted] (0,0) -- (1,0);
 \draw (-1,0) -- (XY);
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 \, . 
-$$
+\ee
 \end{proposition}
 
 \begin{proof}
-TODO
+TODO: include signs!
+
+We start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
+$$
+\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right]
+= 
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \alpha \circ \Lambda^{(y)}_X)(\alpha) \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] . 
+$$
+The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous and we find 
+\begin{align*}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\draw[line width=1pt] 
+(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
+(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
+(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (-1,0) -- (Y);
+\draw (-2,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (2,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+& =
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{X^\dual} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] ,
+\\
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\draw[line width=1pt] 
+(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
+(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
+(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (Y);
+\draw (3,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+& = 
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] .
+\end{align*}
+
+To show that the above two expressions are equal up to homotopy we again make use of the non-degeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
+$$
+\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1) (\prod_{j=1}^m \partial_{y_j} W_2) (\prod_{l=1}^p \partial_{x_l} W_3)} \right] , 
+$$
+but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
 \end{proof}
 
 
