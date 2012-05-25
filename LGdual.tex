@@ -248,8 +248,6 @@ They take over.
 
 \section{Introduction}\label{sec:Introduction}
 
-[TODO: decide whether main results should be stated as theorems already in Introduction]
-
 Landau-Ginzburg models play a central role in many areas of mathematical physics and pure mathematics. Among them are diverse fields such as singularity theory, representation theory, (homological) mirror symmetry, knot invariants, or conformal and topological field theory. All these areas are intimately interrelated, and this richness is actually one of the aesthetical motivations to study Landau-Ginzburg models. Another general motivation is their dual nature of affording insight into deep, often beautiful, results while at the same time maintaining to provide the ability to perform concrete, hands-on computations. 
 
 In the present paper we wish to show how the dichotomy just mentioned manifests itself in the context of two-dimensional topological field theory (TFT) with defects. In short, we will explain how Landau-Ginzburg models give rise to a class of bicategories with adjoints (and several additional properties), and we will see that these structures can be described both elegantly and explicitly. This in turn allows us to prove various general results to whose discussion we will come towards the end of this section. 
@@ -319,11 +317,11 @@ In addition to the labels $T_I$ for the two-dimensional domains and $D_\alpha$ f
 
 A TFT is a functor that assigns a number called the \textsl{correlator} to a labelled worldsheet like~\eqref{worldsheetwithdefects}. Its topological nature implies that the value of any correlator does not depend on the precise position of the $D_\alpha$'s and $\phi_i$'s, but only on their isotopy class. 
 
-It is natural to try and make sense of this situation in terms of a bicategory: its objects are the theories $T_I$, 1-morphisms are labelled defect lines $D_\alpha$, and 2-morphisms are the fields $\phi_i$. The composition of 2-morphisms is the operator product of the fields, which is strictly associative because we only consider \textsl{topological} field theories. The composition of 1-morphisms comes about as follows: since the exact locus of the defect lines does not matter, two (or more) adjacent defect lines can be brought together arbitrarily close, and the limit of this \textsl{fusion} is well-defined and non-singular. The unit of the fusion product is the \textsl{invisible defect} which by definition leaves any other defect line invariant under fusion (from the left or right). 
+It is natural to try and make sense of this situation in terms of a bicategory: its objects are the theories $T_I$, 1-morphisms are labelled defect lines $D_\alpha$, and 2-morphisms are the fields $\phi_i$. The composition of 2-morphisms is the operator product of the fields, which is strictly associative because we only consider \textsl{topological} field theories. The composition of 1-morphisms comes about as follows: since the exact locus of the defect lines does not matter, two (or more) adjacent defect lines can be brought together arbitrarily close, and the limit of this \textsl{fusion} is well-defined and non-singular. The unit of the fusion product is the \textsl{invisible defect} which by definition leaves any other defect line invariant under fusion (from both left and right). 
 
 Thus any TFT with defects is expected to give rise to a bicategory. Standard examples for bicategories include the bicategory of categories (with objects, 1- and 2-morphisms given by categories, functors and natural transformations, respectively) or rings (rings, bimodules, bimodule maps), but these are too generic to be known to describe relevant TFTs. A rich and interesting example is the bicategory of algebraic varieties with Fourier-Mukai kernels as 1-morphisms~\cite{ct1007.2679} which describes B-twisted sigma models, see~e.\,g.~\cite{MB2}. 
 
-The example that we study in this paper is the bicategory $\LG$ of Landau-Ginzburg models. Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$.\footnote{We will allow any reasonable $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
+The example that we study in this paper is the bicategory $\LG$ of Landau-Ginzburg models. Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
 
 On general grounds it is expected that the bicategorical description of TFTs with defects comes equipped with additional structure. In particular, the fact that we consider \textsl{oriented} defect lines should give rise to adjunctions on the level of 1-morphisms: the ``same'' defect line with reversed orientation should be adjoint to the defect with opposite orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$ there is a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
@@ -331,11 +329,11 @@ On general grounds it is expected that the bicategorical description of TFTs wit
 \, , \qquad
 \coev_X: \Delta_V \lra X \otimes X^\dual
 \ee
-that are the counit and unit of a (right) adjunction between~$X$ and~$X^\dual$. Similarly, there are maps $\widetilde\eval_X: X\otimes X^\dual \lra \Delta_V$ and $\widetilde\coev_X: \Delta_W \lra X^\dual \otimes X$ that make~$X^\dual$ the left adjoint of~$X$. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in a somewhat ad hoc manner in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from the physical picture. 
+that are the counit and unit of a (right) adjunction between~$X$ and~$X^\dual$. Similarly, one expects maps $\widetilde\eval_X: X\otimes X^\dual \lra \Delta_V$ and $\widetilde\coev_X: \Delta_W \lra X^\dual \otimes X$ that make~$X^\dual$ the left adjoint of~$X$, and furthermore there should exist natural isomorphisms $X\lra X^{\dual\dual}$ which give rise to a so-called pivotal structure. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from the physical picture. 
 
-In the present paper we develop a conceptual framework from which we obtain explicit expressions for the above adjunction maps in the general case. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
+In the present paper we prove that $\LG$ has adjoints and is pivotal in the general case. We do so by developing a conceptual framework from which we obtain explicit expressions for the above adjunction maps, opening the door for many applications. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
 
-But regardless of the conceptual origins of the adjunction property of $\LG$, in the end they produce very explicit formulas one can actually calculate with in practice: for a matrix factorisation~$X$ of $V-W$ with differential~$D$, the maps are given by
+But regardless of the conceptual origins of the adjunction properties of $\LG$, in the end they produce very explicit formulas one can actually calculate with in practice: for a matrix factorisation~$X$ of $V-W$ with differential~$D$, the maps are given by
 \be\label{evcoevexplicit}
 \eval_X = TODO \, , \qquad
 \coev_X = TODO
@@ -343,7 +341,7 @@ But regardless of the conceptual origins of the adjunction property of $\LG$, in
 where $\partial_{[i]}$ denotes the difference quotient operator for the $i$-th variable in $k[x]=k[x_1,\ldots,x_n]$, see~\eqref{diffquotop}. The mixture of explicitness and conceptual control rather effortlessly affords various applications which are of importance in their own right. We shall discuss some of them in later parts of this paper, and we briefly mention two of them already now. 
 
 Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation~$X$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
-\begin{align*}
+\begin{align}\label{defectactionIntro}
 \mathcal D_r(X)(\psi) = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
@@ -376,9 +374,9 @@ Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ i
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (135:0) circle (2.5pt) node[left] {{\small$\psi$}};
-\fill (50:2) circle (2.5pt) node[right] {{\small$\lambda_{X^\dual}$}};
-\fill (-50:2) circle (2.5pt) node[right] {{\small$\lambda^{-1}_{X^\dual}$}};
+\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X^\dual}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X^\dual}$}};
 \draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
 \fill (0.4,1.15) circle (0pt) node {{\small $\Delta_W$}};
 \fill (0.4,-1.15) circle (0pt) node {{\small $\Delta_W$}};
@@ -397,19 +395,57 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \nicecolourscheme (0,0) circle (2);
 \fill (-1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
+\fill (180:2) circle (0pt) node[left] {{\small$X$}};
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (135:0) circle (2.5pt) node[left] {{\small$\psi$}};
+\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \; ,
-\end{align*}
-where as usual (and explained in more detail in Section~\ref{subsec:bicatLG}) evaluation and coevaluation maps are denoted as caps and cups, respectively, and~$\lambda_{X^\dual}$ is the left action of $\Delta_W$ on~$X^\dual$. In Section~\ref{sec:defectaction} we will prove the general formula 
+\end{align}
+where as usual (and explained in more detail in Section~\ref{subsec:bicatLG}) evaluation and coevaluation maps are denoted as caps and cups, respectively, $\lambda_{X^\dual}$ is the left action of $\Delta_W$ on~$X^\dual$, and we always read diagrams like the above from bottom to top. In Section~\ref{sec:defectaction} we will prove the general formula 
 \be\label{DrXpsi}
-\mathcal D_r(X)(\psi)  = (-1)^{{m\choose 2} + {n+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{z_1} D\ldots \partial_{z_m} D \, \partial_{x_1} D\ldots \partial_{x_n} D \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right]
+\mathcal D_r(X)(\psi)  = (-1)^{{m\choose 2} + {n+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi \str\big( \partial_{z_1} D\ldots \partial_{z_m} D \, \partial_{x_1} D\ldots \partial_{x_n} D \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right]
 \ee
 as well as various properties such as $\mathcal D_r(X\otimes Y) = \mathcal D_r(X) \circ \mathcal D_r(Y)$. 
+
+One may also consider the situation in~\eqref{defectactionIntro} with an additional defect field $\Phi\in\End(X)$ inserted on the $X$-loop. We will see that this simply amounts to the insertion of~$\Phi$ as a factor inside the supertrace in~\eqref{DrXpsi}. As the two special cases $V=0$ and $W=0$ we thus obtain
+$$
+\!\!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.0,-1.0) circle (0pt) node[white] {{\small$W$}};
+%
+\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
+\fill (130:2) circle (3.3pt) node[left] {{\small$\Phi$}};
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+= 
+(-1)^{{n+1\choose 2}} \Res_{k[x]/k} \!\!\left[ \frac{\psi \str\big( \Phi \Lambda_X^{(x)} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] , 
+\qquad
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (-2.1,-2.1) circle (0pt) node[white] {{\small$V$}};
+\shadedraw[top color=white, bottom color=white, draw=white] (0,0) circle (2);
+%
+\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
+\fill (130:2) circle (3.3pt) node[left] {{\small$\Phi$}};
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ = 
+(-1)^{{m\choose 2}} \str\big( \Phi \Lambda_X^{(z)} \big) \, . 
+$$
+In this way we recover the \textsl{Kapustin-Li disk correlator} and the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$). 
 
 Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:CardyCondition} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} and~\cite{dm1102.2957} for $k=\nC$ using rather heavy or technical machinery. Or proof works for any commutative noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphisms
 $$
@@ -432,7 +468,7 @@ in $\LG$ (which is to be identified with an annulus correlator) can be evaluated
 
 [TODO: mention new, more general Kapustin-Li proof here or somewhere else]
 
-Let us conclude this introductory section by naming some further motivations for and future applications of the results presented in this paper. One of the most intriguing properties of Landau-Ginzburg models is that they are one of the two sides of the \textsl{CFT/LG correspondence}. It roughly states that many aspects of a large class of conformal field theories (CFTs) can be described in terms of (non-conformal) Landau-Ginzburg models. CFTs have an extremely rich structure, and the subclass of \textsl{rational} CFTs are particularly well-understood. Starting with~\cite{tft1} their description in terms of a beautiful categorical theory has been developed, and one may wonder which structures encountered in rational CFT can also be found in the theory of Landau-Ginzburg models -- whether or not they correspond to a rational CFT. The complete answer to this question is not known, but at least all the formal properties of $\LG$ that we establish in this paper also hold for the bicategory of topological defects in rational conformal field theory. Of course this by no means exhausts the richness of rational CFT, and there remain many properties of Landau-Ginzburg models to be uncovered, inspired by the CFT/LG correspondence. 
+Let us conclude this introductory section by naming some further motivations for and future applications of the results presented in this paper. One of the most intriguing properties of Landau-Ginzburg models is that they are on one of the two sides of the \textsl{CFT/LG correspondence}. It roughly states that many aspects of a large class of conformal field theories (CFTs) can be described in terms of (non-conformal) Landau-Ginzburg models. CFTs have an extremely rich structure, and the subclass of \textsl{rational} CFTs are particularly well-understood. Starting with~\cite{tft1} their description in terms of a beautiful categorical theory has been developed, and one may wonder which structures encountered in rational CFT can also be found in the theory of Landau-Ginzburg models -- whether or not they correspond to a rational CFT. The complete answer to this question is not known, but at least all the formal properties of $\LG$ that we establish in this paper also hold for the bicategory of topological defects in rational conformal field theory. Of course this by no means exhausts the richness of rational CFT, and there remain many properties of Landau-Ginzburg models to be uncovered, inspired by the CFT/LG correspondence. 
 
 One example is the \textsl{generalised orbifold} procedure of~\cite{ffrs0909.5013} which constructs all rational CFTs of fixed central charge from any given single such CFT. Carried over to Landau-Ginzburg models this leads to the following picture: under the right circumstances a Landau-Ginzburg model with potential~$V$ can be obtained from a model with completely different potential~$W$ by identifying a 1-endomorphism~$F$ in $\LG(W,W)$ that can be equipped with the structure of a special symmetric Frobenius algebra (see e.\,g.~\cite[Section~3]{tft1}). Then the category of matrix factorisations of~$V$ is equivalent to the category of $F$-modules. The results of the present paper facilitate the construction of suitable algebras as follows: for any defect $X\in \LG(W,V)$ with invertible \textsl{quantum dimension} $\mathcal D_r(X)(1)$ we obtain a special symmetric Frobenius algebra $F = X^\dual \otimes X$ that allows to recast everything about theory~$V$ in terms of theory~$W$. Also note that with our explicit formula~\eqref{DrXpsi} the condition of invertibility of the quantum dimension is very easy to check in practice. The details of this construction will be described along with examples in the forthcoming paper~\cite{genorb}. 
 
@@ -545,7 +581,7 @@ satisfying
 \end{align}
 \end{definition}
 
-It is convenient (and also suggested by the motivation discussed in the Introduction) to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{TODO} for more details (\textbf{todo} So we fix specific adjunctions for each $X$). In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
+It is convenient (and also suggested by the motivation discussed in the Introduction) to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{JSGoTCI,JSGoTCII} for more details (\textbf{todo} So we fix specific adjunctions for each $X$). In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
 $$
 \eval_{X} = 
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
@@ -1967,7 +2003,7 @@ The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous
 
 To show that the above two expressions are equal up to homotopy we again make use of the non-degeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
 $$
-\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1) (\prod_{j=1}^m \partial_{y_j} W_2) (\prod_{l=1}^p \partial_{x_l} W_3)} \right] , 
+\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1) (\prod_{j=1}^m \partial_{y_j} W_2) (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
 $$
 but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
 \end{proof}
@@ -2097,9 +2133,9 @@ Diagrammatically these definitions read
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
 \draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
-\fill (135:0) circle (2.5pt) node[left] {{\small$\psi$}};
-\fill (50:2) circle (2.5pt) node[right] {{\small$\lambda_{X}$}};
-\fill (-50:2) circle (2.5pt) node[right] {{\small$\lambda^{-1}_{X}$}};
+\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X}$}};
 \draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
 \fill (0.41,1.15) circle (0pt) node {{\small $\Delta_V$}};
 \fill (0.41,-1.15) circle (0pt) node {{\small $\Delta_V$}};
@@ -2150,9 +2186,9 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (135:0) circle (2.5pt) node[left] {{\small$\psi$}};
-\fill (50:2) circle (2.5pt) node[right] {{\small$\lambda_{X^\dual}$}};
-\fill (-50:2) circle (2.5pt) node[right] {{\small$\lambda^{-1}_{X^\dual}$}};
+\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X^\dual}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X^\dual}$}};
 \draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
 \fill (0.4,1.15) circle (0pt) node {{\small $\Delta_W$}};
 \fill (0.4,-1.15) circle (0pt) node {{\small $\Delta_W$}};
@@ -2197,7 +2233,7 @@ $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(
 \ee
 describes two-point correlators on the sphere. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
 
-We also note that in the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
+As already observed in Section~\ref{sec:Introduction}, for the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
 \end{remark}
 
 Using the ``folding trick'' (which relates defects to boundary conditions in a product theory) one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$. This was done in~\cite{cr1006.5609} for the case $V=W$. Here we use our adjunction formulas to directly prove it for the general case: 
@@ -2252,8 +2288,8 @@ $$
 \def\angEl{45}
 \filldraw[ball color= white!77!blue,draw=white] (0,0) circle (\R);
 \DrawLatitudeCircleU[\R,rotate=130,very thick, blue]{65}
-\fill (-0.95,-0.83) circle (1pt) node[above] {{\small$\phi$}}; 
-\fill (0.95,-0.83) circle (1pt) node[above] {{\small$\psi$}}; 
+\fill (-0.95,-0.83) circle (1.3pt) node[above] {{\small$\phi$}}; 
+\fill (0.95,-0.83) circle (1.3pt) node[above] {{\small$\psi$}}; 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \right\rangle
@@ -2265,8 +2301,8 @@ $$
 \def\angEl{45}
 \filldraw[ball color= white!77!blue,draw=white] (0,0) circle (\R);
 \DrawLongitudeCircle[\R]{80}
-\fill (-0.95,-0.83) circle (1pt) node[above] {{\small$\phi$}}; 
-\fill (0.95,-0.83) circle (1pt) node[above] {{\small$\psi$}}; 
+\fill (-0.95,-0.83) circle (1.3pt) node[above] {{\small$\phi$}}; 
+\fill (0.95,-0.83) circle (1.3pt) node[above] {{\small$\psi$}}; 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \right\rangle
@@ -2278,8 +2314,8 @@ $$
 \def\angEl{45}
 \filldraw[ball color= white!77!blue,draw=white] (0,0) circle (\R);
 \DrawLatitudeCircle[\R,rotate=-130, very thick, blue]{65}
-\fill (-0.95,-0.83) circle (1pt) node[above] {{\small$\phi$}}; 
-\fill (0.95,-0.83) circle (1pt) node[above] {{\small$\psi$}}; 
+\fill (-0.95,-0.83) circle (1.3pt) node[above] {{\small$\phi$}}; 
+\fill (0.95,-0.83) circle (1.3pt) node[above] {{\small$\psi$}}; 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \right\rangle .
@@ -3206,6 +3242,14 @@ Proceedings of the XVI International Congress on Mathematical Physics, Prague, A
 %\bibitem[Jon85]{JonesPolynomialPaper}
 %V.~F.~R. Jones, \textsl{A polynomial invariant for knots via von {N}eumann
 %  algebras}, Bull. Amer. Math. Soc. \textbf{12} (1985), 103--111.
+
+\bibitem[JS91]{JSGoTCI}
+A.~Joyal and R.~Street, \textsl{The geometry of tensor calculus I}, Advances in Math. \textbf{88} (1991), 55--112.
+
+\bibitem[JS]{JSGoTCII}
+A.~Joyal and R.~Street, \textsl{The geometry of tensor calculus II}, 
+draft available at 
+\href{http://maths.mq.edu.au/~street/GTCII.pdf}{http://maths.mq.edu.au/\textasciitilde street/GTCII.pdf}
 
 \bibitem[Kap]{k1004.2307}
 A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
