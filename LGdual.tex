@@ -96,6 +96,7 @@
 \begin{document}
 
 % Commands
+\def\Atlarrow{\overset{\leftarrow}{\At}}
 \def\Res{\res\!}
 \newcommand{\cat}[1]{\mathcal{#1}}
 \newcommand{\lto}{\longrightarrow}
@@ -759,8 +760,11 @@ A central role is played by the \textsl{(normalised) bar complex}
 \be\label{BarComplex}
 \Bar = \bigoplus_{n\geq 0} \Bar_n \, , \qquad \Bar_n = \Omega^n A \otimes A \, .
 \ee
-It is an $(A^{\text{op}} \otimes A)$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. 
-
+It is an $(A^{\text{op}} \otimes A)$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. While $d$ is right $A$-linear, we will also make use of the left $A$-linear operator $s$ on $\Bar$ defined by
+% for the operator s see coevc3
+\[
+s( a_0 da_1 \cdots da_n \otimes a_{n+1} ) = (-1)^{n+1} a_0 da_1 \cdots da_n da_{n+1}\,.
+\]
 There is a second differential graded structure on~$\Bar$ if the algebra~$A$ is commutative. To describe it let us first recall that (still for arbitrary~$A$) the bar complex is the standard resolution 
 $$
 \xymatrix{%
@@ -775,9 +779,9 @@ $$
 %$$
 %b': da_0\ldots da_n\otimes a_{n+1} \lmt (-1)^{n-1} a_0da_1\ldots da_{n-1} \cdot a_n \otimes a_{n+1} + (-1)^n a_0 da_1\ldots da_{n-1} \otimes a_n a_{n+1} \, . 
 %$$
-From this it is straightforward to check that we have the identity
+From this it is straightforward to check that we have the identities
 \be\label{b'd+db'}
-b'd+db'=1_{\Bar} \, .
+b'd+db'=1_{\Bar} \, \qquad b' s + s b' = 1_{\Bar}\,.
 \ee
 
 From now on we assume that~$A$ is commutative. Recall that $(m,n)$-shuffles are permutations in
@@ -951,7 +955,7 @@ s&: X \otimes_{R^e} \Bar \lto X \otimes_{R^e} \Bar, &\qquad s( e_i \otimes \omeg
 \end{align*}
 
 \begin{definition}
-The \emph{associative Atiyah classes} of $X$ are operators on $X \otimes_{R^e} \Bar$ defined by
+The \emph{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes_{R^e} \Bar$ defined by
 \begin{align*}
 \At_{R^e/R_2}(X) &= [d, D] = d D + D d\,,\\
 \At_{R^e/R_1}(X) &= [s, D] = s D + D s\,.
@@ -963,12 +967,12 @@ One can easily check that for $\omega \in \Bar$
 \At_{R^e/R_2}(X)( e_i \otimes \omega ) = \sum_j (-1)^{|e_j|} e_j \otimes d( D_{ji} ) \omega
 \]
 and more generally for $m \ge 1$
-\[
+\begin{equation}\label{eq:powerofatiyah}
 \At_{R^e/R_2}(X)^m( e_i \otimes \omega ) = \sum_{j_1,\ldots,j_m} (-1)^{|e_i| + \binom{m+1}{2}} e_{j_m} \otimes d( D_{j_m, j_{m-1}} ) \cdots d(D_{j_2,j_1})d( D_{j_1 i} ) \omega\,.
-\]
+\end{equation}
 There are similar formulas for $\At_{R^e/R_1}$. We call these \emph{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_{R^e/R_2}$ as a cohomology class, so we should perhaps refer to Atiyah \emph{operators}, but we persist with the above terminology.
 
-To discuss the linearity we need to be clear that $X \otimes_{R^e} \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then clear from the above formula that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
+To discuss the linearity we need to be clear that $X \otimes_{R^e} \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then clear from the above formula that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}(X)$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
 
 There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes_{R^e} X$ (using the right $R^e$-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
 \begin{align*}
@@ -980,9 +984,51 @@ The difference from the other Atiyah classes appears when we exponentiate
 \]
 From this expression it is clear that $\lAt_{R^e/R_2}$ and $\lAt_{R^e/R_1}$ are both left $R^e$-linear, using the action of left multiplication on $\Bar$ in $\Bar \otimes_{R^e} X$.
 
+In addition to these four distinct kinds of Atiyah classes, we will sometimes need purely cosmetic variants where we switch the order of elements of $X$ and $\Bar$ in the tensors. This creates an awkward situation with the notation, since we want elements of $R^e$ traversing the tensor product to act on the same side of $\Bar$ as before. The clearest way to indicate this is to use the twist isomorphism
+\begin{equation}\label{eq:attau}
+\tau: R^e \otimes_k R^e \lto R^e \otimes_k R^e, \qquad \tau ( a \otimes a' ) = a' \otimes a
+\end{equation}
+so that in $\tau_*( \Bar ) \otimes_{R^e} X$ we have $\omega \otimes a x$ = $a \omega \otimes x$. If we extend $d$ and $s$ to operators on $\tau_*( \Bar ) \otimes_{R^e} X$ as before, then we define operators on this tensor product by
+\[
+\Atlarrow_{R^e/R_2}(X) = [ d, D ], \qquad \Atlarrow_{R^e/R_1}(X) = [s, D]\,.
+\]
+There is clearly a commutative diagram
+\[
+\xymatrix@C+2pc@R+1pc{
+X \otimes_{R^e} \Bar \ar[d]_{\At_{R^e/R_2}(X)^m} \ar[r]^-{\cong} & \tau_*( \Bar ) \otimes_{R^e} X \ar[d]^{\Atlarrow_{R^e/R_2}(X)^m}\\
+X \otimes_{R^e} \ar[r]_-{\cong} & \tau_*( \Bar ) \otimes_{R^e} X
+}
+\]
+in which the rows are graded twist maps (with Koszul signs). We adopt similar conventions for the other Atiyah classes.
+
+\subsection{Connections}
+
+Let $k$ be a ring and $A$ a $k$-algebra, $\Omega A = \Omega_k A$ the differential graded algebra $(\Omega A, d, \dot)$ of noncommutative differential forms explained in Section \ref{??}. A \emph{connection} on a $\mathbb{Z}_2$-graded $A$-module $X$ is a $k$-linear map
+\[
+\nabla: X \lto X \otimes_A \Omega^1 A\,,
+\]
+which sends $X^i$ into $X^i \otimes_A \Omega^1_A$ and satisfies the graded Leibniz rule for $x \in X, a \in A$
+\[
+\nabla( x a ) = \nabla( x ) a + (-1)^{|x|} x da\,.
+\]
+Notice that by left and right multiplication $\Omega A$ is an $A$-bimodule, and so $X \otimes_A \Omega^1 A$ is naturally an $A$-bimodule and in particular for $W \in A$ it makes sense to consider the operator $[W, -]$ on $X \otimes_A \Omega^1 A$ which sends an element $\xi$ to $W \xi - \xi W$.
+
+\begin{lemma} Let $(X,D)$ be a linear factorisation of $W \in A$. If $\nabla$ is a connection on $X$ then
+\[
+[ \nabla, D ] = \nabla D + D \nabla: X \lto X \otimes_A \Omega^1 A
+\]
+is right $A$-linear and satisfies
+\[
+[ D, [ \nabla, D ] ] = [ W, - ] \nabla - (-1)^F ( dW \cdot - )\,.
+\]
+\end{lemma}
+
+\begin{lemma} If in the previous lemma $W \in k$ and 
+\end{lemma}
+
 \section{Inverting the unit actions}\label{section:pertandhtpy}
 
-As part of the structure of the bicategory $\LG$ we have specified, for any finite rank matrix factorisation $X \in \hmf(k[x,z], V - W)$, a pair of $k[z]$-$k[x]$-bilinear homotopy equivalences
+As part of the structure of the bicategory $\LG$ we have specified for any $1$-morphism $X \in \LG(W,V)$ a pair of isomorphisms
 \begin{equation}\label{eq:pertandhtpy1}
 \lambda: \Delta_V \otimes X \lto X, \qquad \rho: X \otimes \Delta_W \lto X
 \end{equation}
@@ -993,13 +1039,13 @@ X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \oti
 & X
 }
 \end{equation}
-where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho'$ is explained below. Rather than trying to invert~$\rho$ directly, it turns out to be advantageous to invert $\rho'$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and we make use of a completion of $X \otimes \Bar$ in order to guarantee that this geometric series converges.
+where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho'$ is explained below. Rather than trying to invert~$\rho$ directly, it turns out to be easier to invert $\rho'$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and we make use of a completion of $X \otimes \Bar$ in order to guarantee that this geometric series converges.
 
 The bulk of the argument is given in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We assume
 \[
 X \in \HMF(S \otimes_k \Re, U)
 \]
-is given together with a homogeneous basis $\{ e_i \}_{i \in I}$. The reader should keep in mind the special case where $S = k[z], R = k[x]$ and $X$ the extension of scalars from $S \otimes_k R$ to $S \otimes_k \Re$ of some factorisation of $V - W$ over $k[x,z]$. Let $D$ denote the differential on $X$ and unless specified otherwise in this section $\otimes$ denotes the tensor product $\otimes_{\Re}$. Consider the $(S \otimes_k \Re)$-module
+is given together with a homogeneous basis $\{ e_i \}_{i \in I}$. The reader should keep in mind the special case where $S = k[z], R = k[x]$ and $X$ the extension of scalars from $S \otimes_k R$ to $S \otimes_k \Re$ of some factorisation of $V - W$ over $k[x,z]$. Let $D$ denote the differential on $X$ and unless specified otherwise in this section $\otimes$ denotes the tensor product $\otimes_{\Re}$. Consider the module
 \[
 X \,\widehat{\otimes}\, \Bar := \prod_{m \ge 0} X \otimes \Bar_m
 \]
@@ -1007,13 +1053,13 @@ with the $\mathbb{Z}_2$-grading
 \[
 \big( X \,\widehat{\otimes}\, \Bar \big)^i = \left( \prod_{m \in \mathbb{Z}} X^i \otimes \Bar_{2m} \right) \oplus \left( \prod_{m \in \mathbb{Z}} X^{i+1} \otimes \Bar_{2m+1} \right) . 
 \]
-As a $\mathbb{Z}_2$-graded $(S \otimes_k \Re)$-module, $X \,\widehat{\otimes}\, \Bar$ is the inverse limit of the system
+It is sometimes helpful to view $X \,\widehat{\otimes}\, \Bar$ as the inverse limit of the system
 \[
 \cdots \lto X \otimes \Bar/\Bar_{\ge 2} \lto X \otimes \Bar/\Bar_{\ge 1}
 \]
-where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$ and the maps are the obvious quotients $\Bar/\Bar_{\ge m+1} \lto \Bar/\Bar_{\ge m}$.
+where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$ and the maps are the obvious quotients $\Bar/\Bar_{\ge m+1} \lto \Bar/\Bar_{\ge m}$. Since $\Bar$ is an $R^e$-bimodule via left and right multiplication there are natural left and right $R^e$-actions on $X \,\widehat{\otimes}\, \Bar$. Since the left and right actions of $R_2$ on $\Bar$ agree, this amounts to an $R_2$ action on $X \,\widehat{\otimes}\, \Bar$ together with the structure of an $R_1$-bimodule. There is of course an $S$-module structure as well, which is preserved by all maps in this section and which we will henceforth not emphasise.
 
-Let $W \in A$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in \Re$. For convenience in distinguishing between the left and right copy of $R$ in $\Re = R \otimes_k \Rop$ we write $\Rop$ even though $R$ is commutative. Our first observation is that this graded module can be equipped as a linear factorisation of $U + \widetilde{W}$ over $S \otimes_k \Re$. One checks that there are well-defined operators
+Let $W \in R$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in \Re$. Our first observation is that $X \,\widehat{\otimes}\, \Bar$ can be equipped as a linear factorisation of $U + \widetilde{W}$. One checks that there are well-defined operators
 \begin{align*}
 D(x_0, x_1, \ldots) &= (D(x_0), D(x_1), \ldots) \, , \\
 b'(x_0, x_1, \ldots) &= (b'(x_1),b'(x_2),\ldots) \, , \\
@@ -1021,15 +1067,9 @@ d(x_0,x_1,\ldots) &= (0, d(x_0), d(x_1),\ldots) \, , \\
 s(x_0,x_1,\ldots) &= (0, s(x_0), s(x_1), \ldots) \, , \\
 d \widetilde{W} \times (x_0,x_1,\ldots) &= (0, d \widetilde{W} \times x_0, d \widetilde{W} \times x_1, \ldots)
 \end{align*}
-on $X \,\widehat{\otimes}\, \Bar$, where $d$ is extended to an $(S \otimes_k \Rop)$-linear operator on $X \otimes \Bar$ by the rule
-\[
-d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d(\omega)\,,
-\]
-and $s$ extends to an $S \otimes_k R$-linear operator by
-\[
-s( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes s(\omega)\,.
-\]
-Assume that $U + \widetilde{W}$ belongs to the image of either $S \otimes_k R$ or $S \otimes_k \Rop$ in $S \otimes_k \Re$, so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over the appropriate one of these two rings.
+on $X \,\widehat{\otimes}\, \Bar$, where $d$ and $s$ are extended to $X \otimes \Bar$ as in Section \ref{section:atiyahclasses} using the chosen basis. 
+
+For the next result assume that $U + \widetilde{W}$ belongs to the image of $S \otimes_k R_i$ in $S \otimes_k R^e$ for some $i = 1,2$ so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over $S \otimes_k R_i$.
 
 \begin{lemma} $( X \, \widehat{\otimes}_R\, \Bar, d_X + b' + d\widetilde{W} \times (-) )$ is a linear factorisation of $U + \widetilde{W}$.
 \end{lemma}
@@ -1041,9 +1081,11 @@ There is a morphism of linear factorisations
 \[
 \pi: X \, \widehat{\otimes}\, \Bar = \prod_{m \ge 0} X \otimes \Bar_m \lto X \otimes \Bar_0 \lto X \otimes R
 \]
-where the first map is the projection and the second is the product $\Re \lto R$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of Atiyah classes. In fact we give two homotopy inverses, one which is right $R$-linear and the other left $R$-linear. We begin with the deformation retract arising from the fact that~$s$ and~$d$ are contracting homotopies for the differential $b'$.
+where the first map is the projection and the second is the product $\Re \lto R$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of Atiyah classes. In fact we give two homotopy inverses, one which is $R_2$-linear and the other left $R_1$-linear. We begin with the deformation retract arising from the fact that~$s$ and~$d$ are contracting homotopies for the differential $b'$.
 
-\begin{lemma}\label{lemma:firstdefo} There are $S$-linear deformation retract data of $\mathbb{Z}_2$-graded complexes
+All deformation retract datums in the following are at least $S$-linear.
+
+\begin{lemma}\label{lemma:firstdefo} There are deformation retract data of $\mathbb{Z}_2$-graded complexes
 \begin{equation}\label{eq:firstdefo1}
 \xymatrix@C+2pc{
 (X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma_d} & (X \, \widehat{\otimes} \, \Bar, b') \ar@<-1ex>[l]_-{\pi}
@@ -1061,7 +1103,11 @@ and
 {}\ar@(ur,dr)[]^{-s}
 }%
 \end{equation}
-where $\sigma_d(e_i \otimes a ) = e_i \otimes (1 \otimes a)$ and $\sigma_s(e_i \otimes a ) = e_i \otimes (a \otimes 1)$. In \eqref{eq:firstdefo1} every map is right $R$-linear and in \eqref{eq:firstdefo2} every map is left $R$-linear.
+where
+\[
+\sigma_d(e_i \otimes a ) = e_i \otimes (1 \otimes a), \qquad \sigma_s(e_i \otimes a ) = e_i \otimes (a \otimes 1)\,.
+\]
+Moreover, in \eqref{eq:firstdefo1} every map is $R_2$-linear and in \eqref{eq:firstdefo2} every map is left $R_1$-linear.
 \end{lemma}
 \begin{proof}
 The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \sigma \pi$ are (\ref{b'd+db'}) and \eqref{??}.
@@ -1073,9 +1119,10 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-The right $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_2}(X) = [d,d_X]$.
+In the notation of Section \ref{section:atiyahclasses} we can describe the homotopy inverses of $\pi$ using Atiyah classes.
+%The $R_2$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_2}(X) = [d,d_X]$.
 
-\begin{proposition}\label{prop:finalpertdefo} There is an $(S \otimes_k \Rop)$-linear deformation retract datum
+\begin{proposition}\label{prop:finalpertdefo} There is an $R_2$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
@@ -1085,7 +1132,7 @@ where
 \[
 \sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_2}(X)^m \sigma\,.
 \]
-In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
+In particular, $\pi$ is an $R_2$-linear homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
 It follows from the perturbation lemma (Proposition \ref{prop:pertlemma}) with Lemmas~\ref{lemma:firstdefo} and~\ref{lemma:smallpertde} that
@@ -1117,10 +1164,9 @@ for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ l
 \textbf{todo}
 \end{proof}
 
-The left $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_1}(X) = [s,d_X]$.
-\textbf{todo} the linearity here is confusing.
+%The left $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_1}(X) = [s,d_X]$.
 
-\begin{proposition}\label{prop:finalpertdefo} There is an $(S \otimes_k R)$-linear deformation retract datum
+\begin{proposition}\label{prop:finalpertdefo} There is a left $R_1$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
@@ -1130,7 +1176,7 @@ where
 \[
 \sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_1}(X)^m \sigma\,.
 \]
-In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
+In particular, $\pi$ is a left $R_1$-linear homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
 \textbf{todo}.
@@ -1263,27 +1309,25 @@ The \textsl{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dua
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
-On the tensor product
+With $\tau$ as in (\ref{eq:attau}) we consider on the tensor product
 \[
-\Bar \otimes_{\Re} ( X^\dual \otimes_{k[z]} X)\,
+\tau_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X)\,
 \]
-we consider the operator $\At_{X^\dual \otimes X} = [d, d_{X^\dual \otimes X}]$. Here $d$ is extended to the tensor product by
+the operator
 \[
-d( \omega \otimes e_i^* \otimes e_j ) = d(\omega) \otimes e_i^* \otimes e_j\,.
+\Atlarrow_{R^e/R_2}(X^\dual \otimes X) = [d, d_{X^\dual \otimes X}] = [d, d_{X^\dual} \otimes 1_X]
 \]
-For the purposes of forming tensor products we view $\Bar$ as a right $\Re$-module in the usual way for a module over a commutative ring, that is, $\Re$ acts on the right via \textsl{left} form multiplication (there is possibility for confusion since \textsl{right} form multiplication equips $\Bar$ with a different right $\Re$-module structure). With this convention, we may interchangeably write $\Bar$ to the left or right of $X^\dual \otimes_{k[z]} X$ (as it appears in Section \ref{section:pertandhtpy}) provided we keep track of the relevant signs.
-
-Since $d$ is right $R$-linear, $[d, d_{X^\dual \otimes X}] = [d, d_{X^\dual}\otimes 1_X]$ and so we abuse notation and write $\At_{X^\dual}$ for $\At_{X^\dual \otimes X}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow(X^\dual)$ for the operator in the previous equation. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
 \[
 \xymatrix@C+1pc{
-X^\dual \otimes_{k[z]} X \ar[r]^-{\At^m_{X^\dual}} & \Bar \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
+X^\dual \otimes_{k[z]} X \ar[rr]^-{\Atlarrow(X^\dual)^m} & & \tau_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
 }
 \]
 which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
 
 \begin{theorem}\label{theorem:coev1} A representative for the coevaluation morphism is the chain map
 \begin{equation}\label{eq:coev10}
-\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^m \Psi \At^m_{X^\dual}( \iota_X ) \right)\
+\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^m \Psi \Atlarrow(X^\dual)^m( \iota_X ) \right)\
 \end{equation}
 where the Atiyah class sends forms to the left, as explained above.
 \end{theorem}
@@ -1383,8 +1427,6 @@ which composed with the supertrace and residue gives the desired morphism. Here 
 \end{proof}
 
 TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
-
-\newpage
 
 \section{Zorro moves}\label{sec:Zorro}
 
