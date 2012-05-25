@@ -1078,9 +1078,9 @@ This can be checked on the inverse system, where it follows from Lemma \ref{lemm
 \end{proof}
 
 There is a morphism of linear factorisations
-\[
+\begin{equation}\label{eq:pibar}
 \pi: X \, \widehat{\otimes}\, \Bar = \prod_{m \ge 0} X \otimes \Bar_m \lto X \otimes \Bar_0 \lto X \otimes R
-\]
+\end{equation}
 where the first map is the projection and the second is the product $\Re \lto R$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of Atiyah classes. In fact we give two homotopy inverses, one which is $R_2$-linear and the other left $R_1$-linear. We begin with the deformation retract arising from the fact that~$s$ and~$d$ are contracting homotopies for the differential $b'$.
 
 All deformation retract datums in the following are at least $S$-linear.
@@ -1104,9 +1104,9 @@ and
 }%
 \end{equation}
 where
-\[
+\begin{equation}\label{eq:sigmsandd}
 \sigma_d(e_i \otimes a ) = e_i \otimes (1 \otimes a), \qquad \sigma_s(e_i \otimes a ) = e_i \otimes (a \otimes 1)\,.
-\]
+\end{equation}
 Moreover, in \eqref{eq:firstdefo1} every map is $R_2$-linear and in \eqref{eq:firstdefo2} every map is left $R_1$-linear.
 \end{lemma}
 \begin{proof}
@@ -1122,32 +1122,31 @@ Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes 
 In the notation of Section \ref{section:atiyahclasses} we can describe the homotopy inverses of $\pi$ using Atiyah classes.
 %The $R_2$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_2}(X) = [d,d_X]$.
 
-\begin{proposition}\label{prop:finalpertdefo} There is an $R_2$-linear deformation retract datum
+\begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is an $R_2$-linear homotopy equivalence with inverse
+\[
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_2}(X)^m \sigma_d\,.
+\]
+More precisely, there is an $R_2$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
 }
 \]
-where
-\[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_2}(X)^m \sigma\,.
-\]
-In particular, $\pi$ is an $R_2$-linear homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
 It follows from the perturbation lemma (Proposition \ref{prop:pertlemma}) with Lemmas~\ref{lemma:firstdefo} and~\ref{lemma:smallpertde} that
 \[
 \xymatrix@C+2pc{
-(X \otimes A, b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi_\infty}
+(X \otimes R, b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi_\infty}
 }
 \]
-is a deformation retract datum, where with $\tau = \sum_{m \ge 0} (-1)^m (\delta d) \delta$ we have
+is a deformation retract datum, where with $\tau = \sum_{m \ge 0} (-1)^m (\delta d) \delta$ we have (writing $\sigma = \sigma_d$)
 \begin{align*}
 \sigma_\infty = \sum_{m \ge 0} (-1)^m (d \delta)^m \sigma \, , \qquad
 \pi_\infty = \pi + \pi \tau h\, , \qquad
 b_\infty = \pi \tau \sigma\,.
 \end{align*}
-Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi A = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum of the stated form, where we may use $d^2 = 0$ and $d \sigma = 0$ to write
+Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi \tau = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum of the stated form, where we may use $d^2 = 0$ and $d \sigma = 0$ to write
 \[
 \sigma_\infty = \sum_{m \ge 0} (-1)^m \big[ d, \delta \big]^m \sigma = \sum_{m \ge 0} (-1)^m [d, D + d\widetilde{W} \times (-)]^m \sigma\,.
 \]
@@ -1155,7 +1154,7 @@ Expanding this yields $\sum_{m \ge 0} [d, D]^m \sigma$ plus terms involving fact
 \begin{equation}\label{eq:finalpertdefo2}
 [d, d\widetilde{W} \times (-)] [d,D]^i \sigma
 \end{equation}
-for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ leaves a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ has the form given in the statement of the proposition.
+for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
 \end{proof}
 
 \begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$.
@@ -1166,17 +1165,16 @@ for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ l
 
 %The left $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_1}(X) = [s,d_X]$.
 
-\begin{proposition}\label{prop:finalpertdefo} There is a left $R_1$-linear deformation retract datum
+\begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is a left $R_1$-linear homotopy equivalence with inverse
+\[
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_1}(X)^m \sigma_s\,.
+\]
+More precisely, there is a left $R_1$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
 }
 \]
-where
-\[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_1}(X)^m \sigma\,.
-\]
-In particular, $\pi$ is a left $R_1$-linear homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
 \textbf{todo}.
@@ -1184,57 +1182,56 @@ In particular, $\pi$ is a left $R_1$-linear homotopy equivalence with inverse $\
 
 Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. There is a morphism of linear factorisations
 \begin{equation}\label{eq:koszulpi}
-\pi: X \otimes \Delta \lto X \otimes \Re \lto X \otimes R
+\pi_{\Delta}: X \otimes \Delta \lto X \otimes \Re \lto X \otimes R
 \end{equation}
 where the first map is the projection of $\Delta$ onto $\mathbb{Z}$-degree zero, and the second map is the product. This is compatible with the map $\pi$ defined for the bar resolution of the diagonal in the sense that there is a commutative diagram
 \[
 \xymatrix{
-X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta \ar[dl]^-{\pi}\\
+X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta \ar[dl]^-{\pi_\Delta}\\
 & X \otimes R
 }
 \]
 in which every side is a homotopy equivalence: 
 
-\begin{lemma}\label{lemma:koszulstab1} The map $\pi$ of (\ref{eq:koszulpi}) is both an $(S \otimes_k \Rop)$-linear homotopy equivalence and an $(S \otimes_k R)$-linear homotopy equivalence.
+\begin{lemma}\label{lemma:koszulstab1} The morphism $\pi_\Delta$ is both an $R_2$-linear homotopy equivalence and a left $R_1$-linear homotopy equivalence.
 \end{lemma}
 \begin{proof}
-There is an exact sequence of free right (left) $R$-modules
+There is a split exact sequence
 \[
 0 \lto \Delta_n \lto \cdots \lto \Delta_0 \lto R \lto 0
 \]
-which splits, and provides the necessary right (left) $R$-linear $\sigma: R \lto \Delta$ and homotopy $h$ on $\Delta$ to make
+and the splittings provide the $R_2$-linear (resp. left $R_1$-linear) $\sigma: R \lto \Delta$ and homotopy $h$ making
 \[
 \xymatrix@C+2pc{
-(X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma} & (X \otimes \Delta, 1 \otimes \delta_{-}) \ar@<-1ex>[l]_-{\pi}
+(X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma} & (X \otimes \Delta, 1 \otimes \delta_{-}) \ar@<-1ex>[l]_-{\pi_\Delta}
 }%
 \!\!\!\xymatrix{%
 {}\ar@(ur,dr)[]^{-h}
 }%
 \]
-into an $(S \otimes_k \Rop)$-linear deformation retract datum (resp. $S \otimes_k R$-linear). Moreover $\delta = D \otimes 1 + 1 \otimes \delta_{+}$ is a small perturbation and the perturbation lemma applies to show that $\pi$ is a homotopy equivalence.
+into an $R_2$-linear deformation retract datum (resp. left $R_1$-linear). Moreover $\delta = D \otimes 1 + 1 \otimes \delta_{+}$ is a small perturbation and the perturbation lemma shows that $\pi_\Delta$ is a homotopy equivalence.
 \end{proof}
 
-\begin{corollary}\label{corollary:koszulstab2} An $(S \otimes_k \Rop)$-linear homotopy inverse to $\pi$ of (\ref{eq:koszulpi}) is given by
+\begin{corollary}\label{corollary:koszulstab2} An $R_2$-linear homotopy inverse to $\pi_\Delta$ is given by
 \[
-\pi^{-1}_d = \sum_{m \ge 0} (-1)^m \Psi \big[d, D\big]^m \sigma_d\,,
+\pi^{-1}_d = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_2}(X)^m \sigma_d\,,
 \]
-while an $(S \otimes_k R)$-linear homotopy inverse is given by
+while a left $R_1$-linear homotopy inverse is given by
 \[
-\pi^{-1}_s = \sum_{m \ge 0} (-1)^m \Psi \big[s, D\big]^m \sigma_s\,.
+\pi^{-1}_s = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_1}(X)^m \sigma_s\,.
 \]
+where $\sigma_s, \sigma_d$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
 
-Since all tensor products are over $\Re$ everything that we have said above can be restated with $\Bar$ on the left, for example with $\Bar \,\widehat{\otimes} \, X = \prod_{m \ge 0} \Bar_m \,\widehat{\otimes}\, X$.
+Since all tensor products are over $\Re$ everything that we have said above can be restated with $\Bar$ on the left, for example with $\Bar \,\widehat{\otimes} \, X = \prod_{m \ge 0} \Bar_m \,\widehat{\otimes}\, X$ (\textbf{todo} modify this).
 
-For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ we deduce: 
+For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ (\textbf{todo} to which component does $R$ map?) we deduce: 
 
 \begin{proposition} $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
 \[
-\lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi [s, d_X ]^m \sigma\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi [d, d_X]^m \sigma\,.
+\lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_1}(X)^m \sigma_s\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_2}(X)^m \sigma_d\,.
 \]
 \end{proposition}
-
-\textbf{todo} more on $s$ here.
 
 \section{Derivation of the evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
