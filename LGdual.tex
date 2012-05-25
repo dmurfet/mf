@@ -1747,7 +1747,16 @@ The same result also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Rema
 
 \subsection{Pivotality}
 
-We end this section by listing a few properties of the adjunction maps. For a morphism $\varphi: X \lra Y$ between matrix factorisations $X\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x))$ and $Y\in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))$ we define its adjoint to be
+We end this section by clarifying the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$. They describe~$X^\dual$ as the right and left adjoint to~$X$, respectively. So far we have trated these maps independently, but of course they are closely related. The precise connection is via a pivotal structure, which is the answer to the natural question about the relation between~$X$ and~$X^{\dual\dual}$: pivotality means that there is a tensor structure preserving isomorphism between every 1-morphism and its double adjoint. 
+
+In order to establish pivotality for the bicategory $\LG$ we start be listing a few properties of the adjunction maps. Of particular importance is the identity~\eqref{eq:monoidalproperty} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:CardyCondition}, e.\,g.~to prove the Cardy condition. 
+
+For a map $\varphi: X \lra Y$ between matrix factorisations 
+\begin{align*}
+X & \in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x)) \, , \\
+Y & \in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))
+\end{align*}
+we define its adjoint to be
 $$
 \varphi^\dual = \varphi^\vee[m] : Y^\dual \lra X^\dual \, .
 $$
@@ -2051,11 +2060,71 @@ but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the a
 \end{proof}
 
 
-So far we have treated the adjunction maps $\eval, \coev$ and $\widetilde\eval, \widetilde\coev$ independently, but of course they are closely related. The precise connection is via a pivotal structure: 
-
 \begin{definition}\label{def.pivotal}
-We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a monoidal natural 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\widetilde\eval_X = \eval_{X^\dual}\circ (\delta_X \otimes 1_{X^\dual})$ and $\widetilde\coev_X = (1_{X^\dual} \otimes \delta_X^{-1} ) \circ \coev_{X^\dual}$. 
+We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a natural monoidal 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\widetilde\eval_X = \eval_{X^\dual}\circ (\delta_X \otimes 1_{X^\dual})$ and $\widetilde\coev_X = (1_{X^\dual} \otimes \delta_X^{-1} ) \circ \coev_{X^\dual}$. 
 \end{definition}
+
+As explained e.\,g.~in~\cite[Lemma~2.12]{cr1006.5609} for a 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$ to be natural and monoidal is equivalent to the identities
+\be\label{eq:diagrammaticDefinitionPivotal}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(-1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
+(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
+\draw (-1,0) -- (A); 
+\draw (1,0) -- (A2); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
+\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (-1,0) -- (A2); 
+\draw (1,0) -- (A); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\, , \qquad 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
+\draw[line width=1pt] 
+(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
+(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
+(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (-1,0) -- (Y);
+\draw (-2,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (2,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
+\draw[line width=1pt] 
+(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
+(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
+(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (Y);
+\draw (3,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\ee
+to hold for every 2-morphism $\varphi: X \lra Y$.  
 
 In the case of the bicategory $\LG$ we claim that a pivotal structure is given by 
 \be\label{delta}
@@ -2101,35 +2170,7 @@ node[below] {{{\small$X^{\dual\dual}$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
-in terms of our maps $\eval, \coev, \widetilde\eval, \widetilde\coev$ from Section~\ref{sec:derivcoeval}. As a consistency check the Zorro moves immediately imply that in any bicategory with coinciding left and right adjoints the map~$\delta_X$ defined in~\eqref{delta} satisfies $\widetilde\eval_X = \eval_{X^\dual}\circ (\delta_X \otimes 1_{X^\dual})$ and $\widetilde\coev_X = (1_{X^\dual} \otimes \delta_X^{-1} ) \circ \coev_{X^\dual}$ as in Definition~\ref{def.pivotal}. Furthermore, $\delta$ is guaranteed to be natural if $\eval, \coev, \widetilde\eval, \widetilde\coev$ satisfy the ``morphism migration properties''~(i) and~(ii) of Proposition~\ref{prop.morphismmigration}. This is so because naturality is equivalent to the condition 
-$$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[line width=0] 
-(-1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
-\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
-\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
-\draw (-1,0) -- (A); 
-\draw (1,0) -- (A2); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
-\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (-1,0) -- (A2); 
-\draw (1,0) -- (A); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-$$
-for all 2-morphisms $\varphi: X \lra Y$ (see e.\,g.~\cite[Lemma~2.12(i)]{cr1006.5609}) which is easily seen to be true under the above assumption by another application of Zorro moves. 
+in terms of our maps $\eval, \coev, \widetilde\eval, \widetilde\coev$ from Section~\ref{sec:derivcoeval}. As a consistency check the Zorro moves immediately imply that in any bicategory with coinciding left and right adjoints the map~$\delta_X$ defined in~\eqref{delta} satisfies $\widetilde\eval_X = \eval_{X^\dual}\circ (\delta_X \otimes 1_{X^\dual})$ and $\widetilde\coev_X = (1_{X^\dual} \otimes \delta_X^{-1} ) \circ \coev_{X^\dual}$ as in Definition~\ref{def.pivotal}. Furthermore, $\delta$ is natural as $\eval, \coev, \widetilde\eval, \widetilde\coev$ satisfy the ``morphism migration properties''~(i) and~(ii) of Proposition~\ref{prop.morphismmigration}: naturality is equivalent to the first condition in~\eqref{eq:diagrammaticDefinitionPivotal}, which is easily seen to hold using the morphism mirgration properties together with another application of Zorro moves. 
 
 \begin{theorem}
 $\LG$ is pivotal. The pivotal structure~$\delta$ is the canonical one given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X\in \hmf(R\otimes_k S, V-W), \Phi\in X^\dual \in \hmf(S\otimes_k R, W-V)$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
@@ -2138,7 +2179,7 @@ $\LG$ is pivotal. The pivotal structure~$\delta$ is the canonical one given by $
 \begin{proof}
 The fact that~\eqref{delta} is the canonical map given in the statement of the theorem follows from the explicit expressions for the adjunction maps: $\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with $e_j$ replaced by $e_j^{**}$. 
 
-It remains to be shown that~$\delta$ is monoidal in the case of $\LG$. By~\cite[Lemma~2.12(ii)]{cr1006.5609} this is equivalent to the statement of Proposition~\ref{prop:monoidalproperty}. 
+It remains to be shown that~$\delta$ is monoidal in the case of $\LG$. This is equivalent to the statement of Proposition~\ref{prop:monoidalproperty}. 
 \end{proof}
 
 
