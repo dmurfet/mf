@@ -88,6 +88,7 @@
 \DeclareMathOperator{\HF}{HF}
 \DeclareMathOperator{\pr}{pr}
 \DeclareMathOperator{\At}{At}
+\DeclareMathOperator{\lAt}{lAt}
 \DeclareMathOperator{\mff}{mf}
 \DeclareMathOperator{\MF}{MF}
 \DeclareMathOperator{\Sh}{Sh}
@@ -900,7 +901,48 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
 \]
 
-\newpage
+\section{Atiyah Classes}\label{section:atiyahclasses}
+% see assat, the onct series
+
+As explained in the introduction, the structure of the bicategory $\LG$ can be understood in terms of associative Atiyah classes. In this section we develop the basic theory of these operators, beginning with the simplest definition (which involves a choice of basis) and then afterwards developing the more abstract general theory in the setting of noncommutative form-valued connections. For this paper the simpler definition is sufficient, since we will only use the Atiyah class to construct explicit chain level representatives of morphisms which we already know to be well-defined up to homotopy, and in this situation it is natural to make some auxiliary choices. In any case, we develop the general theory in order to have a more solid foundation for the subject of associative Atiyah classes.
+
+Let $k$ be a ring, $R$ a $k$-algebra, and set $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We define  the operators $s,d$ on the Bar complex $\Bar = \Bar_{R/k}$ as in Section \ref{subsec:Bar} and recall that $\Bar$ is equipped with an $R^e$-bimodule structure by left and right multiplication. Let $(X,D)$ be a pair consisting of a $\mathbb{Z}_2$-graded free $R^e$-module $X$ and an odd $R^e$-linear operator $D$ on $X$ (for the moment we do not require any condition on $D^2$). 
+
+Given a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ we can extend $d$ and $s$ to operators
+\begin{align*}
+d&: X \otimes_{R^e} \Bar \lto X \otimes_{R^e} \Bar, &\qquad d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d \omega\,,\\
+s&: X \otimes_{R^e} \Bar \lto X \otimes_{R^e} \Bar, &\qquad s( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes s \omega\,.
+\end{align*}
+
+\begin{definition}
+The \emph{associative Atiyah classes} of $X$ are operators on $X \otimes_{R^e} \Bar$ defined by
+\begin{align*}
+\At_{R^e/R_2}(X) &= [d, D] = d D + D d\,,\\
+\At_{R^e/R_1}(X) &= [s, D] = s D + D s\,.
+\end{align*}
+\end{definition}
+
+One can easily check that for $\omega \in \Bar$
+\[
+\At_{R^e/R_2}(X)( e_i \otimes \omega ) = \sum_j (-1)^{|e_j|} e_j \otimes d( D_{ji} ) \omega
+\]
+and more generally for $m \ge 1$
+\[
+\At_{R^e/R_2}(X)^m( e_i \otimes \omega ) = \sum_{j_1,\ldots,j_m} (-1)^{|e_i| + \binom{m+1}{2}} e_{j_m} \otimes d( D_{j_m, j_{m-1}} ) \cdots d(D_{j_2,j_1})d( D_{j_1 i} ) \omega\,.
+\]
+There are similar formulas for $\At_{R^e/R_1}$. We call these \emph{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_{R^e/R_2}$ as a cohomology class, so we should perhaps refer to Atiyah \emph{operators}, but we persist with the above terminology.
+
+To discuss the linearity we need to be clear that $X \otimes_{R^e} \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then clear from the above formula that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
+
+There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes_{R^e} X$ (using the right $R^e$-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
+\begin{align*}
+\lAt_{R^e/R_2}(X) &= [d, D], \qquad \lAt_{R^e/R_1}(X) = [s,D]\,.
+\end{align*}
+The difference from the other Atiyah classes appears when we exponentiate
+\[
+\lAt_{R^e/R_2}(X)^m( \omega \otimes e_i ) = \sum_{j_1,\ldots,j_m} \omega d( D_{j_1,i} ) d(D_{j_2,j_1}) \cdots d(D_{j_m,j_{m-1}}) \otimes e_{j_m}\,.
+\]
+From this expression it is clear that $\lAt_{R^e/R_2}$ and $\lAt_{R^e/R_1}$ are both left $R^e$-linear, using the action of left multiplication on $\Bar$ in $\Bar \otimes_{R^e} X$.
 
 \section{Inverting the unit actions}\label{section:pertandhtpy}
 
@@ -908,16 +950,16 @@ As part of the structure of the bicategory $\LG$ we have specified, for any fini
 \begin{equation}\label{eq:pertandhtpy1}
 \lambda: \Delta_V \otimes X \lto X, \qquad \rho: X \otimes \Delta_W \lto X
 \end{equation}
-which we call the \textsl{unit actions}. A representing chain map for the inverses of these morphisms is not specified as part of the defining data of the bicategory, and finding such representatives is nontrivial. Indeed, the fundamental technical result in this paper is the calculation of explicit homotopy inverses for $\lambda, \rho$ and similar maps in terms of associative Atiyah classes. For this we use the commutative diagram
+which we call the \textsl{unit actions}. A representing chain map for the inverses of these morphisms is not specified as part of the defining data of the bicategory, and finding such representatives is nontrivial. Indeed, the fundamental technical result in this paper is the calculation of explicit homotopy inverses for $\lambda, \rho$ and similar maps in terms of Atiyah classes. For this we use the commutative diagram
 \begin{equation}\label{eq:pertdia1}
 \xymatrix{
 X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta_W \ar[dl]^-{\rho}\\
 & X
 }
 \end{equation}
-where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho'$ is explained below. Rather than trying to invert~$\rho$ directly, it turns out to be advantageous to invert $\rho'$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the associative Atiyah class of $X$ and we make use of a completion of $X \otimes \Bar$ in order to guarantee that this geometric series converges.
+where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho'$ is explained below. Rather than trying to invert~$\rho$ directly, it turns out to be advantageous to invert $\rho'$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and we make use of a completion of $X \otimes \Bar$ in order to guarantee that this geometric series converges.
 
-The bulk of the argument is given in the following general setting: $k$ is an arbitrary commutative ring, $R, S$ are $k$-algebras and
+The bulk of the argument is given in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We assume
 \[
 X \in \HMF(S \otimes_k \Re, U)
 \]
@@ -995,7 +1037,7 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-Next we give the right $R$-linear inverse to $\pi$ in terms of the Atiyah class $\At_X = [d,D]$ on $X \otimes \Bar$.
+The right $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_2}(X) = [d,d_X]$.
 
 \begin{proposition}\label{prop:finalpertdefo} There is an $(S \otimes_k \Rop)$-linear deformation retract datum
 \[
@@ -1005,9 +1047,9 @@ Next we give the right $R$-linear inverse to $\pi$ in terms of the Atiyah class 
 \]
 where
 \[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \big[d, D \big]^m \sigma\
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_2}(X)^m \sigma\,.
 \]
-and $D=d_X$. In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
+In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
 It follows from the perturbation lemma (Proposition \ref{prop:pertlemma}) with Lemmas~\ref{lemma:firstdefo} and~\ref{lemma:smallpertde} that
@@ -1039,7 +1081,8 @@ for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes_R A$ l
 \textbf{todo}
 \end{proof}
 
-TODO: And the left $R$-linear inverse to $\pi$ in terms of the Atiyah class $\underline{\At}_X = [s,D]$ on $X \otimes \Bar$.
+The left $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_1}(X) = [s,d_X]$.
+\textbf{todo} the linearity here is confusing.
 
 \begin{proposition}\label{prop:finalpertdefo} There is an $(S \otimes_k R)$-linear deformation retract datum
 \[
@@ -1049,9 +1092,9 @@ TODO: And the left $R$-linear inverse to $\pi$ in terms of the Atiyah class $\un
 \]
 where
 \[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \big[s, D \big]^m \sigma\
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{R^e/R_1}(X)^m \sigma\,.
 \]
-and $D=d_X$. In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
+In particular, $\pi$ is a homotopy equivalence with inverse $\sigma_\infty$.
 \end{proposition}
 \begin{proof}
 \textbf{todo}.
@@ -2472,7 +2515,7 @@ TODO: Fix the sign, it should only be $(-1)^n$.
 
 TODO: Mention HRR as special example, more discussion needed? 
 
-
+\appendix
 
 \section{Duality via adjoint operators}\label{section:dualityadjointop}
 % All rings are commutative by default unless they are called "associative"
