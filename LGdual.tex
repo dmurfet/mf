@@ -494,7 +494,7 @@ $$
 d_{X} = \begin{pmatrix} 0 & d_X^1 \\ d_X^0 & 0\end{pmatrix} .
 $$
 
-A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even $R$-linear map $\varphi: X \longrightarrow Y$ such that $d_Y \varphi = \varphi d_X$. Two morphisms $\varphi, \psi: X\lra Y$ are \textsl{homotopic} if there exists an odd $R$-linear map $\lambda:X\lra Y$ such that $d_Y\lambda + \lambda d_X = \psi-\varphi$. Equality up to homotopy is an equivalence relation. 
+A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even $R$-linear map $\varphi: X \longrightarrow Y$ such that $d_Y \varphi = \varphi d_X$. Two morphisms $\varphi, \psi: X\lra Y$ are \textsl{homotopic} if there exists an odd $R$-linear map $\lambda:X\lra Y$ such that $d_Y\lambda + \lambda d_X = \psi-\varphi$. Equality up to homotopy is an equivalence relation. \textbf{todo} Fix notation for Hom complexes.
 
 The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of matrix factorisations whose objects are isomorphic to matrix factorisations with finitely-generated underlying $R$-modules. These three categories have standard triangulated structures whose shift functor we denote as~$[1]$. 
 
@@ -503,9 +503,9 @@ Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factoris
 \Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
 \ee
 as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
-$$
+\be\label{DeltaWstabmap}
 \pi: \Delta_W \lra R
-$$
+\ee
 for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
 $$
 {}^{t_i}(-): k[x,x'] \lra k[x,x'] \, , \qquad f \lmt f\big|_{x_i\lmt x'_i}
@@ -531,7 +531,7 @@ together with the differential
 $$
 d_{Y\otimes X} = d_Y \otimes 1 + 1 \otimes d_X
 $$
-where the second term comes with the usual Koszul signs when applied to elements. We  observe that e.\,g.~by the argument of~\cite[Section~12]{dm1102.2957} the tensor product does not lead out of the categories $\hmf(R_i \otimes_k R_j, W_j - W_i)$. Also note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. 
+where the second term comes with the usual Koszul signs when applied to elements. We  observe that e.\,g.~by the argument of~\cite[Section~12]{dm1102.2957} the tensor product does not lead out of the categories $\hmf(R_i \otimes_k R_j, W_j - W_i)$ (\textbf{todo} warning warning). Also note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. 
 
 Now we can be more specific about the tensor action of the unit matrix factorisation. For $X\in \hmf(R_1 \otimes_k R_2,W_2-W_1)$ there are natural maps
 \be\label{lambdarho}
@@ -834,10 +834,10 @@ Both~$\Phi$ and~$\Psi$ are maps of differential graded algebras between $(\Delta
 We refer to~\cite{sw0911.0917} for the case of~$\Phi$; since our expression for~$\Psi$ is not manifestly the same as in loc.~cit.~we spell out the proof. Let us first show that~$\Psi$ is compatible with the differentials. On the one hand we compute $(\delta_- \Psi) (df_1\ldots df_p \otimes 1)$ to be 
 \begin{align}
 & \delta_ -\Big( \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \theta_{i_p} \Big) \nonumber \\
-& =  \sum_{j=1}^n \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \cdot (x_j - x'_j) \sum_{k=1}^p (-1)^{k+1} \delta_{j i_k} \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
+& =  \sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_p]} f_p) \cdot (x_{i_k} - x'_{i_k}) \sum_{k=1}^p (-1)^{k+1} \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
 & = \sum_{k=1}^p (-1)^{k+1}\sum_{i_1<\ldots <i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1\ldots t_{i_{k}}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
-& = \sum_{2\leq t_2<\ldots< i_p} (f_1 - {}^{t_1\ldots t_{i_{2}-1}} f_1) (\partial_{[i_2]} f_2) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_2} \ldots \theta_{i_p} \nonumber \\
-& \qquad + \sum_{k=2}^{p-1} (-1)^{k+1}\sum_{i_1,\ldots,i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1\ldots t_{i_{k+1}-1}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
+& = \sum_{2\leq i_2<\ldots< i_p} (f_1 - {}^{t_1\ldots t_{i_{2}-1}} f_1) (\partial_{[i_2]} f_2) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_2} \ldots \theta_{i_p} \nonumber \\
+& \qquad + \sum_{k=2}^{p-1} (-1)^{k+1}\sum_{i_1 < \ldots <i_p} (\partial_{[i_1]} f_1) \ldots ({}^{t_1\ldots t_{i_{k-1}}} f_k - {}^{t_1 \ldots t_{i_{k+1}-1}} f_k) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_1} \ldots \widehat{\theta_{i_k}} \ldots \theta_{i_p}  \nonumber \\
 & \qquad + (-1)^{p+1} \sum_{i_1<\ldots< i_{p-1}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) ({}^{t_1\ldots t_{i_{p-1}}} f_p - {}^{t_1\ldots t_n} f_p)  \, \theta_{i_1} \ldots \theta_{i_{p-1}} \nonumber \\
 & = \sum_{2\leq t_2<\ldots <i_p} f_1 (\partial_{[i_2]} f_2) \ldots (\partial_{[i_p]} f_p) \, \theta_{i_2} \ldots \theta_{i_p} \nonumber \\
 & \qquad + (-1)^{p} \sum_{i_1<\ldots< i_{p-1}\leq n-1} (\partial_{[i_1]} f_1) \ldots (\partial_{[i_{p-1}]} f_{p-1}) \, {}^{t_1\ldots t_n} f_p  \, \theta_{i_1} \ldots \theta_{i_{p-1}}  \label{delPsi} 
@@ -972,12 +972,12 @@ and more generally for $m \ge 1$
 \end{equation}
 There are similar formulas for $\At_{R^e/R_1}$. We call these \emph{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_{R^e/R_2}$ as a cohomology class, so we should perhaps refer to Atiyah \emph{operators}, but we persist with the above terminology.
 
-To discuss the linearity we need to be clear that $X \otimes_{R^e} \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then clear from the above formula that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}(X)$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
+To discuss the linearity we need to be clear that $X \otimes_{R^e} \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}(X)$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
 
 There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes_{R^e} X$ (using the right $R^e$-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
-\begin{align*}
-\lAt_{R^e/R_2}(X) &= [d, D], \qquad \lAt_{R^e/R_1}(X) = [s,D]\,.
-\end{align*}
+\begin{equation}\label{eq:leftatiyahclasses}
+\lAt_{R^e/R_2}(X) = [d, D], \qquad \lAt_{R^e/R_1}(X) = [s,D]\,.
+\end{equation}
 The difference from the other Atiyah classes appears when we exponentiate
 \[
 \lAt_{R^e/R_2}(X)^m( \omega \otimes e_i ) = \sum_{j_1,\ldots,j_m} \omega d( D_{j_1,i} ) d(D_{j_2,j_1}) \cdots d(D_{j_m,j_{m-1}}) \otimes e_{j_m}\,.
@@ -1026,22 +1026,29 @@ is right $A$-linear and satisfies
 \begin{lemma} If in the previous lemma $W \in k$ and 
 \end{lemma}
 
-\section{Inverting the unit actions}\label{section:pertandhtpy}
+\section{Perturbation to the stabilised diagonal}\label{section:pertandhtpy}
 
-As part of the structure of the bicategory $\LG$ we have specified for any $1$-morphism $X \in \LG(W,V)$ a pair of isomorphisms
+The fundamental technical results in this paper are constructions, using the perturbation lemma, of explicit homotopy inverses to morphisms involving the stabilised diagonal. Generically the results are geometric series in the associative Atiyah classes of the previous section. To give a specific example, recall that as part of the structure of the bicategory $\LG$ we have specified for any $1$-morphism $X \in \LG(W,V)$ a pair of isomorphisms
 \begin{equation}\label{eq:pertandhtpy1}
 \lambda: \Delta_V \otimes X \lto X, \qquad \rho: X \otimes \Delta_W \lto X
 \end{equation}
-which we call the \textsl{unit actions}. A representing chain map for the inverses of these morphisms is not specified as part of the defining data of the bicategory, and finding such representatives is nontrivial. Indeed, the fundamental technical result in this paper is the calculation of explicit homotopy inverses for $\lambda, \rho$ and similar maps in terms of Atiyah classes. For this we use the commutative diagram
+which we call the \textsl{unit actions}. A representing chain map for the inverses of these morphisms is not specified as part of the defining data of the bicategory, and finding such representatives is nontrivial. It turns out to be difficult to invert $\rho$ directly, so we proceed by identifying $\rho$ as the shadow of a similar canonical map $\rho'$ on the Bar model for the diagonal via a commutative diagram
 \begin{equation}\label{eq:pertdia1}
 \xymatrix{
 X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta_W \ar[dl]^-{\rho}\\
 & X
 }
 \end{equation}
-where $\Psi$ is the canonical map given in (\ref{intro_psi}) and $\rho'$ is explained below. Rather than trying to invert~$\rho$ directly, it turns out to be easier to invert $\rho'$ and then compose with $\Psi$. Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and we make use of a completion of $X \otimes \Bar$ in order to guarantee that this geometric series converges.
+where $\Psi$ is the canonical map given in (\ref{intro_psi}). Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and by postcomposing with $\Psi$ we obtain the desired inverse to $\rho$. A completion of $X \otimes \Bar$ is used in order to guarantee that the geometric series converges. We return to this example in Proposition \ref{prop:inverses_unitact} below.
 
-The bulk of the argument is given in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We assume
+Another important example is the following: given an object $(k[x],W) \in \LG$ and a $1$-morphism $X \in \LG(W,W)$ we can consider the problem of lifting a $k[x]$-bilinear morphism of linear factorisations $X \lto k[x]$ to a morphism $X \lto \Delta_W$ along the stabilisation map $\pi_{\Delta}: \Delta_W \lto k[x]$
+\[
+\xymatrix{
+X \ar[dr] \ar@{.>}[rr] & & \Delta_W \ar[dl]^-{\pi_{\Delta}} \\
+& k[x]\,.
+}
+\]
+The solution to this lifting problem is given in Proposition \ref{prop:liftingresult}. In order to address these examples and others at the same time, we work in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We assume
 \[
 X \in \HMF(S \otimes_k \Re, U)
 \]
@@ -1110,7 +1117,7 @@ where
 Moreover, in \eqref{eq:firstdefo1} every map is $R_2$-linear and in \eqref{eq:firstdefo2} every map is left $R_1$-linear.
 \end{lemma}
 \begin{proof}
-The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \sigma \pi$ are (\ref{b'd+db'}) and \eqref{??}.
+The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \sigma \pi$ are given in (\ref{b'd+db'}).
 \end{proof}
 
 \begin{lemma}\label{lemma:smallpertde} The perturbation $\delta = D + d\widetilde{W} \times (-)$ is small on $X\,\widehat{\otimes} \, \Bar$ with respect to both of the above deformation retract data. That is, both $1 + \delta d$ and $1 + \delta s$ are invertible.
@@ -1130,7 +1137,7 @@ More precisely, there is an $R_2$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
-}
+}\,.
 \]
 \end{proposition}
 \begin{proof}
@@ -1173,18 +1180,18 @@ More precisely, there is a left $R_1$-linear deformation retract datum
 \[
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
-}
+}\,.
 \]
 \end{proposition}
 \begin{proof}
 \textbf{todo}.
 \end{proof}
 
-Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. There is a morphism of linear factorisations
+Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ with $k$ noetherian and let $(\Delta, d_{\Delta})$ be the finite rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. Denoting by $\pi_{\Delta}: \Delta \lto R$ the stabilisation morphism of \eqref{DeltaWstabmap} there is a morphism
 \begin{equation}\label{eq:koszulpi}
-\pi_{\Delta}: X \otimes \Delta \lto X \otimes \Re \lto X \otimes R
+\pi_{\Delta} = 1 \otimes \pi_{\Delta}: X \otimes \Delta \lto X \otimes R\,.
 \end{equation}
-where the first map is the projection of $\Delta$ onto $\mathbb{Z}$-degree zero, and the second map is the product. This is compatible with the map $\pi$ defined for the bar resolution of the diagonal in the sense that there is a commutative diagram
+This is compatible with the map $\pi$ of \eqref{eq:pibar} in the sense that there is a commutative diagram
 \[
 \xymatrix{
 X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta \ar[dl]^-{\pi_\Delta}\\
@@ -1213,21 +1220,53 @@ into an $R_2$-linear deformation retract datum (resp. left $R_1$-linear). Moreov
 \end{proof}
 
 \begin{corollary}\label{corollary:koszulstab2} An $R_2$-linear homotopy inverse to $\pi_\Delta$ is given by
-\[
+\begin{equation}
 \pi^{-1}_d = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_2}(X)^m \sigma_d\,,
-\]
+\end{equation}
 while a left $R_1$-linear homotopy inverse is given by
-\[
+\begin{equation}
 \pi^{-1}_s = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_1}(X)^m \sigma_s\,.
-\]
+\end{equation}
 where $\sigma_s, \sigma_d$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
+
+Equipped with these formulas we return to the lifting problem discussed at the beginning of this section. We will show that, given $Y \in \hmf(R^e, \widetilde{W})$, there is a $k$-linear homotopy equivalence
+\[
+\Hom_{R^e}(Y, \Delta) \lto \Hom_{R^e}(Y, R)\,.
+\]
+In particular given an $R^e$-linear morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) $R^e$-linear morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
+\[
+\xymatrix{
+Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta \ar[dl]^-{\pi_\Delta} \\
+& R
+}\,.
+\]
+To produce a formula for $\varphi_{\textup{lift}}$ we choose a homogeneous basis $\{ e_i \}_{i \in I}$ for $Y$.
+
+\begin{proposition}\label{prop:liftingresult} In the above notation, the morphism $\varphi_{\textup{lift}}$ is given by
+\[
+\varphi_{\textup{lift}} = \sum_{m \ge 0} (-1)^m \Psi \circ \varphi' \circ \lAt_{R^e/R_2}(Y)^m\,.
+\]
+where $\varphi': Y \lto R^e$ is the $R^e$-linear map defined by $\varphi'(e_i) = 1 \otimes \varphi(e_i)$.
+\end{proposition}
+\begin{remark}
+For each $m \ge 0$ the summand of $\varphi_{\textup{lift}}$ is $(-1)^m$ times the composite
+\[
+\xymatrix@C+2pc{
+Y \ar[r]^-{[d, d_Y]^m} & \Bar \otimes_{R^e} Y \ar[r]^-{1 \otimes \varphi'} & \Bar \otimes_{R^e} R^e \cong \Bar \ar[r]^-{\Psi} & \Delta
+}\,.
+\]
+\end{remark}
+% see lipert3
+\begin{proof}[Proof of the Proposition]
+\textbf{todo}.
+\end{proof}
 
 Since all tensor products are over $\Re$ everything that we have said above can be restated with $\Bar$ on the left, for example with $\Bar \,\widehat{\otimes} \, X = \prod_{m \ge 0} \Bar_m \,\widehat{\otimes}\, X$ (\textbf{todo} modify this).
 
 For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ (\textbf{todo} to which component does $R$ map?) we deduce: 
 
-\begin{proposition} $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
+\begin{proposition}\label{prop:inverses_unitact} $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
 \[
 \lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_1}(X)^m \sigma_s\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_2}(X)^m \sigma_d\,.
 \]
