@@ -149,6 +149,7 @@
 \def\drangle{\big\rangle\!\big\rangle}
 \def\bigdlangle{\Big\langle\!\!\Big\langle}
 \def\bigdrangle{\Big\rangle\!\!\Big\rangle}
+\def\reprod{\gamma}
 \newcommand{\Ress}[1]{\res_{#1}\!}
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
@@ -946,16 +947,16 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 
 As explained in the introduction, the structure of the bicategory $\LG$ can be understood in terms of associative Atiyah classes. In this section we develop the basic theory of these operators, beginning with the simplest definition (which involves a choice of basis) and then afterwards developing the more abstract general theory in the setting of noncommutative form-valued connections. For this paper the simpler definition is sufficient, since we will only use the Atiyah class to construct explicit chain level representatives of morphisms which we already know to be well-defined up to homotopy, and in this situation it is natural to make some auxiliary choices. In any case, we develop the general theory in order to have a more solid foundation for the subject of associative Atiyah classes.
 
-Let $k$ be a ring, $R$ a $k$-algebra, and set $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We define  the operators $s,d$ on the Bar complex $\Bar = \Bar_{R/k}$ as in Section \ref{subsec:Bar} and recall that $\Bar$ is equipped with an $R^e$-bimodule structure by left and right multiplication. Let $(X,D)$ be a pair consisting of a $\mathbb{Z}_2$-graded free $R^e$-module $X$ and an odd $R^e$-linear operator $D$ on $X$ (for the moment we do not require any condition on $D^2$). 
+Let $k$ be a ring, $R$ a $k$-algebra, and set $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We define  the operators $s,d$ on the Bar complex $\Bar = \Bar_{R/k}$ as in Section \ref{subsec:Bar} and recall that $\Bar$ is equipped with an $R^e$-bimodule structure by left and right multiplication. Let $(X,D)$ be a pair consisting of a $\mathbb{Z}_2$-graded free $R^e$-module $X$ and an odd $R^e$-linear operator $D$ on $X$ (for the moment we do not require any condition on $D^2$). By default $\otimes$ means $\otimes_{R^e}$.
 
 Given a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ we can extend $d$ and $s$ to operators
 \begin{align*}
-d&: X \otimes_{R^e} \Bar \lto X \otimes_{R^e} \Bar, &\qquad d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d \omega\,,\\
-s&: X \otimes_{R^e} \Bar \lto X \otimes_{R^e} \Bar, &\qquad s( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes s \omega\,.
+d&: X \otimes \Bar \lto X \otimes \Bar, &\qquad d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d \omega\,,\\
+s&: X \otimes \Bar \lto X \otimes \Bar, &\qquad s( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes s \omega\,.
 \end{align*}
 
 \begin{definition}
-The \emph{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes_{R^e} \Bar$ defined by
+The \emph{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes \Bar$ defined by
 \begin{align*}
 \At_{R^e/R_2}(X) &= [d, D] = d D + D d\,,\\
 \At_{R^e/R_1}(X) &= [s, D] = s D + D s\,.
@@ -968,42 +969,85 @@ One can easily check that for $\omega \in \Bar$
 \]
 and more generally for $m \ge 1$
 \begin{equation}\label{eq:powerofatiyah}
-\At_{R^e/R_2}(X)^m( e_i \otimes \omega ) = \sum_{j_1,\ldots,j_m} (-1)^{|e_i| + \binom{m+1}{2}} e_{j_m} \otimes d( D_{j_m, j_{m-1}} ) \cdots d(D_{j_2,j_1})d( D_{j_1 i} ) \omega\,.
+\At_{R^e/R_2}(X)^m( e_i \otimes \omega ) = \sum_{j_1,\ldots,j_m} (-1)^{m|e_i| + \binom{m+1}{2}} e_{j_m} \otimes d( D_{j_m, j_{m-1}} ) \cdots d(D_{j_2,j_1})d( D_{j_1 i} ) \omega\,.
 \end{equation}
+% for signs see for example shati
 There are similar formulas for $\At_{R^e/R_1}$. We call these \emph{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_{R^e/R_2}$ as a cohomology class, so we should perhaps refer to Atiyah \emph{operators}, but we persist with the above terminology.
 
-To discuss the linearity we need to be clear that $X \otimes_{R^e} \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}(X)$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
+To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}(X)$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
 
-There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes_{R^e} X$ (using the right $R^e$-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
+There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $R^e$-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
 \begin{equation}\label{eq:leftatiyahclasses}
 \lAt_{R^e/R_2}(X) = [d, D], \qquad \lAt_{R^e/R_1}(X) = [s,D]\,.
 \end{equation}
 The difference from the other Atiyah classes appears when we exponentiate
-\[
+\begin{equation}\label{eq:leftatiyahexp}
 \lAt_{R^e/R_2}(X)^m( \omega \otimes e_i ) = \sum_{j_1,\ldots,j_m} \omega d( D_{j_1,i} ) d(D_{j_2,j_1}) \cdots d(D_{j_m,j_{m-1}}) \otimes e_{j_m}\,.
-\]
-From this expression it is clear that $\lAt_{R^e/R_2}$ and $\lAt_{R^e/R_1}$ are both left $R^e$-linear, using the action of left multiplication on $\Bar$ in $\Bar \otimes_{R^e} X$.
-
-In addition to these four distinct kinds of Atiyah classes, we will sometimes need purely cosmetic variants where we switch the order of elements of $X$ and $\Bar$ in the tensors. This creates an awkward situation with the notation, since we want elements of $R^e$ traversing the tensor product to act on the same side of $\Bar$ as before. The clearest way to indicate this is to use the twist isomorphism
-\begin{equation}\label{eq:attau}
-\tau: R^e \otimes_k R^e \lto R^e \otimes_k R^e, \qquad \tau ( a \otimes a' ) = a' \otimes a
 \end{equation}
-so that in $\tau_*( \Bar ) \otimes_{R^e} X$ we have $\omega \otimes a x$ = $a \omega \otimes x$. If we extend $d$ and $s$ to operators on $\tau_*( \Bar ) \otimes_{R^e} X$ as before, then we define operators on this tensor product by
+From this expression it is clear that $\lAt_{R^e/R_2}$ and $\lAt_{R^e/R_1}$ are both left $R^e$-linear, using the action of left multiplication on $\Bar$ in $\Bar \otimes X$.
+
+In addition to these four distinct kinds of Atiyah classes, we will sometimes need purely cosmetic variants where we switch the order of elements of $X$ and $\Bar$ in the tensors. This creates an awkward situation with the notation, since we want elements of $R^e$ traversing the tensor product to act on the same side of $\Bar$ as before. The clearest way to indicate this is to use the map
+\begin{equation}\label{eq:attau}
+\reprod: R^e \otimes_k R^e \lto R^e \otimes_k R^e, \qquad \reprod ( a \otimes a' ) = aa' \otimes 1
+\end{equation}
+so that in $\reprod_*( \Bar ) \otimes X$ we have $\omega \otimes a x$ = $a \omega \otimes x$. If we extend $d$ and $s$ to operators on $\reprod_*( \Bar ) \otimes X$ as before, then we define operators on this tensor product by
 \[
 \Atlarrow_{R^e/R_2}(X) = [ d, D ], \qquad \Atlarrow_{R^e/R_1}(X) = [s, D]\,.
 \]
-There is clearly a commutative diagram
+There is a commutative diagram
 \[
 \xymatrix@C+2pc@R+1pc{
-X \otimes_{R^e} \Bar \ar[d]_{\At_{R^e/R_2}(X)^m} \ar[r]^-{\cong} & \tau_*( \Bar ) \otimes_{R^e} X \ar[d]^{\Atlarrow_{R^e/R_2}(X)^m}\\
-X \otimes_{R^e} \ar[r]_-{\cong} & \tau_*( \Bar ) \otimes_{R^e} X
+X \otimes \Bar \ar[d]_{\At_{R^e/R_2}(X)^m} \ar[r]^-{\cong} & \reprod_*( \Bar ) \otimes X \ar[d]^{\Atlarrow_{R^e/R_2}(X)^m}\\
+X \otimes \Bar \ar[r]_-{\cong} & \reprod_*( \Bar ) \otimes X
 }
 \]
 in which the rows are graded twist maps (with Koszul signs). We adopt similar conventions for the other Atiyah classes.
 
+\newpage
+
+\subsection{Properties}
+
+With the above notation, let $(X,d_X)$ and $(Y,d_Y)$ be $\mathbb{Z}_2$-graded free $R^e$-modules equipped with odd $R^e$-linear differentials (again, no condition on $d_X^2$ or $d_Y^2$) and respective homogeneous bases $\{ e_i \}_{i \in I}$ and $\{ f_j \}_{j \in J}$. Throughout all Atiyah classes are of the same ``type'' and we write $\At$ for $\At_{R^e/R_2}$. 
+
+Giving $X \otimes Y$ the differential $d_{X \otimes Y} = d_X \otimes 1 + 1 \otimes d_Y$ and the basis $\{ e_i \otimes f_j \}_{i \in I, j \in J}$ we have
+\begin{align*}
+\At(X) &\in \End( X \otimes \Bar ),\\
+\Atlarrow(Y) &\in \End( \reprod_*(\Bar) \otimes Y ),\\
+\At(X \otimes Y) &\in \End( X \otimes Y \otimes \Bar )\,.
+\end{align*}
+An important property of the commutative Atiyah class is that the class of $X \otimes Y$ can be expressed in terms of the classes of $X$ and $Y$. The analogue for associative Atiyah classes involves the shuffle product, which we make into an $R^e$-linear operation
+\begin{equation}\label{eq:shuffle_opat}
+\xymatrix@C+2pc{
+X \otimes \reprod_*(\Bar) \otimes \reprod_*(\Bar) \otimes Y \ar[r]^-{1 \otimes \times \otimes 1} & X \otimes \reprod_*(\Bar) \otimes Y \ar[r]^-{\cong} & X \otimes Y \otimes \Bar
+}
+\end{equation}
+where the last map is the graded twist on the second two components. The following lemma is sufficient for our purposes, but it would be desirable to have a natural, basis-free analogue.
+
+\begin{lemma}\label{lemma:atshufat} For $m \ge 0$ we have
+\be\label{eq:atshufat}
+\At(X \otimes Y)^m( e_i \otimes f_j ) = \sum_{p+q = m} \At(X)^p(e_i) \times \Atlarrow(Y)^q(f_j)
+\ee
+where on the right hand side we use the operation \eqref{eq:shuffle_opat}. 
+\end{lemma}
+\begin{proof}
+We have
+\[
+\At(X \otimes Y)(e_i \otimes f_j) = \sum_{i_1} (-1)^{|e_{i_1}| + |f_j|} e_{i_1} \otimes f_j \otimes d( d_{X,i_1,i}) + \sum_{j_1} (-1)^{|f_{j_1}|} e_i \otimes f_{j_1} \otimes d( d_{Y, j_1,j} )\,.
+\]
+Iterating, we see that $\At(X \otimes Y)^m(e_i \otimes f_j)$ is a sum over all indices of terms
+\[
+e_{i_{m-p}} \otimes f_{j_p} \otimes \sigma_\bullet( \underbrace{d(d_{X,i_{m-p}i_{m-p-1}}), \ldots, d(d_{X,i_1i})}_{m-p}, \underbrace{d(d_{Y,j_pj_{p-1}}), \ldots, d(d_{Y,j_1j})}_p )
+\]
+where $\sigma$ is a $(m-p,p)$ shuffle and the sign that is attached to such a term is $(-1)^q$ where
+\[
+q = |e_{i_{m-p}}| + \cdots + |e_{i_1}| + |f_{j_p}| + \cdots + |f_{j_1}| + (m-p)|f_{j_p}| + |\sigma|\,.
+\]
+But considering \eqref{eq:powerofatiyah} it is straightforward to check that the right hand side of \eqref{eq:atshufat} is a sum over the same collection of terms, and we leave it to the reader to verify that the signs match.
+\end{proof}
+
 \subsection{Connections}
 
-Let $k$ be a ring and $A$ a $k$-algebra, $\Omega A = \Omega_k A$ the differential graded algebra $(\Omega A, d, \dot)$ of noncommutative differential forms explained in Section \ref{??}. A \emph{connection} on a $\mathbb{Z}_2$-graded $A$-module $X$ is a $k$-linear map
+Let $k$ be a ring and $A$ a $k$-algebra, $\Omega A = \Omega_k A$ the differential graded algebra $(\Omega A, d, \cdot)$ of noncommutative differential forms explained in Section \ref{??}. A \emph{connection} on a $\mathbb{Z}_2$-graded $A$-module $X$ is a $k$-linear map
 \[
 \nabla: X \lto X \otimes_A \Omega^1 A\,,
 \]
@@ -1230,7 +1274,7 @@ while a left $R_1$-linear homotopy inverse is given by
 where $\sigma_s, \sigma_d$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
 
-Equipped with these formulas we return to the lifting problem discussed at the beginning of this section. We will show that, given $Y \in \hmf(R^e, \widetilde{W})$, there is a $k$-linear homotopy equivalence
+Equipped with these formulas we return to the lifting problem discussed at the beginning of this section. We will show that, given a finite rank matrix factorisation $Y$ of $\widetilde{W}$ over $R^e$, there is a $k$-linear homotopy equivalence
 \[
 \Hom_{R^e}(Y, \Delta) \lto \Hom_{R^e}(Y, R)\,.
 \]
@@ -1244,11 +1288,12 @@ Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta \ar[dl]^
 To produce a formula for $\varphi_{\textup{lift}}$ we choose a homogeneous basis $\{ e_i \}_{i \in I}$ for $Y$.
 
 \begin{proposition}\label{prop:liftingresult} In the above notation, the morphism $\varphi_{\textup{lift}}$ is given by
-\[
+\begin{equation}\label{eq:liftingresult}
 \varphi_{\textup{lift}} = \sum_{m \ge 0} (-1)^m \Psi \circ \varphi' \circ \lAt_{R^e/R_2}(Y)^m\,.
-\]
+\end{equation}
 where $\varphi': Y \lto R^e$ is the $R^e$-linear map defined by $\varphi'(e_i) = 1 \otimes \varphi(e_i)$.
 \end{proposition}
+
 \begin{remark}
 For each $m \ge 0$ the summand of $\varphi_{\textup{lift}}$ is $(-1)^m$ times the composite
 \[
@@ -1259,8 +1304,25 @@ Y \ar[r]^-{[d, d_Y]^m} & \Bar \otimes_{R^e} Y \ar[r]^-{1 \otimes \varphi'} & \Ba
 \end{remark}
 % see lipert3
 \begin{proof}[Proof of the Proposition]
-\textbf{todo}.
+We apply Corollary \ref{corollary:koszulstab2} with $X = Y^{\vee}$ to see that the composite
+\[
+\xymatrix@C+2pc{
+\Hom_{R^e}(Y, \Delta) \ar[r]^-{\cong}_-{\xi^{-1}} & Y^{\vee} \otimes_{R^e} \Delta \ar[r]^-{\pi_{\Delta}} & Y^{\vee} \otimes_{R^e} R \ar[r]^-{\cong}_-{\xi} & \Hom_{R^e}(Y, R)
+}
+\]
+is a homotopy equivalence, with $\xi$ denoting the canonical isomorphisms. Evaluating the homotopy inverse $\xi \circ \pi_d^{-1} \circ \xi^{-1}$ on the cohomology class of $\varphi$ yields the map $\varphi_{\textup{lift}}$ defined by
+\[
+\varphi_{\textup{lift}} = \sum_i \sum_{m \ge 0} (-1)^m \xi \Psi [d, d_X]^m \sigma_d( e_i^* \otimes \varphi(e_i) )\,.
+\]
+A straightforward computation yields (with $D = d_Y$)
+\[
+\varphi_{\textup{lift}}(e_j) = \sum_{m \ge 0}\sum_{i_0, i_1, \ldots, i_{m-1}} (-1)^{m|e_{i_0}| + m} \Psi d( D_{i_{m-1},j}) d( D_{i_{m-2},i_{m-1}} ) \cdots d( D_{i_0, i_1} ) \cdot (1 \otimes \varphi(e_{i_0}) )
+\]
+which by \eqref{eq:leftatiyahexp} agrees with the right hand side of \eqref{eq:liftingresult}.
 \end{proof}
+
+\begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_s$ instead of $\pi^{-1}_d$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{R^e/R_1}$ instead of $\lAt_{R^e/R_2}$.
+\end{remark}
 
 Since all tensor products are over $\Re$ everything that we have said above can be restated with $\Bar$ on the left, for example with $\Bar \,\widehat{\otimes} \, X = \prod_{m \ge 0} \Bar_m \,\widehat{\otimes}\, X$ (\textbf{todo} modify this).
 
@@ -1345,9 +1407,9 @@ The \textsl{coevaluation} is the morphism $\widetilde\coev_X: \Delta \lto X^\dua
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
-With $\tau$ as in (\ref{eq:attau}) we consider on the tensor product
+With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product
 \[
-\tau_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X)\,
+\reprod_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X)\,
 \]
 the operator
 \[
@@ -1356,7 +1418,7 @@ the operator
 with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow(X^\dual)$ for the operator in the previous equation. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
 \[
 \xymatrix@C+1pc{
-X^\dual \otimes_{k[z]} X \ar[rr]^-{\Atlarrow(X^\dual)^m} & & \tau_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
+X^\dual \otimes_{k[z]} X \ar[rr]^-{\Atlarrow(X^\dual)^m} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
 }
 \]
 which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
@@ -1376,36 +1438,34 @@ A summand $f \otimes \theta_{\bs{i}}$ in (\ref{eq:coev11}), with $f \in X^\dual 
 \[
 f \otimes \zeta( \theta_{i_1} \ldots \theta_{i_p} ) = f \otimes \varepsilon\big( \theta_{\bs{i}} \wedge - \big)
 \]
-and then to the function $\Delta \lto X^\dagger \otimes X$ defined by
-\[
-\gamma \lmt (-1)^{|\omega||f|} \varepsilon\big( \gamma \wedge \omega \otimes f \big)\,,
-\]
-and so (\ref{eq:coev10}) follows from (\ref{eq:coev11}).
+and then to the function $\Delta \lto X^\dagger \otimes X$ defined by $\gamma \lmt (-1)^{|\omega||f|} \varepsilon\big( \gamma \wedge \omega \otimes f \big)$, and so (\ref{eq:coev10}) follows from (\ref{eq:coev11}).
 \end{proof}
 
 There is an alternative presentation which we will also need. On the tensor product
 \[
-( X^\dual \otimes X) \otimes_{k[x,y]} \Bar
+( X^\dual \otimes X) \otimes_{R^e} \Bar
 \]
-we consider the operator $\At_{X^\dual \otimes X, k[x,y]/k[x]} = [s, d_{X^\dual \otimes X}]$ and its powers. Since $s$ is $k[x]$-linear, this is actually $[s, d_{X}]$ and for this reason we abuse notation and write $\At_{X, k[x,y]/k[x]}$ for $\At_{X^\dual \otimes X, k[x,y]/k[x]}$. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+we consider the operator
 \[
-\xymatrix{
-X^\dual \otimes X \ar[r]^-{\At^m_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otimes_{k[x,y]} \Bar \ar[r]^-{\Psi} & (X^\dual \otimes X)\otimes_{k[x,y]} K\,.
-}
+\At_{R^e/R_1}(X^\dual \otimes X) = [s, d_{X^\dual \otimes X}] = [s, d_X]
 \]
+with the second equality holding because $s$ is $k[x]$-linear. We write $\At_{R^e/R_1}(X)$ for this operator. 
+
+%If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+%\[
+%\xymatrix{
+%X^\dual \otimes X \ar[r]^-{\At^m_{X, k[x,y]/k[x]}} & ( X^\dual \otimes X ) \otimes_{k[x,y]} \Bar \ar[r]^-{\Psi} & (X^\dual \otimes X)\otimes_{k[x,y]} K\,.
+%}
+%\]
 
 \begin{theorem} A representative for the coevaluation morphism is the chain map
 \[
-\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{m \ge 0} (-1)^m \Psi \At^m_{X,k[x,y]/k[x]}( \iota_X ) \wedge \gamma \right)\,.
+\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{m \ge 0} (-1)^m \Psi \At_{R^e/R_1}(X)^m( \iota_X ) \wedge \gamma \right)\,.
 \]
 \end{theorem}
 
-(\textbf{todo} Left and right facing Atiyah classes)
-
 \begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
 \end{example}
-
-\newpage
 
 \subsection{Evaluation}\label{subsec:eval}
 
@@ -1569,40 +1629,13 @@ Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq
 &= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
 \end{align} 
-In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:shuffleatiyah} below, whose proof is delayed to the end of the section. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
+In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:atshufat}. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
 \begin{align}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
 &= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \Lambda \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
 \end{align}
 Since the Zorro map~$\mathcal Z$ is $k[x,z]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
-
-\begin{lemma}\label{lemma:shuffleatiyah} 
-TODO: $\At \times \At = \At$.
-\end{lemma}
-
-% TODO: use the below for the proof... 
-%\begin{lemma}
-%$\Gamma(e_q) = \sum_{n\geq 0} \sum_j (-1)^{|e_j| + n} (\At_{X\otimes X^\dual})^n(e_q \otimes e_j^* \otimes e_j)$. 
-%\end{lemma}
-%
-%\begin{proof}
-%We compute $\Gamma(e_q)$, using $\At_X(e_q) = (-1)^{|e_q|+1} e_k \otimes d(d_X)_{kq}$ and paying attention to Koszul signs: 
-%\begin{align}
-%e_q & \stackrel{\rho_X^{-1}}{\longmapsto} \sum_{a\geq 0} (-1)^a \At_X^a(e_q) \nonumber \\
-%& \qquad\; = \sum_{a\geq 0} (-1)^{a + (|e_q|+1)+\ldots+(|e_q|+a)} e_{k_a} \otimes d(d_X)_{k_a k_{a-1}} \ldots d(d_X)_{k_1 q} \nonumber \\
-%& \stackrel{\gamma_1}{\longmapsto} \Big( \sum_{a\geq 0} (-1)^{a + a|e_q| + {a+1\choose 2}} e_{k_a} \otimes d(d_X)_{k_a k_{a-1}} \ldots d(d_X)_{k_1 q} \Big) \nonumber \\
-%& \qquad\; \otimes \Big( \sum_{b\geq 0} \sum_j (-1)^{|e_j|+b} (-1)^{(|e_j|+1)+\ldots+(|e_j|+b) + b|e_j|} e^*_{l_b} \otimes e_j \otimes d(d_{X^\dual})_{l_b l_{b-1}} \ldots d(d_{X^\dual})_{l_1 j} \Big) \nonumber \\
-%& \stackrel{\gamma_3 \circ \gamma_2}{\longmapsto} \sum_{n\geq 0} \sum_j (-1)^{|e_j|+n} \sum_{a=0}^n(-1)^{a|e_q| + {a+1\choose 2} + {n-a+1\choose 2}} \sum_{\sigma \in \Sh(n-a,a)} (-1)^{|\sigma|} e_{k_a} \otimes e^*_{l_{n-a}} \otimes e_j \nonumber \\
-%& \qquad\;   \otimes \sigma_\bullet \left( d(d_{X^\dual})_{l_{n-a} l_{n-a-1}} \ldots d(d_{X^\dual})_{l_1 j} d(d_X)_{k_a k_{a-1}} \ldots d(d_X)_{k_1 q} \right) \nonumber \\
-%& \qquad\; =  \sum_{n\geq 0} \sum_j (-1)^{|e_j|+n} \sum_{a=0}^n (-1)^{a|e_q| + {a+1\choose 2} + {n-a+1\choose 2} + a(n-a)} \sum_{\sigma \in \Sh(a,n-a)} (-1)^{|\sigma|}  \label{31} \\
-%& \qquad\qquad \cdot e_{k_a} \otimes e^*_{l_{n-a}} \otimes e_j \otimes \sigma_\bullet \left( d(d_X)_{k_a k_{a-1}} \ldots d(d_X)_{k_1 q} d(d_{X^\dual})_{l_{n-a} l_{n-a-1}} \ldots d(d_{X^\dual})_{l_1 j} \right) \nonumber \\
-%& \qquad\; =  \sum_{n\geq 0} \sum_j (-1)^{|e_j|+n} ( \At_X + \At_{X^\dual} )^n (e_q \otimes e^*_j \otimes e_j) \label{32} \\
-%& \qquad\; =  \sum_{n\geq 0} \sum_j (-1)^{|e_j|+n} (\At_{X\otimes X^\dual})^n (e_q \otimes e^*_j \otimes e_j) \, . \nonumber
-%\end{align}
-%To understand the penultimate step we note that the sign $(-1)^{a|e_q| + {a+1\choose 2} + {n-a+1\choose 2} + a(n-a)}$ with $\sigma=\operatorname{id}$ in~\eqref{31} is precisely that of the contribution to~\eqref{32} where $\At_{X^\dual}$ first acts $n-a$ times on $e_q\otimes e^*_j\otimes e_j$, followed by $\At_X^a$. The sign $(-1)^{|\sigma|}$ appears in~\eqref{32} if some $\At_X$ acts before some of the $\At_{X^\dual}$. 
-%\end{proof}
-
 
 The form of self-adjointness of the Atiyah class that we will use is contained in the next result. The $p = 0$ case is the statement that for $\varphi \in \End(X) \otimes_{k[x]} \Bar$ we have
 \[
@@ -3270,7 +3303,7 @@ I.~Brunner and D.~Roggenkamp, \textsl{B-type defects in {L}andau-{G}inzburg
 %  \href{http://www.carqueville.net/nils/webCompilations}{http://www.carqueville.net/nils/webCompilations}.
 
 \bibitem[CW10]{ct1007.2679}
-A.~{C\u ald\u araru} and J.~Tu, \textsl{The Mukai pairing, I: a categorical approach},
+A.~{C\u ald\u araru} and S.~Willerton, \textsl{The Mukai pairing, I: a categorical approach},
 New York Journal of Mathematics \textbf{16} (2010) 61--98, 
   \href{http://arxiv.org/abs/0707.2052}{[arXiv:0707.2052]}.
 
