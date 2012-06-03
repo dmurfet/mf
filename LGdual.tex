@@ -950,12 +950,12 @@ As explained in the introduction, the structure of the bicategory $\LG$ can be u
 Let $k$ be a ring, $R$ a $k$-algebra, and set $R^e = R_1 \otimes_k R_2$ where $R_i = R$ for $i = 1,2$. We define  the operators $s,d$ on the Bar complex $\Bar = \Bar_{R/k}$ as in Section \ref{subsec:Bar} and recall that $\Bar$ is equipped with an $R^e$-bimodule structure by left and right multiplication. Let $(X,D)$ be a pair consisting of a $\mathbb{Z}_2$-graded free $R^e$-module $X$ and an odd $R^e$-linear operator $D$ on $X$ (for the moment we do not require any condition on $D^2$). By default $\otimes$ means $\otimes_{R^e}$.
 
 Given a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ we can extend $d$ and $s$ to operators
-\begin{align*}
-d&: X \otimes \Bar \lto X \otimes \Bar, &\qquad d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d \omega\,,\\
-s&: X \otimes \Bar \lto X \otimes \Bar, &\qquad s( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes s \omega\,.
-\end{align*}
+\begin{align}
+d&: X \otimes \Bar \lto X \otimes \Bar, &\qquad d( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d \omega\,, \label{eq:extendd}\\
+s&: X \otimes \Bar \lto X \otimes \Bar, &\qquad s( e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes s \omega\,. \label{eq:extends}
+\end{align}
 
-\begin{definition}
+\begin{definition}\label{defn:atiyahclassbasis}
 The \emph{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes \Bar$ defined by
 \begin{align*}
 \At_{R^e/R_2}(X) &= [d, D] = d D + D d\,,\\
@@ -975,6 +975,9 @@ and more generally for $m \ge 1$
 There are similar formulas for $\At_{R^e/R_1}$. We call these \emph{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_{R^e/R_2}$ as a cohomology class, so we should perhaps refer to Atiyah \emph{operators}, but we persist with the above terminology.
 
 To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $R^e$-module via the right action of $R^e$ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that both $\At_{R^e/R_2}(X)$ and $\At_{R^e/R_1}(X)$ are right $R^e$-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp. $s$) as differentiating in the $R_1$-directions (resp. $R_2$-directions).
+
+\begin{remark}\label{remark:linearatother} Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $S \otimes_k R^e$-module with $S \otimes_k R^e$-linear operator $D$. If we choose a homogeneous $S \otimes_k R^e$-basis for $X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd},\eqref{eq:extends} then $[d, D]$ and $[s, D]$ are $S$-linear and right $R^e$-linear operators on $X \otimes \Bar$ and we use the same notation and terminology for these operators. All our remarks extend \emph{mutatis mutandis} to this kind of Atiyah class.
+\end{remark}
 
 There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $R^e$-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
 \begin{equation}\label{eq:leftatiyahclasses}
@@ -1002,8 +1005,6 @@ X \otimes \Bar \ar[r]_-{\cong} & \reprod_*( \Bar ) \otimes X
 }
 \]
 in which the rows are graded twist maps (with Koszul signs). We adopt similar conventions for the other Atiyah classes.
-
-\newpage
 
 \subsection{Properties}
 
@@ -1047,28 +1048,41 @@ But considering \eqref{eq:powerofatiyah} it is straightforward to check that the
 
 \subsection{Connections}
 
-Let $k$ be a ring and $A$ a $k$-algebra, $\Omega A = \Omega_k A$ the differential graded algebra $(\Omega A, d, \cdot)$ of noncommutative differential forms explained in Section \ref{??}. A \emph{connection} on a $\mathbb{Z}_2$-graded $A$-module $X$ is a $k$-linear map
+It is better to construct the Atiyah class from a choice of connection, rather than a choice of basis, and such is the purpose of this section. However, as we have already explained, these remarks will not be needed in the sequel and are included only for the sake of completeness. For this reason we restrict ourselves to a discussion of only one of the many ``types'' of Atiyah class presented above, the modifications for the other cases being left to the reader.
+
+Let $k$ be a ring and $R$ a $k$-algebra, $\Omega R = \Omega_k R$ the differential graded algebra $(\Omega R, d, \cdot)$ of noncommutative differential forms explained in Section \ref{subsec:Bar}. A \emph{connection} on a $\mathbb{Z}_2$-graded $R$-module $X$ is a $k$-linear map
 \[
-\nabla: X \lto X \otimes_A \Omega^1 A\,,
+\nabla: X \lto X \otimes_R \Omega^1 R\,,
 \]
-which sends $X^i$ into $X^i \otimes_A \Omega^1_A$ and satisfies the graded Leibniz rule for $x \in X, a \in A$
+which sends $X^i$ into $X^i \otimes_R \Omega^1_R$ and satisfies the graded Leibniz rule for $x \in X, a \in R$
 \[
 \nabla( x a ) = \nabla( x ) a + (-1)^{|x|} x da\,.
 \]
-Notice that by left and right multiplication $\Omega A$ is an $A$-bimodule, and so $X \otimes_A \Omega^1 A$ is naturally an $A$-bimodule and in particular for $W \in A$ it makes sense to consider the operator $[W, -]$ on $X \otimes_A \Omega^1 A$ which sends an element $\xi$ to $W \xi - \xi W$.
+Notice that by left and right multiplication $\Omega R$ is an $R$-bimodule, and so $X \otimes_R \Omega^1 R$ is naturally an $R$-bimodule. Let us write $R^e = R_1 \otimes_k R_2$ with $R_i = R$ so that the right $R$-module structure on $X \otimes_R \Omega^1 R$ is the action of $R_2$. The next lemma is an exercise in the Leibniz rule.
 
-\begin{lemma} Let $(X,D)$ be a linear factorisation of $W \in A$. If $\nabla$ is a connection on $X$ then
+\begin{lemma} Let $(X,D)$ be a linear factorisation of $W \in R$. If $\nabla$ is a connection on $X$ then
 \[
-[ \nabla, D ] = \nabla D + D \nabla: X \lto X \otimes_A \Omega^1 A
+[ \nabla, D ] = \nabla D + D \nabla: X \lto X \otimes_R \Omega^1 R
 \]
-is right $A$-linear and satisfies
-\[
-[ D, [ \nabla, D ] ] = [ W, - ] \nabla - (-1)^F ( dW \cdot - )\,.
-\]
+is $R_2$-linear.
 \end{lemma}
 
-\begin{lemma} If in the previous lemma $W \in k$ and 
+The element $[ \nabla, D ]$ of $\Hom_{R_2}(X, X \otimes_R \Omega^1 R)$ is not necessarily closed unless $W$ belongs to the image of the structure morphism $K \lto W$, which we indicate by saying that $W \in k$.
+
+\begin{lemma} If $W \in k$ then $[ \nabla, D ]$ is a morphism of linear factorisations of $W$ over $R_2$.
 \end{lemma}
+
+\begin{lemma} If $\nabla'$ is another connection on $X$ then
+\[
+[ \nabla, D ] - [ \nabla', D] = [ \nabla - \nabla', D]
+\]
+is $R_2$-linear. In particular if $W \in k$ then the homology class of $[ \nabla, D ]$ in $H^0 \Hom_{R_2}(X, X \otimes_R \Omega^1 R)$ is independent of the choice of connection.
+\end{lemma}
+
+\begin{remark} To relate this to the earlier construction, observe that if $X$ is a free $R^e$-module with basis $\{ e_i \}_{i \in I}$ then $\Omega R$ can be identified with $\Bar$ and the operator $d: X \lto X \otimes \Bar_1 = X \otimes_R \Omega^1 R$ of \eqref{eq:extendd} is a connection.
+\end{remark}
+
+\textbf{todo} Explain naturality?
 
 \section{Perturbation to the stabilised diagonal}\label{section:pertandhtpy}
 
@@ -1170,8 +1184,7 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-In the notation of Section \ref{section:atiyahclasses} we can describe the homotopy inverses of $\pi$ using Atiyah classes.
-%The $R_2$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{R^e/R_2}(X) = [d,d_X]$.
+In the notation of Section \ref{section:atiyahclasses} we can describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $S \otimes_k R^e$-module so we are using the convention of Remark \ref{remark:linearatother}.
 
 \begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is an $R_2$-linear homotopy equivalence with inverse
 \[
@@ -1526,7 +1539,7 @@ TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
 
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its adjoint $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. Let $\{ e_i \}_{i \in I}$ denote a homogeneous $k[x,z]$-basis of $X$ and $\{ e_i^* \}_{i \in I}$ the dual basis of $X^\vee$.
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints for any noetherian $\mathbb{Q}$-algebra $k$. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its adjoint $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
@@ -1568,36 +1581,37 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 \draw (A2) -- (A); 
 \end{tikzpicture}
 \ee
-Here we also label the two domains to the left and right of the 1-morphism~$X$ by the variables pertaining to the objects $(k[x],W), (k[z],V) \in \LG$; where opportune we use primes to distinguish between different copies of the same variable sets, i.\,e.~between between different actions of the same ring. We call the left-hand side of (\ref{Zorro1detail}) the \textsl{Zorro map} and denote it $\mathcal Z$. It is the composite
+Here we label the two domains to the left and right of the 1-morphism~$X$ by the variables pertaining to the objects $(k[x],W), (k[z],V) \in \LG$, using primes to distinguish between different copies of the same variable sets. We keep in mind that there are two distinct $\Delta$'s which appear: if we write $R = k[x]$ and $S = k[z]$ then one of the $\Delta$'s is an $R$-$R$-bimodule, and the other is an $S$-$S$-bimodule. It is convenient to identify $\Re = R \otimes_k R$ with $k[x,x']$ so that the right $R$-action is via $x'$-variables.
+
+
+We call the left-hand side of (\ref{Zorro1detail}) the \textsl{Zorro map} and denote it $\mathcal Z$. It is the composite
 \be\label{eq:zorro1a1}
 \xymatrix@C+2pc{
 X \ar[r]^-{\rho^{-1}} & X \otimes \Delta_W \ar[r]^-{1 \otimes\,\widetilde{\coev}} & X \otimes X^{\dagger} \otimes X \ar[r]^-{\widetilde{\eval}\, \otimes 1} & \Delta_V \otimes X \ar[r]^-{\lambda} & X\,,
 }
 \ee
-which we prove is homotopic to the identity on $X$. Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. 
+which we prove is homotopic to the identity on $X$. Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. Our first order of business is to establish the expression for the Zorro map given in the next lemma. For this we need to introduce the $k[x',z]$-linear map
+\begin{gather*}
+\dlangle - \drangle: S \otimes_k \Bar \lto S \otimes_k R = k[x',z],\\
+\dlangle \alpha \drangle = (-1)^{n+1\choose 2} \Res_{k[x,x',z]/k[x',z]} \left[ \frac{ \varepsilon\Psi( \alpha ) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\end{gather*}
+We use the map $\varepsilon\Psi: \Bar \lto S \otimes_k R$ of Section \ref{??} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$ as before. Here $\Bar$ is the bar complex of $R$ over $k$, and the two copies of $R$ in $R^e = k[x,x']$ play very different roles in $\langle\!\langle - \rangle\!\rangle$. The left copy (i.\,e.~$k[x]$) is integrated out, and the map is linear with respect to the right action.
 
-We keep in mind that there are two distinct $\Delta$'s which appear: if we write $R = k[x]$ and $S = k[z]$ then one of the $\Delta$'s is an $R$-$R$-bimodule, and the other is an $S$-$S$-bimodule. It is sometimes convenient to identify $\Re$ with $k[x,x']$ so that the right $R$-action is via polynomials in the $x'$-variables.
+Let $\{ e_i \}_{i \in I}$ be a homogeneous $k[x,z]$-basis of $X$, $\{ e_i^* \}_{i \in I}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i \in I, j \in J}$ the determined basis of $\End(X)$. By the Atiyah class $\At = \At( \End(X) )$ of this complex we mean the operator on $\End(X) \otimes_R \Bar$ which might more properly be called the Atiyah class of $\End(X) \otimes_R R^e$ determined by the basis $e_{ij}$.
 
-Let us introduce the notation
-$$
-\langle\!\langle-\rangle\!\rangle = (-1)^{n+1\choose 2} \Res_{k[x,x',z]/k[x',z]} \left[ \frac{ \varepsilon\Psi(-) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
-$$
-for the map $S \otimes_k \Bar \lto S \otimes_k R = k[x',z]$ defined using the map $\varepsilon\Psi: \Bar \lto S \otimes_k R$ of Section \ref{??} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$ as before. Here $\Bar$ is the bar complex of $R$ over $k$, and the two copies of $R$ play very different roles in $\langle\!\langle - \rangle\!\rangle$. The left copy (i.\,e.~$k[x]$) is integrated out, and the map is linear with respect to the right action, so that overall $\langle\!\langle - \rangle\!\rangle$ is $k[x,z]$-linear.
-
-Let $\At$ denote the Atiyah class of $\End(X)$, which is an operator on $\End(X) \otimes_{k[x]} \Bar$. Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set 
+Let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set 
 $$
 \Lambda = \lambda_1\ldots \lambda_n \, . 
 $$
-Our first order of business is to establish the following expression for the Zorro map.
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
 \mathcal Z = \sum_j (-1)^{|e_j| + n} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
 \ee
-where for $f \in X$, the endomorphism $f \circ e_j^*$ sends $g$ to $e_j^*(g) \cdot f$.
+where for $f \in X$, the endomorphism $f \circ e_j^*$ of $X$ sends $g$ to $e_j^*(g) \cdot f$.
 \end{lemma}
 
-Before giving the proof of the lemma, let us sketch the argument that $\mathcal Z$ is homotopic to the identity. In outline, the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
+Before giving the proof of the lemma, let us roughly sketch how it leads to an argument that $\mathcal Z$ is homotopic to the identity. Although we will not formalise the argument in precisely these terms, the Atiyah class is ``anti-self-adjoint'' with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
 \begin{equation}\label{eq:trueproofeq}
 \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \Lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
 \end{equation}
@@ -1632,44 +1646,63 @@ Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq
 In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:atshufat}. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
 \begin{align}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
-&= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \At^n( e_q \circ e_j^* ) \Lambda \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
+&= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
 \end{align}
 Since the Zorro map~$\mathcal Z$ is $k[x,z]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
 
-The form of self-adjointness of the Atiyah class that we will use is contained in the next result. The $p = 0$ case is the statement that for $\varphi \in \End(X) \otimes_{k[x]} \Bar$ we have
+The basic adjointness that we need is contained in the next lemma.
+
+\begin{lemma}\label{lemma:lameadjoints} Given homogeneous $\psi \in \End(X)$ and $\varphi \in \End(X) \otimes_{k[x]} \Bar$
+\begin{align*}
+\big\langle\!\big\langle \str( \psi \circ \At(\varphi) ) \big\rangle\!\big\rangle = -(-1)^{|\psi|} &\big\langle\!\big\langle d \str( D( \psi ) \circ \varphi ) \big\rangle\!\big\rangle + (-1)^{|\psi|} \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle\\
+&- \dlangle \str\big( D(\psi) \circ d\varphi ) \big) \drangle\,.
+\end{align*}
+\end{lemma}
+\begin{proof}
+We write $\psi^\bullet$ for the operator $\psi^\bullet(\alpha \otimes \omega) = \psi \circ \alpha \otimes \omega$ on $\End(X) \otimes_{k[x]} \Bar$. The super Jacobi identity for operators on this tensor product gives
+\be\label{superJacobi0}
+\big[ \psi^\bullet, \At \big] = \big[ \psi^\bullet, [d, D] \big] = \big[ D, \big[ \psi^\bullet, d \big] \big] - (-1)^{|\psi|} \big[ d, \big[ D, \psi^\bullet \big] \big]\,.
+\ee
+It is easy to see that $\str \circ d = d \circ \str$ and hence $\str \circ \At = 0$ so if we apply~\eqref{superJacobi0} to~$\varphi$
+\begin{align*}
+\dlangle \str\big( \psi \circ \At(\varphi) \big) \drangle &= \dlangle \str\big( \big[ D, \big[ \psi^\bullet, d \big] \big] \varphi \big) \drangle - (-1)^{|\psi|} \dlangle \str\big( \big[ d, \big[ D, \psi^\bullet \big] \big] \varphi \big) \drangle\\
+&= (-1)^{|\psi|} \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle\\
+&\qquad- (-1)^{|\psi|} \dlangle d \str\big( \big[ D, \psi^\bullet \big] \varphi \big) \drangle\\
+&\qquad- \dlangle \str\big( \big[ D, \psi^\bullet \big]( d \varphi ) \big) \drangle \, .
+\end{align*}
+But since $[D, \psi^\bullet] = D(\psi)^\bullet$ this is what we wanted to show.
+\end{proof}
+
+Applying the previous lemma with $\psi = \Lambda$ and using that $D(\Lambda)$ is a linear combination of the $f_i$ which annihilate with the residue in $\langle\!\langle - \rangle\!\rangle$ we find that
 \[
-\big\langle\!\big\langle \str( \lambda_1 \ldots \lambda_n \circ \At(\varphi) ) \big\rangle\!\big\rangle = \sum_{i=1}^n (-1)^{i-1} \Big\langle\!\Big\langle \nabla \left\{ f_i \str( \lambda_1 \ldots \widehat{\lambda_i} \ldots \lambda_n \circ \varphi ) \right\} \Big\rangle\!\Big\rangle + h_0( D(\varphi))
+\big\langle\!\big\langle \str( \lambda_1 \ldots \lambda_n \circ \At(\varphi) ) \big\rangle\!\big\rangle = \sum_{i=1}^n (-1)^{i-1} \Big\langle\!\Big\langle d \left\{ f_i \str( \lambda_1 \ldots \widehat{\lambda_i} \ldots \lambda_n \circ \varphi ) \right\} \Big\rangle\!\Big\rangle + h_0( D(\varphi))
 \]
-for some function $h_0$, where as usual $\widehat{\lambda_i}$ means that $\lambda_i$ is omitted. Applying the lemma inductively will interpolate between the left- and right-hand sides of (\ref{eq:trueproofeq}). For the general statement we will need some notation: given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1, \ldots, n\}$ (not necessarily in ascending order) let
+for some function $h_0$, where as usual $\widehat{\lambda_i}$ means that $\lambda_i$ is omitted. Applying the lemma again will reduce the number of $\lambda$'s by one, and proceeding inductively we can use the lemma to interpolate between the left- and right-hand sides of (\ref{eq:trueproofeq}) (although we will never formalise exactly what the right hand side means! \textbf{todo}). The precise statement is contained in the next lemma, of which the previous formula is the $p = 0$ case.
+
+We will need some notation: given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1, \ldots, n\}$ (not necessarily in ascending order) let
 \[
 \ell(\bs{i}) = p, \qquad w(\bs{i}) = i_1 + \ldots + i_p, \qquad |\bs{i}| = \sum_{1 \le a < b \le n} \delta_{i_a > i_b}\, \qquad \gamma(\bs{i}) = w(\bs{i}) + |\bs{i}| + \binom{p+1}{2}\,.
 \]
-The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted. We deliberately confuse an endomorphism of $X$ with the operator on $\End(X) \otimes_{k[x]} \Bar$ which acts by post-composition with the endomorphism. 
+The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted.
 %Let $D$ denote the differential on $\End(X)$, i.\,e.~the commutator with~$d_X$.
 
 \begin{lemma}\label{lemma:zorromain} For $\varphi \in \End(X) \otimes_{k[x]} \Bar$ and $0 \le p < n$ we have
 \begin{align*}
-\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) + p} & \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_p} \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \Big\rangle\!\Big\rangle\\
-&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i}) + p+1} \Big\langle\!\Big\langle \nabla f_{i_1} \nabla f_{i_2} \cdots \nabla f_{i_{p+1}} \str\big( \Lambda_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \Big\rangle\!\Big\rangle + h_p( D( \varphi ) )
+\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) + p} & \Big\langle\!\Big\langle d \circ f_{i_1} \circ \cdots \circ d \circ f_{i_p} \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \Big\rangle\!\Big\rangle\\
+&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i}) + p+1} \Big\langle\!\Big\langle d \circ f_{i_1} \circ \cdots \circ d \circ f_{i_{p+1}} \str\big( \Lambda_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \Big\rangle\!\Big\rangle + h_p( D( \varphi ) )
 \end{align*}
 where $f_i = \partial_{x_i} W$, $D=[d_X,-]$ is the differential on $\End(X)$, and the sums are over all sequences of length $p, p+1$, respectively, and
 \[
-h_p( \psi ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}, \nabla](\psi) \big) \Big\rangle\!\Big\rangle\,.
+h_p( \psi ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle d \circ f_{i_1} \circ \cdots \circ d \circ f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}, d](\psi) \big) \Big\rangle\!\Big\rangle\,.
 \]
 \end{lemma}
 \begin{proof}
-Fix a sequence $\bs{i}$ of length $p$. The super Jacobi identity for operators on $\End(X) \otimes \Bar$ gives
-\be\label{superJacobi}
-\big[ \Lambda_{i_1,\ldots,i_p}, \At \big] = (-1)^{n-p} \big[ D, \big[ \Lambda_{i_1,\ldots,i_p}, \nabla \big] \big] - \big[ \nabla, \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \big]\,.
-\ee
-It is easy to see that $\str \circ \nabla = \nabla \circ \str$ and hence $\str \circ \At = 0$ so if we apply~\eqref{superJacobi} to~$\varphi$ and then apply $\dlangle \eta \str( - ) \drangle$ with $\eta = \nabla \circ f_{i_1} \circ \cdots \circ \nabla \circ f_{i_p}$, we have
+Fix a sequence $\bs{i}$ of length $p$ and let $\psi = \Lambda_{i_1,\ldots,i_p}$ and let $\eta$ be the operator $\eta = d \circ f_{i_1} \circ \cdots \circ d \circ f_{i_p}$ on $\Bar$, where the $f_i$ stand for multiplication (on the left) by $f_i$. Then by Lemma \ref{lemma:lameadjoints}, or rather the proof with $\dlangle - \drangle$ replaced by $\dlangle \eta( - ) \drangle$ we have
 \begin{align}
-\dlangle \eta \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \drangle &= (-1)^{n-p} \dlangle \eta \str\big( \big[ D, \big[ \Lambda_{i_1,\ldots,i_p}, \nabla \big] \big] \varphi \big) \drangle \nonumber\\
-&\qquad - \dlangle \eta \str\big( \big[ \nabla, \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \big] \varphi \big) \drangle \nonumber\\
-&= \dlangle \eta \str\big( \big[ \Lambda_{i_1,\ldots,i_p}, \nabla \big] ( D\varphi ) \big) \drangle \label{eq:hutch1}\\
-&\qquad- \dlangle \eta \nabla \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \varphi \big) \drangle \label{eq:hutch2}\\
-&\qquad+ (-1)^{n-p+1} \bigdlangle \eta \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p} \big]( \nabla \varphi ) \big) \drangle \, . \label{eq:hutch3}
+\dlangle \eta \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \drangle &= \dlangle \eta \str\big( \big[ \Lambda_{i_1,\ldots,i_p}, d \big] ( D\varphi ) \big) \drangle \label{eq:hutch1}\\
+&\qquad- \dlangle \eta \circ d \circ \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p} \big] \varphi \big) \drangle \label{eq:hutch2}\\
+&\qquad+ (-1)^{n-p+1} \bigdlangle \eta \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p} \big]( d \varphi ) \big) \drangle \, . \label{eq:hutch3}
 \end{align}
 Since $[d_X, \lambda_i] = f_i$ we have
 \[
@@ -1677,7 +1710,7 @@ Since $[d_X, \lambda_i] = f_i$ we have
 \]
 where the sign counts the number of $\lambda$'s to the left of $\lambda_a$ in $\Lambda_{i_1,\ldots,i_p}$. Substituting, the last summand (\ref{eq:hutch3}) in the above is, up to a sign, 
 \[
-\sum_{a \notin \{ i_1,\ldots, i_p \}} (-1)^{a-1 + \#\{ b \l i_b < a \}} \bigdlangle \nabla f_{i_1} \cdots \nabla f_{i_p} f_a \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p,a} \big]( \nabla \varphi ) \big) \bigdrangle \, .
+\sum_{a \notin \{ i_1,\ldots, i_p \}} (-1)^{a-1 + \#\{ b \l i_b < a \}} \bigdlangle d \circ f_{i_1} \circ \cdots \circ d \circ f_{i_p} f_a \str\big( \big[ D, \Lambda_{i_1,\ldots,i_p,a} \big]( d \varphi ) \big) \bigdrangle \, .
 \]
 If we sum over all sequences $\bs{i}$ with the signs given in the statement of the lemma it is straightforward to check that the above term vanishes, because $f_{i_p} f_a$ and $f_a f_{i_p}$ appear in the sum with opposite signs. This completes the proof, since the sum over $\bs{i}$ of (\ref{eq:hutch1}) and (\ref{eq:hutch2}) gives us the right-hand side of the equation in the statement of the lemma.
 \end{proof}
@@ -1690,7 +1723,7 @@ If we sum over all sequences $\bs{i}$ with the signs given in the statement of t
 \begin{proof}
 Applying Lemma \ref{lemma:zorromain} repeatedly yields
 \begin{align*}
-\big\langle\!\big\langle \str \big( \Lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle = (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \big\langle\!\big\langle \nabla f_{\sigma(1)} \cdots \nabla f_{\sigma(n)} \str(\varphi) \big\rangle\!\big\rangle + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
+\big\langle\!\big\langle \str \big( \Lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle = (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \big\langle\!\big\langle d \circ f_{\sigma(1)} \circ \cdots \circ d \circ f_{\sigma(n)} \str(\varphi) \big\rangle\!\big\rangle + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
 \end{align*}
 %where 
 %$$
