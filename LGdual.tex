@@ -1504,6 +1504,7 @@ with the second equality holding because $s$ is $k[x]$-linear. We write $\At_{1}
 \end{example}
 
 \subsection{Evaluation}\label{subsec:eval}
+% see (eval)
 
 In this section $\Delta$ denotes $\Delta_V$. The evaluation will be produced by writing down a natural morphism $\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to the morphism $\widetilde\eval_X$ into $\Delta$. To begin with there is a canonical quotient (an $S^e$-linear morphism of linear factorisations of $\widetilde{V}$)
 \be\label{eq:firstisoevalsec}
@@ -1561,10 +1562,10 @@ X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \De
 \[
 \widetilde\eval_X: X \otimes_R X^\dual \lto \Delta
 \]
-is defined for homogeneous $\eta \in X$ and $\nu \in X^\dagger$ by
-\[
+defined for homogeneous $\eta \in X$ and $\nu \in X^\dagger$ by
+\be\label{eq:constructevalmap0}
 \widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta| + |\nu| + \chi} \Res_{S^e \otimes_k R/R} \left[ \frac{ \Psi \nu \big( \At_2(X)^m \Lambda ( \eta ) \big) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
-\]
+\ee
 \end{proposition}
 
 Before giving the proof, let us be clear that the term under the residue is the composite
@@ -1590,12 +1591,12 @@ in $\HMF(S^e, \widetilde{V})$ with $\psi \circ \vartheta = 1$ in the homotopy ca
 \Hom_{S^e}( (X \otimes_R X^\vee)[n], S ) \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{S^e}( \bar{X} \otimes_{\bar{R}} \bar{X}^\vee, S) \ar@<-1ex>[l]_-{\vartheta_\bullet}
 }\,.
 \ee
-where a $\bullet$ as a superscript indicates post-composition and as a subscript, pre-compostiion. By Proposition \ref{prop:liftingresult} the right hand vertical map is a homotopy equivalence and therefore so is the left hand vertical map. This in particular justifies why in \eqref{eq:defineeval} there is a unique morphism $\widetilde\eval_X$ making the diagram commute.
+where a ``$\bullet$'' as a superscript indicates post-composition and as a subscript, pre-composition. If we ignore the first isomorphism of \eqref{eq:firstisoevalsec} which only contributes a sign, then $\eval_0$ is a closed element in the bottom left corner of the diagram. By Proposition \ref{prop:liftingresult} the right hand vertical map is a homotopy equivalence and therefore so is the left hand vertical map. This in particular justifies why in \eqref{eq:defineeval} there is a unique morphism $\widetilde\eval_X$ making the diagram commute : this map is the inverse image, in cohomology, of $\eval_0$ under $\pi_{\Delta}^\bullet$.
 
-If we ignore the first isomorphism of \eqref{eq:firstisoevalsec} which only contributes a sign, then $\eval_0$ is a morphism $(X \otimes_R X^\vee)[n] \lto S$, i.e. a closed element in the bottom left corner of the diagram. The following diagram commutes
+The following diagram commutes
 \[
 \xymatrix{
-X \otimes_R X^\vee \ar[d]_{\Lambda \otimes 1}\ar[r] & \Hom_{S \otimes_k R}(X, X) \ar[d]^{ (-1)^n \Lambda^\bullet}\\
+X \otimes_R X^\vee \ar[d]_{(-1)^n \Lambda \otimes 1}\ar[r] & \Hom_{S \otimes_k R}(X, X) \ar[d]^{ (-1)^n \Lambda^\bullet}\\
 X \otimes_R X^\vee \ar[r] & \Hom_{S \otimes_k R}(X, X)
 }\,,
 \]
@@ -1609,10 +1610,27 @@ defined by
 \[
 \eval'_0( \eta \otimes \nu ) = \Res_{S \otimes_k R/S} \left[ \frac{ \str( \eta \circ \nu ) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
 \]
-We denote by $\eval'_{0,\textup{lift}}$ the morphism $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Delta$ lifting $\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. Then we define $\widetilde\eval_X = \vartheta_\bullet( \eval'_{0, \textup{lift}} )$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
-\end{proof}
+We denote by $\eval'_{0,\textup{lift}}$ the morphism $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Delta$ lifting $\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. To run the construction we need to fix an $S^e$-basis for $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee$. The basis we pick is $\{ g_\alpha e_i \otimes e_j ^* \}_{\alpha, i, j}$ where $g_\alpha$ gives a $k$-basis of $\bar{R}$. We define $\widetilde\eval_X = \vartheta_\bullet( \eval'_{0, \textup{lift}} ) = (-1)^n \eval'_{0, \textup{lift}} \circ (\Lambda \otimes 1)$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
 
-\newpage
+We have
+\[
+\widetilde\eval_X = \sum_{m \ge 0} (-1)^{m+n} \Psi \circ (1 \otimes \eval''_0) \circ [d, d_{X \otimes X^\vee}]^m \circ ( \Lambda \otimes 1 )
+\]
+where $\eval''_0: \bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto S^e$ is the $S^e$-linear map defined on the basis by
+\[
+\eval''_0( f_\alpha e_i \otimes e_j^* ) = 1 \otimes \eval'_0( f_\alpha e_i \otimes e_j^* )\,.
+\]
+Since in $d_{X \otimes X^\vee} = d_X \otimes 1 + 1 \otimes d_{X^\vee}$ only $d_X$ involves polynomials in $R_1$, we have $[d, d_{X \otimes X^\vee}] = [d, d_X]$. We compute using \eqref{eq:leftatiyahexp} that for $g \in R$ (writing $D = d_X$, and putting in the sign $n|e_i|$ from the first map of \eqref{eq:firstisoevalsec})
+\begin{align*}
+\widetilde\eval_X( g e_i \otimes e_j^* ) &= \sum_{m \ge 0} (-1)^{m+n+n|e_i|} \Psi (1 \otimes \eval''_0)\left( g \sum_k [d, d_X]^m( \Lambda_{ki} e_k \otimes e_j ^*) \right)\\
+&= \sum_{m \ge 0} (-1)^{m+n+n|e_i|} \Psi (1 \otimes \eval''_0)\left( g \sum_{k, k_1, \ldots, k_m} \Lambda_{ki} \cdot d( D_{k_1k} ) \cdots d( D_{k_m, k_{m-1}} ) \otimes e_{k_m} \otimes e_j^* \right)
+\end{align*}
+Applying $\eval''_0$ involves taking the supertrace $\str( e_{k_m} \circ e_j^* ) = (-1)^{|e_j|}\delta_{j,k_m}$ so that
+\[
+= \sum_{m \ge 0} \sum_{k,k_1,\ldots,k_m} (-1)^{m+n+n|e_i|+|e_j|+\chi} \Lambda_{ji} \Psi( d(D_{k_1,k}) \cdots d(D_{j,k_{m-1}}) ) \Res_{S \otimes_k R/S} \left[ \frac{ g \cdot \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\]
+which agrees with \eqref{eq:constructevalmap0} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
+\end{proof}
 
 TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
 
