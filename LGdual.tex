@@ -1312,11 +1312,11 @@ while a left $R_1$-linear homotopy inverse is given by
 where $\sigma_s, \sigma_d$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
 
-With these formulas in hand we return to the lifting problem discussed at the beginning of this section. We show that given $Y \in \hmf(R^e, \widetilde{W})$ composing with $\pi_{\Delta}$ induces an isomorphism
+With these formulas in hand we return to the lifting problem discussed at the beginning of this section. We show that given $Y \in \hmf(R^e, \widetilde{W})$ composing with $\pi_{\Delta}$ induces a quasi-isomorphism
 \be\label{eq:liftingresult0}
-H^0 \Hom_{R^e}(Y, \Delta) \lto H^0 \Hom_{R^e}(Y, R)\,.
+\Hom_{R^e}(Y, \Delta) \lto \Hom_{R^e}(Y, R)\,.
 \ee
-More concretely: given an $R^e$-linear morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) $R^e$-linear morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
+In particular, given an $R^e$-linear morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) $R^e$-linear morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
 \[
 \xymatrix{
 Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta \ar[dl]^-{\pi_\Delta} \\
@@ -1325,7 +1325,7 @@ Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta \ar[dl]^
 \]
 To produce a formula for $\varphi_{\textup{lift}}$ we choose a homogeneous basis $\{ e_i \}_{i \in I}$ for $Y$.
 
-\begin{proposition}\label{prop:liftingresult} The map \eqref{eq:liftingresult0} is an isomorphism and, in the above notation
+\begin{proposition}\label{prop:liftingresult} The map \eqref{eq:liftingresult0} is a homotopy equivalence and, in the above notation
 \begin{equation}\label{eq:liftingresult}
 \varphi_{\textup{lift}} = \sum_{m \ge 0} (-1)^m \Psi \circ \varphi' \circ \lAt_{2}(Y)^m
 \end{equation}
@@ -1503,12 +1503,10 @@ with the second equality holding because $s$ is $k[x]$-linear. We write $\At_{1}
 \begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
 \end{example}
 
-\newpage
-
 \subsection{Evaluation}\label{subsec:eval}
 
 In this section $\Delta$ denotes $\Delta_V$. The evaluation will be produced by writing down a natural morphism $\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to the morphism $\widetilde\eval_X$ into $\Delta$. To begin with there is a canonical quotient (an $S^e$-linear morphism of linear factorisations of $\widetilde{V}$)
-\be
+\be\label{eq:firstisoevalsec}
 X \otimes_R (X^{\vee}[n]) \cong (X \otimes_R X^\vee)[n] \lto S \otimes_{S^e} (X \otimes_R X^{\vee})[n] \cong \Hom_{S \otimes_k R}(X,X)[n]\,.
 \ee
 sending $e_i \otimes e_j^*$ to $(-1)^{n|e_i|} e_i \circ e_j^*$.
@@ -1521,7 +1519,9 @@ Postcomposing with $\Lambda$ gives an $S$-linear map (we define $\Lambda^\bullet
 \Hom_{S \otimes_k R}(X, X)[n] \ar[r]^-{(-1)^n \Lambda^\bullet} & \Hom(\bar{X}, \bar{X}) := \Hom_{S \otimes_k R}(X, X) \otimes_R R/(f_1,\ldots,f_n)\,.
 }
 \]
-This is actually a morphism of complexes, since the commutator of $\Lambda$ with the differentials on the mapping complexes is by definition a linear combination of the $f_i$. The supertrace gives another $S$-linear morphism of complexes
+This is actually a morphism of complexes, since the commutator of $\Lambda$ with the differentials on the mapping complexes is an expression in the $f_i$.
+
+The supertrace gives an $S$-linear morphism of complexes
 \[
 \xymatrix@C+2pc{
 \Hom(\bar{X}, \bar{X}) \ar[r]^-{\str} & S \otimes_k R/(f_1,\ldots,f_n)
@@ -1546,7 +1546,7 @@ defined for $\eta \in X$ and $\nu \in X^\dual$ by
 \]
 \end{lemma} 
 
-There is a stabilisation morphism $\pi_\Delta: \Delta \lto S$ and while $X \otimes_R X^\dual$ is not free of finite rank over $S^e$, it is a direct summand of a finite rank matrix factorisation in $\HMF(S^e, \widetilde{V})$ and it follows that the unique lifting of Proposition \ref{prop:liftingresult} applies. That is, there is up to homotopy a unique morphism of matrix factorisations $\widetilde\eval_X$ making the following diagram commute
+There is a stabilisation morphism $\pi_\Delta: \Delta \lto S$, and while $X \otimes_R X^\dual$ is not free of finite rank over $S^e$, it is a direct summand of a finite rank matrix factorisation in $\HMF(S^e, \widetilde{V})$. The unique lifting statement of Proposition \ref{prop:liftingresult} can be extended to summands (for the argument, see the proof of the proposition below) so there is up to homotopy a unique morphism of matrix factorisations $\widetilde\eval_X$ making the following diagram commute
 \be\label{eq:defineeval}
 \xymatrix{
 X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \Delta \ar[dl]^-{\pi_\Delta} \\
@@ -1557,9 +1557,7 @@ X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \De
 \begin{definition} $\widetilde\eval_X$ is the unique morphism in $\HMF(S^e, \widetilde{V})$ making \eqref{eq:defineeval} commute.
 \end{definition}
 
-TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
-
-\begin{proposition} A representative for the evaluation morphism is the chain map
+\begin{proposition}\label{prop:constructevalmap} A representative for the evaluation morphism is the chain map
 \[
 \widetilde\eval_X: X \otimes_R X^\dual \lto \Delta
 \]
@@ -1576,6 +1574,47 @@ X \ar[r]^{\Lambda} & X \ar[r]^-{\inc} & \Bar \otimes_S X \ar[r]^-{\At_2(X)^m} & 
 }
 \]
 where $\At_2(X) = [d, d_X]$. The residue integrates out the $R$, leaving us with an element of $\Delta$.
+
+As has already been mentioned, if $X \otimes_R X^\dual$ were finite rank we could apply Proposition \ref{prop:liftingresult} directly to deduce a formula for the lifting $\widetilde\eval_X$. As this is not the case, we have to be a little indirect and appeal to the idempotent pushforward construction of \cite{??}. Specifically, with $\bar{R} = R/(f_1,\ldots,f_n)$, Theorem \ref{??} of \emph{loc.cit.} shows that there is a diagram
+\[
+\xymatrix@C+2pc{
+(X \otimes_R X^\vee)[n] \ar@<-1ex>[r]_-{\vartheta} & \bar{X} \otimes_{\bar{R}} \bar{X}^\vee := (X \otimes_R X^\vee) \otimes_R \bar{R} \ar@<-1ex>[l]_-{\psi}
+}
+\]
+in $\HMF(S^e, \widetilde{V})$ with $\psi \circ \vartheta = 1$ in the homotopy category and $\vartheta = (-1)^n \Lambda \otimes 1$. Note that since $W$ is a potential, $R/(f_1,\ldots,f_n)$ is a finitely generated free $k$-module and $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee$ is a finite rank matrix factorisation.
+
+\begin{proof}[Proof of Proposition \ref{prop:constructevalmap}] Consider the commutative diagram
+\be\label{eq:proofconstructevalmap}
+\xymatrix@C+2pc{
+\Hom_{S^e}( (X \otimes_R X^\vee)[n], \Delta ) \ar[d]_{\pi^\bullet_\Delta} \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{S^e}(\bar{X} \otimes_{\bar{R}} \bar{X}^\vee, \Delta ) \ar@<-1ex>[l]_-{\vartheta_\bullet} \ar[d]^{\pi^\bullet_\Delta}\\
+\Hom_{S^e}( (X \otimes_R X^\vee)[n], S ) \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{S^e}( \bar{X} \otimes_{\bar{R}} \bar{X}^\vee, S) \ar@<-1ex>[l]_-{\vartheta_\bullet}
+}\,.
+\ee
+where a $\bullet$ as a superscript indicates post-composition and as a subscript, pre-compostiion. By Proposition \ref{prop:liftingresult} the right hand vertical map is a homotopy equivalence and therefore so is the left hand vertical map. This in particular justifies why in \eqref{eq:defineeval} there is a unique morphism $\widetilde\eval_X$ making the diagram commute.
+
+If we ignore the first isomorphism of \eqref{eq:firstisoevalsec} which only contributes a sign, then $\eval_0$ is a morphism $(X \otimes_R X^\vee)[n] \lto S$, i.e. a closed element in the bottom left corner of the diagram. The following diagram commutes
+\[
+\xymatrix{
+X \otimes_R X^\vee \ar[d]_{\Lambda \otimes 1}\ar[r] & \Hom_{S \otimes_k R}(X, X) \ar[d]^{ (-1)^n \Lambda^\bullet}\\
+X \otimes_R X^\vee \ar[r] & \Hom_{S \otimes_k R}(X, X)
+}\,,
+\]
+where the rows are as in \eqref{eq:firstisoevalsec}, from which we deduce that $\eval_0 = \vartheta_\bullet( \eval'_0 )$, where $\eval'_0$ is the map
+\[
+\xymatrix{
+\bar{X} \otimes_{\bar{R}} \bar{X}^\vee \ar[r] & S \otimes_{S^e} (\bar{X} \otimes_{\bar{R}} \bar{X}^\vee) \cong \Hom(\bar{X}, \bar{X}) \ar[r] & S
+}
+\]
+defined by
+\[
+\eval'_0( \eta \otimes \nu ) = \Res_{S \otimes_k R/S} \left[ \frac{ \str( \eta \circ \nu ) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\]
+We denote by $\eval'_{0,\textup{lift}}$ the morphism $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Delta$ lifting $\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. Then we define $\widetilde\eval_X = \vartheta_\bullet( \eval'_{0, \textup{lift}} )$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
+\end{proof}
+
+\newpage
+
+TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
 
 \section{Zorro moves}\label{sec:Zorro}
 
