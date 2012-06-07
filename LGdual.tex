@@ -1085,6 +1085,9 @@ q = |e_{i_{m-p}}| + \cdots + |e_{i_1}| + |f_{j_p}| + \cdots + |f_{j_1}| + (m-p)|
 But considering \eqref{eq:powerofatiyah} it is straightforward to check that the right-hand side of~\eqref{eq:atshufat} is a sum over the same collection of terms, and it can be checked that the signs match.
 \end{proof}
 
+\begin{remark}\label{remark:twistshufat} If in \eqref{eq:shuffle_opat} instead of twisting $\Bar$ to the right we twisted it to the left, so that the operation terminated in $\gamma_*(\Bar) \otimes X \otimes Y$, then \eqref{eq:atshufat} would instead compute $\Atlarrow(X \otimes Y)^m( e_i \otimes f_j )$.
+\end{remark}
+
 \subsection{Connections}
 
 It is better to construct the Atiyah class from a choice of connection, rather than a choice of basis, and such is the purpose of this section. However, as we have already explained, these remarks will not be needed in the sequel and are included only for the sake of completeness. For this reason we restrict ourselves to a discussion of only one of the many ``types'' of Atiyah class presented above, the modifications for the other cases being left to the reader.
@@ -1551,7 +1554,7 @@ The composite of the above is the desired morphism $\eval_0$.
 \begin{remark} For the moment in this section there is a universal sign factor $\chi$, yet to be determined. We should also address why the map is independent up to homotopy of the choice of $\lambda_i$, by just citing the pushforward paper with Toby perhaps.
 \end{remark}
 
-\begin{lemma} There is a morphism of linear factorisations of $\widetilde{V}$ over $S^e$
+\begin{lemma}\label{lemma:morphismevalzero} There is a morphism of linear factorisations of $\widetilde{V}$ over $S^e$
 \[
 \eval_0: X \otimes_{R} X^\dual \lto S\,,
 \]
@@ -1707,9 +1710,9 @@ X \ar[r]^-{\rho^{-1}} & X \otimes_R \Delta_W \ar[r]^-{1 \otimes\,\widetilde{\coe
 which we prove is homotopic to the identity on $X$. Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. Our first order of business is to establish the expression for the Zorro map given in the next lemma. For this we need to introduce the $R_2$-linear map
 \begin{gather*}
 \big\langle\!\big\langle - \big\rangle\!\big\rangle: \Bar \lto R_2,\\
-\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = (-1)^{\varphi} \Res_{R^e/R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = (-1)^{\chi} \Res_{R^e/R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
 \end{gather*}
-We use the maps $\varepsilon$ and $\Psi$ Section~\ref{sec:Background} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$ is as before. To be clear, this differential form and the $\partial_{x_i} W$ in the denominator of the residue are all viewed as elements of $R_1$, the copy of $R$ which is integrated out by the residue.
+We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. To be clear, this differential form and the $\partial_{x_i} W$ in the denominator of the residue are all viewed as elements of $R_1$, the copy of $R$ which is integrated out by the residue.
 
 Let $\{ e_i \}_{i \in I}$ be a homogeneous $S \otimes_k R$-basis of $X$, $\{ e_i^* \}_{i \in I}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i \in I, j \in J}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. By the Atiyah class $\At = \At( \End(X) )$ of this complex we mean the operator on $\End(X) \otimes_{R_1} \Bar$ which would more properly be called the Atiyah class of $\End(X) \otimes_{R_1} R^e$ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
 
@@ -1721,7 +1724,7 @@ Post-composition with $\Lambda$ gives a well-defined operator on $\End(X) \otime
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
-\mathcal Z = \sum_j (-1)^{(n+1)|e_j| + \varphi} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
+\mathcal Z = \sum_j (-1)^{(n+1)|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
 \ee
 where for $f \in X$, the endomorphism $f \circ e_j^*$ of $X$ sends $g$ to $e_j^*(g) \cdot f$.
 \end{lemma}
@@ -1740,28 +1743,46 @@ There are two subtleties which complicate the proof. The first is that we must d
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
-\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1}(a) &= \sum_{m \ge 0}(-1)^m \Psi\! \At^m_X(a)\,,\\
-\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{i \ge 0}(-1)^i (\Psi\!\At^i_{X^{\dagger}} \otimes 1)(\iota_X) \Big)\,,\\
-&= \sum_{i,j} (-1)^{i+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At^i_{X^{\dagger}}( e_j^* ) \otimes e_j \Big)\\
-\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\alpha) &= (-1)^{\binom{n+1}{2}}\Res_{k[x,y',z]/k[y',z]}\! \left[ \frac{\str ( \alpha
-%|_{z=z'}
- \Lambda) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1} &= \sum_{m \ge 0}(-1)^m \Psi \At_2(X)^m \sigma_d\,,\\
+\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{m \ge 0}(-1)^m \Psi \Atlarrow_2(X^{\dagger})^m(\iota_X) \Big)\,,\\
+&= \sum_{m,j} (-1)^{m+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\dagger})^m( e_j^* ) \otimes e_j \Big)\\
+\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{n+n|\eta| + |\nu| + \chi}\Res_{S^e \otimes_k R/S^e}\! \left[ \frac{ \Psi \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
 %Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) 
-Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes. Also define $\nabla$ and Atiyah classes (\textbf{todo}).
+Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes.
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
-Consider the image of a basis element $e_q$ under the first two maps of (\ref{eq:zorro1a1}): 
+Consider the image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1}: 
 \begin{align}
-(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= \textup{another line of explanation}\\
-&= \sum_{i,k,j} (-1)^{i+k} \varepsilon\Big( \Psi\! \At^i_X( e_q ) \wedge \Psi \!\At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
-&= \sum_{j} \sum_{i+k = n} (-1)^n \varepsilon\Psi\Big( \At^i_X( e_q ) \times \At^k_{X^{\dagger}}( e_j^* ) \otimes e_j \Big) \nonumber\\
-&= \sum_{j} (-1)^n \varepsilon\Psi\Big( \At^n_{X \otimes X^{\dagger}}( e_q \otimes e_j^* ) \otimes e_j \Big)\,. \label{firstzorromaps}
+(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= (1 \otimes \widetilde{\coev}) \sum_{m \ge 0} (-1)^m \Psi \At_2(X)^m (e_q)\nonumber\\
+&= \sum_{j} \sum_{m+m'=n} (-1)^{n+|e_j|} \varepsilon\Big( \Psi \At(X)^m( e_q ) \wedge \Psi \Atlarrow(X^{\dagger})^{m'}( e_j^* ) \otimes e_j \Big) \nonumber\\
+&= \sum_{j} \sum_{m+m' = n} (-1)^{n+|e_j|} \varepsilon\Psi\Big( \At(X)^m( e_q ) \times \Atlarrow(X^{\dagger})^{m'}( e_j^* ) \otimes e_j \Big) \nonumber
 \end{align} 
-In the first step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$, and in the last step we use Lemma \ref{lemma:atshufat}. Applying $\widetilde\eval$ in the first two components of $X \otimes X^{\dagger} \otimes X$ to the expression in (\ref{firstzorromaps}) has the effect of changing the associative Atiyah class of $X \otimes X^{\dagger}$ to the associative Atiyah class of $\End(X)$ and so
-\begin{align}
+In the last step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$. Next we apply Lemma \ref{lemma:atshufat}, or more precisely Remark \ref{remark:twistshufat}, to rewrite this shuffle product of Atiyah classes as the action of a single Atiyah class
+\[
+= \sum_j (-1)^{n+|e_j|} \varepsilon \Psi \Big( \Atlarrow(X \otimes X^\dagger)^n( e_q \otimes e_j^* ) \otimes e_j \Big)
+\]
+This is an element of $X \otimes_R X^\dual \otimes_S X$. Applying the last two maps of \eqref{eq:zorro1a1} is, by definition of $\widetilde\eval$, the same as applying the morphism $\eval_0$ of Lemma \ref{lemma:morphismevalzero}. Recall that this map was pieced together step by step at the beginning of Section \ref{subsec:eval}. Since there are some subtleties with signs, let us address the first few steps explicitly: applying the first isomorphism of \eqref{eq:firstisoevalsec} yields
+\[
+\sum_j (-1)^{n+|e_j|} \varepsilon \Psi \Big( \Atlarrow((X \otimes X^\vee)[n])^n( (-1)^{n|e_q|} e_q \otimes e_j^* ) \otimes e_j \Big)\,.
+\]
+Since the Atiyah class of $Y[n]$ differs from that of $Y$ by a sign $(-1)^n$, this is the same as
+\[
+\sum_j (-1)^{|e_j|+n|e_q|} \varepsilon \Psi \Big( \Atlarrow(X \otimes X^\vee)^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
+\]
+The next step of \eqref{eq:firstisoevalsec} is identify the left and right actions of $S$, under which operation  $X \otimes X^\vee$ becomes identified $\End(X)$, so we are left with
+\[
+\sum_j (-1)^{|e_j|+n|e_q|} \varepsilon \Psi \Big( \Atlarrow( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
+\]
+Switching from the Atiyah class $\Atlarrow$ to one of type $\At$ with noncommutative forms on the right comes at the expense of a sign $(-1)^{n(|e_q|+|e_j|_n}$. The final result of applying \eqref{eq:firstisoevalsec} to $(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q )$ is therefore
+\[
+\sum_j (-1)^{(n+1)|e_j|+n} \varepsilon \Psi \Big( \At^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
+\]
+To finish applying $\eval_0$ it remains to postcompose with $(-1)^n \Lambda$, take the supertrace and then integrate:
+\begin{align*}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
-&= \sum_j (-1)^{|e_j|+n+\binom{n+1}{2}}\Res_{k[x]/k}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j
+&= \sum_j (-1)^{(n+1)|e_j|+\chi}\Res_{R^e/R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j\\
+&= \sum_j (-1)^{(n+1)|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
 \end{align}
 Since the Zorro map~$\mathcal Z$ is $k[x,z]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
