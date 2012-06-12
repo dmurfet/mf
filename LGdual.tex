@@ -232,7 +232,14 @@
 
 
 
-\title{Rise of the Planet of the Coevaluations}
+\title{Adjunctions and defects in Landau-Ginzburg models}%
+% Other titles: 
+% Rise of the Planet of the Coevaluations
+% Adjoint defects in Landau-Ginzburg models
+% Adjunction and defects in Landau-Ginzburg models
+% Adjunctions and defects in Landau-Ginzburg models
+% On adjunctions and defects in Landau-Ginzburg models
+
 \author{Nils Carqueville}
 \email{nils.carqueville@physik.uni-muenchen.de}
 \address{Arnold Sommerfeld Center for Theoretical Physics, LMU M\"unchen \& Excellence Cluster Universe}
@@ -328,15 +335,15 @@ The example that we study in this paper is the bicategory $\LG$ of Landau-Ginzbu
 
 On general grounds it is expected that the bicategorical description of TFTs with defects comes equipped with additional structure. In particular, the fact that we consider \textsl{oriented} defect lines should give rise to adjunctions on the level of 1-morphisms: the ``same'' defect line with reversed orientation should be adjoint to the defect with opposite orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$ there is a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
-\eval_X: X^\dual \otimes X \lra \Delta_W 
+\widetilde\eval_X: X \otimes X^\dual \lra \Delta_W 
 \, , \qquad
-\coev_X: \Delta_V \lra X \otimes X^\dual
+\widetilde\coev_X: \Delta_V \lra X^\dual \otimes X
 \ee
-that are the counit and unit of a (right) adjunction between~$X$ and~$X^\dual$. Similarly, one expects maps $\widetilde\eval_X: X\otimes X^\dual \lra \Delta_V$ and $\widetilde\coev_X: \Delta_W \lra X^\dual \otimes X$ that make~$X^\dual$ the left adjoint of~$X$, and furthermore there should exist natural isomorphisms $X\lra X^{\dual\dual}$ which give rise to a so-called pivotal structure. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from the physical picture. 
+that are the counit and unit of a (right) adjunction between~$X$ and~$X^\dual$. Similarly, one expects maps $\eval_X: X\otimes {}^\dual X \lra \Delta_V$ and $\coev_X: \Delta_W \lra {}^\dual X \otimes X$ for a left adjoint~${}^\dual X$ of~$X$, together with natural isomorphisms between~$X$ and its double-adjoint, closely related to a so-called pivotal structure. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from the physical picture. 
 
-In the present paper we prove that $\LG$ has adjoints and is pivotal in the general case. We do so by developing a conceptual framework from which we obtain explicit expressions for the above adjunction maps, opening the door for many applications. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
+In the present paper we prove that $\LG$ has adjoints and is ``pivotal up to shifts'' in the general case. We do so by developing a conceptual framework from which we obtain explicit expressions for the above adjunction maps, opening the door for many applications. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
 
-Regardless of the conceptual origins of the adjunction properties of $\LG$, in the end they produce very explicit formulas one can actually calculate with in practice: for a matrix factorisation~$X$ of $V-W$ with differential~$D$, the maps are given by
+Regardless of the conceptual origins of the adjunction properties of $\LG$, in the end they produce very explicit formulas one can actually calculate with in practice: for a matrix factorisation~$X$ of $V-W$ with differential~$D$, the maps are given by[TODO: footnote or comment that we usually only use $X$, not $(X,D)$, to label a defect]
 \be\label{evcoevexplicit}
 \eval_X = TODO \, , \qquad
 \coev_X = TODO
@@ -510,11 +517,11 @@ as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. W
 \pi: \Delta_W \lra R
 \ee
 for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. By making a choice of how to order the~$\theta_i$ we obtain an $\Re$-linear map 
-$$
+\be\label{eq:vareps}
 \varepsilon: \Delta_W \lra \Re[n] 
 \, , \qquad 
 \theta_1\ldots \theta_n \lmt 1
-$$
+\ee
 that is non-zero only on elements in top $\theta$-degree. 
 
 
@@ -583,14 +590,16 @@ Together with the differential defined on a $\nZ$-homogeneous map $\alpha$ by $\
 One of the main results of the present paper is that $\LG$ (and also $\LG^{\mathrm{gr}}$) is endowed with an additional duality structure. Let us recall the relevant notion. 
 
 \begin{definition}\label{def:bicatduals}
-We say a bicategory~$\mathcal B$ \textsl{has adjoints} if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism $X^\dual \in \mathcal B(B,A)$ together with 2-morphisms 
+[TODO: what is called left adjoint here is called right adjoint in the paper with Ingo. The reason is that ${}^\dual X$ looks stupid and Sections 5 and 6 are full of right duals. OK to have notational clash with [CR2010]?]
+
+We say a bicategory~$\mathcal B$ \textsl{has left adjoints} if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism ${}^\dual X \in \mathcal B(B,A)$ together with 2-morphisms 
 \be\label{evcoev}
-\eval_X : X^\dual \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes X^\dual
+\eval_X : {}^\dual X \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes {}^\dual X
 \ee
 satisfying 
 \begin{align}
-\rho_X \circ (1_X \otimes \eval_X) \circ \alpha_{X,X^\dual,X} \circ (\coev_X \otimes 1_X) \circ \lambda_X^{-1} & = 1_X \, , \label{uglyZorro1}\\
-\lambda_{X^\dual} \circ (\eval_X \otimes 1_{X^\dual}) \circ \alpha^{-1}_{X^\dual,X,X^\dual} \circ (1_{X^\dual} \otimes \coev_X) \circ \rho_{X^\dual}^{-1} & = 1_{X^\dual} \, . \label{uglyZorro2}
+\rho_X \circ (1_X \otimes \eval_X) \circ \alpha_{X,{}^\dual X,X} \circ (\coev_X \otimes 1_X) \circ \lambda_X^{-1} & = 1_X \, , \label{uglyZorro1}\\
+\lambda_{{}^\dual X} \circ (\eval_X \otimes 1_{{}^\dual X}) \circ \alpha^{-1}_{{}^\dual X,X,{}^\dual X} \circ (1_{{}^\dual X} \otimes \coev_X) \circ \rho_{{}^\dual X}^{-1} & = 1_{{}^\dual X} \, . \label{uglyZorro2}
 \end{align}
 \end{definition}
 
@@ -601,7 +610,7 @@ $$
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_A$}}
 (3,0) node[line width=0pt] (D) {{\small $X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {\small{$X^\dual$}}; 
+(2,0) node[line width=0pt] (s) {\small{${^\dual }X$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
@@ -609,7 +618,7 @@ $$
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
 (3,0) node[line width=0pt] (D) {{\small$X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {{\small$X^\dual$}}; 
+(2,0) node[line width=0pt] (s) {{\small$^\dual X$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture} , 
 \qquad
@@ -651,8 +660,8 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 \, , \qquad
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+(1,1.25) node[line width=0pt] (A) {{\small ${}^\dual X$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual X$}}; 
 \draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
 \draw (-1,0) -- (A2); 
@@ -661,13 +670,13 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 =
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(0,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(0,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+(0,1.25) node[line width=0pt] (A) {{\small ${}^\dual X$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual X$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
 \ee
 
-The adjoint~$X^\dual$ of~$X$ as described in Definition~\ref{def:bicatduals} is more precisely called \textsl{right adjoint} to~$X$, and one says that~$X^\dual$ is \textsl{left adjoint} to~$X$ if there are maps 
+Similarly one says that~$X^\dual$ is \textsl{right adjoint} to~$X$ if there are maps 
 $$
 \widetilde\eval_{X} = 
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
@@ -739,21 +748,21 @@ satisfying the associated Zorro moves
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
 \ee
-We will mostly continue to simply speak of adjoints without a further attribute as we will see that in $\LG$ left and right adjoints coincide. 
+Note that in general there is no reason for the left and right adjoints to coincide. 
 
-Specifying the adjoint of a $1$-morphism is often straightforward, but providing explicit evaluation and coevaluation maps and checking that the Zorro moves hold is no easy task. For example, given a $1$-morphism $X: (k[x],W) \lto (k[y],V)$ in $\LG$, that is, an object $X \in \hmf(k[x,z], V - W)$ with $k[x] = k[x_1,\ldots,x_n]$, the adjoint is the matrix factorisation $X^\dual = X^\vee[n]$ with differential
+Specifying the adjoint of a $1$-morphism is often straightforward, but providing explicit evaluation and coevaluation maps and checking that the Zorro moves hold is no easy task. For example, given a $1$-morphism $X: (k[x_1,\ldots,x_n],W) \lto (k[z_1,\ldots,z_m],V)$ in $\LG$, that is, an object $X \in \hmf(k[x,z], V - W)$, we will see that its left and right adjoints are given by ${}^\dual X = X^\vee[m]$,  $X^\dual = X^\vee[n]$ with differentials
 $$
+d_{{}^\dual X} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[m] 
+\, , \qquad 
 d_{X^\dual} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[n] 
 $$ 
-where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules.
-
-In Section~\ref{sec:derivcoeval} we construct the evaluation and coevaluation morphisms. This is complicated enough that instead of tackling it directly we will need to introduce the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on non-commutative forms. 
+where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules. On the other hand, the whole of Sections~\ref{sec:derivcoeval} and~\ref{sec:Zorro} are devoted to construct the evaluation and coevaluation morphisms and prove the Zorro moves. This is complicated enough that instead of tackling it directly we will need to introduce the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on noncommutative forms. 
 
 \subsection{Bar complex}\label{subsec:Bar}
 
 Let us for the moment be slightly more general and consider an arbitrary unital associative $k$-algebra~$A$. In our applications to matrix factorisations we will set $A=R=k[x]$. 
 
-\textsl{Non-commutative $n$-forms over~$A$} are elements in 
+\textsl{Noncommutative $n$-forms over~$A$} are elements in 
 $$
 \Omega^n A = A\otimes \bar A^{\otimes n} 
 $$
@@ -771,7 +780,7 @@ d: (a_0,\ldots,a_n) \lmt (1,a_0,\ldots,a_n)
 $$
 where $a_i\in A$. We will write $(a_0,a_1,\ldots,a_n)$ also as $a_0da_1\ldots da_n$. 
 
-More generally one can consider relative non-commutative forms: for a subalgebra $B\subset A$ they are elements in $\Omega_B A = \bigoplus_{n\geq 0} A\otimes_B (A/B)^{\otimes_B n}$, which has a differential graded structure analogous to $\Omega A = \Omega_k A$. We refer to the book~\cite{Loday} for further details. 
+More generally one can consider relative noncommutative forms: for a subalgebra $B\subset A$ they are elements in $\Omega_B A = \bigoplus_{n\geq 0} A\otimes_B (A/B)^{\otimes_B n}$, which has a differential graded structure analogous to $\Omega A = \Omega_k A$. We refer to the book~\cite{Loday} for further details. 
 
 A central role is played by the \textsl{(normalised) bar complex} 
 \be\label{BarComplex}
@@ -980,7 +989,7 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \section{Atiyah Classes}\label{section:atiyahclasses}
 % see assat, the onct series
 
-As explained in the Introduction, the structure of the bicategory $\LG$ can be understood in terms of associative Atiyah classes. In this section we develop the basic theory of these operators, beginning with the simplest definition (which involves a choice of basis) and then afterwards developing the more abstract general theory in the setting of non-commutative form-valued connections. For this paper the simpler definition is sufficient, since we will only use the Atiyah class to construct explicit chain level representatives of morphisms which we already know to be well-defined up to homotopy, and in this situation it is natural to make some auxiliary choices. In any case, we develop the general theory in order to have a more solid foundation for the subject of associative Atiyah classes.
+As explained in the Introduction, the structure of the bicategory $\LG$ can be understood in terms of associative Atiyah classes. In this section we develop the basic theory of these operators, beginning with the simplest definition (which involves a choice of basis) and then afterwards developing the more abstract general theory in the setting of noncommutative form-valued connections. For this paper the simpler definition is sufficient, since we will only use the Atiyah class to construct explicit chain level representatives of morphisms which we already know to be well-defined up to homotopy, and in this situation it is natural to make some auxiliary choices. In any case, we develop the general theory in order to have a more solid foundation for the subject of associative Atiyah classes.
 
 Let $k$ be a ring, $R$ a $k$-algebra, and set $\Re = R_1 \otimes_k R_2$ where $R_i = R$ for $i \in \{1,2\}$. We define  the operators $s,d$ on the bar complex $\Bar = \Bar_{R/k}$ as in Section \ref{subsec:Bar} and recall that $\Bar$ is equipped with an $\Re $-bimodule structure by left and right multiplication. Let $(X,D)$ be a pair consisting of a $\mathbb{Z}_2$-graded free $\Re $-module $X$ and an odd $\Re $-linear operator $D$ on $X$ (for the moment we do not require any condition on $D^2$). By default $\otimes$ means $\otimes_{\Re }$ in this section.
 
@@ -1016,7 +1025,7 @@ To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into 
 Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $(S \otimes_k \Re)$-module with $(S \otimes_k \Re)$-linear operator $D$. If we choose a homogeneous $(S \otimes_k \Re)$-basis for~$X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd}, \eqref{eq:extends} then $[d, D]$ and $[s, D]$ are $S$-linear and right $\Re $-linear operators on $X \otimes \Bar$ and we use the same notation and terminology for these operators. All our remarks extend \textsl{mutatis mutandis} to this kind of Atiyah class.
 \end{remark}
 
-There are two more variants of the Atiyah class that differ from the above only in the way in which we order the non-commutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $\Re $-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
+There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $\Re $-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by
 \begin{equation}\label{eq:leftatiyahclasses}
 \lAt_{2}(X) = [d, D], \qquad \lAt_{1}(X) = [s,D]\,.
 \end{equation}
@@ -1094,7 +1103,7 @@ But considering \eqref{eq:powerofatiyah} it is straightforward to check that the
 
 It is better to construct the Atiyah class from a choice of connection, rather than a choice of basis, and such is the purpose of this section. However, as we have already explained, these remarks will not be needed in the sequel and are included only for the sake of completeness. For this reason we restrict ourselves to a discussion of only one of the many ``types'' of Atiyah class presented above, the modifications for the other cases being left to the reader.
 
-Let $k$ be a ring and $R$ a $k$-algebra, $\Omega R = \Omega_k R$ the differential graded algebra $(\Omega R, d, \cdot)$ of non-commutative differential forms explained in Section \ref{subsec:Bar}. A \textsl{connection} on a $\mathbb{Z}_2$-graded $R$-module $X$ is a $k$-linear map
+Let $k$ be a ring and $R$ a $k$-algebra, $\Omega R = \Omega_k R$ the differential graded algebra $(\Omega R, d, \cdot)$ of noncommutative differential forms explained in Section \ref{subsec:Bar}. A \textsl{connection} on a $\mathbb{Z}_2$-graded $R$-module $X$ is a $k$-linear map
 \[
 \nabla: X \lto X \otimes_R \Omega^1 R\,,
 \]
@@ -1395,7 +1404,9 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 
 For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite-rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ we deduce: 
 
-\begin{proposition}\label{prop:inverses_unitact} $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
+\begin{proposition}\label{prop:inverses_unitact} 
+[TODO: joint with \ref{corollary:koszulstab2}]
+$k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
 \[
 \lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_s\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_d\,.
 \]
@@ -1407,11 +1418,14 @@ For future reference, let us conclude by stating the special case of inverses fo
 In this section we derive formulas for the evaluation and coevaluation $2$-morphisms in the bicategory $\LG$ of Landau-Ginzburg models. We fix two potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ and a matrix factorisation $X\in \hmf(k[x,z], V-W)$. 
 
 \begin{definition}
-The \textsl{adjoint} of $X$ is $X^\dual = X^\vee[n] \in \hmf(k[x,z], W-V)$.
+The \textsl{right adjoint} of~$X$ is $X^\dual = X^\vee[n] \in \hmf(k[x,z], W-V)$ with 
+$$
+d_{X^\dual} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[n] \, .
+$$
+Similarly, ${}^\dual X = X^\vee[m]$ is the \textsl{left adjoint}. 
 \end{definition}
 
-
-As recalled in Section~\ref{subsec:bicatLG} there are two kinds of evaluation and coevaluation $2$-morphisms associated with~$X$. The derivation is very similar in both cases, so we give the full details for 
+As recalled in Section~\ref{subsec:bicatLG} there are two kinds of evaluation and coevaluation $2$-morphisms associated with the two adjoints of~$X$. The derivation is very similar in both cases, so we give the full details for 
 \[
 \widetilde\coev_X: \Delta_W \lto X^\dual \otimes_{k[z]} X
 \, , \qquad
@@ -1441,7 +1455,7 @@ The product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-g
 \[
 \Delta' \otimes_{\Re} \Delta \lto K\,.
 \]
-Composing with the natural morphism $\varepsilon: K \lto \Re[n]$ and taking the adjoint, we obtain the map
+Composing with the natural morphism $\varepsilon: K \lto \Re[n]$ from~\eqref{eq:vareps} and taking the adjoint, we obtain the map
 \[
 \zeta: \Delta' \lto \Delta^\vee [n]\, , \qquad \omega \lmt \varepsilon( \omega \wedge - )
 \]
@@ -1469,7 +1483,7 @@ So to complete the proof we need only to show that the step marked $\pi$ is a ri
 \end{proof}
 
 \begin{definition}\label{def:coeval}
-$\widetilde\coev_X$ is the morphism in the homotopy category $\HMF(\Re, \widetilde{W})$ whose cohomology class maps to $1_X$ under the quasi-isomorphism \eqref{eq:isogivescoev}.
+$\widetilde\coev_X: \Delta \lra X^\dual \otimes X$ is the morphism in the homotopy category $\HMF(\Re, \widetilde{W})$ whose cohomology class maps to $1_X$ under the quasi-isomorphism \eqref{eq:isogivescoev}.
 \end{definition}
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
@@ -1667,7 +1681,7 @@ TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
 
 \section{Zorro moves}\label{sec:Zorro}
 
-In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints, by proving that the evaluation and coevaluation morphisms of Section \ref{sec:derivcoeval} satisfy the Zorro moves. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its adjoint $X^\dual = X^\vee[n]\in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
+In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints, by proving that the evaluation and coevaluation morphisms of Section \ref{sec:derivcoeval} satisfy the Zorro moves. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its left and right adjoints ${}^\dual X, X^\dual \in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
@@ -1719,19 +1733,20 @@ X \ar[r]^-{\rho^{-1}} & X \otimes_R \Delta_W \ar[r]^-{1 \otimes\,\widetilde{\coe
 }
 \ee
 which we prove is homotopic to the identity on $X$. Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. Our first order of business is to establish the expression for the Zorro map given in the next lemma. For this we need to introduce the $R_2$-linear map
-\begin{gather*}
-\big\langle\!\big\langle - \big\rangle\!\big\rangle: \Bar \lto R_2,\\
-\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = (-1)^{\chi} \Res_{\Re /R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
-\end{gather*}
+$$
+\big\langle\!\big\langle - \big\rangle\!\big\rangle: \Bar \lto R_2 
+\, ,\qquad
+\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = (-1)^{\chi} \Res_{\Re /R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] .
+$$
 We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. To be clear, this differential form and the $\partial_{x_i} W$ in the denominator of the residue are all viewed as elements of $R_1$, the copy of $R$ which is integrated out by the residue.
 
-Let $\{ e_i \}_{i \in I}$ be a homogeneous $S \otimes_k R$-basis of $X$, $\{ e_i^* \}_{i \in I}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i \in I, j \in J}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. By the Atiyah class $\At = \At( \End(X) )$ of this complex we mean the operator on $\End(X) \otimes_{R_1} \Bar$ which would more properly be called the Atiyah class of $\End(X) \otimes_{R_1} \Re $ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
+Let $\{ e_i \}_{i \in I}$ be a homogeneous $(S \otimes_k R)$-basis of $X$, $\{ e_i^* \}_{i \in I}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i \in I, j \in J}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. By the Atiyah class $\At = \At( \End(X) )$ of this complex we mean the operator on $\End(X) \otimes_{R_1} \Bar$ which would more properly be called the Atiyah class of $\End(X) \otimes_{R_1} \Re $ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
 
 As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set 
 $$
 \Lambda = \lambda_1\ldots \lambda_n \, . 
 $$
-Postcomposition with $\Lambda$ gives a well-defined operator on $\End(X) \otimes_{R_1} \Bar$.
+Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ on $\End(X) \otimes_{R_1} \Bar$.
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
@@ -1750,7 +1765,7 @@ We will see that $\At^n( \Lambda )$ is a transition determinant in the sense of 
 \end{equation}
 The reader will appreciate the parallel with the argument for duality in the monoidal category of vector spaces, with the new feature here being the Atiyah class and its anti-self-adjointness.
 
-There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus non-commutative differential forms (compare with the proof of non-degeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
+There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of non-degeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
@@ -1996,26 +2011,25 @@ The same result also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Rema
 
 \subsection{Pivotality}
 
-We end this section by clarifying the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$. They describe~$X^\dual$ as the right and left adjoint to~$X$, respectively. So far we have trated these maps independently, but of course they are closely related. The precise connection is via a pivotal structure, which is the answer to the natural question about the relation between~$X$ and~$X^{\dual\dual}$: pivotality means that there is a tensor structure preserving isomorphism between every 1-morphism and its double adjoint. 
+We end this section by clarifying the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$, and listing some of their properties. Of particular importance is the identity~\eqref{eq:monoidalproperty} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:CardyCondition}, e.\,g.~to prove the Cardy condition. 
 
-In order to establish pivotality for the bicategory $\LG$ we start be listing a few properties of the adjunction maps. Of particular importance is the identity~\eqref{eq:monoidalproperty} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:CardyCondition}, e.\,g.~to prove the Cardy condition. 
-
-For a map $\varphi: X \lra Y$ between matrix factorisations 
-\begin{align*}
-X & \in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x)) \, , \\
-Y & \in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))
-\end{align*}
-we define its adjoint to be
+For a map $\varphi: X \lra Y$ between matrix factorisations in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_n], V-W)$ 
+%\begin{align*}
+%Y & \in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x)) \, , \\
+%X & \in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))
+%\end{align*}
+we define its adjoints to be
 $$
-\varphi^\dual = \varphi^\vee[m] : Y^\dual \lra X^\dual \, .
+{}^\dual \varphi = \varphi^\vee[m] : {}^\dual Y \lra {}^\dual X \, , \qquad
+\varphi^\dual = \varphi^\vee[n] : Y^\dual \lra X^\dual
 $$
 
 \begin{proposition}\label{prop.morphismmigration}
 For a 2-morphism $\varphi: X \lra Y$ in $\LG$ we have
 \begin{enumerate}
-\item $\eval_Y \circ (1_{Y^\dual} \otimes \varphi) = \eval_X \circ (\varphi^\dual \otimes 1_X)$, 
-\item $(\varphi \otimes 1_{X^\dual}) \circ \coev_X = (1_Y \otimes \varphi^\dual) \circ \coev_Y$, 
-\item $\varphi^\dual = \lambda_{X^\dual} \circ (\eval_Y \otimes 1_{X^\dual}) \circ (1_{Y^\dual} \otimes \varphi \otimes 1_{X^\dual}) \circ (1_{Y^\dual} \otimes \coev_X) \circ \rho^{-1}_{Y^\dual}$
+\item $\eval_Y \circ (1_{{}^\dual Y} \otimes \varphi) = \eval_X \circ ({}^\dual \varphi \otimes 1_X)$, 
+\item $(\varphi \otimes 1_{{}^\dual X}) \circ \coev_X = (1_Y \otimes {}^\dual \varphi) \circ \coev_Y$, 
+\item ${}^\dual \varphi = \lambda_{{}^\dual X} \circ (\eval_Y \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \varphi \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \coev_X) \circ \rho^{-1}_{{}^\dual Y}$
 \end{enumerate}
 and similarly for $\widetilde\eval$ and $\widetilde\coev$. Diagramatically the above identities read
 $$
@@ -2027,9 +2041,9 @@ $$
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
 \draw (3,0.65) -- (3,0)
-node[below] {{{\small$X\vphantom{Y^\dual}$}}};
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
 \draw (2,0.65) -- (2,0)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -2039,11 +2053,11 @@ node[below] {{{\small$Y^\dual$}}};
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[left] {{\small $\varphi^\dual$}};
+\fill (2,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
 \draw (3,0.65) -- (3,0)
-node[below] {{{\small$X\vphantom{Y^\dual}$}}};
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
 \draw (2,0.65) -- (2,0)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \, , \qquad
@@ -2055,7 +2069,7 @@ node[below] {{{\small$Y^\dual$}}};
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
 \fill (2,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
 \draw (3,0.35) -- (3,1)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (2,0.35) -- (2,1)
 node[above] {{{\small$Y$}}};
 \end{tikzpicture} 
@@ -2067,9 +2081,9 @@ node[above] {{{\small$Y$}}};
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi^\dual$}};
+\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
 \draw (3,0.35) -- (3,1)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (2,0.35) -- (2,1)
 node[above] {{{\small$Y$}}};
 \end{tikzpicture} 
@@ -2077,11 +2091,11 @@ node[above] {{{\small$Y$}}};
 \, , \qquad
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi^\dual$}};
+\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
 \draw (3,0) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (3,0) -- (3,-0.5)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -2098,9 +2112,9 @@ node[below] {{{\small$Y^\dual$}}};
 (1,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
 \draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \, . 
@@ -2112,11 +2126,11 @@ The first identity follows immediately from the explicit expression for the eval
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi^\dual$}};
+\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
 \draw (3,0) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (3,0) -- (3,-0.5)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -2126,16 +2140,16 @@ node[below] {{{\small$Y^\dual$}}};
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (1,0.5) circle (2.5pt) node[right] {{\small $\varphi^\dual$}};
+\fill (1,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
 \draw (2,0.32) -- (2,0.68);
 \draw[line width=0pt] 
 (2,0.5) node[line width=0pt] (D) {}
 (1,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
 \draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -2152,9 +2166,9 @@ node[below] {{{\small$Y^\dual$}}};
 (1,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
 \draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$Y^\dual$}}};
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \Rightarrow
@@ -2164,9 +2178,9 @@ node[below] {{{\small$Y^\dual$}}};
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[left] {{\small $\varphi^\dual$}};
+\fill (3,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
 \draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (2,0.35) -- (2,1.5)
 node[above] {{{\small$Y$}}};
 \end{tikzpicture} 
@@ -2190,7 +2204,7 @@ node[above] {{{\small$Y$}}};
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
 \draw (1,0.32) -- (1,0.68);
 \draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (0,0.32) -- (0,1.5)
 node[above] {{{\small$Y$}}};
 \end{tikzpicture} 
@@ -2204,7 +2218,7 @@ node[above] {{{\small$Y$}}};
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
 \fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
 \draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^\dual$}}};
+node[above] {{{\small${}^\dual X$}}};
 \draw (2,0.35) -- (2,1.5)
 node[above] {{{\small$Y$}}};
 \end{tikzpicture} 
@@ -2214,12 +2228,37 @@ $$
 The obvious analogous identities for $\widetilde\eval$ and $\widetilde\coev$ follow in the same way. 
 \end{proof}
 
-
-\begin{proposition}\label{prop:monoidalproperty}
-For two matrix factorisations $Y\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x))$ and $X\in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))$ we have
-\be\label{eq:monoidalproperty}
+\begin{definition}\label{def.pivotal}
+We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a natural monoidal 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\overline\eval_X = \widetilde\eval_{X^\dual}\circ (1_{X^\dual} \otimes \delta_{X})$ and $\overline\coev_X = (\delta_X^{-1} \otimes 1_{X^\dual} ) \circ \widetilde\coev_{X^\dual}$. By the condition for~$\delta$ to be natural monoidal we mean that the identities
+$$
 %%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(-1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
+(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
+\draw (-1,0) -- (A); 
+\draw (1,0) -- (A2); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
+\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (-1,0) -- (A2); 
+\draw (1,0) -- (A); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\, , \qquad 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
 \draw[line width=1pt] 
 (-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
 (-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
@@ -2233,6 +2272,127 @@ For two matrix factorisations $Y\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y
 \draw (2,0) -- (XY);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
+\draw[line width=1pt] 
+(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
+(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
+(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (Y);
+\draw (3,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+$$
+hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
+\end{definition}
+
+In the bicategory $\LG$ the natural candidate for a pivotal structure is
+\be\label{delta}
+\delta_X = 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2.6,-0.3) circle (0pt) node[below] {{\small $\coev_{X^\dual}$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\fill (1.6,1.23) circle (0pt) node[above] {{\small $\widetilde\eval_{X}$}};
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small${}^\dual X^{\dual}$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small$X$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+: X\stackrel{\cong}{\lra} {}^\dual X^\dual \cong X^{\vee\vee}[m+m] = X^{\vee\vee}
+\, , \qquad 
+\delta_X^{-1} = 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[redirected] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2.6,-0.28) circle (0pt) node[below] {{\small $\widetilde\coev_{X}$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[redirected] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\fill (1.6,1.23) circle (0pt) node[above] {{\small $\eval_{X^\dual}$}};
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small$X$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small${}^\dual X^{\dual}$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\ee
+for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_n], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, one straightforwardly verifies that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
+
+For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below we will establish that then it also satisfies the conditions in Definition~\ref{def.pivotal}. However, for $m+n$ odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$). Thus $\LG$ cannot be pivotal in the above sense. 
+
+What is important for applications though is that identities like those in Definition~\ref{def.pivotal} hold. The precise statement is the following result, which can also be read as ``$\LG$ is pivotal up to shifts''. 
+
+\begin{proposition}\label{prop:monoidalproperty}
+\begin{enumerate}
+\item For any map~$\varphi:Z\lra Y$ in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_n], V-W)$ we have 
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(-1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
+(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
+\draw (-1,0) -- (A); 
+\draw (1,0) -- (A2); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(1,1.25) node[line width=0pt] (A) {{\small ${}^\dual Z$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual Y$}}; 
+\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
+\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (-1,0) -- (A2); 
+\draw (1,0) -- (A); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+[m+n]
+$$
+where the right-hand side map is shifted to match the left-hand side's source and target. 
+\item For two matrix factorisations $Y\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y)-W_1(x))$ and $X\in \hmf(k[y_1,\ldots,y_m,z_1,\ldots,z_p], W_3(z)-W_2(y))$ we have
+\be\label{eq:monoidalproperty}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\draw[line width=1pt] 
+(-2,-1) node[line width=0pt] (X) {{\small ${}^\dual Y$}}
+(-1,-1) node[line width=0pt] (Y) {{\small ${}^\dual X$}}
+(2,2) node[line width=0pt] (XY) {{\small ${}^\dual (X\otimes Y)$}}; 
+\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (-1,0) -- (Y);
+\draw (-2,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (2,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+[n+p] \circ \tau
 =
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
@@ -2249,14 +2409,15 @@ For two matrix factorisations $Y\in \hmf(k[x_1,\ldots,x_n,y_1,\ldots,y_m], W_2(y
 \draw (-1,0) -- (XY);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-\, . 
 \ee
+where~$\tau$ is the isomorphism $Y^\dual \otimes X^\dual = Y^\vee[n] \otimes X^\vee[m] \lra Y^\vee[m+n+p] \otimes X^\vee[p] = ({}^\dual Y \otimes {}^\dual X)[n+p]$. 
+\end{enumerate}
 \end{proposition}
 
 \begin{proof}
-TODO: include signs!
+Part (i) follows in a standard way by applying Zorro moves together with the ``morphism migration properties'' of Proposition~\ref{prop.morphismmigration}. 
 
-We start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
+[TODO: include signs!] To establish part (ii) we start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
 $$
 \sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right]
 = 
@@ -2309,134 +2470,11 @@ but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the a
 \end{proof}
 
 
-\begin{definition}\label{def.pivotal}
-We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a natural monoidal 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\widetilde\eval_X = \eval_{X^\dual}\circ (\delta_X \otimes 1_{X^\dual})$ and $\widetilde\coev_X = (1_{X^\dual} \otimes \delta_X^{-1} ) \circ \coev_{X^\dual}$. 
-\end{definition}
-
-As explained e.\,g.~in~\cite[Lemma~2.12]{cr1006.5609} for a 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$ to be natural and monoidal is equivalent to the identities
-\be\label{eq:diagrammaticDefinitionPivotal}
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[line width=0] 
-(-1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
-\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
-\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
-\draw (-1,0) -- (A); 
-\draw (1,0) -- (A2); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
-\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (-1,0) -- (A2); 
-\draw (1,0) -- (A); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
-\draw[line width=1pt] 
-(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
-(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
-(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (-1,0) -- (Y);
-\draw (-2,0) -- (X);
-\draw[dotted] (0,0) -- (1,0);
-\draw (2,0) -- (XY);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
-\draw[line width=1pt] 
-(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
-(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
-(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (Y);
-\draw (3,0) -- (X);
-\draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (XY);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-\ee
-to hold for every 2-morphism $\varphi: X \lra Y$.  
-
-In the case of the bicategory $\LG$ we claim that a pivotal structure is given by 
-\be\label{delta}
-\delta_X = 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2.6,-0.3) circle (0pt) node[below] {{\small $\coev_{X^\dual}$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\fill (1.6,1.23) circle (0pt) node[above] {{\small $\widetilde\eval_{X}$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X^{\dual\dual}$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$X$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad 
-\delta_X^{-1} = 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[redirected] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2.6,-0.28) circle (0pt) node[below] {{\small $\widetilde\coev_{X}$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[redirected] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\fill (1.6,1.23) circle (0pt) node[above] {{\small $\eval_{X^\dual}$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$X^{\dual\dual}$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\ee
-in terms of our maps $\eval, \coev, \widetilde\eval, \widetilde\coev$ from Section~\ref{sec:derivcoeval}. As a consistency check the Zorro moves immediately imply that in any bicategory with coinciding left and right adjoints the map~$\delta_X$ defined in~\eqref{delta} satisfies $\widetilde\eval_X = \eval_{X^\dual}\circ (\delta_X \otimes 1_{X^\dual})$ and $\widetilde\coev_X = (1_{X^\dual} \otimes \delta_X^{-1} ) \circ \coev_{X^\dual}$ as in Definition~\ref{def.pivotal}. Furthermore, $\delta$ is natural as $\eval, \coev, \widetilde\eval, \widetilde\coev$ satisfy the ``morphism migration properties''~(i) and~(ii) of Proposition~\ref{prop.morphismmigration}: naturality is equivalent to the first condition in~\eqref{eq:diagrammaticDefinitionPivotal}, which is easily seen to hold using the morphism mirgration properties together with another application of Zorro moves. 
-
-\begin{theorem}
-$\LG$ is pivotal. The pivotal structure~$\delta$ is the canonical one given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X\in \hmf(R\otimes_k S, V-W), \Phi\in X^\dual \in \hmf(S\otimes_k R, W-V)$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
-\end{theorem}
-
-\begin{proof}
-The fact that~\eqref{delta} is the canonical map given in the statement of the theorem follows from the explicit expressions for the adjunction maps: $\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with $e_j$ replaced by $e_j^{**}$. 
-
-It remains to be shown that~$\delta$ is monoidal in the case of $\LG$. This is equivalent to the statement of Proposition~\ref{prop:monoidalproperty}. 
-\end{proof}
-
-
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
 In any bicategory with adjoints there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its adjoint). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
-Let $X\in \hmf(k[x,z], V-W)$ as before. In this section when we write $\End$ we mean the spaces of 2-endomorphisms in $\LG$. We define maps 
+Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\End$ we mean the spaces of 2-endomorphisms in $\LG$. We define maps 
 $$
 \mathcal D_l(X): \End(\Delta_V) \longrightarrow \End(\Delta_W) \, , \qquad
 \mathcal D_r(X): \End(\Delta_W) \longrightarrow \End(\Delta_V)
@@ -2444,8 +2482,9 @@ $$
 in terms of the morphisms encoding the monoidal and adjunction structures as follows. For $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we set
 \begin{align*}
 \mathcal D_l(X)(\phi) & = \eval_X \circ (1_{X^\dual}\otimes (\lambda_X \circ (\phi\otimes 1_X)\circ \lambda_X^{-1})) \circ \widetilde\coev_X \, , \\ 
-\mathcal D_r(X)(\psi) & = \widetilde\eval_X \circ (1_{X}\otimes (\lambda_{X^\dual} \circ (\phi\otimes 1_{X^\dual})\circ \lambda_{X^\dual}^{-1})) \circ \coev_X \, .
+\mathcal D_r(X)(\psi) & = \widetilde\eval_X \circ (1_{X}\otimes (\lambda_{X^\dual} \circ (\phi\otimes 1_{X^\dual})\circ \lambda_{X^\dual}^{-1})) \circ \coev_X
 \end{align*}
+for $m+n$ even, and $\mathcal D_l(X)=0=\mathcal D_r(X)$ for $m+n$ odd. 
 In the special case $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
 
 Diagrammatically these definitions read
@@ -2556,7 +2595,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 %node[near end,right] {{{\small$\Delta_V$}}};
 %\end{tikzpicture}
 \ee
-where again we indicated our choice of variable names in the four domains, and both loops are labelled by~$X$. 
+where we indicated our choice of variable names in the four domains, and both loops are labelled by~$X$. 
 
 \begin{remark}
 $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose non-degenerate pairing
@@ -2721,13 +2760,13 @@ The proof is a straightforward check of the axioms, made especially easy by the 
 Since $\LG$ is a bicategory with adjoints and shadows it is automatically equipped with a 2-categorical trace operation as introduced and discussed at length in~\cite{p0807.1471, ps0910.1306}. We only quote the definition: 
 
 \begin{definition}
-Let~$\mathcal B$ be a bicategory with shadows and 1-morphism~$Y$ with adjoint~$Y^\dual$. Then the \textsl{trace} of a 2-morphism $\psi: X\otimes Y \lra Y \otimes Z$ is the map 
+Let~$\mathcal B$ be a bicategory with shadows and 1-morphism~$Y$ with left adjoint~${}^\dual Y$. Then the \textsl{trace} of a 2-morphism $\psi: X\otimes Y \lra Y \otimes Z$ is the map 
 $$
 \xymatrix{%
 \langle\!\langle X \rangle\!\rangle \ar[rr]^-{\langle\!\langle1\otimes \coev_Y\rangle\!\rangle} && 
-\langle\!\langle X \otimes Y \otimes Y^\dual \rangle\!\rangle \ar[r]^-{\langle\!\langle\psi \otimes 1\rangle\!\rangle} & 
-\langle\!\langle Y \otimes Z \otimes Y^\dual \rangle\!\rangle \ar[r]^-{\theta} &
-\langle\!\langle Y^\dual \otimes Y \otimes Z \rangle\!\rangle \ar[rr]^-{\langle\!\langle\eval_Y \otimes 1\rangle\!\rangle} && 
+\langle\!\langle X \otimes Y \otimes {}^\dual Y \rangle\!\rangle \ar[r]^-{\langle\!\langle\psi \otimes 1\rangle\!\rangle} & 
+\langle\!\langle Y \otimes Z \otimes {}^\dual Y \rangle\!\rangle \ar[r]^-{\theta} &
+\langle\!\langle {}^\dual Y \otimes Y \otimes Z \rangle\!\rangle \ar[rr]^-{\langle\!\langle\eval_Y \otimes 1\rangle\!\rangle} && 
 \langle\!\langle Z \rangle\!\rangle 
 }%
 \, . 
@@ -2753,7 +2792,7 @@ Motivated by the above this construction can be extended to any 1-morphism in $\
 $$
 \beta_X= \langle\!\langle \widetilde\coev_X \rangle\!\rangle : \langle\!\langle \Delta_{W} \rangle\!\rangle \lra \langle\!\langle X^\dual \otimes X \rangle\!\rangle
 \, , \qquad 
-\beta^X= \langle\!\langle \eval_X \rangle\!\rangle : \langle\!\langle X^\dual \otimes X \rangle\!\rangle \lra \langle\!\langle \Delta_{W} \rangle\!\rangle \, , 
+\beta^X= \langle\!\langle \eval_X \rangle\!\rangle : \langle\!\langle {}^\dual X \otimes X \rangle\!\rangle \lra \langle\!\langle \Delta_{W} \rangle\!\rangle \, , 
 $$
 respectively. Substituting the expressions~\eqref{TODO} and~\eqref{TODO} we find that the form of $\beta_X$ stays the same while for $m\neq 0$ the generalised boundary-bulk map $\beta^X$  involves a residue and additional derivatives $\partial_{z_i} d_X$: 
 \begin{align*}
@@ -2771,6 +2810,7 @@ respectively. Substituting the expressions~\eqref{TODO} and~\eqref{TODO} we find
 As another application of our explicit expressions for adjunctions in $\LG$ in this section we present a new proof of the Cardy condition. This deep result long eluded rigorous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluations and coevaluations in $\LG$ it will follow effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, such as $k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
 
 Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factorisations $X,Y \in \hmf(k[x], W)$, and also two maps $\varphi: X\lra X$, $\psi: Y\lra Y$. We interpret~$X$ and~$Y$ as 1-morphisms $(k,0)\lra (k[x],W)$ in $\LG$, and in this way we obtain the 2-morphism (where here and below we do no longer display dashed lines for unit 1-endomorphisms)
+[TODO: shall we say that this 2-morphism only makes sense (or has nonvanishing correlator) only for $n$ even? Then we should also explicitly say that both sides of the Cardy condition vanish separately for $n$ odd -- clear for RHS because of trace, and clear for LHS because the fat $X^\dual \otimes Y$-bubble is a map from the trivial theory to the trivial theory, therefore trivial.]
 \be\label{annulus}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
@@ -2789,7 +2829,7 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \ee
-which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This in not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
+which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This is not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
 
 To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions~\eqref{TODO} for evaluations and coevaluations we find \begin{align}
 & \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y) \underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
