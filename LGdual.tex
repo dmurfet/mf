@@ -251,7 +251,7 @@
 \classification{TODO}
 
 \begin{abstract}
-They take over. 
+TODO: abstract
 \end{abstract}
 
 \maketitle
@@ -264,6 +264,7 @@ In the present paper we wish to show how the dichotomy just mentioned manifests 
 
 To set the stage and provide some background, let us recall a few ideas about TFTs with defects; for more detailed accounts we refer e.\,g.~to~\cite{k1004.2307} and~\cite[Section~2]{dkr1107.0495}. We imagine the bulk sector theories~$T_I$ to ``live'' on a two-dimensional surface called the \textsl{worldsheet}. More precisely, the worldsheet may be partitioned into various domains to which the (not necessarily distinct) theories~$T_I$ are associated, and which are separated by one-dimensional oriented \textsl{defect lines} $D_\alpha$. A sketch of a typical such partitioned worldsheet looks as follows: 
 \be\label{worldsheetwithdefects}
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline,>=stealth]
 \clip (0,0) ellipse (6cm and 3cm);
 \nicedashedcolourscheme (0,0) ellipse (6cm and 3cm);
@@ -322,6 +323,7 @@ To set the stage and provide some background, let us recall a few ideas about TF
 \draw[->,very thick, out=40, in=260] (-4,0) to (-3,1.5);
 \draw[very thick, out=80, in=270] (-3,1.5) to (-2.5,3);
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 \ee
 In addition to the labels $T_I$ for the two-dimensional domains and $D_\alpha$ for the one-dimensional defect lines, we also include labels~$\phi_i$ for zero-dimensional points. These labels are interpreted as describing ``degrees of freedom'', or \textsl{fields}, inserted at the points on the worldsheet. Note that the fields can also be placed at junctions of multiple defect lines. 
 
@@ -385,8 +387,8 @@ Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ i
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
-\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X^\dual}$}};
-\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X^\dual}$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{{}^\dual X}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{{}^\dual X}$}};
 \draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
 \fill (0.4,1.15) circle (0pt) node {{\small $\Delta_W$}};
 \fill (0.4,-1.15) circle (0pt) node {{\small $\Delta_W$}};
@@ -414,7 +416,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \; ,
 \end{align}
-where as usual (and explained in more detail in Section~\ref{subsec:bicatLG}) evaluation and coevaluation maps are denoted as caps and cups, respectively, $\lambda_{X^\dual}$ is the left action of $\Delta_W$ on~$X^\dual$, and we always read diagrams like the above from bottom to top. Thus~\eqref{defectactionIntro} equals $\widetilde\eval_X \circ (1\otimes \lambda_{X^\dagger}) \circ (1\otimes \psi \otimes 1) \circ (1\otimes \lambda_{X^\dagger}^{-1}) \circ \coev_X$, from which in Section~\ref{sec:defectaction} we will prove the general formula 
+where as usual (and explained in more detail in Section~\ref{subsec:bicatLG}) evaluation and coevaluation maps are denoted as caps and cups, respectively, $\lambda_{{}^\dual X}$ is the left action of $\Delta_W$ on~${}^\dual X$, and we always read diagrams like the above from bottom to top. Thus~\eqref{defectactionIntro} equals $\widetilde\eval_X[m+n] \circ (1\otimes \lambda_{{}^\dual X}) \circ (1\otimes \psi \otimes 1) \circ (1\otimes \lambda_{{}^\dual X}^{-1}) \circ \coev_X$, from which in Section~\ref{sec:defectaction} we will prove the general formula 
 \be\label{DrXpsi}
 \mathcal D_r(X)(\psi)  = (-1)^{{m\choose 2} + {n+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi \str\big( \partial_{z_1} D\ldots \partial_{z_m} D \, \partial_{x_1} D\ldots \partial_{x_n} D \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right]
 \ee
@@ -458,24 +460,28 @@ $$
 where $\Lambda_X^{(x)} = \partial_{x_1} D\ldots \partial_{x_n} D$ and $\Lambda_X^{(z)} = \partial_{z_1} D\ldots \partial_{z_m} D$. 
 In this way we respectively recover the \textsl{Kapustin-Li disk correlator} and the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$). 
 
-Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:CardyCondition} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} and~\cite{dm1102.2957} for $k=\nC$ using rather heavy or technical machinery. Or proof works for any commutative noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism 
+Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:CardyCondition} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} and~\cite{dm1102.2957} for $k=\nC$ using rather heavy or technical machinery. Or proof works for any commutative noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
 $$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
 \nicecolourscheme (0,0) circle (2);
 \nicereallynocolourscheme (0,0) circle (1);
 \fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
 \draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {{\small$\eval_Y$}}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {{\small$\widetilde\coev_Y$}}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; %{{\small$\eval_Y$}}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; % {{\small$\widetilde\coev_Y$}}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {{\small$\widetilde\eval_X$}}; 
-\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\fill (180:0.9) circle (0pt) node[left] {{\small$X$}};
+\fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
 \end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $$
-in $\LG$ (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition, see Theorem~\ref{thm:CardyCondition}. 
+(which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition, see Theorem~\ref{thm:CardyCondition}. 
 
 [TODO: mention new, more general Kapustin-Li proof here or somewhere else]
 
@@ -485,11 +491,11 @@ One example is the \textsl{generalised orbifold} procedure of~\cite{ffrs0909.501
 
 [TODO: 2-representations, work of Murfet-Rouquier]
 
-TODO: The rest of the present paper is organised as follows. 
+The rest of the present paper is organised as follows. In Section~\ref{sec:Background} we collect necessary background material on matrix factorisations, bicategories with adjoints, noncommutative forms, residues, and homological perturbation theory. Section~\ref{section:atiyahclasses} introduces various notions of associative Atiyah classes, which together with homological perturbation allow us to invert or lift up to homotopy certain maps pertaining to the stabilised diagonal in Section~\ref{section:pertandhtpy}. Using these results we construct explicit evaluation and coevaluation maps in Section~\ref{sec:derivcoeval} and prove that they indeed endow the bicategory $\LG$ with left and right adjoints in Section~\ref{sec:Zorro}. The next three section discuss applications of this main result: defect action on bulk fields in Section~\ref{sec:defectaction}, a bicategorical trace and its relation to open/closed topological field theory in Section~\ref{sec:shadows}, and the Cardy condition in Section~\ref{sec:CardyCondition}. Finally, in an appendix we provide a proof, similar in spirit to the construction of Section~\ref{sec:Zorro}, of the nondegeneracy of the Kapustin-Li pairing, for the general base~$k$ over which we work also in the bulk of the paper. 
 
 
 \begin{acknowledgements}
-TODO: especially Ragnar Buchweitz, also Ingo Runkel and who else? 
+TODO: especially Ragnar Buchweitz, also Ilka Brunner, Daniel Plencner, Ingo Runkel and who else? 
 \end{acknowledgements}
 
 
@@ -606,11 +612,12 @@ satisfying
 It is convenient to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{JSGoTCI,JSGoTCII} for more details (\textbf{todo} So we fix specific adjunctions for each $X$). In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
 $$
 \eval_{X} = 
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_A$}}
 (3,0) node[line width=0pt] (D) {{\small $X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {\small{${^\dual }X$}}; 
+(2,0) node[line width=0pt] (s) {\small{${}^\dual X$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
@@ -618,16 +625,19 @@ $$
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
 (3,0) node[line width=0pt] (D) {{\small$X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {{\small$^\dual X$}}; 
+(2,0) node[line width=0pt] (s) {{\small${}^\dual X$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\end{tikzpicture} , 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+, 
 \qquad
 \coev_{X} = 
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_B$}}
-(3,0) node[line width=0pt] (D) {{\small$X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {{\small$X^\dual$}}; 
+(3,0) node[line width=0pt] (D) {{\small$X\vphantom{{}^\dual X}$}}
+(2,0) node[line width=0pt] (s) {{\small${}^\dual X$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
@@ -635,9 +645,11 @@ $$
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
 (3,0) node[line width=0pt] (D) {{\small$X\vphantom{A^\dual}$}}
-(2,0) node[line width=0pt] (s) {{\small$X^\dual$}}; 
+(2,0) node[line width=0pt] (s) {{\small${}^\dual X$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
-\end{tikzpicture} \, . 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+ \, . 
 $$
 Note that such diagrams are always to be read from bottom to top. Then the defining relations~\eqref{uglyZorro1} and~\eqref{uglyZorro2} translate into the \textsl{Zorro moves}
 \be\label{Zorros}
@@ -679,6 +691,7 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 Similarly one says that~$X^\dual$ is \textsl{right adjoint} to~$X$ if there are maps 
 $$
 \widetilde\eval_{X} = 
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_B$}}
@@ -687,15 +700,20 @@ $$
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 \equiv
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
 (3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
 (2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
-\end{tikzpicture} , 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+, 
 \qquad
 \widetilde\coev_{X} = 
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_A$}}
@@ -704,16 +722,20 @@ $$
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 \equiv
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
 (3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
 (2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 $$
 satisfying the associated Zorro moves
 \be\label{otherZorros}
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
 (1,1.25) node[line width=0pt] (A) {{\small $X$}}
@@ -723,14 +745,18 @@ satisfying the associated Zorro moves
 \draw (-1,0) -- (A2); 
 \draw (1,0) -- (A); 
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 =
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
 (0,1.25) node[line width=0pt] (A) {{\small $X$}}
 (0,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 \, , \qquad
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
 (-1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
@@ -740,13 +766,16 @@ satisfying the associated Zorro moves
 \draw (-1,0) -- (A); 
 \draw (1,0) -- (A2); 
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 =
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
 (0,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
 (0,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
+%%%%%%%%%%%%%%%%%%%%%%
 \ee
 Note that in general there is no reason for the left and right adjoints to coincide. 
 
@@ -766,7 +795,7 @@ Let us for the moment be slightly more general and consider an arbitrary unital 
 $$
 \Omega^n A = A\otimes \bar A^{\otimes n} 
 $$
-where $\bar A = A/k$ and in this section by ``$\otimes$'' we mean ``$\otimes_k$''. We denote the projection of $a_0\otimes a_1 \otimes \ldots \otimes a_n \in A^{\otimes n}$ to $\Omega^n A$ as $(a_0,a_1,\ldots,a_n)$. The direct sum 
+where $\bar A = A/k$ and in this section by ``$\otimes$'' we mean ``$\otimes_k$''. We denote the projection of $a_0\otimes a_1 \otimes \ldots \otimes a_n \in A^{\otimes (n+1)}$ to $\Omega^n A$ as $(a_0,a_1,\ldots,a_n)$. The direct sum 
 $$
 \Omega A = \bigoplus_{n\geq 0} \Omega^n A
 $$
@@ -786,7 +815,7 @@ A central role is played by the \textsl{(normalised) bar complex}
 \be\label{BarComplex}
 \Bar = \bigoplus_{n\geq 0} \Bar_n \, , \qquad \Bar_n = \Omega^n A \otimes A \, .
 \ee
-It is an $(A^{\text{op}} \otimes A)$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. While $d$ is right $A$-linear, we will also make use of the left $A$-linear operator $s$ on $\Bar$ defined by
+It is an $(A \otimes A^{\text{op}})$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. While $d$ is right $A$-linear, we will also make use of the left $A$-linear operator $s$ on $\Bar$ defined by
 % for the operator s see coevc3
 \[
 s( a_0 da_1 \cdots da_n \otimes a_{n+1} ) = (-1)^{n+1} a_0 da_1 \cdots da_n da_{n+1}\,.
@@ -921,7 +950,7 @@ $$
 
 \subsection{Residues}\label{section:residuebackground}
 
-TODO: we briefly recall some of its basic properties; see~\cite{TODO} for more details. Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x]$ it is the $k[y]$-linear map that sends a polynomial $g\in k[x,y]$ to the expression
+Since residues feature prominently in the Kapustin-Li pairing and in the evaluation maps constructed in Section~\ref{sec:derivcoeval} we briefly recall their definition and basic property; see~\cite{TODO} for more details. Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x]$ it is the $k[y]$-linear map that sends a polynomial $g\in k[x,y]$ to the expression
 $$
 \Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1 \ldots f_n} \right] 
 \in k[y]
@@ -986,7 +1015,7 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
 \]
 
-\section{Atiyah Classes}\label{section:atiyahclasses}
+\section{Atiyah classes}\label{section:atiyahclasses}
 % see assat, the onct series
 
 As explained in the Introduction, the structure of the bicategory $\LG$ can be understood in terms of associative Atiyah classes. In this section we develop the basic theory of these operators, beginning with the simplest definition (which involves a choice of basis) and then afterwards developing the more abstract general theory in the setting of noncommutative form-valued connections. For this paper the simpler definition is sufficient, since we will only use the Atiyah class to construct explicit chain level representatives of morphisms which we already know to be well-defined up to homotopy, and in this situation it is natural to make some auxiliary choices. In any case, we develop the general theory in order to have a more solid foundation for the subject of associative Atiyah classes.
@@ -1405,7 +1434,7 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite-rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ we deduce: 
 
 \begin{proposition}\label{prop:inverses_unitact} 
-[TODO: joint with \ref{corollary:koszulstab2}]
+[TODO: join with \ref{corollary:koszulstab2}]
 $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
 \[
 \lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_s\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_d\,.
@@ -1685,6 +1714,7 @@ In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models
 
 Let us consider the first identity of~\eqref{otherZorros} in more detail: 
 \be\label{Zorro1detail}
+%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 
 \fill (0.2,1.6) circle (0pt) node {{\small $\Delta_V$}};
@@ -1722,6 +1752,7 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 (0,-2.7) node[line width=0pt] (A2) {{\small $X$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
 \ee
 Here we label the domains by the rings $R = k[x]$ and $S = k[z]$ pertaining to the two objects of $\LG$. We keep in mind that there are two $\Delta$'s which appear: one of which is an $R$-$R$-bimodule, and the other is an $S$-$S$-bimodule. We write $\Re = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$.
 
@@ -1765,7 +1796,7 @@ We will see that $\At^n( \Lambda )$ is a transition determinant in the sense of 
 \end{equation}
 The reader will appreciate the parallel with the argument for duality in the monoidal category of vector spaces, with the new feature here being the Atiyah class and its anti-self-adjointness.
 
-There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of non-degeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
+There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of nondegeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
@@ -1846,7 +1877,7 @@ We will need some notation: given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1
 \[
 \ell(\bs{i}) = p, \qquad w(\bs{i}) = i_1 + \ldots + i_p, \qquad |\bs{i}| = \sum_{1 \le a < b \le n} \delta_{i_a > i_b}\, \qquad \gamma(\bs{i}) = w(\bs{i}) + |\bs{i}| + \binom{p+1}{2}\,.
 \]
-The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted.
+The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\Lambda_{i_1,\ldots,i_p}$ [TODO: why commas between indices=] for the product $\Lambda = \lambda_1 \cdots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted.
 %Let $D$ denote the differential on $\End(X)$, i.\,e.~the commutator with~$d_X$.
 
 \begin{lemma}\label{lemma:zorromain} For $\varphi \in \End(X) \otimes_{k[x]} \Bar$ and $0 \le p < n$ we have
@@ -1917,7 +1948,7 @@ H = \sum_j \sum_{p=0}^{n-1} (-1)^{|e_j|} h_i( D \At^{n-p-1}(- \circ e_j^*) ) \cd
 \]
 As the difference of two closed maps $H = \mathcal{Z} - 1_X$ is a closed endomorphism of $X$, and to complete the proof that $\mathcal{Z} \simeq 1_X$ it remains to prove that $H$ is null-homotopic. 
 
-The idea is to use the non-degenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
+The idea is to use the nondegenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
 \be
 \Hom_{k[x,z]}(X,X) \lto \Hom_k( \Hom_{k[x,z]}(X,X), k )[m+n]\,, \qquad \varphi \lmt \langle \varphi, - \rangle_X\,.
 \ee
@@ -1960,7 +1991,7 @@ where we used Lemma~\ref{lem:LeibnizForDQO} in the third step.
 \begin{theorem}\label{theorem:mainzorro} The Zorro map $\mathcal{Z}$ is homotopic to $1_X$.
 \end{theorem}
 \begin{proof}
-As we have already mentioned, it suffices by non-degeneracy of \eqref{eq:bracketkl} to prove that $\langle H, - \rangle_X$ is a null-homotopic function $\Hom_{k[x,z]}(X,X) \lto k$. For $\varphi' \in \End(X)$ the numerator in the residue which computes $\langle H, \varphi' \rangle_X$ is, using \eqref{strlambdaAtn}, a differential form multiplied by
+As we have already mentioned, it suffices by nondegeneracy of \eqref{eq:bracketkl} to prove that $\langle H, - \rangle_X$ is a null-homotopic function $\Hom_{k[x,z]}(X,X) \lto k$. For $\varphi' \in \End(X)$ the numerator in the residue which computes $\langle H, \varphi' \rangle_X$ is, using \eqref{strlambdaAtn}, a differential form multiplied by
 \[
 \str( H \varphi' \Lambda^{(x)} \Lambda^{(z)}) = \sum_{p=0}^{n-1} h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) )
 \]
@@ -1977,7 +2008,7 @@ h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) ) &= h_p \At^{n-p-1}D(\
 \end{align}
 Now $D(\Lambda^{(z)})$ is a linear combination of terms divisible by the $\partial_{z_j} V$, and since $h_p$ and $\At$ are $k[z]$-linear these coefficients pass through to annihilate with the denominator in the residue in  (\ref{eq:bracketkl}). 
 
-Similarly $\varphi' D(\Lambda^{(x)}) \Lambda^{(z)}$ is a sum of terms of the form $f_j \alpha$ for various $j$. But the Atiyah class and the commutator $[\Lambda_{i_1,\ldots,i_p}, \nabla]$ are right linear (TODO: explain right action on $\Bar$?) so
+Similarly $\varphi' D(\Lambda^{(x)}) \Lambda^{(z)}$ is a sum of terms of the form $f_j \alpha$ for various $j$. But the Atiyah class and the commutator $[\Lambda_{i_1,\ldots,i_p}, \nabla]$ are right linear so
 \begin{align*}
 h_p \At^{n-p-1}\big( \alpha f_j ) &= h_p\left( \At^{n-p-1}(\alpha) \cdot f_j \right)\\
 &= \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\Big\langle \nabla \left\{ f_{i_1} \cdots \nabla f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}, \nabla]\At^{n-p-1}(\alpha) \big) \cdot f_j \right\} \Big\rangle\!\Big\rangle\,.
@@ -1993,7 +2024,7 @@ The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contri
 \langle H, - \rangle_X = 
 \frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \Lambda^{(x)} \Lambda^{(z)} ) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_m} V} \right]\,.
 \]
-This proves that $\langle H, - \rangle_X$ is null-homotopic, and thus $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals. Hence by the non-degeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
+This proves that $\langle H, - \rangle_X$ is null-homotopic, and thus $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals. Hence by the nondegeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
 \end{proof}
 
 The three other Zorro moves are proven analogously (\textbf{todo}).
@@ -2428,9 +2459,9 @@ The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
 \draw[line width=1pt] 
-(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
-(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
-(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+(-2,-1) node[line width=0pt] (X) {{\small ${}^\dual Y$}}
+(-1,-1) node[line width=0pt] (Y) {{\small ${}^\dual X$}}
+(2,2) node[line width=0pt] (XY) {{\small ${}^\dual (X\otimes Y)$}}; 
 \draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
 \draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
@@ -2441,7 +2472,7 @@ The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 & =
-\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{X^\dual} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] ,
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{{}^\dual X} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] ,
 \\
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
@@ -2462,7 +2493,7 @@ The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous
 \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] .
 \end{align*}
 
-To show that the above two expressions are equal up to homotopy we again make use of the non-degeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
+To show that the above two expressions are equal up to homotopy we again make use of the nondegeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
 $$
 \Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1) (\prod_{j=1}^m \partial_{y_j} W_2) (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
 $$
@@ -2474,17 +2505,17 @@ but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the a
 
 In any bicategory with adjoints there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its adjoint). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
-Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\End$ we mean the spaces of 2-endomorphisms in $\LG$. We define maps 
+Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\Hom$ and $\End$ we mean the spaces of 2-(endo)morphisms in $\LG$. We define maps 
 $$
-\mathcal D_l(X): \End(\Delta_V) \longrightarrow \End(\Delta_W) \, , \qquad
-\mathcal D_r(X): \End(\Delta_W) \longrightarrow \End(\Delta_V)
+\mathcal D_l(X): \End(\Delta_V) \longrightarrow \Hom(\Delta_W, \Delta_W[m+n]) \, , \qquad
+\mathcal D_r(X): \End(\Delta_W) \longrightarrow \Hom(\Delta_V, \Delta_V[m+n])
 $$
 in terms of the morphisms encoding the monoidal and adjunction structures as follows. For $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we set
 \begin{align*}
-\mathcal D_l(X)(\phi) & = \eval_X \circ (1_{X^\dual}\otimes (\lambda_X \circ (\phi\otimes 1_X)\circ \lambda_X^{-1})) \circ \widetilde\coev_X \, , \\ 
-\mathcal D_r(X)(\psi) & = \widetilde\eval_X \circ (1_{X}\otimes (\lambda_{X^\dual} \circ (\phi\otimes 1_{X^\dual})\circ \lambda_{X^\dual}^{-1})) \circ \coev_X
+\mathcal D_l(X)(\phi) & = \eval_X[m+n] \circ (1_{X^\dual}\otimes (\lambda_X \circ (\phi\otimes 1_X)\circ \lambda_X^{-1})) \circ \widetilde\coev_X \, , \\ 
+\mathcal D_r(X)(\psi) & = \widetilde\eval_X[m+n] \circ (1_{X}\otimes (\lambda_{{}^\dual X} \circ (\phi\otimes 1_{{}^\dual X})\circ \lambda_{{}^\dual X}^{-1})) \circ \coev_X \, . 
 \end{align*}
-for $m+n$ even, and $\mathcal D_l(X)=0=\mathcal D_r(X)$ for $m+n$ odd. 
+Note that since $\Hom(\Delta,\Delta[1]) = 0$ in $\LG$ the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$ are zero if $m+n$ is odd, while for even $m+n$ they map to $\End(\Delta_W)$ and $\End(\Delta_V)$, respectively. 
 In the special case $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
 
 Diagrammatically these definitions read
@@ -2558,8 +2589,8 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
-\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X^\dual}$}};
-\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X^\dual}$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{{}^\dual X}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{{}^\dual X}$}};
 \draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
 \fill (0.4,1.15) circle (0pt) node {{\small $\Delta_W$}};
 \fill (0.4,-1.15) circle (0pt) node {{\small $\Delta_W$}};
@@ -2595,10 +2626,10 @@ node[near end,right] {{{\small$\Delta_V$}}};
 %node[near end,right] {{{\small$\Delta_V$}}};
 %\end{tikzpicture}
 \ee
-where we indicated our choice of variable names in the four domains, and both loops are labelled by~$X$. 
+in the nontrivial case, where we indicated our choice of variable names in the four domains, and both loops are labelled by~$X$. 
 
 \begin{remark}
-$\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose non-degenerate pairing
+$\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose nondegenerate pairing
 \be\label{bulktopmet}
 \langle \phi, \psi \rangle_W = (-1)^n \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right]
 \ee
@@ -2607,7 +2638,7 @@ describes two-point correlators on the sphere. Furthermore, matrix factorisation
 As already observed in Section~\ref{sec:Introduction}, for the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
 \end{remark}
 
-Using the ``folding trick'' (which relates defects to boundary conditions in a product theory) one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$. This was done in~\cite{cr1006.5609} for the case $V=W$. Here we use our adjunction formulas to directly prove it for the general case: 
+Using the ``folding trick'', which relates defects to boundary conditions in a product theory, one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$ (in particular, from this perspective it is also immediate that $\mathcal D_l(X)$ and $\mathcal D_r(X)$ should vanish for odd $m+n$). This was done in~\cite{cr1006.5609} for the case $V=W$ in one variable. Here we use our adjunction formulas to directly prove it for the general case: 
 
 \begin{proposition}\label{prop:defectaction}
 For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
@@ -2773,20 +2804,20 @@ $$
 $$
 \end{definition}
 
-Next we wish to point out a connection between shadows and the structure of two-dimensional open/closed topological field theory (TFT) for Landau-Ginzburg models. Recall that a TFT is the data of a commutative Frobenius algebra~$C$, a Calabi-Yau category~$\mathcal O$, bulk-boundary maps $\beta_A: C \lra \End_{\mathcal O}(A)$, and boundary-bulk maps $\beta^A: \End_{\mathcal O}(A) \lra C$ for all $A\in\mathcal O$. These data are subject to several consistency conditions, see e.\,g.~\cite{TODO: Lazaroiu and Moore-Segal}. 
+Next we wish to point out a connection between shadows and the structure of two-dimensional open/closed topological field theory (TFT) for Landau-Ginzburg models. Recall that a TFT is the data of a commutative Frobenius algebra~$C$, a Calabi-Yau category~$\mathcal O$, bulk-boundary maps $\beta_A: C \lra \End_{\mathcal O}(A)$, and boundary-bulk maps $\beta^A: \End_{\mathcal O}(A) \lra C$ for all $A\in\mathcal O$. These data are subject to several consistency conditions, see e.\,g.~\cite{l0312, ms0609042}. 
 
 Every Landau-Ginzburg model with potential $W\in R = k[x_1,\ldots,x_n]$ gives rise to a TFT with $C=R/(\partial W)$, $\mathcal O = \hmf(R,W)$ and
 \be\label{betaQ}
 \beta_Q : \phi \lmt \phi \cdot 1_Q \, , \qquad 
 \beta^Q : \psi \lmt (-1)^{n\choose 2} \str(\psi \, \partial_{x_1} d_Q \ldots \partial_{x_n} d_Q) \, . 
 \ee
-The hardest part in establishing this result is to prove the non-degeneracy of the Kapustin-Li pairing and that the Cardy condition holds; this was first done in~\cite{m0912.1629} and~\cite{pv1002.2116}, respectively, in the case where~$k$ is a field. In Sections~\ref{section:dualityadjointop} and~\ref{sec:CardyCondition} we will give new proofs for the general case. 
+The hardest part in establishing this result is to prove the nondegeneracy of the Kapustin-Li pairing and that the Cardy condition holds; this was first done in~\cite{m0912.1629} and~\cite{pv1002.2116}, respectively, in the case where~$k$ is a field. In Sections~\ref{section:dualityadjointop} and~\ref{sec:CardyCondition} we will give new proofs for the general case. 
 
 We note that the maps~\eqref{betaQ} can be recovered from the adjunction and shadow structure of $\LG$ as follows. On the one hand we have 
 $$
 \langle\!\langle \Delta_W \rangle\!\rangle = R/(\partial W)[n]
 $$
-since $\langle\!\langle \Delta_W \rangle\!\rangle = \Delta_W \otimes_{\Re} R = (\bigwedge (\bigoplus_{i=1}^n R \theta_i), \sum_{i=1}^n \partial_{x_i}W \theta_i)$ which is homotopy equivalent (and therefore equal in $\hmf(k,0)$) to $R/(\partial W)[n]$. On the other hand $\langle\!\langle Q^\dual \otimes Q \rangle\!\rangle = Q^\vee \otimes_k Q \otimes_{\Re} R = \End_R(Q)$. Thus from the explicit expressions~\eqref{TODO} and~\eqref{TODO} we find that $\beta_Q = \langle\!\langle \widetilde\coev_Q \rangle\!\rangle$ and $\beta^Q = \langle\!\langle \eval_Q \rangle\!\rangle$ (up to a sign, TODO?). 
+since $\langle\!\langle \Delta_W \rangle\!\rangle = \Delta_W \otimes_{\Re} R = (\bigwedge (\bigoplus_{i=1}^n R \theta_i), \sum_{i=1}^n \partial_{x_i}W \theta_i)$ which is homotopy equivalent (and therefore equal in $\hmf(k,0)$) to $R/(\partial W)[n]$. On the other hand $\langle\!\langle Q^\dual \otimes Q \rangle\!\rangle = Q^\vee \otimes_k Q \otimes_{\Re} R = \End_R(Q)$. Thus from the explicit expressions~\eqref{TODO} and~\eqref{TODO} we find that $\beta_Q = \langle\!\langle \widetilde\coev_Q \rangle\!\rangle$ and $\beta^Q = \langle\!\langle \eval_Q \rangle\!\rangle$ (TODO: up to a sign). 
 
 Motivated by the above this construction can be extended to any 1-morphism in $\LG$: for $X \in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ we define the \textsl{generalised bulk-boundary} and \textsl{boundary-bulk maps} to be
 $$
@@ -2802,15 +2833,12 @@ respectively. Substituting the expressions~\eqref{TODO} and~\eqref{TODO} we find
 \psi & \lmt (-1)^{m+1\choose 2} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\, \partial_{z_1} d_X \ldots \partial_{z_m} d_X \partial_{x_1} d_X \ldots \partial_{x_n} d_X \right) \underline{\operatorname{d}\!z}}{\partial_{z_1} W \ldots \partial_{z_m} W} \right] \, . 
 \end{align*}
 
-[TODO: comment on relation to defect action??]
-
 
 \section{Cardy condition}\label{sec:CardyCondition}
 
-As another application of our explicit expressions for adjunctions in $\LG$ in this section we present a new proof of the Cardy condition. This deep result long eluded rigorous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluations and coevaluations in $\LG$ it will follow effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, such as $k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
+As another application of our explicit expressions for adjunctions in $\LG$ in this section we present a new proof of the Cardy condition. This deep result long eluded rigorous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluations and coevaluations in $\LG$ it will follow rather effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, such as $k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
 
 Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factorisations $X,Y \in \hmf(k[x], W)$, and also two maps $\varphi: X\lra X$, $\psi: Y\lra Y$. We interpret~$X$ and~$Y$ as 1-morphisms $(k,0)\lra (k[x],W)$ in $\LG$, and in this way we obtain the 2-morphism (where here and below we do no longer display dashed lines for unit 1-endomorphisms)
-[TODO: shall we say that this 2-morphism only makes sense (or has nonvanishing correlator) only for $n$ even? Then we should also explicitly say that both sides of the Cardy condition vanish separately for $n$ odd -- clear for RHS because of trace, and clear for LHS because the fat $X^\dual \otimes Y$-bubble is a map from the trivial theory to the trivial theory, therefore trivial.]
 \be\label{annulus}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
@@ -2823,21 +2851,66 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {{\small$\widetilde\eval_X$}}; 
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {{\small$\widetilde\eval_X[n] \tau$}}; 
 \draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+%
+\fill (135:2) circle (2.5pt) node[left] {{\small$\rho_{{}^\dual Y} \tau'$}};
+\draw[densely dotted] (90:1) .. controls +(0,0.2) and +(0.5,-0.5) .. (135:2);
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \ee
-which is a map $k\lra k$ that we call~$C$. Note that we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This is not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
+which is a map $k\lra k$ that we call~$C$. In the case of odd~$n$ we have to suspend $\widetilde\eval_X$ (with the dotted line in~\eqref{annulus} representing $\Delta_W[n]$) and use the isomorphisms $\tau: X\otimes X^\vee[n] \lra X[n] \otimes X^\vee$ and $\tau': Y^\vee \otimes \Delta_W[n] \lra Y^\vee[n] \lra \Delta_W$; for~$n$ even this additional notational clutter disappears. 
+
+
+Note that again we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This is not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
 
 To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions~\eqref{TODO} for evaluations and coevaluations we find \begin{align}
-& \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y) \underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] \, , \nonumber \\
+& \widetilde\eval_X = \str(-) + \mathcal O(\theta) \, , \qquad \eval_Y = (-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str( \, - \circ \Lambda_Y) \underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] , \nonumber \\
 & \coev_X: 1 \lmt \Lambda_X \, , \qquad  \widetilde\coev_Y: 1\lmt 1_Y \label{evcoeveasy}
 \end{align}
 where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$. 
 
-We will now compute the diagram~\eqref{annulus} in two different ways and then compare the results. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
+The diagram~\eqref{annulus} can be computed in two different ways; equating the respective results amounts to the Cardy condition. Below we will present the details for the case of even~$n$. For odd~$n$ the proof works analogously, but one has to use the variant
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\draw[line width=1pt] 
+(-2,-1) node[line width=0pt] (X) {{\small $Y^\vee$}}
+(-1,-1) node[line width=0pt] (Y) {{\small $X \vphantom{Y^\vee}$}}
+(2,2) node[line width=0pt] (XY) {{\small $(X^\vee[1]\otimes Y)^\vee$}}; 
+\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\fill (-0.5,0.65) circle (0pt) node[above] {{\small$\widetilde\eval_X[1]\tau$}};
+\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+\draw[densely dotted] (-0.5,0.75) .. controls +(0,0.2) and +(0.5,-0.5) .. (-1.56,1.1);
+\fill (-1.56,1.1) circle (2.5pt) node[left] {{\small$\rho_{Y^\vee[1]}\tau'$}};
+\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (-1,0) -- (Y);
+\draw (-2,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (2,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\draw[line width=1pt] 
+(2,-1) node[line width=0pt] (Y) {{\small $Y^\vee$}}
+(3,-1) node[line width=0pt] (X) {{\small $X \vphantom{Y^\vee}$}}
+(-1,2) node[line width=0pt] (XY) {{\small $(X^\vee[1]\otimes Y)^\vee$}}; 
+\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (Y);
+\draw (3,0) -- (X);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (XY);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+$$
+ of~\eqref{eq:monoidalproperty} which can be etablished by an argument similar to the one leading to Proposition~\ref{prop:monoidalproperty}. 
+
+One possibility to compute~\eqref{annulus} is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $\str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
 $$
 C 
 = 
@@ -2867,17 +2940,17 @@ C
 \fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
 \end{tikzpicture} 
 = 
-(-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
 $$
 Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
 \be\label{C1}
 C = 
-(-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
 \ee
 
-On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by $X^\dual\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
+On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
 $$
-\eval_{X^\dual \otimes Y} = \str(-) \, , \qquad \widetilde\coev_{X^\dual \otimes Y} : 1 \lmt 1_{X^\dual \otimes Y}
+\eval_{{}^\dual X \otimes Y} = \str(-) \, , \qquad \widetilde\coev_{{}^\dual X \otimes Y} : 1 \lmt 1_{X^\dual \otimes Y}
 $$
 to arrive at
 \be\label{C2}
@@ -2899,24 +2972,26 @@ C
 \end{tikzpicture} 
 = 
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
-\draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\draw[ultra thick] (0,0) circle (2);
+\draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
 \fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
 \end{tikzpicture} 
 = 
-\str (\psi \circ (-) \circ \varphi ) \, .
+\str ( {}_\psi m_\varphi ) 
 \ee
-Here the second step follows from Proposition~\ref{prop:defectactionproperties}(iii). Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
+where $ {}_\psi m_\varphi \in \End_k(\Hom_{\hmf(k[x],W)}(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
+The second equality in~\eqref{C2} follows from Proposition~\ref{prop:defectactionproperties}(iii) (whose proof in turn relies on Proposition~\ref{prop:monoidalproperty}). Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
 
 \begin{theorem}\label{thm:CardyCondition}
 The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have
 $$
-\str (\psi \circ (-) \circ \varphi )
+\str ( {}_\psi m_\varphi ) 
 = 
-(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] \, .
+(-1)^{n+1\choose 2} \Res_{k[k]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] 
 $$
+with ${}_\psi m_\varphi(\alpha) = \psi\circ\alpha\circ\varphi$ for $\alpha\in \End_k(\Hom_{\hmf(k[x],W)}(X,Y))$. 
 \end{theorem}
 
 TODO: Fix the sign, it should only be $(-1)^n$. 
@@ -2929,7 +3004,7 @@ TODO: Mention HRR as special example, more discussion needed?
 % All rings are commutative by default unless they are called "associative"
 % TODO match generality to dviat5
 
-Let $k$ be a noetherian $\mathbb{Q}$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a non-degenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
+Let $k$ be a noetherian $\mathbb{Q}$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a nondegenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
 
 Given $W \in R$ and two finite-rank matrix factorisations $X,Y$ of $W$ let $\Hom(X,Y) = \Hom_R(X,Y)$ denote the $\mathbb{Z}_2$-graded Hom-complex. We define a natural $k$-bilinear pairing
 \[
@@ -2939,12 +3014,12 @@ by the following formula, where $\lambda_i = \partial_{x_i}d_Y, \omega = \ud x_1
 \begin{equation}\label{eq:generalklpairing}
 \langle \varphi, \psi \rangle = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \cdots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1,\ldots,f_n } \Bigg]\,.
 \end{equation}
-Such a pairing is \textsl{homotopically non-degenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
+Such a pairing is \textsl{homotopically nondegenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
 \begin{align*}
 \Hom(X,Y) & \lto \Hom_k( \Hom(Y,X), k )[n]\,,\\
 \varphi & \lmt \langle \varphi, - \rangle
 \end{align*}
-is a homotopy equivalence over $k$. The main theorem here is that under some reasonable hypotheses the pairing $\langle -, - \rangle$ is homotopically non-degenerate. This non-degeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
+is a homotopy equivalence over $k$. The main theorem here is that under some reasonable hypotheses the pairing $\langle -, - \rangle$ is homotopically nondegenerate. This nondegeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
 
 \begin{theorem}\label{theorem:generalkl} Suppose that the following conditions are satisfied
 \begin{itemize}
@@ -2957,7 +3032,7 @@ r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \underline{\ud x}}{ f_1, \ldots, 
 \end{align*}
 is an isomorphism.
 \end{itemize}
-Then the pairing $\langle -, - \rangle$ is homotopically non-degenerate.
+Then the pairing $\langle -, - \rangle$ is homotopically nondegenerate.
 \end{theorem}
 
 There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
@@ -2990,7 +3065,7 @@ r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1, \ldots, f_n} \Bi
 \end{align*}
 is an isomorphism.
 \end{itemize}
-In this situation one can still write down the pairing (\ref{eq:generalklpairing}) and we prove that this is homotopically non-degenerate (Proposition \ref{prop:almostkltheorem}). The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H3$'$) above even if the polynomial ring does not.
+In this situation one can still write down the pairing (\ref{eq:generalklpairing}) and we prove that this is homotopically nondegenerate (Proposition \ref{prop:almostkltheorem}). The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H3$'$) above even if the polynomial ring does not.
 
 \subsection{Adjoint operators on dg-categories}\label{section:adjointopdg}
 % TODO: Point out that these Atiyah classes are from connections over k[f], not k like in the associative case.
@@ -3012,7 +3087,7 @@ When it is convenient we write $\langle \alpha, \beta \rangle$ for $c_{XY}(\alph
 }
 \]
 commutes, where $\tau$ is the graded twist $\tau( \varphi \otimes \psi) = (-1)^{|\varphi||\psi|} \psi \circ \varphi$; 
-\item[(ii)] \textsl{non-degenerate} if for all $X,Y$ the morphism
+\item[(ii)] \textsl{nondegenerate} if for all $X,Y$ the morphism
 \begin{align*}
 \zeta_{XY}: \cat{C}(X,Y) & \lto \Hom_k( \cat{C}(Y,X), k)\,,\\
 \varphi & \lmt c_{XY}( \varphi \otimes - )
@@ -3021,10 +3096,10 @@ is an isomorphism of complexes.
 \end{itemize}
 \end{definition}
 
-%\begin{remark} \textbf{todo}. Probably this all works for a weaker form of non-degeneracy, where $\zeta$ is just a homotopy equivalence, but we don't need this. In what generality should we state things, then? Maybe we also only need cyclicity up to homotopy.
+%\begin{remark} \textbf{todo}. Probably this all works for a weaker form of nondegeneracy, where $\zeta$ is just a homotopy equivalence, but we don't need this. In what generality should we state things, then? Maybe we also only need cyclicity up to homotopy.
 %\end{remark}
 
-From now on we assume $\cat{C}$ is equipped with a cyclic non-degenerate pairing. In this section an \textsl{operator} is a closed homogeneous $k$-linear operator on some mapping complex $\cat{C}(X,Y)$ in $\cat{C}$, that is, a closed homogeneous element of the complex $\Hom_k( \cat{C}(X,Y), \cat{C}(X,Y) )$. We are interested in linear operators on the $\cat{C}(X,Y)$ and adjunctions between them, with respect to the pairing.
+From now on we assume $\cat{C}$ is equipped with a cyclic nondegenerate pairing. In this section an \textsl{operator} is a closed homogeneous $k$-linear operator on some mapping complex $\cat{C}(X,Y)$ in $\cat{C}$, that is, a closed homogeneous element of the complex $\Hom_k( \cat{C}(X,Y), \cat{C}(X,Y) )$. We are interested in linear operators on the $\cat{C}(X,Y)$ and adjunctions between them, with respect to the pairing.
 
 Recall that if $\Psi$ is homogeneous then $1 \otimes \Psi$ acts on tensors with Koszul signs.
 
@@ -3090,7 +3165,7 @@ So much for the general theory; from now on $\cat{C}$ denotes the dg-category wh
 \[
 \cat{C}(X,Y) = \Hom(\bar{X}, \bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}\,.
 \]
-While the ordinary dg-category of matrix factorisations only admits a pairing which is homotopically non-degenerate, this (linear) quotient $\cat{C}$ admits a cyclic non-degenerate pairing in the stronger sense explained above. To define it, let
+While the ordinary dg-category of matrix factorisations only admits a pairing which is homotopically nondegenerate, this (linear) quotient $\cat{C}$ admits a cyclic nondegenerate pairing in the stronger sense explained above. To define it, let
 \[
 \langle - \rangle: R \lto k
 \]
@@ -3105,7 +3180,7 @@ This annihilates the ideal $(f_1,\ldots,f_n)R$ and therefore factors via a $k$-l
 \langle -, - \rangle: \Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \lto k\,, \qquad
 \langle \varphi, \psi \rangle = \langle \str( \varphi \circ \psi ) \rangle
 \end{align*}
-is cyclic and non-degenerate in the sense of Definition \ref{defn:nondegpair}.
+is cyclic and nondegenerate in the sense of Definition \ref{defn:nondegpair}.
 \end{proposition}
 \begin{proof}
 The pairing factors as
@@ -3114,7 +3189,7 @@ The pairing factors as
 \Hom(\bar{X}, \bar{Y}) \otimes \Hom(\bar{Y}, \bar{X}) \ar[r]^-{-\circ-} & \Hom(\bar{Y}, \bar{Y}) \ar[r]^-{\str} & \bar{R} \ar[r]^-{\langle - \rangle} & k
 }
 \end{equation}
-so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Non-degeneracy follows from hypothesis (H4$'$) and the following calculation, in which the first step is adjoint (\textbf{todo} not really!) to the composite of the first two maps in (\ref{eq:barnondeg})
+so it is clear that it is a closed $k$-linear map, and moreover cyclicity follows from the cyclicity of the supertrace. Nondegeneracy follows from hypothesis (H4$'$) and the following calculation, in which the first step is adjoint (\textbf{todo} not really!) to the composite of the first two maps in (\ref{eq:barnondeg})
 \begin{align*}
 \Hom_R(\bar{X}, \bar{Y}) &\cong \Hom_R( \Hom(\bar{Y}, \bar{X}), \bar{R} )\,\\
 &\cong \Hom_R( \Hom(\bar{Y}, \bar{X}), \Hom_k( \bar{R}, k) )\\
@@ -3220,7 +3295,7 @@ In the previous section we constructed operators $\lambda_i^\bullet, {\lambda_i}
 \[
 \cat{C}(X,Y) = \Hom(\bar{X}, \bar{Y})
 \]
-which split in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes to give $\Hom(X,Y)$. In this way the dg-category of matrix factorisations can be recovered from the quotient $\cat{C}$ and the non-degenerate pairing defined above induces the homotopically non-degenerate pairing $\langle -, - \rangle$.
+which split in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes to give $\Hom(X,Y)$. In this way the dg-category of matrix factorisations can be recovered from the quotient $\cat{C}$ and the nondegenerate pairing defined above induces the homotopically nondegenerate pairing $\langle -, - \rangle$.
 
 The main result of \cite{dm1102.2957} is that if $V$ is the free $k$-module on the basis $\theta_1,\ldots,\theta_n$ then there is a homotopy equivalence
 \[
@@ -3269,7 +3344,7 @@ Observe that by the (anti-)self-adjointness established in the previous section
 from which it is immediate that $e^{\dagger} = e'$.
 \end{proof}
 
-\begin{proposition}\label{prop:almostkltheorem} The pairing (\ref{eq:generalklpairing}) is homotopically non-degenerate.
+\begin{proposition}\label{prop:almostkltheorem} The pairing (\ref{eq:generalklpairing}) is homotopically nondegenerate.
 \end{proposition}
 \begin{proof} Consider the diagram
 \[
@@ -3456,7 +3531,7 @@ Working modulo the $f_i$ and using the tricks in the discussion preceeding \cite
 \end{align*}
 where $\nabla_{gr}$ has odd degree for the purpose of writing commutators. Expanding each of these commutators in its components $\At_i$ yields a sum
 \begin{align*}
-&= \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
+& \sum_{m \ge 0} \sum_{\sigma \in S_{m,n}} (-1)^{\binom{m+1}{2}} \frac{1}{m!} \At_{\sigma(1)} \cdots \At_{\sigma(m)} \theta_{\sigma(1)} \cdots \theta_{\sigma(m)}
 \end{align*}
 over all injective functions $S_{m,n}$ from $[1,m]$ to $[1,n]$. Using \eqref{eq:rhoformula2}
 % see syme2
@@ -3623,7 +3698,7 @@ A.~Joyal and R.~Street, \textsl{The geometry of tensor calculus II},
 draft available at 
 \href{http://maths.mq.edu.au/~street/GTCII.pdf}{http://maths.mq.edu.au/\textasciitilde street/GTCII.pdf}
 
-\bibitem[Kap]{k1004.2307}
+\bibitem[Ka]{k1004.2307}
 A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
   {T}heir {A}pplications},
   \href{http://arxiv.org/abs/1004.2307}{[arXiv:1004.2307]}.
@@ -3668,6 +3743,11 @@ A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
 %\bibitem[Lam86]{LambekRingsModules}
 %J.~Lambek, \textsl{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
 
+\bibitem[La05]{l0312}
+C.~I. Lazaroiu, \textsl{On the boundary coupling of topological {L}andau-{G}inzburg
+  models}, JHEP \textbf{0505} (2005), 037,
+  \href{http://www.arxiv.org/abs/hep-th/0312286}{[hep-th/0312286]}.
+
 \bibitem[LM]{Calinetal}
 C.~I. Lazaroiu and D.~McNamee, unpublished.
 
@@ -3704,7 +3784,11 @@ D.~Murfet, \textsl{Residues and duality for singularity categories of isolated {
 %H.~Murakami, T.~Ohtsuki, and S.~Yamada, \textsl{Homfly polynomial via an
 %  invariant of colored plane graphs}, Enseign. Math. \textbf{44} (1998),
 %  325--360.
-%
+
+\bibitem[MS]{ms0609042}
+G.~W. Moore and G.~Segal, \textsl{D-branes and {K}-theory in {2D} topological
+  field theory}, \href{http://arxiv.org/abs/hep-th/0609042}{[hep-th/0609042]}.
+
 %\bibitem[MS]{ms0709.1971}
 %V.~Manzorchuck and C.~Stroppel, \textsl{A combinatorial approach to functorial
 %  quantum {$\mathfrak{sl}_k$} knot invariants},
