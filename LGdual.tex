@@ -1015,6 +1015,45 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \sigma_\infty = \sigma + \sum_{m \ge 0} h(\delta h)^m \delta \sigma = \sum_{m \ge 0} (h \delta)^m \sigma\,.
 \]
 
+\subsection{Canonical morphisms}\label{section:canonicalmaps}
+% see NMF and NMF2
+
+In this section we recall the definition of various canonical maps. Throughout $R$ is a ring and all factorisations are over $R$. Let $X,Y$ denote linear factorisations of $W,W'$ respectively.
+
+\begin{lemma} There is a natural morphism of linear factorisations of $W' - W$
+\begin{gather*}
+\xi: X^{\vee} \otimes_R Y \lto \Hom_R(X,Y),\,\\
+\xi( \nu \otimes y )(x) = (-1)^{|\nu||y|} \nu(x) \cdot y
+\end{gather*}
+which is an isomorphism if $X$ is a finitely generated projective $R$-module.
+\end{lemma}
+
+\begin{lemma} There is a natural isomorphism of linear factorisations of $W + W'$
+\begin{gather*}
+\textup{swap}: X \otimes_R Y \lto Y \otimes_R X\,,\\
+x \otimes y \mapsto (-1)^{|x||y|} y \otimes x\,.
+\end{gather*}
+\end{lemma}
+
+Precomposing $\xi$ with this swap isomorphism we have a canonical morphism
+\begin{gather*}
+Y \otimes_R X^{\vee} \lto \Hom_R(X,Y)\,,\\
+y \otimes \nu \mapsto \big\{ x \mapsto \nu(y) \cdot x \big\}\,.
+\end{gather*}
+Since it is unlikely to cause confusion, we also denote this map by $\xi$.
+
+\begin{lemma} There are natural isomorphisms of linear factorisations of $W + W'$
+\begin{gather*}
+X[i] \otimes_R Y \lto (X \otimes_R Y)[i]\,,\\
+x \otimes y \mapsto x \otimes y\,,
+\end{gather*}
+and
+\begin{gather*}
+X \otimes_R Y[i] \lto (X \otimes _R Y)[i]\,,\\
+x \otimes y \mapsto (-1)^{i|x|} x \otimes y\,.
+\end{gather*}
+\end{lemma}
+
 \section{Atiyah classes}\label{section:atiyahclasses}
 % see assat, the onct series
 
@@ -1125,8 +1164,8 @@ q = |e_{i_{m-p}}| + \cdots + |e_{i_1}| + |f_{j_p}| + \cdots + |f_{j_1}| + (m-p)|
 But considering \eqref{eq:powerofatiyah} it is straightforward to check that the right-hand side of~\eqref{eq:atshufat} is a sum over the same collection of terms, and the signs match.
 \end{proof}
 
-\begin{remark}\label{remark:twistshufat} If in \eqref{eq:shuffle_opat} instead of twisting $\Bar$ to the right we twisted it to the left, so that the operation terminated in $\gamma_*(\Bar) \otimes X \otimes Y$, then \eqref{eq:atshufat} would instead compute $\Atlarrow(X \otimes Y)^m( e_i \otimes f_j )$.
-\end{remark}
+%\begin{remark}\label{remark:twistshufat} If in \eqref{eq:shuffle_opat} instead of twisting $\Bar$ to the right we twisted it to the left, so that the operation terminated in $\gamma_*(\Bar) \otimes X \otimes Y$, then \eqref{eq:atshufat} would instead compute $\Atlarrow(X \otimes Y)^m( e_i \otimes f_j )$.
+%\end{remark}
 
 \subsection{Connections}
 
@@ -1235,7 +1274,7 @@ All deformation retract data in the following are at least $S$-linear.
 \begin{lemma}\label{lemma:firstdefo} There are deformation retract data of $\mathbb{Z}_2$-graded complexes
 \begin{equation}\label{eq:firstdefo1}
 \xymatrix@C+2pc{
-(X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma_d} & (X \, \widehat{\otimes} \, \Bar, b') \ar@<-1ex>[l]_-{\pi}
+(X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma_2} & (X \, \widehat{\otimes} \, \Bar, b') \ar@<-1ex>[l]_-{\pi}
 }%
 \!\!\!\xymatrix{%
 {}\ar@(ur,dr)[]^{-d}
@@ -1244,7 +1283,7 @@ All deformation retract data in the following are at least $S$-linear.
 and
 \begin{equation}\label{eq:firstdefo2}
 \xymatrix@C+2pc{
-(X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma_s} & (X \, \widehat{\otimes} \, \Bar, b') \ar@<-1ex>[l]_-{\pi}
+(X \otimes R, 0) \ar@<-1ex>[r]_-{\sigma_1} & (X \, \widehat{\otimes} \, \Bar, b') \ar@<-1ex>[l]_-{\pi}
 }%
 \!\!\!\xymatrix{%
 {}\ar@(ur,dr)[]^{-s}
@@ -1252,7 +1291,7 @@ and
 \end{equation}
 where
 \begin{equation}\label{eq:sigmsandd}
-\sigma_d(e_i \otimes a ) = e_i \otimes (1 \otimes a) \, , \qquad \sigma_s(e_i \otimes a ) = e_i \otimes (a \otimes 1)\,.
+\sigma_2(e_i \otimes a ) = e_i \otimes (1 \otimes a) \, , \qquad \sigma_1(e_i \otimes a ) = e_i \otimes (a \otimes 1)\,.
 \end{equation}
 Moreover, in \eqref{eq:firstdefo1} every map is $R_2$-linear and in \eqref{eq:firstdefo2} every map is left $R_1$-linear.
 \end{lemma}
@@ -1266,11 +1305,11 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-In the notation of Section \ref{section:atiyahclasses} we can describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}.
+In the notation of Section \ref{section:atiyahclasses} we can now describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}.
 
 \begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is an $R_2$-linear homotopy equivalence with inverse
 \[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{2}(X)^m \sigma_d\,.
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{2}(X)^m \sigma_2\,.
 \]
 More precisely, there is an $R_2$-linear deformation retract datum
 \[
@@ -1286,21 +1325,21 @@ It follows from the perturbation lemma (Proposition \ref{prop:pertlemma}) with L
 (X \otimes R, b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi_\infty}
 }
 \]
-is a deformation retract datum, where with $\tau = \sum_{m \ge 0} (-1)^m (\delta d) \delta$ we have (writing $\sigma = \sigma_d$)
+is a deformation retract datum, where with $\tau = \sum_{m \ge 0} (-1)^m (\delta d) \delta$ we have
 \begin{align*}
-\sigma_\infty = \sum_{m \ge 0} (-1)^m (d \delta)^m \sigma \, , \qquad
+\sigma_\infty = \sum_{m \ge 0} (-1)^m (d \delta)^m \sigma_2 \, , \qquad
 \pi_\infty = \pi + \pi \tau h\, , \qquad
-b_\infty = \pi \tau \sigma\,.
+b_\infty = \pi \tau \sigma_2\,.
 \end{align*}
-Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi \tau = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum of the stated form, where we may use $d^2 = 0$ and $d \sigma = 0$ to write
+Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi \tau = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum of the stated form, where we may use $d^2 = 0$ and $d \sigma_2 = 0$ to write
 \[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \big[ d, \delta \big]^m \sigma = \sum_{m \ge 0} (-1)^m [d, D + d\widetilde{W} \times (-)]^m \sigma\,.
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \big[ d, \delta \big]^m \sigma_2 = \sum_{m \ge 0} (-1)^m [d, D + d\widetilde{W} \times (-)]^m \sigma_2\,.
 \]
-Expanding this yields $\sum_{m \ge 0} (-1)^m [d, D]^m \sigma$ plus terms involving factors of the form
+Expanding this yields $\sum_{m \ge 0} (-1)^m [d, D]^m \sigma_2$ plus terms involving factors of the form
 \begin{equation}\label{eq:finalpertdefo2}
-[d, d\widetilde{W} \times (-)] [d,D]^i \sigma
+[d, d\widetilde{W} \times (-)] [d,D]^i \sigma_2
 \end{equation}
-for some $i \ge 0$. Applying $[d,D]^i \sigma$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
+for some $i \ge 0$. Applying $[d,D]^i \sigma_2$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
 \end{proof}
 
 \begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$.
@@ -1324,7 +1363,7 @@ from which it is clear that $d( \alpha \times \omega ) + \alpha \times d\omega =
 
 \begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is a left $R_1$-linear homotopy equivalence with inverse
 \[
-\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{1}(X)^m \sigma_s\,.
+\sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{1}(X)^m \sigma_1\,.
 \]
 More precisely, there is a left $R_1$-linear deformation retract datum
 \[
@@ -1371,13 +1410,13 @@ into an $R_2$-linear deformation retract datum (resp. left $R_1$-linear). Moreov
 
 \begin{corollary}\label{corollary:koszulstab2} An $R_2$-linear homotopy inverse to $\pi_\Delta$ is given by
 \begin{equation}
-\pi^{-1}_d = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_d\,,
+\pi^{-1}_2 = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_2\,,
 \end{equation}
 while a left $R_1$-linear homotopy inverse is given by
 \begin{equation}
-\pi^{-1}_s = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_s\,.
+\pi^{-1}_1 = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_1\,.
 \end{equation}
-where $\sigma_s, \sigma_d$ are as in \eqref{eq:sigmsandd}.
+where $\sigma_1, \sigma_2$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
 
 With these formulas in hand we return to the lifting problem discussed at the beginning of this section. We show that given $Y \in \hmf(\Re , \widetilde{W})$ composing with $\pi_{\Delta}$ induces a quasi-isomorphism
@@ -1417,9 +1456,9 @@ We apply Corollary \ref{corollary:koszulstab2} with $X = Y^{\vee}$ to see that t
 \Hom_{\Re }(Y, \Delta) \ar[r]^-{\cong}_-{\xi^{-1}} & Y^{\vee} \otimes_{\Re } \Delta \ar[r]^-{\pi_{\Delta}} & Y^{\vee} \otimes_{\Re } R \ar[r]^-{\cong}_-{\xi} & \Hom_{\Re }(Y, R)
 }
 \]
-is a homotopy equivalence, with $\xi$ denoting the canonical isomorphisms. Evaluating the homotopy inverse $\xi \circ \pi_d^{-1} \circ \xi^{-1}$ on the cohomology class of $\varphi$ yields the map $\varphi_{\textup{lift}}$ defined by
+is a homotopy equivalence, with $\xi$ denoting the canonical isomorphisms. Evaluating the homotopy inverse $\xi \circ \pi_2^{-1} \circ \xi^{-1}$ on the cohomology class of $\varphi$ yields the map $\varphi_{\textup{lift}}$ defined by
 \[
-\varphi_{\textup{lift}} = \sum_i \sum_{m \ge 0} (-1)^m \xi \Psi [d, d_X]^m \sigma_d( e_i^* \otimes \varphi(e_i) )\,.
+\varphi_{\textup{lift}} = \sum_i \sum_{m \ge 0} (-1)^m \xi \Psi [d, d_X]^m \sigma_2( e_i^* \otimes \varphi(e_i) )\,.
 \]
 A straightforward computation yields (with $D = d_Y$)
 \[
@@ -1428,7 +1467,7 @@ A straightforward computation yields (with $D = d_Y$)
 which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:liftingresult}.
 \end{proof}
 
-\begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_s$ instead of $\pi^{-1}_d$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{1}$ instead of $\lAt_{2}$.
+\begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_1$ instead of $\pi^{-1}_2$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{1}$ instead of $\lAt_{2}$.
 \end{remark}
 
 For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite-rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ we deduce: 
@@ -1437,7 +1476,7 @@ For future reference, let us conclude by stating the special case of inverses fo
 [TODO: join with \ref{corollary:koszulstab2}]
 $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
 \[
-\lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_s\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_d\,.
+\lambda_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_1\,, \qquad \rho_X^{-1} = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_2\,.
 \]
 \end{proposition}
 
@@ -1470,7 +1509,7 @@ At this point the evaluation and coevaluation morphisms we construct would be mo
 
 \subsection{Coevaluation}\label{subsec:derivcoeval}
 
-In this section $\Delta$ denotes $\Delta_W$. The coevaluation is produced by computing a chain representative for the inverse image of the identity under the canonical quasi-isomorphism of the next result.
+In this section $\Delta$ denotes $\Delta_W$. The coevaluation is produced by computing a chain representative for the inverse image of the identity under the canonical quasi-isomorphism of the next result. We will make use of the various canonical maps recalled in Section \ref{section:canonicalmaps}.
 
 \begin{proposition}\label{prop:isogivescoev} There is a canonical homotopy equivalence of $\mathbb{Z}_2$-graded $k$-complexes
 \begin{equation}
@@ -1488,27 +1527,23 @@ Composing with the natural morphism $\varepsilon: K \lto \Re[n]$ from~\eqref{eq:
 \[
 \zeta: \Delta' \lto \Delta^\vee [n]\, , \qquad \omega \lmt \varepsilon( \omega \wedge - )
 \]
-which is an isomorphism of matrix factorisations. Combining this with various canonical maps and the morphism $\pi: \Delta' \lto \Delta'_0 = \Re \lto R$ we have the following diagram of \textsl{right} $R$-linear morphisms of complexes: 
+which is an isomorphism of matrix factorisations. Combining this with various canonical maps and the morphism $\pi: \Delta' \lto \Delta'_0 = \Re \lto R$ we have the following diagram of $R_2$-linear morphisms:
 \begin{equation}
 \xymatrix{
 \Hom_{\Re}( \Delta, X^\vee[n] \otimes_{S} X)\\
-\Delta^\vee \otimes_{\Re} \left( X^\vee[n] \otimes_{S} X \right) \ar[u]^-{\cong}_-{\xi}\\
-\left( X^\vee[n] \otimes_{S} X \right) \otimes_{\Re} \Delta^\vee \ar[u]^-{\cong}_-{\textup{swap}}\\
-\left( X^\vee \otimes_{S} X \right) \otimes_{\Re} \Delta^\vee[n] \ar[u]^-{\cong}\\
-\left( X^\vee \otimes_{S} X \right) \otimes_{\Re} \Delta' \ar[u]^-{\cong}_-{\zeta} \ar[d]^-{\pi}\\
+\Delta^\vee \otimes_{\Re} \left( X^\vee[n] \otimes_S X \right) \ar[u]^-{\cong}_-{\xi}\\
+\Delta^\vee[n] \otimes_{\Re} \left( X^\vee \otimes_{S} X \right) \ar[u]^-{\cong}\\
+\Delta' \otimes_{\Re} \left( X^\vee \otimes_S X \right) \ar[u]^-{\cong}_-{\zeta \otimes 1}\\
+\left( X^\vee \otimes_{S} X \right) \otimes_{\Re} \Delta' \ar[u]^-{\cong}_-{\textup{swap}} \ar[d]^-{\pi}\\
 \left( X^\vee \otimes_{S} X \right) \otimes_{\Re} R \ar[d]_-{\cong}\ar[d]^-{\kappa}\\
 \Hom_{R \otimes_k S}(X,X)
 }\label{eq:isogivescoev2}
 \end{equation}
-where for $\eta \in \Delta^\vee, x \in X^\vee \otimes_{S} X$ and $\tau \in \Delta$ we have
-\[
-\xi( \eta \otimes x )( \tau ) = (-1)^{|\eta||x|} \eta( \tau ) \cdot x\,,
-\]
-and for $f \in X^\vee$ and $g,g' \in X$: 
+where for $f \in X^\vee$ and $g,g' \in X$: 
 \[
 \kappa( f \otimes g )(g') = (-1)^{|f||g|} f(g') \cdot g\,.
 \]
-So to complete the proof we need only to show that the step marked $\pi$ is a right $R$-linear homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1} with $A = k[x]$ and $R = \Ae$.
+To complete the proof we need only to show that the step marked $\pi$ is a homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1}.
 \end{proof}
 
 \begin{definition}\label{def:coeval}
@@ -1517,45 +1552,39 @@ $\widetilde\coev_X: \Delta \lra X^\dual \otimes X$ is the morphism in the homoto
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
-With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product
+With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product $\reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X)$ the operator
 \[
-\reprod_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X)\,
+\Atlarrow_{2}(X^\vee \otimes X) = [d, d_{X^\vee \otimes X}] = [d, d_{X^\vee}]
 \]
-the operator
-\[
-\Atlarrow_{2}(X^\dual \otimes X) = [d, d_{X^\dual \otimes X}] = [d, d_{X^\dual}]
-\]
-with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow(X^\dual)$ for the operator in the previous equation. If we apply $\Psi: \Bar \lto K$ after a power of the Atiyah class, we end up with maps
+with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow_2(X^\vee)$ for $\Atlarrow_{2}(X^\vee \otimes X)$. Consider the map
 \[
 \xymatrix@C+1pc{
-X^\dual \otimes_{k[z]} X \ar[rr]^-{\Atlarrow(X^\dual)^m} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{k[z]} X ) \ar[r]^-{\Psi} & K \otimes_{\Re} (X^\dual \otimes_{k[z]} X)
+X^\vee \otimes_{S} X \ar[rr]^-{\Atlarrow_2(X^\vee)^m} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X ) \ar[r]^-{\Psi} & \Delta \otimes_{\Re} (X^\vee \otimes_{S} X)
 }
 \]
 which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
 
 \begin{theorem}\label{theorem:coev1} A representative for the coevaluation morphism is the chain map
 \begin{equation}\label{eq:coev10}
-\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^\dual)^m( \iota_X ) \right)\
+\widetilde\coev^L_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^\vee)^m( \iota_X ) \right)\,.
 \end{equation}
-where the Atiyah class sends forms to the left, as explained in Section~\ref{section:atiyahclasses}.
 \end{theorem}
 \begin{proof}
-Let us chase $1_X$ upwards through (\ref{eq:isogivescoev2}), noting that $\iota_X = \kappa^{-1}(1_X)$. With $A = k[x], R = \Ae$ we may apply Corollary \ref{corollary:koszulstab2} to describe a homotopy inverse to $\pi$ in terms of the Atiyah class $[d, d_{X^\dual \otimes X}]$. In light of the observations preceeding the statement of the theorem we have
+We lift the identity $1_X$ upwards through the sequence of quasi-isomorphisms in \eqref{eq:isogivescoev2}, noting that $\iota_X = \kappa^{-1}(1_X)$. To take the inverse image of $\iota_X$ under the map induced by $\pi$ on cohomology, we may use either of the homotopy inverses $\pi_1^{-1}, \pi_2^{-1}$ of Corollary \ref{corollary:koszulstab2}. Using the second yields
 \begin{equation}\label{eq:coev11}
-\pi^{-1} \kappa^{-1}(1_X) = \sum_{m \ge 0} (-1)^m \Psi \big[d, d_{X^\dual}\big]^m( \iota_X )\,.
+\pi^{-1}_2 \kappa^{-1}(1_X) = \sum_{m \ge 0} (-1)^m \Psi \At_2(X^{\vee})^m( \iota_X )\,.
 \end{equation}
-A summand $f \otimes \theta_{\bs{i}}$ in (\ref{eq:coev11}), with $f \in X^\dual \otimes X$ and $\theta_{\bs{i}} = \theta_{i_1} \ldots \theta_{i_p}$ for $i_1 < \ldots < i_p$, maps under $\zeta$ to
-\[
-f \otimes \zeta( \theta_{\bs{i}} ) = f \otimes \varepsilon\big( \theta_{\bs{i}} \wedge - \big)
-\]
-and then to the function $\Delta \lto X^\dagger \otimes X$ defined by $\gamma \lmt (-1)^{|\omega||f|} \varepsilon\big( \gamma \wedge \theta_{\bs{i}} \otimes f \big)$, and so (\ref{eq:coev10}) follows from (\ref{eq:coev11}).
+Applying the swap isomorphism has the effect of exchanging $\At_2$ for $\Atlarrow_2$ in this formula, so that the cohomology class in $\Delta' \otimes_{\Re} (X^\vee \otimes_S X)$ mapping to $1_X$ is $\sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^{\vee})^m( \iota_X )$.
+
+A tensor $\omega \otimes \alpha$ in $\Delta' \otimes_{\Re} (X^\vee \otimes_S X)$ is sent under the remaining maps in \eqref{eq:isogivescoev2} to the function $(-1)^{n(|\omega| + n)} \xi( \varepsilon( \omega \wedge - ) \otimes \alpha )$. This map sends a form $\gamma \in \Delta$ to
+\begin{align}
+\gamma &\mapsto (-1)^{n(|\omega| +n ) + (|\omega| + n)(|\alpha|+n)} \varepsilon( \omega \wedge \gamma ) \cdot \alpha\label{eq:signcalccoeval}\\
+&= (-1)^{|\omega||\alpha| + n|\alpha| + |\omega||\gamma|} \varepsilon( \gamma \wedge \omega ) \cdot \alpha\,. \nonumber
+\end{align}
+This vanishes unless $|\gamma| = n - |\omega|$, so the final sign is $(-1)^{|\omega||\alpha| + n|\alpha| + n|\omega| + |\omega|}$. Since $\iota_X$ has degree zero the element $\sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^{\vee})^m( \iota_X )$ can be written as a sum of tensors $\omega \otimes \alpha$ with $|\omega| = |\alpha| = m$, in which case the sign on \eqref{eq:signcalccoeval} is just $+1$ and the formula \eqref{eq:coev10} follows.
 \end{proof}
 
-There is an alternative presentation which we will also need. On the tensor product
-\[
-( X^\dual \otimes X) \otimes_{\Re } \Bar
-\]
-we consider the operator
+There is an alternative presentation which we will need. On $( X^\dual \otimes X) \otimes_{\Re } \Bar$ consider
 \[
 \At_{1}(X^\dual \otimes X) = [s, d_{X^\dual \otimes X}] = [s, d_X]
 \]
@@ -1583,7 +1612,7 @@ The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ a
 $$
 \Lambda = \lambda_1 \ldots \lambda_n \, . 
 $$ 
-For example the operators $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices as well. 
+For example the operators $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices. 
 
 Postcomposing with $\Lambda$ gives an $S$-linear map (we define $\Lambda^\bullet(\alpha) = \Lambda \circ \alpha)$
 \[
@@ -1605,17 +1634,14 @@ and finally the residue symbol (see Section \ref{section:residuebackground}) giv
 \]
 The composite of the above is the desired morphism $\eval_0$.
 
-\begin{remark} For the moment in this section there is a universal sign factor $\chi$, yet to be determined. We should also address why the map is independent up to homotopy of the choice of $\lambda_i$, by just citing the pushforward paper with Toby perhaps.
-\end{remark}
-
 \begin{lemma}\label{lemma:morphismevalzero} There is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $
 \[
 \eval_0: X \otimes_{R} X^\dual \lto S\,,
 \]
 defined for homogeneous $\eta \in X$ and $\nu \in X^\dual$ by
 \begin{align}
-\eval_0( \eta \otimes \nu ) &= (-1)^{\chi + n|\eta| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \str( \Lambda \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
-&= (-1)^{\chi + n|\eta| + |\nu| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \nu \Lambda( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\eval_0( \eta \otimes \nu ) &= (-1)^{n|\eta| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \str( \Lambda \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
+&= (-1)^{n|\eta| + |\nu| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \nu \Lambda( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \end{align}
 \end{lemma} 
 
@@ -1636,7 +1662,7 @@ X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \De
 \]
 defined for homogeneous $\eta \in X$ and $\nu \in X^\dagger$ by
 \be\label{eq:constructevalmap0}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta| + |\nu| + \chi} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \nu \big( \At_2(X)^m \Lambda ( \eta ) \big) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta| + |\nu|} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \nu \big( \At_2(X)^m \Lambda ( \eta ) \big) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \ee
 \end{proposition}
 
@@ -1699,14 +1725,12 @@ Since in $d_{X \otimes X^\vee} = d_X \otimes 1 + 1 \otimes d_{X^\vee}$ only $d_X
 \end{align*}
 Applying $\eval''_0$ involves taking the supertrace $\str( e_{k_m} \circ e_j^* ) = (-1)^{|e_j|}\delta_{j,k_m}$ so that the above equals
 \[
-\sum_{m \ge 0} \sum_{k,k_1,\ldots,k_{m-1}} (-1)^{m+n+n|e_i|+|e_j|+\chi} \Lambda_{ki} \Psi( d(D_{k_1,k}) \cdots d(D_{j,k_{m-1}}) ) \Res_{S \otimes_k R/S} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\sum_{m \ge 0} \sum_{k,k_1,\ldots,k_{m-1}} (-1)^{m+n+n|e_i|+|e_j|} \Lambda_{ki} \Psi( d(D_{k_1,k}) \cdots d(D_{j,k_{m-1}}) ) \Res_{S \otimes_k R/S} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \]
 which agrees with \eqref{eq:constructevalmap0} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
 \end{proof}
 
 TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
-
-\newpage
 
 \section{Zorro moves}\label{sec:Zorro}
 
@@ -1767,7 +1791,7 @@ which we prove is homotopic to the identity on $X$. Note that we continue to dis
 $$
 \big\langle\!\big\langle - \big\rangle\!\big\rangle: \Bar \lto R_2 
 \, ,\qquad
-\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = (-1)^{\chi} \Res_{\Re /R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] .
+\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = \Res_{\Re /R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] .
 $$
 We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. To be clear, this differential form and the $\partial_{x_i} W$ in the denominator of the residue are all viewed as elements of $R_1$, the copy of $R$ which is integrated out by the residue.
 
@@ -1781,7 +1805,7 @@ Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ o
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
-\mathcal Z = \sum_j (-1)^{(n+1)|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
+\mathcal Z = \sum_j (-1)^{n+|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j
 \ee
 where for $f \in X$, the endomorphism $f \circ e_j^*$ of $X$ sends $g$ to $e_j^*(g) \cdot f$.
 \end{lemma}
@@ -1800,48 +1824,50 @@ There are two subtleties which complicate the proof. The first is that we must d
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
-\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1} &= \sum_{m \ge 0}(-1)^m \Psi \At_2(X)^m \sigma_d\,,\\
-\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{m \ge 0}(-1)^m \Psi \Atlarrow_2(X^{\dagger})^m(\iota_X) \Big)\,,\\
-&= \sum_{m,j} (-1)^{m+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\dagger})^m( e_j^* ) \otimes e_j \Big)\\
-\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{n+n|\eta| + |\nu| + \chi}\Res_{\Se  \otimes_k R/\Se }\! \left[ \frac{ \Psi \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1} &= \sum_{m \ge 0}(-1)^m \Psi \At_2(X)^m \sigma_2\,,\\
+\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{m \ge 0}(-1)^m \Psi \Atlarrow_2(X^{\vee})^m(\iota_X) \Big)\,,\\
+&= \sum_{m,j} (-1)^{m+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\vee})^m( e_j^* ) \otimes e_j \Big)\\
+\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{n+n|\eta| + |\nu|}\Res_{\Se  \otimes_k R/\Se }\! \left[ \frac{ \Psi \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
 %Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) 
 Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes.
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
-Consider the image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1}: 
+Throughout the proof we write $\At$ for $\At_2$. The image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1} is computed by
 \begin{align}
-(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= (1 \otimes \widetilde{\coev}) \sum_{m \ge 0} (-1)^m \Psi \At_2(X)^m (e_q)\nonumber\\
-&= \sum_{j} \sum_{m+m'=n} (-1)^{n+|e_j|} \varepsilon\Big( \Psi \At(X)^m( e_q ) \wedge \Psi \Atlarrow(X^{\dagger})^{m'}( e_j^* ) \otimes e_j \Big) \nonumber\\
-&= \sum_{j} \sum_{m+m' = n} (-1)^{n+|e_j|} \varepsilon\Psi\Big( \At(X)^m( e_q ) \times \Atlarrow(X^{\dagger})^{m'}( e_j^* ) \otimes e_j \Big) \nonumber
+(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= (1 \otimes \widetilde{\coev}) \sum_{m \ge 0} (-1)^m \Psi \At(X)^m (e_q)\nonumber\\
+&= \sum_{j} \sum_{m+m'=n} (-1)^{n+|e_j|} \varepsilon\Big( \Psi \At(X)^m( e_q ) \wedge \Psi \Atlarrow(X^{\vee})^{m'}( e_j^* ) \otimes e_j \Big) \nonumber\\
+&= \sum_{j} \sum_{m+m' = n} (-1)^{n+|e_j|} \varepsilon\Psi\Big( \At(X)^m( e_q ) \times \Atlarrow(X^{\vee})^{m'}( e_j^* ) \otimes e_j \Big) \label{eq:zorro1a12}
 \end{align} 
-In the last step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$. Next we apply Lemma \ref{lemma:atshufat}, or more precisely Remark \ref{remark:twistshufat}, to rewrite this shuffle product of Atiyah classes as the action of a single Atiyah class
+In the last step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$. Next we apply Lemma \ref{lemma:atshufat} to write this shuffle product of Atiyah classes as a single Atiyah class. As it stands in \eqref{eq:zorro1a12} the term inside the $\varepsilon \Psi ( - )$ belongs to $X \otimes \gamma_*(\Bar) \otimes X^\vee \otimes X$. Moving the $\Bar$ to the right of the $X^\vee$ introduces a sign $(-1)^{n( |e_j| + m' )}$. 
+
+We account for this sign by using $\Atlarrow(X^{\vee}[n])^{m'} = (-1)^{nm'} \Atlarrow(X^{\vee})^{m'}$ to rewrite \eqref{eq:zorro1a12} as
+\begin{align*}
+= \sum_{j} \sum_{m+m' = n} (-1)^{n+|e_j|+n(|e_j| + m') + n|e_j|} \varepsilon\Psi\Big( \At(X)^m( e_q ) \times \Atlarrow(X^{\vee}[n])^{m'}( e_j^* ) \otimes e_j \Big)\,.
+\end{align*}
+Then Lemma \ref{lemma:atshufat} applies directly to show that
 \[
-= \sum_j (-1)^{n+|e_j|} \varepsilon \Psi \Big( \Atlarrow(X \otimes X^\dagger)^n( e_q \otimes e_j^* ) \otimes e_j \Big)
+(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) = \sum_j (-1)^{n+|e_j| + n|e_j|} \varepsilon \Psi\Big( \At(X \otimes X^{\vee}[n])^n(e_q \otimes e_j^*) \otimes e_j \Big)\,.
 \]
-This is an element of $X \otimes_R X^\dual \otimes_S X$. Applying the last two maps of \eqref{eq:zorro1a1} is, by definition of $\widetilde\eval$, the same as applying the morphism $\eval_0$ of Lemma \ref{lemma:morphismevalzero}. Recall that this map was pieced together step by step at the beginning of Section \ref{subsec:eval}. Since there are some subtleties with signs, let us address the first few steps explicitly: applying the first isomorphism of \eqref{eq:firstisoevalsec} yields
+Applying the first isomorphism of \eqref{eq:firstisoevalsec} yields
 \[
-\sum_j (-1)^{n+|e_j|} \varepsilon \Psi \Big( \Atlarrow((X \otimes X^\vee)[n])^n( (-1)^{n|e_q|} e_q \otimes e_j^* ) \otimes e_j \Big)\,.
+\sum_j (-1)^{n+(n+1)|e_j| + n|e_q|} \varepsilon \Psi \Big( \At((X \otimes X^\vee)[n])^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
 \]
 Since the Atiyah class of $Y[n]$ differs from that of $Y$ by a sign $(-1)^n$, this is the same as
 \[
-\sum_j (-1)^{|e_j|+n|e_q|} \varepsilon \Psi \Big( \Atlarrow(X \otimes X^\vee)^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
+\sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At(X \otimes X^\vee)^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
 \]
-The next step of \eqref{eq:firstisoevalsec} is identify the left and right actions of $S$, under which operation  $X \otimes X^\vee$ becomes identified $\End(X)$, so we are left with
+The next step of \eqref{eq:firstisoevalsec} is to tensor $- \otimes_{S^e} S$, that is, to identify the left and right actions of $S$, after which $X \otimes X^\vee$ becomes identified $\End(X)$, so we are left with
 \[
-\sum_j (-1)^{|e_j|+n|e_q|} \varepsilon \Psi \Big( \Atlarrow( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
+\sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
 \]
-Switching from the Atiyah class $\Atlarrow$ to one of type $\At$ with noncommutative forms on the right comes at the expense of a sign $(-1)^{n(|e_q|+|e_j|_n}$. The final result of applying \eqref{eq:firstisoevalsec} to $(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q )$ is therefore
-\[
-\sum_j (-1)^{(n+1)|e_j|+n} \varepsilon \Psi \Big( \At^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
-\]
-To finish applying $\eval_0$ it remains to postcompose with $(-1)^n \Lambda$, take the supertrace and then integrate:
+To finish applying $\eval_0$ it remains to compose with $(-1)^n \Lambda$, supertrace and integrate:
 \begin{align*}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
-&= \sum_j (-1)^{(n+1)|e_j|+\chi}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j\\
-&= \sum_j (-1)^{(n+1)|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
+&= \sum_j (-1)^{n+(n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j\\
+&= \sum_j (-1)^{n+(n+1)|e_j|+n|e_q|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
 \end{align*}
-Since the Zorro map~$\mathcal Z$ is $k[x,z]$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
+This clearly vanishes unless $|e_q| = |e_j|$, so the sign in the last formula is in fact $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$. Since the Zorro map~$\mathcal Z$ is $S \otimes_k R$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
 
 The basic adjointness that we need is contained in the next lemma.
