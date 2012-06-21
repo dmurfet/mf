@@ -1592,17 +1592,35 @@ with the second equality holding because $s$ is $k[x]$-linear. We write $\At_{1}
 
 \begin{theorem} A representative for the coevaluation morphism is the chain map
 \[
-\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m( \iota_X ) \wedge \gamma \right)\,.
+\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{m \ge 0} (-1)^{m+mn} \Psi \At_{1}(X)^m( \iota_X ) \wedge \gamma \right)\,.
 \]
 \end{theorem}
 
 \begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
 \end{example}
 
+\subsubsection{Other coevaluation}
+
+On the theory that it's better to have \emph{something} rough here rather than nothing, with the same notation as above the other coevaluation is a morphism
+\[
+\coev_X : \Delta_V \lra X \otimes_R X^\vee[m]\,.
+\]
+If we define
+\[
+\iota_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_R X^\vee[m]
+\]
+then
+\[
+\coev^L_X( \gamma ) = \sum_{i \ge 0} (-1)^i \varepsilon \left( \gamma \wedge \Psi \Atlarrow_2(X)^i( \iota_X ) \right)
+\]
+and the alternative formula is
+\[
+\coev^R_X( \gamma ) = \sum_{i \ge 0} (-1)^{i + im} \varepsilon \left( \Psi \At_1(X^{\vee})^i( \iota_X ) \wedge \gamma \right)\,.
+\]
 \subsection{Evaluation}\label{subsec:eval}
 % see (eval)
 
-In this section $\Delta$ denotes $\Delta_V$. The evaluation will be produced by writing down a natural morphism [TODO: write tilde on top of $\eval_0$ etc.~everywhere?] $\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to the morphism $\widetilde\eval_X$ into $\Delta$. To begin with there is a canonical quotient (an $\Se $-linear morphism of linear factorisations of $\widetilde{V}$)
+In this section $\Delta$ denotes $\Delta_V$. The evaluation will be produced by writing down a natural morphism [TODO: write tilde on top of $\eval_0$ etc.~everywhere?] $\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to the morphism $\widetilde\eval_X$ into $\Delta$. To begin with there is a canonical map (an $\Se $-linear morphism of linear factorisations of $\widetilde{V}$)
 \be\label{eq:firstisoevalsec}
 X \otimes_R (X^{\vee}[n]) \cong (X \otimes_R X^\vee)[n] \lto S \otimes_{\Se } (X \otimes_R X^{\vee})[n] \cong \Hom_{S \otimes_k R}(X,X)[n]\,.
 \ee
@@ -1656,17 +1674,23 @@ X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \De
 \begin{definition} $\widetilde\eval_X$ is the unique morphism in $\HMF(\Se , \widetilde{V})$ making \eqref{eq:defineeval} commute.
 \end{definition}
 
+Before stating the formula for $\widetilde\eval_X$ we need to introduce the $S^e \otimes_k R$-linear map
+\begin{gather*}
+\theta: X \otimes_R X^{\vee} \lto S^e \otimes_k R\,,\\
+\theta( e_i \otimes e_j^* ) = (-1)^{|e_i||e_j|} e_j^*( e_i ) = (-1)^{|e_i|} \delta_{ij}\,.
+\end{gather*}
+
 \begin{proposition}\label{prop:constructevalmap} A representative for the evaluation morphism is the chain map
 \[
 \widetilde\eval_X: X \otimes_R X^\dual \lto \Delta
 \]
 defined for homogeneous $\eta \in X$ and $\nu \in X^\dagger$ by
 \be\label{eq:constructevalmap0}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta| + |\nu|} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \nu \big( \At_2(X)^m \Lambda ( \eta ) \big) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta|} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \theta\left( \At_2(X)^m \Lambda ( \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \ee
 \end{proposition}
 
-Before giving the proof, let us be clear that the term under the residue is the composite
+(\textbf{Todo} redo this part) Before giving the proof, let us be clear that the term under the residue is the composite
 \[
 \xymatrix@C+1pc{
 X \ar[r]^{\Lambda} & X \ar[r]^-{\inc} & \Bar \otimes_S X \ar[r]^-{\At_2(X)^m} & \Bar \otimes_S X \ar[r]^-{1 \otimes \nu} & \Bar \otimes_S S \otimes_k R \cong \Bar \otimes_k R \ar[r]^-{\Psi \otimes 1} & \Delta \otimes_k R
@@ -1682,7 +1706,7 @@ As has already been mentioned, if $X \otimes_R X^\dual$ were finite-rank we coul
 \]
 in $\HMF(\Se , \widetilde{V})$ with $\psi \circ \vartheta = 1$ in the homotopy category and $\vartheta = (-1)^n \Lambda \otimes 1$. Note that since $W$ is a potential, $R/(f_1,\ldots,f_n)$ is a finitely generated free $k$-module and $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee$ is a finite-rank matrix factorisation.
 
-\begin{proof}[Proof of Proposition \ref{prop:constructevalmap}] Consider the commutative diagram
+\begin{proof}[Proof of Proposition \ref{prop:constructevalmap}] (\textbf{todo} Proof stupid, ignore) Consider the commutative diagram
 \be\label{eq:proofconstructevalmap}
 \xymatrix@C+2pc{
 \Hom_{\Se }( (X \otimes_R X^\vee)[n], \Delta ) \ar[d]_{\pi^\bullet_\Delta} \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{\Se }(\bar{X} \otimes_{\bar{R}} \bar{X}^\vee, \Delta ) \ar@<-1ex>[l]_-{\vartheta_\bullet} \ar[d]^{\pi^\bullet_\Delta}\\
