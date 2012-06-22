@@ -1477,39 +1477,44 @@ $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
 
-In the bicategory $\LG$ a $1$-morphism $W \lto V$ is represented by a finite rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials. The \textsl{right} and \emph{left adjoint} of this $1$-morphism are defined respectively to be
+In the bicategory $\LG$ a $1$-morphism $W \lto V$ is represented by a finite rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials. The \textsl{right} and \emph{left adjoints} of $X$ are the $1$-morphisms $V \lto W$ defined respectively by
 \[
 X^\dual = X^\vee[n], \qquad {}^\dual X = X^\vee[m]\,.
 \]
-These are objects of $\hmf(k[x,z], W-V)$, with the differentials as spelled out in \eqref{eq:differentials_adjoints}.
+These are objects of $\hmf(k[x,z], W-V)$, with the differentials spelled out in \eqref{eq:differentials_adjoints}.
 
 In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define canonical evaluation and coevaluation morphisms 
-\begin{align*}
+\begin{align}
 \coev_X &: \Delta_V \lto X \otimes_{k[x]} {}^\dual X
 \, , \qquad
-\eval_X: {}^\dual X \otimes_{k[z]} X \lto \Delta_W\\
+\eval_X: {}^\dual X \otimes_{k[z]} X \lto \Delta_W \label{eq:derivcoeval1}\\
 \widetilde\coev_X&: \Delta_W \lto X^\dual \otimes_{k[z]} X
 \, , \qquad
-\widetilde\eval_X: X \otimes_{k[x]} X^\dual \lto \Delta_V
-\end{align*}
-and derive explicit formulas for these morphisms in terms of Atiyah classes.
+\widetilde\eval_X: X \otimes_{k[x]} X^\dual \lto \Delta_V \label{eq:derivcoeval2}
+\end{align}
+and derive explicit formulas for these morphisms in terms of Atiyah classes. We already give these formulas below; the rest of the section will be spent justifying that these expressions do in fact define chain maps representing canonical morphisms \eqref{eq:derivcoeval1} and \eqref{eq:derivcoeval2} in the homotopy category of matrix factorisations. It is worth pointing out that the evaluation and coevaluation morphisms we construct would be more accurately described as \textsl{candidates}, as it is only later in Section~\ref{sec:Zorro} that we show that these maps are actually the counit and unit of an adjunction by proving the Zorro moves.
 
-To simplify the notation we set $R = k[x]$ and $S = k[z]$ so that $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W$ and $X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}. 
+ While the homotopy classes of these morphisms are canonical the formulas depend on a choice of homogeneous basis $\{ e_i \}_{i}$ for $X$ with dual basis $\{ e_i^* \}_{i}$. Representatives for the coevaluation morphisms are given by the chain maps
+\begin{gather}
+\widetilde\coev_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_2(X^\vee)^l( \iota_X ) \right)\,, \label{eq:coev10}\\
+\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_{k[z]} X \nonumber
+\end{gather}
+and
+\begin{gather}
+\coev_X( \gamma ) = \sum_{l \ge 0} (-1)^l \varepsilon \left( \gamma \wedge \Psi \Atlarrow_2(X)^l( \iota_X ) \right)\,,\label{eq:coev102}\\
+\iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X\,. \nonumber
+\end{gather}
+A representative for the first evaluation morphism is given by ($\Lambda = \partial_{x_1}(d_X) \cdots \partial_{x_n}(d_X)$)
+\be\label{eq:constructevalmap00}
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{n+l+n|\eta|+|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \nu\left( \At_2(X)^l( \Lambda \eta ) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\ee
+Since $\nu$ and $\eta$ involve different copies of the $z$-variables this formula is slightly dishonest: it does not naively make sense to evaluate $\nu$ on $\At_2(X)^l( \Lambda \eta )$. A fully accurate statement is given as Proposition \ref{prop:constructevalmap}. In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$
+\be\label{eq:constructevalmap01}
+\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{n}{2}+l+n|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \At_2(X^{\vee})^l( \nu \circ \Lambda ) (\eta) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\ee
+To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W$ and $X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}. 
 
 
-We fix a homogeneous basis $\{ e_i \}_{i \in I}$ for $X$ with dual basis $\{ e_i^* \}_{i \in I}$.
-
-A representative for the coevaluation morphism is the chain map toad
-\begin{gather*}
-\widetilde\coev_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^\vee)^m( \iota_X ) \right)\,, \label{eq:coev10}\\
-\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_S X\,.
-\end{gather*}
-then
-\begin{gather*}
-\coev_X( \gamma ) = \sum_{i \ge 0} (-1)^i \varepsilon \left( \gamma \wedge \Psi \Atlarrow_2(X)^i( \iota_X ) \right)\,,\\
-\iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_R {}^\dual X\,.
-\end{gather*}
-At this point the evaluation and coevaluation morphisms we construct would be more accurately described as a \textsl{candidates}, as it is only later in Section~\ref{sec:Zorro} that we show that our candidates are actually the counit and unit of an adjunction by proving the Zorro moves.
 
 \subsection{Coevaluation}\label{subsec:derivcoeval}
 
