@@ -598,7 +598,7 @@ One of the main results of the present paper is that $\LG$ (and also $\LG^{\math
 \begin{definition}\label{def:bicatduals}
 [TODO: what is called left adjoint here is called right adjoint in the paper with Ingo. The reason is that ${}^\dual X$ looks stupid and Sections 5 and 6 are full of right duals. OK to have notational clash with [CR2010]?]
 
-We say a bicategory~$\mathcal B$ \textsl{has left adjoints} if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism ${}^\dual X \in \mathcal B(B,A)$ together with 2-morphisms 
+We say a bicategory~$\mathcal B$ \textsl{has left adjoints} if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism ${}^\dual X \in \mathcal B(B,A)$ together with 2-morphisms (\textbf{todo} $\circ$ not $\otimes$ here?)
 \be\label{evcoev}
 \eval_X : {}^\dual X \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes {}^\dual X
 \ee
@@ -785,7 +785,7 @@ d_{{}^\dual X} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatr
 \, , \qquad 
 d_{X^\dual} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[n] 
 \ee
-where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules. On the other hand, the whole of Sections~\ref{sec:derivcoeval} and~\ref{sec:Zorro} are devoted to construct the evaluation and coevaluation morphisms and prove the Zorro moves. This is complicated enough that instead of tackling it directly we will need to introduce the completed bar complex of the ring~$R$. As preparation we shall next discuss some background on noncommutative forms. 
+where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules. On the other hand, the whole of Sections~\ref{sec:derivcoeval} and~\ref{sec:Zorro} are devoted to construct the evaluation and coevaluation morphisms and prove the Zorro moves. This is complicated enough that instead of tackling it directly we will need to introduce the bar complex of the ring~$R$. As preparation we shall next discuss some background on noncommutative forms. 
 
 \subsection{Bar complex}\label{subsec:Bar}
 
@@ -1087,7 +1087,7 @@ and more generally for $m \ge 1$,
 % for signs see for example shati
 There are slightly more complicated formulas for $\At_1$, but since this Atiyah class is less important for us than $\At_2$ we leave the details to Remark \ref{remark:at2formulas} below. We call these \textsl{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_1$ and $\At_{2}$ as a cohomology class, so we should perhaps refer to Atiyah \textsl{operators}, but we persist with the above terminology.
 
-To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $\Re $-module via the right action of $\Re $ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that $\At_{2}(X)$ is right $\Re $-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp.~$s$) as differentiating in the $R_1$-directions (resp.~$R_2$-directions).
+To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $\Re $-module via the right action of $\Re $ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:at2nopower} that $\At_{2}(X)$ is right $\Re $-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp.~$s$) as differentiating in the $R_1$-directions (resp.~$R_2$-directions).
 
 \begin{remark}\label{remark:linearatother} 
 Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $(S \otimes_k \Re)$-module with $(S \otimes_k \Re)$-linear operator $D$. If we choose a homogeneous $(S \otimes_k \Re)$-basis for~$X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd}, \eqref{eq:extends} then $[d, D]$ and $[s, D]$ are operators on $X \otimes \Bar$ and we use the same notation and terminology for these operators. All our remarks extend \textsl{mutatis mutandis} to this kind of Atiyah class.
@@ -1245,9 +1245,9 @@ It is sometimes helpful to view $X \,\widehat{\otimes}\, \Bar$ as the inverse li
 \[
 \cdots \lto X \otimes \Bar/\Bar_{\ge 2} \lto X \otimes \Bar/\Bar_{\ge 1}
 \]
-where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$ and the maps are the obvious quotients $\Bar/\Bar_{\ge m+1} \lto \Bar/\Bar_{\ge m}$. Since $\Bar$ is an $\Re $-bimodule via left and right multiplication there are natural left and right $\Re $-actions on $X \,\widehat{\otimes}\, \Bar$. Since the left and right actions of $R_2$ on $\Bar$ agree, this amounts to an $R_2$-action on $X \,\widehat{\otimes}\, \Bar$ together with the structure of an $R_1$-bimodule. There is of course an $S$-module structure as well, which is preserved by all maps in this section and which we will henceforth not emphasise.
+where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$ and the maps are the obvious quotients $\Bar/\Bar_{\ge m+1} \lto \Bar/\Bar_{\ge m}$. Since $\Bar$ is an $\Re $-bimodule via left and right multiplication there are natural left and right $\Re $-actions on $X \,\widehat{\otimes}\, \Bar$. Since the left and right actions of $R_2$ on $\Bar$ agree, this amounts to an $R_2$-action on $X \,\widehat{\otimes}\, \Bar$ together with the structure of an $R_1$-bimodule. There is of course an $S$-module structure as well, which is preserved by all maps and which we will henceforth not emphasise.
 
-Let $W \in R$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in \Re$. Our first observation is that $X \,\widehat{\otimes}\, \Bar$ can be equipped as a linear factorisation of $U + \widetilde{W}$. One checks that there are well-defined operators
+Let $W \in R$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in \Re$. Our first observation is that $X \,\widehat{\otimes}\, \Bar$ can be equipped as a linear factorisation of $U + \widetilde{W}$. One checks that there are well-defined operators on $X \,\widehat{\otimes}\, \Bar$ defined by
 \begin{align*}
 D(x_0, x_1, \ldots) &= (D(x_0), D(x_1), \ldots) \, , \\
 b'(x_0, x_1, \ldots) &= (b'(x_1),b'(x_2),\ldots) \, , \\
@@ -1255,7 +1255,7 @@ d(x_0,x_1,\ldots) &= (0, d(x_0), d(x_1),\ldots) \, , \\
 s(x_0,x_1,\ldots) &= (0, s(x_0), s(x_1), \ldots) \, , \\
 d \widetilde{W} \times (x_0,x_1,\ldots) &= (0, d \widetilde{W} \times x_0, d \widetilde{W} \times x_1, \ldots)
 \end{align*}
-on $X \,\widehat{\otimes}\, \Bar$, where $d$ and $s$ are extended to $X \otimes \Bar$ as in Section \ref{section:atiyahclasses} using the chosen basis. 
+where $d$ and $s$ are extended to $X \otimes \Bar$ as in Section \ref{section:atiyahclasses} using the chosen basis. 
 
 %For the next result assume that $U + \widetilde{W}$ belongs to the image of $S \otimes_k R_i$ in $S \otimes_k \Re $ for some $i \in \{1,2\}$ so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over $S \otimes_k R_i$.
 
@@ -1314,11 +1314,11 @@ In the notation of Section \ref{section:atiyahclasses} we can now describe the h
 \sigma_\infty = \sum_{m \ge 0} (-1)^m \At_{2}(X)^m \sigma_2\,.
 \]
 More precisely, there is an $R_2$-linear deformation retract datum
-\[
+\be\label{eq:finalpertdefo001}
 \xymatrix@C+2pc{
 (X \otimes R, D \otimes 1) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi}
 }.
-\]
+\ee
 \end{proposition}
 \begin{proof}
 It follows from the perturbation lemma (Proposition \ref{prop:pertlemma}) with Lemmas~\ref{lemma:firstdefo} and~\ref{lemma:smallpertde} that
@@ -1333,7 +1333,7 @@ is a deformation retract datum, where with $\tau = \sum_{m \ge 0} (-1)^m (\delta
 \pi_\infty = \pi + \pi \tau h\, , \qquad
 b_\infty = \pi \tau \sigma_2\,.
 \end{align*}
-Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi \tau = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum of the stated form, where we may use $d^2 = 0$ and $d \sigma_2 = 0$ to write
+Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi \tau = \pi D$. It follows that $b_\infty = D \otimes 1$ and $\pi_\infty = \pi - \pi D d = \pi$. So there is a deformation retract datum \eqref{eq:finalpertdefo001}, where we may use $d^2 = 0$ and $d \sigma_2 = 0$ to write
 \[
 \sigma_\infty = \sum_{m \ge 0} (-1)^m \big[ d, \delta \big]^m \sigma_2 = \sum_{m \ge 0} (-1)^m [d, D + d\widetilde{W} \times (-)]^m \sigma_2\,.
 \]
@@ -1341,7 +1341,7 @@ Expanding this yields $\sum_{m \ge 0} (-1)^m [d, D]^m \sigma_2$ plus terms invol
 \begin{equation}\label{eq:finalpertdefo2}
 [d, d\widetilde{W} \times (-)] [d,D]^i \sigma_2
 \end{equation}
-for some $i \ge 0$. Applying $[d,D]^i \sigma_2$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
+for some $i \ge 0$. Applying $[d,D]^i \sigma_2$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms of the form (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
 \end{proof}
 
 \begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$.
@@ -1482,7 +1482,6 @@ $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given 
 \]
 \end{proposition}
 
-\newpage
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
 
