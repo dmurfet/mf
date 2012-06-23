@@ -87,8 +87,8 @@
 \DeclareMathOperator{\HMF}{HMF}
 \DeclareMathOperator{\HF}{HF}
 \DeclareMathOperator{\pr}{pr}
-\DeclareMathOperator{\At}{At}
 \DeclareMathOperator{\lAt}{lAt}
+\DeclareMathOperator{\At}{At}
 \DeclareMathOperator{\mff}{mf}
 \DeclareMathOperator{\MF}{MF}
 \DeclareMathOperator{\Sh}{Sh}
@@ -817,9 +817,9 @@ A central role is played by the \textsl{(normalised) bar complex}
 \ee
 It is an $(A \otimes A^{\text{op}})$-module via $(a\otimes a').(a_0da_1\ldots da_n\otimes a_{n+1}) = aa_0da_1\ldots da_n\otimes a_{n+1}a'$. Together with the differential $d\otimes 1_A$ (which by standard abuse of notation we usually simply write~$d$) and the product induced from $\Omega A$ and~$A$, the bar complex~$\Bar$ is a differential graded algebra $(\Bar,d,\cdot)$. While $d$ is right $A$-linear, we will also make use of the left $A$-linear operator $s$ on $\Bar$ defined by
 % for the operator s see coevc3
-\[
+\be\label{eq:definition_s}
 s( a_0 da_1 \ldots da_n \otimes a_{n+1} ) = (-1)^{n+1} a_0 da_1 \ldots da_n da_{n+1}\,.
-\]
+\ee
 There is a second differential graded structure on~$\Bar$ if the algebra~$A$ is commutative. To describe it let us first recall that (still for arbitrary~$A$) the bar complex is the standard resolution 
 $$
 \xymatrix{%
@@ -1020,7 +1020,7 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 
 We end this section by recalling the definition of several canonical maps. Throughout~$R$ is a ring and all factorisations are over~$R$. Let~$X$ and~$Y$ denote linear factorisations of~$W$ and~$V$, respectively.
 
-\begin{lemma} There is a natural morphism of linear factorisations of $V - W$, 
+\begin{lemma}\label{lemma:iso_tensorhom1} There is a natural morphism of linear factorisations of $V - W$, 
 $$
 \xi: X^{\vee} \otimes_R Y \lto \Hom_R(X,Y)\, , \qquad
 \xi( \nu \otimes y )(x) = (-1)^{|\nu||y|} \nu(x) \cdot y \, ,
@@ -1036,10 +1036,10 @@ $$
 \end{lemma}
 
 Precomposing~$\xi$ with this swap isomorphism we have a canonical morphism
-\begin{gather*}
+\be\label{eq:iso_tensorhom2}
 Y \otimes_R X^{\vee} \lto \Hom_R(X,Y)\,, \qquad
 y \otimes \nu \lmt \big\{ x \lmt \nu(y) \cdot x \big\}\,.
-\end{gather*}
+\ee
 Since it is unlikely to cause confusion, we also denote this map by $\xi$.
 
 \begin{lemma} There are natural isomorphisms of linear factorisations of $W + V$, 
@@ -1076,21 +1076,21 @@ The \textsl{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes \
 \end{align*}
 \end{definition}
 
-One can easily check that for $\omega \in \Bar$ we have
-\[
-\At_{2}(X)( e_i \otimes \omega ) = \sum_j (-1)^{|e_j|} e_j \otimes d( D_{ji} ) \omega
-\]
-and more generally for $m \ge 1$: 
-\begin{equation}\label{eq:powerofatiyah}
-\At_{2}(X)^m( e_i \otimes \omega ) = (-1)^{m|e_i| + \binom{m+1}{2}} \sum_{j_1,\ldots,j_m} e_{j_m} \otimes d( D_{j_m, j_{m-1}} ) \ldots d(D_{j_2,j_1})d( D_{j_1 i} ) \omega\,.
-\end{equation}
+One checks that for $\omega \in \Bar$
+\be\label{eq:at2nopower}
+\At_{2}(X)( e_i \otimes \omega ) = \sum_j (-1)^{|e_j|} e_j \otimes d( D_{ji} ) \omega\,,
+\ee
+and more generally for $m \ge 1$,
+\be
+\At_{2}(X)^m( e_i \otimes \omega ) = (-1)^{m|e_i| + \binom{m+1}{2}} \sum_{j_1,\ldots,j_m} e_{j_m} \otimes d( D_{j_m, j_{m-1}} ) \ldots d(D_{j_2,j_1})d( D_{j_1 i} ) \omega\,\label{eq:powerofatiyah}
+\ee
 % for signs see for example shati
-There are similar formulas for $\At_{1}$. We call these \textsl{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_{2}$ as a cohomology class, so we should perhaps refer to Atiyah \textsl{operators}, but we persist with the above terminology.
+There are slightly more complicated formulas for $\At_1$, but since this Atiyah class is less important for us than $\At_2$ we leave the details to Remark \ref{remark:at2formulas} below. We call these \textsl{associative} Atiyah classes to distinguish them from the more standard Atiyah classes defined using commutative differential forms, but since the latter do not appear in this paper (with the exception of Appendix \ref{section:dualityadjointop}) we will omit the qualifier ``associative''. Without conditions on $D^2$ there is no interpretation of $\At_1$ and $\At_{2}$ as a cohomology class, so we should perhaps refer to Atiyah \textsl{operators}, but we persist with the above terminology.
 
-To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $\Re $-module via the right action of $\Re $ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that both $\At_{2}(X)$ and $\At_{1}(X)$ are right $\Re $-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp.~$s$) as differentiating in the $R_1$-directions (resp.~$R_2$-directions).
+To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $\Re $-module via the right action of $\Re $ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:powerofatiyah} that $\At_{2}(X)$ is right $\Re $-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp.~$s$) as differentiating in the $R_1$-directions (resp.~$R_2$-directions).
 
 \begin{remark}\label{remark:linearatother} 
-Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $(S \otimes_k \Re)$-module with $(S \otimes_k \Re)$-linear operator $D$. If we choose a homogeneous $(S \otimes_k \Re)$-basis for~$X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd}, \eqref{eq:extends} then $[d, D]$ and $[s, D]$ are $S$-linear and right $\Re $-linear operators on $X \otimes \Bar$ and we use the same notation and terminology for these operators. All our remarks extend \textsl{mutatis mutandis} to this kind of Atiyah class.
+Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $(S \otimes_k \Re)$-module with $(S \otimes_k \Re)$-linear operator $D$. If we choose a homogeneous $(S \otimes_k \Re)$-basis for~$X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd}, \eqref{eq:extends} then $[d, D]$ and $[s, D]$ are operators on $X \otimes \Bar$ and we use the same notation and terminology for these operators. All our remarks extend \textsl{mutatis mutandis} to this kind of Atiyah class.
 \end{remark}
 
 There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $\Re $-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by $\lAt_{2}(X) = [d, D]$ and $\lAt_{1}(X) = [s,D]$. 
@@ -1098,7 +1098,7 @@ The difference from the other Atiyah classes appears when we exponentiate:
 \begin{equation}\label{eq:leftatiyahexp}
 \lAt_{2}(X)^m( \omega \otimes e_i ) = \sum_{j_1,\ldots,j_m} \omega d( D_{j_1,i} ) d(D_{j_2,j_1}) \ldots d(D_{j_m,j_{m-1}}) \otimes e_{j_m}\,.
 \end{equation}
-From this expression it is clear that $\lAt_{2}$ and $\lAt_{1}$ are both left $\Re $-linear, using the action of left multiplication on $\Bar$ in $\Bar \otimes X$.
+From this it is clear that $\lAt_{2}$ is left $\Re $-linear, using the action of left multiplication on $\Bar \otimes X$.
 
 In addition to these four distinct kinds of Atiyah classes, we will sometimes need purely cosmetic variants where we switch the order of elements of $X$ and $\Bar$ in the tensors. This creates an awkward situation with the notation, since we want elements of $\Re $ traversing the tensor product to act on the same side of $\Bar$ as before. Maybe the clearest way to indicate this is to use the map
 \begin{equation}\label{eq:attau}
@@ -1117,44 +1117,53 @@ in which the rows are graded twist maps (with Koszul signs). To be explicit,
 \ee
 We adopt similar notational conventions for the other Atiyah classes.
 
+\begin{remark}\label{remark:at2formulas} In the formulas for $\At_1$ it is sufficient for our purposes to only consider $\omega' \in \Bar$ of the form $\omega' = a_0 da_1 \ldots da_n \otimes 1$. Then
+\be
+\At_1(X)(e_i \otimes \omega' ) = \sum_j (-1)^{|e_j| + n + 1} e_j \otimes D_{ji}^{(1)} \omega d( D_{ji}^{(2)} )
+\ee
+where we write $D_{ji} = \sum D_{ji}^{(1)} \otimes D_{ji}^{(2)} \in \Re$. The additional sign compared to \eqref{eq:at2nopower} comes from the sign in the definition \eqref{eq:definition_s} of the operator $s$. More generally for $m \ge 1$,
+\be
+\At_1(X)^m( e_i \otimes \omega' ) = (-1)^{m|e_i| + mn} \sum_{j_1,\ldots,j_m} e_{j_m} \otimes D_{j_1 i}^{(1)} \ldots D_{j_mj_{m-1}}^{(1)} \omega d(D_{j_1i}^{(2)}) \ldots d(D_{j_mj_{m-1}}^{(2)})\,.
+\ee
+\end{remark}
+
 \subsection{Properties}
 
-With the above notation, let $(X,d_X)$ and $(Y,d_Y)$ be $\mathbb{Z}_2$-graded free $\Re $-modules equipped with odd $\Re $-linear differentials (again, no condition on $d_X^2$ or $d_Y^2$) and respective homogeneous bases $\{ e_i \}_{i}$ and $\{ f_j \}_{j}$. Throughout all Atiyah classes are of the same ``type'' and we write $\At$ for $\At_{2}$. 
-
-Giving $X \otimes Y$ the differential $d_{X \otimes Y} = d_X \otimes 1 + 1 \otimes d_Y$ and the basis $\{ e_i \otimes f_j \}_{i,j}$ we have
+With the above notation, let $(X,d_X)$ and $(Y,d_Y)$ be $\mathbb{Z}_2$-graded free $\Re $-modules equipped with odd $\Re $-linear differentials (again, no condition on $d_X^2$ or $d_Y^2$) and respective homogeneous bases $\{ e_i \}_{i}$ and $\{ f_j \}_{j}$. Giving $X \otimes Y$ the differential $d_{X \otimes Y} = d_X \otimes 1 + 1 \otimes d_Y$ and the basis $\{ e_i \otimes f_j \}_{i,j}$ we have
 \begin{align*}
 \At(X) &\in \End( X \otimes \Bar ) \, ,\\
 \Atlarrow(Y) &\in \End( \reprod_*(\Bar) \otimes Y ) \, ,\\
-\At(X \otimes Y) &\in \End( X \otimes Y \otimes \Bar )\,.
+\At(X \otimes Y) &\in \End( X \otimes Y \otimes \Bar )
 \end{align*}
-An important property of the commutative Atiyah class is that the class of $X \otimes Y$ can be expressed in terms of the classes of $X$ and $Y$. The analogue for associative Atiyah classes involves the shuffle product, which we make into an $\Re $-linear operation
+where $\At$ denotes either $\At_1$ or $\At_2$. An important property of the commutative Atiyah class is that the class of $X \otimes Y$ can be expressed in terms of the classes of $X$ and $Y$. The analogue for associative Atiyah classes involves the shuffle product, which we make into an $\Re $-linear operation
 \begin{equation}\label{eq:shuffle_opat}
 \xymatrix@C+2pc{
 X \otimes \reprod_*(\Bar) \otimes \reprod_*(\Bar) \otimes Y \ar[r]^-{1 \otimes \times \otimes 1} & X \otimes \reprod_*(\Bar) \otimes Y \ar[r]^-{\cong} & X \otimes Y \otimes \Bar
 }
 \end{equation}
-where the last map is the graded twist on the second two components. The following lemma is sufficient for our purposes, but it would be desirable to have a natural, basis-free analogue.
+where the last map is the graded twist on the second two components. %The following lemma is sufficient for our purposes, but it would be desirable to have a natural, basis-free analogue.
 
 \begin{lemma}\label{lemma:atshufat} For $m \ge 0$ we have
-\be\label{eq:atshufat}
-\At(X \otimes Y)^m( e_i \otimes f_j ) = \sum_{p+q = m} \At(X)^p(e_i) \times \Atlarrow(Y)^q(f_j)
-\ee
+\begin{align}
+\At_2(X \otimes Y)^m( e_i \otimes f_j ) &= \sum_{p+q = m} \At_2(X)^p(e_i) \times \Atlarrow_2(Y)^q(f_j)\,,\label{eq:atshufat}\\
+\At_1(X \otimes Y)^m( e_i \otimes f_j ) &= \sum_{p+q = m} (-1)^{pq} \At_1(X)^p(e_i) \times \Atlarrow_1(Y)^q(f_j)\label{eq:atshufat2}
+\end{align}
 where on the right-hand side we use the operation \eqref{eq:shuffle_opat}. 
 \end{lemma}
 \begin{proof}
 We have
 \[
-\At(X \otimes Y)(e_i \otimes f_j) = \sum_{i_1} (-1)^{|e_{i_1}| + |f_j|} e_{i_1} \otimes f_j \otimes d( d_{X,i_1,i}) + \sum_{j_1} (-1)^{|f_{j_1}|} e_i \otimes f_{j_1} \otimes d( d_{Y, j_1,j} )\,.
+\At_2(X \otimes Y)(e_i \otimes f_j) = \sum_{i_1} (-1)^{|e_{i_1}| + |f_j|} e_{i_1} \otimes f_j \otimes d( d_{X,i_1,i}) + \sum_{j_1} (-1)^{|f_{j_1}|} e_i \otimes f_{j_1} \otimes d( d_{Y, j_1,j} )\,.
 \]
-Iterating, we see that $\At(X \otimes Y)^m(e_i \otimes f_j)$ is a sum over all indices of terms
-\[
+Iterating, we see that $\At_2(X \otimes Y)^m(e_i \otimes f_j)$ is a sum over all indices of terms
+\be\label{eq:proofofatiyahshuff}
 e_{i_{m-p}} \otimes f_{j_p} \otimes \sigma_\bullet( \underbrace{d(d_{X,i_{m-p}i_{m-p-1}}), \ldots, d(d_{X,i_1i})}_{m-p}, \underbrace{d(d_{Y,j_pj_{p-1}}), \ldots, d(d_{Y,j_1j})}_p )
-\]
+\ee
 where $\sigma$ is an $(m-p,p)$ shuffle and the sign that is attached to such a term is $(-1)^q$ where
 \[
 q = |e_{i_{m-p}}| + \ldots + |e_{i_1}| + |f_{j_p}| + \ldots + |f_{j_1}| + (m-p)|f_{j_p}| + |\sigma|\,.
 \]
-But considering \eqref{eq:powerofatiyah} it is straightforward to check that the right-hand side of~\eqref{eq:atshufat} is a sum over the same collection of terms, and the signs match.
+But considering \eqref{eq:powerofatiyah} it is straightforward to check that the right-hand side of~\eqref{eq:atshufat} is a sum over the same collection of terms, and the signs match, so that \eqref{eq:atshufat} holds. The situation for \eqref{eq:atshufat2} and $\At_1$ is similar. The only significant difference is that $s$ contributes an additional sign of parity $\binom{p+1}{2}$ to $\At_1(X)^p$, of parity $\binom{q+1}{2}$ to $\At_1(Y)^q$ and of parity $\binom{m+1}{2}$ to $\At_1(X \otimes Y)^m$ (compared to the signs on the $\At_2$ counterparts). The difference is compensated by the sign $(-1)^{pq}$ present in \eqref{eq:atshufat2}.
 \end{proof}
 
 %\begin{remark}\label{remark:twistshufat} If in \eqref{eq:shuffle_opat} instead of twisting $\Bar$ to the right we twisted it to the left, so that the operation terminated in $\gamma_*(\Bar) \otimes X \otimes Y$, then \eqref{eq:atshufat} would instead compute $\Atlarrow(X \otimes Y)^m( e_i \otimes f_j )$.
@@ -1248,7 +1257,7 @@ d \widetilde{W} \times (x_0,x_1,\ldots) &= (0, d \widetilde{W} \times x_0, d \wi
 \end{align*}
 on $X \,\widehat{\otimes}\, \Bar$, where $d$ and $s$ are extended to $X \otimes \Bar$ as in Section \ref{section:atiyahclasses} using the chosen basis. 
 
-For the next result assume that $U + \widetilde{W}$ belongs to the image of $S \otimes_k R_i$ in $S \otimes_k \Re $ for some $i \in \{1,2\}$ so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over $S \otimes_k R_i$.
+%For the next result assume that $U + \widetilde{W}$ belongs to the image of $S \otimes_k R_i$ in $S \otimes_k \Re $ for some $i \in \{1,2\}$ so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over $S \otimes_k R_i$.
 
 \begin{lemma} $( X \, \widehat{\otimes}_R\, \Bar, d_X + b' + d\widetilde{W} \times (-) )$ is a linear factorisation of $U + \widetilde{W}$.
 \end{lemma}
@@ -1496,68 +1505,64 @@ and derive explicit formulas for these morphisms in terms of Atiyah classes. We 
 
  While the homotopy classes of these morphisms are canonical the formulas depend on a choice of homogeneous basis $\{ e_i \}_{i}$ for $X$ with dual basis $\{ e_i^* \}_{i}$. Representatives for the coevaluation morphisms are given by the chain maps
 \begin{gather}
-\widetilde\coev_X(\gamma) = \varepsilon \left( \gamma \wedge \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_2(X^\vee)^l( \iota_X ) \right)\,, \label{eq:coev10}\\
+\widetilde\coev_X(\gamma) = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge  (-1)^l \Psi \Atlarrow_2(X^\vee)^l( \iota_X ) \right)\,, \label{eq:coev10}\\
 \iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_{k[z]} X \nonumber
 \end{gather}
 and
 \begin{gather}
-\coev_X( \gamma ) = \sum_{l \ge 0} (-1)^l \varepsilon \left( \gamma \wedge \Psi \Atlarrow_2(X)^l( \iota_X ) \right)\,,\label{eq:coev102}\\
+\coev_X( \gamma ) = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge (-1)^l \Psi \Atlarrow_2(X)^l( \iota'_X ) \right)\,,\label{eq:coev102}\\
 \iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X\,. \nonumber
 \end{gather}
 A representative for the first evaluation morphism is given by ($\Lambda = \partial_{x_1}(d_X) \cdots \partial_{x_n}(d_X)$)
 \be\label{eq:constructevalmap00}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{n+l+n|\eta|+|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \nu\left( \At_2(X)^l( \Lambda \eta ) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{n+l+n|\eta|+|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \nu\left( \lAt_2(X)^l( \Lambda \eta ) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
 \ee
-Since $\nu$ and $\eta$ involve different copies of the $z$-variables this formula is slightly dishonest: it does not naively make sense to evaluate $\nu$ on $\At_2(X)^l( \Lambda \eta )$. A fully accurate statement is given as Proposition \ref{prop:constructevalmap}. In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$
+Since $\nu$ and $\eta$ involve different copies of the $z$-variables this formula is slightly dishonest: it does not naively make sense to evaluate $\nu$ on $\lAt_2(X)^l( \Lambda \eta )$. A fully accurate statement is given as Proposition \ref{prop:constructevalmap}. In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$
 \be\label{eq:constructevalmap01}
-\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{n}{2}+l+n|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \At_2(X^{\vee})^l( \nu \circ \Lambda ) (\eta) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{n}{2}+l+n|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda ) (\eta) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
 \ee
-To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W$ and $X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}. 
+To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}. 
 
-
+Throughout we make use of the canonical maps from Section \ref{section:canonicalmaps}.
 
 \subsection{Coevaluation}\label{subsec:derivcoeval}
 
-In this section $\Delta$ denotes $\Delta_W$. The coevaluation is produced by computing a chain representative for the inverse image of the identity under the canonical quasi-isomorphism of the next result. We will make use of the various canonical maps recalled in Section \ref{section:canonicalmaps}.
+In this section we present the coevaluation morphism $\widetilde\coev_X$ and the derivation of its explicit chain level representative. Afterwards we consider the other coevaluation $\coev_X$, but since the derivation is almost identical we leave most of the details in this case to the reader.
 
 \begin{proposition}\label{prop:isogivescoev} There is a canonical homotopy equivalence of $\mathbb{Z}_2$-graded $k$-complexes
 \begin{equation}
-\Hom_{\Re }( \Delta, X^\dual \otimes_{S} X ) \lto \Hom_{R \otimes_k S}(X,X)\,. \label{eq:isogivescoev}
+\Hom_{\Re }( \Delta_W, X^\dual \otimes_{S} X ) \lto \Hom_{R \otimes_k S}(X,X)\,. \label{eq:isogivescoev}
 \end{equation}
 \end{proposition}
-\begin{proof}
-Let $\Delta'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta$ but with the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in just the same way that $\Delta$ approximates it as a factorisation of $\widetilde{W}$. Also let~$K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta$, but the differential~$\delta_{-}$, so~$K$ is the usual Koszul complex of $x_1 - x'_1, \ldots, x_n - x'_n$.
+
+\begin{definition}\label{def:coeval} We define $\widetilde\coev_X: \Delta_W \lra X^\dual \otimes_S X$ to be the morphism in the homotopy category $\HMF(\Re, \widetilde{W})$ whose cohomology class maps to $1_X$ under the quasi-isomorphism \eqref{eq:isogivescoev}.
+\end{definition}
+
+\begin{proof}[Proof of Proposition \ref{prop:isogivescoev}]
+Let $\Delta_W'$ denote the matrix factorisation of $- \widetilde{W}$ with the same underlying graded free module as $\Delta_W$ but the modified differential $d_{\Delta'} = - \delta_{+} + \delta_{-}$. This approximates the diagonal as a matrix factorisation of $- \widetilde{W}$ in the same way that $\Delta_W$ approximates it as a factorisation of $\widetilde{W}$. Also let~$K$ denote the $\mathbb{Z}_2$-graded complex with the same underlying graded module as $\Delta_W$, but the differential~$\delta_{-}$, so~$K$ is the usual Koszul complex of $x_1 - x'_1, \ldots, x_n - x'_n$.
 
 The product in the exterior algebra gives rise to a morphism of $\mathbb{Z}_2$-graded complexes
 \[
-\Delta' \otimes_{\Re} \Delta \lto K\,.
+\Delta_W' \otimes_{\Re} \Delta_W \lto K\,.
 \]
-Composing with the natural morphism $\varepsilon: K \lto \Re[n]$ from~\eqref{eq:vareps} and taking the adjoint, we obtain the map
-\[
-\zeta: \Delta' \lto \Delta^\vee [n]\, , \qquad \omega \lmt \varepsilon( \omega \wedge - )
-\]
-which is an isomorphism of matrix factorisations. Combining this with various canonical maps and the morphism $\pi: \Delta' \lto \Delta'_0 = \Re \lto R$ we have the following diagram of $R_2$-linear morphisms:
+Composing with the morphism $\varepsilon: K \lto \Re[n]$ from~\eqref{eq:vareps} and taking the adjoint, we obtain the isomorphism of matrix factorisations
+\be
+\zeta: \Delta_W' \lto \Delta_W^\vee [n]\, , \qquad \omega \lmt \varepsilon( \omega \wedge - )\,.
+\ee
+Combining this with various canonical maps and the morphism $\pi: \Delta_W' \lto (\Delta_W')_0 = \Re \lto R$ we have the following diagram of $R_2$-linear morphisms:
 \begin{equation}
 \xymatrix{
-\Hom_{\Re}( \Delta, X^\vee[n] \otimes_{S} X)\\
-\Delta^\vee \otimes_{\Re} \left( X^\vee[n] \otimes_S X \right) \ar[u]^-{\cong}_-{\xi}\\
-\Delta^\vee[n] \otimes_{\Re} \left( X^\vee \otimes_{S} X \right) \ar[u]^-{\cong}\\
-\Delta' \otimes_{\Re} \left( X^\vee \otimes_S X \right) \ar[u]^-{\cong}_-{\zeta \otimes 1}\\
-\left( X^\vee \otimes_{S} X \right) \otimes_{\Re} \Delta' \ar[u]^-{\cong}_-{\textup{swap}} \ar[d]^-{\pi}\\
+\Hom_{\Re}( \Delta_W, X^\vee[n] \otimes_{S} X)\\
+\Delta_W^\vee \otimes_{\Re} \left( X^\vee[n] \otimes_S X \right) \ar[u]^-{\cong}_-{\xi}\\
+\Delta_W^\vee[n] \otimes_{\Re} \left( X^\vee \otimes_{S} X \right) \ar[u]^-{\cong}\\
+\Delta_W' \otimes_{\Re} \left( X^\vee \otimes_S X \right) \ar[u]^-{\cong}_-{\zeta \otimes 1}\\
+\left( X^\vee \otimes_{S} X \right) \otimes_{\Re} \Delta_W' \ar[u]^-{\cong}_-{\textup{swap}} \ar[d]^-{\pi}\\
 \left( X^\vee \otimes_{S} X \right) \otimes_{\Re} R \ar[d]_-{\cong}\ar[d]^-{\kappa}\\
 \Hom_{R \otimes_k S}(X,X)
 }\label{eq:isogivescoev2}
 \end{equation}
-where for $f \in X^\vee$ and $g,g' \in X$: 
-\[
-\kappa( f \otimes g )(g') = (-1)^{|f||g|} f(g') \cdot g\,.
-\]
-To complete the proof we need only to show that the step marked $\pi$ is a homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1}.
+where for $f \in X^\vee$ and $g,g' \in X$ we define $\kappa( f \otimes g )(g') = (-1)^{|f||g|} f(g') \cdot g$. To complete the proof we need only to show that the step marked $\pi$ is a homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1}.
 \end{proof}
-
-\begin{definition}\label{def:coeval}
-$\widetilde\coev_X: \Delta \lra X^\dual \otimes X$ is the morphism in the homotopy category $\HMF(\Re, \widetilde{W})$ whose cohomology class maps to $1_X$ under the quasi-isomorphism \eqref{eq:isogivescoev}.
-\end{definition}
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
@@ -1568,21 +1573,21 @@ With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product $\reprod
 with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow_2(X^\vee)$ for $\Atlarrow_{2}(X^\vee \otimes X)$. Consider the map
 \[
 \xymatrix@C+1pc{
-X^\vee \otimes_{S} X \ar[rr]^-{\Atlarrow_2(X^\vee)^m} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X ) \ar[r]^-{\Psi} & \Delta \otimes_{\Re} (X^\vee \otimes_{S} X)
+X^\vee \otimes_{S} X \ar[rr]^-{\Atlarrow_2(X^\vee)^m} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X ) \ar[r]^-{\Psi} & \Delta_W \otimes_{\Re} (X^\vee \otimes_{S} X)
 }
 \]
 which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
 
-\begin{theorem}\label{theorem:coev1} A representative for the coevaluation morphism is the chain map \eqref{eq:coev10}.
-\end{theorem}
+\begin{proposition}\label{prop:coev1} A representative for the coevaluation morphism is the chain map \eqref{eq:coev10}.
+\end{proposition}
 \begin{proof}
 We lift the identity $1_X$ upwards through the sequence of quasi-isomorphisms in \eqref{eq:isogivescoev2}, noting that $\iota_X = \kappa^{-1}(1_X)$. To take the inverse image of $\iota_X$ under the map induced by $\pi$ on cohomology, we may use either of the homotopy inverses $\pi_1^{-1}, \pi_2^{-1}$ of Corollary \ref{corollary:koszulstab2}. Using the second yields
 \begin{equation}\label{eq:coev11}
 \pi^{-1}_2 \kappa^{-1}(1_X) = \sum_{m \ge 0} (-1)^m \Psi \At_2(X^{\vee})^m( \iota_X )\,.
 \end{equation}
-Applying the swap isomorphism has the effect of exchanging $\At_2$ for $\Atlarrow_2$ in this formula, so that the cohomology class in $\Delta' \otimes_{\Re} (X^\vee \otimes_S X)$ mapping to $1_X$ is $\sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^{\vee})^m( \iota_X )$.
+Applying the swap isomorphism has the effect of exchanging $\At_2$ for $\Atlarrow_2$ in this formula, so that the cohomology class in $\Delta_W' \otimes_{\Re} (X^\vee \otimes_S X)$ mapping to $1_X$ is $\sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^{\vee})^m( \iota_X )$.
 
-A tensor $\omega \otimes \alpha$ in $\Delta' \otimes_{\Re} (X^\vee \otimes_S X)$ is sent under the remaining maps in \eqref{eq:isogivescoev2} to the function $(-1)^{n(|\omega| + n)} \xi( \varepsilon( \omega \wedge - ) \otimes \alpha )$. This map sends a form $\gamma \in \Delta$ to
+A tensor $\omega \otimes \alpha$ in $\Delta_W' \otimes_{\Re} (X^\vee \otimes_S X)$ is sent under the remaining maps in \eqref{eq:isogivescoev2} to the function $(-1)^{n(|\omega| + n)} \xi( \varepsilon( \omega \wedge - ) \otimes \alpha )$. This map sends a form $\gamma \in \Delta_W$ to
 \begin{align}
 \gamma &\mapsto (-1)^{n(|\omega| +n ) + (|\omega| + n)(|\alpha|+n)} \varepsilon( \omega \wedge \gamma ) \cdot \alpha\label{eq:signcalccoeval}\\
 &= (-1)^{|\omega||\alpha| + n|\alpha| + |\omega||\gamma|} \varepsilon( \gamma \wedge \omega ) \cdot \alpha\,. \nonumber
@@ -1590,90 +1595,82 @@ A tensor $\omega \otimes \alpha$ in $\Delta' \otimes_{\Re} (X^\vee \otimes_S X)$
 This vanishes unless $|\gamma| = n - |\omega|$, so the final sign is $(-1)^{|\omega||\alpha| + n|\alpha| + n|\omega| + |\omega|}$. Since $\iota_X$ has degree zero the element $\sum_{m \ge 0} (-1)^m \Psi \Atlarrow_2(X^{\vee})^m( \iota_X )$ can be written as a sum of tensors $\omega \otimes \alpha$ with $|\omega| = |\alpha| = m$, in which case the sign on \eqref{eq:signcalccoeval} is just $+1$ and the formula \eqref{eq:coev10} follows.
 \end{proof}
 
-There is an alternative presentation which we will need. On $( X^\dual \otimes X) \otimes_{\Re } \Bar$ consider
+There is an alternative presentation which we will need. On $( X^\dual \otimes_R X) \otimes_{\Re } \Bar$ consider
 \[
 \At_{1}(X^\dual \otimes X) = [s, d_{X^\dual \otimes X}] = [s, d_X]
 \]
-with the second equality holding because $s$ is $k[x]$-linear. We write $\At_{1}(X)$ for this operator. 
+with the second equality holding because $s$ is $R$-linear. We write $\At_{1}(X)$ for this operator. 
 
-\begin{theorem} A representative for the coevaluation morphism is the chain map
+\begin{proposition} A representative for the coevaluation morphism is the chain map
 \[
 \widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{m \ge 0} (-1)^{m+mn} \Psi \At_{1}(X)^m( \iota_X ) \wedge \gamma \right)\,.
 \]
-\end{theorem}
+\end{proposition}
 
-\begin{example} Give an example for say $n = 3$ to explain how the coevaluation picks out the ``curvature'' in the orthogonal to infinitesimal element $\gamma$.
-\end{example}
+We conclude this section by sketching how one defines, and derives an explicit formula for, the other coevaluation. To begin with, one constructs a canonical homotopy equivalence
+\be\label{eq:othercoev11}
+\Hom_{S^e}(\Delta_V, X \otimes_R X^{\vee}[m]) \lto \Hom_{R \otimes_k S}(X, X)
+\ee
+in the same way that we constructed the homotopy equivalence of Proposition \ref{prop:isogivescoev}. The coevaluation $\coev_X$ is defined to be the morphism $\Delta_V \lto X \otimes_R X^{\vee}[m]$ in $\HMF(S^e, \widetilde{V})$ whose cohomology class is the preimage of the identity under the quasi-isomorphism \eqref{eq:othercoev11}. Once again using the homotopy inverses computed in Corollary \ref{corollary:koszulstab2} one finds two different chain maps lifting the identity. 
 
-\subsubsection{Other coevaluation}
+The first representative is \eqref{eq:coev102} above: let us state this as a
 
-On the theory that it's better to have \emph{something} rough here rather than nothing, with the same notation as above the other coevaluation is a morphism
+\begin{proposition} A representative for $\coev_X$ is the chain map \eqref{eq:coev102}.
+\end{proposition}
+
+The second choice of homotopy inverse yields
+
+\begin{proposition} A representative for $\coev_X$ is the chain map
 \[
-\coev_X : \Delta_V \lra X \otimes_R X^\vee[m]\,.
+\coev^R_X( \gamma ) = \sum_{l \ge 0} (-1)^{l + lm} \varepsilon \left( \Psi \At_1(X^{\vee})^l( \iota'_X ) \wedge \gamma \right)\,.
 \]
-If we define
-\[
-\iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_R X^\vee[m]
-\]
-then
-\[
-\coev^L_X( \gamma ) = \sum_{i \ge 0} (-1)^i \varepsilon \left( \gamma \wedge \Psi \Atlarrow_2(X)^i( \iota'_X ) \right)
-\]
-and the alternative formula is
-\[
-\coev^R_X( \gamma ) = \sum_{i \ge 0} (-1)^{i + im} \varepsilon \left( \Psi \At_1(X^{\vee})^i( \iota'_X ) \wedge \gamma \right)\,.
-\]
+\end{proposition}
 
 \subsection{Evaluation}\label{subsec:eval}
 % see (eval)
 
-In this section $\Delta$ denotes $\Delta_V$. The evaluation will be produced by writing down a natural morphism $\widetilde\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to the morphism $\widetilde\eval_X$ into $\Delta$. To begin with there is a canonical map (an $\Se $-linear morphism of linear factorisations of $\widetilde{V}$)
-\be\label{eq:firstisoevalsec}
-X \otimes_R (X^{\vee}[n]) \cong (X \otimes_R X^\vee)[n] \lto S \otimes_{\Se } (X \otimes_R X^{\vee})[n] \cong \Hom_{S \otimes_k R}(X,X)[n]\,.
+In this section we construct the evaluation $\widetilde\eval_X$ by writing down a morphism $\widetilde\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to a morphism into $\Delta_V$. The other evaluation $\eval_X$ is defined in a similar way, and will be treated briefly at the end of the section.
+
+The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. The construction will turn out to be independent of this choice up to homotopy, although this is not obvious. We also set $\Lambda = \lambda_1 \ldots \lambda_n$. For example, taking $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices.
+
+To begin with there is a canonical map (an $\Se $-linear morphism of linear factorisations of $\widetilde{V}$)
+\be\label{eq:defneval0_00}
+X \otimes_R X^{\vee}[n] \lto \left( X \otimes_R X^{\vee}[n] \right) \otimes_R \bar{R} \cong \bar{X} \otimes_R \bar{X}^{\vee}[n]
 \ee
-sending $e_i \otimes e_j^*$ to $(-1)^{n|e_i|} e_i \circ e_j^*$.
-
-The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. We also set 
-$$
-\Lambda = \lambda_1 \ldots \lambda_n \, . 
-$$ 
-For example the operators $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices. 
-
-Postcomposing with $\Lambda$ gives an $S$-linear map (we define $\Lambda^\bullet(\alpha) = \Lambda \circ \alpha)$
-\[
-\xymatrix@C+2pc{
-\Hom_{S \otimes_k R}(X, X)[n] \ar[r]^-{(-1)^n \Lambda^\bullet} & \Hom(\bar{X}, \bar{X}) := \Hom_{S \otimes_k R}(X, X) \otimes_R R/(f_1,\ldots,f_n)\,.
+where we write $\bar{R} = R/(f_1,\ldots,f_n)$ and $\bar{X} = X \otimes_R \bar{R}$. Then we compose with
+\be\label{eq:defneval0_0}
+\xymatrix@C+2.5pc{
+\bar{X} \otimes_R X^{\vee}[n] \cong \bar{X}[n] \otimes_R X^{\vee} \ar[r]^-{(-1)^n \Lambda \otimes 1} & \bar{X} \otimes_R X^{\vee}
 }
-\]
-This is actually a morphism of complexes, since the commutator of $\Lambda$ with the differentials on the mapping complexes is an expression in the $f_i$.
-
-The supertrace gives an $S$-linear morphism of complexes
-\[
-\xymatrix@C+2pc{
-\Hom(\bar{X}, \bar{X}) \ar[r]^-{\str} & S \otimes_k R/(f_1,\ldots,f_n)
+\ee
+which is closed because $\Lambda$ is a closed map $X[n] \lto X$ modulo the $f_i$. Finally we compose with
+\be\label{eq:defneval0_1}
+\xymatrix@C+1.5pc{
+\bar{X} \otimes_R \bar{X}^{\vee} \ar[r]^-{\can} & S \otimes_{S^e} ( \bar{X} \otimes_R \bar{X}^{\vee} ) \cong \Hom_{R \otimes_k S}(\bar{X}, \bar{X}) \ar[r]^-{\str} & \bar{R} \otimes_k S \ar[r]^-{\Res} & S
 }
-\]
-and finally the residue symbol (see Section \ref{section:residuebackground}) gives an $S$-linear map
+\ee
+where the last map marked is the $S$-linear residue symbol (see Section \ref{section:residuebackground})
 \[
-\Res_{S \otimes_k R/S} \left[ \frac{ (-) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: S \otimes_k R/(f_1,\ldots,f_n) \lto S\,.
+\Res_{R \otimes_k S^e/S^e} \left[ \frac{ (-) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: \bar{R} \otimes_K S \lto S\,.
 \]
-The composite of the above is the desired morphism $\eval_0$.
+We note that the first map in \eqref{eq:defneval0_0} and the second in \eqref{eq:defneval0_1} are as defined in Section \ref{section:canonicalmaps}.
 
-\begin{lemma}\label{lemma:morphismevalzero} There is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $
-\[
-\eval_0: X \otimes_{R} X^\dual \lto S\,,
-\]
-defined for homogeneous $\eta \in X$ and $\nu \in X^\dual$ by
+\begin{definition} $\eval_0$ is the composite of \eqref{eq:defneval0_00}, \eqref{eq:defneval0_0} and \eqref{eq:defneval0_1}. We write $\eval'_0$ for \eqref{eq:defneval0_1}.
+\end{definition}
+
+It is immediate that
+
+\begin{lemma}\label{lemma:morphismevalzero} $\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\dual$
 \begin{align}
 \eval_0( \eta \otimes \nu ) &= (-1)^{n|\eta| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \str( \Lambda \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
 &= (-1)^{n|\eta| + |\nu| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \nu \Lambda( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \end{align}
 \end{lemma} 
 
-There is a stabilisation morphism $\pi_\Delta: \Delta \lto S$, and while $X \otimes_R X^\dual$ is not free of finite rank over $\Se $, it is a direct summand of a finite-rank matrix factorisation in $\HMF(\Se , \widetilde{V})$. The unique lifting statement of Proposition \ref{prop:liftingresult} can be extended to summands (for the argument, see the proof of the proposition below) so there is up to homotopy a unique morphism of matrix factorisations $\widetilde\eval_X$ making the following diagram commute:
+There is a stabilisation morphism $\pi_\Delta: \Delta_V \lto S$, and while $X \otimes_R X^\dual$ is not free of finite rank over $\Se $, it is a direct summand of a finite-rank matrix factorisation in $\HMF(\Se , \widetilde{V})$. The unique lifting statement of Proposition \ref{prop:liftingresult} can be extended to summands (for the argument, see the proof of the proposition below) so there is up to homotopy a unique morphism of matrix factorisations $\widetilde\eval_X$ making the following diagram commute:
 \be\label{eq:defineeval}
 \xymatrix{
-X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \Delta \ar[dl]^-{\pi_\Delta} \\
+X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \Delta_V \ar[dl]^-{\pi_\Delta} \\
 & S
 }\,.
 \ee
@@ -1683,27 +1680,28 @@ X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \De
 
 Before stating the formula for $\widetilde\eval_X$ we need to introduce the $S^e \otimes_k R$-linear map
 \begin{gather*}
-\theta: X \otimes_R X^{\vee} \lto S^e \otimes_k R\,,\\
-\theta( e_i \otimes e_j^* ) = (-1)^{|e_i||e_j|} e_j^*( e_i ) = (-1)^{|e_i|} \delta_{ij}\,.
+(-,-): X \otimes_R X^{\vee} \lto S^e \otimes_k R\,,\\
+( e_i, e_j^* ) = (-1)^{|e_i||e_j|} e_j^*( e_i ) = (-1)^{|e_i|} \delta_{ij}\,.
 \end{gather*}
+This pairing is simply evaluation (with an appropriate Koszul sign) modulo the fact that $X$ and its dual $X^{\vee}$ involve different copies of the ring $S$.
 
 \begin{proposition}\label{prop:constructevalmap} A representative for the evaluation morphism is the chain map
 \[
-\widetilde\eval_X: X \otimes_R X^\dual \lto \Delta
+\widetilde\eval_X: X \otimes_R X^\dual \lto \Delta_V
 \]
 defined for homogeneous $\eta \in X$ and $\nu \in X^\dagger$ by
 \be\label{eq:constructevalmap0}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta|} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \theta\left( \At_2(X)^m \Lambda ( \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta|} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \big( \lAt_2(X)^m \Lambda ( \eta ), \nu \big) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \ee
 \end{proposition}
 
-(\textbf{Todo} redo this part) Before giving the proof, let us be clear that the term under the residue is the composite
+To be clear, the term in the numerator of the residue is the image of $\Lambda(\eta) \otimes \nu$ under the map
 \[
 \xymatrix@C+1pc{
-X \ar[r]^{\Lambda} & X \ar[r]^-{\inc} & \Bar \otimes_S X \ar[r]^-{\At_2(X)^m} & \Bar \otimes_S X \ar[r]^-{1 \otimes \nu} & \Bar \otimes_S S \otimes_k R \cong \Bar \otimes_k R \ar[r]^-{\Psi \otimes 1} & \Delta \otimes_k R
+X \otimes_R X^{\vee} \ar[r]^-{\lAt_2(X)^m} & \Bar \otimes_{S^e}(X \otimes_R X^{\vee} ) \ar[r]^-{1 \otimes (-,-)} & \Bar \otimes_{S^e} ( S^e \otimes_k R ) \cong \Bar \otimes_k R \ar[r]^-{\Psi \otimes 1} & \Delta_V \otimes_k R
 }
 \]
-where $\At_2(X) = [d, d_X]$. The residue integrates out the $R$, leaving us with an element of $\Delta$.
+where $\lAt_2(X) = [d, d_X]$. The residue integrates out the $R$, leaving us with an element of $\Delta_V$.
 
 As has already been mentioned, if $X \otimes_R X^\dual$ were finite-rank we could apply Proposition \ref{prop:liftingresult} directly to deduce a formula for the lifting $\widetilde\eval_X$. As this is not the case, we have to be a little indirect and appeal to the idempotent pushforward construction of \cite{??}. Specifically, with $\bar{R} = R/(f_1,\ldots,f_n)$, Theorem \ref{??} of \textsl{loc.cit.} shows that there is a diagram
 \[
