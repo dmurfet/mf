@@ -1437,7 +1437,7 @@ To produce a formula for $\varphi_{\textup{lift}}$ we choose a homogeneous basis
 \begin{proposition}\label{prop:liftingresult} 
 The map \eqref{eq:liftingresult0} is a homotopy equivalence, and in the above notation
 \begin{equation}\label{eq:liftingresult}
-\varphi_{\textup{lift}} = \sum_{m \ge 0} (-1)^m \Psi \circ \varphi' \circ \lAt_{2}(Y)^m
+\varphi_{\textup{lift}} = \sum_{l \ge 0} (-1)^l \Psi \circ (1 \otimes \varphi') \circ \lAt_{2}(Y)^l
 \end{equation}
 where $\varphi': Y \lto \Re $ is the $\Re $-linear map defined by $\varphi'(e_i) = 1 \otimes \varphi(e_i)$.
 \end{proposition}
@@ -1512,14 +1512,18 @@ and
 \coev_X( \gamma ) = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge (-1)^l \Psi \Atlarrow_2(X)^l( \iota'_X ) \right)\,,\label{eq:coev102}\\
 \iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X\,. \nonumber
 \end{gather}
-A representative for the first evaluation morphism is given by ($\Lambda = \partial_{x_1}(d_X) \cdots \partial_{x_n}(d_X)$)
+A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{n+l+n|\eta|+|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \nu\left( \lAt_2(X)^l( \Lambda \eta ) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \ee
-Since $\nu$ and $\eta$ involve different copies of the $z$-variables this formula is slightly dishonest: it does not naively make sense to evaluate $\nu$ on $\lAt_2(X)^l( \Lambda \eta )$. A fully accurate statement is given as Proposition \ref{prop:constructevalmap}. In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$
+where $\Lambda^{(x)} = \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$ and $(\eta',\nu)$ denotes the evaluation of a functional $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. The precise statement is given in Proposition \ref{prop:constructevalmap}. 
+
+In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$. The formula is
 \be\label{eq:constructevalmap01}
-\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{n}{2}+l+n|\nu|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda ) (\eta) \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
+\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{m+1}{2}+l+m|\nu|} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right]
 \ee
+where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}.
+
 To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}. 
 
 Throughout we make use of the canonical maps from Section \ref{section:canonicalmaps}.
@@ -1534,7 +1538,7 @@ In this section we present the coevaluation morphism $\widetilde\coev_X$ and the
 \end{equation}
 \end{proposition}
 
-\begin{definition}\label{def:coeval} We define $\widetilde\coev_X: \Delta_W \lra X^\dual \otimes_S X$ to be the morphism in the homotopy category $\HMF(\Re, \widetilde{W})$ whose cohomology class maps to $1_X$ under the quasi-isomorphism \eqref{eq:isogivescoev}.
+\begin{definition}\label{def:coeval} We define $\widetilde\coev_X$ to be the morphism in the category $\HMF(\Re, \widetilde{W})$ whose cohomology class maps to $1_X$ under the quasi-isomorphism \eqref{eq:isogivescoev}.
 \end{definition}
 
 \begin{proof}[Proof of Proposition \ref{prop:isogivescoev}]
@@ -1606,7 +1610,7 @@ with the second equality holding because $s$ is $R$-linear. We write $\At_{1}(X)
 \]
 \end{proposition}
 
-We conclude this section by sketching how one defines, and derives an explicit formula for, the other coevaluation. To begin with, one constructs a canonical homotopy equivalence
+We conclude this section by explaining how one defines, and derives an explicit formula for, the other coevaluation. To begin with one constructs a canonical homotopy equivalence
 \be\label{eq:othercoev11}
 \Hom_{S^e}(\Delta_V, X \otimes_R X^{\vee}[m]) \lto \Hom_{R \otimes_k S}(X, X)
 \ee
@@ -1630,19 +1634,23 @@ The second choice of homotopy inverse yields
 
 In this section we construct the evaluation $\widetilde\eval_X$ by writing down a morphism $\widetilde\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to a morphism into $\Delta_V$. The other evaluation $\eval_X$ is defined in a similar way, and will be treated briefly at the end of the section.
 
-The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. The construction will turn out to be independent of this choice up to homotopy, although this is not obvious. We also set $\Lambda = \lambda_1 \ldots \lambda_n$. For example, taking $\lambda_i = \partial_{x_i} d_X$ would do, but it will be important to allow other choices.
+The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. The construction will turn out to be independent of this choice up to homotopy, although this is not obvious. We also set $\Lambda^{(x)} = \lambda_1 \ldots \lambda_n$. For example, taking $\lambda_i = -\partial_{x_i} d_X$ would do since by the Leibniz rule
+\[
+\partial_{x_i}(d_X) d_X + d_X \partial_{x_i}(d_X) = \partial_{x_i}( d_X^2 ) = - \partial_{x_i} W\,.
+\]
+However it will be important to allow other choices of null-homotopy.
 
 To begin with there is a canonical map (an $\Se $-linear morphism of linear factorisations of $\widetilde{V}$)
 \be\label{eq:defneval0_00}
-X \otimes_R X^{\vee}[n] \lto \left( X \otimes_R X^{\vee}[n] \right) \otimes_R \bar{R} \cong \bar{X} \otimes_R \bar{X}^{\vee}[n]
+X \otimes_R X^{\vee}[n] \cong (X \otimes_R X^{\vee})[n] \lto \left( X \otimes_R X^{\vee} \right)[n] \otimes_R \bar{R} \cong (\bar{X} \otimes_R \bar{X}^{\vee})[n]
 \ee
 where we write $\bar{R} = R/(f_1,\ldots,f_n)$ and $\bar{X} = X \otimes_R \bar{R}$. Then we compose with
 \be\label{eq:defneval0_0}
 \xymatrix@C+2.5pc{
-\bar{X} \otimes_R X^{\vee}[n] \cong \bar{X}[n] \otimes_R X^{\vee} \ar[r]^-{(-1)^n \Lambda \otimes 1} & \bar{X} \otimes_R X^{\vee}
+(\bar{X} \otimes_R \bar{X}^{\vee})[n] \ar[r]^-{(-1)^n \Lambda^{(x)} \otimes 1} & \bar{X} \otimes_R X^{\vee}
 }
 \ee
-which is closed because $\Lambda$ is a closed map $X[n] \lto X$ modulo the $f_i$. Finally we compose with
+which is closed because $\Lambda^{(x)}$ is a closed map $X[n] \lto X$ modulo the $f_i$. Finally we compose with
 \be\label{eq:defneval0_1}
 \xymatrix@C+1.5pc{
 \bar{X} \otimes_R \bar{X}^{\vee} \ar[r]^-{\can} & S \otimes_{S^e} ( \bar{X} \otimes_R \bar{X}^{\vee} ) \cong \Hom_{R \otimes_k S}(\bar{X}, \bar{X}) \ar[r]^-{\str} & \bar{R} \otimes_k S \ar[r]^-{\Res} & S
@@ -1650,26 +1658,26 @@ which is closed because $\Lambda$ is a closed map $X[n] \lto X$ modulo the $f_i$
 \ee
 where the last map marked is the $S$-linear residue symbol (see Section \ref{section:residuebackground})
 \[
-\Res_{R \otimes_k S^e/S^e} \left[ \frac{ (-) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: \bar{R} \otimes_K S \lto S\,.
+\Res_{R/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: \bar{R} \otimes_k S \lto S\,.
 \]
 We note that the first map in \eqref{eq:defneval0_0} and the second in \eqref{eq:defneval0_1} are as defined in Section \ref{section:canonicalmaps}.
 
-\begin{definition} $\eval_0$ is the composite of \eqref{eq:defneval0_00}, \eqref{eq:defneval0_0} and \eqref{eq:defneval0_1}. We write $\eval'_0$ for \eqref{eq:defneval0_1}.
+\begin{definition} $\widetilde\eval_0$ is the composite of \eqref{eq:defneval0_00}, \eqref{eq:defneval0_0} and \eqref{eq:defneval0_1}.
 \end{definition}
 
 It is immediate that
 
-\begin{lemma}\label{lemma:morphismevalzero} $\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\dual$
+\begin{lemma}\label{lemma:morphismevalzero} $\widetilde\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\dual$
 \begin{align}
-\eval_0( \eta \otimes \nu ) &= (-1)^{n|\eta| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \str( \Lambda \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
-&= (-1)^{n|\eta| + |\nu| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \nu \Lambda( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_0( \eta \otimes \nu ) &= (-1)^{n|\eta| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \str( \Lambda^{(x)} \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
+&= (-1)^{n|\eta| + |\nu| +n} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \end{align}
 \end{lemma} 
 
 There is a stabilisation morphism $\pi_\Delta: \Delta_V \lto S$, and while $X \otimes_R X^\dual$ is not free of finite rank over $\Se $, it is a direct summand of a finite-rank matrix factorisation in $\HMF(\Se , \widetilde{V})$. The unique lifting statement of Proposition \ref{prop:liftingresult} can be extended to summands (for the argument, see the proof of the proposition below) so there is up to homotopy a unique morphism of matrix factorisations $\widetilde\eval_X$ making the following diagram commute:
 \be\label{eq:defineeval}
 \xymatrix{
-X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \Delta_V \ar[dl]^-{\pi_\Delta} \\
+X \otimes_R X^\dual \ar[dr]_-{\widetilde\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \Delta_V \ar[dl]^-{\pi_\Delta} \\
 & S
 }\,.
 \ee
@@ -1677,88 +1685,112 @@ X \otimes_R X^\dual \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_X} & & \De
 \begin{definition} $\widetilde\eval_X$ is the unique morphism in $\HMF(\Se , \widetilde{V})$ making \eqref{eq:defineeval} commute.
 \end{definition}
 
-Before stating the formula for $\widetilde\eval_X$ we need to introduce the $S^e \otimes_k R$-linear map
+The formula for $\widetilde\eval_X$ involves the following $S^e \otimes_k R$-linear map
 \begin{gather*}
 (-,-): X \otimes_R X^{\vee} \lto S^e \otimes_k R\,,\\
 ( e_i, e_j^* ) = (-1)^{|e_i||e_j|} e_j^*( e_i ) = (-1)^{|e_i|} \delta_{ij}\,.
 \end{gather*}
 This pairing is simply evaluation (with an appropriate Koszul sign) modulo the fact that $X$ and its dual $X^{\vee}$ involve different copies of the ring $S$.
 
-\begin{proposition}\label{prop:constructevalmap} A representative for the evaluation morphism is the chain map
-\[
-\widetilde\eval_X: X \otimes_R X^\dual \lto \Delta_V
-\]
-defined for homogeneous $\eta \in X$ and $\nu \in X^\dagger$ by
-\be\label{eq:constructevalmap0}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{m \ge 0} (-1)^{m+n+n|\eta|} \Res_{\Se  \otimes_k R/\Se } \left[ \frac{ \Psi \big( \lAt_2(X)^m \Lambda ( \eta ), \nu \big) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
-\ee
+\begin{proposition}\label{prop:constructevalmap} A representative for $\widetilde\eval_X$ is the chain map \eqref{eq:constructevalmap00}.
 \end{proposition}
 
-To be clear, the term in the numerator of the residue is the image of $\Lambda(\eta) \otimes \nu$ under the map
+To be clear, the numerator of the residue in \eqref{eq:constructevalmap00} is the image of $\Lambda^{(x)}(\eta) \otimes \nu$ under the map
 \[
 \xymatrix@C+1pc{
-X \otimes_R X^{\vee} \ar[r]^-{\lAt_2(X)^m} & \Bar \otimes_{S^e}(X \otimes_R X^{\vee} ) \ar[r]^-{1 \otimes (-,-)} & \Bar \otimes_{S^e} ( S^e \otimes_k R ) \cong \Bar \otimes_k R \ar[r]^-{\Psi \otimes 1} & \Delta_V \otimes_k R
+X \otimes_R X^{\vee} \ar[r]^-{\lAt_2(X)^l} & \Bar \otimes_{S^e}(X \otimes_R X^{\vee} ) \ar[r]^-{1 \otimes (-,-)} & \Bar \otimes_{S^e} ( S^e \otimes_k R ) \cong \Bar \otimes_k R \ar[r]^-{\Psi \otimes 1} & \Delta_V \otimes_k R
 }
 \]
 where $\lAt_2(X) = [d, d_X]$. The residue integrates out the $R$, leaving us with an element of $\Delta_V$.
 
 As has already been mentioned, if $X \otimes_R X^\dual$ were finite-rank we could apply Proposition \ref{prop:liftingresult} directly to deduce a formula for the lifting $\widetilde\eval_X$. As this is not the case, we have to be a little indirect and appeal to the idempotent pushforward construction of \cite{??}. Specifically, with $\bar{R} = R/(f_1,\ldots,f_n)$, Theorem \ref{??} of \textsl{loc.cit.} shows that there is a diagram
-\[
+\be\label{eq:idempotentpushdia}
 \xymatrix@C+2pc{
-(X \otimes_R X^\vee)[n] \ar@<-1ex>[r]_-{\vartheta} & \bar{X} \otimes_{\bar{R}} \bar{X}^\vee := (X \otimes_R X^\vee) \otimes_R \bar{R} \ar@<-1ex>[l]_-{\psi}
+X \otimes_R X^\vee[n] \cong (X \otimes_R X^\vee)[n] \ar@<-1ex>[r]_-{\vartheta} & \bar{X} \otimes_{\bar{R}} \bar{X}^\vee := (X \otimes_R X^\vee) \otimes_R \bar{R} \ar@<-1ex>[l]_-{\psi}
 }
-\]
-in $\HMF(\Se , \widetilde{V})$ with $\psi \circ \vartheta = 1$ in the homotopy category and $\vartheta = (-1)^n \Lambda \otimes 1$. Note that since $W$ is a potential, $R/(f_1,\ldots,f_n)$ is a finitely generated free $k$-module and $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee$ is a finite-rank matrix factorisation.
+\ee
+in $\HMF(\Se , \widetilde{V})$ with $\psi \circ \vartheta = 1$ in the homotopy category and $\vartheta = (-1)^n \Lambda^{(x)} \otimes 1$. Observe that since $W$ is a potential, $R/(f_1,\ldots,f_n)$ is a finitely generated free $k$-module and $\bar{X} \otimes_{R} \bar{X}^\vee$ is therefore a finite-rank matrix factorisation of $\widetilde{V}$ over $S^e$.
 
-\begin{proof}[Proof of Proposition \ref{prop:constructevalmap}] (\textbf{todo} Proof stupid, ignore) Consider the commutative diagram
+\begin{proof}[Proof of Proposition \ref{prop:constructevalmap}] To lift $\widetilde\eval_0: X \otimes_R X^{\vee}[n] \lto S$, consider the commutative diagram
 \be\label{eq:proofconstructevalmap}
 \xymatrix@C+2pc{
-\Hom_{\Se }( (X \otimes_R X^\vee)[n], \Delta ) \ar[d]_{\pi^\bullet_\Delta} \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{\Se }(\bar{X} \otimes_{\bar{R}} \bar{X}^\vee, \Delta ) \ar@<-1ex>[l]_-{\vartheta_\bullet} \ar[d]^{\pi^\bullet_\Delta}\\
-\Hom_{\Se }( (X \otimes_R X^\vee)[n], S ) \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{\Se }( \bar{X} \otimes_{\bar{R}} \bar{X}^\vee, S) \ar@<-1ex>[l]_-{\vartheta_\bullet}
-}\,.
-\ee
-where a ``$\bullet$'' as a superscript indicates postcomposition and as a subscript it denotes precomposition. If we ignore the first isomorphism of \eqref{eq:firstisoevalsec} which only contributes a sign, then $\eval_0$ is a closed element in the bottom left corner of the diagram. By Proposition \ref{prop:liftingresult} the right-hand vertical map is a homotopy equivalence and therefore so is the left-hand vertical map. This in particular justifies why in \eqref{eq:defineeval} there is a unique morphism $\widetilde\eval_X$ making the diagram commute: this map is the inverse image, in cohomology, of $\eval_0$ under $\pi_{\Delta}^\bullet$.
-
-The following diagram commutes
-\[
-\xymatrix{
-X \otimes_R X^\vee \ar[d]_{(-1)^n \Lambda \otimes 1}\ar[r] & \Hom_{S \otimes_k R}(X, X) \ar[d]^{ (-1)^n \Lambda^\bullet}\\
-X \otimes_R X^\vee \ar[r] & \Hom_{S \otimes_k R}(X, X)
-}\,,
-\]
-where the rows are as in \eqref{eq:firstisoevalsec}, from which we deduce that $\eval_0 = \vartheta_\bullet( \eval'_0 )$, where $\eval'_0$ is the map
-\[
-\xymatrix{
-\bar{X} \otimes_{\bar{R}} \bar{X}^\vee \ar[r] & S \otimes_{\Se } (\bar{X} \otimes_{\bar{R}} \bar{X}^\vee) \cong \Hom(\bar{X}, \bar{X}) \ar[r] & S
+\Hom_{\Se }( X \otimes_R X^\vee[n], \Delta ) \ar[d]_{\pi^\bullet_\Delta} \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{\Se }(\bar{X} \otimes_{R} \bar{X}^\vee, \Delta ) \ar@<-1ex>[l]_-{\vartheta_\bullet} \ar[d]^{\pi^\bullet_\Delta}\\
+\Hom_{\Se }( X \otimes_R X^\vee[n], S ) \ar@<-1ex>[r]_-{\psi_\bullet} & \Hom_{\Se }( \bar{X} \otimes_{R} \bar{X}^\vee, S) \ar@<-1ex>[l]_-{\vartheta_\bullet}
 }
-\]
-defined by
-\[
-\eval'_0( \eta \otimes \nu ) = \Res_{S \otimes_k R/S} \left[ \frac{ \str( \eta \circ \nu ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\,.
-\]
-We denote by $\eval'_{0,\textup{lift}}$ the morphism $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Delta$ lifting $\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. To run the construction we need to fix an $\Se $-basis for $\bar{X} \otimes_{\bar{R}} \bar{X}^\vee$. The basis we pick is $\{ g_\alpha e_i \otimes e_j ^* \}_{\alpha, i, j}$ where $g_\alpha$ gives a $k$-basis of $\bar{R}$. We define $\widetilde\eval_X = \vartheta_\bullet( \eval'_{0, \textup{lift}} ) = (-1)^n \eval'_{0, \textup{lift}} \circ (\Lambda \otimes 1)$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
+\ee
+where a ``$\bullet$'' as a superscript indicates postcomposition and as a subscript it denotes precomposition, and we leave the isomorphism $X \otimes_R X^\vee[n] \cong (X \otimes_R X)[n]$ implicit throughout. By Proposition \ref{prop:liftingresult} the right-hand vertical map is a homotopy equivalence and therefore so is the left-hand vertical map. This justifies why in \eqref{eq:defineeval} there is a unique morphism $\widetilde\eval_X$ making the diagram commute: it is the image in cohomology of $\widetilde\eval_0$ under the homotopy inverse of $\pi_{\Delta}^\bullet$.
 
-We have
+Let $\widetilde\eval'_0$ denote the morphism in \eqref{eq:defneval0_1}, so that $\widetilde\eval_0 = \vartheta_\bullet( \widetilde\eval'_0 )$, and let $\widetilde\eval'$ denote the morphism $\bar{X} \otimes_{R} \bar{X}^\vee \lto \Delta$ lifting $\widetilde\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. To run the lifting construction we need to fix an $\Se $-basis for $\bar{X} \otimes_{R} \bar{X}^\vee$. The basis we pick is $\{ g_\alpha e_i \otimes e_j ^* \}_{\alpha, i, j}$ where $g_\alpha$ gives a $k$-basis of $\bar{R}$. We define $\widetilde\eval_X = \vartheta_\bullet( \widetilde\eval' ) = (-1)^n \widetilde\eval' \circ (\Lambda^{(x)} \otimes 1)$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
+
+The statements of Proposition \ref{prop:liftingresult} gives us
 \[
-\widetilde\eval_X = \sum_{m \ge 0} (-1)^{m+n} \Psi \circ (1 \otimes \eval''_0) \circ [d, d_{X \otimes X^\vee}]^m \circ ( \Lambda \otimes 1 )
+\widetilde\eval_X = \sum_{l \ge 0} (-1)^{l+n} \Psi \circ (1 \otimes \widetilde\eval''_0) \circ \lAt(X \otimes X^\vee)^l \circ ( \Lambda^{(x)} \otimes 1 )
 \]
-where $\eval''_0: \bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Se $ is the $\Se $-linear map defined on the basis by
-\[
-\eval''_0( f_\alpha e_i \otimes e_j^* ) = 1 \otimes \eval'_0( f_\alpha e_i \otimes e_j^* )\,.
-\]
-Since in $d_{X \otimes X^\vee} = d_X \otimes 1 + 1 \otimes d_{X^\vee}$ only $d_X$ involves polynomials in $R_1$, we have $[d, d_{X \otimes X^\vee}] = [d, d_X]$. We compute using \eqref{eq:leftatiyahexp} that for $g \in R$ (writing $D = d_X$, and putting in the sign $n|e_i|$ from the first map of \eqref{eq:firstisoevalsec})
+where $\widetilde\eval''_0: \bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Se $ is the $\Se $-linear map defined by $\widetilde\eval''_0( g_\alpha e_i \otimes e_j^* ) = 1 \otimes \eval'_0( f_\alpha e_i \otimes e_j^* )$. In $d_{X \otimes X^\vee} = d_X \otimes 1 + 1 \otimes d_{X^\vee}$ only $d_X$ involves polynomials in $R_1$, so $\lAt(X \otimes X^\vee) = \lAt(X)$. We compute using \eqref{eq:leftatiyahexp} that for $g \in R$ (writing $D = d_X$, and putting in the sign $n|e_i|$ from the first map of \eqref{eq:defneval0_00})
 \begin{align*}
-\widetilde\eval_X( g e_i \otimes e_j^* ) &= \sum_{m \ge 0} (-1)^{m+n+n|e_i|} \Psi (1 \otimes \eval''_0)\left( g \sum_k [d, d_X]^m( \Lambda_{ki} e_k \otimes e_j ^*) \right)\\
-&= \sum_{m \ge 0} (-1)^{m+n+n|e_i|} \Psi (1 \otimes \eval''_0)\left( g \sum_{k, k_1, \ldots, k_m} \Lambda_{ki} \cdot d( D_{k_1k} ) \ldots d( D_{k_m, k_{m-1}} ) \otimes e_{k_m} \otimes e_j^* \right)
+\widetilde\eval_X( g e_i \otimes e_j^* ) &= \sum_{l \ge 0} (-1)^{l+n+n|e_i|} \Psi (1 \otimes \widetilde\eval''_0)\left( g \sum_k \lAt(X)^l( \Lambda^{(x)}_{ki} e_k \otimes e_j ^*) \right)\\
+&= \sum_{l \ge 0} (-1)^{l+n+n|e_i|} \Psi (1 \otimes \widetilde\eval''_0)\left( g \sum_{k, k_1, \ldots, k_l} \Lambda^{(x)}_{ki} \cdot d( D_{k_1k} ) \ldots d( D_{k_l, k_{l-1}} ) \otimes e_{k_l} \otimes e_j^* \right)
 \end{align*}
-Applying $\eval''_0$ involves taking the supertrace $\str( e_{k_m} \circ e_j^* ) = (-1)^{|e_j|}\delta_{j,k_m}$ so that the above equals
+Applying $\widetilde\eval''_0$ involves taking the supertrace $\str( e_{k_l} \circ e_j^* ) = (-1)^{|e_j|}\delta_{jk_l}$ so that the above equals
 \[
-\sum_{m \ge 0} \sum_{k,k_1,\ldots,k_{m-1}} (-1)^{m+n+n|e_i|+|e_j|} \Lambda_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{m-1}}) ) \Res_{S \otimes_k R/S} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{l+n+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{S^e \otimes_k R/S^e} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \]
 which agrees with \eqref{eq:constructevalmap0} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
 \end{proof}
 
-TODO: $\coev_\Delta= \lambda^{-1}_\Delta$ and $\eval_\Delta = \lambda_\Delta$
+\begin{remark} \textbf{todo} Independence of $\lambda$ choices. At the moment the statement in the introduction involves only $\partial_{x_i} d_X$, how to reconcile this with general $\lambda_i$.
+\end{remark}
+
+We conclude this section with a brief explanation of the derivation of $\eval_X$ and its explicit formula. The partial derivatives $\partial_{z_i} V$ act null-homotopically on $X$ and we let $\lambda_i^{(z)} \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i^{(z)}] = \partial_{z_i} V \cdot 1_X$. For example $\lambda_i^{(z)} = \partial_{z_i} d_X$ would do. 
+
+We define an operator $\lambda_{i \bullet}^{(z)}$ on $X^{\vee}$ by
+\[
+\lambda_{i \bullet}^{(z)} {}(\alpha) = (-1)^{|\alpha|} \lambda_i^{(z)} \circ \alpha\,.
+\]
+It is easily checked that $[d_{X^\vee}, \lambda_{i \bullet}^{(z)}] = \partial_{z_i} V \cdot 1_{X^\vee}$, so this is a null-homotopy for the action of $\partial_{z_i} V$. With $\bar{S} = S/(\partial_{z_1} V, \ldots, \partial_{z_m} V)$ there is an $S^e$-linear morphism of linear factorisations of $\widetilde{V}$
+\be\label{eq:ordinaryeval00}
+\xymatrix{
+X^{\vee}[m] \otimes_S X \ar[r] & ( X^{\vee}[m] \otimes_S X ) \otimes_S \bar{S} \cong \bar{X}^{\vee}[m] \otimes_S \bar{X} \ar[rrr]^-{(-1)^n \lambda^{(z)}_{n \bullet} \circ \cdots \circ \lambda^{(z)}_{1 \bullet}} & & & \bar{X}^{\vee} \otimes_S \bar{X}
+}
+\ee
+which we can compose with
+\be\label{eq:ordinaryeval01}
+\xymatrix@C+1pc{
+\bar{X}^{\vee} \otimes_S \bar{X} \ar[r]^-{\can} & S \otimes_{S^e}( \bar{X}^{\vee} \otimes_S \bar{X} ) \cong \Hom_{R \otimes_k S}(\bar{X}, \bar{X}) \ar[r]^-{\str} & R \otimes_k \bar{S} \ar[r]^-{\Res} & R
+}
+\ee
+where the last map is the $R$-linear residue symbol (we write $\underline{\ud z} = \ud z_1 \ldots \ud z_m$)
+\[
+\Res_{S/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right]: R \otimes_k \bar{S} \lto R\,.
+\]
+
+\begin{definition} $\eval_0$ is the composite of \eqref{eq:ordinaryeval00} and \eqref{eq:ordinaryeval01}.
+\end{definition}
+
+We define $\eval_X$ to be the unique morphism in $\HMF(\Re, \widetilde{W})$ making the diagram
+\be
+\xymatrix{
+{}^\dual X \otimes_S X \ar[dr]_-{\eval_0} \ar@{.>}[rr]^-{\eval_X} & & \Delta_W \ar[dl]^-{\pi_\Delta} \\
+& R
+}\,.
+\ee
+The existence of such a unique morphism, and the explicit formula for it, are established as before. First we have to write the infinite rank matrix factorisation $X^{\vee}[m] \otimes_S X$ as a direct summand of a finite rank factorisation as in \eqref{eq:idempotentpushdia}. Then Proposition \ref{prop:liftingresult} applies to this finite rank factorisation in which we have embedded to produce the desired lifting. The conclusion is that
+
+\begin{proposition}\label{prop:constructevalmapnontilde} A representative for $\eval_X$ is the chain map \eqref{eq:constructevalmap01}.
+\end{proposition}
+
+The formula for $\eval_X$ involves the $R^e \otimes_k S$-linear map
+\begin{gather*}
+(-,-): X^{\vee} \otimes_S X \lto R^e \otimes_k S\,,\\
+( e_i^*, e_j ) = e_j^*( e_i ) = \delta_{ij}\,.
+\end{gather*}
+The numerator of the residue in \eqref{eq:constructevalmap01} is the image of $\nu \circ \Lambda^{(z)} \otimes \eta$ under the map
+\[
+\xymatrix@C+1pc{
+X^{\vee} \otimes_S X \ar[r]^-{\lAt_2(X^{\vee})^l} & \Bar \otimes_{R^e}(X^{\vee} \otimes_S X ) \ar[r]^-{1 \otimes (-,-)} & \Bar \otimes_{R^e} ( R^e \otimes_k S ) \cong \Bar \otimes_k S \ar[r]^-{\Psi \otimes 1} & \Delta_W \otimes_k S
+}\,.
+\]
+The residue integrates out the $S$, leaving us with an element of $\Delta_W$.
 
 \section{Zorro moves}\label{sec:Zorro}
 
@@ -1825,11 +1857,7 @@ We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\u
 
 Let $\{ e_i \}_{i}$ be a homogeneous $(S \otimes_k R)$-basis of $X$, $\{ e_i^* \}_{i}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i,j}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. By the Atiyah class $\At = \At( \End(X) )$ of this complex we mean the operator on $\End(X) \otimes_{R_1} \Bar$ which would more properly be called the Atiyah class of $\End(X) \otimes_{R_1} \Re $ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
 
-As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set 
-$$
-\Lambda = \lambda_1\ldots \lambda_n \, . 
-$$
-Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ on $\End(X) \otimes_{R_1} \Bar$.
+As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set $\Lambda = \lambda_1\ldots \lambda_n$. Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ on $\End(X) \otimes_{R_1} \Bar$.
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
@@ -1889,7 +1917,7 @@ The next step of \eqref{eq:firstisoevalsec} is to tensor $- \otimes_{S^e} S$, th
 \[
 \sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
 \]
-To finish applying $\eval_0$ it remains to compose with $(-1)^n \Lambda$, supertrace and integrate:
+To finish applying $\widetilde\eval_0$ it remains to compose with $(-1)^n \Lambda$, supertrace and integrate:
 \begin{align*}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
 &= \sum_j (-1)^{n+(n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j\\
