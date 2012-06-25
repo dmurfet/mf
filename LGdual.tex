@@ -1514,9 +1514,9 @@ and
 \end{gather}
 A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{l+n+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \ee
-where $\Lambda^{(x)} = \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$ and $(\eta',\nu)$ denotes the evaluation of a functional $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. The precise statement is given in Proposition \ref{prop:constructevalmap}. 
+where $\Lambda^{(x)} = (-1)^n \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$ and $(\eta',\nu)$ denotes the evaluation of $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. The precise statement is given in Proposition \ref{prop:constructevalmap}. 
 
 In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$. The formula is
 \be\label{eq:constructevalmap01}
@@ -1647,7 +1647,7 @@ X \otimes_R X^{\vee}[n] \cong (X \otimes_R X^{\vee})[n] \lto \left( X \otimes_R 
 where we write $\bar{R} = R/(f_1,\ldots,f_n)$ and $\bar{X} = X \otimes_R \bar{R}$. Then we compose with
 \be\label{eq:defneval0_0}
 \xymatrix@C+2.5pc{
-(\bar{X} \otimes_R \bar{X}^{\vee})[n] \ar[r]^-{(-1)^n \Lambda^{(x)} \otimes 1} & \bar{X} \otimes_R X^{\vee}
+(\bar{X} \otimes_R \bar{X}^{\vee})[n] \ar[r]^-{(-1)^n \Lambda^{(x)} \otimes 1} & \bar{X} \otimes_R \bar{X}^{\vee}
 }
 \ee
 which is closed because $\Lambda^{(x)}$ is a closed map $X[n] \lto X$ modulo the $f_i$. Finally we compose with
@@ -1722,7 +1722,7 @@ where a ``$\bullet$'' as a superscript indicates postcomposition and as a subscr
 
 Let $\widetilde\eval'_0$ denote the morphism in \eqref{eq:defneval0_1}, so that $\widetilde\eval_0 = \vartheta_\bullet( \widetilde\eval'_0 )$, and let $\widetilde\eval'$ denote the morphism $\bar{X} \otimes_{R} \bar{X}^\vee \lto \Delta$ lifting $\widetilde\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. To run the lifting construction we need to fix an $\Se $-basis for $\bar{X} \otimes_{R} \bar{X}^\vee$. The basis we pick is $\{ g_\alpha e_i \otimes e_j ^* \}_{\alpha, i, j}$ where $g_\alpha$ gives a $k$-basis of $\bar{R}$. We define $\widetilde\eval_X = \vartheta_\bullet( \widetilde\eval' ) = (-1)^n \widetilde\eval' \circ (\Lambda^{(x)} \otimes 1)$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
 
-The statements of Proposition \ref{prop:liftingresult} gives us
+The statement of Proposition \ref{prop:liftingresult} gives us
 \[
 \widetilde\eval_X = \sum_{l \ge 0} (-1)^{l+n} \Psi \circ (1 \otimes \widetilde\eval''_0) \circ \lAt(X \otimes X^\vee)^l \circ ( \Lambda^{(x)} \otimes 1 )
 \]
@@ -1733,7 +1733,7 @@ where $\widetilde\eval''_0: \bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Se $ is
 \end{align*}
 Applying $\widetilde\eval''_0$ involves taking the supertrace $\str( e_{k_l} \circ e_j^* ) = (-1)^{|e_j|}\delta_{jk_l}$ so that the above equals
 \[
-\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{l+n+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{S^e \otimes_k R/S^e} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{l+n+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{R/k} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \]
 which agrees with \eqref{eq:constructevalmap0} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
 \end{proof}
@@ -1857,7 +1857,7 @@ We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\u
 
 Let $\{ e_i \}_{i}$ be a homogeneous $(S \otimes_k R)$-basis of $X$, $\{ e_i^* \}_{i}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i,j}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. By the Atiyah class $\At = \At( \End(X) )$ of this complex we mean the operator on $\End(X) \otimes_{R_1} \Bar$ which would more properly be called the Atiyah class of $\End(X) \otimes_{R_1} \Re $ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
 
-As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i=\partial_{x_i}d_X(x,z)$, and set $\Lambda = \lambda_1\ldots \lambda_n$. Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ on $\End(X) \otimes_{R_1} \Bar$.
+As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i= -\partial_{x_i}d_X(x,z)$, and set $\Lambda = \lambda_1\ldots \lambda_n$. Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ on $\End(X) \otimes_{R_1} \Bar$.
 
 \begin{lemma}\label{lemma:Zorrointermediate} We have
 \be\label{Zorrointermediate}
@@ -1923,7 +1923,7 @@ To finish applying $\widetilde\eval_0$ it remains to compose with $(-1)^n \Lambd
 &= \sum_j (-1)^{n+(n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j\\
 &= \sum_j (-1)^{n+(n+1)|e_j|+n|e_q|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
 \end{align*}
-This clearly vanishes unless $|e_q| = |e_j|$, so the sign in the last formula is in fact $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$. Since the Zorro map~$\mathcal Z$ is $S \otimes_k R$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
+The only nonvanishing summands have $|e_q| = |e_j|$, so the sign in the last formula is in fact $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$. Since the Zorro map~$\mathcal Z$ is $S \otimes_k R$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
 
 The basic adjointness that we need is contained in the next lemma.
