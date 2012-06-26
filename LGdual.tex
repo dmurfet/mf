@@ -96,6 +96,7 @@
 \begin{document}
 
 % Commands
+\def\globalsigneval{\binom{n}{2}}
 \def\Atlarrow{\overset{\leftarrow}{\At}}
 \def\Res{\res\!}
 \newcommand{\cat}[1]{\mathcal{#1}}
@@ -1517,7 +1518,7 @@ and
 \end{gather}
 A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\binom{n+1}{2}+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\globalsigneval+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \ee
 where $\Lambda^{(x)} = (-1)^n \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$ and $(\eta',\nu)$ denotes the evaluation of $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. For the precise statement see Proposition \ref{prop:constructevalmap}. 
 
@@ -1665,15 +1666,15 @@ where the last map marked is the $S$-linear residue symbol (see Section \ref{sec
 \]
 We note that the first map in \eqref{eq:defneval0_0} and the second in \eqref{eq:defneval0_1} are as defined in Section \ref{section:canonicalmaps}.
 
-\begin{definition} $\widetilde\eval_0$ is $(-1)^{\binom{n+1}{2}}$ times the composite of \eqref{eq:defneval0_00}, \eqref{eq:defneval0_0} and \eqref{eq:defneval0_1}.
+\begin{definition} $\widetilde\eval_0$ is $(-1)^{\globalsigneval}$ times the composite of \eqref{eq:defneval0_00}, \eqref{eq:defneval0_0} and \eqref{eq:defneval0_1}.
 \end{definition}
 
 The global sign is determined by the Zorro move and the signs on the coevaluation. 
 
 \begin{lemma}\label{lemma:morphismevalzero} $\widetilde\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\dual$
 \begin{align}
-\widetilde\eval_0( \eta \otimes \nu ) &= (-1)^{\binom{n+1}{2}+n|\eta|} \Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
-&= (-1)^{\binom{n+1}{2}+n|\eta| + |\nu|} \Res_{R/k} \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_0( \eta \otimes \nu ) &= (-1)^{\globalsigneval+n|\eta|} \Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
+&= (-1)^{\globalsigneval+n|\eta| + |\nu|} \Res_{R/k} \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \end{align}
 \end{lemma} 
 
@@ -1723,7 +1724,7 @@ in $\HMF(\Se , \widetilde{V})$ with $\psi \circ \vartheta = 1$ in the homotopy c
 \ee
 where a ``$\bullet$'' as a superscript indicates postcomposition and as a subscript it denotes precomposition, and we leave the isomorphism $X \otimes_R X^\vee[n] \cong (X \otimes_R X)[n]$ implicit throughout. By Proposition \ref{prop:liftingresult} the right-hand vertical map is a homotopy equivalence and therefore so is the left-hand vertical map. This justifies why in \eqref{eq:defineeval} there is a unique morphism $\widetilde\eval_X$ making the diagram commute: it is the image in cohomology of $\widetilde\eval_0$ under the homotopy inverse of $\pi_{\Delta}^\bullet$.
 
-Let $\widetilde\eval'_0$ denote $(-1)^{\binom{n+1}{2}}$ times the morphism in \eqref{eq:defneval0_1} so that $\widetilde\eval_0 = \vartheta_\bullet( \widetilde\eval'_0 )$, and let $\widetilde\eval'$ denote the morphism $\bar{X} \otimes_{R} \bar{X}^\vee \lto \Delta$ lifting $\widetilde\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. To run the lifting construction we need to fix an $\Se $-basis for $\bar{X} \otimes_{R} \bar{X}^\vee$. The basis we pick is $\{ g_\alpha e_i \otimes e_j ^* \}_{\alpha, i, j}$ where $g_\alpha$ gives a $k$-basis of $\bar{R}$. We define $\widetilde\eval_X = \vartheta_\bullet( \widetilde\eval' ) = \widetilde\eval' \circ (\Lambda^{(x)} \otimes 1)$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
+Let $\widetilde\eval'_0$ denote $(-1)^{\globalsigneval}$ times the morphism in \eqref{eq:defneval0_1} so that $\widetilde\eval_0 = \vartheta_\bullet( \widetilde\eval'_0 )$, and let $\widetilde\eval'$ denote the morphism $\bar{X} \otimes_{R} \bar{X}^\vee \lto \Delta$ lifting $\widetilde\eval'_0$ which is produced by Proposition \ref{prop:liftingresult}. To run the lifting construction we need to fix an $\Se $-basis for $\bar{X} \otimes_{R} \bar{X}^\vee$. The basis we pick is $\{ g_\alpha e_i \otimes e_j ^* \}_{\alpha, i, j}$ where $g_\alpha$ gives a $k$-basis of $\bar{R}$. We define $\widetilde\eval_X = \vartheta_\bullet( \widetilde\eval' ) = \widetilde\eval' \circ (\Lambda^{(x)} \otimes 1)$. By construction this morphism makes \eqref{eq:defineeval} commute, and it just remains to compute it explicitly.
 
 The statement of Proposition \ref{prop:liftingresult} gives us
 \[
@@ -1736,7 +1737,7 @@ where $\widetilde\eval''_0: \bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Se $ is
 \end{align*}
 Applying $\widetilde\eval''_0$ involves taking the supertrace $\str( e_{k_l} \circ e_j^* ) = (-1)^{|e_j|}\delta_{jk_l}$ so that the above equals
 \[
-\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{\binom{n+1}{2}+l+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{R/k} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{\globalsigneval+l+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{R/k} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
 \]
 which agrees with \eqref{eq:constructevalmap00} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
 \end{proof}
@@ -1753,7 +1754,7 @@ We define an operator $\lambda_{i \bullet}^{(z)}$ on $X^{\vee}$ by
 It is easily checked that $[d_{X^\vee}, \lambda_{i \bullet}^{(z)}] = \partial_{z_i} V \cdot 1_{X^\vee}$, so this is a null-homotopy for the action of $\partial_{z_i} V$. With $\bar{S} = S/(\partial_{z_1} V, \ldots, \partial_{z_m} V)$ there is an $S^e$-linear morphism of linear factorisations of $\widetilde{V}$
 \be\label{eq:ordinaryeval00}
 \xymatrix{
-X^{\vee}[m] \otimes_S X \ar[r] & ( X^{\vee}[m] \otimes_S X ) \otimes_S \bar{S} \cong \bar{X}^{\vee}[m] \otimes_S \bar{X} \ar[rrr]^-{(-1)^n \lambda^{(z)}_{n \bullet} \circ \cdots \circ \lambda^{(z)}_{1 \bullet}} & & & \bar{X}^{\vee} \otimes_S \bar{X}
+X^{\vee}[m] \otimes_S X \ar[r] & ( X^{\vee}[m] \otimes_S X ) \otimes_S \bar{S} \cong \bar{X}^{\vee}[m] \otimes_S \bar{X} \ar[rrr]^-{\lambda^{(z)}_{m \bullet} \circ \cdots \circ \lambda^{(z)}_{1 \bullet}} & & & \bar{X}^{\vee} \otimes_S \bar{X}
 }
 \ee
 which we can compose with
@@ -1767,7 +1768,7 @@ where the last map is the $R$-linear residue symbol (we write $\underline{\ud z}
 \Res_{S/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right]: R \otimes_k \bar{S} \lto R\,.
 \]
 
-\begin{definition} $\eval_0$ is the composite of \eqref{eq:ordinaryeval00} and \eqref{eq:ordinaryeval01}.
+\begin{definition} $\eval_0$ is $(-1)^m$ times the composite of \eqref{eq:ordinaryeval00} and \eqref{eq:ordinaryeval01}.
 \end{definition}
 
 We define $\eval_X$ to be the unique morphism in $\HMF(\Re, \widetilde{W})$ making the diagram
@@ -1886,7 +1887,7 @@ For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit 
 \rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1} &= \sum_{l \ge 0}(-1)^l \Psi \At_2(X)^l \sigma_2\,,\\
 \widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{l \ge 0}(-1)^l \Psi \Atlarrow_2(X^{\vee})^l(\iota_X) \Big)\,,\\
 &= \sum_{l,j} (-1)^{l+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\vee})^l( e_j^* ) \otimes e_j \Big)\\
-\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{\binom{n+1}{2}+n|\eta| + |\nu|}\Res_{\Se  \otimes_k R/\Se }\! \left[ \frac{ \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{\binom{n}{2}+n|\eta| + |\nu|}\Res_{\Se  \otimes_k R/\Se }\! \left[ \frac{ \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
 %Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) 
 Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes.
@@ -1898,27 +1899,27 @@ Throughout the proof we write $\At$ for $\At_2$. The image of a basis element $e
 &= \sum_{j} \sum_{l+l'=n} (-1)^{n+|e_j|} \varepsilon\Big( \Psi \At(X)^l( e_q ) \wedge \Psi \Atlarrow(X^{\vee})^{l'}( e_j^* ) \otimes e_j \Big) \nonumber\\
 &= \sum_{j} \sum_{l+l' = n} (-1)^{n+|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\vee})^{l'}( e_j^* ) \otimes e_j \Big) \label{eq:zorro1a12}
 \end{align} 
-In the last step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$. Next we apply Lemma \ref{lemma:atshufat} to write this shuffle product of Atiyah classes as a single Atiyah class. As it stands in \eqref{eq:zorro1a12} the term inside the $\varepsilon \Psi ( - )$ belongs to $X \otimes \gamma_*(\Bar) \otimes X^\vee \otimes X$. Moving the $\Bar$ to the right of the $X^\vee$ introduces a sign $(-1)^{n( |e_j| + l' )}$. 
+In the last step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$. Next we apply Lemma \ref{lemma:atshufat} to write this shuffle product of Atiyah classes as a single Atiyah class. As it stands in \eqref{eq:zorro1a12} the term inside the $\varepsilon \Psi ( - )$ belongs to $X \otimes \gamma_*(\Bar) \otimes X^\vee[n] \otimes X$. Moving the $\Bar$ to the right of the $X^\vee[n]$ introduces a sign $(-1)^{n( |e_j| + n + l' )}$. 
 
 We account for this sign by using $\Atlarrow(X^{\vee}[n])^{l'} = (-1)^{nl'} \Atlarrow(X^{\vee})^{l'}$ to rewrite \eqref{eq:zorro1a12} as
 \begin{align*}
-\sum_{j} \sum_{l+l' = n} (-1)^{n+|e_j|+n(|e_j| + l') + n|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\vee}[n])^{l'}( e_j^* ) \otimes e_j \Big)\,.
+\sum_{j} \sum_{l+l' = n} (-1)^{|e_j|+n(|e_j| + n + l') + n|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\vee}[n])^{l'}( e_j^* ) \otimes e_j \Big)\,.
 \end{align*}
 Then Lemma \ref{lemma:atshufat} applies directly to show that
 \[
-(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) = \sum_j (-1)^{n+|e_j| + n|e_j|} \varepsilon \Psi\Big( \At(X \otimes X^{\vee}[n])^n(e_q \otimes e_j^*) \otimes e_j \Big)\,.
+(1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) = \sum_j (-1)^{|e_j| + n|e_j|} \varepsilon \Psi\Big( \At(X \otimes X^{\vee}[n])^n(e_q \otimes e_j^*) \otimes e_j \Big)\,.
 \]
 Applying the first isomorphism of \eqref{eq:defneval0_00} yields
 \[
-\sum_j (-1)^{n+(n+1)|e_j| + n|e_q|} \varepsilon \Psi \Big( \At((X \otimes X^\vee)[n])^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
+\sum_j (-1)^{(n+1)|e_j| + n|e_q|} \varepsilon \Psi \Big( \At((X \otimes X^\vee)[n])^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
 \]
 Since the Atiyah class of $Y[n]$ agrees with that of $Y$, this is the same as
 \[
-\sum_j (-1)^{n+(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At(X \otimes X^\vee)^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
+\sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At(X \otimes X^\vee)^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
 \]
 The next step of \eqref{eq:firstisoevalsec} is to tensor $- \otimes_{S^e} S$, that is, to identify the left and right actions of $S$, after which $X \otimes X^\vee$ becomes identified $\End(X)$, so we are left with
 \[
-\sum_j (-1)^{n+(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
+\sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
 \]
 To finish applying $\widetilde\eval_0$ it remains to compose with $\Lambda$, multiply by the global sign, supertrace and integrate:
 \begin{align*}
