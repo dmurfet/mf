@@ -1118,6 +1118,9 @@ in which the rows are graded twist maps (with Koszul signs). To be explicit,
 \ee
 We adopt similar notational conventions for the other Atiyah classes.
 
+\begin{remark}\label{remark:atofshift} Consider the pair $(X[1], -D)$, with the same homogeneous basis as $X$. Then $\At_2(X)$ and $\At_2(X[1])$ define the same operator on the underlying module $X \otimes \Bar$. On the other hand, as operators on $\gamma_*(\Bar) \otimes X$ we have $\Atlarrow_2(X[1]) = - \Atlarrow_2(X)$.
+\end{remark}
+
 \begin{remark}\label{remark:at2formulas} In the formulas for $\At_1$ it is sufficient for our purposes to only consider $\omega' \in \Bar$ of the form $\omega' = a_0 da_1 \ldots da_n \otimes 1$. Then
 \be
 \At_1(X)(e_i \otimes \omega' ) = \sum_j (-1)^{|e_j| + n + 1} e_j \otimes D_{ji}^{(1)} \omega d( D_{ji}^{(2)} )
@@ -1510,7 +1513,7 @@ and derive explicit formulas for these morphisms in terms of Atiyah classes. We 
 
  While the homotopy classes of these morphisms are canonical the formulas depend on a choice of homogeneous basis $\{ e_i \}_{i}$ for $X$ with dual basis $\{ e_i^* \}_{i}$. Representatives for the coevaluation morphisms are given by the chain maps (\textbf{todo} reference for $\varepsilon$)
 \begin{gather}
-\widetilde\coev_X(\gamma) = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge  (-1)^l \Psi \Atlarrow_2(X^\vee)^l( \iota_X ) \right)\,, \label{eq:coev10}\\
+\widetilde\coev_X(\gamma) = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge  (-1)^{l+nl} \Psi \Atlarrow_2(X^\dual)^l( \iota_X ) \right)\,, \label{eq:coev10}\\
 \iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_{k[z]} X \nonumber
 \end{gather}
 and
@@ -1518,6 +1521,8 @@ and
 \coev_X( \gamma ) = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge (-1)^{l+ml} \Psi \Atlarrow_2(X)^l( \iota'_X ) \right)\,,\label{eq:coev102}\\
 \iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X\,. \nonumber
 \end{gather}
+The Atiyah classes involved in \eqref{eq:coev10} and \eqref{eq:coev102} are actually those of the $k[x]$-bimodule $X^\dual \otimes_{k[z]} X$ and the $k[z]$-bimodule $X \otimes_{k[x]} X^\dual$, respectively, but these simplify to the Atiyah classes given in the formulas; see the discussion preceeding Proposition \ref{prop:coev1}.
+
 A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
 \widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\globalsigneval+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
@@ -1530,7 +1535,7 @@ In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functio
 \ee
 where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. (\textbf{todo} Use a single $(-,-)$ instead of two?)
 
-To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}. 
+To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}.
 
 Throughout we make use of the canonical maps from Section \ref{section:canonicalmaps}.
 
@@ -1575,14 +1580,14 @@ where for $f \in X^\vee$ and $g,g' \in X$ we define $\kappa( f \otimes g )(g') =
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
-With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product $\reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X)$ the operator
+With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product $\reprod_*(\Bar_{R/k}) \otimes_{\Re} ( X^\vee \otimes_{S} X)$ the operator
 \[
 \Atlarrow_{2}(X^\vee \otimes X) = [d, d_{X^\vee \otimes X}] = [d, d_{X^\vee}]
 \]
 with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow_2(X^\vee)$ for $\Atlarrow_{2}(X^\vee \otimes X)$. Consider the map
 \[
 \xymatrix@C+1pc{
-X^\vee \otimes_{S} X \ar[rr]^-{\Atlarrow_2(X^\vee)^m} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X ) \ar[r]^-{\Psi} & \Delta_W \otimes_{\Re} (X^\vee \otimes_{S} X)
+X^\vee \otimes_{S} X \ar[rr]^-{\Atlarrow_2(X^\vee)^m} & & \reprod_*(\Bar_{R/k}) \otimes_{\Re} ( X^\vee \otimes_{S} X ) \ar[r]^-{\Psi} & \Delta_W \otimes_{\Re} (X^\vee \otimes_{S} X)
 }
 \]
 which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
@@ -1707,7 +1712,7 @@ To be clear, the numerator of the residue in \eqref{eq:constructevalmap00} is th
 X \otimes_R X^{\vee} \ar[r]^-{\lAt_2(X)^l} & \Bar \otimes_{S^e}(X \otimes_R X^{\vee} ) \ar[r]^-{1 \otimes (-,-)} & \Bar \otimes_{S^e} ( S^e \otimes_k R ) \cong \Bar \otimes_k R \ar[r]^-{\Psi \otimes 1} & \Delta_V \otimes_k R
 }
 \]
-where $\lAt_2(X) = [d, d_X]$. The residue integrates out the $R$, leaving us with an element of $\Delta_V$.
+where $\lAt_2(X) = [d, d_X], \Bar = \Bar_{S/k}$. The residue integrates out the $R$, leaving an element of $\Delta_V$.
 
 As has already been mentioned, if $X \otimes_R X^\dual$ were finite-rank we could apply Proposition \ref{prop:liftingresult} directly to deduce a formula for the lifting $\widetilde\eval_X$. As this is not the case, we have to be a little indirect and appeal to the idempotent pushforward construction of \cite{??}. Specifically, with $\bar{R} = R/(f_1,\ldots,f_n)$, Theorem \ref{??} of \textsl{loc.cit.} shows that there is a diagram
 \be\label{eq:idempotentpushdia}
@@ -1886,26 +1891,24 @@ There are two subtleties which complicate the proof. The first is that we must d
 
 For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit formulas for the maps involved: 
 \begin{align*}
-\rho^{-1}: X \lto X \otimes \Delta \, , \qquad \rho^{-1} &= \sum_{l \ge 0}(-1)^l \Psi \At_2(X)^l \sigma_2\,,\\
-\widetilde{\coev}: \Delta \lto X^{\dagger} \otimes X \, , \qquad \widetilde{\coev}(\gamma) &= \varepsilon\Big( \gamma \wedge \sum_{l \ge 0}(-1)^l \Psi \Atlarrow_2(X^{\vee})^l(\iota_X) \Big)\,,\\
-&= \sum_{l,j} (-1)^{l+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\vee})^l( e_j^* ) \otimes e_j \Big)\\
-\widetilde{\eval}: X \otimes X^{\dagger} \lto \Delta \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{\binom{n}{2}+n|\eta| + |\nu|}\Res_{\Se  \otimes_k R/\Se }\! \left[ \frac{ \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\rho^{-1}: X \lto X \otimes_R \Delta_W \, , \qquad \rho^{-1} &= \sum_{l \ge 0}(-1)^l \Psi \At_2(X)^l \sigma_2\,,\\
+\widetilde{\coev}: \Delta_W \lto X^{\dagger} \otimes_S X \, , \qquad \widetilde{\coev}(\gamma) &= \sum_{l,j} (-1)^{l+nl+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\dual})^l( e_j^* ) \otimes e_j \Big)\\
+\widetilde{\eval}: X \otimes_R X^{\dagger} \lto \Delta_V \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{\binom{n}{2}+n|\eta| + |\nu|}\Res_{R/k}\! \left[ \frac{ \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
-%Note that tensoring with the diagonal defines a map $(-)|_{z=z'}: X \otimes X^{\dagger} \lto \Hom_{k[x,z]}(X,X)$ (\textbf{more} there is no longer a $z'$ -- so there's no need to mention it!) 
 Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes.
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
-Throughout the proof we write $\At$ for $\At_2$. The image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1} is computed by
+Throughout we write $\At$ for $\At_2$, and Atiyah classes are taken with respect to $R/k$. The image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1} is computed by
 \begin{align}
 (1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= (1 \otimes \widetilde{\coev}) \sum_{l \ge 0} (-1)^l \Psi \At(X)^l (e_q)\nonumber\\
-&= \sum_{j} \sum_{l+l'=n} (-1)^{n+|e_j|} \varepsilon\Big( \Psi \At(X)^l( e_q ) \wedge \Psi \Atlarrow(X^{\vee})^{l'}( e_j^* ) \otimes e_j \Big) \nonumber\\
-&= \sum_{j} \sum_{l+l' = n} (-1)^{n+|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\vee})^{l'}( e_j^* ) \otimes e_j \Big) \label{eq:zorro1a12}
+&= \sum_{j} \sum_{l+l'=n} (-1)^{n+nl'+|e_j|} \varepsilon\Big( \Psi \At(X)^l( e_q ) \wedge \Psi \Atlarrow(X^{\dual})^{l'}( e_j^* ) \otimes e_j \Big) \nonumber\\
+&= \sum_{j} \sum_{l+l' = n} (-1)^{n+nl'+|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\dual})^{l'}( e_j^* ) \otimes e_j \Big) \label{eq:zorro1a12}
 \end{align} 
 In the last step we use that $\Psi$ intertwines the shuffle product on $\Bar$ with the exterior product on~$\Delta$. Next we apply Lemma \ref{lemma:atshufat} to write this shuffle product of Atiyah classes as a single Atiyah class. As it stands in \eqref{eq:zorro1a12} the term inside the $\varepsilon \Psi ( - )$ belongs to $X \otimes \gamma_*(\Bar) \otimes X^\vee[n] \otimes X$. Moving the $\Bar$ to the right of the $X^\vee[n]$ introduces a sign $(-1)^{n( |e_j| + n + l' )}$. 
 
-We account for this sign by using $\Atlarrow(X^{\vee}[n])^{l'} = (-1)^{nl'} \Atlarrow(X^{\vee})^{l'}$ to rewrite \eqref{eq:zorro1a12} as
+We account for this sign by rewriting \eqref{eq:zorro1a12} as
 \begin{align*}
-\sum_{j} \sum_{l+l' = n} (-1)^{|e_j|+n(|e_j| + n + l') + n|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\vee}[n])^{l'}( e_j^* ) \otimes e_j \Big)\,.
+\sum_{j} \sum_{l+l' = n} (-1)^{|e_j|+n(|e_j| + n + l') + n|e_j|} \varepsilon\Psi\Big( \At(X)^l( e_q ) \times \Atlarrow(X^{\dual})^{l'}( e_j^* ) \otimes e_j \Big)\,.
 \end{align*}
 Then Lemma \ref{lemma:atshufat} applies directly to show that
 \[
