@@ -502,99 +502,36 @@ TODO: especially Ragnar Buchweitz, also Ilka Brunner, Daniel Plencner, Ingo Runk
 
 \section{Background}\label{sec:Background}
 
-\subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
+\subsection{Bicategories and adjunction}\label{subsec:bicat}
 
-Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space. 
+Our main reference for bicategories is \cite{bor94}. 
 
-A \textsl{linear factorisation} of a potential $W\in R$ is a $\nZ_2$-graded $R$-module $X=X^0\oplus X^1$ together with an odd $R$-linear endomorphism~$d_X$ such that $d_X^2=W\cdot 1_X$. If~$X$ is a free $R$-module then the pair $(X,d_X)$ is called a \textsl{matrix factorisation}, and we often refer to it simply by~$X$ without explicitly mentioning the \textsl{differential} $d_X$; given a basis for~$X$ we sometimes identify the latter with the associated matrix: 
-$$
-d_{X} = \begin{pmatrix} 0 & d_X^1 \\ d_X^0 & 0\end{pmatrix} .
-$$
-
-A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even $R$-linear map $\varphi: X \longrightarrow Y$ such that $d_Y \varphi = \varphi d_X$. Two morphisms $\varphi, \psi: X\lra Y$ are \textsl{homotopic} if there exists an odd $R$-linear map $\lambda:X\lra Y$ such that $d_Y\lambda + \lambda d_X = \psi-\varphi$. Equality up to homotopy is an equivalence relation. \textbf{todo} Fix notation for Hom complexes.
-
-The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of matrix factorisations whose objects are isomorphic to matrix factorisations with finitely-generated underlying $R$-modules. These three categories have standard triangulated structures whose shift functor we denote as~$[1]$. 
-
-Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factorisation} $\Delta_W \in \hmf(\Re, \widetilde W)$ where $\Re = R\otimes_k R$ and $\widetilde W = W\otimes 1 - 1\otimes W$. Introducing~$n$ formal symbols $\theta_i$ as a convenient notational device, we have 
-\be\label{DeltaW}
-\Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
-\ee
-as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
-\be\label{DeltaWstabmap}
-\pi: \Delta_W \lra R
-\ee
-for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. By making a choice of how to order the~$\theta_i$ we obtain an $\Re$-linear map 
-\be\label{eq:vareps}
-\varepsilon: \Delta_W \lra \Re[n] 
-\, , \qquad 
-\theta_1\ldots \theta_n \lmt 1
-\ee
-that is non-zero only on elements in top $\theta$-degree. 
-
-
-To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
-$$
-{}^{t_i}(-): k[x,x'] \lra k[x,x'] \, , \qquad f \lmt f\big|_{x_i\lmt x'_i}
-$$
-in terms of which we can define difference quotient operators
-\be\label{diffquotop}
-\partial_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_1\ldots t_{i-1}}f - {}^{t_1\ldots t_i}f}{x_i-x'_i} \, . 
-\ee
-It is easy to check that the $\partial_{[i]}$ satisfy the following kind of Leibniz rule: 
-\begin{lemma}\label{lem:LeibnizForDQO}
-For $f,g \in k[x,x']$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
-\end{lemma}
-
-The differential on $\Delta_W$ is given by
-\be\label{DeltaW}
-d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*  \,. 
-\ee
-We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. For our purposes it will be sufficient to consider matrix factorisations $X\in \HMF(R_1\otimes_k R_2, W_2-W_1)$ and $Y\in \HMF(R_2\otimes_k R_3, W_3-W_2)$ (where of course $R_i = k$ is a possibility for any~$i$). Then the \textsl{tensor product matrix factorisation} $Y\otimes X \in \HMF(R_1\otimes_k R_3, W_3-W_1)$ is the $\nZ_2$-graded module 
-$$
-Y\otimes X = \Big( (Y^0\otimes_{R_2} X^0) \oplus (Y^1\otimes_{R_2} X^1) \Big) \oplus \Big( (Y^0\otimes_{R_2} X^1) \oplus (Y^1\otimes_{R_2} X^0) \Big) 
-$$
-together with the differential
-$$
-d_{Y\otimes X} = d_Y \otimes 1 + 1 \otimes d_X
-$$
-where the second term comes with the usual Koszul signs when applied to elements. We  observe that e.\,g.~by the argument of~\cite[Section~12]{dm1102.2957} the tensor product does not lead out of the categories $\hmf(R_i \otimes_k R_j, W_j - W_i)$ (\textbf{todo} warning warning). Also note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. 
-
-Now we can be more specific about the tensor action of the unit matrix factorisation. For $X\in \hmf(R_1 \otimes_k R_2,W_2-W_1)$ there are natural maps
-\be\label{lambdarho}
-\lambda_X = \pi \otimes 1_X: \Delta_{W_2} \otimes X \lra X \, , \qquad \rho_X = 1_X \otimes \pi : X \otimes \Delta_{W_1} \lra X
-\ee
-which are isomorphisms in $\hmf(R_1 \otimes_k R_2,W_2-W_1)$. Later in Section~\ref{section:pertandhtpy} we will give a description of their explicit homotopy inverses. 
-
-\begin{definition}
-The \textsl{bicategory of Landau-Ginzburg models} $\LG$ consists of the following data: 
+\begin{definition} A bicategory $\cat{B}$ consists of the following data:
 \begin{itemize}
-\item Objects are pairs $(R,W)$ with $W\in R=k[x]$ a potential. 
-\item 1- and 2-morphisms are the objects and morphisms of the categories $\hmf(R_1 \otimes_k R_2,W_2-W_1)$, respectively. 
-\item The unit 1-morphisms are $\Delta_W \in \hmf(\Re,\widetilde W)$. 
-\item The composition functor is the tensor product
-$$
-\otimes : \hmf(R_2 \otimes_k R_3,W_3-W_2) \times \hmf(R_1 \otimes_k R_2,W_2-W_1) \lra \hmf(R_1 \otimes_k R_3,W_3-W_1) \, .
-$$
-\item There are natural 2-isomorphisms $\alpha, \lambda, \rho$ as above. 
-\end{itemize}¥
+\item A class $|\cat{B}|$ of \textsl{objects}.
+\item For each pair $A,B$ of objects a small category $\cat{B}(A,B)$ whose objects we call \textsl{$1$-morphisms} and whose arrows we call \textsl{$2$-morphisms}. Composition of $2$-morphisms is denoted $\gamma \circ \delta$.
+\item For each triple $A,B,C$ of objects a functor
+\[
+c_{ABC}: \cat{B}(A,B) \times \cat{B}(B,C) \lto \cat{B}(A,C)\,.
+\]
+Given $1$-morphisms $f: A \lto B$ and $g: B \lto C$ we write $g \circ f$ for their \textsl{composite} $c_{ABC}( f, g )$. Given $2$-morphisms $\gamma: f \lto f', \delta: g \lto g'$ we write $\delta \star \gamma$ for $c_{ABC}(\gamma, \delta)$, sometimes called the \textsl{horizontal composite}.
+\item For each object $A$ an identity $1$-morphism $\Delta_A: A \lto A$.
+\item For each triple of composable $1$-morphisms $h, g, f$ a $2$-isomorphism
+\[
+\alpha_{f,g,h}: (h \circ g) \circ f \lto h \circ (g \circ f)
+\]
+natural with respect to $2$-morphisms in all three variables.
+\item For each $1$-morphism $f: A \lto B$ a pair of $2$-isomorphisms
+\begin{align*}
+\lambda_f&: \Delta_B \circ f \lto f\,,\\
+\rho_f&: f \circ \Delta_A \lto f
+\end{align*}
+natural with respect to $2$-morphisms in the variable $f$.
+\end{itemize}
+This data is subject to two coherence axioms, one involving the associator $\alpha$ and the other the left and right unit actions $\lambda, \rho$, see \cite{bor94}.
 \end{definition}
 
-\begin{proposition}[\cite{McNameethesis, Calinetal, cr0909.4381}] 
-$\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorphisms up to homotopy, and they satisfy the coherence axioms for bicategories. 
-\end{proposition}
-
-\begin{remark}\label{remark:gradedbicategory}
-An analogous statement is also true of the bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$. Its objects are pairs $(R,W)$ as above but with the additional requirement that~$R$ is a $\nZ$-graded ring and~$W$ is homogeneus of some degree $2c$. A graded linear factorisation is then a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. As shown in~\cite{cr0909.4381} this is in particular true of the structure maps $\alpha, \lambda, \rho$. 
-
-As a relevant example let us discuss the graded Hom. For graded linear factorisations $X,Y$ of $W,W' \in R_{2c}$, respectively, we can form the $\nZ$-graded $R$-module $\Hom_{\mathrm{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i$, where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of $\nZ$-degree~$i$. This is a submodule of $\Hom_R(X,Y)$, and if~$X,Y$ are finitely generated then $\Hom_{\mathrm{gr}}(X,Y) = \Hom_R(X,Y)$. This graded module has a $\nZ_2$-decomposition into even and odd maps, 
-\begin{align*}
-\Hom_{\mathrm{gr}}(X,Y) &= \Big( \Hom_{\mathrm{gr}}(X^0, Y^0) \oplus \Hom_{\mathrm{gr}}(X^1, Y^1) \Big) \oplus \Big( \Hom_{\mathrm{gr}}(X^0, Y^1) \oplus \Hom_{\mathrm{gr}}(X^1, Y^0) \Big) \, .
-\end{align*}
-Together with the differential defined on a $\nZ$-homogeneous map $\alpha$ by $\alpha \lmt d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X$, the graded module $\Hom_{\mathrm{gr}}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \nZ_2)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lra Y'$ is a morphism of graded linear factorisations of degree~$i$, then $\Hom_{\mathrm{gr}}(1_X,\varphi)$ is another morphism of degree~$i$, and similarly in the first variable.
-\end{remark}
-
-
-One of the main results of the present paper is that $\LG$ (and also $\LG^{\mathrm{gr}}$) is endowed with an additional duality structure. Let us recall the relevant notion. 
+In general discussions of bicategories we will follow the notational convention of \cite{bor94}, which is to denote the identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ by $i_f$, and the identity on $1_A$ by $i_A$.
 
 \begin{definition}\label{def:bicatduals}
 [TODO: what is called left adjoint here is called right adjoint in the paper with Ingo. The reason is that ${}^\dual X$ looks stupid and Sections 5 and 6 are full of right duals. OK to have notational clash with [CR2010]?]
@@ -778,7 +715,101 @@ satisfying the associated Zorro moves
 \end{tikzpicture} \, .
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
-Note that in general there is no reason for the left and right adjoints to coincide. 
+Note that in general there is no reason for the left and right adjoints to coincide.
+
+\subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
+
+Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space. 
+
+A \textsl{linear factorisation} of a potential $W\in R$ is a $\nZ_2$-graded $R$-module $X=X^0\oplus X^1$ together with an odd $R$-linear endomorphism~$d_X$ such that $d_X^2=W\cdot 1_X$. If~$X$ is a free $R$-module then the pair $(X,d_X)$ is called a \textsl{matrix factorisation}, and we often refer to it simply by~$X$ without explicitly mentioning the \textsl{differential} $d_X$; given a basis for~$X$ we sometimes identify the latter with the associated matrix: 
+$$
+d_{X} = \begin{pmatrix} 0 & d_X^1 \\ d_X^0 & 0\end{pmatrix} .
+$$
+
+A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even $R$-linear map $\varphi: X \longrightarrow Y$ such that $d_Y \varphi = \varphi d_X$. Two morphisms $\varphi, \psi: X\lra Y$ are \textsl{homotopic} if there exists an odd $R$-linear map $\lambda:X\lra Y$ such that $d_Y\lambda + \lambda d_X = \psi-\varphi$. Equality up to homotopy is an equivalence relation. \textbf{todo} Fix notation for Hom complexes.
+
+The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of matrix factorisations whose objects are isomorphic to matrix factorisations with finitely-generated underlying $R$-modules. These three categories have standard triangulated structures whose shift functor we denote as~$[1]$. 
+
+Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factorisation} $\Delta_W \in \hmf(\Re, \widetilde W)$ where $\Re = R\otimes_k R$ and $\widetilde W = W\otimes 1 - 1\otimes W$. Introducing~$n$ formal symbols $\theta_i$ as a convenient notational device, we have 
+\be\label{DeltaW}
+\Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
+\ee
+as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
+\be\label{DeltaWstabmap}
+\pi: \Delta_W \lra R
+\ee
+for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. By making a choice of how to order the~$\theta_i$ we obtain an $\Re$-linear map 
+\be\label{eq:vareps}
+\varepsilon: \Delta_W \lra \Re[n] 
+\, , \qquad 
+\theta_1\ldots \theta_n \lmt 1
+\ee
+that is non-zero only on elements in top $\theta$-degree. 
+
+
+To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
+$$
+{}^{t_i}(-): k[x,x'] \lra k[x,x'] \, , \qquad f \lmt f\big|_{x_i\lmt x'_i}
+$$
+in terms of which we can define difference quotient operators
+\be\label{diffquotop}
+\partial_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_1\ldots t_{i-1}}f - {}^{t_1\ldots t_i}f}{x_i-x'_i} \, . 
+\ee
+It is easy to check that the $\partial_{[i]}$ satisfy the following kind of Leibniz rule: 
+\begin{lemma}\label{lem:LeibnizForDQO}
+For $f,g \in k[x,x']$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
+\end{lemma}
+
+The differential on $\Delta_W$ is given by
+\be\label{DeltaW}
+d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*  \,. 
+\ee
+We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. For our purposes it will be sufficient to consider matrix factorisations $X\in \HMF(R_1\otimes_k R_2, W_2-W_1)$ and $Y\in \HMF(R_2\otimes_k R_3, W_3-W_2)$ (where of course $R_i = k$ is a possibility for any~$i$). Then the \textsl{tensor product matrix factorisation} $Y\otimes X \in \HMF(R_1\otimes_k R_3, W_3-W_1)$ is the $\nZ_2$-graded module 
+$$
+Y\otimes X = \Big( (Y^0\otimes_{R_2} X^0) \oplus (Y^1\otimes_{R_2} X^1) \Big) \oplus \Big( (Y^0\otimes_{R_2} X^1) \oplus (Y^1\otimes_{R_2} X^0) \Big) 
+$$
+together with the differential
+$$
+d_{Y\otimes X} = d_Y \otimes 1 + 1 \otimes d_X
+$$
+where the second term comes with the usual Koszul signs when applied to elements. We  observe that e.\,g.~by the argument of~\cite[Section~12]{dm1102.2957} the tensor product does not lead out of the categories $\hmf(R_i \otimes_k R_j, W_j - W_i)$ (\textbf{todo} warning warning). Also note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. 
+
+Now we can be more specific about the tensor action of the unit matrix factorisation. For $X\in \hmf(R_1 \otimes_k R_2,W_2-W_1)$ there are natural maps
+\be\label{lambdarho}
+\lambda_X = \pi \otimes 1_X: \Delta_{W_2} \otimes X \lra X \, , \qquad \rho_X = 1_X \otimes \pi : X \otimes \Delta_{W_1} \lra X
+\ee
+which are isomorphisms in $\hmf(R_1 \otimes_k R_2,W_2-W_1)$. Later in Section~\ref{section:pertandhtpy} we will give a description of their explicit homotopy inverses. 
+
+\begin{definition}
+The \textsl{bicategory of Landau-Ginzburg models} $\LG$ consists of the following data: 
+\begin{itemize}
+\item Objects are pairs $(R,W)$ with $W\in R=k[x]$ a potential. 
+\item 1- and 2-morphisms are the objects and morphisms of the categories $\hmf(R_1 \otimes_k R_2,W_2-W_1)$, respectively. 
+\item The unit 1-morphisms are $\Delta_W \in \hmf(\Re,\widetilde W)$. 
+\item The composition functor is the tensor product
+$$
+\otimes : \hmf(R_2 \otimes_k R_3,W_3-W_2) \times \hmf(R_1 \otimes_k R_2,W_2-W_1) \lra \hmf(R_1 \otimes_k R_3,W_3-W_1) \, .
+$$
+\item There are natural 2-isomorphisms $\alpha, \lambda, \rho$ as above. 
+\end{itemize}¥
+\end{definition}
+
+\begin{proposition}[\cite{McNameethesis, Calinetal, cr0909.4381}] 
+$\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorphisms up to homotopy, and they satisfy the coherence axioms for bicategories. 
+\end{proposition}
+
+\begin{remark}\label{remark:gradedbicategory}
+An analogous statement is also true of the bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$. Its objects are pairs $(R,W)$ as above but with the additional requirement that~$R$ is a $\nZ$-graded ring and~$W$ is homogeneus of some degree $2c$. A graded linear factorisation is then a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. As shown in~\cite{cr0909.4381} this is in particular true of the structure maps $\alpha, \lambda, \rho$. 
+
+As a relevant example let us discuss the graded Hom. For graded linear factorisations $X,Y$ of $W,W' \in R_{2c}$, respectively, we can form the $\nZ$-graded $R$-module $\Hom_{\mathrm{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i$, where $\Hom_R(X,Y)_i$ denotes the group of all $R$-linear maps $X \lto Y$ of $\nZ$-degree~$i$. This is a submodule of $\Hom_R(X,Y)$, and if~$X,Y$ are finitely generated then $\Hom_{\mathrm{gr}}(X,Y) = \Hom_R(X,Y)$. This graded module has a $\nZ_2$-decomposition into even and odd maps, 
+\begin{align*}
+\Hom_{\mathrm{gr}}(X,Y) &= \Big( \Hom_{\mathrm{gr}}(X^0, Y^0) \oplus \Hom_{\mathrm{gr}}(X^1, Y^1) \Big) \oplus \Big( \Hom_{\mathrm{gr}}(X^0, Y^1) \oplus \Hom_{\mathrm{gr}}(X^1, Y^0) \Big) \, .
+\end{align*}
+Together with the differential defined on a $\nZ$-homogeneous map $\alpha$ by $\alpha \lmt d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X$, the graded module $\Hom_{\mathrm{gr}}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \nZ_2)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lra Y'$ is a morphism of graded linear factorisations of degree~$i$, then $\Hom_{\mathrm{gr}}(1_X,\varphi)$ is another morphism of degree~$i$, and similarly in the first variable.
+\end{remark}
+
+
+One of the main results of the present paper is that $\LG$ (and also $\LG^{\mathrm{gr}}$) is endowed with an additional duality structure. Let us recall the relevant notion (\textbf{todo} now moved).
 
 Specifying the adjoint of a $1$-morphism is often straightforward, but providing explicit evaluation and coevaluation maps and checking that the Zorro moves hold is no easy task. For example, given a $1$-morphism $X: (k[x_1,\ldots,x_n],W) \lto (k[z_1,\ldots,z_m],V)$ in $\LG$, that is, an object $X \in \hmf(k[x,z], V - W)$, we will see that its left and right adjoints are given by ${}^\dual X = X^\vee[m]$,  $X^\dual = X^\vee[n]$ with differentials
 \be\label{eq:differentials_adjoints}
@@ -3700,6 +3731,9 @@ P.~S.~Aspinwall, T.~Bridgeland, A.~Craw, M.~R.~Douglas, and M.~Gross, \textsl{Di
 %\bibitem[Bec]{b1105.0702}
 %H.~Becker, \textsl{Khovanov-Rozansky homology via Cohen-Macaulay approximations and Soergel bimodules},
 %  \href{http://arxiv.org/abs/1105.0702}{[arXiv:1105.0702]}.
+
+\bibitem[Bor94]{bor94}
+F.~Borceux, \textsl{Handbook of categorical algebra $1$}, volume $50$ of \textsl{Encyclopedia of Mathematics and its Applications}, Cambridge University Press, Cambridge, 1994.
 
 \bibitem[BR07]{br0707.0922}
 I.~Brunner and D.~Roggenkamp, \textsl{B-type defects in {L}andau-{G}inzburg
