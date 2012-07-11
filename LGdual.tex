@@ -742,6 +742,28 @@ satisfying the associated Zorro moves
 \ee
 Note that in general there is no reason for the left and right adjoints to coincide.
 
+\section{Adjunction}
+
+Let $\cat{B}$ be a bicategory. The following lemma recasts the definition of adjunction given in Section \ref{subsec:bicat} in terms of a natural isomorphism. Since the proof is essentially the same as the usual proof for adjoint functors, we omit it. Observe however that we insist on naturality with respect to both $1$ and $2$-morphisms. Throughout this section we write $\Hom(f,g)$ for $\Hom_{\cat{A}(A,B)}(f,f')$.
+
+\begin{lemma} Let $f: A \lto B$ and $g: B \lto A$ be $1$-morphisms in $\cat{B}$. Specifying $2$-morphisms $\eval, \coev$ satisfying \eqref{uglyZorro1}, \eqref{uglyZorro2} is equivalent to specifying a family of bijections
+\[
+\Phi_{h, l}: \Hom(g \circ h, l) \lto \Hom(h, f \circ l),
+\]
+indexed by pairs of $1$-morphisms $h: C \lto B$ and $l: C \lto A$, subject to the following conditions:
+\begin{itemize}
+\item[(i)] The bijections $\Phi$ are natural with respect to $2$-morphisms in the variables $h, l$, and
+\item[(ii)] The bijections $\Phi$ are natural with respect to $1$-morphisms in the sense that for any $h': C' \lto C$ the diagram
+\[
+\xymatrix@C+1pc{
+\Hom(g \circ h, l) \ar[d]\ar[r]^-{\Phi} & \Hom(h, f \circ l) \ar[d]\\
+\Hom( (g \circ h) \circ h', l \circ h') \ar[d] & \Hom(h \circ h', (f \circ l) \circ h') \ar[d]\\
+\Hom( g \circ (h \circ h'), l \circ h') \ar[r]^-{\Phi} & \Hom(h \circ h', f \circ (l \circ h') )
+}
+\]
+\end{itemize}
+\end{lemma}
+
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
 Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space (\textbf{todo} comment on non-isolated singularities).
@@ -3849,8 +3871,7 @@ J.~Fr\"ohlich, J.~Fuchs, I.~Runkel and C.~Schweigert,
 Proceedings of the XVI International Congress on Mathematical Physics, Prague, August 3--8, 2009, \href{http://arxiv.org/abs/0909.5013}{[arXiv:0909.5013]}.
 
 \bibitem[Gray74]{gray}
-J.~W.~Gray, \textsl{Formal category theory: adjointness for 2-categories}, Springer-
-Verlag, Berlin, 1974.
+J.~W.~Gray, \textsl{Formal category theory: adjointness for 2-categories}, Springer-Verlag, Berlin, 1974.
 
 %\bibitem[FFRS07]{ffrs0607247}
 %J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
