@@ -504,7 +504,7 @@ TODO: especially Ragnar Buchweitz, also Ilka Brunner, Daniel Plencner, Ingo Runk
 
 \subsection{Bicategories and adjunction}\label{subsec:bicat}
 
-Our main reference for bicategories is \cite{bor94}. 
+In this section we recall the basic theory of bicategories, with \cite{bor94} as our main reference. In the next section we introduce the main example of interest, the bicategory of Landau-Ginzburg models. The basic references for bicategories are \cite{benabou, gray, kellystreet} and for a useful survey see \cite{lack}. 
 
 \begin{definition} A bicategory $\cat{B}$ consists of the following data:
 \begin{itemize}
@@ -514,7 +514,7 @@ Our main reference for bicategories is \cite{bor94}.
 \[
 c_{ABC}: \cat{B}(A,B) \times \cat{B}(B,C) \lto \cat{B}(A,C)\,.
 \]
-Given $1$-morphisms $f: A \lto B$ and $g: B \lto C$ we write $g \circ f$ for their \textsl{composite} $c_{ABC}( f, g )$. Given $2$-morphisms $\gamma: f \lto f', \delta: g \lto g'$ we write $\delta \star \gamma$ for $c_{ABC}(\gamma, \delta)$, sometimes called the \textsl{horizontal composite}.
+Given $1$-morphisms $f: A \lto B$ and $g: B \lto C$ we write $g \circ f$ for their \textsl{composite} $c_{ABC}( f, g )$, and given $2$-morphisms $\gamma: f \lto f'$ and $\delta: g \lto g'$ we write $\delta * \gamma$ for $c_{ABC}(\gamma, \delta)$.
 \item For each object $A$ an identity $1$-morphism $\Delta_A: A \lto A$.
 \item For each triple of composable $1$-morphisms $h, g, f$ a $2$-isomorphism
 \[
@@ -531,59 +531,84 @@ natural with respect to $2$-morphisms in the variable $f$.
 This data is subject to two coherence axioms, one involving the associator $\alpha$ and the other the left and right unit actions $\lambda, \rho$, see \cite{bor94}.
 \end{definition}
 
-In general discussions of bicategories we will follow the notational convention of \cite{bor94}, which is to denote the identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ by $i_f$, and the identity on $1_A$ by $i_A$.
+We will typically follow the notational convention of \cite{bor94}, with the exception that the identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ is denoted $1_f$ rather than $i_f$, and the identity $2$-endomorphism of $\Delta_A$ is denoted $1_A$. For the remainder of this section, $\cat{B}$ denotes a bicategory.
 
-\begin{definition}\label{def:bicatduals}
-[TODO: what is called left adjoint here is called right adjoint in the paper with Ingo. The reason is that ${}^\dual X$ looks stupid and Sections 5 and 6 are full of right duals. OK to have notational clash with [CR2010]?]
+We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{??}.
 
-We say a bicategory~$\mathcal B$ \textsl{has left adjoints} if for each 1-morphism $X\in \mathcal B(A,B)$ there exists a 1-morphism ${}^\dual X \in \mathcal B(B,A)$ together with 2-morphisms (\textbf{todo} $\circ$ not $\otimes$ here?)
+Our references for adjunction in bicategories are \cite[Chapter $6$]{gray} and \cite{kellystreet}.
+
+\begin{definition}\label{def:adjointbicats} Two $1$-morphisms $f: A \lto B$ and $g: B \lto A$ are part of an \textsl{adjoint pair} when there exist $2$-morphisms
 \be\label{evcoev}
-\eval_X : {}^\dual X \otimes X \lra 1_A \, , \qquad \coev_X : 1_B \lra X \otimes {}^\dual X
+\eval : g \circ f \lra \Delta_A \, , \qquad \coev : \Delta_B \lra f \circ g
 \ee
 satisfying 
 \begin{align}
-\rho_X \circ (1_X \otimes \eval_X) \circ \alpha_{X,{}^\dual X,X} \circ (\coev_X \otimes 1_X) \circ \lambda_X^{-1} & = 1_X \, , \label{uglyZorro1}\\
-\lambda_{{}^\dual X} \circ (\eval_X \otimes 1_{{}^\dual X}) \circ \alpha^{-1}_{{}^\dual X,X,{}^\dual X} \circ (1_{{}^\dual X} \otimes \coev_X) \circ \rho_{{}^\dual X}^{-1} & = 1_{{}^\dual X} \, . \label{uglyZorro2}
+\rho_f \circ (1_f * \eval) \circ \alpha_{f,g,f} \circ (\coev * 1_f) \circ \lambda_f^{-1} & = 1_f \, , \label{uglyZorro1}\\
+\lambda_{g} \circ (\eval * 1_{g}) \circ \alpha^{-1}_{g,f,g} \circ (1_{g} \otimes \coev) \circ \rho_{g}^{-1} & = 1_{g} \, . \label{uglyZorro2}
 \end{align}
+Equivalently, the following two composites evaluate to the identity:
+\begin{align}
+\xymatrix@C+1.5pc
+{
+f \ar[r]^-{\lambda_f^{-1}} & \Delta_B \circ f \ar[r]^-{\coev * 1_f} & ( f \circ g ) \circ f \ar[r]^-{\alpha_{f,g,f}} & f \circ ( g \circ f ) \ar[r]^-{1_f * \eval} & f \circ \Delta_A \ar[r]^-{\rho_f} & f
+}\,,\\
+\xymatrix@C+1.5pc
+{
+g \ar[r]^-{\rho_g^{-1}} & g \circ \Delta_B \ar[r]^-{1_g * \coev} & g \circ ( f \circ g ) \ar[r]^-{\alpha^{-1}_{g,f,g}} & (g \circ f) \circ g \ar[r]^-{\eval * 1_g} & \Delta_A \circ g \ar[r]^-{\lambda_g} & g
+}\,.
+\end{align}
+In this case we say that $g$ is \emph{left adjoint} to $f$ and that $f$ is \emph{right adjoint} to $g$, and we write $g \dashv f$. The $2$-morphisms $\eval$ and $\coev$ are referred to as the \textsl{evaluation} and \textsl{coevaluation} maps.
 \end{definition}
 
-It is convenient to denote identities in bicategories with duals in string diagram notation, see e.\,g.~\cite{JSGoTCI,JSGoTCII} for more details (\textbf{todo} So we fix specific adjunctions for each $X$). In this language the evaluation and coevaluation maps~\eqref{evcoev} are written as
+\begin{definition}\label{def:bicatduals}
+$\mathcal B$ \textsl{has left adjoints} (resp. \textsl{has right adjoints}) if every 1-morphism in $\cat{B}$ admits a left adjoint (resp. admits a right adjoint). If they exist these adjoints are unique up to isomorphism, and the unique left and right adjoints of $f$ are denoted by ${}^\dual f$ and $f^\dual$ respectively.
+\end{definition}
+
+If a $1$-morphism $f: A \lto B$ has both a left and right adjoint then we write the evaluation and coevaluation maps for the adjunction ${}^\dual f \dashv f$ with $f$ as a subscript, that is
+\be\label{evcoev2}
+\eval_f : {}^\dual f \circ f \lra \Delta_A \, , \qquad \coev_f : \Delta_B \lra f \circ {}^\dual f\,.
+\ee
+For the adjunction $f \dashv f^\dual$ we write the evaluation and coevaluation maps as
+\be\label{evcoev3}
+\widetilde\eval_f : f \circ f^\dual \lra \Delta_B \, , \qquad \widetilde\coev_f : \Delta_A \lra f^\dual \circ f\,.
+\ee
+It is convenient to denote identities in bicategories with adjoints in string diagram notation. We will explain a refined version of this notation in Section \ref{??}, but for the moment string diagrams have the meaning given in \cite{JSGoTCI,JSGoTCII} and also explained very clearly in \cite{ladia,khovdia}. In this language the evaluation and coevaluation maps~\eqref{evcoev2} are written as
 $$
-\eval_{X} = 
+\eval_{f} = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
-(2.5,1.6) node[line width=0pt] (I) {{\small$1_A$}}
-(3,0) node[line width=0pt] (D) {{\small $X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {\small{${}^\dual X$}}; 
+(2.5,1.6) node[line width=0pt] (I) {{\small$\Delta_A$}}
+(3,0) node[line width=0pt] (D) {{\small $f\vphantom{f^\dual}$}}
+(2,0) node[line width=0pt] (s) {\small{${}^\dual f$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
 \equiv
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
-(3,0) node[line width=0pt] (D) {{\small$X\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {{\small${}^\dual X$}}; 
+(3,0) node[line width=0pt] (D) {{\small$f\vphantom{f^\dual}$}}
+(2,0) node[line width=0pt] (s) {{\small${}^\dual f$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 , 
 \qquad
-\coev_{X} = 
+\coev_{f} = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
-(2.5,1.6) node[line width=0pt] (I) {{\small$1_B$}}
-(3,0) node[line width=0pt] (D) {{\small$X\vphantom{{}^\dual X}$}}
-(2,0) node[line width=0pt] (s) {{\small${}^\dual X$}}; 
+(2.5,1.6) node[line width=0pt] (I) {{\small$\Delta_B$}}
+(3,0) node[line width=0pt] (D) {{\small$f\vphantom{{}^\dual f}$}}
+(2,0) node[line width=0pt] (s) {{\small${}^\dual f$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
 \equiv
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
-(3,0) node[line width=0pt] (D) {{\small$X\vphantom{A^\dual}$}}
-(2,0) node[line width=0pt] (s) {{\small${}^\dual X$}}; 
+(3,0) node[line width=0pt] (D) {{\small$f\vphantom{A^\dual}$}}
+(2,0) node[line width=0pt] (s) {{\small${}^\dual f$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -593,8 +618,8 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 \be\label{Zorros}
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(-1,1.25) node[line width=0pt] (A) {{\small $X$}}
-(1,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
+(-1,1.25) node[line width=0pt] (A) {{\small $f$}}
+(1,-1.25) node[line width=0pt] (A2) {{\small $f$}}; 
 \draw[directed] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
 \draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
 \draw (-1,0) -- (A); 
@@ -603,15 +628,15 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 =
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(0,1.25) node[line width=0pt] (A) {{\small $X$}}
-(0,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
+(0,1.25) node[line width=0pt] (A) {{\small $f$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small $f$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture}
 \, , \qquad
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small ${}^\dual X$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual X$}}; 
+(1,1.25) node[line width=0pt] (A) {{\small ${}^\dual f$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual f$}}; 
 \draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
 \draw (-1,0) -- (A2); 
@@ -620,21 +645,21 @@ Note that such diagrams are always to be read from bottom to top. Then the defin
 =
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(0,1.25) node[line width=0pt] (A) {{\small ${}^\dual X$}}
-(0,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual X$}}; 
+(0,1.25) node[line width=0pt] (A) {{\small ${}^\dual f$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual f$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
 \ee
 
-Similarly one says that~$X^\dual$ is \textsl{right adjoint} to~$X$ if there are maps 
+Similarly the evaluation and coevaluation maps \eqref{evcoev3} are written
 $$
-\widetilde\eval_{X} = 
+\widetilde\eval_{f} = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_B$}}
-(3,0) node[line width=0pt] (D) {{\small $X^\dual\vphantom{X^\dual}$}}
-(2,0) node[line width=0pt] (s) {\small{$X\vphantom{X^\dual}$}}; 
+(3,0) node[line width=0pt] (D) {{\small $f^\dual\vphantom{f^\dual}$}}
+(2,0) node[line width=0pt] (s) {\small{$f\vphantom{f^\dual}$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
@@ -643,20 +668,20 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.6cm]
 \draw[line width=0pt] 
-(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
-(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+(3,0) node[line width=0pt] (D) {{\small$f^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$f\vphantom{f^\dual}$}}; 
 \draw[redirected] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 , 
 \qquad
-\widetilde\coev_{X} = 
+\widetilde\coev_{f} = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
 (2.5,1.6) node[line width=0pt] (I) {{\small$1_A$}}
-(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
-(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+(3,0) node[line width=0pt] (D) {{\small$f^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$f\vphantom{f^\dual}$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \draw[dashed] (2.5,0.81) -- (I);
 \end{tikzpicture}
@@ -665,8 +690,8 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.6cm,rotate=180]
 \draw[line width=0pt] 
-(3,0) node[line width=0pt] (D) {{\small$X^\dual$}}
-(2,0) node[line width=0pt] (s) {{\small$X\vphantom{X^\dual}$}}; 
+(3,0) node[line width=0pt] (D) {{\small$f^\dual$}}
+(2,0) node[line width=0pt] (s) {{\small$f\vphantom{f^\dual}$}}; 
 \draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -676,8 +701,8 @@ satisfying the associated Zorro moves
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small $X$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
+(1,1.25) node[line width=0pt] (A) {{\small $f$}}
+(-1,-1.25) node[line width=0pt] (A2) {{\small $f$}}; 
 \draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[redirected] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
 \draw (-1,0) -- (A2); 
@@ -688,8 +713,8 @@ satisfying the associated Zorro moves
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(0,1.25) node[line width=0pt] (A) {{\small $X$}}
-(0,-1.25) node[line width=0pt] (A2) {{\small $X$}}; 
+(0,1.25) node[line width=0pt] (A) {{\small $f$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small $f$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -697,8 +722,8 @@ satisfying the associated Zorro moves
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(-1,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(1,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+(-1,1.25) node[line width=0pt] (A) {{\small $f^\dual$}}
+(1,-1.25) node[line width=0pt] (A2) {{\small $f^\dual$}}; 
 \draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
 \draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
 \draw (-1,0) -- (A); 
@@ -709,8 +734,8 @@ satisfying the associated Zorro moves
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(0,1.25) node[line width=0pt] (A) {{\small $X^\dual$}}
-(0,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+(0,1.25) node[line width=0pt] (A) {{\small $f^\dual$}}
+(0,-1.25) node[line width=0pt] (A2) {{\small $f^\dual$}}; 
 \draw (A2) -- (A); 
 \end{tikzpicture} \, .
 %%%%%%%%%%%%%%%%%%%%%%
@@ -719,7 +744,7 @@ Note that in general there is no reason for the left and right adjoints to coinc
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
-Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space. 
+Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space (\textbf{todo} comment on non-isolated singularities).
 
 A \textsl{linear factorisation} of a potential $W\in R$ is a $\nZ_2$-graded $R$-module $X=X^0\oplus X^1$ together with an odd $R$-linear endomorphism~$d_X$ such that $d_X^2=W\cdot 1_X$. If~$X$ is a free $R$-module then the pair $(X,d_X)$ is called a \textsl{matrix factorisation}, and we often refer to it simply by~$X$ without explicitly mentioning the \textsl{differential} $d_X$; given a basis for~$X$ we sometimes identify the latter with the associated matrix: 
 $$
@@ -760,7 +785,7 @@ It is easy to check that the $\partial_{[i]}$ satisfy the following kind of Leib
 For $f,g \in k[x,x']$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
 \end{lemma}
 
-The differential on $\Delta_W$ is given by
+The differential on $\Delta_W$ is given by (\textbf{todo} contraction)
 \be\label{DeltaW}
 d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*  \,. 
 \ee
@@ -821,7 +846,7 @@ where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules. On
 
 \subsection{Bar complex}\label{subsec:Bar}
 
-Let us for the moment be slightly more general and consider an arbitrary unital associative $k$-algebra~$A$. In our applications to matrix factorisations we will set $A=R=k[x]$. 
+Let us for the moment be slightly more general and consider an arbitrary unital associative $k$-algebra~$A$. In our applications to matrix factorisations we will set $A=R=k[x]$. (\textbf{todo} ref Quillen, others)
 
 \textsl{Noncommutative $n$-forms over~$A$} are elements in 
 $$
@@ -911,7 +936,7 @@ There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be import
 \Phi & : \Delta \lra \Bar \, , \qquad \theta_{i_1}\ldots \theta_{i_p} \lmt \sum_{\sigma\in S_p} (-1)^{|\sigma|} dx_{i_{\sigma(1)}} \ldots dx_{i_{\sigma(p)}} \otimes 1 \, , \label{intro_phi}\\
 \Psi & : \Bar \lra \Delta \, , \qquad df_1\ldots df_p \otimes 1 \lmt \sum_{1\leq i_1<\ldots<i_p\leq n} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \, \theta_{i_1} \ldots \theta_{i_p} \, \label{intro_psi}.
 \end{align}
-These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$. 
+These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$. (\textbf{todo} Discuss possible reorderings, linearity)
 
 \begin{lemma}\label{PhiPsiDG}
 Both~$\Phi$ and~$\Psi$ are maps of differential graded algebras between $(\Delta, \delta_-, \wedge)$ and $(\Bar, b', \times)$. 
@@ -1147,18 +1172,21 @@ in which the rows are graded twist maps (with Koszul signs). To be explicit,
 \be
 \Atlarrow_{2}(X)^m( \omega \otimes e_i ) = (-1)^{m|\omega| + \binom{m}{2}} \sum_{j_1,\ldots,j_m} d(D_{j_m,j_{m-1}}) \ldots d(D_{j_2,j_1}) d(D_{j_1,i}) \omega \otimes e_{j_m}\,.
 \ee
-We adopt similar notational conventions for the other Atiyah classes.
 
 \begin{remark}\label{remark:atofshift} Consider the pair $(X[1], -D)$, with the same homogeneous basis as $X$. Then $\At_2(X)$ and $\At_2(X[1])$ define the same operator on the underlying module $X \otimes \Bar$. On the other hand, as operators on $\gamma_*(\Bar) \otimes X$ we have $\Atlarrow_2(X[1]) = - \Atlarrow_2(X)$.
 \end{remark}
 
 \begin{remark}\label{remark:at2formulas} In the formulas for $\At_1$ it is sufficient for our purposes to only consider $\omega' \in \Bar$ of the form $\omega' = a_0 da_1 \ldots da_n \otimes 1$. Then
 \be
-\At_1(X)(e_i \otimes \omega' ) = \sum_j (-1)^{|e_j| + n + 1} e_j \otimes D_{ji}^{(1)} \omega d( D_{ji}^{(2)} )
+\At_1(X)(e_i \otimes \omega' ) = \sum_j (-1)^{|e_j| + n + 1} e_j \otimes D_{ji}^{(1)} \omega' d( D_{ji}^{(2)} )
 \ee
 where we write $D_{ji} = \sum D_{ji}^{(1)} \otimes D_{ji}^{(2)} \in \Re$. The additional sign compared to \eqref{eq:at2nopower} comes from the sign in the definition \eqref{eq:definition_s} of the operator $s$. More generally for $m \ge 1$,
 \be
-\At_1(X)^m( e_i \otimes \omega' ) = (-1)^{m|e_i| + mn} \sum_{j_1,\ldots,j_m} e_{j_m} \otimes D_{j_1 i}^{(1)} \ldots D_{j_mj_{m-1}}^{(1)} \omega d(D_{j_1i}^{(2)}) \ldots d(D_{j_mj_{m-1}}^{(2)})\,.
+\At_1(X)^m( e_i \otimes \omega' ) = (-1)^{m|e_i| + mn} \sum_{j_1,\ldots,j_m} e_{j_m} \otimes D_{j_1 i}^{(1)} \ldots D_{j_mj_{m-1}}^{(1)} \omega' d(D_{j_1i}^{(2)}) \ldots d(D_{j_mj_{m-1}}^{(2)})\,.
+\ee
+We will also need % see shati2
+\be
+\Atlarrow_1(X)^m( \omega' \otimes e_i ) = (-1)^m \sum_{j_1,\ldots,j_m} D_{j_1 i}^{(1)} \ldots D_{j_mj_{m-1}}^{(1)} \omega' d(D_{j_1i}^{(2)}) \ldots d(D_{j_mj_{m-1}}^{(2)}) \otimes e_{j_m}\,.
 \ee
 \end{remark}
 
@@ -1344,7 +1372,7 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-In the notation of Section \ref{section:atiyahclasses} we can now describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}.
+In the notation of Section \ref{section:atiyahclasses} we can now describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}. (\textbf{todo} Are we clear enough what $\At_2$ means on the completed tensor product?)
 
 \begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is an $R_2$-linear homotopy equivalence with inverse
 \[
@@ -1464,7 +1492,7 @@ With these formulas in hand we return to the lifting problem discussed at the be
 \be\label{eq:liftingresult0}
 \Hom_{\Re }(Y, \Delta) \lto \Hom_{\Re }(Y, R)\,.
 \ee
-In particular, given an $\Re $-linear morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) $\Re $-linear morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
+In particular, given a morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
 \[
 \xymatrix{
 Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta \ar[dl]^-{\pi_\Delta} \\
@@ -1482,10 +1510,10 @@ where $\varphi': Y \lto \Re $ is the $\Re $-linear map defined by $\varphi'(e_i)
 \end{proposition}
 
 \begin{remark}
-For each $m \ge 0$ the summand of $\varphi_{\textup{lift}}$ is $(-1)^m$ times the composite
+For each $l \ge 0$ the summand of $\varphi_{\textup{lift}}$ is $(-1)^l$ times the composite
 \[
 \xymatrix@C+2pc{
-Y \ar[r]^-{[d, d_Y]^m} & \Bar \otimes_{\Re } Y \ar[r]^-{1 \otimes \varphi'} & \Bar \otimes_{\Re } \Re  \cong \Bar \ar[r]^-{\Psi} & \Delta
+Y \ar[r]^-{[d, d_Y]^l} & \Bar \otimes_{\Re } Y \ar[r]^-{1 \otimes \varphi'} & \Bar \otimes_{\Re } \Re  \cong \Bar \ar[r]^-{\Psi} & \Delta
 }\,.
 \]
 \end{remark}
@@ -3732,6 +3760,10 @@ P.~S.~Aspinwall, T.~Bridgeland, A.~Craw, M.~R.~Douglas, and M.~Gross, \textsl{Di
 %H.~Becker, \textsl{Khovanov-Rozansky homology via Cohen-Macaulay approximations and Soergel bimodules},
 %  \href{http://arxiv.org/abs/1105.0702}{[arXiv:1105.0702]}.
 
+\bibitem[Ben67]{benabou}
+J.~B\'{e}nabou, \textsl{Introduction to bicategories}, Reports of the Midwest Category
+Seminar, pages 1Ð-77. Springer, Berlin, 1967.
+
 \bibitem[Bor94]{bor94}
 F.~Borceux, \textsl{Handbook of categorical algebra $1$}, volume $50$ of \textsl{Encyclopedia of Mathematics and its Applications}, Cambridge University Press, Cambridge, 1994.
 
@@ -3816,6 +3848,10 @@ J.~Fr\"ohlich, J.~Fuchs, I.~Runkel and C.~Schweigert,
 \textsl{Defect lines, dualities, and generalised orbifolds},
 Proceedings of the XVI International Congress on Mathematical Physics, Prague, August 3--8, 2009, \href{http://arxiv.org/abs/0909.5013}{[arXiv:0909.5013]}.
 
+\bibitem[Gray74]{gray}
+J.~W.~Gray, \textsl{Formal category theory: adjointness for 2-categories}, Springer-
+Verlag, Berlin, 1974.
+
 %\bibitem[FFRS07]{ffrs0607247}
 %J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
 %  defects in rational conformal field theory}, Nucl. Phys. B \textbf{763}
@@ -3867,6 +3903,12 @@ A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
   {T}heir {A}pplications},
   \href{http://arxiv.org/abs/1004.2307}{[arXiv:1004.2307]}.
 
+\bibitem[KS74]{kellystreet}
+G.~M.~Kelly and R.~Street, \textsl{Review of the elements of 2-categories}, In Category Seminar (Proc. Sem., Sydney, 1972/1973), pages 75Ð103. Lecture Notes in Math., Vol. 420. Springer, Berlin, 1974.
+
+\bibitem[Kho10]{khovdia}
+M.~Khovanov, \textsl{Categorifications from planar diagrammatics}, Japanese J. of Mathematics 5, 153--181 (2010), \href{http://arxiv.org/abs/1008.5084}{[arXiv:1008.5084v1]}.
+
 %\bibitem[Kaw96]{kawauchibook}
 %A.~Kawauchi, \textsl{A {S}urvey of {K}not {T}heory}, Birkh\"auser, 1996.
 %
@@ -3907,7 +3949,13 @@ A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
 %\bibitem[Lam86]{LambekRingsModules}
 %J.~Lambek, \textsl{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
 
-\bibitem[La05]{l0312}
+\bibitem[Lack]{lack}
+S.~Lack, \textsl{A $2$-categories companion}, \href{http://arxiv.org/abs/math/0702535}{[arXiv:math/0702535v1]}.
+
+\bibitem[Lau12]{ladia}
+A.~D.~Lauda, \textsl{An introduction to diagrammatic algebra and categorified quantum $\mathfrak{sl}_2$}, Bulletin of the Institute of Mathematics Academia Sinica (New Series), Vol. \textbf{7} (2012), No. 2, pp. 165--270, \href{http://arxiv.org/abs/1106.2128}{[arXiv:1106.2128v2]}.
+
+\bibitem[Laz05]{l0312}
 C.~I. Lazaroiu, \textsl{On the boundary coupling of topological {L}andau-{G}inzburg
   models}, JHEP \textbf{0505} (2005), 037,
   \href{http://www.arxiv.org/abs/hep-th/0312286}{[hep-th/0312286]}.
