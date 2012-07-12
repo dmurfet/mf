@@ -514,47 +514,47 @@ In this section we recall the basic theory of bicategories, with \cite{bor94} as
 \[
 c_{ABC}: \cat{B}(A,B) \times \cat{B}(B,C) \lto \cat{B}(A,C)\,.
 \]
-Given $1$-morphisms $f: A \lto B$ and $g: B \lto C$ we write $g \circ f$ for their \textsl{composite} $c_{ABC}( f, g )$, and given $2$-morphisms $\gamma: f \lto f'$ and $\delta: g \lto g'$ we write $\delta * \gamma$ for $c_{ABC}(\gamma, \delta)$.
+Given $1$-morphisms $f: A \lto B$ and $g: B \lto C$ we write $g \otimes f$ for their \textsl{composite} $c_{ABC}( f, g )$, and given $2$-morphisms $\gamma: f \lto f'$ and $\delta: g \lto g'$ we write $\delta \otimes \gamma$ for $c_{ABC}(\gamma, \delta)$.
 \item For each object $A$ an identity $1$-morphism $\Delta_A: A \lto A$.
 \item For each triple of composable $1$-morphisms $h, g, f$ a $2$-isomorphism
 \[
-\alpha_{f,g,h}: (h \circ g) \circ f \lto h \circ (g \circ f)
+\alpha_{f,g,h}: (h \otimes g) \otimes f \lto h \otimes (g \otimes f)
 \]
 natural with respect to $2$-morphisms in all three variables.
 \item For each $1$-morphism $f: A \lto B$ a pair of $2$-isomorphisms
 \begin{align*}
-\lambda_f&: \Delta_B \circ f \lto f\,,\\
-\rho_f&: f \circ \Delta_A \lto f
+\lambda_f&: \Delta_B \otimes f \lto f\,,\\
+\rho_f&: f \otimes \Delta_A \lto f
 \end{align*}
 natural with respect to $2$-morphisms in the variable $f$.
 \end{itemize}
-This data is subject to two coherence axioms, one involving the associator $\alpha$ and the other the left and right unit actions $\lambda, \rho$, see \cite{bor94}.
+This data is subject to two coherence axioms, one involving the associator $\alpha$ and the other the left and right unit actions $\lambda, \rho$, see diagrams $(7.18)$ and $(7.19)$ of \cite{bor94}.
 \end{definition}
 
-We will typically follow the notational convention of \cite{bor94}, with the exception that the identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ is denoted $1_f$ rather than $i_f$, and the identity $2$-endomorphism of $\Delta_A$ is denoted $1_A$. For the remainder of this section, $\cat{B}$ denotes a bicategory.
+The identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ is denoted $1_f$ and the identity $2$-endomorphism of $\Delta_A$ is denoted $1_A$. For the remainder of this section, $\cat{B}$ denotes a bicategory.
 
-We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{??}.
+We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{app:adjoints}.
 
 Our references for adjunction in bicategories are \cite[Chapter $6$]{gray} and \cite{kellystreet}.
 
 \begin{definition}\label{def:adjointbicats} Two $1$-morphisms $f: A \lto B$ and $g: B \lto A$ are part of an \textsl{adjoint pair} when there exist $2$-morphisms
 \be\label{evcoev}
-\eval : g \circ f \lra \Delta_A \, , \qquad \coev : \Delta_B \lra f \circ g
+\eval : g \otimes f \lra \Delta_A \, , \qquad \coev : \Delta_B \lra f \otimes g
 \ee
 satisfying 
 \begin{align}
-\rho_f \circ (1_f * \eval) \circ \alpha_{f,g,f} \circ (\coev * 1_f) \circ \lambda_f^{-1} & = 1_f \, , \label{uglyZorro1}\\
-\lambda_{g} \circ (\eval * 1_{g}) \circ \alpha^{-1}_{g,f,g} \circ (1_{g} \otimes \coev) \circ \rho_{g}^{-1} & = 1_{g} \, . \label{uglyZorro2}
+\rho_f \circ (1_f \otimes \eval) \circ \alpha_{f,g,f} \circ (\coev \otimes 1_f) \circ \lambda_f^{-1} & = 1_f \, , \label{uglyZorro1}\\
+\lambda_{g} \circ (\eval \otimes 1_{g}) \circ \alpha^{-1}_{g,f,g} \circ (1_{g} \otimes \coev) \circ \rho_{g}^{-1} & = 1_{g} \, . \label{uglyZorro2}
 \end{align}
 Equivalently, the following two composites evaluate to the identity:
 \begin{align}
 \xymatrix@C+1.5pc
 {
-f \ar[r]^-{\lambda_f^{-1}} & \Delta_B \circ f \ar[r]^-{\coev * 1_f} & ( f \circ g ) \circ f \ar[r]^-{\alpha_{f,g,f}} & f \circ ( g \circ f ) \ar[r]^-{1_f * \eval} & f \circ \Delta_A \ar[r]^-{\rho_f} & f
+f \ar[r]^-{\lambda_f^{-1}} & \Delta_B \otimes f \ar[r]^-{\coev \otimes 1_f} & ( f \otimes g ) \otimes f \ar[r]^-{\alpha_{f,g,f}} & f \otimes ( g \otimes f ) \ar[r]^-{1_f \otimes \eval} & f \otimes \Delta_A \ar[r]^-{\rho_f} & f
 }\,,\\
 \xymatrix@C+1.5pc
 {
-g \ar[r]^-{\rho_g^{-1}} & g \circ \Delta_B \ar[r]^-{1_g * \coev} & g \circ ( f \circ g ) \ar[r]^-{\alpha^{-1}_{g,f,g}} & (g \circ f) \circ g \ar[r]^-{\eval * 1_g} & \Delta_A \circ g \ar[r]^-{\lambda_g} & g
+g \ar[r]^-{\rho_g^{-1}} & g \otimes \Delta_B \ar[r]^-{1_g \otimes \coev} & g \otimes ( f \otimes g ) \ar[r]^-{\alpha^{-1}_{g,f,g}} & (g \otimes f) \otimes g \ar[r]^-{\eval \otimes 1_g} & \Delta_A \otimes g \ar[r]^-{\lambda_g} & g
 }\,.
 \end{align}
 In this case we say that $g$ is \emph{left adjoint} to $f$ and that $f$ is \emph{right adjoint} to $g$, and we write $g \dashv f$. The $2$-morphisms $\eval$ and $\coev$ are referred to as the \textsl{evaluation} and \textsl{coevaluation} maps.
@@ -566,11 +566,11 @@ $\mathcal B$ \textsl{has left adjoints} (resp. \textsl{has right adjoints}) if e
 
 If a $1$-morphism $f: A \lto B$ has both a left and right adjoint then we write the evaluation and coevaluation maps for the adjunction ${}^\dual f \dashv f$ with $f$ as a subscript, that is
 \be\label{evcoev2}
-\eval_f : {}^\dual f \circ f \lra \Delta_A \, , \qquad \coev_f : \Delta_B \lra f \circ {}^\dual f\,.
+\eval_f : {}^\dual f \otimes f \lra \Delta_A \, , \qquad \coev_f : \Delta_B \lra f \otimes {}^\dual f\,.
 \ee
 For the adjunction $f \dashv f^\dual$ we write the evaluation and coevaluation maps as
 \be\label{evcoev3}
-\widetilde\eval_f : f \circ f^\dual \lra \Delta_B \, , \qquad \widetilde\coev_f : \Delta_A \lra f^\dual \circ f\,.
+\widetilde\eval_f : f \otimes f^\dual \lra \Delta_B \, , \qquad \widetilde\coev_f : \Delta_A \lra f^\dual \otimes f\,.
 \ee
 It is convenient to denote identities in bicategories with adjoints in string diagram notation. We will explain a refined version of this notation in Section \ref{??}, but for the moment string diagrams have the meaning given in \cite{JSGoTCI,JSGoTCII} and also explained very clearly in \cite{ladia,khovdia}. In this language the evaluation and coevaluation maps~\eqref{evcoev2} are written as
 $$
@@ -741,28 +741,6 @@ satisfying the associated Zorro moves
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
 Note that in general there is no reason for the left and right adjoints to coincide.
-
-\section{Adjunction}
-
-Let $\cat{B}$ be a bicategory. The following lemma recasts the definition of adjunction given in Section \ref{subsec:bicat} in terms of a natural isomorphism. Since the proof is essentially the same as the usual proof for adjoint functors, we omit it. Observe however that we insist on naturality with respect to both $1$ and $2$-morphisms. Throughout this section we write $\Hom(f,g)$ for $\Hom_{\cat{A}(A,B)}(f,f')$.
-
-\begin{lemma} Let $f: A \lto B$ and $g: B \lto A$ be $1$-morphisms in $\cat{B}$. Specifying $2$-morphisms $\eval, \coev$ satisfying \eqref{uglyZorro1}, \eqref{uglyZorro2} is equivalent to specifying a family of bijections
-\[
-\Phi_{h, l}: \Hom(g \circ h, l) \lto \Hom(h, f \circ l),
-\]
-indexed by pairs of $1$-morphisms $h: C \lto B$ and $l: C \lto A$, subject to the following conditions:
-\begin{itemize}
-\item[(i)] The bijections $\Phi$ are natural with respect to $2$-morphisms in the variables $h, l$, and
-\item[(ii)] The bijections $\Phi$ are natural with respect to $1$-morphisms in the sense that for any $h': C' \lto C$ the diagram
-\[
-\xymatrix@C+1pc{
-\Hom(g \circ h, l) \ar[d]\ar[r]^-{\Phi} & \Hom(h, f \circ l) \ar[d]\\
-\Hom( (g \circ h) \circ h', l \circ h') \ar[d] & \Hom(h \circ h', (f \circ l) \circ h') \ar[d]\\
-\Hom( g \circ (h \circ h'), l \circ h') \ar[r]^-{\Phi} & \Hom(h \circ h', f \circ (l \circ h') )
-}
-\]
-\end{itemize}
-\end{lemma}
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
@@ -3765,6 +3743,211 @@ and in particular $[ \lambda_i, \At_j ] = - \delta_{ij}$ up to homotopy.
 \textbf{todo}.
 \end{proof}
 
+\appendix
+
+\section{Remarks on adjoints}\label{app:adjoints}
+% see bicat2, adjbi, adjbi2
+
+Let $\cat{B}$ be a bicategory. We address the following problem encountered in the construction of adjoints in the bicategory of Landau-Ginzburg models: suppose that for each $1$-morphism $f: A \lto B$ we are given a pair of $1$-morphisms ${}^\dual f, f^\dual: B \lto A$ and that for those $f$ belonging to some subcategory $\cat{C}_{AB} \subseteq \cat{B}(A, B)$ we are given evaluation and coevaluation maps exhibiting ${}^\dual f, f^\dual$ as adjoints of $f$.
+
+Provided every object of $\cat{B}(A,B)$ is a direct summand of an object of $\cat{C}_{AB}$ we explain below that there is an essentially unique way of extending the definition of evaluation and coevaluation maps from $\cat{C}$ to all of $\cat{B}(A,B)$.
+
+But before getting into that we need to recall some more background on adjoints in bicategories. Specifically, the way in which the adjoints ${}^\dual f$ and $f^\dual$ are functorial with respect to $2$-morphisms. This is an adaptation of standard material for monoidal categories, so we will be brief.
+
+Throughout this section we write $\Hom(f,g)$ for $\Hom_{\cat{B}(A,B)}(f,f')$.
+
+\subsection{Functoriality of adjoints}\label{section:funcadjoint}
+
+The following lemma recasts the definition of adjunction given in Section \ref{subsec:bicat} in terms of a natural isomorphism. Observe that we insist on naturality with respect to both $1$ and $2$-morphisms. 
+
+\begin{lemma} Let $f: A \lto B$ and $g: B \lto A$ be $1$-morphisms. Specifying $2$-morphisms $\eval, \coev$ satisfying \eqref{uglyZorro1}, \eqref{uglyZorro2} is equivalent to specifying a family of bijections
+\[
+\Phi_{h, l}: \Hom(g \otimes h, l) \lto \Hom(h, f \otimes l),
+\]
+indexed by pairs of $1$-morphisms $h: C \lto B$ and $l: C \lto A$, subject to the following conditions:
+\begin{itemize}
+\item[(i)] The bijections $\Phi$ are natural with respect to $2$-morphisms in the variables $h, l$, and
+\item[(ii)] The bijections $\Phi$ are natural with respect to $1$-morphisms in the sense that for any $h': C' \lto C$ the diagram
+\[
+\xymatrix@C+2.5pc{
+\Hom(g \otimes h, l) \ar[d]_-{(-) \otimes 1_{h'}}\ar[r]^-{\Phi_{h,l}} & \Hom(h, f \otimes l) \ar[d]^-{(-) \otimes 1_{h'}}\\
+\Hom( (g \otimes h) \otimes h', l \otimes h') \ar[d]_\alpha & \Hom(h \otimes h', (f \otimes l) \otimes h') \ar[d]^\alpha\\
+\Hom( g \otimes (h \otimes h'), l \otimes h') \ar[r]_-{\Phi_{h \otimes h', l \otimes h'}} & \Hom(h \otimes h', f \otimes (l \otimes h') )
+}
+\]
+commutes.
+\end{itemize}
+\end{lemma}
+\begin{proof}
+The proof is essentially the same as the usual proof for adjoint functors, so we omit it.
+\end{proof}
+
+\begin{remark}
+For the careful reader we mention that when working with bicategories one often needs to check commutativity of diagrams constructed from the structure morphisms $\lambda, \rho, \alpha$. Just as for monoidal categories this commutativity is, in most cases, an easy consequence of the coherence axioms. The only exceptions relevant for this paper are the diagrams $(5), (7), (10)$ of \cite{kelly}, whose commutativity follows from the coherence axioms but not in a completely obvious way.
+\end{remark}
+
+Let $f_1,f_2: A \lto B$ be $1$-morphisms with left adjoints ${}^\dual f_i$. By the previous lemma there is an isomorphism
+\be\label{eq:2isolemma}
+\Hom({}^\dual f_2, {}^\dual f_1) \stackrel{\rho}{\cong} \Hom({}^\dual f_2 \otimes \Delta_B, {}^\dual f_1) \stackrel{\Phi}{\cong} \Hom( \Delta_B, f_2 \otimes {}^\dual f_1)\,.
+\ee
+\begin{definition} Given a $2$-morphism $\zeta: f_1 \lto f_2$ we define ${}^\dual \zeta: {}^\dual f_2 \lto {}^\dual f_1$ to be the unique $2$-morphism making the diagram
+\be\label{eq:dualzeta}
+\xymatrix@C+1pc@R+1pc{
+\Delta_B \ar[r]^-{\coev} \ar[d]_-{\coev} & f_1 \otimes {}^\dual f_1 \ar[d]^{\zeta \otimes 1}\\
+f_2 \otimes {}^\dual f_2 \ar[r]_-{1 \otimes {}^\dual \zeta} & f_2 \otimes {}^\dual f_1
+}
+\ee
+commute.
+\end{definition}
+
+\begin{remark}
+\begin{itemize}
+\item[(i)] The construction is functorial, in the sense that ${}^\dual(1_f) = 1_{{}^\dual f}$ and ${}^\dual( \xi \circ \zeta ) = {}^\dual \zeta \circ {}^\dual \xi$.
+\item[(ii)] Using commutativity of \eqref{eq:dualzeta} and the Zorro identities one checks that
+\be\label{eq:dualzeta2}
+\xymatrix@C+1pc@R+1pc
+{
+{}^\dual f_2 \otimes f_1 \ar[r]^-{{}^\dual \zeta \otimes 1}\ar[d]_-{1 \otimes \zeta} & {}^\dual f_1 \otimes f_1 \ar[d]^-{\eval}\\
+{}^\dual f_2 \otimes f_2 \ar[r]_{\eval} & \Delta_A
+}
+\ee
+commutes.
+\item[(iii)] In diagrammatic language the explicit construction of the $2$-morphism ${}^\dual \zeta$ can be presented in terms of the diagram:
+
+The commutativity of \eqref{eq:dualzeta} and \eqref{eq:dualzeta2} expresses the following two identities, which tell us that we can ``slide'' $2$-morphism around cups and caps:
+\end{itemize}
+\end{remark}
+
+Let $f_1,f_2: A \lto B$ be $1$-morphisms with right adjoints $f_i^\dual$. There is an isomorphism
+\[
+\Hom(f_2^\dual, f_1^\dual) \stackrel{\rho}{\cong} \Hom(f_2^\dual, f_1^\dual \otimes \Delta_B) \stackrel{\Phi}{\cong} \Hom(f_1 \otimes f_2^\dual, \Delta_B)\,.
+\]
+
+\begin{definition} Given a $2$-morphism $\zeta: f_1 \lto f_2$ we define $\zeta^\dual: f_2^\dual \lto f_1^\dual$ to be the unique $2$-morphism making the diagram
+\be\label{eq:funcrightdual}
+\xymatrix@C+1pc@R+1pc{
+f_1 \otimes f_2^\dual \ar[r]^-{\zeta \otimes 1}\ar[d]_-{1 \otimes \zeta^\dual} & f_2 \otimes f_2^\dual \ar[d]^-{\eval}\\
+f_1 \otimes f_1^\dual \ar[r]_{\eval} & \Delta_B
+}
+\ee
+commute.
+\end{definition}
+
+Again the construction is functorial, and the diagram
+\be\label{eq:funcrightdual2}
+\xymatrix@C+1pc@R+1pc{
+\Delta_A \ar[d]_-{\coev} \ar[r]^-{\coev} & f_1^\dual \otimes f_1 \ar[d]^-{1 \otimes \zeta}\\
+f_2^\dual \otimes f_2 \ar[r]_-{\zeta^\dual \otimes 1} & f_1^\dual \otimes f_2
+}
+\ee
+commutes.
+
+\subsection{Extending duality to the idempotent closure}
+
+Let $\cat{B}$ be a bicategory and suppose that for fixed objects $A,B$ there is a contravariant functor
+\be\label{eq:extenddual1}
+(-)^\dual: \cat{B}(A,B) \lto \cat{B}(B,A)
+\ee
+and a full subcategory $\cat{C} \subseteq \cat{B}(A,B)$ together with, for each $f \in \cat{C}$, a pair of $2$-morphisms
+\be\label{eq:extenddual2}
+\eval_f: f \otimes f^\dual \lto \Delta_B \, , \qquad \coev_f: \Delta_A \lto f^\dual \otimes f
+\ee
+making $f$ into the left adjoint of $f^\dual$. Suppose that the following two conditions are satisfied:
+\begin{itemize}
+\item[(i)] every object in the category $\cat{B}(A,B)$ is a direct summand of an object in $\cat{C}$, and
+\item[(ii)] for every morphism $\zeta: f_1 \lto f_2$ in $\cat{C}$ the morphism $\zeta^\dual: f_2^\dual \lto f_1^\dual$ defined in Section \ref{section:funcadjoint} agrees with the image of $\zeta$ under the functor $\eqref{eq:extenddual1}$. Equivalently, the image makes \eqref{eq:funcrightdual} commute.
+\end{itemize}
+
+Having been given duality in the subcategory $\cat{C}$ we show how to exend to the idempotent closure. The argument for extending left adjoints is identical and we leave it to the reader.
+
+\begin{proposition}\label{prop:uniquext} There is a \emph{unique} way of defining for each $x \in \cat{B}(A,B)$ a pair of $2$-morphisms
+\[
+\eval_x: x \otimes x^\dual \lto \Delta_B \, , \qquad \coev_x: \Delta_A \lto x^\dual \otimes x
+\]
+satisfying the conditions
+\begin{itemize}
+\item[(i)] if $x \in \cat{C}$ then $\eval_x, \coev_x$ are as given in \eqref{eq:extenddual2},
+\item[(ii)] $\eval_x, \coev_x$ make $x$ the left adjoint of $x^\dual$, and
+\item[(iii)] the diagrams
+\be\label{eq:propuniquext}
+\xymatrix@C+1pc@R+1pc{
+\Delta_A \ar[d]_-{\coev_{x_2}} \ar[r]^-{\coev_{x_1}} & x_1^\dual \otimes x_1 \ar[d]^-{1 \otimes \zeta}\\
+x_2^\dual \otimes x_2 \ar[r]_-{\zeta^\dual \otimes 1} & x_1^\dual \otimes x_2
+}
+ \qquad
+\xymatrix@C+1pc@R+1pc{
+x_1 \otimes x_2^\dual \ar[r]^-{\zeta \otimes 1}\ar[d]_-{1 \otimes \zeta^\dual} & x_2 \otimes x_2^\dual \ar[d]^-{\eval_{x_2}}\\
+x_1 \otimes x_1^\dual \ar[r]_{\eval_{x_1}} & \Delta_B
+}
+\ee
+commute for every morphism $\zeta: x_1 \lto x_2$ in $\cat{B}(A,B)$.
+\end{itemize}
+\end{proposition}
+
+The proof occupies the rest of this section. To begin with we choose for each $x \in \cat{B}(A,B)$ an object $f \in \cat{C}$ (depending on $x$) and $2$-morphisms $q,p$ such that $p \circ q = 1_x$ as in the diagram
+\[
+\xymatrix@C+2pc{
+x \ar@<-1ex>[r]_-{q} & f \ar@<-1ex>[l]_-{p}
+}\,.
+\]
+Using these choices we define the $2$-morphisms $\eval_x, \coev_x$, which will turn out to be independent of the choice of $f,p,q$. Applying the functor $(-)^\dual$ to the morphisms $p,q$ of $\cat{B}(A,B)$ we have summands
+\[
+\xymatrix@C+2pc{
+x^\dual \otimes x \ar@<-1ex>[r]_-{p^\dual \otimes q} & f^\dual \otimes f \ar@<-1ex>[l]_-{p^\dual \otimes q}
+}, \qquad (q^\dual \otimes p) \circ (q^\dual \otimes p) = 1_{x^\dual \otimes x}
+\]
+and
+\[
+\xymatrix@C+2pc{
+x \otimes x^\dual \ar@<-1ex>[r]_-{q \otimes p^\dual} & f \otimes f^\dual \ar@<-1ex>[l]_-{p \otimes q^\dual}
+}, \qquad (p \otimes q^\dual) \circ (q \otimes p^\dual) = 1_{x \otimes x^\dual}\,.
+\]
+Using these maps we define $\coev_x$ to be the composite
+\[
+\coev_x = \xymatrix@C+1pc{ \Delta_A \ar[r]^-{\coev_f} & f^\dual \otimes f \ar[r]^-{q^\dual \otimes p} & x^\dual \otimes x }
+\]
+and we define $\eval_x$ to be
+\[
+\eval_x = \xymatrix@C+1pc{ x \otimes x^\dual \ar[r]^-{q \otimes p^\dual} & f \otimes f^\dual \ar[r]^-{\eval_f} & \Delta_B }\,.
+\]
+First we check that $\eval_x, \coev_x$ make $x$ into a left adjoint of $x^\dual$.
+
+\begin{lemma} $\eval_x, \coev_x$ satisfy \eqref{uglyZorro1} and \eqref{uglyZorro2}.
+\end{lemma}
+\begin{proof}
+We explain the proof of \eqref{uglyZorro2}, the other verification is similar. Consider the following diagram, where we omit an associator to avoid clutter
+\[
+\xymatrix@C+2pc@R+1pc{
+f \ar[d]_-{p} \ar[r]^-{\rho_f^{-1}} & f \otimes \Delta_A \ar[d]_-{p \otimes 1}\ar[r]^-{1 \otimes \coev_f} & f \otimes f^\dual \otimes f \ar@/_1pc/[d]_-{p \otimes q^\dual \otimes p} \ar[r]^-{\eval_f \otimes 1} & \Delta_A \otimes f \ar[r]^-{\lambda_f} & f\\
+x \ar[r]_-{\rho_x^{-1}} & x \otimes \Delta_A \ar[r]_-{1 \otimes \coev_x} & x \otimes x^\dual \otimes x \ar@/_1pc/[u]_-{q \otimes p^\dual \otimes q} \ar[r]_-{\eval_x \otimes 1} & \Delta_A \otimes x \ar[u]_-{1 \otimes q}\ar[r]_-{\lambda_x} & x \ar[u]_-{q}
+}\,.
+\]
+Let $Z$ denote the bottom row. By definition each of the squares in this diagram commute, so
+\begin{align*}
+q \circ Z \circ p &= \lambda_f \circ ( \eval_f \otimes 1 ) \circ ( qp \otimes (qp)^\dual \otimes qp ) \circ (1 \otimes \coev_f ) \circ \rho_f^{-1}\\
+&= \lambda_f \circ (\eval_f \otimes 1) \circ ((qp)^2 \otimes 1 \otimes qp ) \circ (1 \otimes \coev_f ) \circ \rho_f^{-1}\\
+&= \lambda_f \circ (\eval_f \otimes 1) \circ (qp \otimes 1 \otimes qp ) \circ (1 \otimes \coev_f ) \circ \rho_f^{-1}\\
+&= qp \circ \lambda_f \circ (\eval_f \otimes 1) \circ (1 \otimes \coev_f ) \circ \rho_f^{-1} \circ qp\\
+&= (qp)^2 = q \circ 1_x \circ p\,,
+\end{align*}
+and hence $Z = 1_x$ as claimed. In the second step we use the fact that $qp$ is a morphism in $\cat{C}$, so by naturality of the evaluation $\eval_f \circ ( qp \otimes 1 ) = \eval_f \circ ( 1 \otimes (qp)^\dual )$.
+\end{proof}
+
+Using naturality \eqref{eq:funcrightdual}, \eqref{eq:funcrightdual2} of $\eval_f, \coev_f$ it is straightforward to check that the diagrams \eqref{eq:propuniquext} commute. If we apply the same argument to two presentations of a $1$-morphism $x$ as a summand of $f,f'$ in $\cat{C}$ we see that $\eval_x, \coev_x$ are independent of the choice of presentation, and in particular if $x \in \cat{C}$ then these maps agree with the given ones.
+
+To complete the proof of the proposition it only remains to argue that this family of $2$-morphisms $\{ \eval_x, \coev_x \}_{x \in \cat{B}(A,B)}$ is \emph{unique}. Suppose that we are given $\{\eval'_x, \coev'_x\}_{x \in \cat{B}(A,B)}$ satisfying (i),(ii),(iii) of the proposition. Given $x$ with presentation as above, the solid square in the diagram
+\[
+\xymatrix@C+1pc{
+f \otimes x^\dual \ar[d]_-{p \otimes 1}\ar[r]^-{1 \otimes p^\dual} & f \otimes f^\dual \ar[d]^-{\eval_f}\\
+x \otimes x^\dual \ar@{.>}@/_1pc/[u]_{q \otimes 1}\ar[r]_-{\eval'_x} & \Delta_B
+}
+\]
+commutes by (iii) and (i). But then
+\[
+\eval'_x = \eval'_x \circ (p \otimes 1) \circ (q \otimes 1) = \eval_f \circ (1 \otimes p^\dual) \circ (q \otimes 1) = \eval_x
+\]
+and similarly for $\coev'_x$.
+
 \newcommand{\etalchar}[1]{$^{#1}$}
 \providecommand{\href}[2]{#2}
 \begin{thebibliography}{FYH{\etalchar{+}}85}
@@ -3923,6 +4106,9 @@ draft available at
 A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
   {T}heir {A}pplications},
   \href{http://arxiv.org/abs/1004.2307}{[arXiv:1004.2307]}.
+
+\bibitem[Kel64]{kelly}
+G.~M.~Kelly, \textsl{On {M}ac{L}ane's conditions for coherence of natural associativities, commutativities, etc.}, Journal of Algebra, 1, 397--402 (1964).
 
 \bibitem[KS74]{kellystreet}
 G.~M.~Kelly and R.~Street, \textsl{Review of the elements of 2-categories}, In Category Seminar (Proc. Sem., Sydney, 1972/1973), pages 75Ð103. Lecture Notes in Math., Vol. 420. Springer, Berlin, 1974.
