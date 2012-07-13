@@ -3217,26 +3217,19 @@ by the following formula, where $\lambda_i = \partial_{x_i}d_Y, \omega = \ud x_1
 \begin{equation}\label{eq:generalklpairing}
 \langle \varphi, \psi \rangle = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \ldots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1\ldots f_n } \Bigg]\,.
 \end{equation}
+In order to be able to define this residue we require that the partial derivatives $f_i$ form a regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$ and that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module.
+
 Such a pairing is \textsl{homotopically nondegenerate} if the adjoint morphism of $\mathbb{Z}_2$-graded complexes
 \begin{align*}
 \Hom(X,Y) & \lto \Hom_k( \Hom(Y,X), k )[n]\,,\\
 \varphi & \lmt \langle \varphi, - \rangle
 \end{align*}
-is a homotopy equivalence over $k$. The main theorem here is that under some reasonable hypotheses the pairing $\langle -, - \rangle$ is homotopically nondegenerate. This nondegeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
+is a homotopy equivalence over $k$. The main theorem here is that in complete generality 
 
-\begin{theorem}\label{theorem:generalkl} Suppose that the following conditions are satisfied
-\begin{itemize}
-\item[(H1)] The partial derivatives $f_i = \partial_{x_i} W$ form a regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$.
-\item[(H2)] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
-\item[(H3)] The $R$-linear map
-\begin{align*}
-\bar{R} & \lto \Hom_k( \bar{R}, k)\, , \\
-r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \underline{\ud x}}{ f_1 \ldots f_n} \Bigg]
-\end{align*}
-is an isomorphism.
-\end{itemize}
-Then the pairing $\langle -, - \rangle$ is homotopically nondegenerate.
+\begin{theorem}\label{theorem:generalkl} The pairing $\langle -, - \rangle$ is homotopically nondegenerate.
 \end{theorem}
+
+%This nondegeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
 
 There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
 \[
@@ -3252,10 +3245,10 @@ in the homotopy category of $\mathbb{Z}_2$-graded $k$-complexes. There is an iso
 \end{equation}
 of complexes which identify these idempotents, and from this the theorem will follow. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\bar{R}$ is Frobenius over $k$. The hard work lies in showing that this isomorphism identifies the two idempotents, and for this we need to carefully study adjointness between operators on dg-categories. Thus the first part of the proof, in Section \ref{section:adjointopdg}, consists in formalising this kind of adjointness.
 
-In fact it will be convenient to prove the theorem slightly more generally, since in order to equip~$R$ with a connection we may need to pass to the $fR$-adic completion. Consequently, for the rest of this section $R$ is an arbitrary noetherian $k$-algebra, $W \in R$, and our actual hypotheses are:
+In fact it will be convenient to prove the theorem more generally, since in order to equip~$R$ with a connection we may need to pass to the $(f_1,\ldots,f_n)$-adic completion. Consequently, for the rest of this section $R$ is an arbitrary noetherian $k$-algebra, $W \in R$, and our hypotheses are:
 \begin{itemize}
 \item[(H1$'$)] $f = \{ f_1,\ldots,f_n \}$ is any regular sequence in $R$ with the property that multiplication by $f_i$ is a null-homotopic endomorphism of $X,Y \in \hmf(R,W)$ for $1 \le i \le n$.
-\item[(H2$'$)] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated projective $k$-module.
+\item[(H2$'$)] $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module.
 \item[(H3$'$)] $R$ admits a flat $k$-linear connection
 \[
 \nabla: R \lto R \otimes_{k[f]} \Omega^1_{k[f]/k}
@@ -3268,7 +3261,7 @@ r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1 \ldots f_n} \Bigg
 \end{align*}
 is an isomorphism.
 \end{itemize}
-In this situation one can still write down the pairing (\ref{eq:generalklpairing}) and we prove that this is homotopically nondegenerate (Proposition \ref{prop:almostkltheorem}). The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H3$'$) above even if the polynomial ring does not.
+In this situation the pairing (\ref{eq:generalklpairing}) still makes sense and we prove that it is homotopically nondegenerate in Proposition \ref{prop:almostkltheorem}. The theorem follows by passing from $k[x_1,\ldots,x_n]$ to a completion, which satisfies (H3$'$) above even if the polynomial ring does not.
 
 \subsection{Adjoint operators on dg-categories}\label{section:adjointopdg}
 % TODO: Point out that these Atiyah classes are from connections over k[f], not k like in the associative case.
@@ -3402,7 +3395,7 @@ so it is clear that it is a closed $k$-linear map, and moreover cyclicity follow
 
 We have in mind two special classes of operators on the dg-category $\cat{C}$. The first arises because the partial derivatives $f_i=\partial_{x_i}W$ act as zero on the cohomology of $\cat{C}$ but via nonzero maps on the dg-level. In what follows let $X,Y$ denote finite-rank matrix factorisations of $W$.
 
-\begin{definition} Given a null-homotopy $\lambda_i$ for the action of $f_i$ on $Y$, that is, a map $\lambda_i \in \Hom(Y,Y)$ of degree one with $[D, \lambda_i] = f_i \cdot 1_Y$, we define the odd operator $\lambda_i^\bullet$ on $\Hom(\bar{X},\bar{Y})$ by
+\begin{definition} Given a null-homotopy $\lambda_i$ for the action of $f_i$, that is, a map $\lambda_i \in \Hom(Y,Y)$ of degree one with $[D, \lambda_i] = f_i \cdot 1_Y$, we define the odd operator $\lambda_i^\bullet$ on $\Hom(\bar{X},\bar{Y})$ by
 \[
 \lambda_i^\bullet(\varphi) = \lambda_i \circ \varphi\,
 \]
@@ -3567,13 +3560,28 @@ where $\xi = (\vartheta')^* \circ \zeta \circ \vartheta$. It is immediate from c
 which completes the proof.
 \end{proof}
 
-Let us now abandon the general setting, and return to the situation of the main theorem where $R = k[x_1,\ldots,x_n]$, and (H1)--(H3) are satisfied for $f_i = \partial_{x_i} W$ and $\omega = \ud x_1 \ldots \ud x_n$.
+Let us now abandon the general setting, and return to the situation of the main theorem where $R = k[x_1,\ldots,x_n]$, $f_i = \partial_{x_i} W$ and $\omega = \ud x_1 \ldots \ud x_n$. The main nontrivial input that we need is:
 
-\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Set $I = (f_1,\ldots,f_n)R$ and let $\widehat{R}$ denote the $I$-adic completion of $R$. Then by \cite{??} this algebra admits a flat standard connection as a $k[f]$-module, and the other axioms among (H1$'$)--(H4$'$) follow for $\widehat{R}$ from our hypotheses about $R$ with $\omega = \ud x_1 \ldots \ud x_n$ (here we use that residues for $R/k$ and $\widehat{R}/k$ agree). Note that in (H1$'$) we only need that the $f_i$ act null-homotopically on the matrix factorisations
+\begin{theorem}\label{theorem:nonlocalduality} The $R$-linear map
+\begin{align*}
+\bar{R} & \lto \Hom_k( \bar{R}, k)\, , \\
+r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \underline{\ud x}}{ f_1 \ldots f_n} \Bigg]
+\end{align*}
+is an isomorphism.
+\end{theorem}
+\begin{proof}
+For local rings $R$ this is the statement of local duality. We give a proof which works in the present level of generality in \cite{??}.
+\end{proof}
+
+Set $I = (f_1,\ldots,f_n)R$ and let $\widehat{R}$ denote the $I$-adic completion of $R$. The axioms (H1$'$)--(H4$'$) hold for $\widehat{R}$, since by \cite[Appendix B]{dm1102.2957} this algebra admits a flat standard connection as a $k[f]$-module, and (H4$'$) follows from from Theorem \ref{theorem:nonlocalduality}.
+
+Note that in (H1$'$) we only need that the $f_i$ act null-homotopically on the matrix factorisations
 \[
 \widehat{X} = X \otimes_R \widehat{R} \, , \qquad \widehat{Y} = Y \otimes_R \widehat{R}
 \]
-extended from $R$. Consider the diagram
+extended from $R$
+
+\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Consider the diagram
 \[
 \xymatrix@C+2pc{
 \Hom_R(X,Y) \ar[d]_{\can} \ar[r] & \Hom_k( \Hom_R(Y,X), k )[n]\\
