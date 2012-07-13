@@ -1591,7 +1591,7 @@ In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functio
 \be\label{eq:constructevalmap01}
 \eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{m+1}{2}+l+m|\nu|} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right]
 \ee
-where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. (\textbf{todo} Use a single $(-,-)$ instead of two?)
+where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
 
 To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}.
 
@@ -1703,7 +1703,7 @@ The second choice of homotopy inverse yields
 
 In this section we construct the evaluation $\widetilde\eval_X$ by writing down a morphism $\widetilde\eval_0: X \otimes_R X^\dual \lto S$ and then lifting this via perturbation to a morphism into $\Delta_V$. The other evaluation $\eval_X$ is defined in a similar way, and will be treated briefly at the end of the section.
 
-The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. The construction will turn out to be independent of this choice up to homotopy, although this is not obvious. We also set $\Lambda^{(x)} = \lambda_1 \ldots \lambda_n$. For example, taking $\lambda_i = -\partial_{x_i} d_X$ would do since by the Leibniz rule
+The partial derivatives $f_i = \partial_{x_i} W$ act null-homotopically on $X$ and we let $\lambda_i \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i] = f_i \cdot 1_X$. The construction will turn out to be independent of this choice up to homotopy, although this is not completely obvious; see Remark \ref{remark:indeptlambda}. We also set $\Lambda^{(x)} = \lambda_1 \ldots \lambda_n$. For example, taking $\lambda_i = -\partial_{x_i} d_X$ would do since by the Leibniz rule
 \[
 \partial_{x_i}(d_X) d_X + d_X \partial_{x_i}(d_X) = \partial_{x_i}( d_X^2 ) = - \partial_{x_i} W\,.
 \]
@@ -1807,7 +1807,21 @@ Applying $\widetilde\eval''_0$ involves taking the supertrace $\str( e_{k_l} \ci
 which agrees with \eqref{eq:constructevalmap00} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
 \end{proof}
 
-\begin{remark} \textbf{todo} Independence of $\lambda$ choices. At the moment the statement in the introduction to Section $5$ involves only $\partial_{x_i} d_X$, how to reconcile this with general $\lambda_i$.
+\begin{remark}\label{remark:indeptlambda} We claim that the morphism $\widetilde\eval_X$ is canonical in the sense that it is independent up to homotopy of the choices of null-homotopy $\lambda_i$. It clearly suffices to argue that $\widetilde\eval_0$ is independent of these choices, and for this we use a variant of the argument in \cite[Appendix A]{dm1102.2957}. 
+
+Write $D(-)$ for $[d_X, -]$ and suppose $\lambda'_1$ is another degree-one map with $D(\lambda'_1) = f_1 \cdot 1_X$. Then as $S$-linear morphisms of complexes $\Hom_{R \otimes_k S}(X,X) \lto S$ we have, writing $\Lambda_{>1} = \lambda_2 \ldots \lambda_n$
+\begin{align*}
+&\Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ -) \, \underline{\operatorname{d}\!x}}{f_1 \ldots f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str( f_1 \lambda_1 \Lambda_{> 1} \circ -) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str\big( D( \lambda_1') \lambda_1 \Lambda_{> 1} \circ -\big) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str\big( \lambda_1' D( \lambda_1 \Lambda_{> 1} \circ -)\big) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str\big( \lambda_1' f_1 \Lambda_{> 1} \circ (-) - \lambda_1' \lambda_1 D( \Lambda_{> 1} ) \circ (-) + (-1)^n \lambda_1'\Lambda^{(x)} \circ D(-)\big) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]
+\end{align*}
+The term involving $D( \Lambda_{> 1} )$ belongs to the submodule $(f_2,\ldots,f_n)\Hom_{R \otimes_k S}(X,X)$, and since the $f_i$ with $i > 2$ annihilate with the residue we are left with
+\begin{align*}
+&= \Res_{R/k} \left[ \frac{ \str( \lambda_1' \Lambda_{> 1} \circ -) \, \underline{\operatorname{d}\!x}}{f_1 \ldots f_n} \right] + (-1)^n\Res_{R/k} \left[ \frac{ \str\big(\lambda_1' \Lambda^{(x)} \circ D(-)\big) \, \underline{\operatorname{d}\!x}}{f_1^2 \ldots f_n} \right]
+\end{align*}
+The second summand is a null-homotopic functional, so we have proven that $\widetilde\eval_0$ is homotopic to the map defined using $\lambda_1' \Lambda_{> 1}$ in place of $\Lambda^{(x)}$, as claimed. The argument for general $i$ is the same. In much the same way one can show that up to a sign $\widetilde\eval_X$ is also independent of the way in which we order the $\lambda_i$, but we will not need this.
 \end{remark}
 
 We conclude this section with a brief explanation of the derivation of $\eval_X$ and its explicit formula. The partial derivatives $\partial_{z_i} V$ act null-homotopically on $X$ and we let $\lambda_i^{(z)} \in \Hom_{R \otimes_k S}(X,X)$ denote a degree-one map with $[d_X, \lambda_i^{(z)}] = \partial_{z_i} V \cdot 1_X$. For example $\lambda_i^{(z)} = \partial_{z_i} d_X$ would do. 
@@ -1859,7 +1873,7 @@ The numerator of the residue in \eqref{eq:constructevalmap01} is the image of $\
 X^{\vee} \otimes_S X \ar[r]^-{\lAt_2(X^{\vee})^l} & \Bar \otimes_{R^e}(X^{\vee} \otimes_S X ) \ar[r]^-{1 \otimes (-,-)} & \Bar \otimes_{R^e} ( R^e \otimes_k S ) \cong \Bar \otimes_k S \ar[r]^-{\Psi \otimes 1} & \Delta_W \otimes_k S
 }\,.
 \]
-The residue integrates out the $S$, leaving us with an element of $\Delta_W$.
+The residue integrates out the $S$, leaving us with an element of $\Delta_W$. By the argument given in Remark \ref{remark:indeptlambda} the morphism $\eval_X$ is independent of the choices of null-homotopy $\lambda^{(z)}_i$.
 
 \section{Zorro moves}\label{sec:Zorro}
 
@@ -3742,8 +3756,6 @@ and in particular $[ \lambda_i, \At_j ] = - \delta_{ij}$ up to homotopy.
 \begin{proof}
 \textbf{todo}.
 \end{proof}
-
-\appendix
 
 \section{Remarks on adjoints}\label{app:adjoints}
 % see bicat2, adjbi, adjbi2
