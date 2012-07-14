@@ -93,6 +93,7 @@
 \DeclareMathOperator{\mff}{mf}
 \DeclareMathOperator{\MF}{MF}
 \DeclareMathOperator{\Sh}{Sh}
+\DeclareMathOperator{\Der}{Der}
 
 \begin{document}
 
@@ -966,7 +967,7 @@ To establish compatibility with the products we compute
 where in the third step the anti-commutativity of the~$\theta_i$ allowed us to sum over the longer sequences $i_1<\ldots< i_{p+q}$ by introducing an additional sum over shuffles. 
 \end{proof}
 
-On a practical level both the Bar and Koszul complexes resolve the diagonal, so there must be a chain map lifting the identity on the diagonal, and $\Psi$ gives one particular example of such a chain map. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{??}.
+On a practical level both the Bar and Koszul complexes resolve the diagonal, so there must be a chain map lifting the identity on the diagonal, and $\Psi$ gives one particular example of such a chain map. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{appendix:mapeppsi}.
 
 Now we come back to consider any $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
 \begin{lemma}\label{PsiHF}
@@ -4133,6 +4134,69 @@ commutes by (iii) and (i). But then
 \eval'_x = \eval'_x \circ (p \otimes 1) \circ (q \otimes 1) = \eval_f \circ (1 \otimes p^\dual) \circ (q \otimes 1) = \eval_x
 \]
 and similarly for $\coev'_x$.
+
+\section{The map $\varepsilon \Psi$}\label{appendix:mapeppsi}
+% see divop
+
+In this section $k$ is any commutative ring, $R = k[x_1,\ldots,x_n]$. We write $\Re = R \otimes_k R = k[x] \otimes_k k[x']$. In the notation of Section \ref{subsec:Bar} both the Koszul complex $(\Delta, \delta_{-})$ and $(\Bar, b')$ give $\Re$-resolutions of the diagonal $R$, and $\Psi$ is the unique chain map up to homotopy making the triangle in the diagram
+\[
+\xymatrix{
+\Bar \ar[dr]_-{\pi} \ar[r]^-{\Psi} & \Delta \ar[d]^-{\pi} \ar[r]^\varepsilon & \Re[n]\\
+& R
+}
+\]
+commute. As indicated in this diagram there is a second canonical chain map $\varepsilon: (\Delta, \delta_{-}) \lto \Re[n]$, see \eqref{eq:vareps}, and the composite $\varepsilon \Psi$ gives a cocycle in Hochschild cohomology
+\[
+\varepsilon \Psi \in H^n \Hom_{\Re}( \Bar, \Re ) = H^n( R, \Re )\,.
+\]
+This Hochschild cohomology module is a free $R$-module of rank one, and $\varepsilon \Psi$ gives a generator. In this appendix we explain that $\varepsilon \Psi$ is a product in Hochschild cohomology of the derivations
+\[
+\partial_{(i)}: R \lra \Re \, , \qquad f \lmt \frac{f - {}^{t_i}f}{x_i-x'_i} \, ,
+\]
+where we use the notation ${}^{t_i}(-)$ of Section \ref{subsec:bicatLG}. 
+
+\begin{definition} Let $\Re_{(i)}$ denote the $R$-bimodule which is $\Re$ with the left and right actions
+\[
+r_1 * s * r_2 = r_1 \cdot s \cdot {}^{t_i} r_2\,, \qquad r_i \in R, s \in \Re
+\]
+where ``$\cdot$'' denotes ring multiplication in $\Re$.
+\end{definition}
+
+\begin{lemma} $\partial_{(i)}$ is a $k$-linear derivation of $R$ into the bimodule $\Re_{(i)}$.
+\end{lemma}
+\begin{proof}
+Immediate from the identity in Lemma \ref{lem:LeibnizForDQO}.
+\end{proof}
+
+By the usual correspondence between bimodule derivations and Hochschild $1$-cocycles, each $\partial_{(i)}$ determines a class $[ D_i ] \in H^1(R, \Re_{(i)})$. Taking the product yields a class in
+\[
+[ D_1 ] * \cdots * [D_n] \in H^n(R, \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)})\,.
+\]
+Next we observe that the map
+\begin{gather*}
+\gamma: \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)} \lto \Re\,\\
+\gamma( r_1 \otimes \cdots \otimes r_n ) = r_1 \cdot {}^{t_1} r_2 \cdot {}^{t_1t_2} r_3 \cdots {}^{t_1 \ldots t_{n-1}} r_n
+\end{gather*}
+is a morphism of $R$-bimodules.
+
+\begin{lemma} $\varepsilon \Psi$ is the image of $[D_1] * \cdots * [D_n]$ under the induced map
+\[
+H^n(R, \gamma): H^n(R, \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)}) \lto H^n(R, \Re)\,.
+\]
+That is, in Hochschild cohomology
+\[
+\varepsilon \Psi = H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )\,.
+\]
+\end{lemma}
+\begin{proof}
+We have
+\begin{align*}
+H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )( df_1 \ldots df_p ) &= \gamma\left( \partial_{(1)}f_1 \otimes \partial_{(2)}f_2 \cdots \otimes \partial_{(n)}f_n \right)\\
+&= \partial_{(1)}f_1 {}^{t_1} \partial_{(2)}f_2 \cdots \otimes {}^{t_1 \ldots t_{n-1}}\partial_{(n)}f_n\\
+&= \partial_{[1]}f_1 \partial_{[2]}f_2 \cdots \otimes \partial_{[n]}f_n\\
+&= \varepsilon \Psi( df_1 \ldots df_p )\,.
+\end{align*}
+\end{proof}
 
 \newcommand{\etalchar}[1]{$^{#1}$}
 \providecommand{\href}[2]{#2}
