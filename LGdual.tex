@@ -744,14 +744,22 @@ Note that in general there is no reason for the left and right adjoints to coinc
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
-Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space (\textbf{todo} comment on non-isolated singularities).
+Let us fix the ring $R=k[x_1,\ldots,x_n]$, where~$k$ is a commutative noetherian $\nQ$-algebra; relevant examples are $k=\nC$ and $k=\nC[t_1,\ldots,t_d]$. Typically we will simply write $k[x]$ for $k[x_1,\ldots,x_n]$. We call an element $W\in R$ a \textsl{potential} if $R/(\partial_{x_i}W)$ is a finitely generated free $k$-module and the partial derivatives $\partial_{x_i}W$ form a regular sequence. In this case $k=\nC$ this simply means that the Jacobi ring $R/(\partial_{x_i}W)$ is a finite-dimensional vector space.
 
 A \textsl{linear factorisation} of a potential $W\in R$ is a $\nZ_2$-graded $R$-module $X=X^0\oplus X^1$ together with an odd $R$-linear endomorphism~$d_X$ such that $d_X^2=W\cdot 1_X$. If~$X$ is a free $R$-module then the pair $(X,d_X)$ is called a \textsl{matrix factorisation}, and we often refer to it simply by~$X$ without explicitly mentioning the \textsl{differential} $d_X$; given a basis for~$X$ we sometimes identify the latter with the associated matrix: 
 $$
 d_{X} = \begin{pmatrix} 0 & d_X^1 \\ d_X^0 & 0\end{pmatrix} .
 $$
+Given two linear factorisations $X,Y$ of $W$, $\Hom_R(X,Y)$ is a $\mathbb{Z}_2$-graded complex with differential
+\[
+d( \varphi ) = d_Y \circ \varphi - (-1)^{|\varphi|} \varphi \circ d_X\,.
+\]
+A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even $R$-linear map $\varphi: X \longrightarrow Y$ such that $d_Y \varphi = \varphi d_X$. Two morphisms $\varphi, \psi: X\lra Y$ are \textsl{homotopic} if there exists an odd $R$-linear map $\lambda:X\lra Y$ such that $d_Y\lambda + \lambda d_X = \psi-\varphi$. Equality up to homotopy is an equivalence relation.
 
-A \textsl{morphism} of linear factorisations $(X,d_X)$ and $(Y,d_Y)$ is an even $R$-linear map $\varphi: X \longrightarrow Y$ such that $d_Y \varphi = \varphi d_X$. Two morphisms $\varphi, \psi: X\lra Y$ are \textsl{homotopic} if there exists an odd $R$-linear map $\lambda:X\lra Y$ such that $d_Y\lambda + \lambda d_X = \psi-\varphi$. Equality up to homotopy is an equivalence relation. \textbf{todo} Fix notation for Hom complexes.
+Given a linear factorisation $X$ of $W$ the \emph{dual factorisation} $X^\vee = \Hom_R(X, R)$ is a linear factorisation of $-W$ with $d_{X^\vee}( \nu ) = -(-1)^{|\nu|} \nu \circ d_X$. In terms of matrices
+\be\label{eq:differentials_adjoints}
+d_{X^\vee} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}\,.
+\ee
 
 The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of matrix factorisations whose objects are isomorphic to matrix factorisations with finitely-generated underlying $R$-modules. These three categories have standard triangulated structures whose shift functor we denote as~$[1]$. 
 
@@ -759,20 +767,7 @@ Given a potential $W\in R=k[x]$ there is always the \textsl{unit matrix factoris
 \be\label{DeltaW}
 \Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
 \ee
-as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. We write 
-\be\label{DeltaWstabmap}
-\pi: \Delta_W \lra R
-\ee
-for the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. By making a choice of how to order the~$\theta_i$ we obtain an $\Re$-linear map 
-\be\label{eq:vareps}
-\varepsilon: \Delta_W \lra \Re[n] 
-\, , \qquad 
-\theta_1\ldots \theta_n \lmt 1
-\ee
-that is non-zero only on elements in top $\theta$-degree. 
-
-
-To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
+as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
 $$
 {}^{t_i}(-): k[x,x'] \lra k[x,x'] \, , \qquad f \lmt f\big|_{x_i\lmt x'_i}
 $$
@@ -785,11 +780,25 @@ It is easy to check that the $\partial_{[i]}$ satisfy the following kind of Leib
 For $f,g \in k[x,x']$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
 \end{lemma}
 
-The differential on $\Delta_W$ is given by (\textbf{todo} contraction)
+The differential on $\Delta_W$ is then given by (\textbf{todo} contraction)
 \be\label{DeltaW}
 d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*  \,. 
 \ee
-We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. For our purposes it will be sufficient to consider matrix factorisations $X\in \HMF(R_1\otimes_k R_2, W_2-W_1)$ and $Y\in \HMF(R_2\otimes_k R_3, W_3-W_2)$ (where of course $R_i = k$ is a possibility for any~$i$). Then the \textsl{tensor product matrix factorisation} $Y\otimes X \in \HMF(R_1\otimes_k R_3, W_3-W_1)$ is the $\nZ_2$-graded module 
+We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. It is also referred to as the \emph{stabilised diagonal} \cite{d0904.4713} or \emph{Koszul model} of the diagonal since the morphism of linear factorisations of $\widetilde W$
+\be\label{DeltaWstabmap}
+\pi: \Delta_W \lra R\,,
+\ee
+given by the projection $\Delta_W \lra \Re$ to the $\theta$-degree~$0$ component composed with multiplication $\Re \lra R$, is universal in the homotopy category of linear factorisations among all morphisms from finite rank matrix factorisations to $R$.
+
+By making a choice of how to order the~$\theta_i$ we obtain an $\Re$-linear map 
+\be\label{eq:vareps}
+\varepsilon: \Delta_W \lra \Re[n] 
+\, , \qquad 
+\theta_1\ldots \theta_n \lmt 1
+\ee
+that is non-zero only on elements in top $\theta$-degree.
+
+For our purposes it will be sufficient to consider matrix factorisations $X\in \HMF(R_1\otimes_k R_2, W_2-W_1)$ and $Y\in \HMF(R_2\otimes_k R_3, W_3-W_2)$ (where of course $R_i = k$ is a possibility for any~$i$). Then the \textsl{tensor product matrix factorisation} $Y\otimes X \in \HMF(R_1\otimes_k R_3, W_3-W_1)$ is the $\nZ_2$-graded module 
 $$
 Y\otimes X = \Big( (Y^0\otimes_{R_2} X^0) \oplus (Y^1\otimes_{R_2} X^1) \Big) \oplus \Big( (Y^0\otimes_{R_2} X^1) \oplus (Y^1\otimes_{R_2} X^0) \Big) 
 $$
@@ -833,18 +842,9 @@ As a relevant example let us discuss the graded Hom. For graded linear factorisa
 Together with the differential defined on a $\nZ$-homogeneous map $\alpha$ by $\alpha \lmt d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X$, the graded module $\Hom_{\mathrm{gr}}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \nZ_2)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lra Y'$ is a morphism of graded linear factorisations of degree~$i$, then $\Hom_{\mathrm{gr}}(1_X,\varphi)$ is another morphism of degree~$i$, and similarly in the first variable.
 \end{remark}
 
-
-One of the main results of the present paper is that $\LG$ (and also $\LG^{\mathrm{gr}}$) is endowed with an additional duality structure. Let us recall the relevant notion (\textbf{todo} now moved).
-
-Specifying the adjoint of a $1$-morphism is often straightforward, but providing explicit evaluation and coevaluation maps and checking that the Zorro moves hold is no easy task. For example, given a $1$-morphism $X: (k[x_1,\ldots,x_n],W) \lto (k[z_1,\ldots,z_m],V)$ in $\LG$, that is, an object $X \in \hmf(k[x,z], V - W)$, we will see that its left and right adjoints are given by ${}^\dual X = X^\vee[m]$,  $X^\dual = X^\vee[n]$ with differentials
-\be\label{eq:differentials_adjoints}
-d_{{}^\dual X} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[m] 
-\, , \qquad 
-d_{X^\dual} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix}[n] 
-\ee
-where $(-)^\vee$ denotes taking the dual in the category of $k[x,z]$-modules. On the other hand, the whole of Sections~\ref{sec:derivcoeval} and~\ref{sec:Zorro} are devoted to construct the evaluation and coevaluation morphisms and prove the Zorro moves. This is complicated enough that instead of tackling it directly we will need to introduce the bar complex of the ring~$R$. As preparation we shall next discuss some background on noncommutative forms. 
-
 \subsection{Bar complex}\label{subsec:Bar}
+
+For a polynomial ring the standard resolutions of the diagonal are the Koszul and Bar resolutions. Above we defined the unit $1$-morphisms in $\LG$ using a Koszul model for the diagonal, but in the study of adjoints it will quickly become necessary to use the Bar model for the diagonal as well. For this reason we recall in this section the necessary background on noncommutative forms and the Bar complex. We explain how to use the Bar complex to construct a second model for the diagonal, and construct the map $\Psi$ which relates the Koszul and Bar models.
 
 Let us for the moment be slightly more general and consider an arbitrary unital associative $k$-algebra~$A$. In our applications to matrix factorisations we will set $A=R=k[x]$. (\textbf{todo} ref Quillen, others)
 
@@ -929,14 +929,16 @@ d_{\Bar}^2 (\omega) & = b'(d\widetilde W \times \omega) + d\widetilde W \times b
 where in the second last step we used~\eqref{b'd+db'} together with $b'(\widetilde W)=0$. 
 \end{proof}
 
-If we use~$\pi$ also to denote the projection $\Bar \lra \Bar_0 = \Re$ composed with multiplication $\Re \lra R$, then $\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{section:pertandhtpy}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. Before we do this on the level of linear factorisations we shall consider the special case $W=0$. We write $\Delta = \Delta_0 = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that now $(\Delta_W, d_{\Delta_W})$ reduces to the ordinary Koszul complex $(\Delta, \delta_-)$, see~\eqref{DeltaW}. 
+If we use~$\pi$ also to denote the projection $\Bar \lra \Bar_0 = \Re$ composed with multiplication $\Re \lra R$, then $\pi \otimes 1_X : \Bar \otimes X \lra X$ and $1_X \otimes \pi: X \otimes \Bar \lra X$ give left and right actions of~$\Bar$ as in~\eqref{lambdarho}. These maps have homotopy inverses too and we will construct them in Section~\ref{section:pertandhtpy}. For the moment we take the fact that~$\Bar$ is another model for the unit action on matrix factorisations as motivation to discuss its relation to the Koszul matrix factorisation~$\Delta_W$. 
+
+Before we do this on the level of linear factorisations we consider the case of $\mathbb{Z}$-graded complexes. We write $\Delta = \bigwedge( \bigoplus_{i=1}^n \Re \theta_i)$ and observe that $(\Delta, \delta_-)$ is the ordinary Koszul complex, see~\eqref{DeltaW}. 
 
 There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be important to us: 
 \begin{align}
 \Phi & : \Delta \lra \Bar \, , \qquad \theta_{i_1}\ldots \theta_{i_p} \lmt \sum_{\sigma\in S_p} (-1)^{|\sigma|} dx_{i_{\sigma(1)}} \ldots dx_{i_{\sigma(p)}} \otimes 1 \, , \label{intro_phi}\\
 \Psi & : \Bar \lra \Delta \, , \qquad df_1\ldots df_p \otimes 1 \lmt \sum_{1\leq i_1<\ldots<i_p\leq n} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \, \theta_{i_1} \ldots \theta_{i_p} \, \label{intro_psi}.
 \end{align}
-These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$. (\textbf{todo} Discuss possible reorderings, linearity)
+These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$.
 
 \begin{lemma}\label{PhiPsiDG}
 Both~$\Phi$ and~$\Psi$ are maps of differential graded algebras between $(\Delta, \delta_-, \wedge)$ and $(\Bar, b', \times)$. 
@@ -983,6 +985,8 @@ To establish compatibility with the products we compute
 \end{align*}
 where in the third step the anti-commutativity of the~$\theta_i$ allowed us to sum over the longer sequences $i_1<\ldots< i_{p+q}$ by introducing an additional sum over shuffles. 
 \end{proof}
+
+On a practical level both the Bar and Koszul complexes resolve the diagonal, so there must be a chain map lifting the identity on the diagonal, and $\Psi$ gives one particular example of such a chain map. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{??}.
 
 Now we come back to consider any $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
 \begin{lemma}\label{PsiHF}
@@ -1548,6 +1552,8 @@ $k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given 
 \lambda_X^{-1} = \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_{1}(X)^l \sigma_1\,, \qquad \rho_X^{-1} = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X)^l \sigma_2\,.
 \]
 \end{proposition}
+
+\textbf{todo} Spell out that $\Bar$ is a unit too.
 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
