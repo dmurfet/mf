@@ -8,6 +8,7 @@
 \usepackage{longtable}
 \usepackage{dsfont}
 \usepackage{tikz}
+\usetikzlibrary{decorations.pathmorphing}
 \def\nicedashedcolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=gray, dashed]}
 \def\nicecolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=white]}
 \def\nicepalecolourscheme{\shadedraw[top color=blue!12, bottom color=blue!12, draw=white]}
@@ -2737,7 +2738,7 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \nicepalecolourscheme (0,0) circle (2);
 \fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
 %
-\draw[densely dotted] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.3mm, segment length=1.2mm}] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
 \draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
@@ -2787,7 +2788,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \nicecolourscheme (0,0) circle (2);
 \fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
-\draw[densely dotted] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.3mm, segment length=1.2mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
@@ -2983,7 +2984,7 @@ The defect operators satisfy the following compatibility conditions:
 
 (ii): In the proof of the explicit formula for $\mathcal D_l(X)$ in Proposition~\ref{prop:defectaction} we could also have used the alternative representations for $\eval_X$ and $\widetilde\coev_X$ in terms of $d_{X^\dual}$. Then the assertion immediately follows. 
 
-(iii) \& (iv): These relations follow from Proposition~\ref{prop:monoidalproperty} and a straightforward calculation with string diagrams, see e.\,g.~the proof of~\cite[Lemma~3.1]{cr1006.5609}. 
+(iii) \& (iv): These relations follow from Proposition~\ref{prop:monoidalproperty} and a straightforward calculation with string diagrams, see e.\,g.~the proof of~\cite[Lemma~3.1]{cr1006.5609}. (TODO: do we want to show this calculation with wiggly lines?)
 \end{proof}
 
 
@@ -3106,7 +3107,7 @@ where we view $\Delta_W$ as a 1-morphism $(k,0) \lra (\Re, \widetilde W)$, i.\,e
 
 We have just seen how the structure of open/closed TFT embeds into $\LG$. In principle this is enough to compute arbitrary correlators using the factorisation property of TFT. However, one can also compute more general correlators directly in $\LG$: all we have to do is to interpret the physical picture of a worldsheet~$\Sigma$ with insertions and defect lines as the associated string diagram representing a 2-morphism $k \lra k$ which is the value of the correlator of~$\Sigma$. 
 
-As an illustrative example let us consider the genus-3 correlator of the worldsheet with two phases governed by the potentials~$V$ and~$W$, depicted in the upper part of Figure~\ref{fig:worldsheet}. Here we label boundaries, defect lines, bulk fields, boundary fields, defect fields by $Y, X, \phi, \psi, \Phi$ with appropriate indices, respectively. The string diagram computing this correlator is shown in the lower part of Figure~\ref{fig:worldsheet}. It is exactly the same as the worldsheet picture, apart form the fact that we interpret the relevant parts as evaluation and coevaluation maps, and if the numbers~$m$ and~$n$ of variables on which~$V$ and~$W$ depend are both odd then we use the wiggly line (TODO: use wiggly lines!) notation explained in Section~TODO. Note that if~$m$ and~$n$ have opposite parity then by the results of Section~\ref{sec:defectaction} the correlator vanishes as it corresponds to a map in $\Hom_{\hmf(k,0)}(k,k[1]) = 0$.
+As an illustrative example let us consider the genus-3 correlator of the worldsheet with two phases governed by the potentials~$V$ and~$W$, depicted in the upper part of Figure~\ref{fig:worldsheet}. Here we label boundaries, defect lines, bulk fields, boundary fields, defect fields by $Y, X, \phi, \psi, \Phi$ with appropriate indices, respectively. The string diagram computing this correlator is shown in the lower part of Figure~\ref{fig:worldsheet}. It is exactly the same as the worldsheet picture, apart form the fact that we interpret the relevant parts as evaluation and coevaluation maps, and if the numbers~$m$ and~$n$ of variables on which~$V$ and~$W$ depend are both odd then we use the wiggly line notation explained in Section~\ref{subsec:alternatives}. Note that if~$m$ and~$n$ have opposite parity then by the results of Section~\ref{sec:defectaction} the correlator vanishes as it corresponds to a map in $\Hom_{\hmf(k,0)}(k,k[1]) = 0$.
 
 \begin{figure}[h!]
 $$
@@ -3170,7 +3171,7 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 %
-\draw[thin, densely dotted] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
+\draw[very thin, decorate, decoration={snake, amplitude=0.3mm, segment length=1.2mm}] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 TODO 
