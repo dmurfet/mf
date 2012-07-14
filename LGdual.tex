@@ -2920,8 +2920,309 @@ $$
 \end{proof}
 
 
+\section{Open/closed topological field theory}\label{sec:ocTFT}
+
+In this section we describe how the structure of two-dimensional open/closed topological field theory (TFT) is completely  captured in the bicategory $\LG$. We will see how all TFT data are naturally encoded in string diagrams that directly translate the physical intuition into straightforwardly computable 2-morphisms. More generally, this allows for the computation of any correlator (of worldsheets of arbitrary genus, possibly with boundaries and defect lines). As an example we will compute an annulus correlator, thereby providing a new, simple proof of the Cardy condition. 
+
+Recall from~\cite{l0312, ms0609042} that one way to present a two-dimensional open/closed TFT is by the data of 
+\begin{itemize}
+\item a commutative Frobenius algebra~$C$, 
+\item a Calabi-Yau category~$\mathcal O$, 
+\item \textsl{bulk-boundary maps} $\beta_A: C \lra \End_{\mathcal O}(A)$ and \textsl{boundary-bulk maps} $\beta^A: \End_{\mathcal O}(A) \lra C$ for all $A\in \mathcal O$. 
+\end{itemize}
+These data are subject to the following conditions. 
+\begin{itemize}
+\item The bulk-boundary maps $\beta_A$ are morphisms of unital algebras that map into the centre of $\End_{\mathcal O}(A)$. 
+\item $\beta_A$ and $\beta^A$ are mutually adjoint with respect to the nondegenerate pairings $\langle -,- \rangle$ on~$C$ and $\langle -,- \rangle_A$ on $\End_{\mathcal O}(A)$ (which are part of the Frobenius and Calabi-Yau structure): 
+$$
+\langle \beta_A(\phi) , \psi \rangle_A = \langle \phi, \beta^A(\psi) \rangle
+$$
+for all $\phi\in C$ and $\psi\in \End_{\mathcal O}(A)$. 
+\item The \textsl{Cardy condition} is satisfied, i.\,e.~we have
+$$
+\str ( {}_\psi m_\varphi ) = \langle \beta^A(\varphi), \beta^B(\psi) \rangle
+$$
+for all $\varphi: A \lra A$, $\psi: B \lra B$ where ${}_\psi m_\varphi (\alpha) = \psi\alpha\varphi$ for all $\alpha \in \Hom_{\mathcal O}(A,B)$. 
+\end{itemize}
+
+Every Landau-Ginzburg model with potential $W\in R = k[x_1,\ldots,x_n]$ gives rise to an open/closed TFT with $C = R/(\partial W)$, $\mathcal O = \hmf(R,W)$, 
+\be\label{bubobobu}
+\beta_X : \phi \lmt \phi \cdot 1_X \, , \qquad  
+\beta^X : \psi \lmt (-1)^{n\choose 2} \str(\psi \, \partial_{x_1} d_X \ldots \partial_{x_n} d_X) 
+\ee
+and the bulk and boundary pairings 
+\begin{align}
+\langle \phi_1 , \phi_2 \rangle 
+& = 
+(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi_1 \phi_2 \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right] , \label{bulkpairing} \\
+\langle \psi_1 , \psi_2 \rangle_X 
+& = (-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{ \str (\psi_1 \psi_2 \, \partial_{x_1} d_X \ldots \partial_{x_n} d_X) \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right] . \label{KapuLi}
+\end{align}
+The hardest part in establishing this result is to prove the nondegeneracy of the Kapustin-Li pairing~\eqref{KapuLi} and that the Cardy condition holds (the fact that~\eqref{bulkpairing} is nondegenerate is a classical result in residue theory, and checking the remaining axioms is obvious or straightforward); this was first done in~\cite{m0912.1629} and~\cite{pv1002.2116}, respectively, in the case where~$k$ is a field. In Section/reference TODO and at the end of this section we will give (new) proofs for the general case. 
+
+Before turning to the Cardy condition we wish to explain how the above data can be extracted from the bicategory $\LG$ using the powerful and suggestive string diagram language.\footnote{Note however that $\LG$ contains much more information than just the structure of open/closed TFT.} For $X\in \hmf(R,W)$ the bulk-boundary and boundary-bulk maps~\eqref{bubobobu} are given by
+$$
+\beta_X(\phi) = 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (-2,-2.2) rectangle (0,2.2);
+\fill (-1.5,-1.8) circle (0pt) node[white] {{\small$W$}};
+%
+\draw[->, very thick] (0,-2.2) -- (0,0); 
+\draw[very thick] (0,0) -- (0,2.2);
+\draw[dashed] (0,-1.5) .. controls +(-0.5,1) and +(0,-1) .. (-1,0);
+\draw[dashed] (-1,0) .. controls +(0,1) and +(-0.5,-1) .. (0,1.5);
+\fill (0,0) circle (0pt) node[right] {{\small$X$}};
+\fill (-1,0) circle (3.3pt) node[left] {{\small$\phi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\, , \qquad 
+\beta^X(\psi) = 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$W$}};
+%
+\shadedraw[top color=white, bottom color=white, draw=white] (0,0) circle (2);
+\draw (0,0) circle (2);
+\draw[->, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
+\draw[->, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
+\fill (90:2) circle (0pt) node[below] {{\small$X$}};
+\fill (180:2) circle (3.3pt) node[left] {{\small$\psi$}};
+\draw[dashed] (270:2) -- (270:3.3)
+node[near end,right] {{{\small$\Delta_W$}}};
+\draw[dashed] (90:2) -- (90:3.3)
+node[near end,right] {{{\small$\Delta_W$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+$$
+where we used the identification $R/(\partial W) \cong \End_{\hmf(R,W)}(\Delta_W)$ and a special case of Proposition~\ref{prop:defectaction} (TODO: generalise that proposition to the case where we have fields living on the defect loops). Another special case of the same proposition allows us to recover the Kapustin-Li pairing as the obvious 2-morphism representing the disk correlator, 
+$$
+\langle \psi_1 , \psi_2 \rangle_X = 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
+%
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
+\draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
+\fill (-22.5:2) circle (3.3pt) node[right] {{\small$\psi_1$}};
+\fill (22.5:2) circle (3.3pt) node[right] {{\small$\psi_2$}};
+\fill (270:2) circle (0pt) node[below] {{\small$X$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\, .
+$$
+Note that here and from now on we do no longer display dashed lines for the unit 1-endomorphism~$\Delta_W$. 
+
+The bulk pairing $\langle -,- \rangle = \langle -,- \rangle_W$ describes the 2-point \textsl{sphere} correlator; flattening the sphere suggests the identity
+\be\label{DeltaDisk}
+\langle \phi_1, \phi_2 \rangle_W = 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\fill (0,0) circle (0pt) node[white] {{\small$W(x)-W(y)$}};
+%
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
+\draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
+%\draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
+%\draw[dashed] (135:0) .. controls +(0,-1) and +(-0.5,1) .. (-50:2);
+\fill (-22.5:2) circle (3.3pt) node[right] {{\small$\phi_1(x)$}};
+\fill (22.5:2) circle (3.3pt) node[right] {{\small$\phi_2(x)$}};
+\fill (270:2) circle (0pt) node[below] {{\small$\Delta_W$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ee
+where we view $\Delta_W$ as a 1-morphism $(k,0) \lra (\Re, \widetilde W)$, i.\,e.~as a boundary condition of the doubled theory with potential $W(x)-W(y)$. The above equality indeed holds as follows from our explicit expressions for the adjunction maps together with~\cite[Proposition\,4.1.2]{pv1002.2116}. A more conceptual derivation of~\eqref{DeltaDisk} would involve to endow the bicategory $\LG$ with a monoidal structure (so as to give rigorous meaning to the process of folding worldsheets together). 
+
+We have just seen how the structure of open/closed TFT embeds into $\LG$. In principle this is enough to compute arbitrary correlators using the factorisation property of TFT. However, one can also compute more general correlators directly in $\LG$: all we have to do is to interpret the physical picture of a worldsheet~$\Sigma$ with insertions and defect lines as the associated string diagram representing a 2-morphism $k \lra k$ which is the value of the correlator of~$\Sigma$. 
+
+As an illustrative example let us consider the genus-3 correlator of the worldsheet with two phases governed by the potentials~$V$ and~$W$, depicted in the upper part of Figure~\ref{fig:worldsheet}. Here we label boundaries, defect lines, bulk fields, boundary fields, defect fields by $Y, X, \phi, \psi, \Phi$ with appropriate indices, respectively. The string diagram computing this correlator is shown in the lower part of Figure~\ref{fig:worldsheet}. It is exactly the same as the worldsheet picture, apart form the fact that we interpret the relevant parts as evaluation and coevaluation maps, and if the numbers~$m$ and~$n$ of variables on which~$V$ and~$W$ depend are both odd then we use the wiggly line (TODO: use wiggly lines!) notation explained in Section~TODO. Note that if~$m$ and~$n$ have opposite parity then by the results of Section~\ref{sec:defectaction} the correlator vanishes as it corresponds to a map in $\Hom_{\hmf(k,0)}(k,k[1]) = 0$.
+
+\begin{figure}[h!]
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (5.2);
+\draw (0,0) circle (5.2);
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\vspace{0.1cm} TODO
+$$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (5.2);
+\draw (0,0) circle (5.2);
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+$$
+\caption{TODO: caption} 
+\label{fig:worldsheet} 
+\end{figure}
+
+\subsection{Cardy condition}
+
+Diagrams much simpler than the one in Figure~\ref{fig:worldsheet} can already lead to relevant insight. As another application of the adjunctions in $\LG$ we will now give a novel proof of the Cardy condition. For Landau-Ginzburg models this deep result long eluded rigirous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluation and coevaluation maps in $\LG$ it will follow rather effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, e.\,g.~$k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
+
+Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factorisations $X,Y \in \hmf(k[x], W)$, and also two maps $\varphi: X\lra X$, $\psi: Y\lra Y$. We interpret~$X$ and~$Y$ as 1-morphisms $(k,0)\lra (k[x],W)$ in $\LG$, and in this way we obtain the 2-morphism
+\be\label{annulus}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; %{{\small$\eval_Y$}}; 
+%\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; % {{\small$\widetilde\coev_Y$}}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
+%\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\fill (180:0.9) circle (0pt) node[left] {{\small$X$}};
+\fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\equiv \; 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {{\small$\eval_Y$}}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {{\small$\widetilde\coev_Y$}}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {{\small$\widetilde\eval_X$}}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+%
+\draw[thin, densely dotted] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+TODO 
+\ee
+which is a map $k\lra k$ that we call~$C$. We can think of~$C$ as the value of the annulus correlator with boundary conditions $X,Y$ and boundary fields $\varphi,\psi$. 
+
+To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions in Section~\ref{sec:derivcoeval} for evaluation and coevaluation maps we find
+\begin{align}
+& \widetilde\eval_X (e_i \otimes e_j^*) = (-1)^{|e_j|} \delta_{ij} + \mathcal O(\theta) \, , \qquad 
+\eval_Y (f_i^* \otimes f_j) = (-1)^{{n+1\choose 2} + n |f_j|} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] , \nonumber \\
+& \coev_X (1) = \sum_j (-1)^{{n\choose 2} + n |e_j|} \bar\Lambda_X e_j \otimes e_j^* \, , \qquad 
+\widetilde\coev_Y (1) = \sum_j (-1)^{|f_j|} f_j^* \otimes f_j \label{evcoeveasy}
+\end{align}
+where $\bar\Lambda_X = \partial_{[1]} d_X\ldots \partial_{[n]} d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$, and $\{ e_i \}_i$ and $\{ f_j \}_j$ are homogeneous bases of~$X$ and~$Y$, respectively. 
+
+The diagram~\eqref{annulus} can be computed in two different ways; equating the respective results amounts to the Cardy condition. One possibility to compute~\eqref{annulus} is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $(-1)^{n\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue
+$$
+C 
+= 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+= 
+(-1)^{n\choose 2} \,  
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+= 
+\Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
+$$
+Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps we thus find from the above that
+\be\label{C1}
+C = 
+\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
+\ee
+
+On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y = \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$ (TODO: check signs from the shift). Then we use
+$$
+\eval_{{}^\dual X \otimes Y} ((e_i^* \otimes f_j)^* \otimes (e_a^* \otimes f_b)) = \delta_{ia} \, \delta_{jb} 
+\, , \qquad 
+\widetilde\coev_{{}^\dual X \otimes Y} (1) = \sum_{i,j} (-1)^{|e_i| + |f_j|} (e_i^* \otimes f_j)^* \otimes (e_i^* \otimes f_j)
+$$
+to arrive at
+\be\label{C2}
+C 
+= 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
+\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+= 
+(-1)^n 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\draw[ultra thick] (0,0) circle (2);
+\draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
+\fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+= 
+(-1)^n \str ( {}_\psi m_\varphi ) 
+\ee
+where $ {}_\psi m_\varphi \in \End_k(\Hom_{\hmf(k[x],W)}(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
+The second equality in~\eqref{C2} follows from Proposition~\ref{prop:defectactionproperties}(iii) (whose proof in turn relies on Proposition~\ref{prop:monoidalproperty}). Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
+
+\begin{theorem}\label{thm:CardyCondition}
+The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have (TODO: sign)
+$$
+\str ( {}_\psi m_\varphi ) 
+= 
+\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] 
+$$
+with ${}_\psi m_\varphi(\alpha) = \psi\circ\alpha\circ\varphi$ for $\alpha\in \Hom_{\hmf(k[x],W)}(X,Y)$. 
+\end{theorem}
+
+\begin{remark}
+The Cardy condition also holds if one or both of the maps $\varphi, \psi$ are odd (which we present as maps such as $X\lra X[1]$ in $\LG$). The proof of this fact proceeds similarly to the above. 
+\end{remark}
+
 
 \section{Shadows}\label{sec:shadows}
+
+TODO: less TFT discussion in this section
 
 The adjunctions in $\LG$ afford us the construction of a bicategorical trace in terms of shadow functors~\cite{p0807.1471}. We will also see that shadows allow to recover and generalise the boundary-bulk and bulk-boundary maps of the two-dimensional topological field theories based on Landau-Ginzburg models. 
 
@@ -3009,204 +3310,6 @@ respectively. Substituting the expressions for the adjiunction maps in Section~\
 \beta^X : \End_{k[x,z]}(X)[m] & \lra k[x]/(\partial V)[n] \, , \\
 \psi & \lmt (-1)^{m+1\choose 2} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\,  \partial_{x_1} d_X \ldots \partial_{x_n} d_X \partial_{z_1} d_X \ldots \partial_{z_m} d_X \right) \underline{\operatorname{d}\!z}}{\partial_{z_1} W \ldots \partial_{z_m} W} \right] \, . 
 \end{align*}
-
-
-\section{Cardy condition}\label{sec:CardyCondition}
-
-As another application of our explicit expressions for adjunctions in $\LG$ in this section we present a new proof of the Cardy condition. This deep result long eluded rigorous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluations and coevaluations in $\LG$ it will follow rather effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, such as $k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
-
-Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factorisations $X,Y \in \hmf(k[x], W)$, and also two maps $\varphi: X\lra X$, $\psi: Y\lra Y$. We interpret~$X$ and~$Y$ as 1-morphisms $(k,0)\lra (k[x],W)$ in $\LG$, and in this way we obtain the 2-morphism (where here and below we do no longer display dashed lines for unit 1-endomorphisms)
-\be\label{annulus}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (2);
-\nicereallynocolourscheme (0,0) circle (1);
-\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
-\draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; %{{\small$\eval_Y$}}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; % {{\small$\widetilde\coev_Y$}}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
-%
-\draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
-\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
-\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
-\fill (180:0.9) circle (0pt) node[left] {{\small$X$}};
-\fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\ee
-which is a map $k\lra k$ that we call~$C$. 
-
-\begin{remark}\label{rem:correlatorsare2morphisms}
-Note that again we colour-code the domain representing the non-trivial object $(k[x],W)$ in $\LG$. This is not only a visual aid for interpreting the components of the map~$C$, but~\eqref{annulus} can also be interpreted as an annulus correlator with ``boundary conditions'' $X,Y$ and ``field insertions'' $\varphi, \psi$. 
-
-More generally, we claim that for arbitrary Landau-Ginzburg models the correlator for \textsl{any} worldsheet with defects and insertions can be computed as a 2-morphism in $\LG$: all one has to do is to interpret the worldsheet as the associated string diagram. In this way the bicategory $\LG$ provides a complete and unified framework for all Landau-Ginzburg models. 
-
-When reading off the relevant 2-morphism from the physical picture of a worldsheet with insertions, there is one detail that we should address: in order for the picture to make sense as a string diagram, one may have to suspend the adjunction maps (an example of which we already saw in the definition of the defect action maps~\eqref{defectactionwrittenout}) and include isomorphisms of the type $X\otimes Y[1] \lra X[1] \otimes Y$. For example, what we really mean by the expression in~\eqref{annulus} is the map
-$$
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (2);
-\nicereallynocolourscheme (0,0) circle (1);
-\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
-\draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {{\small$\eval_Y$}}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {{\small$\widetilde\coev_Y$}}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
-%
-\draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {{\small$\widetilde\eval_X[n] \tau$}}; 
-\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
-\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
-%
-\fill (135:2) circle (2.5pt) node[left] {{\small$\rho_{{}^\dual Y} \tau'$}};
-\draw[densely dotted] (90:1) .. controls +(0,0.2) and +(0.5,-0.5) .. (135:2);
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-$$
-where in the case of odd~$n$ we have to suspend $\widetilde\eval_X$ (with the dotted line in~\eqref{annulus} representing $\Delta_W[n]$) and use the isomorphisms $\tau: X\otimes X^\vee[n] \lra X[n] \otimes X^\vee$ and $\tau': Y^\vee \otimes \Delta_W[n] \lra Y^\vee[n] \otimes \Delta_W$; for~$n$ even this additional notational clutter disappears. 
-\end{remark}
-
-To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions in Section~\ref{sec:derivcoeval} for evaluation and coevaluation maps we find \begin{align}
-& \widetilde\eval_X (e_i \otimes e_j^*) = (-1)^{|e_j|} \delta_{ij} + \mathcal O(\theta) \, , \qquad 
-\eval_Y (f_i^* \otimes f_j) = (-1)^{{n+1\choose 2} + n |f_j|} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] , \nonumber \\
-& \coev_X (1) = \sum_j (-1)^{{n+1 \choose 2} + n |e_j|} \Lambda_X e_j \otimes e_j^* \, , \qquad 
-\widetilde\coev_Y (1) = \sum_j (-1)^{|f_j|} f_j^* \otimes f_j \label{evcoeveasy}
-\end{align}
-where $\Lambda_X = \partial_1 d_X\ldots \partial_n d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$, and $\{ e_i \}_i$ and $\{ f_j \}_j$ are homogeneous bases of~$X$ and~$Y$, respectively. 
-
-The diagram~\eqref{annulus} can be computed in two different ways; equating the respective results amounts to the Cardy condition. Below we will present the details for the case of even~$n$. For odd~$n$ the proof works analogously, but one has to use the variant
-$$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
-\draw[line width=1pt] 
-(-2,-1) node[line width=0pt] (X) {{\small $Y^\vee$}}
-(-1,-1) node[line width=0pt] (Y) {{\small $X \vphantom{Y^\vee}$}}
-(2,2) node[line width=0pt] (XY) {{\small $(X^\vee[1]\otimes Y)^\vee$}}; 
-\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\fill (-0.5,0.65) circle (0pt) node[above] {{\small$\widetilde\eval_X[1]\tau$}};
-\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-\draw[densely dotted] (-0.5,0.75) .. controls +(0,0.2) and +(0.5,-0.5) .. (-1.56,1.1);
-\fill (-1.56,1.1) circle (2.5pt) node[left] {{\small$\rho_{Y^\vee[1]}\tau'$}};
-\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (-1,0) -- (Y);
-\draw (-2,0) -- (X);
-\draw[dotted] (0,0) -- (1,0);
-\draw (2,0) -- (XY);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
-\draw[line width=1pt] 
-(2,-1) node[line width=0pt] (Y) {{\small $Y^\vee$}}
-(3,-1) node[line width=0pt] (X) {{\small $X \vphantom{Y^\vee}$}}
-(-1,2) node[line width=0pt] (XY) {{\small $(X^\vee[1]\otimes Y)^\vee$}}; 
-\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (Y);
-\draw (3,0) -- (X);
-\draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (XY);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-$$
- of~\eqref{eq:monoidalproperty} which can be etablished by an argument similar to the one leading to Proposition~\ref{prop:monoidalproperty}. 
-
-One possibility to compute~\eqref{annulus} is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue: 
-$$
-C 
-= 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (2);
-\nicereallynocolourscheme (0,0) circle (1);
-\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
-\draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
-%
-\draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
-\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
-\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-= 
-(-1)^{n+1\choose 2} \,  
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (2);
-\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
-\draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
-%
-\fill (45:0) circle (2.5pt) node[below] {{\small$\str(\varphi\Lambda_X)$}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-= 
-\Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
-$$
-Using the expressions $\beta^X(\varphi) = (-1)^{n+1\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n+1\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps from Section~\ref{sec:shadows} we thus find from the above that
-\be\label{C1}
-C = 
-\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
-\ee
-
-On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y = \Hom(X,Y) \in \End_{\LG}( (k,0) )$. Then we use
-$$
-\eval_{{}^\dual X \otimes Y} = \str(-) \, , \qquad \widetilde\coev_{{}^\dual X \otimes Y} : 1 \lmt 1_{{}^\dual X \otimes Y}
-$$
-to arrive at
-\be\label{C2}
-C 
-= 
-\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (2);
-\nicereallynocolourscheme (0,0) circle (1);
-\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
-\draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
-%
-\draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
-\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
-\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
-\end{tikzpicture} 
-= 
-\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
-\draw[ultra thick] (0,0) circle (2);
-\draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
-\fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
-\end{tikzpicture} 
-= 
-\str ( {}_\psi m_\varphi ) 
-\ee
-where $ {}_\psi m_\varphi \in \End_k(\Hom_{\hmf(k[x],W)}(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
-The second equality in~\eqref{C2} follows from Proposition~\ref{prop:defectactionproperties}(iii) (whose proof in turn relies on Proposition~\ref{prop:monoidalproperty}). Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
-
-\begin{theorem}\label{thm:CardyCondition}
-The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have
-$$
-\str ( {}_\psi m_\varphi ) 
-= 
-\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] 
-$$
-with ${}_\psi m_\varphi(\alpha) = \psi\circ\alpha\circ\varphi$ for $\alpha\in \Hom_{\hmf(k[x],W)}(X,Y)$. 
-\end{theorem}
-
-\begin{remark}
-The Cardy condition also holds if one or both of the maps $\varphi, \psi$ are odd (which we present as maps such as $X\lra X[1]$ in $\LG$). The proof of this fact proceeds like the above, with small changes coming from the suspensions as indicated in Remark~\ref{rem:correlatorsare2morphisms}. 
-\end{remark}
 
 
 \section{Duality via adjoint operators}\label{section:dualityadjointop}
