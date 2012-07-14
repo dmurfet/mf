@@ -1881,6 +1881,11 @@ X^{\vee} \otimes_S X \ar[r]^-{\lAt_2(X^{\vee})^l} & \Bar \otimes_{R^e}(X^{\vee} 
 \]
 The residue integrates out the $S$, leaving us with an element of $\Delta_W$. By the argument given in Remark \ref{remark:indeptlambda} the morphism $\eval_X$ is independent of the choices of null-homotopy $\lambda^{(z)}_i$.
 
+\subsection{Alternative adjoints and their graphical presentation}\label{subsec:alternatives}
+
+TODO
+
+
 \section{Zorro moves}\label{sec:Zorro}
 
 In this section we will show that the bicategory $\LG$ of Landau-Ginzburg models has adjoints, by proving that the evaluation and coevaluation morphisms of Section \ref{sec:derivcoeval} satisfy the Zorro moves. Let us fix two arbitrary potentials $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$. Then we want to prove that for any matrix factorisation $X\in \hmf(k[x,z], V-W)$ and its left and right adjoints ${}^\dual X, X^\dual \in \hmf(k[x,z], W-V)$ the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros} are satisfied. 
@@ -2680,7 +2685,7 @@ but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the a
 
 In any pivotal bicategory with adjoints there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its adjoint). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
-Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\Hom$ and $\End$ we mean the spaces of 2-(endo)morphisms in $\LG$. We define maps 
+Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\Hom$ and $\End$ we mean the spaces of 2-(endo)morphisms in $\LG$. We define \textsl{defect operators} 
 $$
 \mathcal D_l(X): \End(\Delta_V) \longrightarrow \Hom(\Delta_W, \Delta_W[m+n]) \, , \qquad
 \mathcal D_r(X): \End(\Delta_W) \longrightarrow \Hom(\Delta_V, \Delta_V[m+n])
@@ -2688,14 +2693,15 @@ $$
 in terms of the morphisms encoding the monoidal and adjunction structures as follows. For $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we set
 \begin{align}
 \mathcal D_l(X)(\phi) & = \eval_X[m+n] \circ (1_{X^\dual}\otimes (\lambda_X \circ (\phi\otimes 1_X)\circ \lambda_X^{-1})) \circ \widetilde\coev_X \, , \nonumber \\ 
-\mathcal D_r(X)(\psi) & = \widetilde\eval_X[m+n] \circ (1_{X}\otimes (\lambda_{{}^\dual X} \circ (\psi\otimes 1_{{}^\dual X})\circ \lambda_{{}^\dual X}^{-1})) \circ \coev_X \, . \label{defectactionwrittenout}
+\mathcal D_r(X)(\psi) & = \widetilde\eval_X[m+n] \circ (1_{X}\otimes (\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1})) \circ \coev_X \, . \label{defectactionwrittenout}
 \end{align}
 Note that since $\Hom(\Delta,\Delta[1]) = 0$ in $\LG$ the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$ are zero if $m+n$ is odd, while for even $m+n$ they map to $\End(\Delta_W)$ and $\End(\Delta_V)$, respectively. 
 In the special case $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
 
 Diagrammatically these definitions read
-\be\label{defectaction}
-\mathcal D_l(X)(\phi) =
+\begin{align}
+\label{leftdefectaction}
+& \mathcal D_l(X)(\phi) =
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
 \nicecolourscheme (0,0) circle (3.5);
@@ -2703,14 +2709,14 @@ Diagrammatically these definitions read
 \nicepalecolourscheme (0,0) circle (2);
 \fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
 %
-\fill (180:2) circle (0pt) node[left] {{\small$x\vphantom{z'}$}};
-\fill (180:2) circle (0pt) node[right] {{\small$z\vphantom{z'}$}};
-\fill (0:2) circle (0pt) node[left] {{\small$z'\vphantom{z'}$}};
-\fill (0:2) circle (0pt) node[right] {{\small$x'\vphantom{z'}$}};
+%\fill (180:2) circle (0pt) node[left] {{\small$x\vphantom{z'}$}};
+%\fill (180:2) circle (0pt) node[right] {{\small$z\vphantom{z'}$}};
+%\fill (0:2) circle (0pt) node[left] {{\small$z'\vphantom{z'}$}};
+%\fill (0:2) circle (0pt) node[right] {{\small$x'\vphantom{z'}$}};
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
 \draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
-\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
+\fill (135:0) circle (3.3pt) node[left] {{\small$\phi$}};
 \fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X}$}};
 \fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X}$}};
 \draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
@@ -2723,112 +2729,171 @@ node[near end,right] {{{\small$\Delta_W$}}};
 node[near end,right] {{{\small$\Delta_W$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+=
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$W$}};
+\nicepalecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
 %
-%\fill (1.5,1.3) circle (2.5pt) node[right] {{\small $\lambda_X$}};
-%\fill (1.5,-1.3) circle (2.5pt) node[right] {{\small $\lambda^{-1}_X$}};
-%\fill (0,0) circle (2.5pt) node[left] {{\small $\phi$}};
-%
-%\fill (0.6,1) circle (0pt) node {{\small $\Delta_V$}};
-%\fill (0.6,-0.95) circle (0pt) node {{\small $\Delta_V$}};
-%
-%\draw[directed] (1.5,1.3) .. controls +(0,1.5) and +(0,1.5) .. (-1.5,1.3);
-%\draw[directed] (-1.5,-1.3) .. controls +(0,-1.5) and +(0,-1.5) .. (1.5,-1.3);
-%\draw (1.5,-1.3) -- (1.5,1.3)
-%node[midway,left] {{{\footnotesize$z'\vphantom{y}$}}}
-%node[midway,right] {{{\footnotesize$y\vphantom{yz'}$}}};
-%\draw (-1.5,-1.3) -- (-1.5,1.3)
-%node[midway,left] {{{\footnotesize$x\vphantom{yz'}$}}}
-%node[midway,right] {{{\footnotesize$z\vphantom{yz'}$}}};
-%\draw[dashed] (0,0) .. controls +(0,1) and +(-0.5,-1) .. (1.5,1.3);
-%\draw[dashed] (0,0) .. controls +(0,-1) and +(-0.5,1) .. (1.5,-1.3);
-%\draw[dashed] (0,-2.5) -- (0,-3.5)
-%node[near end,right] {{{\small$\Delta_W$}}};
-%\draw[dashed] (0,2.47) -- (0,3.5)
-%node[near end,right] {{{\small$\Delta_W$}}};
-%\end{tikzpicture}
-\, , \qquad 
-\mathcal D_r(X)(\psi) = 
+\draw[densely dotted] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
+\draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
+\fill (135:0) circle (3.3pt) node[left] {{\small$\phi$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X}$}};
+\draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
+\fill (0.41,1.15) circle (0pt) node {{\small $\Delta_V$}};
+\fill (0.41,-1.15) circle (0pt) node {{\small $\Delta_V$}};
+\draw[dashed] (135:0) .. controls +(0,-1) and +(-0.5,1) .. (-50:2);
+\draw[dashed] (270:2) -- (270:3.3)
+node[near end,right] {{{\small$\Delta_W$}}};
+\draw[dashed] (90:2) -- (90:3.3)
+node[near end,right] {{{\small$\Delta_W$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\, ,  \\
+& \mathcal D_r(X)(\psi) = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
 \nicepalecolourscheme (0,0) circle (3.5);
-\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
+\fill (2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
 \nicecolourscheme (0,0) circle (2);
-\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
+\fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
-\fill (180:2) circle (0pt) node[left] {{\small$z\vphantom{z'}$}};
-\fill (180:2) circle (0pt) node[right] {{\small$x\vphantom{z'}$}};
-\fill (0:2) circle (0pt) node[left] {{\small$x'\vphantom{z'}$}};
-\fill (0:2) circle (0pt) node[right] {{\small$z'\vphantom{z'}$}};
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
-\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{{}^\dual X}$}};
-\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{{}^\dual X}$}};
-\draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
-\fill (0.4,1.15) circle (0pt) node {{\small $\Delta_W$}};
-\fill (0.4,-1.15) circle (0pt) node {{\small $\Delta_W$}};
-\draw[dashed] (135:0) .. controls +(0,-1) and +(-0.5,1) .. (-50:2);
+\fill (135:0) circle (3.3pt) node[right] {{\small$\psi$}};
+\fill (130:2) circle (3.3pt) node[left] {{\small$\rho_X$}};
+\fill (230:2) circle (3.3pt) node[left] {{\small$\rho^{-1}_{X}$}};
+\draw[dashed] (135:0) .. controls +(0,1) and +(0.5,-1) .. (130:2);
+\fill (-0.1,1.15) circle (0pt) node {{\small $\Delta_W$}};
+\fill (-0.1,-1.15) circle (0pt) node {{\small $\Delta_W$}};
+\draw[dashed] (135:0) .. controls +(0,-1) and +(0.5,1) .. (230:2);
 \draw[dashed] (270:2) -- (270:3.3)
 node[near end,right] {{{\small$\Delta_V$}}};
 \draw[dashed] (90:2) -- (90:3.3)
 node[near end,right] {{{\small$\Delta_V$}}};
 \end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+= 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
+\nicecolourscheme (0,0) circle (2);
+\fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
-%\fill (1.5,1.3) circle (2.5pt) node[right] {{\small $\lambda_{X^\dual}$}};
-%\fill (1.5,-1.3) circle (2.5pt) node[right] {{\small $\lambda^{-1}_{X^\dual}$}};
-%\fill (0,0) circle (2.5pt) node[left] {{\small $\psi$}};
-%
-%\fill (0.6,1) circle (0pt) node {{\small $\Delta_W$}};
-%\fill (0.6,-0.95) circle (0pt) node {{\small $\Delta_W$}};
-%
-%\draw[redirected] (1.5,1.3) .. controls +(0,1.5) and +(0,1.5) .. (-1.5,1.3);
-%\draw[redirected] (-1.5,-1.3) .. controls +(0,-1.5) and +(0,-1.5) .. (1.5,-1.3);
-%\draw (1.5,-1.3) -- (1.5,1.3)
-%node[midway,left] {{{\footnotesize$y\vphantom{yz'}$}}}
-%node[midway,right] {{{\footnotesize$z'\vphantom{yz'}$}}};
-%\draw (-1.5,-1.3) -- (-1.5,1.3)
-%node[midway,left] {{{\footnotesize$z\vphantom{yz'}$}}}
-%node[midway,right] {{{\footnotesize$x\vphantom{yz'}$}}};
-%\draw[dashed] (0,0) .. controls +(0,1) and +(-0.5,-1) .. (1.5,1.3);
-%\draw[dashed] (0,0) .. controls +(0,-1) and +(-0.5,1) .. (1.5,-1.3);
-%\draw[dashed] (0,-2.5) -- (0,-3.5)
-%node[near end,right] {{{\small$\Delta_V$}}};
-%\draw[dashed] (0,2.47) -- (0,3.5)
-%node[near end,right] {{{\small$\Delta_V$}}};
-%\end{tikzpicture}
-\ee
-in the nontrivial case, where we indicated our choice of variable names in the four domains, and both loops are labelled by~$X$. 
+\draw[densely dotted] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (135:0) circle (3.3pt) node[right] {{\small$\psi$}};
+\fill (130:2) circle (3.3pt) node[left] {{\small$\rho_X$}};
+\fill (230:2) circle (3.3pt) node[left] {{\small$\rho^{-1}_{X}$}};
+\draw[dashed] (135:0) .. controls +(0,1) and +(0.5,-1) .. (130:2);
+\fill (-0.1,1.15) circle (0pt) node {{\small $\Delta_W$}};
+\fill (-0.1,-1.15) circle (0pt) node {{\small $\Delta_W$}};
+\draw[dashed] (135:0) .. controls +(0,-1) and +(0.5,1) .. (230:2);
+\draw[dashed] (270:2) -- (270:3.3)
+node[near end,right] {{{\small$\Delta_V$}}};
+\draw[dashed] (90:2) -- (90:3.3)
+node[near end,right] {{{\small$\Delta_V$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{rightdefectaction}
+\end{align}
+in the nontrivial case, where we use the adjunction maps and notation of Section~\ref{subsec:alternatives} on the right-hand side. 
 
 \begin{remark}
 $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose nondegenerate pairing
 \be\label{bulktopmet}
-\langle \phi, \psi \rangle_W = \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right]
+\langle \phi, \psi \rangle_W = 
+(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right]
 \ee
-describes two-point correlators on the sphere. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{defectaction} have the natural interpretations in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
+describes 2-point correlators on the sphere, see also Section~\ref{sec:ocTFT}. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{leftdefectaction} and~\eqref{rightdefectaction} have the natural interpretation in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
 
-As already observed in Section~\ref{sec:Introduction}, for the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
+%As already observed in Section~\ref{sec:Introduction}, for the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
 \end{remark}
 
-Using the ``folding trick'', which relates defects to boundary conditions in a product theory, one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$ (in particular, from this perspective it is also immediate that $\mathcal D_l(X)$ and $\mathcal D_r(X)$ should vanish for odd $m+n$). This was done in~\cite{cr1006.5609} for the case $V=W$ in one variable. Here we use our adjunction formulas to directly prove it for the general case: 
+Using the ``folding trick'', which relates defects to boundary conditions in a product theory, one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$ (in particular, from this perspective it is also immediate that $\mathcal D_l(X)$ and $\mathcal D_r(X)$ should vanish for odd $m+n$). This was done in~\cite{cr1006.5609} for the case $V=W$ in one variable. Here we use our adjunction formulas to directly prove it for the general case. In addition, we want to allow for the additional decoration with a map $\Phi: X \lra X$ for which we define the following variants of the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$: 
+\be\label{defectactionwithfieldinsertion}
+\mathcal D_l^\Phi(X)(\phi) =
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (3.5);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$W$}};
+\nicepalecolourscheme (0,0) circle (2);
+\fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
+%
+%\fill (180:2) circle (0pt) node[left] {{\small$x\vphantom{z'}$}};
+%\fill (180:2) circle (0pt) node[right] {{\small$z\vphantom{z'}$}};
+%\fill (0:2) circle (0pt) node[left] {{\small$z'\vphantom{z'}$}};
+%\fill (0:2) circle (0pt) node[right] {{\small$x'\vphantom{z'}$}};
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
+\draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
+\fill (135:0) circle (3.3pt) node[left] {{\small$\phi$}};
+\fill (0:2) circle (3.3pt) node[right] {{\small$\Phi$}};
+\fill (50:2) circle (3.3pt) node[right] {{\small$\lambda_{X}$}};
+\fill (-50:2) circle (3.3pt) node[right] {{\small$\lambda^{-1}_{X}$}};
+\draw[dashed] (135:0) .. controls +(0,1) and +(-0.5,-1) .. (50:2);
+\fill (0.41,1.15) circle (0pt) node {{\small $\Delta_V$}};
+\fill (0.41,-1.15) circle (0pt) node {{\small $\Delta_V$}};
+\draw[dashed] (135:0) .. controls +(0,-1) and +(-0.5,1) .. (-50:2);
+\draw[dashed] (270:2) -- (270:3.3)
+node[near end,right] {{{\small$\Delta_W$}}};
+\draw[dashed] (90:2) -- (90:3.3)
+node[near end,right] {{{\small$\Delta_W$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\, , \qquad
+\mathcal D_r^\Phi(X)(\psi) = 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (2.2,-2.2) circle (0pt) node[white] {{\small$V$}};
+\nicecolourscheme (0,0) circle (2);
+\fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
+%
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (135:0) circle (3.3pt) node[right] {{\small$\psi$}};
+\fill (180:2) circle (3.3pt) node[left] {{\small$\Phi$}};
+\fill (130:2) circle (3.3pt) node[left] {{\small$\rho_X$}};
+\fill (230:2) circle (3.3pt) node[left] {{\small$\rho^{-1}_{X}$}};
+\draw[dashed] (135:0) .. controls +(0,1) and +(0.5,-1) .. (130:2);
+\fill (-0.1,1.15) circle (0pt) node {{\small $\Delta_W$}};
+\fill (-0.1,-1.15) circle (0pt) node {{\small $\Delta_W$}};
+\draw[dashed] (135:0) .. controls +(0,-1) and +(0.5,1) .. (230:2);
+\draw[dashed] (270:2) -- (270:3.3)
+node[near end,right] {{{\small$\Delta_V$}}};
+\draw[dashed] (90:2) -- (90:3.3)
+node[near end,right] {{{\small$\Delta_V$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\, . 
+\ee
 
 \begin{proposition}\label{prop:defectaction}
-For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
+For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \End(X)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
 \begin{align*}
-\mathcal D_l(X)(\phi) & = (-1)^{{m\choose 2} + {n+1\choose 2}}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] \, , \\
-\mathcal D_r(X)(\psi) & = (-1)^{{m+1\choose 2} + 0 (TODO)}  \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
+\mathcal D_l^\Phi(X)(\phi) & 
+= (-1)^{{m\choose 2} +}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{x_n} d_{X}\ldots \partial_{x_1} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] \, , \\
+\mathcal D_r^\Phi(X)(\psi) & = (-1)^{{m\choose 2} + {n\choose 2}}  \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
 \end{align*}
 \end{proposition}
 
 \begin{proof}
-We treat the case of $\mathcal D_r(X)$ in detail, the argument for $\mathcal D_l(X)$ works similarly. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to set $x=x'$ and $z=z'$ at appropriate places, cf.~\eqref{defectaction}. Furthermore, $\lambda_{{}^\dual X}$ will project out all non-zero degree contributions coming from the action of $\lambda^{-1}_{{}^\dual X}$, so $\lambda_{{}^\dual X} \circ (\psi\otimes 1_{{}^\dual X})\circ \lambda_{{}^\dual X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
+We treat the case of $\mathcal D_r^\Phi(X)$ in detail, the argument for $\mathcal D_l^\Phi(X)$ works similarly. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to to identify the variables on both sides of the unit 1-endomorphisms at appropriate places. Furthermore, $\rho_X$ will project out all non-zero degree contributions coming from the action of $\rho_{X}^{-1}$, so $\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
 
-In the lower part of the expression for $\mathcal D_r(X)(\psi)$ in~\eqref{defectaction} we have 
+In the lower part of the expression for $\mathcal D_r^\Phi(X)(\psi)$ in~\eqref{defectactionwithfieldinsertion} we have 
 $$
-\coev_X(1) = \sum_j (-1)^{{m+1\choose 2} + m|e_j|} \partial_{[1]} d_X \ldots \partial_{[m]} d_X e_j \otimes e_j^* \, . 
+\coev_X(1) = \sum_j (-1)^{{m\choose 2} + m|e_j|} \partial_{[1]} d_X \ldots \partial_{[m]} d_X e_j \otimes e_j^* \, . 
 $$
 %\begin{align}
 %\widetilde\coev_X (1) & = \sum_j (-1)^{|e_j|} (\varepsilon\Psi) \left( (-\At_{X})^n (e_j^*\otimes e_j) \right) \nonumber \\
@@ -2837,19 +2902,19 @@ $$
 %& = \sum_j (-1)^{|e_j|(|e_j| + n) + {n\choose 2}} e_j^* \otimes \big( \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X} \big) (e_{j}) \label{coevtilde1}
 %\end{align}
 %which we identify with $(-1)^{{n\choose 2}} \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X}$ in $\End(X)$. Note that in the last step leading to~\eqref{coevtilde1} we set $\partial_{[i]} d_{X}(x,z) = \partial_{x_i} d_{X}(x,z)$ since $x=x'$ in $\End(\Delta_W)$. 
-Next we apply~$\psi$ and $\widetilde\eval_X$. Since the latter maps back to~$\Delta_V$ we may set $\partial_{[i]} d_X = \partial_{z_i} d_X$ in the above as $z=z'$ in $\End(\Delta_V)$. Thus we obtain
+Next we apply~$\Phi$, $\psi$ and $\widetilde\eval_X$. Since the latter maps back to~$\Delta_V$ we may set $\partial_{[i]} d_X = \partial_{z_i} d_X$. Thus we obtain
 $$
-\mathcal D_r(X)(\psi) = (-1)^{{m+1\choose 2} + 0 (TODO)} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( d_{X} \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
+\mathcal D_r^\Phi(X)(\psi) = (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
 $$
-Here we collectively denote the contributions from $\widetilde\eval_X$ of non-zero degree in the Koszul complex $\Delta_V$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_r(X)(\psi)$ is a morphism in $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
+Here we collectively denote the contributions from $\widetilde\eval_X$ of non-zero degree in the Koszul complex $\Delta_V$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_r^\Phi(X)(\psi)$ is a morphism in $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
 \end{proof}
 
 \begin{corollary}
 For any $X\in \hmf(k[x,z], V-W)$ the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$ are adjoint with respect to the pairings~\eqref{bulktopmet}, i.\,e.~we have
 \be\label{Dadjoint}
-\big\langle \mathcal D_l(X)(\phi), \psi \big\rangle_W = (-1)^{{n+1\choose 2} TODO} \big\langle \phi , \mathcal D_r(X)(\psi) \big\rangle_V
+\big\langle \mathcal D_l(X)(\phi), \psi \big\rangle_W = \big\langle \phi , \mathcal D_r(X)(\psi) \big\rangle_V
 \ee
-for all $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$. [TODO: why does $\mathcal D_r$ not have a nicer sign?]
+for all $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$. 
 \end{corollary}
 
 \begin{proof}
@@ -2858,7 +2923,7 @@ This directly follows from the explicit expressions for $\mathcal D_l(X)$, $\mat
 
 
 \begin{remark}
-We recall the physical interpretation of the relation~\eqref{Dadjoint}. Both sides of this equation are two-point correlators on the Riemann sphere, with a defect line labelled by~$X$ wrapped around counterclockwise the bulk field~$\phi$, or wrapped around~$\psi$ in clockwise fashion. That both correlators should be equal follows from the fact that the topological defect can be moved around the sphere at no cost: 
+We recall the physical interpretation of the relation~\eqref{Dadjoint}. Both sides of this equation are 2-point correlators on the Riemann sphere, with a defect line labelled by~$X$ wrapped around counterclockwise the bulk field~$\phi$, or wrapped around~$\psi$ in clockwise fashion. That both correlators should be equal follows from the fact that the topological defect can be moved around the sphere at no cost: 
 $$
 \left\langle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -2901,9 +2966,11 @@ $$
 $$
 \end{remark}
 
+The defect operators satisfy the following compatibility conditions: 
+
 \begin{proposition}
 \begin{enumerate}
-\item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$, 
+\item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$ (TODO: actually, we get $(-1)^{n\choose 2}$ at the moment!), 
 \item $\mathcal D_l(X) = \mathcal D_r(X^\dual)$, 
 \item $\mathcal D_l(Y \otimes X) = \mathcal D_l(X) \circ \mathcal D_l(Y)$, 
 \item $\mathcal D_r(Y \otimes X) = \mathcal D_r(Y) \circ \mathcal D_r(X)$. 
@@ -2912,7 +2979,7 @@ $$
 \end{proposition}
 
 \begin{proof}
-(i) TODO: either cite Polishchuk-Vaintrob and/or use $\coev_\Delta= \lambda^{-1}_\Delta$ etc.
+(i) TODO: either cite Polishchuk-Vaintrob and/or use $\coev_\Delta= \lambda^{-1}_\Delta$ etc. (well, actually PV tell us that we get $(-1)^{n\choose 2}$)
 
 (ii): In the proof of the explicit formula for $\mathcal D_l(X)$ in Proposition~\ref{prop:defectaction} we could also have used the alternative representations for $\eval_X$ and $\widetilde\coev_X$ in terms of $d_{X^\dual}$. Then the assertion immediately follows. 
 
@@ -2996,7 +3063,7 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 $$
-where we used the identification $R/(\partial W) \cong \End_{\hmf(R,W)}(\Delta_W)$ and a special case of Proposition~\ref{prop:defectaction} (TODO: generalise that proposition to the case where we have fields living on the defect loops). Another special case of the same proposition allows us to recover the Kapustin-Li pairing as the obvious 2-morphism representing the disk correlator, 
+where we used the identification $R/(\partial W) \cong \End_{\hmf(R,W)}(\Delta_W)$ and a special case of Proposition~\ref{prop:defectaction}. Another special case of the same proposition allows us to recover the Kapustin-Li pairing as the obvious 2-morphism representing the disk correlator, 
 $$
 \langle \psi_1 , \psi_2 \rangle_X = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
