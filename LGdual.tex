@@ -1273,7 +1273,7 @@ X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \oti
 & X
 }
 \end{equation}
-where $\Psi$ is the canonical map given in (\ref{intro_psi}). Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and by postcomposing with $\Psi$ we obtain the desired inverse to $\rho$. A similar argument works for inverting $\lambda$. A completion of $X \otimes \Bar$ is used in order to guarantee that the geometric series converges. We return to this example in Remark \ref{remark:rhoandlambdainverse} below.
+where $\Psi$ is the canonical map given in (\ref{intro_psi}). Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and by postcomposing with $\Psi$ we obtain the desired inverse to $\rho$. A similar argument works for inverting $\lambda$. A completion of $X \otimes \Bar$ is used in order to guarantee that the geometric series converges. We return to this example in Section \ref{section:rhoandlambdainverse} below.
 
 Another important example is the following: given an object $(k[x],W) \in \LG$ and a $1$-morphism $X \in \LG(W,W)$ consider the problem of lifting a $k[x]$-bilinear morphism of linear factorisations $X \lto k[x]$ to a morphism $X \lto \Delta_W$ along the stabilisation map $\pi_{\Delta}: \Delta_W \lto k[x]$
 \[
@@ -1282,7 +1282,7 @@ X \ar[dr] \ar@{.>}[rr] & & \Delta_W \ar[dl]^-{\pi_{\Delta}} \\
 & k[x]\,.
 }
 \]
-The solution to this lifting problem is given in Proposition \ref{prop:liftingresult}, and will be used to give an explicit formula for the evaluation maps in Section \ref{sec:derivcoeval}.
+The solution to this lifting problem is given in Section \ref{section:liftingproblem}, and will be used to give an explicit formula for the evaluation maps in Section \ref{sec:derivcoeval}.
 
 In order to address these examples and others at the same time, we work in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $\Re  = R_1 \otimes_k R_2$ where $R_i = R$ for $i \in \{1,2\}$. We assume that a matrix factorisation
 \be\label{eq:xisamf}
@@ -1434,8 +1434,8 @@ More precisely, there is a left $R_1$-linear deformation retract datum
 Using the second equation of Lemma \ref{lemma:shortobs} the proof is almost identical to that of Proposition \ref{prop:finalpertdefo}, so we omit it.
 \end{proof}
 
-\begin{remark} In the situation of Remark \ref{remark:specialcaseinvert} we have shown that $\pi: X' \,\widehat{\otimes}_R\, \Bar \lto X'$ is an $R$-linear homotopy equivalence for the two possible $R$-actions on $X' \,\widehat{\otimes}_R\, \Bar$, the $R$-action on $X'$ which moves across the tensor to act as $R_1$ on $\Bar$, and the $R_2$-action on $\Bar$.
-\end{remark}
+%\begin{remark} In the situation of Remark \ref{remark:specialcaseinvert} we have shown that $\pi: X' \,\widehat{\otimes}_R\, \Bar \lto X'$ is an $R$-linear homotopy equivalence for the two possible $R$-actions on $X' \,\widehat{\otimes}_R\, \Bar$, the $R$-action on $X'$ which moves across the tensor to act as $R_1$ on $\Bar$, and the $R_2$-action on $\Bar$.
+%\end{remark}
 
 Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ and let $(\Delta, d_{\Delta})$ be the finite-rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. We continue to assume that $X$ is a matrix factorisation as given in \eqref{eq:xisamf}. 
 
@@ -1482,93 +1482,91 @@ while a left $R_1$-linear homotopy inverse is given by
 where $\sigma_1, \sigma_2$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
 
-\begin{remark}\label{remark:rhoandlambdainverse} To return to the problem of inverting the unit actions $\lambda$ and $\rho$, recall the special case of $R = k[x], S = k[z]$, $X'$ a matrix factorisation over $S \otimes_k R$ of $V - W$ and $X = X' \otimes_R \Re$ discussed in Remark \ref{remark:specialcaseinvert}. In this case $\pi_{\Delta}$ is precisely the right unit action $\rho = \pi_{\Delta}: X' \otimes_R \Delta \lto X'$.
+\subsection{Inverses of unit actions}\label{section:rhoandlambdainverse}
 
-The relevant $S$-$R$-bimodule structure on $X' \otimes_R \Delta$ is the one coming from the action of $S$ on $X'$ and the right action of $R$ on $\Delta$ (which we have called $R_2$ above) and with respect to this bimodule structure the homotopy inverse of $\rho$ is given by \eqref{eq:koszulstab2_1}, that is,
+Let us now return to the problem of inverting the unit actions $\lambda$ and $\rho$, using the setting of Remark \ref{remark:specialcaseinvert}, so that $R = k[x], S = k[z]$, $X$ is a matrix factorisation over $S \otimes_k R$ of $V - W$ and we take $X' = X \otimes_R \Re$ as the relevant matrix factorisation in the above. In this case $\pi_{\Delta}$ is precisely the right unit action $\rho: X \otimes_R \Delta_W \lto X$.
+
+The relevant $S$-$R$-bimodule structure on $X \otimes_R \Delta_W$ is the one coming from the action of $S$ on $X$ and the right action of $R$ on $\Delta_W$ (which we have called $R_2$ above) and with respect to this bimodule structure the homotopy inverse of $\rho$ is given by \eqref{eq:koszulstab2_1}, that is,
 \be\label{eq:formula_rhoinverse}
-\rho^{-1} = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X')^l \sigma_2\,.
+\rho^{-1} = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X)^l \sigma_2\,.
 \ee
-Here $\At_2(X')$ denotes the operator $[d, d_{X'}]$ on $X' \otimes_R \Bar$ with $d$ being extended to $X' \otimes_R \Bar$ using a fixed homogeneous $S \otimes_k R$-basis $\{ e_i \}_i$ for $X'$ as explained in Remark \ref{remark:linearatother}. The summands in this formula are composites of $S$-$R_2$-bilinear maps
+Here $\At_2(X)$ denotes the operator $[d, d_{X}]$ on $X \otimes_R \Bar$ with $d$ being extended to $X \otimes_R \Bar$ using a fixed homogeneous $S \otimes_k R$-basis $\{ e_i \}_i$ for $X$ as explained in Remark \ref{remark:linearatother}. The summands in this formula are composites of $S$-$R_2$-bilinear maps
 \[
 \xymatrix@C+2pc{
-X' \ar[r]^-{\sigma_2} & X' \otimes_R \Re \ar[r]^-{\At_2(X')^l} & X' \otimes_R \Bar
+X \ar[r]^-{\sigma_2} & X \otimes_R \Re \ar[r]^-{\At_2(X)^l} & X' \otimes_R \Bar
 }
 \]
 where $\sigma_2(e_i) = e_i \otimes (1 \otimes 1)$.
 
-To give a formula for the homotopy inverse of $\lambda$, first let $\Delta_V$ denote the unit matrix factorisation of $\widetilde V$ and $X = \Se \otimes_S X'$. The unit action $\lambda: \Delta_V \otimes_S X' \lto X'$ can be written as a composite
+To give a formula for the homotopy inverse of $\lambda$, first let $\Delta_V$ denote the unit matrix factorisation of $\widetilde V$ and $X' = \Se \otimes_S X$. The unit action $\lambda: \Delta_V \otimes_S X \lto X$ can be written as a composite
 \[
 \xymatrix{
-\Delta_V \otimes_S X' \cong \Delta_V \otimes_{\Se} X \ar[r]^-{\pi_{\Delta}} & S \otimes_{\Se} X \cong X'
+\Delta_V \otimes_S X \cong \Delta_V \otimes_{\Se} X' \ar[r]^-{\pi_{\Delta}} & S \otimes_{\Se} X' \cong X
 }\,.
 \]
 Writing $\Se = S_1 \otimes_k S_2$, we seek an $S_1$-$R$-bilinear inverse to $\pi_{\Delta}$. It would suffice to invert
 \be\label{eq:mashedkoalas}
-X \otimes_{\Se} \Delta_V \lto X \otimes_{\Se} S
+X' \otimes_{\Se} \Delta_V \lto X' \otimes_{\Se} S
 \ee
 and then compose on both ends with swap isomorphisms, provided we keep in mind that we want an $S_1$-linear, not $S_2$-linear, inverse to \eqref{eq:mashedkoalas}. But switching the role of $R$ and $S$ in the above this is exactly what is provided by \eqref{eq:koszulstab2_2}. Postcomposing with the swap isomorphism has the effect of converting $\At_{1}$ into $\Atlarrow_{1}$, so the conclusion is that an $S_1$-$R$-bilinear homotopy inverse for $\lambda$ is
 \be\label{eq:formulalambdainv}
-\lambda^{-1} = \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_{1}(X')^l \sigma_1\,.
+\lambda^{-1} = \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_{1}(X)^l \sigma_1\,.
 \ee
-Here $\Atlarrow_1(X')$ denotes the operator $[s, d_{X'}]$ on $\gamma_*(\Bar) \otimes_S X'$ and the summands in this formula are composites of $S_1$-$R$-bilinear maps
+Here $\Atlarrow_1(X)$ denotes the operator $[s, d_{X}]$ on $\gamma_*(\Bar) \otimes_S X$ and the summands in this formula are composites of $S_1$-$R$-bilinear maps
 \[
 \xymatrix@C+2pc{
-X' \ar[r]^-{\sigma_1} & \Se \otimes_S X' \ar[r]^-{\At_1(X')^l} & \gamma_*(\Bar) \otimes_S X'
+X \ar[r]^-{\sigma_1} & \Se \otimes_S X \ar[r]^-{\At_1(X)^l} & \gamma_*(\Bar) \otimes_S X
 }
 \]
-where $\sigma_1(e_i) = (1 \otimes 1) \otimes e_i$. Notice that we have shown that $\lambda, \rho$ are homotopy equivalences, and provided explicit inverses, for an arbitrary matrix factorisation $X'$ (i.e. not necessarily finite rank).
-\end{remark}
+where $\sigma_1(e_i) = (1 \otimes 1) \otimes e_i$. Notice that we have shown that $\lambda, \rho$ are homotopy equivalences, and provided explicit inverses, for an arbitrary matrix factorisation $X$ (i.e. not necessarily finite rank).
 
-With these formulas in hand we return to the lifting problem discussed at the beginning of this section. We show that given $Y \in \hmf(\Re , \widetilde{W})$ composing with $\pi_{\Delta}$ induces a quasi-isomorphism
-\be\label{eq:liftingresult0}
-\Hom_{\Re }(Y, \Delta) \lto \Hom_{\Re }(Y, R)\,.
-\ee
-In particular, given a morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
-\[
+\subsection{The lifting problem}\label{section:liftingproblem}
+
+The universal property of $\pi_{\Delta}: \Delta_W \lto R$ is that for any matrix factorisation $Y \in \hmf(\Re , \widetilde{W})$ and morphism of linear factorisations $\varphi: Y \lto R$ there is a unique (up to homotopy) morphism $\varphi_{\textup{lift}}$ making the following diagram commute up to homotopy
+\be\label{eq:liftingproblem2}
 \xymatrix{
-Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta \ar[dl]^-{\pi_\Delta} \\
+Y \ar[dr]_-{\varphi} \ar@{.>}[rr]^-{\varphi_{\textup{lift}}} & & \Delta_W \ar[dl]^-{\pi_\Delta} \\
 & R
 }\,.
-\]
-To produce a formula for $\varphi_{\textup{lift}}$ we choose a homogeneous basis $\{ e_i \}_{i}$ for $Y$.
+\ee
+In this section we give an explicit formula for $\varphi_{\textup{lift}}$.
 
-\begin{proposition}\label{prop:liftingresult} 
-The map \eqref{eq:liftingresult0} is a homotopy equivalence, and in the above notation
-\begin{equation}\label{eq:liftingresult}
-\varphi_{\textup{lift}} = \sum_{l \ge 0} (-1)^l \Psi \circ (1 \otimes \varphi') \circ \lAt_{2}(Y)^l
-\end{equation}
-where $\varphi': Y \lto \Re $ is the $\Re $-linear map defined by $\varphi'(e_i) = 1 \otimes \varphi(e_i)$.
-\end{proposition}
-
-\begin{remark}
-For each $l \ge 0$ the summand of $\varphi_{\textup{lift}}$ is $(-1)^l$ times the composite
+Having chosen a homogeneous basis $\{ e_i \}_{i}$ for $Y$, the formula is written in terms of the maps
 \[
 \xymatrix@C+2pc{
-Y \ar[r]^-{[d, d_Y]^l} & \Bar \otimes_{\Re } Y \ar[r]^-{1 \otimes \varphi'} & \Bar \otimes_{\Re } \Re  \cong \Bar \ar[r]^-{\Psi} & \Delta
+Y \ar[r]^-{\lAt_2(Y)^l} & \Bar \otimes_{\Re } Y \ar[r]^-{1 \otimes \varphi'} & \Bar \otimes_{\Re } \Re  \cong \Bar \ar[r]^-{\Psi} & \Delta_W
 }\,.
 \]
-\end{remark}
+where $\varphi': Y \lto \Re $ is the $\Re $-linear map defined by $\varphi'(e_i) = 1 \otimes \varphi(e_i)$.
 % see lipert3
-\begin{proof}[Proof of Proposition~\ref{prop:liftingresult}]
-We apply Corollary \ref{corollary:koszulstab2} with $X = Y^{\vee}$ to see that the composite
+
+\begin{proposition}\label{prop:liftingresult} 
+In the above notation
+\begin{equation}\label{eq:liftingresult}
+\varphi_{\textup{lift}} = \sum_{l \ge 0} (-1)^l \Psi (1 \otimes \varphi') \lAt_{2}(Y)^l
+\end{equation}
+is a morphism of matrix factorisations making \eqref{eq:liftingproblem2} commute.
+\end{proposition}
+\begin{proof}
+We apply Corollary \ref{corollary:koszulstab2} to see that the composite
 \[
 \xymatrix@C+2pc{
-\Hom_{\Re }(Y, \Delta) \ar[r]^-{\cong}_-{\xi^{-1}} & Y^{\vee} \otimes_{\Re } \Delta \ar[r]^-{\pi_{\Delta}} & Y^{\vee} \otimes_{\Re } R \ar[r]^-{\cong}_-{\xi} & \Hom_{\Re }(Y, R)
+\Hom_{\Re }(Y, \Delta) \ar[r]^-{\cong}_-{\xi^{-1}} & Y^{\vee} \otimes_{\Re } \Delta \ar[r]^-{1 \otimes \pi_{\Delta}} & Y^{\vee} \otimes_{\Re } R \ar[r]^-{\cong}_-{\xi} & \Hom_{\Re }(Y, R)
 }
 \]
-is a homotopy equivalence, with $\xi$ denoting the canonical isomorphisms. Evaluating the homotopy inverse $\xi \circ \pi_2^{-1} \circ \xi^{-1}$ on the cohomology class of $\varphi$ yields the map $\varphi_{\textup{lift}}$ defined by
+is a homotopy equivalence, with $\xi$ denoting the canonical isomorphisms (see Section \ref{section:canonicalmaps}). Evaluating the homotopy inverse $\xi \circ \pi_2^{-1} \circ \xi^{-1}$ on the cohomology class of $\varphi$ yields the map $\varphi_{\textup{lift}}$ defined by
 \[
-\varphi_{\textup{lift}} = \sum_i \sum_{m \ge 0} (-1)^m \xi \Psi [d, d_X]^m \sigma_2( e_i^* \otimes \varphi(e_i) )\,.
+\varphi_{\textup{lift}} = \sum_i \sum_{l \ge 0} (-1)^m \xi \Psi \At_2(Y^\vee)^l \sigma_2( e_i^* \otimes \varphi(e_i) )\,.
 \]
 A straightforward computation yields (with $D = d_Y$)
 \[
-\varphi_{\textup{lift}}(e_j) = \sum_{m \ge 0}\sum_{i_0, i_1, \ldots, i_{m-1}} (-1)^{m|e_{i_0}| + m} \Psi d( D_{i_{m-1},j}) d( D_{i_{m-2},i_{m-1}} ) \ldots d( D_{i_0, i_1} ) \cdot (1 \otimes \varphi(e_{i_0}) )
+\varphi_{\textup{lift}}(e_j) = \sum_{l \ge 0}\sum_{i_0, i_1, \ldots, i_{l-1}} (-1)^{l|e_{i_0}| + l} \Psi\left( d( D_{i_{l-1},j}) d( D_{i_{l-2},i_{l-1}} ) \ldots d( D_{i_0, i_1} ) \cdot (1 \otimes \varphi(e_{i_0}) ) \right)
 \]
 which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:liftingresult}.
 \end{proof}
 
-\begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_1$ instead of $\pi^{-1}_2$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{1}$ instead of $\lAt_{2}$.
-\end{remark}
+%\begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_1$ instead of $\pi^{-1}_2$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{1}$ instead of $\lAt_{2}$.
+%\end{remark}
 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
