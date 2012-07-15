@@ -793,7 +793,7 @@ Now we can be more specific about the tensor action of the unit matrix factorisa
 \be\label{lambdarho}
 \lambda_X = \pi \otimes 1_X: \Delta_{W_2} \otimes X \lra X \, , \qquad \rho_X = 1_X \otimes \pi : X \otimes \Delta_{W_1} \lra X
 \ee
-which are isomorphisms in $\hmf(R_1 \otimes_k R_2,W_2-W_1)$. Later in Section~\ref{section:pertandhtpy} we will give a description of their explicit homotopy inverses. 
+which are isomorphisms in $\hmf(R_1 \otimes_k R_2,W_2-W_1)$. These morphisms give the left and right unit actions in the bicategory of Landau-Ginzburg models. Later in Section~\ref{section:pertandhtpy} we will give a description of their explicit homotopy inverses. 
 
 \begin{definition}
 The \textsl{bicategory of Landau-Ginzburg models} $\LG$ consists of the following data: 
@@ -1132,7 +1132,9 @@ There are slightly more complicated formulas for $\At_1$, but since this Atiyah 
 To discuss the linearity we need to be clear that $X \otimes \Bar$ is made into a right $\Re $-module via the right action of $\Re $ on $\Bar$ by multiplication. It is then apparent from \eqref{eq:at2nopower} that $\At_{2}(X)$ is right $\Re $-linear. The subscripts on the Atiyah classes arise because we think of $d$ (resp.~$s$) as differentiating in the $R_1$-directions (resp.~$R_2$-directions).
 
 \begin{remark}\label{remark:linearatother} 
-Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $(S \otimes_k \Re)$-module with $(S \otimes_k \Re)$-linear operator $D$. If we choose a homogeneous $(S \otimes_k \Re)$-basis for~$X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd}, \eqref{eq:extends} then $[d, D]$ and $[s, D]$ are operators on $X \otimes \Bar$ and we use the same notation and terminology for these operators. All our remarks extend \textsl{mutatis mutandis} to this kind of Atiyah class.
+Suppose that $S$ is a $k$-algebra and $X$ a $\mathbb{Z}_2$-graded free $(S \otimes_k \Re)$-module with $(S \otimes_k \Re)$-linear odd operator $D$. If we choose a homogeneous $(S \otimes_k \Re)$-basis for~$X$ and extend $d,s$ to $S$-linear operators on $X \otimes \Bar$ via \eqref{eq:extendd}, \eqref{eq:extends} then $\At_2(X) = [d, D]$ and $\At_1(X) = [s, D]$ define operators on $X \otimes \Bar$, and all our remarks apply equally well to this kind of Atiyah class.
+
+Similarly if instead $X$ is a $\mathbb{Z}_2$-graded free $(S \otimes_k R)$-module with $(S \otimes_k R)$-linear odd operator $D$ and we choose a homogeneous basis for $X$ and extend $d,s$ to $S$-linear operators on $X \otimes_R \Bar$ then $\At_2(X) = [d, D]$ and $\At_1(X) = [s,D]$ are operators on $X \otimes_R \Bar = (X \otimes_R \Re) \otimes \Bar$ which agree with the Atiyah classes of the $(S \otimes_k \Re)$-module $X \otimes_R \Re$.
 \end{remark}
 
 There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $\Re $-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by $\lAt_{2}(X) = [d, D]$ and $\lAt_{1}(X) = [s,D]$. 
@@ -1255,35 +1257,38 @@ is $R_2$-linear. In particular if $W \in k$ then the homology class of $[ \nabla
 \begin{remark} To relate this to the earlier construction, observe that if $X$ is a free $\Re $-module with basis $\{ e_i \}_{i}$ then $\Omega R$ can be identified with $\Bar$ and the operator $d: X \lto X \otimes \Bar_1 = X \otimes_R \Omega^1 R$ of \eqref{eq:extendd} is a connection.
 \end{remark}
 
-\textbf{todo} Explain naturality?
-
 \section{Perturbation and inverting unit actions}\label{section:pertandhtpy}
+% mostly from barmf5, unitlg. The stuff involving s is from coevc3.
 
-The fundamental technical results in this paper are constructions, using the perturbation lemma, of explicit homotopy inverses to morphisms involving the stabilised diagonal. Generically the results are geometric series in the associative Atiyah classes of the previous section. To give a specific example, recall that as part of the structure of the bicategory $\LG$ we have specified for any $1$-morphism $X \in \LG(W,V)$ a pair of isomorphisms (\textbf{todo} say he instead?)
+The fundamental technical results in this paper are constructions, using the perturbation lemma, of explicit homotopy inverses to morphisms involving the stabilised diagonal. Generically the results are geometric series in the associative Atiyah classes of the previous section. To give a specific example, recall that in defining the bicategory $\LG$ we have specified for any $1$-morphism $X \in \LG(W,V)$ a pair of natural isomorphisms
 \begin{equation}\label{eq:pertandhtpy1}
 \lambda: \Delta_V \otimes X \lto X \, , \qquad \rho: X \otimes \Delta_W \lto X
 \end{equation}
-which we call the \textsl{unit actions}. A representing chain map for the inverses of these morphisms is not specified as part of the defining data of the bicategory, and finding such representatives is nontrivial. It turns out to be difficult to invert $\rho$ directly, so we proceed by identifying $\rho$ as the shadow of a similar canonical map $\rho'$ on the bar model for the diagonal via a commutative diagram
+called the \textsl{unit actions}, see \eqref{lambdarho}. Representing chain maps for the inverses of these morphisms are necessary for computing with diagrams in $\LG$, and in particular are needed for proving the Zorro moves in Section \ref{sec:Zorro}, but finding such representatives is nontrivial. 
+
+Instead of inverting $\lambda$ and $\rho$ directly, which is difficult, we proceed by identifying $\rho$ as the shadow of a similar canonical map $\rho'$ on the bar model for the diagonal via a commutative diagram
 \begin{equation}\label{eq:pertdia1}
 \xymatrix{
 X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\rho'}\ar[rr]^{1 \otimes \Psi} & & X \otimes \Delta_W \ar[dl]^-{\rho}\\
 & X
 }
 \end{equation}
-where $\Psi$ is the canonical map given in (\ref{intro_psi}). Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and by postcomposing with $\Psi$ we obtain the desired inverse to $\rho$. A completion of $X \otimes \Bar$ is used in order to guarantee that the geometric series converges. We return to this example in Proposition \ref{prop:inverses_unitact} below.
+where $\Psi$ is the canonical map given in (\ref{intro_psi}). Roughly speaking the inverse of $\rho'$ is the geometric series in powers of the Atiyah class of $X$ and by postcomposing with $\Psi$ we obtain the desired inverse to $\rho$. A similar argument works for inverting $\lambda$. A completion of $X \otimes \Bar$ is used in order to guarantee that the geometric series converges. We return to this example in Remark \ref{remark:rhoandlambdainverse} below.
 
-Another important example is the following: given an object $(k[x],W) \in \LG$ and a $1$-morphism $X \in \LG(W,W)$ we can consider the problem of lifting a $k[x]$-bilinear morphism of linear factorisations $X \lto k[x]$ to a morphism $X \lto \Delta_W$ along the stabilisation map $\pi_{\Delta}: \Delta_W \lto k[x]$
+Another important example is the following: given an object $(k[x],W) \in \LG$ and a $1$-morphism $X \in \LG(W,W)$ consider the problem of lifting a $k[x]$-bilinear morphism of linear factorisations $X \lto k[x]$ to a morphism $X \lto \Delta_W$ along the stabilisation map $\pi_{\Delta}: \Delta_W \lto k[x]$
 \[
 \xymatrix{
 X \ar[dr] \ar@{.>}[rr] & & \Delta_W \ar[dl]^-{\pi_{\Delta}} \\
 & k[x]\,.
 }
 \]
-The solution to this lifting problem is given in Proposition \ref{prop:liftingresult}. In order to address these examples and others at the same time, we work in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $\Re  = R_1 \otimes_k R_2$ where $R_i = R$ for $i \in \{1,2\}$. We assume
+The solution to this lifting problem is given in Proposition \ref{prop:liftingresult}, and will be used to give an explicit formula for the evaluation maps in Section \ref{sec:derivcoeval}.
+
+In order to address these examples and others at the same time, we work in the following general setting: $k$ is a ring, $R, S$ are $k$-algebras and $\Re  = R_1 \otimes_k R_2$ where $R_i = R$ for $i \in \{1,2\}$. We assume that a matrix factorisation
 \be\label{eq:xisamf}
 X \in \HMF(S \otimes_k \Re, U)
 \ee
-is given together with a homogeneous basis $\{ e_i \}_{i}$. The reader should keep in mind the special case where $S = k[z], R = k[x]$ and $X$ the extension of scalars from $S \otimes_k R$ to $S \otimes_k \Re$ of some factorisation of $V - W$ over $k[x,z]$. Let $D$ denote the differential on $X$ and unless specified otherwise in this section $\otimes$ denotes the tensor product $\otimes_{\Re}$. Consider the module
+is given with homogeneous basis $\{ e_i \}_{i}$ as an $S \otimes_k \Re$-module. Let $D$ denote the differential on $X$ and unless specified otherwise in this section $\otimes$ denotes the tensor product $\otimes_{\Re}$. Consider the module
 \[
 X \,\widehat{\otimes}\, \Bar := \prod_{m \ge 0} X \otimes \Bar_m
 \]
@@ -1321,6 +1326,9 @@ There is a morphism of linear factorisations
 \end{equation}
 where the first map is the projection and the second is the product $\Re \lto R$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of Atiyah classes. In fact we give two homotopy inverses, one which is $R_2$-linear and the other left $R_1$-linear. We begin with the deformation retract arising from the fact that~$s$ and~$d$ are contracting homotopies for the differential $b'$.
 
+\begin{remark}\label{remark:specialcaseinvert} The reader should keep in mind the special case where $S = k[z], R = k[x]$ and $X$ is the extension of scalars from $S \otimes_k R$ to $S \otimes_k \Re$ of a matrix factorisation $X'$ of $V - W$ over $k[x,z]$, with $V \in k[z], W \in k[x]$. Then $\pi$ is a morphism $X' \,\widehat{\otimes}_R\, \Bar \lto X'$ of linear factorisations of $V - W$.
+\end{remark}
+
 All deformation retract data in the following are at least $S$-linear.
 
 \begin{lemma}\label{lemma:firstdefo} There are deformation retract data of $\mathbb{Z}_2$-graded complexes
@@ -1357,7 +1365,7 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
-In the notation of Section \ref{section:atiyahclasses} we can now describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}. (\textbf{todo} Are we clear enough what $\At_2$ means on the completed tensor product?)
+In the notation of Section \ref{section:atiyahclasses} we can now describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}.
 
 \begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is an $R_2$-linear homotopy equivalence with inverse
 \[
@@ -1394,9 +1402,9 @@ Expanding this yields $\sum_{m \ge 0} (-1)^m [d, D]^m \sigma_2$ plus terms invol
 for some $i \ge 0$. Applying $[d,D]^i \sigma_2$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms of the form (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
 \end{proof}
 
-\begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$.
+\begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$ and $[s, d\widetilde{W} \times (-)] = s(-) \cdot d\widetilde{W}$.
 \end{lemma}
-% see p.21 of (onct2)
+% see p.21 of (onct2), and p.4.1 of (coevc3) for the second statement
 \begin{proof}
 With $\alpha = d( W \otimes 1 - 1 \otimes W ) = dW \otimes 1$ and $\omega = a_0 da_1 \ldots da_n \otimes a_{n+1}$ we have
 \begin{align*}
@@ -1408,10 +1416,8 @@ On the other hand
 \alpha \times d\omega &= dW da_0 da_1 \ldots da_n \otimes a_{n+1} - da_0 dW da_1 \ldots da_n \otimes a_{n+1}\\
 &+ \ldots + (-1)^{n+1} da_0 da_1 \ldots da_n dW \otimes a_{n+1}\,,
 \end{align*}
-from which it is clear that $d( \alpha \times \omega ) + \alpha \times d\omega = \alpha \cdot d\omega$.
+from which it is clear that $d( \alpha \times \omega ) + \alpha \times d\omega = \alpha \cdot d\omega$. The second statement follows by a similar calculation.
 \end{proof}
-
-%The left $R$-linear inverse to $\pi$ is given in terms of the Atiyah class $\At_{1}(X) = [s,d_X]$.
 
 \begin{proposition}\label{prop:finalpertdefo} The morphism $\pi$ is a left $R_1$-linear homotopy equivalence with inverse
 \[
@@ -1425,8 +1431,11 @@ More precisely, there is a left $R_1$-linear deformation retract datum
 \]
 \end{proposition}
 \begin{proof}
-\textbf{todo}.
+Using the second equation of Lemma \ref{lemma:shortobs} the proof is almost identical to that of Proposition \ref{prop:finalpertdefo}, so we omit it.
 \end{proof}
+
+\begin{remark} In the situation of Remark \ref{remark:specialcaseinvert} we have shown that $\pi: X' \,\widehat{\otimes}_R\, \Bar \lto X'$ is an $R$-linear homotopy equivalence for the two possible $R$-actions on $X' \,\widehat{\otimes}_R\, \Bar$, the $R$-action on $X'$ which moves across the tensor to act as $R_1$ on $\Bar$, and the $R_2$-action on $\Bar$.
+\end{remark}
 
 Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ and let $(\Delta, d_{\Delta})$ be the finite-rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. We continue to assume that $X$ is a matrix factorisation as given in \eqref{eq:xisamf}. 
 
@@ -1463,15 +1472,52 @@ into an $R_2$-linear deformation retract datum (resp. left $R_1$-linear). Moreov
 \end{proof}
 
 \begin{corollary}\label{corollary:koszulstab2} An $R_2$-linear homotopy inverse to $\pi_\Delta$ is given by
-\begin{equation}
-\pi^{-1}_2 = \sum_{m \ge 0} (-1)^m \Psi \At_{2}(X)^m \sigma_2\,,
+\begin{equation}\label{eq:koszulstab2_1}
+\pi^{-1}_2 = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X)^l \sigma_2\,,
 \end{equation}
 while a left $R_1$-linear homotopy inverse is given by
-\begin{equation}
-\pi^{-1}_1 = \sum_{m \ge 0} (-1)^m \Psi \At_{1}(X)^m \sigma_1\,.
+\begin{equation}\label{eq:koszulstab2_2}
+\pi^{-1}_1 = \sum_{l \ge 0} (-1)^l \Psi \At_{1}(X)^l \sigma_1\,.
 \end{equation}
 where $\sigma_1, \sigma_2$ are as in \eqref{eq:sigmsandd}.
 \end{corollary}
+
+\begin{remark}\label{remark:rhoandlambdainverse} To return to the problem of inverting the unit actions $\lambda$ and $\rho$, recall the special case of $R = k[x], S = k[z]$, $X'$ a matrix factorisation over $S \otimes_k R$ of $V - W$ and $X = X' \otimes_R \Re$ discussed in Remark \ref{remark:specialcaseinvert}. In this case $\pi_{\Delta}$ is precisely the right unit action $\rho = \pi_{\Delta}: X' \otimes_R \Delta \lto X'$.
+
+The relevant $S$-$R$-bimodule structure on $X' \otimes_R \Delta$ is the one coming from the action of $S$ on $X'$ and the right action of $R$ on $\Delta$ (which we have called $R_2$ above) and with respect to this bimodule structure the homotopy inverse of $\rho$ is given by \eqref{eq:koszulstab2_1}, that is,
+\be\label{eq:formula_rhoinverse}
+\rho^{-1} = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X')^l \sigma_2\,.
+\ee
+Here $\At_2(X')$ denotes the operator $[d, d_{X'}]$ on $X' \otimes_R \Bar$ with $d$ being extended to $X' \otimes_R \Bar$ using a fixed homogeneous $S \otimes_k R$-basis $\{ e_i \}_i$ for $X'$ as explained in Remark \ref{remark:linearatother}. The summands in this formula are composites of $S$-$R_2$-bilinear maps
+\[
+\xymatrix@C+2pc{
+X' \ar[r]^-{\sigma_2} & X' \otimes_R \Re \ar[r]^-{\At_2(X')^l} & X' \otimes_R \Bar
+}
+\]
+where $\sigma_2(e_i) = e_i \otimes (1 \otimes 1)$.
+
+To give a formula for the homotopy inverse of $\lambda$, first let $\Delta_V$ denote the unit matrix factorisation of $\widetilde V$ and $X = \Se \otimes_S X'$. The unit action $\lambda: \Delta_V \otimes_S X' \lto X'$ can be written as a composite
+\[
+\xymatrix{
+\Delta_V \otimes_S X' \cong \Delta_V \otimes_{\Se} X \ar[r]^-{\pi_{\Delta}} & S \otimes_{\Se} X \cong X'
+}\,.
+\]
+Writing $\Se = S_1 \otimes_k S_2$, we seek an $S_1$-$R$-bilinear inverse to $\pi_{\Delta}$. It would suffice to invert
+\be\label{eq:mashedkoalas}
+X \otimes_{\Se} \Delta_V \lto X \otimes_{\Se} S
+\ee
+and then compose on both ends with swap isomorphisms, provided we keep in mind that we want an $S_1$-linear, not $S_2$-linear, inverse to \eqref{eq:mashedkoalas}. But switching the role of $R$ and $S$ in the above this is exactly what is provided by \eqref{eq:koszulstab2_2}. Postcomposing with the swap isomorphism has the effect of converting $\At_{1}$ into $\Atlarrow_{1}$, so the conclusion is that an $S_1$-$R$-bilinear homotopy inverse for $\lambda$ is
+\be\label{eq:formulalambdainv}
+\lambda^{-1} = \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_{1}(X')^l \sigma_1\,.
+\ee
+Here $\Atlarrow_1(X')$ denotes the operator $[s, d_{X'}]$ on $\gamma_*(\Bar) \otimes_S X'$ and the summands in this formula are composites of $S_1$-$R$-bilinear maps
+\[
+\xymatrix@C+2pc{
+X' \ar[r]^-{\sigma_1} & \Se \otimes_S X' \ar[r]^-{\At_1(X')^l} & \gamma_*(\Bar) \otimes_S X'
+}
+\]
+where $\sigma_1(e_i) = (1 \otimes 1) \otimes e_i$. Notice that we have shown that $\lambda, \rho$ are homotopy equivalences, and provided explicit inverses, for an arbitrary matrix factorisation $X'$ (i.e. not necessarily finite rank).
+\end{remark}
 
 With these formulas in hand we return to the lifting problem discussed at the beginning of this section. We show that given $Y \in \hmf(\Re , \widetilde{W})$ composing with $\pi_{\Delta}$ induces a quasi-isomorphism
 \be\label{eq:liftingresult0}
@@ -1523,18 +1569,6 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 
 \begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_1$ instead of $\pi^{-1}_2$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{1}$ instead of $\lAt_{2}$.
 \end{remark}
-
-For future reference, let us conclude by stating the special case of inverses for the unit actions in \eqref{eq:pertandhtpy1}. So we take $S = k[z]$, $R = k[x]$, and a finite-rank matrix factorisation~$X$ of $U = V - W$ over $k[x,z]$. Applying Corollary~\ref{corollary:koszulstab2} to $X \otimes_R \Re$ or $\Re \otimes_R X$ we deduce: 
-
-\begin{proposition}\label{prop:inverses_unitact} 
-[TODO: join with \ref{corollary:koszulstab2}]
-$k[z]$-$k[x]$-bilinear homotopy inverses for $\lambda_X$ and $\rho_X$ are given by
-\[
-\lambda_X^{-1} = \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_{1}(X)^l \sigma_1\,, \qquad \rho_X^{-1} = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X)^l \sigma_2\,.
-\]
-\end{proposition}
-
-\textbf{todo} Spell out that $\Bar$ is a unit too.
 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 % TODO independence of choice of lambdas and ordering
