@@ -9,6 +9,8 @@
 \usepackage{dsfont}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{calc}
+\usetikzlibrary{decorations.markings}
 \def\nicedashedcolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=gray, dashed]}
 \def\nicecolourscheme{\shadedraw[top color=blue!22, bottom color=blue!22, draw=white]}
 \def\nicepalecolourscheme{\shadedraw[top color=blue!12, bottom color=blue!12, draw=white]}
@@ -2759,7 +2761,7 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \nicepalecolourscheme (0,0) circle (2);
 \fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.3mm, segment length=1.2mm}] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
 \draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
@@ -2809,7 +2811,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \nicecolourscheme (0,0) circle (2);
 \fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.3mm, segment length=1.2mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
@@ -3133,24 +3135,187 @@ As an illustrative example let us consider the genus-3 correlator of the worldsh
 \begin{figure}[h!]
 $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (5.2);
+\begin{tikzpicture}[very thick,scale=0.95,color=blue!50!black, baseline,>=stealth]
+%
+% big circle
+\nicecolourscheme[
+	decoration={markings, mark=at position 0.25 with {\arrow{>}}}, postaction={decorate}
+	] 
+	(0,0) circle (5.2);
 \draw (0,0) circle (5.2);
+%
+% draw 4 circles inside big one: 
+\nicepalecolourscheme (-2,-2) circle (1.5);
+\shadedraw[top color=white, bottom color=white, draw=white] (-2,2) circle (1.5);
+\shadedraw[top color=white, bottom color=white, draw=white] (2,2) circle (1.5);
+\shadedraw[top color=white, bottom color=white, draw=white] (2,-2) circle (1.5);
+%
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{>}}}, postaction={decorate}
+	] 
+	(-2,-2) circle (1.5);
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{<}}}, postaction={decorate}
+	]
+	(2,-2) circle (1.5);
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{<}}}, postaction={decorate}
+	]
+	 (-2,2) circle (1.5);
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{<}}}, postaction={decorate}
+	]
+	 (2,2) circle (1.5);
+%
+% potentials: 
+\fill (0.5,-4.5) circle (0pt) node[white] {{\small$W$}};
+\fill (-1.3,-2.8) circle (0pt) node[white] {{\small$V$}};
+%
+% field insertions: 
+\fill (225:5.2) circle (2.2pt) node[left] {{\small$\Psi_1$}};
+\coordinate (Psi2) at ($ (-2,2) + (45:1.5) $);
+\fill (Psi2) circle (2.2pt) node[right] {{\small$\Psi_2$}};
+\fill (35:5.2) circle (2.2pt) node[right] {{\small$\Psi_3$}};
+\fill (75:5.2) circle (2.2pt) node[above] {{\small$\Phi_1$}};
+\coordinate (Phi2) at ($ (2,2) + (130:1.5) $);
+\fill (Phi2) circle (2.2pt) node[left] {{\small$\Phi_2$}};
+\coordinate (Phi3) at ($ (2,2) + (-10:1.5) $);
+\fill (Phi3) circle (2.2pt) node[right] {{\small$\Phi_3$}};
+\fill (4.2,0) circle (2.2pt) node[right] {{\small$\Phi_4$}};
+\coordinate (Phi5) at ($ (2,-2) + (10:1.5) $);
+\fill (Phi5) circle (2.2pt) node[right] {{\small$\Phi_5$}};
+\fill (-2,-2) circle (2.2pt) node[right] {{\small$\phi_1$}};
+\fill (-4,-1) circle (2.2pt) node[left] {{\small$\phi_2$}};
+%
+% more defects: 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	 (Phi2) .. controls +(-0.2,1) and +(0.3,-0.5) .. (75:5.2); % X_2
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	 (4.2,0) .. controls +(0,1) and +(0.2,-0.5) .. (Phi3); 	% X_3
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	 (Phi5) .. controls +(0.2,0.5) and +(0,-1) .. (4.2,0); 	% X_4
+%
+% label arrowheads: 
+\fill (0,5.45) circle (0pt) node {{\small$Y_1$}}; %Y_1
+%\fill (0,-5.5) circle (0pt) node {{\small$\widetilde\coev_{Y_1}$}};
+\fill (-2,3.8) circle (0pt) node {{\small$Y_2$}}; %Y_2
+%\fill (-2,0.2) circle (0pt) node {{\small$\coev_{Y_2}$}};
+\fill (2,3.8) circle (0pt) node {{\small$Y_3$}}; %Y_3
+%\fill (2,0.2) circle (0pt) node {{\small$\coev_{Y_3}$}};
+\fill (2,-0.2) circle (0pt) node {{\small$Y_4$}}; %Y_4
+%\fill (2,-3.8) circle (0pt) node {{\small$\coev_{Y_4}$}};
+%
+\fill (-2,-0.2) circle (0pt) node {{\small$X_1$}}; %X_1
+%\fill (-2,-3.8) circle (0pt) node {{\small$\widetilde\coev_{X_1}$}};
+\fill (0.75,4.1) circle (0pt) node {{\small$X_2$}}; % X_2
+\fill (3.7,0.8) circle (0pt) node {{\small$X_3$}}; % X_3
+\fill (3.7,-0.8) circle (0pt) node {{\small$X_4$}}; % X_4
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $$
-\vspace{0.1cm} TODO
+\vspace{0.05cm}
 $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (5.2);
+\begin{tikzpicture}[very thick,scale=0.95,color=blue!50!black, baseline,>=stealth]
+%
+% big circle
+\nicecolourscheme[
+	decoration={markings, mark=at position 0.25 with {\arrow{>}}, mark=at position 0.75 with {\arrow{>}}}, postaction={decorate}
+	] 
+	(0,0) circle (5.2);
 \draw (0,0) circle (5.2);
+%
+% draw 4 circles inside big one: 
+\nicepalecolourscheme (-2,-2) circle (1.5);
+\shadedraw[top color=white, bottom color=white, draw=white] (-2,2) circle (1.5);
+\shadedraw[top color=white, bottom color=white, draw=white] (2,2) circle (1.5);
+\shadedraw[top color=white, bottom color=white, draw=white] (2,-2) circle (1.5);
+%
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{>}}, mark=at position 0.75 with {\arrow{>}}}, postaction={decorate}
+	] 
+	(-2,-2) circle (1.5);
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{<}}, mark=at position 0.75 with {\arrow{<}}}, postaction={decorate}
+	]
+	(2,-2) circle (1.5);
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{<}}, mark=at position 0.75 with {\arrow{<}}}, postaction={decorate}
+	]
+	 (-2,2) circle (1.5);
+\draw[
+	decoration={markings, mark=at position 0.25 with {\arrow{<}}, mark=at position 0.75 with {\arrow{<}}}, postaction={decorate}
+	]
+	 (2,2) circle (1.5);
+%
+% potentials: 
+\fill (0.5,-4.5) circle (0pt) node[white] {{\small$W$}};
+\fill (-1.3,-2.8) circle (0pt) node[white] {{\small$V$}};
+%
+% field insertions: 
+\fill (225:5.2) circle (2.2pt) node[left] {{\small$\Psi_1$}};
+\coordinate (Psi2) at ($ (-2,2) + (45:1.5) $);
+\fill (Psi2) circle (2.2pt) node[right] {{\small$\Psi_2$}};
+\fill (35:5.2) circle (2.2pt) node[right] {{\small$\Psi_3$}};
+\fill (75:5.2) circle (2.2pt) node[above] {{\small$\Phi_1$}};
+\coordinate (Phi2) at ($ (2,2) + (130:1.5) $);
+\fill (Phi2) circle (2.2pt) node[left] {{\small$\Phi_2$}};
+\coordinate (Phi3) at ($ (2,2) + (-10:1.5) $);
+\fill (Phi3) circle (2.2pt) node[right] {{\small$\Phi_3$}};
+\fill (4.2,0) circle (2.2pt) node[right] {{\small$\Phi_4$}};
+\coordinate (Phi5) at ($ (2,-2) + (10:1.5) $);
+\fill (Phi5) circle (2.2pt) node[right] {{\small$\Phi_5$}};
+\fill (-2,-2) circle (2.2pt) node[right] {{\small$\phi_1$}};
+\fill (-4,-1) circle (2.2pt) node[left] {{\small$\phi_2$}};
+%
+% more defects: 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	 (Phi2) .. controls +(-0.2,1) and +(0.3,-0.5) .. (75:5.2); % X_2
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	 (4.2,0) .. controls +(0,1) and +(0.2,-0.5) .. (Phi3); 	% X_3
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	 (Phi5) .. controls +(0.2,0.5) and +(0,-1) .. (4.2,0); 	% X_4
+%
+% wiggly lines:
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2,0.5) .. controls +(-3.5,0) and +(-4,-0.5) .. (0,5.2); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2,-3.5) .. controls +(-2.5,0) and +(-2,-1) .. (-2,-0.5); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2,-3.5) .. controls +(-3,0) and +(0,-1) .. (0,3); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2,0.5) .. controls +(-1.7,0) and +(0,-1) .. (0,3); 
+%
+% label arrowheads: 
+\fill (0,5.4) circle (0pt) node {{\small$\eval_{Y_1}$}}; %Y_1
+\fill (0,-5.5) circle (0pt) node {{\small$\widetilde\coev_{Y_1}$}};
+\fill (-2,3.8) circle (0pt) node {{\small$\widetilde\eval_{Y_2}$}}; %Y_2
+\fill (-2,0.2) circle (0pt) node {{\small$\coev_{Y_2}$}};
+\fill (2,3.8) circle (0pt) node {{\small$\widetilde\eval_{Y_3}$}}; %Y_3
+\fill (2,0.2) circle (0pt) node {{\small$\coev_{Y_3}$}};
+\fill (2,-0.2) circle (0pt) node {{\small$\widetilde\eval_{Y_4}$}}; %Y_4
+\fill (2,-3.8) circle (0pt) node {{\small$\coev_{Y_4}$}};
+%
+\fill (-2,-0.25) circle (0pt) node {{\small$\eval_{X_1}$}}; %X_1
+\fill (-2,-3.8) circle (0pt) node {{\small$\widetilde\coev_{X_1}$}};
+\fill (0.75,4.1) circle (0pt) node {{\small$X_2$}}; % X_2
+\fill (3.7,0.8) circle (0pt) node {{\small$X_3$}}; % X_3
+\fill (3.7,-0.8) circle (0pt) node {{\small$X_4$}}; % X_4
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $$
 \caption{A genus-3 worldsheet (top) and the 2-morphism (bottom) in $\LG$ computing its correlator} 
 \label{fig:worldsheet} 
 \end{figure}
+
 
 \subsection{Cardy condition}
 
@@ -3192,7 +3357,7 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.3mm, segment length=1.2mm}] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ee
