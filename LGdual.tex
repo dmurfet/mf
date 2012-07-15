@@ -237,7 +237,9 @@
 
 
 
-\title{Adjunctions and defects in Landau-Ginzburg models}%
+\title{On signs}%
+% Adjunctions and defects in Landau-Ginzburg models
+%
 % Other titles: 
 % Rise of the Planet of the Coevaluations
 % Adjoint defects in Landau-Ginzburg models
@@ -996,20 +998,20 @@ $$
 
 Since residues feature prominently in the Kapustin-Li pairing and in the evaluation maps constructed in Section~\ref{sec:derivcoeval} we briefly recall their definition and basic property; see~\cite{TODO} for more details. Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x]$ it is the $k[y]$-linear map that sends a polynomial $g\in k[x,y]$ to the expression
 $$
-\Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1 \ldots f_n} \right] 
+\Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1, \ldots, f_n} \right] 
 \in k[y]
 $$
 where $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. In practice the residue is computed by the transformation rule
 $$
-\Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1 \ldots f_n} \right] 
+\Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1, \ldots, f_n} \right] 
 = 
-\Res_{k[x,y]/k[y]} \left[ \frac{\det(C) g \, \underline{\operatorname{d}\! x}}{f'_1 \ldots f'_n} \right] 
+\Res_{k[x,y]/k[y]} \left[ \frac{\det(C) g \, \underline{\operatorname{d}\! x}}{f'_1, \ldots, f'_n} \right] 
 \, , \qquad
 f'_i = \sum_{j=1}^n C_{ij} f_j 
 \, , \qquad
 C_{ij} \in k[x,y] \, ,
 $$
-together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\operatorname{d}\! x}/(x_1^{a_1} \ldots x_n^{a_n}) \right] = \delta_{a_1,1}\ldots \delta_{a_n,1}$. (\textbf{todo} denominator ordering).
+together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\operatorname{d}\! x}/(x_1^{a_1} ,\ldots, x_n^{a_n}) \right] = \delta_{a_1,1}\ldots \delta_{a_n,1}$. Note that the order of the elements of the regular sequence in the denominator plays a role; changing that order produces a permutation sign. 
 
 \subsection{Perturbation}
 
@@ -1605,13 +1607,13 @@ The Atiyah classes involved in \eqref{eq:coev10} and \eqref{eq:coev102} are actu
 
 A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\globalsigneval+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\globalsigneval+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]
 \ee
 where $\Lambda^{(x)} = (-1)^n \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$ and $(\eta',\nu)$ denotes the evaluation of $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. For the precise statement see Proposition \ref{prop:constructevalmap}. 
 
 In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$. The formula is
 \be\label{eq:constructevalmap01}
-\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{m+1}{2}+l+m|\nu|} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right]
+\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{\binom{m+1}{2}+l+m|\nu|} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]
 \ee
 where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
 
@@ -1749,7 +1751,7 @@ which is closed because $\Lambda^{(x)}$ is a closed map $X[n] \lto X$ modulo the
 \ee
 where the last map marked is the $S$-linear residue symbol (see Section~\ref{section:residuebackground})
 \[
-\Res_{R/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]: \bar{R} \otimes_k S \lto S\,.
+\Res_{R/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]: \bar{R} \otimes_k S \lto S\,.
 \]
 We note that the first map in~\eqref{eq:defneval0_1} and the second in \eqref{eq:defneval0_1} are as defined in Section \ref{section:canonicalmaps}.
 
@@ -1760,8 +1762,8 @@ The global sign is determined by the Zorro move and the signs on the coevaluatio
 
 \begin{lemma}\label{lemma:morphismevalzero} $\widetilde\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\dual$
 \begin{align}
-\widetilde\eval_0( \eta \otimes \nu ) &= (-1)^{\globalsigneval+n|\eta|} \Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]\\
-&= (-1)^{\globalsigneval+n|\eta| + |\nu|} \Res_{R/k} \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\widetilde\eval_0( \eta \otimes \nu ) &= (-1)^{\globalsigneval+n|\eta|} \Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]\\
+&= (-1)^{\globalsigneval+n|\eta| + |\nu|} \Res_{R/k} \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]
 \end{align}
 \end{lemma} 
 
@@ -1824,7 +1826,7 @@ where $\widetilde\eval''_0: \bar{X} \otimes_{\bar{R}} \bar{X}^\vee \lto \Se $ is
 \end{align*}
 Applying $\widetilde\eval''_0$ involves taking the supertrace $\str( e_{k_l} \circ e_j^* ) = (-1)^{|e_j|}\delta_{jk_l}$ so that the above equals
 \[
-\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{\globalsigneval+l+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{R/k} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right]
+\sum_{l \ge 0} \sum_{k,k_1,\ldots,k_{l-1}} (-1)^{\globalsigneval+l+n|e_i|+|e_j|} \Lambda^{(x)}_{ki} \Psi( d(D_{k_1,k}) \ldots d(D_{j,k_{l-1}}) ) \Res_{R/k} \left[ \frac{ g \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]
 \]
 which agrees with \eqref{eq:constructevalmap00} for $\eta = g e_i$ and $\nu = e_j^*$, completing the proof.
 \end{proof}
@@ -1834,14 +1836,14 @@ which agrees with \eqref{eq:constructevalmap00} for $\eta = g e_i$ and $\nu = e_
 Write $D(-)$ for $[d_X, -]$ and suppose $\lambda'_1$ is another degree-one map with $D(\lambda'_1) = f_1 \cdot 1_X$. Then as $S$-linear morphisms of complexes $\Hom_{R \otimes_k S}(X,X) \lto S$ we have, writing $\Lambda_{>1} = \lambda_2 \ldots \lambda_n$
 \begin{align*}
 &\Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ -) \, \underline{\operatorname{d}\!x}}{f_1 \ldots f_n} \right]\\
-&= \Res_{R/k} \left[ \frac{ \str( f_1 \lambda_1 \Lambda_{> 1} \circ -) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]\\
-&= \Res_{R/k} \left[ \frac{ \str\big( D( \lambda_1') \lambda_1 \Lambda_{> 1} \circ -\big) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]\\
-&= \Res_{R/k} \left[ \frac{ \str\big( \lambda_1' D( \lambda_1 \Lambda_{> 1} \circ -)\big) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]\\
-&= \Res_{R/k} \left[ \frac{ \str\big( \lambda_1' f_1 \Lambda_{> 1} \circ (-) - \lambda_1' \lambda_1 D( \Lambda_{> 1} ) \circ (-) + (-1)^n \lambda_1'\Lambda^{(x)} \circ D(-)\big) \, \underline{\operatorname{d}\!x}}{f_1^2 f_2 \ldots f_n} \right]
+&= \Res_{R/k} \left[ \frac{ \str( f_1 \lambda_1 \Lambda_{> 1} \circ -) \, \underline{\operatorname{d}\!x}}{f_1^2, f_2, \ldots, f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str\big( D( \lambda_1') \lambda_1 \Lambda_{> 1} \circ -\big) \, \underline{\operatorname{d}\!x}}{f_1^2, f_2, \ldots, f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str\big( \lambda_1' D( \lambda_1 \Lambda_{> 1} \circ -)\big) \, \underline{\operatorname{d}\!x}}{f_1^2, f_2, \ldots ,f_n} \right]\\
+&= \Res_{R/k} \left[ \frac{ \str\big( \lambda_1' f_1 \Lambda_{> 1} \circ (-) - \lambda_1' \lambda_1 D( \Lambda_{> 1} ) \circ (-) + (-1)^n \lambda_1'\Lambda^{(x)} \circ D(-)\big) \, \underline{\operatorname{d}\!x}}{f_1^2, f_2, \ldots, f_n} \right]
 \end{align*}
 The term involving $D( \Lambda_{> 1} )$ belongs to the submodule $(f_2,\ldots,f_n)\Hom_{R \otimes_k S}(X,X)$, and since the $f_i$ with $i > 2$ annihilate with the residue we are left with
 \begin{align*}
-&= \Res_{R/k} \left[ \frac{ \str( \lambda_1' \Lambda_{> 1} \circ -) \, \underline{\operatorname{d}\!x}}{f_1 \ldots f_n} \right] + (-1)^n\Res_{R/k} \left[ \frac{ \str\big(\lambda_1' \Lambda^{(x)} \circ D(-)\big) \, \underline{\operatorname{d}\!x}}{f_1^2 \ldots f_n} \right]
+&= \Res_{R/k} \left[ \frac{ \str( \lambda_1' \Lambda_{> 1} \circ -) \, \underline{\operatorname{d}\!x}}{f_1, \ldots, f_n} \right] + (-1)^n\Res_{R/k} \left[ \frac{ \str\big(\lambda_1' \Lambda^{(x)} \circ D(-)\big) \, \underline{\operatorname{d}\!x}}{f_1^2, \ldots, f_n} \right]
 \end{align*}
 The second summand is a null-homotopic functional, so we have proven that $\widetilde\eval_0$ is homotopic to the map defined using $\lambda_1' \Lambda_{> 1}$ in place of $\Lambda^{(x)}$, as claimed. The argument for general $i$ is the same. In much the same way one can show that up to a sign $\widetilde\eval_X$ is also independent of the way in which we order the $\lambda_i$, but we will not need this.
 \end{remark}
@@ -1866,7 +1868,7 @@ which we can compose with
 \ee
 where the last map is the $R$-linear residue symbol (we write $\underline{\ud z} = \ud z_1 \ldots \ud z_m$)
 \[
-\Res_{S/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right]: R \otimes_k \bar{S} \lto R\,.
+\Res_{S/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]: R \otimes_k \bar{S} \lto R\,.
 \]
 
 \begin{definition} $\eval_0$ is $(-1)^m$ times the composite of \eqref{eq:ordinaryeval00} and \eqref{eq:ordinaryeval01}.
@@ -1910,7 +1912,7 @@ X^\dual & = X^\vee[n] \lra (R \otimes_R X^\vee)[n] \lra R[n] \otimes_R X^\vee \,
 By Lemma~\ref{lem:shiftsigns} the first map sends~$\nu$ to $1\otimes \nu$, and in this way we identify~$X^\dual$ and $R[n] \otimes_R X^\dual$, while the second map involves a sign: $\nu \lmt (-1)^{n |\nu|} 1\otimes \nu$. Thus the adjunction maps exhibiting $R[n] \otimes_R X^\vee$ as a right adjoint of~$X$ are precisely the maps $\widetilde\eval_X$ and $\widetilde\coev_X$ we derived earlier in this section, while the adjunction maps making $X^\vee \otimes_S S[m]$ into a left adjoint of~$X$ differ from $\eval_X$ and $\coev_X$ by signs. Namely, the former are 
 \begin{align*}
 & (X^\vee \otimes_S S[m]) \otimes_S X \ni \nu \otimes \eta \lmt 
-\sum_{l \ge 0} (-1)^{\binom{m+1}{2}+l} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V \ldots \partial_{z_m} V} \right] \in \Delta_W \, , \\
+\sum_{l \ge 0} (-1)^{\binom{m+1}{2}+l} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right] \in \Delta_W \, , \\
 & \Delta_V \ni \gamma  \lmt
 \sum_{l \ge 0} \sum_J \varepsilon \left( \gamma \wedge (-1)^{l+ml} \Psi \Atlarrow_2(X)^l( e_j \otimes e_j^* ) \right) \in X \otimes_R (X^\vee \otimes_S S[m]) \, . 
 \end{align*}
@@ -1974,14 +1976,14 @@ $$
 \draw (-1,0) -- (-1,-1.25); 
 \draw (1,0) -- (1,1.25); 
 \draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.9,-1.25) .. controls +(0,0.5) and +(-0.5,-0.35) .. (-0.5,0.75); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,-0.75) .. controls +(0.5,0.35) and +(0,-0.5) .. (0.9,1.25); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,-0.75) .. controls +(0.8,0.05) and +(0,-1) .. (1.1,1.25); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \;=\;
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw (0,-1.25) -- (0,1.25); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.1,-1.25) -- (0.1,1.25); 
+\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.15,-1.25) -- (0.15,1.25); 
 \end{tikzpicture} \, .
 %%%%%%%%%%%%%%%%%%%%%%
 $$
@@ -1995,7 +1997,7 @@ $$
 \draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1,0) -- (0.5,0.75);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: R[n] \otimes_R R[n] \lra R \, , \qquad r_1\otimes r_2 \lmt (-1)^{nÊ|r_1|} r_1 r_2 \, . 
+: R[n] \otimes_R R[n] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, . 
 $$
 Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same number of variables~$n$ mod~2, wiggly lines can also ``cross over'' to another domain. By this we mean that there are maps 
 \begin{align*}
@@ -2080,7 +2082,7 @@ which we prove is homotopic to the identity on $X$. Note that we continue to dis
 $$
 \big\langle\!\big\langle - \big\rangle\!\big\rangle: \Bar \lto R_2 
 \, ,\qquad
-\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = \Res_{\Re /R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] .
+\big\langle\!\big\langle \alpha \big\rangle\!\big\rangle = \Res_{\Re /R_2} \left[ \frac{ \varepsilon\Psi( \alpha ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right] .
 $$
 We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. To be clear, this differential form and the $\partial_{x_i} W$ in the denominator of the residue are all viewed as elements of $R_1$, the copy of $R$ which is integrated out by the residue.
 
@@ -2112,7 +2114,7 @@ For the proof of Lemma \ref{lemma:Zorrointermediate} let us recall the explicit 
 \begin{align*}
 \rho^{-1}: X \lto X \otimes_R \Delta_W \, , \qquad \rho^{-1} &= \sum_{l \ge 0}(-1)^l \Psi \At_2(X)^l \sigma_2\,,\\
 \widetilde{\coev}: \Delta_W \lto X^{\dagger} \otimes_S X \, , \qquad \widetilde{\coev}(\gamma) &= \sum_{l,j} (-1)^{l+nl+|e_j|} \varepsilon \Big( \gamma \wedge \Psi\!\At_2(X^{\dual})^l( e_j^* ) \otimes e_j \Big)\\
-\widetilde{\eval}: X \otimes_R X^{\dagger} \lto \Delta_V \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{\binom{n}{2}+n|\eta| + |\nu|}\Res_{R/k}\! \left[ \frac{ \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W \ldots \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
+\widetilde{\eval}: X \otimes_R X^{\dagger} \lto \Delta_V \, , \qquad \widetilde{\eval}(\eta \otimes \nu) &= (-1)^{\binom{n}{2}+n|\eta| + |\nu|}\Res_{R/k}\! \left[ \frac{ \nu \Lambda( \eta ) \underline{\operatorname{d}\! x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right] + \mathcal{O}(\theta)\,.
 \end{align*}
 Here $\mathcal{O}(\theta)$ denotes higher order terms which do not survive the map $\lambda$ in~\eqref{Zorro1detail} and therefore may be ignored for present purposes.
 
@@ -2141,25 +2143,25 @@ Since the Atiyah class of $Y[n]$ agrees with that of $Y$, this is the same as
 \[
 \sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At(X \otimes X^\vee)^n( e_q \otimes e_j^* ) \otimes e_j \Big)\,.
 \]
-The next step of \eqref{eq:firstisoevalsec} is to tensor $- \otimes_{S^e} S$, that is, to identify the left and right actions of $S$, after which $X \otimes X^\vee$ becomes identified $\End(X)$, so we are left with
+The next step is to apply $(-) \otimes_{S^e} S$, that is, to identify the left and right actions of $S$, after which $X \otimes X^\vee$ becomes identified $\End(X)$, so we are left with
 \[
 \sum_j (-1)^{(n+1)|e_j|+n|e_q|} \varepsilon \Psi \Big( \At( \End(X) )^n( e_q \circ e_j^* ) \otimes e_j \Big)\,.
 \]
 To finish applying $\widetilde\eval_0$ it remains to compose with $\Lambda$, multiply by the global sign, supertrace and integrate:
 \begin{align*}
 \mathcal{Z}(e_q) &= \lambda \circ (\widetilde\eval \otimes 1) \circ (1 \otimes \widetilde\coev) \circ \rho^{-1}( e_q )\\
-&= \sum_j (-1)^{\binom{n}{2} + (n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W \ldots \partial_{x_n} W} \right] \cdot e_j\\
+&= \sum_j (-1)^{\binom{n}{2} + (n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right] \cdot e_j\\
 &= \sum_j (-1)^{\binom{n}{2} + (n+1)|e_j|+n|e_q|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
 \end{align*}
 The only nonvanishing summands have $|e_q| = |e_j|$, so the sign in the last formula is in fact $(-1)^{\binom{n}{2}+(n+1)|e_j| + n|e_q|} = (-1)^{\binom{n}{2}+|e_j|}$. Since the Zorro map~$\mathcal Z$ is $S \otimes_k R$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
 \end{proof}
 
-The basic adjointness that we need is contained in the next lemma. Throughout we write $\psi^\bullet$ for the operator $\psi^\bullet(\alpha \otimes \omega) = \psi \circ \alpha \otimes \omega$ on $\End(X) \otimes_{R_1} \Bar$.
+The basic adjointness that we need is contained in the next lemma. Throughout we write $\psi^\bullet$ for the operator $\psi^\bullet(\alpha \otimes \omega) = \psi \circ \alpha \otimes \omega$ on $\End(X) \otimes_{R_1} \Bar$, and we denote $[d_X,-]$ by~$D$. 
 
-\begin{lemma}\label{lemma:lameadjoints} Given homogeneous $\psi \in \End(X)$ and $\varphi \in \End(X) \otimes_{R_1} \Bar$ (TODO: $D$ means both $d_X$ and $[d_X,-]$ in this lemma and below)
+\begin{lemma}\label{lemma:lameadjoints} Given homogeneous $\psi \in \End(X)$ and $\varphi \in \End(X) \otimes_{R_1} \Bar$
 \begin{align*}
 \big\langle\!\big\langle \str( \psi \circ \At(\varphi) ) \big\rangle\!\big\rangle = (-1)^{|\psi|+1} &\big\langle\!\big\langle d \str( D( \psi ) \circ \varphi ) \big\rangle\!\big\rangle + (-1)^{|\psi|} \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle\\
-&- \dlangle \str\big( D(\psi) \circ d\varphi ) \big) \drangle\,.
+&- \dlangle \str\big( D(\psi) \circ d\varphi ) \big) \drangle \, . 
 \end{align*}
 \end{lemma}
 \begin{proof}
@@ -2270,7 +2272,7 @@ The idea is to use the nondegenerate pairing on the morphism spaces of $\hmf(k[x
 \ee
 induced by the pairing
 \begin{equation}\label{eq:bracketkl}
-\langle -, - \rangle_X = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ \str( - \circ - \circ \Lambda^{(x)} \Lambda^{(z)}) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_m} V} \right]
+\langle -, - \rangle_X = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ \str( - \circ - \circ \Lambda^{(x)} \Lambda^{(z)}) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W, \ldots, \partial_{x_n} W, \partial_{z_1} V, \ldots, \partial_{z_m} V} \right]
 \end{equation}
 where $\Lambda^{(x)}=\Lambda$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)}$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ on $\Hom_{k[x,z]}(X,X)$ are homotopic, or what is the same, that $\langle H, \varphi \rangle_X$ can be written as a function of $D(\varphi)=[d_X,\varphi]$. This will follow from a careful study of the map $\str( H \circ - )$.
 
@@ -2338,7 +2340,7 @@ which vanishes in the residue.
 The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contribute under the residue, so that
 \[
 \langle H, - \rangle_X = 
-\frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \Lambda^{(x)} \Lambda^{(z)} ) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W \ldots \partial_{x_n} W \partial_{z_1} V \ldots \partial_{z_m} V} \right]\,.
+\frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \Lambda^{(x)} \Lambda^{(z)} ) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W, \ldots, \partial_{x_n} W, \partial_{z_1} V, \ldots, \partial_{z_m} V} \right]\,.
 \]
 This proves that $\langle H, - \rangle_X$ is null-homotopic, and thus $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals. Hence by the nondegeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
 \end{proof}
@@ -2768,9 +2770,9 @@ Part (i) follows in a standard way by applying Zorro moves together with the ``m
 
 [TODO: include signs!] To establish part (ii) we start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}_i$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
 $$
-\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right]
+\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right]
 = 
-\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \alpha \circ \Lambda^{(y)}_X)(\alpha) \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] . 
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \alpha \circ \Lambda^{(y)}_X)(\alpha) \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] . 
 $$
 The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous and we find 
 \begin{align*}
@@ -2790,7 +2792,7 @@ The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 & =
-\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{{}^\dual X} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] ,
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{{}^\dual X} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots. \partial_{y_m} W_2} \right] ,
 \\
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
@@ -2808,12 +2810,12 @@ The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 & = 
-\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2 \ldots \partial_{y_m} W_2} \right] .
+\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] .
 \end{align*}
 
 To show that the above two expressions are equal up to homotopy we again make use of the nondegeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
 $$
-\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1) (\prod_{j=1}^m \partial_{y_j} W_2) (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
+\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1), (\prod_{j=1}^m \partial_{y_j} W_2), (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
 $$
 but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
 \end{proof}
@@ -2950,7 +2952,7 @@ in the nontrivial case, where we use the adjunction maps and notation of Section
 $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose nondegenerate pairing
 \be\label{bulktopmet}
 \langle \phi, \psi \rangle_W = 
-(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right]
+(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right]
 \ee
 describes 2-point correlators on the sphere, see also Section~\ref{sec:ocTFT}. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{leftdefectaction} and~\eqref{rightdefectaction} have the natural interpretation in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is non-singular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
 
@@ -3021,8 +3023,8 @@ node[near end,right] {{{\small$\Delta_V$}}};
 For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \End(X)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
 \begin{align*}
 \mathcal D_l^\Phi(X)(\phi) & 
-= (-1)^{{m\choose 2} +}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( \partial_{x_n} d_{X}\ldots \partial_{x_1} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V \ldots \partial_{z_m} V} \right] \, , \\
-\mathcal D_r^\Phi(X)(\psi) & = (-1)^{{m\choose 2} + {n\choose 2}}  \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \, . 
+= (-1)^{{m\choose 2} + {n\choose 2}}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V, \ldots, \partial_{z_m} V} \right] \, , \\
+\mathcal D_r^\Phi(X)(\psi) & = (-1)^{{m\choose 2} + {n\choose 2}}  \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] \, . 
 \end{align*}
 \end{proposition}
 
@@ -3042,7 +3044,7 @@ $$
 %which we identify with $(-1)^{{n\choose 2}} \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X}$ in $\End(X)$. Note that in the last step leading to~\eqref{coevtilde1} we set $\partial_{[i]} d_{X}(x,z) = \partial_{x_i} d_{X}(x,z)$ since $x=x'$ in $\End(\Delta_W)$. 
 Next we apply~$\Phi$, $\psi$ and $\widetilde\eval_X$. Since the latter maps back to~$\Delta_V$ we may set $\partial_{[i]} d_X = \partial_{z_i} d_X$. Thus we obtain
 $$
-\mathcal D_r^\Phi(X)(\psi) = (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
+\mathcal D_r^\Phi(X)(\psi) = (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
 $$
 Here we collectively denote the contributions from $\widetilde\eval_X$ of non-zero degree in the Koszul complex $\Delta_V$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_r^\Phi(X)(\psi)$ is a morphism in $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
 \end{proof}
@@ -3159,24 +3161,24 @@ and the bulk and boundary pairings
 \begin{align}
 \langle \phi_1 , \phi_2 \rangle 
 & = 
-(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi_1 \phi_2 \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right] , \label{bulkpairing} \\
+(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi_1 \phi_2 \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right] , \label{bulkpairing} \\
 \langle \psi_1 , \psi_2 \rangle_X 
-& = (-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{ \str (\psi_1 \psi_2 \, \partial_{x_1} d_X \ldots \partial_{x_n} d_X) \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W\ldots\partial_{x_n} W}\right] . \label{KapuLi}
+& = (-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{ \str (\psi_1 \psi_2 \, \partial_{x_1} d_X \ldots \partial_{x_n} d_X) \,  \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right] . \label{KapuLi}
 \end{align}
-The hardest part in establishing this result is to prove the nondegeneracy of the Kapustin-Li pairing~\eqref{KapuLi} and that the Cardy condition holds (the fact that~\eqref{bulkpairing} is nondegenerate is a classical result in residue theory, and checking the remaining axioms is obvious or straightforward); this was first done in~\cite{m0912.1629} and~\cite{pv1002.2116}, respectively, in the case where~$k$ is a field. In Section/reference TODO and at the end of this section we will give (new) proofs for the general case. 
+The hardest part in establishing this result is to prove the nondegeneracy of the Kapustin-Li pairing~\eqref{KapuLi} and that the Cardy condition holds (the fact that~\eqref{bulkpairing} is nondegenerate is a classical result in residue theory, and checking the remaining axioms is obvious or straightforward); this was first done in~\cite{m0912.1629} and~\cite{pv1002.2116}, respectively, in the case where~$k$ is a field. In Section~\ref{section:dualityadjointop} and at the end of this section we will give (new) proofs for the general case. 
 
 Before turning to the Cardy condition we wish to explain how the above data can be extracted from the bicategory $\LG$ using the powerful and suggestive string diagram language.\footnote{Note however that $\LG$ contains much more information than just the structure of open/closed TFT.} For $X\in \hmf(R,W)$ the bulk-boundary and boundary-bulk maps~\eqref{bubobobu} are given by
 $$
 \beta_X(\phi) = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (-2,-2.2) rectangle (0,2.2);
-\fill (-1.5,-1.8) circle (0pt) node[white] {{\small$W$}};
+\nicecolourscheme (-2.6,-3.3) rectangle (0,3.3);
+\fill (-2.2,-2.2) circle (0pt) node[white] {{\small$W$}};
 %
-\draw[->, very thick] (0,-2.2) -- (0,0); 
-\draw[very thick] (0,0) -- (0,2.2);
-\draw[dashed] (0,-1.5) .. controls +(-0.5,1) and +(0,-1) .. (-1,0);
-\draw[dashed] (-1,0) .. controls +(0,1) and +(-0.5,-1) .. (0,1.5);
+\draw[->, very thick] (0,-3.3) -- (0,0); 
+\draw[very thick] (0,0) -- (0,3.3);
+\draw[dashed] (0,-2) .. controls +(-0.5,1) and +(0,-1) .. (-1,0);
+\draw[dashed] (-1,0) .. controls +(0,1) and +(-0.5,-1) .. (0,2);
 \fill (0,0) circle (0pt) node[right] {{\small$X$}};
 \fill (-1,0) circle (3.3pt) node[left] {{\small$\phi$}};
 \end{tikzpicture} 
@@ -3244,7 +3246,8 @@ where we view $\Delta_W$ as a 1-morphism $(k,0) \lra (\Re, \widetilde W)$, i.\,e
 
 We have just seen how the structure of open/closed TFT embeds into $\LG$. In principle this is enough to compute arbitrary correlators using the factorisation property of TFT. However, one can also compute more general correlators directly in $\LG$: all we have to do is to interpret the physical picture of a worldsheet~$\Sigma$ with insertions and defect lines as the associated string diagram representing a 2-morphism $k \lra k$ which is the value of the correlator of~$\Sigma$. 
 
-As an illustrative example let us consider the genus-3 correlator of the worldsheet with two phases governed by the potentials~$V$ and~$W$, depicted in the upper part of Figure~\ref{fig:worldsheet}. Here we label boundaries, defect lines, bulk fields, boundary fields, defect fields by $Y, X, \phi, \psi, \Phi$ with appropriate indices, respectively. The string diagram computing this correlator is shown in the lower part of Figure~\ref{fig:worldsheet}. It is exactly the same as the worldsheet picture, apart form the fact that we interpret the relevant parts as evaluation and coevaluation maps, and if the numbers~$m$ and~$n$ of variables on which~$V$ and~$W$ depend are both odd then we use the wiggly line notation explained in Section~\ref{subsec:alternatives}. Note that if~$m$ and~$n$ have opposite parity then by the results of Section~\ref{sec:defectaction} the correlator vanishes as it corresponds to a map in $\Hom_{\hmf(k,0)}(k,k[1]) = 0$.
+As an illustrative example let us consider the genus-3 correlator of the worldsheet with two phases governed by the potentials~$V$ and~$W$, depicted in the upper part of Figure~\ref{fig:worldsheet}. Here we label boundaries, defect lines, bulk fields, boundary fields, defect fields by $Y, X, \phi, \psi, \Phi$ with appropriate indices, respectively. The string diagram computing this correlator is shown in the lower part of Figure~\ref{fig:worldsheet}. It is exactly the same as the worldsheet picture, apart form the fact that we interpret the relevant parts as evaluation and coevaluation maps, and if the numbers~$m$ and~$n$ of variables on which~$V$ and~$W$ depend are both odd then we use the wiggly line notation explained in Section~\ref{subsec:alternatives}.\footnote{Note that if~$m$ and~$n$ have opposite parity then by the results of Section~\ref{sec:defectaction} the correlator vanishes as it corresponds to a map in $\Hom_{\hmf(k,0)}(k,k[1]) = 0$.} 
+We point out that in general the nature of the 1-morphisms/defects involved determines uniquely whether a given cup or cap is a tilded or untilded adjunction map. There may be ambiguities how to make wiggly lines meet, but the value of the 2-morphism obtained is independent of this choice. 
 
 \begin{figure}[h!]
 $$
@@ -3480,7 +3483,7 @@ which is a map $k\lra k$ that we call~$C$. We can think of~$C$ as the value of t
 To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions in Section~\ref{sec:derivcoeval} for evaluation and coevaluation maps we find
 \begin{align}
 & \widetilde\eval_X (e_i \otimes e_j^*) = (-1)^{|e_j|} \delta_{ij} + \mathcal O(\theta) \, , \qquad 
-\eval_Y (f_i^* \otimes f_j) = (-1)^{{n+1\choose 2} + n |f_j|} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W\ldots \partial_n W} \right] , \nonumber \\
+\eval_Y (f_i^* \otimes f_j) = (-1)^{{n+1\choose 2} + n |f_j|} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] , \nonumber \\
 & \coev_X (1) = \sum_j (-1)^{{n\choose 2} + n |e_j|} \bar\Lambda_X e_j \otimes e_j^* \, , \qquad 
 \widetilde\coev_Y (1) = \sum_j (-1)^{|f_j|} f_j^* \otimes f_j \label{evcoeveasy}
 \end{align}
@@ -3521,12 +3524,12 @@ C
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 = 
-\Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
+\Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 $$
 Using the expressions $\beta^X(\varphi) = (-1)^{n\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps we thus find from the above that
 \be\label{C1}
 C = 
-\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] .
+\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 \ee
 
 On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y = \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$ (TODO: check signs from the shift). Then we use
@@ -3577,7 +3580,7 @@ The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,
 $$
 \str ( {}_\psi m_\varphi ) 
 = 
-\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W \ldots \partial_n W} \right] 
+\Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W. \ldots, \partial_n W} \right] 
 $$
 with ${}_\psi m_\varphi(\alpha) = \psi\circ\alpha\circ\varphi$ for $\alpha\in \Hom_{\hmf(k[x],W)}(X,Y)$. 
 \end{theorem}
@@ -3664,7 +3667,7 @@ respectively. Substituting the expressions for the adjiunction maps in Section~\
 \beta_X : k[x]/(\partial V)[n] & \lra \End_{k[x,z]}(X)[m] \, , \\
 \phi & \lmt \phi \cdot 1_{X}[m] \, , \\
 \beta^X : \End_{k[x,z]}(X)[m] & \lra k[x]/(\partial V)[n] \, , \\
-\psi & \lmt (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\,  \partial_{x_1} d_X \ldots \partial_{x_n} d_X \partial_{z_1} d_X \ldots \partial_{z_m} d_X \right) \underline{\operatorname{d}\!x}}{\partial_{x_1}  \ldots \partial_{x_n} W} \right] \, . 
+\psi & \lmt (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\,  \partial_{x_1} d_X \ldots \partial_{x_n} d_X \partial_{z_1} d_X \ldots \partial_{z_m} d_X \right) \underline{\operatorname{d}\!x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] \, . 
 \end{align*}
 
 
@@ -3678,7 +3681,7 @@ Given $W \in R$ and two finite-rank matrix factorisations $X,Y$ of $W$ let $\Hom
 \]
 by the following formula, where $\lambda_i = \partial_{x_i}d_Y, \omega = \ud x_1 \ldots \ud x_n$ and $f_i = \partial_{x_i} W$: 
 \begin{equation}\label{eq:generalklpairing}
-\langle \varphi, \psi \rangle = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \ldots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1\ldots f_n } \Bigg]\,.
+\langle \varphi, \psi \rangle = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Ress{R/k}\Bigg[ \frac{ \str( \varphi \circ \psi \circ \lambda_{\sigma(1)} \circ \ldots \circ \lambda_{\sigma(n)} )\, \omega }{ f_1, \ldots, f_n } \Bigg]\,.
 \end{equation}
 In order to be able to define this residue we require that the partial derivatives $f_i$ form a regular sequence $f = \{f_1,\ldots,f_n\}$ in $R$ and that $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module.
 
@@ -3813,7 +3816,7 @@ as a $k[f]$-module, which is standard in the sense of \cite[Definition 8.6]{dm11
 \item[(H4)] There is an $n$-form $\omega \in \Omega^n_{R/k}$ such that the $R$-linear map
 \begin{align*}
 \bar{R} & \lto \Hom_k( \bar{R}, k)\, , \\
-r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1 \ldots f_n} \Bigg]
+r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \cdot \omega}{ f_1, \ldots, f_n} \Bigg]
 \end{align*}
 is an isomorphism.
 \end{itemize}
@@ -3829,7 +3832,7 @@ While the ordinary dg-category of matrix factorisations only admits a pairing wh
 \]
 be the $k$-linear map
 \[
-\langle r \rangle = \Ress{R/k}\Bigg[ \frac{r \cdot \omega}{ f_1 \ldots f_n} \Bigg]\,.
+\langle r \rangle = \Ress{R/k}\Bigg[ \frac{r \cdot \omega}{ f_1, \ldots, f_n} \Bigg]\,.
 \]
 This map annihilates the ideal $(f_1,\ldots,f_n)R$ and therefore factors via a $k$-linear map $\bar{R} \lto k$.
 
@@ -4034,7 +4037,7 @@ Let us now abandon the general setting, and return to the situation of the main 
 \begin{theorem}\label{theorem:nonlocalduality} The $R$-linear map
 \begin{align*}
 \bar{R} & \lto \Hom_k( \bar{R}, k)\, , \\
-r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \underline{\ud x}}{ f_1 \ldots f_n} \Bigg]
+r & \lmt \Ress{R/k}\Bigg[ \frac{r \cdot (-) \, \underline{\ud x}}{ f_1, \ldots, f_n} \Bigg]
 \end{align*}
 is an isomorphism.
 \end{theorem}
@@ -4085,7 +4088,7 @@ Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is
 
 \begin{lemma}\label{lemma:residuesarehomog} If $f_1,\ldots,f_n$ is a regular sequence in $R$ of homogeneous elements, then the map
 \[
-\Ress{R/k}\Bigg[ \frac{(-) \, \ud \underline{x}}{ f_1 \ldots f_n} \Bigg]: R \lto k
+\Ress{R/k}\Bigg[ \frac{(-) \, \ud \underline{x}}{ f_1, \ldots, f_n} \Bigg]: R \lto k
 \]
 is homogeneous of degree $\sum_{i=1}^n( |x_i| - |f_i| )$.
 \end{lemma}
