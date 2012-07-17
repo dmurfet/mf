@@ -342,20 +342,27 @@ Thus any TFT with defects is expected to be associated with a bicategory. Standa
 
 The subject of this paper is the bicategory $\LG$ of Landau-Ginzburg models over a base ring $k$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$. The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
 
-On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that we consider \textsl{oriented} defect lines should give rise to adjunctions on the level of 1-morphisms: the ``same'' defect line with reversed orientation should be adjoint to the defect with opposite orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$ there should be a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
+On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that we consider \textsl{oriented} defect lines should give rise to adjunctions on the level of 1-morphisms: any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$, viewed as a $1$-morphism between the bulk theories described by a potential $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, there should be a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
-\widetilde\eval_X: X \otimes X^\dual \lra \Delta 
+\widetilde\eval_X: X \otimes_{k[x]} X^\dual \lra \Delta 
 \, , \qquad
-\widetilde\coev_X: \Delta \lra X^\dual \otimes X
+\widetilde\coev_X: \Delta \lra X^\dual \otimes_{k[z]} X
 \ee
-that are the counit and unit of an adjunction between~$X$ and~$X^\dual$. Similarly, one expects a left adjoint~${}^\dual X$ of~$X$. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from physics.
+defining an adjunction between~$X$ and~$X^\dual$. Similarly, one expects a left adjoint~${}^\dual X$ of~$X$. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from physics.
 
-In the present paper we prove that every $1$-morphism $X$ in $\LG$ has left and right adjoints given by ${}^\dual X = X^{\vee}[m]$ and $X^\dual = X^{\vee}[n]$ where $W \in k[x_1,\ldots,x_n], V \in k[z_1,\ldots,z_m]$ and $X^{\vee} = \Hom_{k[x,z]}(X, k[x,z])$ is the dual factorisation of $W - V$. 
+In the present paper we prove that every $1$-morphism $X$ in $\LG$ has left and right adjoints given by ${}^\dual X = X^{\vee}[m]$ and $X^\dual = X^{\vee}[n]$ where $X^{\vee} = \Hom_{k[x,z]}(X, k[x,z])$ is the dual factorisation. Our focus is on providing explicit expressions for the above evaluation and coevaluation maps, with the aim of making it simple and convenient to do algebra in the bicategory $\LG$, and in particular to evaluate correlators such as \eqref{worldsheetwithdefects}. 
 
-Our focus is on providing explicit expressions for the above evaluation and coevaluation maps. For example if $\gamma$ is an element of the exterior algebra $\Delta$, and $\gamma' = \theta_{b_1} \ldots \theta_{b_l}$ is the unique form with $\gamma \wedge \gamma' = (-1)^{s(\gamma)} \theta_1 \ldots \theta_n$ and $b_1 < \cdots < b_l$ for some $s(\gamma) \in \mathbb{Z}_2$ then
+To give a flavour of how explicit the formulas are: if $\{ e_i \}_i$ is a basis for the free $k[x,z]$-module $X$ with dual basis $\{ e_i^* \}_i$ then the coevaluation is defined by
+\be\label{eq:formula_intro_coev}
+\widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(r+1)|e_j| + s} \big\{ \partial_{[b_r]}(d_X) \ldots \partial_{[b_1]}(d_X) \big\}_{ji} \cdot e_i^* \otimes e_j\,.
+\ee
+Here $\gamma$ is an element of the exterior algebra $\Delta$ and $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ is the ``complement'' of $\gamma$, i.e. $b_1 < \cdots < b_l$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, which applied to a polynomial $f(x, z)$ yields a polynomial
 \[
-\widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(l+1)|e_j| + s(\gamma)} \big\{ \partial_{[b_l]}(d_X) \ldots \partial_{[b_1]}(d_X) \big\}_{ji} e_i^* \otimes e_j\,.
+\partial_{[i]} f(x,z) = \frac{ f - f|_{x_i \mapsto x'_i}}{x_i - x'_i}
 \]
+in the ring $k[x,z,x']$ with an additional set of variables $x' = x'_1, \ldots, x_n'$. To make sense of \eqref{eq:formula_intro_coev} we interpret the $x_i$ as acting on the left of the $k[x]$-bimodule $X^\dual \otimes_{k[z]} X$ and the $x'_i$ as acting on the right.
+
+The other evaluation and coevaluation maps have similar elementary presentations, see Section \ref{??}, but for most computations a more sophisticated formula in terms of associative Atiyah classes is the most convenient.
 
 We do so by developing a conceptual framework from which we obtain explicit expressions for the above adjunction maps, opening the door for many applications. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
 
