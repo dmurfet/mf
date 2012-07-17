@@ -265,11 +265,11 @@ TODO: abstract
 
 \section{Introduction}\label{sec:Introduction}
 
-Landau-Ginzburg models play a central role in many areas of mathematical physics and pure mathematics. Among them are diverse fields such as singularity theory, representation theory, (homological) mirror symmetry, knot invariants, or conformal and topological field theory. All these areas are intimately interrelated, and this richness is actually one of the aesthetical motivations to study Landau-Ginzburg models. Another general motivation is their dual nature of affording insight into deep, often beautiful, results while at the same time maintaining to provide the ability to perform concrete, hands-on computations. 
+Landau-Ginzburg models play an important role in many areas of mathematical physics and pure mathematics. Among them are diverse fields such as singularity theory, representation theory, (homological) mirror symmetry, knot invariants, and conformal or topological field theory. These areas are intimately interrelated, and this richness is one of the aesthetic motivations for studying Landau-Ginzburg models. Another general motivation is their dual nature of affording insight into deep results while at the same time being concrete enough to allow for hands-on computations. 
 
-In the present paper we wish to show how the dichotomy just mentioned manifests itself in the context of two-dimensional topological field theory (TFT) with defects. In short, we will explain how Landau-Ginzburg models give rise to a class of bicategories with adjoints (and several additional properties), and we will see that these structures can be described both elegantly and explicitly. This in turn allows us to prove various general results to whose discussion we will come towards the end of this section. 
+In this paper we will show how this dichotomy manifests itself in the context of two-dimensional topological field theory (TFT) with defects. In short, we explain how Landau-Ginzburg models give rise to a bicategory with adjoints and we show that there is a simple description of the structure maps in this bicategory in terms of basic invariants called Atiyah classes. These structure maps are explicit enough that one can do nontrivial computations, but also conceptually elegant in the sense that working with diagrams in the bicategory reduces to a calculus of Atiyah classes.
 
-To set the stage and provide some background, let us recall a few ideas about TFTs with defects; for more detailed accounts we refer e.\,g.~to~\cite{k1004.2307} and~\cite[Section~2]{dkr1107.0495}. We imagine the bulk sector theories~$T_I$ to ``live'' on a two-dimensional surface called the \textsl{worldsheet}. More precisely, the worldsheet may be partitioned into various domains to which the (not necessarily distinct) theories~$T_I$ are associated, and which are separated by one-dimensional oriented \textsl{defect lines} $D_\alpha$. A sketch of a typical such partitioned worldsheet looks as follows: 
+To set the stage and provide some background, we recall a few details about TFTs with defects; for more detailed accounts we refer to~\cite{k1004.2307} and~\cite[Section~2]{dkr1107.0495}. We imagine the bulk sector theories~$T_I$ to ``live'' on a two-dimensional surface called the \textsl{worldsheet}. More precisely, the worldsheet may be partitioned into various domains to which the (not necessarily distinct) theories~$T_I$ are associated, and which are separated by one-dimensional oriented \textsl{defect lines} $D_\alpha$. A sketch of a typical such partitioned worldsheet looks as follows: 
 \be\label{worldsheetwithdefects}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline,>=stealth]
@@ -338,26 +338,36 @@ A TFT is a functor that assigns a number called the \textsl{correlator} to a lab
 
 It is natural to try and make sense of this situation in terms of a bicategory: its objects are the theories $T_I$, 1-morphisms are labelled defect lines $D_\alpha$, and 2-morphisms are the fields $\phi_i$. The composition of 2-morphisms is the operator product of the fields, which is strictly associative because we only consider \textsl{topological} field theories. The composition of 1-morphisms comes about as follows: since the exact locus of the defect lines does not matter, two (or more) adjacent defect lines can be brought together arbitrarily close, and the limit of this \textsl{fusion} is well-defined and non-singular. The unit of the fusion product is the \textsl{invisible defect} which by definition leaves any other defect line invariant under fusion (from both left and right). 
 
-Thus any TFT with defects is expected to give rise to a bicategory. Standard examples for bicategories include the bicategory of categories (with objects, 1- and 2-morphisms given by categories, functors and natural transformations, respectively) or rings (rings, bimodules, bimodule maps), but these are too generic to be known to describe relevant TFTs. A rich and interesting example is the bicategory of algebraic varieties with Fourier-Mukai kernels as 1-morphisms~\cite{ct1007.2679} which describes B-twisted sigma models, see~e.\,g.~\cite{MB2}. 
+Thus any TFT with defects is expected to be associated with a bicategory. Standard examples of bicategories include the bicategory of small categories (with objects, 1- and 2-morphisms given by categories, functors and natural transformations, respectively) or rings (rings, bimodules, bimodule maps), but these are too generic to describe TFTs. A rich and interesting example is the bicategory of algebraic varieties with Fourier-Mukai kernels as 1-morphisms~\cite{ct1007.2679} which describes B-twisted sigma models, see~e.\,g.~\cite{MB2}. 
 
-The example that we study in this paper is the bicategory $\LG$ of Landau-Ginzburg models. Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
+The subject of this paper is the bicategory $\LG$ of Landau-Ginzburg models over a base ring $k$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$. The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
 
-On general grounds it is expected that the bicategorical description of TFTs with defects comes equipped with additional structure. In particular, the fact that we consider \textsl{oriented} defect lines should give rise to adjunctions on the level of 1-morphisms: the ``same'' defect line with reversed orientation should be adjoint to the defect with opposite orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$ there is a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
+On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that we consider \textsl{oriented} defect lines should give rise to adjunctions on the level of 1-morphisms: the ``same'' defect line with reversed orientation should be adjoint to the defect with opposite orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$ there should be a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
-\widetilde\eval_X: X \otimes X^\dual \lra \Delta_W 
+\widetilde\eval_X: X \otimes X^\dual \lra \Delta 
 \, , \qquad
-\widetilde\coev_X: \Delta_V \lra X^\dual \otimes X
+\widetilde\coev_X: \Delta \lra X^\dual \otimes X
 \ee
-that are the counit and unit of a (right) adjunction between~$X$ and~$X^\dual$. Similarly, one expects maps $\eval_X: X\otimes {}^\dual X \lra \Delta_V$ and $\coev_X: \Delta_W \lra {}^\dual X \otimes X$ for a left adjoint~${}^\dual X$ of~$X$, together with natural isomorphisms between~$X$ and its double-adjoint, closely related to a so-called pivotal structure. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from the physical picture. 
+that are the counit and unit of an adjunction between~$X$ and~$X^\dual$. Similarly, one expects a left adjoint~${}^\dual X$ of~$X$. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from physics.
 
-In the present paper we prove that $\LG$ has adjoints and is ``pivotal up to shifts'' in the general case. We do so by developing a conceptual framework from which we obtain explicit expressions for the above adjunction maps, opening the door for many applications. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
+In the present paper we prove that every $1$-morphism $X$ in $\LG$ has left and right adjoints given by ${}^\dual X = X^{\vee}[m]$ and $X^\dual = X^{\vee}[n]$ where $W \in k[x_1,\ldots,x_n], V \in k[z_1,\ldots,z_m]$ and $X^{\vee} = \Hom_{k[x,z]}(X, k[x,z])$ is the dual factorisation of $W - V$. 
 
-Regardless of the conceptual origins of the adjunction properties of $\LG$, in the end they produce very explicit formulas one can actually calculate with in practice: for a matrix factorisation~$X$ of $V-W$ with differential~$D$, the maps are given by [TODO: footnote or comment that we usually only use $X$, not $(X,D)$, to label a defect]
-\be\label{evcoevexplicit}
-\eval_X = TODO \, , \qquad
-\coev_X = TODO
-\ee
-where $\partial_{[i]}$ denotes the difference quotient operator for the $i$-th variable in $k[x]=k[x_1,\ldots,x_n]$, see~\eqref{diffquotop}. The mixture of explicitness and conceptual control rather effortlessly affords various applications which are of importance in their own right. We shall discuss some of them in later parts of this paper, and we briefly mention two of them already now. 
+Our focus is on providing explicit expressions for the above evaluation and coevaluation maps. For example if $\gamma$ is an element of the exterior algebra $\Delta$, and $\gamma' = \theta_{b_1} \ldots \theta_{b_l}$ is the unique form with $\gamma \wedge \gamma' = (-1)^{s(\gamma)} \theta_1 \ldots \theta_n$ and $b_1 < \cdots < b_l$ for some $s(\gamma) \in \mathbb{Z}_2$ then
+\[
+\widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(l+1)|e_j| + s(\gamma)} \big\{ \partial_{[b_l]}(d_X) \ldots \partial_{[b_1]}(d_X) \big\}_{ji} e_i^* \otimes e_j\,.
+\]
+
+We do so by developing a conceptual framework from which we obtain explicit expressions for the above adjunction maps, opening the door for many applications. The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. In this way the adjunction structures can be organised in a rather clean and elegant way, the basic intuition behind which is roughly as follows: [TODO: some words on Atiyah classes, curvature, and all that] 
+
+\cite{superquillen} and \cite[Appendix $1$]{arnold}. The most important invariants of a Riemannian manifold $M$ are the skew-symmetric curvature operators $F_{ij}$.
+
+\begin{itemize}
+\item What is a superconnection?
+\item Curvature of a superconnection
+\item 
+\end{itemize}
+
+Next we consider some examples of calculations which can be done with our explicit formulas.
 
 Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation~$X$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
 \begin{align}\label{defectactionIntro}
@@ -1593,15 +1603,14 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 %\end{remark}
 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
-% TODO independence of choice of lambdas and ordering
 
-In the bicategory $\LG$ a $1$-morphism $W \lto V$ is represented by a finite rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials. The \textsl{adjoints} of $X$ are the $1$-morphisms $V \lto W$ defined respectively by
+Every $1$-morphism in $\LG$ has both a left and right adjoint. Specifically, if a $1$-morphism $W \lto V$ is represented by a finite rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials, then the $1$-morphisms
 \[
-X^\dual = X^\vee[n], \qquad {}^\dual X = X^\vee[m]\,.
+X^\dual = X^\vee[n], \qquad {}^\dual X = X^\vee[m]
 \]
-These are objects of $\hmf(k[x,z], W-V)$, with the differentials spelled out in \eqref{eq:differentials_adjoints}.
+are respectively the right and left adjoints of $X$ in $\LG$. These are objects of $\hmf(k[x,z], W-V)$, with the differentials spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
 
-In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define canonical evaluation and coevaluation morphisms 
+In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define evaluation and coevaluation maps 
 \begin{align}
 \coev_X &: \Delta_V \lto X \otimes_{k[x]} {}^\dual X
 \, , \qquad
@@ -1610,7 +1619,7 @@ In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define canon
 \, , \qquad
 \widetilde\eval_X: X \otimes_{k[x]} X^\dual \lto \Delta_V \label{eq:derivcoeval2}
 \end{align}
-and derive explicit formulas for these morphisms in terms of Atiyah classes. We already give these formulas below; the rest of the section will be spent justifying that these expressions do in fact define chain maps representing canonical morphisms \eqref{eq:derivcoeval1} and \eqref{eq:derivcoeval2} in the homotopy category of matrix factorisations. It is worth pointing out that the evaluation and coevaluation morphisms we construct would be more accurately described as \textsl{candidates}, as it is only later in Section~\ref{sec:Zorro} that we show that these maps are actually the counit and unit of an adjunction by proving the Zorro moves.
+and derive explicit formulas for these morphisms in terms of Atiyah classes. We already give these formulas below; the rest of the section will be spent justifying that these expressions do in fact define chain maps representing canonical morphisms \eqref{eq:derivcoeval1} and \eqref{eq:derivcoeval2} in the homotopy category of matrix factorisations. In Section~\ref{sec:Zorro} we will prove that these maps determine adjunctions ${}^\dual X \dashv X$ and $X \dashv X^\dual$ by proving the Zorro moves.
 
 While the homotopy classes of these morphisms are canonical the formulas depend on a choice of homogeneous basis $\{ e_i \}_{i}$ for $X$ with dual basis $\{ e_i^* \}_{i}$. Representatives for the coevaluation morphisms are given by the chain maps
 \begin{gather}
@@ -1636,7 +1645,7 @@ In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functio
 \ee
 where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
 
-To simplify notation we set $R = k[x], S = k[z]$ and write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}.
+Throughout we write $R = k[x], S = k[z]$ and $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W, X^\dual \otimes X, {}^\dual X \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re $-linear, while $\Delta_V$ and $X \otimes X^\dual, X \otimes {}^\dual X$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by \eqref{DeltaW}.
 
 Throughout we make use of the canonical maps from Section \ref{section:canonicalmaps}.
 
@@ -1894,10 +1903,10 @@ where the last map is the $R$-linear residue symbol (we write $\underline{\ud z}
 \end{definition}
 
 \begin{lemma} $\eval_0$ is a morphism of linear factorisations of $\widetilde W$ over $\Re$, and for $\eta \in X, \nu \in X^\vee$
-\begin{align*}
+\begin{align}
 \eval_0( \nu \otimes \eta ) &= (-1)^{\binom{m+1}{2}+(m+1)|\nu|} \Res_{S/k}\left[ \frac{ \str( \Lambda^{(z)} \circ \eta \circ \nu ) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]\\
 &= (-1)^{\binom{m+1}{2} + m|\nu|} \Res_{S/k} \left[ \frac{ \nu \Lambda^{(z)}( \eta ) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]\,.
-\end{align*}
+\end{align}
 \end{lemma}
 
 We define $\eval_X$ to be the unique morphism in $\HMF(\Re, \widetilde{W})$ making the diagram
@@ -4543,6 +4552,9 @@ H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )( df_1 \ldots df_p ) &= \gamma\left( \
 \providecommand{\href}[2]{#2}
 \begin{thebibliography}{FYH{\etalchar{+}}85}
 
+\bibitem[Arn89]{arnold}
+V.~I.~Arnold, \textsl{Mathematical methods of classical mechanics}, Graduate Texts in Mathematics Vol. 60, Springer-Verlag 1989.
+
 \bibitem[ABCDG]{MB2}
 P.~S.~Aspinwall, T.~Bridgeland, A.~Craw, M.~R.~Douglas, and M.~Gross, \textsl{Dirichlet Branes and Mirror Symmetry}, Clay Mathematics Monographs, AMS, 2009.
 
@@ -4864,6 +4876,9 @@ A.~Polishchuk and A.~Vaintrob, \textsl{Chern characters and {H}irzebruch-{R}iema
 %P.~Seidel and I.~Smith, \textsl{A link invariant from the symplectic geometry of
 %  nilpotent slices}, Duke Math. J. \textbf{134} (2006), 453--514,
 %  \href{http://arxiv.org/abs/math/0405089}{[math.SG/0405089]}.
+
+\bibitem[Qui85]{superquillen}
+D.~Quillen, \textsl{Superconnections and the {C}hern character}, Topology Vol. 24, No. 1, 89--95, 1985.
 
 \bibitem[SW11]{sw0911.0917}
 C.~V.~Shepler and S.~Witherspoon, \textsl{Quantum differentiation and chain maps of bimodule complexes}, Algebra and Number Theory \textbf{5}-3 (2011), 339--360, 
