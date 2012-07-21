@@ -851,16 +851,23 @@ The \textsl{bicategory of Landau-Ginzburg models} $\LG$ consists of the followin
 $\LG$ really is a bicategory, i.\,e.~$\alpha, \lambda, \rho$ are natural isomorphisms up to homotopy, and they satisfy the coherence axioms for bicategories. 
 \end{proposition}
 
-It is often helpful to think of a potential $W \in k[x]$ as ``standing in'' for the triangulated category $\hmf(k[x], W)^\omega$, in which case a $1$-morphism $X: W \lto V$ stands for the triangulated functor
+\begin{remark}\label{remark:integral_functors} It is often helpful to think of a potential $W \in k[x]$ as ``standing in'' for the triangulated category $\hmf(k[x], W)^\omega$, in which case a $1$-morphism $X: W \lto V$ stands for the functor
 \[
 \Phi_X: \hmf(k[x], W)^\omega \lto \hmf(k[z], V)^\omega\,,\qquad
 \Phi_X( Y ) = X \otimes_{k[x]} Y\,.
 \]
-Working in the bicategory $\LG$ therefore amounts to doing algebra with integral functors. To make this precise, consider the object $\mathbb{I} = (k,0)$ of $\cat{B}$. Then a $1$-morphism $\mathbb{I} \lto W$ is precisely an object of $\hmf(k[x], W)^\omega$ and $\Phi_X$ is the functor defined by composition with $X$
+Working in the bicategory $\LG$ therefore amounts to doing algebra with integral functors. To make this precise, consider the object $\mathbb{I} = (k,0)$ of $\cat{LG}$. Then a $1$-morphism $\mathbb{I} \lto W$ is precisely an object of $\hmf(k[x], W)^\omega$ and $\Phi_X$ is the functor defined by composition with $X$
 \[
 \cat{LG}( \mathbb{I}, W ) \lto \cat{LG}( \mathbb{I}, V ), \qquad Y \mapsto X \otimes Y
 \]
-Moreover an adjunction in $\LG$ gives rise in this way to a pair of adjoint functors between categories of matrix factorisations; we return to this in Remark \ref{??}. The more comprehensive way to say this is that $\cat{B}( \mathbb{I}, - )$ defines a psuedofunctor from $\cat{B}$ to the bicategory of categories, functors and natural transformations, and adjoint pairs are preserved by a psuedofunctor; see \cite[\S $4$]{benabou} and \cite{lack}.
+Moreover an adjunction in $\LG$ gives rise in this way to a pair of adjoint functors between categories of matrix factorisations. One way to say this is that $\cat{LG}( \mathbb{I}, - )$ defines a psuedofunctor from $\cat{LG}$ to the bicategory of categories, functors and natural transformations, and adjoint pairs are preserved by a psuedofunctor; see \cite[\S $4$]{benabou} and \cite{lack}.
+
+Less tersely, given an adjunction $X \dashv X^\dual$ and $1$-morphisms $Y: \mathbb{I} \lto W$ and $Z: \mathbb{I} \lto V$ one deduces from the identity on the evaluation and coevaluation a natural isomorphism
+\[
+\Hom_{\LG(\mathbb{I}, V)}( X \otimes Y, Z ) \cong \Hom_{\LG(\mathbb{I}, W)}( Y, X^\dual \otimes Z )
+\]
+which makes the integral functor $\Phi_X$ left adjoint to $\Phi_{X^\dual}$. For the details see Appendix \ref{lemma:adjoint_nat_iso}.
+\end{remark}
 
 \begin{remark}\label{remark:gradedbicategory}
 Analogous statements are also true of the bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$. Its objects are pairs $(R,W)$ as above but with the additional requirement that~$R$ is a $\nZ$-graded ring and~$W$ is homogeneus of some degree $2c$. A graded linear factorisation is then a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. As shown in~\cite{cr0909.4381} this is in particular true of the structure maps $\alpha, \lambda, \rho$. 
@@ -2147,14 +2154,15 @@ Let us consider the first identity of~\eqref{otherZorros} in more detail:
 \ee
 Here we label the domains by the rings $R = k[x]$ and $S = k[z]$ pertaining to the two objects of $\LG$. We keep in mind that there are two $\Delta$'s which appear: one of which is an $R$-$R$-bimodule, and the other is an $S$-$S$-bimodule. We write $\Re = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$.
 
-
 We call the left-hand side of (\ref{Zorro1detail}) the \textsl{Zorro map} and denote it $\mathcal Z$. It is the composite
 \be\label{eq:zorro1a1}
 \xymatrix@C+2pc{
 X \ar[r]^-{\rho^{-1}} & X \otimes_R \Delta_W \ar[r]^-{1 \otimes\,\widetilde{\coev}} & X \otimes_R X^{\dagger} \otimes_S X \ar[r]^-{\widetilde{\eval}\, \otimes 1} & \Delta_V \otimes_S X \ar[r]^-{\lambda} & X\,,
 }
 \ee
-which we prove is homotopic to the identity on $X$. Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. Our first order of business is to establish the expression for the Zorro map given in the next lemma. For this we need to introduce the $R_2$-linear map
+and we will prove in detail that this map is homotopic to the identity on $X$. Since the argument is very similar for the other identity of \eqref{otherZorros}, and the two identities of \eqref{Zorros}, we do not give full details in these cases, but see Remark \ref{remark:otherzorros}.
+
+Note that we continue to discard subscripts that are clear from the context, e.\,g.~$\widetilde\eval = \widetilde\eval_X$. Our first order of business is to establish the expression for the Zorro map given in the next lemma. For this we need to introduce the $R_2$-linear map
 $$
 \big\langle\!\big\langle - \big\rangle\!\big\rangle: \Bar \lto R_2 
 \, ,\qquad
@@ -2173,8 +2181,7 @@ As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_
 where for $f \in X$, the endomorphism $f \circ e_j^*$ of $X$ sends $g$ to $e_j^*(g) \cdot f$.
 \end{lemma}
 
-(TODO: make the next two paragraphs a Remark?)
-Before giving the proof of the lemma, let us roughly sketch how it leads to an argument that $\mathcal Z$ is homotopic to the identity. Although we will not formalise the argument in precisely these terms, the Atiyah class is ``anti-self-adjoint'' (\textbf{todo} still compatible with signs?) with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
+\begin{remark} Before giving the proof of the lemma, let us roughly sketch how it leads to an argument that $\mathcal Z$ is homotopic to the identity. Although we will not formalise the argument in precisely these terms, the Atiyah class is ``anti-self-adjoint'' (\textbf{todo} still compatible with signs?) with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
 \begin{equation}\label{eq:trueproofeq}
 \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \Lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
 \end{equation}
@@ -2182,7 +2189,7 @@ We will see that $\At^n( \Lambda )$ is a transition determinant in the sense of 
 \begin{equation}\label{eq:trueproofeq2}
 \mathcal{Z} \simeq \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j = \sum_j \str(e_j^* \circ -) \cdot e_j = 1_X\,.
 \end{equation}
-The reader will appreciate the parallel with the argument for duality in the monoidal category of vector spaces, with the new feature here being the Atiyah class and its anti-self-adjointness.
+\end{remark}
 
 There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of nondegeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
 
@@ -2413,19 +2420,50 @@ The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contri
 This proves that $\langle H, - \rangle_X$ is null-homotopic, and thus $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals. Hence by the nondegeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
 \end{proof}
 
+\begin{remark}\label{remark:otherzorros}
 The three other Zorro moves are proven analogously (\textbf{todo}).
+\end{remark}
 
 \begin{theorem}
-The bicategory $\LG$ has left and right adjoints. Explicit expressions for the evaluation and coevaluation maps are those of Section~\ref{sec:derivcoeval}. 
+The bicategory $\LG$ has left and right adjoints: for any $1$-morphism $Y: V \lto W$,
+\[
+\xymatrix{
+Y^{\vee}[m] = {}^\dual Y \ar@{-|}[r] & Y \ar@{-|}[r] & Y^\dual = Y^{\vee}[n]
+}\,.
+\]
+Explicit expressions for the evaluation and coevaluation maps are those of Section~\ref{sec:derivcoeval}. 
 \end{theorem}
+\begin{proof}
+So far we have shown that for any $1$-morphism $X$ given by a finite rank matrix factorisation, the $1$-morphisms ${}^\dual X$ and $X^\dual$ are adjoint to $X$ with the evaluation and coevaluation maps specified in Section~\ref{sec:derivcoeval}. This does not exhaust the $1$-morphisms in $\LG$, as there may be objects $Y$ of $\LG(V, W) = \hmf(k[x,z], V - W)^\omega$ not isomorphic to objects of $\hmf(k[x,z], V- W)$. Nevertheless, the evaluation and coevaluation maps already specified can be uniquely extended to summands like $Y$.
 
-(\textbf{todo}) Mention Appendix \ref{app:adjoints} and summands.
+The detailed argument is given in Appendix \ref{section:extendduality}, and we need only check that the hypotheses given there are satisfied for $\LG$. The contravariant functor
+\[
+(-)^\dual = (-)^\vee[n]: \LG(V, W) \lto \LG(W, V)
+\]
+is well-defined, and hypothesis $(ii)$ of the Appendix is easily checked using the explicit formula for the evaluation. The upshot is that every $1$-morphism $Y$ in $\LG(V,W)$ has right adjoint $Y^{\vee}[n]$, and similarly one proves that $Y^{\vee}[m]$ is left adjoint to $Y$.
+\end{proof}
+
+With the notation of Remark \ref{remark:integral_functors} this shows that there are adjunctions of integral functors
+\[
+\xymatrix@C+1pc{
+\Phi_{{}^\dual X} \ar@{-|}[r] & \Phi_X \ar@{-|}[r] & \Phi_{X^\dual}
+}\,.
+\]
+That is, for any $Y \in \hmf(k[x], W)^\omega$ and $Z \in \hmf(k[z], V)^\omega$ there are natural isomorphisms
+\begin{gather*}
+\Hom( X \otimes_{k[x]} Y, Z ) \xlto{\cong} \Hom( Y, X^\dual \otimes_{k[z]} Z )\,,\\
+\Hom( {}^\dual X \otimes_{k[z]} Z, Y ) \xlto{\cong} \Hom( Z, X \otimes_{k[x]} Y )
+\end{gather*}
+The units and counits of adjunction are derived from the evaluation and coevaluation maps of Section~\ref{sec:derivcoeval} in the obvious way; for example, the counit of the adjunction $\Phi_X \dashv \Phi_{X^\dual}$ is the natural transformation $\Phi_X \circ \Phi_{X^\dual} \lto 1$ which, evaluated on an object $Z \in \hmf(k[z], V)$, is the morphism
+\[
+\xymatrix@C+2pc{
+(\Phi_X \circ \Phi_{X^\dual})(Z) = X \otimes_{k[x]} X^\dual \otimes_{k[z]} Z \ar[r]^-{\widetilde\eval_X \otimes 1_Z} & \Delta_V \otimes_{k[z]} Z \ar[r]^-{\lambda_Z} & Z
+}\,.
+\]
 
 \begin{remark}
 The same result also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
 \end{remark}
-
-
 
 \section{Pivotality}\label{sec:pivotality}
 
@@ -4330,7 +4368,7 @@ Throughout this section we write $\Hom(f,g)$ for $\Hom_{\cat{B}(A,B)}(f,g)$.
 
 The following lemma recasts the definition of adjunction given in Section \ref{subsec:bicat} in terms of a natural isomorphism. Observe that we insist on naturality with respect to both $1$ and $2$-morphisms. 
 
-\begin{lemma} Let $f: A \lto B$ and $g: B \lto A$ be $1$-morphisms. Specifying $2$-morphisms $\eval, \coev$ satisfying \eqref{uglyZorro1}, \eqref{uglyZorro2} is equivalent to specifying a family of bijections
+\begin{lemma}\label{lemma:adjoint_nat_iso} Let $f: A \lto B$ and $g: B \lto A$ be $1$-morphisms with $g$ left adjoint to $f$. Specifying $2$-morphisms $\eval, \coev$ satisfying \eqref{uglyZorro1}, \eqref{uglyZorro2} is equivalent to specifying a family of bijections
 \[
 \Phi_{h, l}: \Hom(g \otimes h, l) \lto \Hom(h, f \otimes l),
 \]
@@ -4412,7 +4450,7 @@ f_2^\dual \otimes f_2 \ar[r]_-{\zeta^\dual \otimes 1} & f_1^\dual \otimes f_2
 \ee
 commutes.
 
-\subsection{Extending duality to the idempotent closure}
+\subsection{Extending duality to the idempotent closure}\label{section:extendduality}
 
 Let $\cat{B}$ be a bicategory and suppose that for fixed objects $A,B$ there is a contravariant functor
 \be\label{eq:extenddual1}
