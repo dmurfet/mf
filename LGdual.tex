@@ -332,13 +332,13 @@ In addition to the labels $T_I$ for the two-dimensional domains and $D_\alpha$ f
 
 A TFT is a functor that assigns a number called the \textsl{correlator} to a labelled worldsheet like~\eqref{worldsheetwithdefects}. Its topological nature implies that the value of any correlator does not depend on the precise position of the $D_\alpha$'s and $\phi_i$'s, but only on their isotopy class. 
 
-It is natural to try and make sense of this situation in terms of a bicategory: its objects are the theories $T_I$, 1-morphisms are labelled defect lines $D_\alpha$, and 2-morphisms are the fields $\phi_i$. The composition of 2-morphisms is the operator product of the fields, which is strictly associative because we only consider \textsl{topological} field theories. The composition of 1-morphisms comes about as follows: since the exact locus of the defect lines does not matter, two (or more) adjacent defect lines can be brought together arbitrarily close, and the limit of this \textsl{fusion} is well-defined and non-singular. The unit of the fusion product is the \textsl{invisible defect} which by definition leaves any other defect line invariant under fusion (from both left and right). 
+It is natural to try and make sense of this situation in terms of a bicategory: its objects are the theories $T_I$, 1-morphisms are labelled defect lines $D_\alpha$, and 2-morphisms are the fields $\phi_i$. The composition of 2-morphisms is the operator product of the fields, which is strictly associative because we only consider \textsl{topological} field theories. The composition of 1-morphisms comes about as follows: since the exact locus of the defect lines does not matter, two (or more) adjacent defect lines can be brought together arbitrarily close, and the limit of this \textsl{fusion} is well-defined and non-singular. The unit of the fusion product is the \textsl{invisible defect} which by definition leaves any other defect line invariant under fusion. 
 
 Thus any TFT with defects is expected to be associated with a bicategory. Standard examples of bicategories include the bicategory of small categories (with objects, 1- and 2-morphisms given by categories, functors and natural transformations, respectively) or rings (rings, bimodules, bimodule maps), but these are too generic to describe TFTs. A rich and interesting example is the bicategory of algebraic varieties with Fourier-Mukai kernels as 1-morphisms~\cite{ct1007.2679} which describes B-twisted sigma models, see~e.\,g.~\cite{MB2}. 
 
 The subject of this paper is the bicategory $\LG$ of Landau-Ginzburg models over a base ring $k$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$. The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
 
-On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that defect lines are \textsl{oriented} should give rise to adjunctions on the level of 1-morphisms: any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$, viewed as a $1$-morphism between the bulk theories described by potentials $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, we expect a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
+On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that defect lines are \textsl{oriented} should give rise to adjunctions on the level of 1-morphisms: any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X\equiv (X,D)$ with $D^2 = (V-W)\cdot 1_X$, viewed as a 1-morphism between the bulk theories described by potentials $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, we expect a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
 \widetilde\eval_X: X \otimes_{k[x]} X^\dual \lra \Delta 
 \, , \qquad
@@ -346,19 +346,20 @@ On general grounds it is expected that the bicategorical description of TFTs wit
 \ee
 defining an adjunction between~$X$ and~$X^\dual$. Similarly, one expects a matrix factorisation~${}^\dual X$ and maps $\eval_X: X \otimes {}^\dual X \lto \Delta$ and $\coev_X: \Delta \lto {}^\dual X \otimes X$ making ${}^\dual X$ a left adjoint of $X$, together with natural isomorphisms between $X$ and its double-adjoint, closely related to a so-called pivotal structure. The special case where~$V$ and~$W$ are the same polynomial and depend on only one variable was worked out in~\cite{cr1006.5609}; we refer to that paper's introductory section for further motivation from physics.
 
-In the present paper we prove that every $1$-morphism $X$ in $\LG$ has left and right adjoints given by ${}^\dual X = X^{\vee}[m]$ and $X^\dual = X^{\vee}[n]$ where $X^{\vee} = \Hom_{k[x,z]}(X, k[x,z])$ is the dual factorisation, and we provide explicit formulas for the evaluation and coevaluation maps in terms of residues and associative Atiyah classes. There are two aspects of the construction that we want to highlight: the first is that one gains conceptual insight into the structure of the bicategory $\LG$ by working with Atiyah classes and studying their symmetries, and the second is that having effectively computable formulas for evaluation and coevaluation maps opens the doors for many applications. We now expand briefly on both of these points.
+In the present paper we prove that every $1$-morphism $X:W\lra V$ in $\LG$ as above has left and right adjoints given by ${}^\dual X = X^{\vee}[m]$ and $X^\dual = X^{\vee}[n]$ where $X^{\vee} = \Hom_{k[x,z]}(X, k[x,z])$ is the dual factorisation. We provide explicit formulas for the evaluation and coevaluation maps in terms of residues and the \textsl{associative Atiyah class} of~$X$ that we introduce in Section~\ref{section:atiyahclasses} using noncommutative forms. There are two aspects of the construction that we want to highlight: the first is that one gains conceptual insight into the structure of the bicategory $\LG$ by working with Atiyah classes and studying their symmetries, and the second is that having effectively computable formulas for evaluation and coevaluation maps opens the doors for many applications. 
+%We now expand briefly on both of these points.
 
 %The two key ingredients for our description are \textsl{homological perturbation} and the introduction of \textsl{associative Atiyah classes} to the world of matrix factorisations, following a suggestion by Buchweitz. 
 
-There is a close analogy between the Atiyah class of a complex of free modules over a ring (or vector bundles on a scheme) and the Riemann curvature operator of a Riemannian manifold. One way of making this precise is that the Atiyah class is the curvature of a superconnection in the sense of Quillen \cite{superquillen}, see Remark \ref{remark:curvature_superconnection}. The symmetries of the Riemann curvature operator, the most basic of which is that it is a skew-symmetric operator, play a fundamental role in differential geometry. We propose that a similar basic role should be played in algebra by the symmetries of the Atiyah class. For example, our proof of the existence of adjunctions in $\LG$ ultimately rests on the skew-symmetry of the Atiyah class of mapping complexes in dg-categories of matrix factorisations (\textbf{todo} caveats).
+Regarding the conceptual aspect we note that there is a close analogy between the Atiyah class of a complex of free modules over a ring (or vector bundles on a scheme) and the Riemann curvature operator of a Riemannian manifold. One way of making this precise is that the Atiyah class is the curvature of a superconnection in the sense of Quillen \cite{superquillen}, see Remark \ref{remark:curvature_superconnection}. The symmetries of the Riemann curvature operator, the most basic of which is that it is a skew-symmetric operator, play a fundamental role in differential geometry. We propose that a similar basic role should be played in algebra by the symmetries of the Atiyah class. For example, our proof of the existence of adjunctions in $\LG$ ultimately rests on the skew-symmetry of the Atiyah class of mapping complexes in dg-categories of matrix factorisations (\textbf{todo} caveats).
 
-Next we discuss how calculations may be done with our formulas. To give a flavour of how explicit the formulas are: if $\{ e_i \}_i$ is a basis for the free $k[x,z]$-module $X$ with dual basis $\{ e_i^* \}_i$ then the coevaluation is defined by
+On the other hand our general construction allows to carry out concrete calculations. To give a flavour of how explicit our formulas can be made, let $\{ e_i \}_i$ be a basis for the free $k[x,z]$-module~$X$ with dual basis $\{ e_i^* \}_i$. Then the coevaluation is given by
 \be\label{eq:formula_intro_coev}
 \widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(r+1)|e_j| + s} \big\{ \partial_{[b_r]}(d_X) \ldots \partial_{[b_1]}(d_X) \big\}_{ji} \cdot e_i^* \otimes e_j\,.
 \ee
-Here $\gamma = \theta_{a_1} \ldots \theta_{a_{n-r}}$ is an element of the exterior algebra $\Delta$ and $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ is the ``complement'' of $\gamma$, i.e. $b_1 < \cdots < b_r$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, see \eqref{diffquotop}. The evaluation maps have similar elementary presentations, which involve in addition supertraces and residues, see Section~\ref{sec:derivcoeval}.
+Here $\gamma = \theta_{a_1} \ldots \theta_{a_{n-r}}$ is an element of the exterior algebra $\Delta$ and $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ is the ``complement'' of $\gamma$ in the sense that~$b_1 < \cdots < b_r$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, see \eqref{diffquotop}. The evaluation maps have similar elementary presentations, which involve in addition supertraces and residues, see Section~\ref{sec:derivcoeval}.
 
-Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation~$X$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
+The mixture of explicitness and conceptual control affords various applications which are of imprtance in their own right. We shall discus some of them in later parts of this paper, and we briefly mention two of them already now. Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation $(X,D)$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
 \begin{align}\label{defectactionIntro}
 \mathcal D_r(X)(\psi) = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -466,7 +467,7 @@ $$
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 $$
-(which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our expressions~\eqref{evcoevexplicit} then immediately produces the Cardy condition, see Theorem~\ref{thm:CardyCondition}. 
+(which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our evaluation and coevaluation maps then immediately produces the Cardy condition, see Theorem~\ref{thm:CardyCondition}. 
 
 [TODO: mention new, more general Kapustin-Li proof here or somewhere else]
 
@@ -1826,10 +1827,10 @@ We note that the first map in~\eqref{eq:defneval0_1} and the second in \eqref{eq
 
 The global sign is determined by the Zorro move and the signs on the coevaluation. 
 
-\begin{lemma}\label{lemma:morphismevalzero} $\widetilde\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\vee$
+\begin{lemma}\label{lemma:morphismevalzero} $\widetilde\eval_0$ is a morphism of linear factorisations of $\widetilde{V}$ over $\Se $, and for $\eta \in X, \nu \in X^\vee$ we have 
 \begin{align}
 \widetilde\eval_0( \eta \otimes \nu ) &= (-1)^{\globalsigneval+n|\eta|} \Res_{R/k} \left[ \frac{ \str( \Lambda^{(x)} \circ \eta \circ \nu) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]\\
-&= (-1)^{\globalsigneval+n|\eta| + |\nu|} \Res_{R/k} \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]
+&= (-1)^{\globalsigneval+n|\eta| + |\nu|} \Res_{R/k} \left[ \frac{ \nu \Lambda^{(x)}( \eta ) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right] . 
 \end{align}
 \end{lemma} 
 
@@ -1846,7 +1847,7 @@ X \otimes_R X^\dual \ar[dr]_-{\widetilde\eval_0} \ar@{.>}[rr]^-{\widetilde\eval_
 
 The formula for $\widetilde\eval_X$ involves the following $\Se \otimes_k R$-linear map
 \begin{gather*}
-(-,-): X \otimes_R X^{\vee} \lto \Se \otimes_k R\,,\\
+(-,-): X \otimes_R X^{\vee} \lto \Se \otimes_k R\,,\qquad 
 ( e_i, e_j^* ) = (-1)^{|e_i||e_j|} e_j^*( e_i ) = (-1)^{|e_i|} \delta_{ij}\,.
 \end{gather*}
 This pairing is simply evaluation (with an appropriate Koszul sign) modulo the fact that $X$ and its dual $X^{\vee}$ involve different copies of the ring $S$.
@@ -1862,7 +1863,7 @@ X \otimes_R X^{\vee} \ar[r]^-{\lAt_2(X)^l} & \Bar \otimes_{\Se}(X \otimes_R X^{\
 \]
 where $\lAt_2(X) = [d, d_X], \Bar = \Bar_{S/k}$. The residue integrates out the $R$, leaving an element of $\Delta_V$.
 
-As has already been mentioned, if $X \otimes_R X^\dual$ were finite-rank we could apply Proposition \ref{prop:liftingresult} directly to deduce a formula for the lifting $\widetilde\eval_X$. As this is not the case, we have to be a little indirect and appeal to the idempotent pushforward construction of \cite{dm1102.2957}. Specifically, with $\bar{R} = R/(f_1,\ldots,f_n)$, Theorem \ref{??} of \textsl{loc.cit.} shows that there is a diagram
+As has already been mentioned, if $X \otimes_R X^\dual$ were finite-rank we could apply Proposition \ref{prop:liftingresult} directly to deduce a formula for the lifting $\widetilde\eval_X$. As this is not the case, we have to be a little indirect and appeal to the idempotent pushforward construction of \cite{dm1102.2957}. Specifically, with $\bar{R} = R/(f_1,\ldots,f_n)$, Theorem \ref{??} of loc.\,cit.~shows that there is a diagram
 \be\label{eq:idempotentpushdia}
 \xymatrix@C+2pc{
 X \otimes_R X^\vee[n] \cong (X \otimes_R X^\vee)[n] \ar@<-1ex>[r]_-{\vartheta} & \bar{X} \otimes_{\bar{R}} \bar{X}^\vee := (X \otimes_R X^\vee) \otimes_R \bar{R} \ar@<-1ex>[l]_-{\psi}
@@ -1956,7 +1957,8 @@ X^{\vee} \otimes_S X \ar[r]^-{\lAt_2(X^{\vee})^l} & \Bar \otimes_{\Re}(X^{\vee} 
 \]
 The residue integrates out the $S$, leaving us with an element of $\Delta_W$. By the argument given in Remark \ref{remark:indeptlambda} the morphism $\eval_X$ is independent of the choices of null-homotopy $\lambda^{(z)}_i$.
 
-\begin{remark}\label{remark:indeptlambda} We claim that the morphism $\widetilde\eval_X$ is canonical in the sense that it is independent up to homotopy of the choices of null-homotopy $\lambda_i$. It clearly suffices to argue that $\widetilde\eval_0$ is independent of these choices, and for this we use a variant of the argument in \cite[Appendix A]{dm1102.2957}. 
+\begin{remark}\label{remark:indeptlambda} 
+We claim that the morphism $\widetilde\eval_X$ is canonical in the sense that it is independent up to homotopy of the choices of null-homotopy $\lambda_i$. It clearly suffices to argue that $\widetilde\eval_0$ is independent of these choices, and for this we use a variant of the argument in \cite[Appendix A]{dm1102.2957}. 
 
 Write $D(-)$ for $[d_X, -]$ and suppose $\lambda'_1$ is another degree-one map with $D(\lambda'_1) = f_1 \cdot 1_X$. Then as $S$-linear morphisms of complexes $\Hom_{R \otimes_k S}(X,X) \lto S$ we have, writing $\Lambda_{>1} = \lambda_2 \ldots \lambda_n$
 \begin{align*}
@@ -2348,7 +2350,7 @@ H = \sum_j \sum_{p=0}^{n-1} (-1)^{|e_j|} h_i( D \At^{n-p-1}(- \circ e_j^*) ) \cd
 \]
 As the difference of two closed maps $H = \mathcal{Z} - 1_X$ is a closed endomorphism of $X$, and to complete the proof that $\mathcal{Z} \simeq 1_X$ it remains to prove that $H$ is null-homotopic (\textbf{todo} From here on do not trust, some errors in $H$ for example).
 
-The idea is to use the nondegenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{??,??} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
+The idea is to use the nondegenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{kl0305,hl0404} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
 \be
 \Hom_{k[x,z]}(X,X) \lto \Hom_k( \Hom_{k[x,z]}(X,X), k )[m+n]\,, \qquad \varphi \lmt \langle \varphi, - \rangle_X\,.
 \ee
@@ -2504,40 +2506,12 @@ $$
 \begin{proposition}\label{prop.morphismmigration}
 For a 2-morphism $\varphi: X \lra Y$ in $\LG$ we have
 \begin{enumerate}
-\item $\eval_Y \circ (1_{{}^\dual Y} \otimes \varphi) = \eval_X \circ ({}^\dual \varphi \otimes 1_X)$, 
 \item $(\varphi \otimes 1_{{}^\dual X}) \circ \coev_X = (1_Y \otimes {}^\dual \varphi) \circ \coev_Y$, 
+\item $\eval_Y \circ (1_{{}^\dual Y} \otimes \varphi) = \eval_X \circ ({}^\dual \varphi \otimes 1_X)$, 
 \item ${}^\dual \varphi = \lambda_{{}^\dual X} \circ (\eval_Y \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \varphi \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \coev_X) \circ \rho^{-1}_{{}^\dual Y}$
 \end{enumerate}
 and similarly for $\widetilde\eval$ and $\widetilde\coev$. Diagramatically the above identities read
 $$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (3,0.65) -- (3,0)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (2,0.65) -- (2,0)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
-\draw (3,0.65) -- (3,0)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (2,0.65) -- (2,0)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
 \draw[line width=0pt] 
@@ -2563,6 +2537,34 @@ node[above] {{{\small$Y$}}};
 node[above] {{{\small${}^\dual X$}}};
 \draw (2,0.35) -- (2,1)
 node[above] {{{\small$Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\, , \qquad
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (3,0.65) -- (3,0)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,0)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
+\draw (3,0.65) -- (3,0)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,0)
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \, , \qquad
@@ -2599,7 +2601,21 @@ $$
 \end{proposition}
 
 \begin{proof}
-The first identity follows immediately from the explicit expression for the evaluation. To prove the third identity we only have to apply the Zorro move and use part~(i), and then the third identity follows by appending another upwards-oriented $Y$-line to the left and another Zorro move: 
+Consider the diagrams
+$$
+\xymatrix{%
+\Hom(\Delta, X \otimes {}^\dual X) \ar[rr]^-{(\varphi \otimes 1)\circ(-)} && \Hom(\Delta, Y \otimes {}^\dual X) \\
+\Hom(X,X) \ar[rr]_-{\varphi\circ(-)} \ar[u]^-{\cong} && \Hom(X,Y)\,, \ar[u]_-{\cong}
+}%
+\quad
+\xymatrix{%
+\Hom(\Delta, Y \otimes {}^\dual Y) \ar[rr]^-{(1 \otimes {}^\dual \varphi)\circ(-)} && \Hom(\Delta, Y \otimes {}^\dual X) \\
+\Hom(Y,Y) \ar[rr]_-{(-)\circ\varphi} \ar[u]^-{\cong} && \Hom(X,Y)\,, \ar[u]_-{\cong}
+}%
+$$
+where the vertical maps are analogous to~\eqref{eq:isogivescoev2}. By their naturality both diagrams commute. The counterclockwise maps send $1_X \in \Hom(X,X)$ and $1_Y \in \Hom(Y,Y)$ to the same element in $\Hom(\Delta, {}^\dual X \otimes Y)$. Thus the two sides of part~(i) are equal as they are the images of~$1_X$,~$1_Y$ under the clockwise maps. 
+
+To prove part~(iii) we only have to apply a Zorro move and use part~(i), and with this part~(ii) follows together with another Zorro move: 
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
@@ -2617,7 +2633,7 @@ node[below] {{{\small${}^\dual Y$}}};
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (1,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
+\fill (3,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
 \draw (2,0.32) -- (2,0.68);
 \draw[line width=0pt] 
 (2,0.5) node[line width=0pt] (D) {}
@@ -2654,22 +2670,26 @@ node[below] {{{\small${}^\dual Y$}}};
 \draw[line width=0pt] 
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (2,0.35) -- (2,1.5)
-node[above] {{{\small$Y$}}};
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (3,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw (3,0.65) -- (3,-0.5)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
 \draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
+(0,0.5) node[line width=0pt] (D) {}
+(-1,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (0,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw (2,0.65) -- (2,-0.5)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (-1,0.65) -- (-1,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
 \draw (2,0.32) -- (2,0.68);
 \draw[line width=0pt] 
 (2,0.5) node[line width=0pt] (D) {}
@@ -2680,10 +2700,7 @@ node[above] {{{\small$Y$}}};
 (0,0.5) node[line width=0pt] (s) {}; 
 \draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
 \draw (1,0.32) -- (1,0.68);
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (0,0.32) -- (0,1.5)
-node[above] {{{\small$Y$}}};
+\draw (0,0.32) -- (0,0.5);
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -2692,12 +2709,12 @@ node[above] {{{\small$Y$}}};
 \draw[line width=0pt] 
 (3,0.5) node[line width=0pt] (D) {}
 (2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (2,0.35) -- (2,1.5)
-node[above] {{{\small$Y$}}};
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
+\draw (3,0.65) -- (3,-0.5)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \, . 
@@ -3245,9 +3262,9 @@ The defect operators satisfy the following compatibility conditions:
 \end{proposition}
 
 \begin{proof}
-(i) TODO: cite Kapustin-Rozansky. 
+(i) This is a direct consequence of Proposition~\ref{prop:defectaction} together with the results of~\cite[Section\,5.1, Eq.\,(21)]{kr0405232}. 
 
-(ii): In the proof of the explicit formula for $\mathcal D_l(X)$ in Proposition~\ref{prop:defectaction} we could also have used the alternative representations for $\eval_X$ and $\widetilde\coev_X$ in terms of $d_{X^\dual}$. Then the assertion immediately follows. (TODO: maybe better: look at Proposition~\ref{prop:defectaction} and use relation between $d_{X^\dual}$ and $d_X$)
+(ii): By the argument of Remark~\ref{remark:indeptlambda} reordering the partial derivatives of $d_{X^\dual}$ leaves $\mathcal D_r(X^\dual)$ invariant up to a sign. Together with $(d_{X^\vee})_{ij} = (-1)^{|e_j|}(d_X)_{ji}$ one checks that the claim then follows from Proposition~\ref{prop:defectaction}. 
 
 (iii) \& (iv): These relations follow from Proposition~\ref{prop:monoidalproperty} and a straightforward calculation with string diagrams, see e.\,g.~the proof of~\cite[Lemma~3.1]{cr1006.5609}. (TODO: do we want to show this calculation with wiggly lines?)
 \end{proof}
@@ -4227,7 +4244,7 @@ Consider the following diagram of $\mathbb{Z}_2$-graded complexes
 \[
 \xymatrix@C+2pc{
 \Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{\operatorname{gr}}} \ar[r]^-{\xi} & \Hom(\Hom(Y,X),k)[n]\\
-& \Hom^{gr}_k( \Hom(Y,X), k)[n](a) \ar[u]_{\iota = \inc}
+& \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k)[n](a) \ar[u]_{\iota = \inc}
 }
 \]
 where $\xi$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\xi$ lies in the subspace of homogeneous maps, and we let $\zeta_{\operatorname{gr}}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{\operatorname{gr}}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{\operatorname{gr}}$ is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes (forgetting the $\mathbb{Z}$-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
@@ -4455,7 +4472,7 @@ commute.
 }
 \ee
 commutes.
-\item[(iii)] In diagrammatic language the explicit construction of the $2$-morphism ${}^\dual \zeta$ can be presented in terms of the diagram: (TODO?)
+\item[(iii)] (TODO: do we need this part of the remark)In diagrammatic language the explicit construction of the $2$-morphism ${}^\dual \zeta$ can be presented in terms of the diagram: (TODO?)
 
 The commutativity of \eqref{eq:dualzeta} and \eqref{eq:dualzeta2} expresses the following two identities, which tell us that we can ``slide'' $2$-morphism around cups and caps: (TODO?)
 \end{itemize}
@@ -4773,6 +4790,11 @@ Proceedings of the XVI International Congress on Mathematical Physics, Prague, A
 \bibitem[Gray74]{gray}
 J.~W.~Gray, \textsl{Formal category theory: adjointness for 2-categories}, Springer-Verlag, Berlin, 1974.
 
+\bibitem[HL]{hl0404}
+M.~Herbst and C.~I. Lazaroiu, \textsl{Localization and traces in open-closed
+  topological {L}andau-{G}inzburg models}, JHEP \textbf{0505} (2005), 044,
+  \href{http://www.arxiv.org/abs/hep-th/0404184}{[hep-th/0404184]}.
+
 %\bibitem[FFRS07]{ffrs0607247}
 %J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
 %  defects in rational conformal field theory}, Nucl. Phys. B \textbf{763}
@@ -4824,6 +4846,16 @@ A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
   {T}heir {A}pplications},
   \href{http://arxiv.org/abs/1004.2307}{[arXiv:1004.2307]}.
 
+\bibitem[KL]{kl0305}
+A.~Kapustin and Y.~Li, \textsl{Topological {C}orrelators in {L}andau-{G}inzburg {M}odels with
+  {B}oundaries}, Adv. Theor. Math. Phys. \textbf{7} (2004), 727--749,
+  \href{http://www.arxiv.org/abs/hep-th/0305136}{[hep-th/0305136]}.
+
+\bibitem[KR]{kr0405232}
+A.~Kapustin and L.~Rozansky, \textsl{On the relation between open and closed
+  topological strings}, Commun. Math. Phys. \textbf{252} (2004), 393--414,
+  \href{http://arxiv.org/abs/hep-th/0405232}{[hep-th/0405232]}.
+  
 \bibitem[Kel64]{kelly}
 G.~M.~Kelly, \textsl{On {M}ac{L}ane's conditions for coherence of natural associativities, commutativities, etc.}, Journal of Algebra, 1, 397--402 (1964).
 
