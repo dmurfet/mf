@@ -338,7 +338,7 @@ Thus any TFT with defects is expected to be associated with a bicategory. Standa
 
 The subject of this paper is the bicategory $\LG$ of Landau-Ginzburg models over a base ring $k$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of the polynomial ring, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} Roughly, its objects (or bulk theories) are given by elements (or \textsl{potentials})~$W$ in a polynomial ring $R=k[x_1,\ldots,x_n]$ which have isolated singularities, and its 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$. The fusion of 1-morphisms is the tensor product~\cite{br0707.0922}, and the invisible defect is the stabilised diagonal which we present as the Koszul factorisation $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$ (see Section~\ref{sec:Background} for a detailed description). That $\LG$ is indeed a bicategory has been worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}. 
 
-On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that defect lines are \textsl{oriented} should give rise to adjunctions on the level of 1-morphisms: any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$, viewed as a $1$-morphism between the bulk theories described by potentials $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, there should be a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
+On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that defect lines are \textsl{oriented} should give rise to adjunctions on the level of 1-morphisms: any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X$ of $V-W$, viewed as a $1$-morphism between the bulk theories described by potentials $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, we expect a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
 \widetilde\eval_X: X \otimes_{k[x]} X^\dual \lra \Delta 
 \, , \qquad
@@ -1283,7 +1283,7 @@ for $x \in X, a \in R$. Notice that by left and right multiplication $\Omega R$ 
 is $R_2$-linear.
 \end{lemma}
 
-The element $[ \nabla, D ]$ of $\Hom_{R_2}(X, X \otimes_R \Omega^1 R)$ is not necessarily closed unless $W$ belongs to the image of the structure morphism $K \lto W$, which we indicate by saying that $W \in k$.
+The element $[ \nabla, D ]$ of $\Hom_{R_2}(X, X \otimes_R \Omega^1 R)$ is not necessarily closed unless $W$ belongs to the image of the structure morphism $k \lto W$, which we indicate by saying that $W \in k$.
 
 \begin{lemma} If $W \in k$ then $[ \nabla, D ]$ is a morphism of linear factorisations of $W$ over $R_2$.
 \end{lemma}
@@ -1298,7 +1298,21 @@ is $R_2$-linear. In particular if $W \in k$ then the homology class of $[ \nabla
 \begin{remark} To relate this to the earlier construction, observe that if $X$ is a free $\Re $-module with basis $\{ e_i \}_{i}$ then $\Omega R$ can be identified with $\Bar$ and the operator $d: X \lto X \otimes \Bar_1 = X \otimes_R \Omega^1 R$ of \eqref{eq:extendd} is a connection. \textbf{todo} Talk about extending $\nabla$ to operator on $X \otimes \Omega$. Reference for connections.
 \end{remark}
 
-\begin{remark}\label{remark:curvature_superconnection} Superconnections and their curvature.
+The Atiyah class can be viewed as a component of the curvature of a superconnection.
+
+\begin{remark}\label{remark:curvature_superconnection} A \emph{superconnection} $\Theta$ on a $\mathbb{Z}_2$-graded $R$-module $X$ is a $k$-linear degree one operator $\Theta$ on $X \otimes_R \Omega R$ satisfying the graded Leibniz rule
+\[
+\Theta( \xi \omega ) = \Theta( \xi ) \omega + (-1)^{|\xi|} \xi d \omega
+\]
+for all homogeneous $\xi \in X \otimes_R \Omega R$ and $\omega \in \Omega R$. If $\nabla$ is a connection on $X$ then we can extend $\nabla$ to an operator on $X \otimes_R \Omega R$, and it is easily checked that for any odd $R$-linear operator $D$ on $X$
+\[
+\Theta = \nabla + D
+\]
+is a superconnection. The \emph{curvature} of this superconnection is
+\[
+\Theta^2 = \nabla^2 + D^2 + [\nabla, D]\,.
+\]
+In this paper our connections $\nabla$ are flat, i.e., $\nabla^2 = 0$, and so if $(X,D)$ is a complex the curvature $\Theta^2$ is precisely the Atiyah class $[\nabla, D]$.
 \end{remark}
 %  \cite[Appendix $1$]{arnold}
 
