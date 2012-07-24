@@ -1185,7 +1185,7 @@ Similarly if instead $X$ is a $\mathbb{Z}_2$-graded free $(S \otimes_k R)$-modul
 There are two more variants of the Atiyah class that differ from the above only in the way in which we order the noncommutative differential forms. We can extend $s,d$ to operators on $\Bar \otimes X$ (using the right $\Re $-multiplication on $\Bar$ to form the tensor product) as above, but now without Koszul signs, and define operators on this tensor product by $\lAt_{2}(X) = [d, D]$ and $\lAt_{1}(X) = [s,D]$. 
 The difference from the other Atiyah classes appears when we exponentiate: 
 \begin{equation}\label{eq:leftatiyahexp}
-\lAt_{2}(X)^l( \omega \otimes e_i ) = \sum_{j_1,\ldots,j_l} \omega d( D_{j_1,i} ) d(D_{j_2,j_1}) \ldots d(D_{j_l,j_{l-1}}) \otimes e_{j_l}\,.
+\lAt_{2}(X)^l( \omega \otimes e_i ) = \sum_{j_1,\ldots,j_l} \omega d( D_{j_1 i} ) d(D_{j_2 j_1}) \ldots d(D_{j_l j_{l-1}}) \otimes e_{j_l}\,.
 \end{equation}
 From this it is clear that $\lAt_{2}$ is left $\Re $-linear, using the action of left multiplication on $\Bar \otimes X$.
 
@@ -1202,7 +1202,7 @@ X \otimes \Bar \ar[r]_-{\cong} & \reprod_*( \Bar ) \otimes X
 \]
 in which the rows are graded twist maps (with Koszul signs). For example,
 \be
-\Atlarrow_{2}(X)^l( \omega \otimes e_i ) = (-1)^{l|\omega| + \binom{l}{2}} \sum_{j_1,\ldots,j_l} d(D_{j_l,j_{l-1}}) \ldots d(D_{j_2,j_1}) d(D_{j_1,i}) \omega \otimes e_{j_l}\,. \label{eq:atlarrow_formula}
+\Atlarrow_{2}(X)^l( \omega \otimes e_i ) = (-1)^{l|\omega| + \binom{l}{2}} \sum_{j_1,\ldots,j_l} d(D_{j_l j_{l-1}}) \ldots d(D_{j_2 j_1}) d(D_{j_1 i}) \omega \otimes e_{j_l}\,. \label{eq:atlarrow_formula}
 \ee
 
 \begin{remark}\label{remark:atofshift} Consider the pair $(X[1], -D)$, with the same homogeneous basis as $X$. Then $\At_u(X)$ and $\At_u(X[1])$ define the same operator on the underlying module $X \otimes \Bar$ for $u \in \{1,2\}$. On the other hand, as operators on $\gamma_*(\Bar) \otimes X$ we have $\Atlarrow_u(X[1]) = - \Atlarrow_u(X)$.
@@ -1716,7 +1716,7 @@ Combining this with various canonical maps and the morphism $\pi: \Delta_W' \lto
 \Hom_{R \otimes_k S}(X,X)
 }\label{eq:isogivescoev2}
 \end{equation}
-where for $f \in X^\vee$ and $g,g' \in X$ we define $\kappa( f \otimes g )(g') = (-1)^{|f||g|} f(g') \cdot g$. To complete the proof we need only to show that the step marked $\pi$ is a homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1}.
+where for $f \in X^\vee$ and $g,g' \in X$ we define $\kappa( f \otimes g \otimes 1 )(g') = (-1)^{|f||g|} f(g') \cdot g$. To complete the proof we need only to show that the step marked $\pi$ is a homotopy equivalence. But this is a consequence of Lemma \ref{lemma:koszulstab1}.
 \end{proof}
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
@@ -1788,6 +1788,8 @@ The above formulas can be rewritten in terms of divided difference operators. Ap
 \coev_X(\gamma) = \sum_{j,i} (-1)^{\binom{r}{2} + s(\gamma) + r + mr + m|e_j|} \big\{ \partial_{[b_1]}(d_X) \ldots \partial_{[b_r]}(d_X) \big\}_{ij} e_{i} \otimes e_j^*\,.
 \ee
 \end{remark}
+
+\textbf{todo} which divided diff operator is this?
 
 \subsection{Evaluation}\label{subsec:eval}
 % see (eval)
@@ -2461,7 +2463,7 @@ The detailed argument is given in Appendix \ref{section:extendduality}, and we n
 \[
 (-)^\dual = (-)^\vee[n]: \LG(W,V) \lto \LG(V,W)
 \]
-is well-defined, and hypothesis (ii) of the Appendix is easily checked using the explicit formula for the evaluation. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $Y^{\vee}[n]$, and similarly one proves that $Y^{\vee}[m]$ is left adjoint to $Y$.
+is well-defined, and hypothesis (ii) of the Appendix is checked below in Proposition \ref{prop.morphismmigration}. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $Y^{\vee}[n]$, and similarly one proves that $Y^{\vee}[m]$ is left adjoint to $Y$.
 \end{proof}
 
 With the notation of Remark \ref{remark:integral_functors} this shows that there are adjunctions of integral functors
@@ -3272,7 +3274,7 @@ The defect operators satisfy the following compatibility conditions:
 
 \section{Open/closed topological field theory}\label{sec:ocTFT}
 
-In this section we describe how the structure of two-dimensional open/closed topological field theory (TFT) is completely  captured in the bicategory $\LG$. We will see how all TFT data are naturally encoded in string diagrams that directly translate the physical intuition into straightforwardly computable 2-morphisms. More generally, this allows for the computation of any correlator (of worldsheets of arbitrary genus, possibly with boundaries and defect lines). As an example we will compute an annulus correlator, thereby providing a new, simple proof of the Cardy condition. 
+In this section we describe how the structure of two-dimensional open/closed topological field theory (TFT) is completely  captured in the bicategory $\LG$. We will see how all TFT data are naturally encoded in string diagrams that directly translate the physical intuition into straightforwardly computable 2-morphisms. More generally, this allows for the computation of any correlator (of worldsheets of arbitrary genus, possibly with boundaries and defect lines). As an example we will compute an annulus correlator, thereby providing a new, simple proof (\textbf{HAHA}) of the Cardy condition. 
 
 Recall from~\cite{l0312, ms0609042} that one way to present a two-dimensional open/closed TFT is by the data of 
 \begin{itemize}
