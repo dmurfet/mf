@@ -1011,6 +1011,26 @@ To establish compatibility with the products we compute
 where in the third step the anti-commutativity of the~$\theta_i$ allowed us to sum over the longer sequences $i_1<\ldots< i_{p+q}$ by introducing an additional sum over shuffles. 
 \end{proof}
 
+We will also need the following identity.
+
+\begin{lemma}\label{lem:PsiToTheRight}
+Let $\omega\in\Omega^n R$ and $f \in R$ be given. Then $\Psi(\omega \cdot (f \otimes 1))=\Psi(\omega) \cdot (1 \otimes f)$. 
+\end{lemma}
+
+\begin{proof}
+We may assume that $\omega$ is of the form $da_1\ldots da_n$ for some $a_i\in R$. Then
+\begin{align*}
+\Psi(\omega f) & = \Psi \Big( \sum_{i=1}^n (-1)^{n-i} da_1\ldots da_{i-1} d(a_i a_{i+1}) da_{i+2}\ldots da_n df + (-1)^n a_1 da_2\ldots da_n df \Big) \\
+& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \partial_{[i]} (a_i a_{i+1}) \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
+& \qquad + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
+& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \Big(\partial_{[i]} a_i {}	^{t_1\ldots t_i}a_{i+1} + {}^{t_1\ldots t_{i-1}} a_i \partial_{[i]} a_{i+1} \Big) \\
+& \qquad \cdot  \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
+& = \partial_{[1]} a_1 \ldots \partial_{[n]} a_n (1 \otimes f) \\
+& = \Psi(\omega) (1 \otimes f) \, ,
+\end{align*}
+where we used Lemma~\ref{lem:LeibnizForDQO} in the third step. 
+\end{proof}
+
 On a practical level both the Bar and Koszul complexes resolve the diagonal, so there must be a chain map lifting the identity on the diagonal, and $\Psi$ gives one particular example of such a chain map. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{appendix:mapeppsi}.
 
 Now we come back to consider any $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
@@ -1756,7 +1776,7 @@ with the second equality holding because $s$ is $R$-linear.
 
 \begin{proposition}\label{prop:alt_formula_coev} A representative for the coevaluation morphism is the chain map
 \be\label{eq:alt_formula_coev}
-\widetilde\coev^R_X(\gamma) = \varepsilon \left( \sum_{l \ge 0} (-1)^{l+nl} \Psi \At_{1}(X)^l( \iota_X ) \wedge \gamma \right) .
+\gamma \mapsto \varepsilon \left( \sum_{l \ge 0} (-1)^{l+nl} \Psi \At_{1}(X)^l( \iota_X ) \wedge \gamma \right) .
 \ee
 \end{proposition}
 
@@ -1770,9 +1790,9 @@ A representative for $\coev_X$ is the chain map \eqref{eq:coev102}.
 \end{proposition}
 \begin{proposition} 
 A representative for $\coev_X$ is the chain map
-\[
-\coev^R_X( \gamma ) = \sum_{l \ge 0} (-1)^{l + ml} \varepsilon \left( \Psi \At_1(X^{\vee})^l( \iota'_X ) \wedge \gamma \right) .
-\]
+\be
+\gamma \mapsto \sum_{l \ge 0} (-1)^{l + ml} \varepsilon \left( \Psi \At_1(X^{\vee})^l( \iota'_X ) \wedge \gamma \right) .
+\ee
 where $\iota'_X$ is as given in~\eqref{eq:iotaX}.
 \end{proposition}
 
@@ -2180,17 +2200,33 @@ As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_
 \ee
 \end{lemma}
 
-\begin{remark} Before giving the proof of the lemma, let us roughly sketch how it leads to an argument that $\mathcal Z$ is homotopic to the identity. Although we will not formalise the argument in precisely these terms, the Atiyah class is ``anti-self-adjoint'' (\textbf{todo} still compatible with signs?) with respect to $\langle\!\langle \str( - ) \rangle\!\rangle$: 
-\begin{equation}\label{eq:trueproofeq}
-\big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-)\big) \big\rangle\!\big\rangle \simeq (-1)^n \big\langle\!\big\langle \str \big( \At^n( \Lambda ) \circ -\big) \big\rangle\!\big\rangle\,.
-\end{equation}
-We will see that $\At^n( \Lambda )$ is a transition determinant in the sense of the calculus of residues, so that the right-hand side of~(\ref{eq:trueproofeq}) can be identified with $\str(-)$. Hence
+\begin{remark} Before giving the proof of the lemma, let us sketch out the proof that $\mathcal Z$ is homotopic to the identity. The idea is that this should follow from skew-symmetry of $\At$, i.e., a homotopy
+\be\label{eq:untrueformula}
+\big\langle\!\big\langle \str \big( - \circ \At (-)\big) \big\rangle\!\big\rangle \simeq - \big\langle\!\big\langle \str \big( \At(-) \circ -\big) \big\rangle\!\big\rangle\,.
+\ee
+Unfortunately we do not know how to make sense of the right hand side, let alone prove it. We hope to return to this via a more thorough study of associative Atiyah classes. But let us ignore this problem for a moment and see where our daring gets us: we calculate that for $\varphi \in \End(X) \otimes_{R_1} \Bar$, there are homotopies of functionals of the variable $\varphi$
+\begin{align*}
+\dlangle \str \big( \lambda_1 \cdots \lambda_n \circ \At (\varphi) \big) \drangle &\simeq -\dlangle \str \big( \At(\lambda_1 \cdots \lambda_n) \circ \At^{n-1}(\varphi) \big) \drangle\\
+&\simeq - \sum_{i=1}^n (-1)^{i+1}\dlangle \str \big( \lambda_1 \cdots \At(\lambda_i) \cdots \lambda_n \circ \At^{n-1}(\varphi) \big) \drangle\\
+&\simeq -\sum_{i=1}^n (-1)^{i+1} \dlangle df_i \str \big( \lambda_1 \cdots \widehat{\lambda}_i \cdots \lambda_n \circ \varphi \big) \drangle\,.
+\end{align*}
+We will not make sense of these intermediate steps, but the initial and final terms are well-defined and we prove that they are homotopic functionals of $\varphi$ as the $p = 0$ case of Lemma \ref{lemma:zorromain} below. In this way we may, by omitting the ill-defined intermediate steps, proceed ``using'' the skew-symmetry \eqref{eq:untrueformula} to prove the Zorro move. 
+
+Taking $\varphi = \At^{n-1}(\alpha)$ we prove in Lemma \ref{lemma:zorromain} each of the following homotopies
+\begin{align*}
+\dlangle \str &\big( \Lambda \circ \At^n( \alpha ) \big) \drangle \simeq 
+-\sum_{i_1} (-1)^{i_1+1} \dlangle df_{i_1} \str \big( \lambda_1 \cdots \widehat{\lambda}_{i_1} \cdots \lambda_n) \circ \At^{n-1}(\alpha) \big) \drangle\\
+&\simeq (-1)^2 \sum_{i_1 \neq i_2} (-1)^{i_1+1+i_2+2} \dlangle (df_{i_1} df_{i_2} - df_{i_2} df_{i_1}) \str \big( \lambda_1 \cdots \widehat{\lambda}_{i_1} \cdots \widehat{\lambda}_{i_2} \cdots \lambda_n) \circ \At^{n-2}(\alpha) \big) \drangle\\
+&\simeq \cdots\\
+&\simeq (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \dlangle df_{\sigma(1)} \cdots df_{\sigma(n)} \str( \alpha ) \big) \drangle\\
+&= (-1)^n \str( \alpha )
+\end{align*}
+where in the last step we use a standard fact of the residue calculus: integrating against the determinant of the matrix $( \partial_{[i]}(f_j) )$ is the identity. Applied to the formula \eqref{Zorrointermediate} this yields
 \begin{equation}\label{eq:trueproofeq2}
 \mathcal{Z} \simeq \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j = \sum_j \str(e_j^* \circ -) \cdot e_j = 1_X\,.
 \end{equation}
+and the Zorro move is proved.
 \end{remark}
-
-There are two subtleties which complicate the proof. The first is that we must deal throughout with associative Atiyah classes and thus noncommutative differential forms (compare with the proof of nondegeneracy in Section~\ref{section:dualityadjointop} where only ordinary Atiyah classes are involved). The second is that the identites above only hold, in general, up to homotopy ``$\simeq$''.
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
 Throughout the proof we write $\At$ for $\At_2$. The image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1} is computed by the expressions in \eqref{eq:formula_rhoinverse} and \eqref{eq:coev10}
@@ -2233,10 +2269,16 @@ To finish applying $\widetilde\eval_0$ it remains to compose with $\Lambda$, mul
 &= \sum_j (-1)^{n + (n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right] \cdot e_j\\
 &= \sum_j (-1)^{n + (n+1)|e_j|+n|e_q|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
 \end{align*}
-The only nonvanishing summands have $|e_q| = |e_j|$, so the sign in the last formula is in fact $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$. Since the Zorro map~$\mathcal Z$ is $S \otimes_k R$-linear it is fixed by its action on basis elements~$e_q$, which proves that $\mathcal{Z}$ is given by (\ref{Zorrointermediate}).
+The nonvanishing summands have $|e_q| = |e_j|$, so the sign in the last formula is $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$ and we have proven that the left and right hand sides of \eqref{Zorrointermediate} agree on basis elements $e_q$. To complete the proof it therefore suffices to argue that the right hand side is $S \otimes_k R$-linear. But $S$-linearity is trivial and for $r \in R$ we use that the Atiyah class is right $\Re$-linear and Lemma \ref{lem:PsiToTheRight} to see that for $\eta \in X$
+\begin{align}
+\dlangle \str \big( \Lambda \circ \At^n (r \eta) \big) \drangle &= \dlangle \str \big( \Lambda \circ \At^n (\eta) \big) \cdot (r \otimes 1) \drangle\nonumber\\
+&= \Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( \eta ) \Big) \cdot (1 \otimes r) \underline{\operatorname{d}\! x} }{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]\nonumber\\
+&= \dlangle \str \big( \Lambda \circ \At^n (\eta) \big) \drangle \cdot r\,.\label{eq:eatthemoon}
+\end{align}
+Hence both sides of \eqref{Zorrointermediate} are $S \otimes_k R$-linear and therefore agree.
 \end{proof}
 
-The basic adjointness that we need is contained in the next lemma. Throughout we write $\psi^\bullet$ for the operator $\psi^\bullet(\alpha \otimes \omega) = \psi \circ \alpha \otimes \omega$ on $\End(X) \otimes_{R_1} \Bar$, and we denote $[d_X,-]$ by~$D$.
+We write $\psi^\bullet$ for the operator $\psi^\bullet(\alpha \otimes \omega) = \psi \circ \alpha \otimes \omega$ on $\End(X) \otimes_{R_1} \Bar$, and $D = [d_X,-]$.
 
 \begin{lemma}\label{lemma:lameadjoints} Given homogeneous $\psi \in \End(X)$ and $\varphi \in \End(X) \otimes_{R_1} \Bar$
 \begin{align*}
@@ -2252,176 +2294,142 @@ The super Jacobi identity for operators on this tensor product gives
 It is easy to see that $\str \circ d = d \circ \str$ and hence $\str \circ \At = 0$ so if we apply~\eqref{superJacobi0} to~$\varphi$
 \begin{align*}
 \dlangle \str\big( \psi \circ \At(\varphi) \big) \drangle &= (-1)^{|\psi|} \dlangle \str\big( \big[ D, \big[ \psi^\bullet, d \big] \big] \varphi \big) \drangle - \dlangle \str\big( \big[ d, \big[ D, \psi^\bullet \big] \big] \varphi \big) \drangle\\
-&= \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle\\
-&\qquad-  \dlangle d \str\big( \big[ D, \psi^\bullet \big] \varphi \big) \drangle\\
-&\qquad- (-1)^{|\psi|}\dlangle \str\big( \big[ D, \psi^\bullet \big]( d \varphi ) \big) \drangle \, .
+&= \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle -  \dlangle d \str\big( \big[ D, \psi^\bullet \big] \varphi \big) \drangle - (-1)^{|\psi|}\dlangle \str\big( \big[ D, \psi^\bullet \big]( d \varphi ) \big) \drangle \, .
 \end{align*}
 But since $[D, \psi^\bullet] = D(\psi)^\bullet$ this is what we wanted to show.
 \end{proof}
 
-Applying the previous lemma with $\psi = \Lambda$ and using that $D(\Lambda)$ is a linear combination of the $f_i$ which annihilate with the residue in $\langle\!\langle - \rangle\!\rangle$ we find that
-\[
-\big\langle\!\big\langle \str( \lambda_1 \ldots \lambda_n \circ \At(\varphi) ) \big\rangle\!\big\rangle = \sum_{i=1}^n (-1)^{i} \Big\langle\!\!\Big\langle d \left\{ f_i \str( \lambda_1 \ldots \widehat{\lambda_i} \ldots \lambda_n \circ \varphi ) \right\} \Big\rangle\!\!\Big\rangle + h_0( D(\varphi))
-\]
-for some function $h_0$, where as usual $\widehat{\lambda_i}$ means that $\lambda_i$ is omitted. Applying the lemma again will reduce the number of $\lambda$'s by one, and proceeding inductively we can use the lemma to interpolate between the left- and right-hand sides of (\ref{eq:trueproofeq}) (although we will never formalise exactly what the right hand side means! \textbf{todo}). The precise statement is contained in the next lemma, of which the previous formula is the $p = 0$ case.
-
-We will need some notation: given a subset $\bs{i} = \{i_1,\ldots,i_p\}$ of $\{1, \ldots, n\}$ (we do not require that the $i_j$ be in ascending order) we write $\ell(\bs{i}) = p$ and
+Given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1, \ldots, n\}$ (not necessarily ascending) define $\ell(\bs{i}) = p$ and
 \be
-|\bs{i}| = \sum_{1 \le a < b \le p} \delta_{i_a > i_b}\, , \qquad \gamma(\bs{i}) = |\bs{i}| + i_1 + \ldots + i_p + \binom{p}{2}\,.
+|\bs{i}| = \sum_{1 \le a < b \le p} \delta_{i_a > i_b}\, , \qquad \gamma(\bs{i}) = |\bs{i}| + i_1 + \ldots + i_p\,.
 \ee
-The empty sequence $\emptyset$ is the unique sequence of length $\ell(\emptyset) = 0$. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \ldots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted.
+The empty sequence $\emptyset$ is the unique sequence of length zero. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \ldots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted, and $f_i = \partial_{x_i} W$ as before.
 %Let $D$ denote the differential on $\End(X)$, i.\,e.~the commutator with~$d_X$.
 
+% see przor4
 \begin{lemma}\label{lemma:zorromain} For $\varphi \in \End(X) \otimes_{R_1} \Bar$ and $0 \le p < n$ we have
 \begin{align*}
-\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i})} & \Big\langle\!\!\Big\langle d \left\{ f_{i_1} \cdots d \left\{ f_{i_p} \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \right\} \cdots \right\}  \Big\rangle\!\!\Big\rangle\\
-&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i})} \Big\langle\!\!\Big\langle d \left\{ f_{i_1} \cdots d\left\{ f_{i_{p+1}} \str\big( \Lambda_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \right\} \cdots \right\} \Big\rangle\!\!\Big\rangle + h_p( D \varphi )
+\sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i})} & \Big\langle\!\!\Big\langle d f_{i_1} \cdots d f_{i_p} \str\big( \Lambda_{i_1,\ldots,i_p} \circ \At(\varphi) \big) \Big\rangle\!\!\Big\rangle\\
+&= \sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i})+p} \Big\langle\!\!\Big\langle d f_{i_1} \cdots d f_{i_{p+1}} \str\big( \Lambda_{i_1,\ldots,i_p,i_{p+1}} \circ \varphi \big) \Big\rangle\!\!\Big\rangle + h_p( D \varphi )
 \end{align*}
-where $f_i = \partial_{x_i} W$, $D=[d_X,-]$ is the differential on $\End(X)$, and the sums are over all sequences of length $p, p+1$, respectively, and
+where the sums are over all sequences of length $p, p+1$, respectively, and
 \[
-h_p( \alpha ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i})} \Big\langle\!\!\Big\langle d \left\{ f_{i_1} \cdots d\left\{ f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}^\bullet, d](\alpha) \big) \right\} \cdots \right\} \Big\rangle\!\!\Big\rangle\,.
+h_p( \alpha ) = \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i})} \Big\langle\!\!\Big\langle d f_{i_1} \cdots d f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}^\bullet, d](\alpha) \big) \Big\rangle\!\!\Big\rangle\,.
 \]
 \end{lemma}
 \begin{proof}
-Fix a sequence $\bs{i}$ of length $p$, set $\psi = \Lambda_{i_1,\ldots,i_p}$ and let $\eta$ be the operator $\eta = d \circ f_{i_1} \circ \cdots \circ d \circ f_{i_p}$ on $\Bar$, where the $f_i$ stand for multiplication (on the left) by $f_i$. Then by Lemma \ref{lemma:lameadjoints}, or rather the proof with $\dlangle - \drangle$ replaced by $\dlangle \eta( - ) \drangle$ we have
+Fix a sequence $\bs{i}$ of length $p$ and observe that for $q \notin \bs{i}$
+\be\label{eq:lambdasigns}
+\gamma( ( i_1, \ldots, i_p, q ) ) = \gamma(\bs{i}) + q + \sum_{1 \le a \le p} \delta_{i_a > q} = \gamma(\bs{i}) + q + p + \sum_{1\le b \le p} \delta_{i_b<q} \,.
+\ee
+Set $\psi = \Lambda_{i_1,\ldots,i_p}$ and $\eta = d f_{i_1} \cdots d f_{i_p}$. Then by the argument of Lemma \ref{lemma:lameadjoints}
 \begin{align}
 \dlangle \eta\, \str\big( \psi \circ \At(\varphi) \big) \drangle &= -\dlangle \eta\, d\, \str\big( D(\psi) \circ \varphi \big) \drangle \label{eq:hutch1}\\
-&\qquad+ + \dlangle \eta\, \str\big( [\psi^\bullet, d]( D\varphi ) \big) \drangle\label{eq:hutch2}\\
+&\qquad+  \dlangle \eta\, \str\big( [\psi^\bullet, d]( D\varphi ) \big) \drangle\label{eq:hutch2}\\
 &\qquad- (-1)^{n-p}\dlangle \eta\, \str\big( D(\psi) \circ d\varphi \big) \drangle\label{eq:hutch3}
 \end{align}
-Since $D(\lambda_i) = f_i$ we have
+Since $D(\lambda_i) = f_i$,
 \be\label{eq:expansiondpsi}
 D(\psi) = \sum_{q \notin \{ i_1, \ldots, i_p \} } (-1)^{q+1 + \sum_{1 \le b \le p} \delta_{i_b<q}} f_q \cdot \Lambda_{i_1,\ldots,i_p,q}
 \ee
-where the sign counts the number of $\lambda$'s appearing to the left of $\lambda_q$ in $\Lambda_{i_1,\ldots,i_p}$. By construction
-\be\label{eq:lambdasigns}
-\gamma( ( i_1, \ldots, i_p, q ) ) = \gamma(\bs{i}) + q + p + \sum_{1 \le a \le p} \delta_{i_a > q} = \gamma(\bs{i}) + q + \sum_{1\le b \le p} \delta_{i_b<q} \,.
-\ee
-Substituting, the last summand (\ref{eq:hutch3}) in the above is, up to a sign, 
-\[
-\sum_{q \notin \{ i_1,\ldots, i_p \}} (-1)^{q + \sum_{1\le b \le p} \delta_{i_b<q}} \bigdlangle d\left\{ f_{i_1} \cdots d\left\{ f_{i_p} f_q \str\big( \Lambda_{i_1,\ldots,i_p,q} \circ d \varphi \big) \right\} \cdots \right\} \bigdrangle \, .
-\]
-If we sum over all sequences $\bs{i}$ with the signs given in the statement of the lemma this vanishes, because $f_{i_p} f_q$ and $f_q f_{i_p}$ appear in the sum with opposite signs. This completes the proof, since the sum over $\bs{i}$ of (\ref{eq:hutch1}) and (\ref{eq:hutch2}) gives us the right-hand side of the equation in the statement of the lemma, and the signs are correct by \eqref{eq:lambdasigns}.
+where the sign counts the number of $\lambda$'s appearing to the left of $\lambda_q$ in $\Lambda_{i_1,\ldots,i_p}$. We claim that the sum over all sequences of the last summand (\ref{eq:hutch3}), with the signs $(-1)^{\gamma(\bs{i})}$ given in the statement of the lemma, vanishes. Substituting \eqref{eq:expansiondpsi} the sum in question is
+\begin{align*}
+\sum_{\ell(\bs{i}) = p} \sum_{q \notin \bs{i}} &(-1)^{\gamma(\bs{i}) + q + 1 + \sum_{1 \le b \le p} \delta_{i_b<q}} \dlangle d f_{i_1} \cdots d f_{i_p} f_q \str\big( \Lambda_{i_1,\ldots,i_p,q} \circ d\varphi \big) \drangle\\
+&= (-1)^{p+1}\sum_{\ell(\bs{i}) = p+1} (-1)^{\gamma(\bs{i})} \dlangle d f_{i_1} \cdots d f_{i_p} f_{i_{p+1}} \str\big( \Lambda_{i_1,\ldots,i_p,i_{p+1}} \circ d\varphi \big) \drangle
+\end{align*}
+which vanishes by Lemma \ref{lemma:langlecalc1} below, proving the claim.
+
+The signed sum over all sequences of the remaining terms (\ref{eq:hutch1}) and (\ref{eq:hutch2}) gives us the right-hand side of the equation in the statement of the lemma, completing the proof.
 \end{proof}
 
-\begin{lemma}\label{lemma:langlecalc1} For $\varphi \in \End(X)$ we have
+\begin{lemma}\label{lemma:banatechn} Given a sequence $\bs{i} = (i_1,\ldots,i_p)$ of length $p \ge 2$ and any $\omega \in \Bar$
 \[
-\big\langle\!\big\langle \str \big( \Lambda \circ \At^n (\varphi)\big) \big\rangle\!\big\rangle = (-1)^{n} \str(\varphi) + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )\,.
+\sum_{\sigma \in S_p} (-1)^{|\sigma|} \dlangle d f_{i_{\sigma(1)}} \cdots d f_{i_{\sigma(p-1)}} f_{i_{\sigma(p)}} \omega \drangle = 0\,.
 \]
 \end{lemma}
 \begin{proof}
-Applying Lemma \ref{lemma:zorromain} repeatedly yields
-\begin{align*}
-\big\langle\!\big\langle \str \big( \Lambda \circ \At^n (\varphi)\big) \big\rangle\!\big\rangle &= \sum_{\ell(\bs{i}) = n} (-1)^{\gamma(\bs{i})} \big\langle\!\big\langle d \left\{ f_{i_1} \cdots d\left\{ f_{i_n} \str(\varphi) \right\} \cdots \right\} \big\rangle\!\big\rangle + H'\\
-&= (-1)^{n}\sum_{\sigma \in S_n} (-1)^{|\sigma|} \big\langle\!\big\langle d \left\{ f_{\sigma(1)} \cdots d\left\{ f_{\sigma(n)} \str(\varphi) \right\} \cdots \right\} \big\rangle\!\big\rangle + H'\,.
-\end{align*}
-%where 
-%$$
-%\delta = 
-%\det 
-%\begin{pmatrix}
-%df_1 & df_2 & \ldots & df_n \\
-%\vdots & \vdots & & \vdots \\
-%df_1 & df_2 & \ldots & df_n 
-%\end{pmatrix} .
-%$$
-%This concludes the proof that the Zorro map~\eqref{Zorro1superdetail} is homotopic to the identity. 
-where $H' = \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) )$. By a small argument involving transition determinants (\textbf{todo}) this equals 
-\[
-(-1)^{n} \str( \varphi ) + \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) ) \, .
-\]
+For any permutation $\sigma$,
+\begin{align}
+\dlangle d f_{i_{\sigma(1)}} \cdots d f_{i_{\sigma(p-1)}} f_{i_{\sigma(p)}} \omega \drangle &= \dlangle d f_{i_{\sigma(1)}} \cdots d(f_{i_{\sigma(p-1)}} f_{i_{\sigma(p)}}) \omega \drangle\label{eq:bana1}\\
+&- \dlangle d f_{i_{\sigma(1)}} \cdots f_{i_{\sigma(p-1)}} df_{i_{\sigma(p)}} \omega \drangle\,.
+\end{align}
+When we sum over all permutations $\sigma$ the terms \eqref{eq:bana1} cancel pairwise due to the symmetry in exchanging $\sigma$ with $\sigma \circ (a, a-1)$. In this way we ``migrate'' the undifferentiated $f_i$ to the very left of the expression, where it annihilates with the residue in $\dlangle - \drangle$.
 \end{proof}
 
-The upshot is that, by the previous lemma and Lemma \ref{lemma:Zorrointermediate},
+% see przor4
+\begin{lemma}\label{lemma:langlecalc1} For $\alpha \in \End(X)$ we have
+\be\label{eq:langlecalc1}
+\big\langle\!\big\langle \str \big( \Lambda \circ \At^n \alpha\big) \big\rangle\!\big\rangle = (-1)^{n} \str(\alpha) + \sum_{p=0}^{n-1} (-1)^{\binom{p}{2}} h_i( D \At^{n-p-1}\alpha )\,.
+\ee
+\end{lemma}
+\begin{proof}
+Applying Lemma \ref{lemma:zorromain} twice beginning with $\varphi = \At^{n-1}(\alpha)$ yields
 \begin{align*}
-\mathcal{Z} &= \sum_j (-1)^{n+|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\\
-&= \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j + H\\
-&= \sum_j \str(e_j^* \circ -) \cdot e_j + H\\
-&= 1_X + H
+\dlangle &\str( \Lambda \circ \At^n\alpha ) \drangle = \sum_{\ell(\bs{i}) = 1} (-1)^{\gamma(\bs{i})} \dlangle df_{i_1} \str( \Lambda_{i_1} \circ \At^{n-1}\alpha ) \drangle + h_0( D\At^{n-1}\alpha )\\
+&= \sum_{\ell(\bs{i}) = 2} (-1)^{\gamma(\bs{i}) + 1} \dlangle df_{i_1} df_{i_2} \str( \Lambda_{i_1,i_2} \circ \At^{n-2}\alpha ) \drangle + h_0( D \At^{n-1} \alpha ) + h_1( D \At^{n-2} \alpha )\,.
 \end{align*}
-where
-\[
-H = \sum_j \sum_{p=0}^{n-1} (-1)^{|e_j|} h_i( D \At^{n-p-1}(- \circ e_j^*) ) \cdot e_j\,.
-\]
-As the difference of two closed maps $H = \mathcal{Z} - 1_X$ is a closed endomorphism of $X$, and to complete the proof that $\mathcal{Z} \simeq 1_X$ it remains to prove that $H$ is null-homotopic (\textbf{todo} From here on do not trust, some errors in $H$ for example).
+After $n$ steps we find that, writing $h(\alpha)$ for the second summand in \eqref{eq:langlecalc1},
+\begin{align*}
+\dlangle \str( \Lambda \circ \At^n\alpha ) \drangle &= \sum_{\ell(\bs{i}) = n} (-1)^{\gamma(\bs{i}) + \binom{n}{2}} \dlangle df_{i_1} \cdots df_{i_n} \str(\alpha) \drangle + h(\alpha)\\
+&= (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \dlangle df_{\sigma(1)} \cdots df_{\sigma(n)} \str(\alpha) \drangle + h(\alpha)\\
+&= (-1)^n \str(\varphi) + h(\alpha)\,.
+\end{align*}
+where in the last step we use the residue identity from Lemma \ref{??}.
+\end{proof}
 
-The idea is to use the nondegenerate pairing on the morphism spaces of $\hmf(k[x,z], V-W)$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{kl0305,hl0404} but in general we use the contents of Section \ref{??} (\textbf{more}). The precise statement (Theorem \ref{??}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
+Using the explicit formula for $\mathcal{Z}$ from Lemma \ref{lemma:Zorrointermediate} and the previous calculation, we compute that
+\begin{align}
+\mathcal{Z} &= \sum_j (-1)^{n+|e_j|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (-\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\nonumber\\
+&= \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j + H\nonumber\\
+&= \sum_j \str(e_j^* \circ -) \cdot e_j + H\nonumber\\
+&= 1_X + H\label{eq:zorroequalsH}
+\end{align}
+where
+\be\label{eq:defnmapH}
+H = \sum_j \sum_{p=0}^{n-1} (-1)^{n+|e_j|+\binom{p}{2}} h_p( D \At^{n-p-1}(- \circ e_j^*) ) \cdot e_j\,.
+\ee
+As the difference of two closed maps $H = \mathcal{Z} - 1_X$ is a closed endomorphism of $X$, and to complete the proof that $\mathcal{Z} \simeq 1_X$ it remains to prove that $H$ is null-homotopic.
+
+The idea is to use the nondegenerate pairing on the mapping complexes of the dg-category of matrix factorisations  of $V-W$. If~$k$ is a field this is the Kapustin-Li pairing of \cite{kl0305,hl0404} but in general we use the contents of Section \ref{section:dualityadjointop}. The precise statement (Theorem \ref{theorem:generalkl}) is that there is a homotopy equivalence of $\mathbb{Z}_2$-graded complexes over $k$
 \be
-\Hom_{k[x,z]}(X,X) \lto \Hom_k( \Hom_{k[x,z]}(X,X), k )[m+n]\,, \qquad \varphi \lmt \langle \varphi, - \rangle_X\,.
+\End(X) \lto \Hom_k( \End(X), k )[m+n]\,, \qquad \varphi \lmt \langle \varphi, - \rangle_X\,.
 \ee
 induced by the pairing
 \begin{equation}\label{eq:bracketkl}
-\langle -, - \rangle_X = \frac{1}{n!} \sum_{\sigma \in S_n} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ \str( - \circ - \circ \Lambda^{(x)} \Lambda^{(z)}) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W, \ldots, \partial_{x_n} W, \partial_{z_1} V, \ldots, \partial_{z_m} V} \right]
+\langle \beta, \alpha \rangle_X = \Res_{R \otimes S/k} \left[ \frac{ \str( \beta \circ \alpha \circ \Lambda^{(x)} \Lambda^{(z)}) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W, \ldots, \partial_{x_n} W, \partial_{z_1} V, \ldots, \partial_{z_m} V} \right]
 \end{equation}
-where $\Lambda^{(x)}=\Lambda$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)}$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. To prove that $\mathcal{Z} \simeq 1_X$ it is therefore enough to prove that the functionals $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ on $\Hom_{k[x,z]}(X,X)$ are homotopic, or what is the same, that $\langle H, \varphi \rangle_X$ can be written as a function of $D(\varphi)=[d_X,\varphi]$. This will follow from a careful study of the map $\str( H \circ - )$.
+where $\Lambda^{(x)} = \lambda_1 \cdots \lambda_n$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)} = \mu_1 \cdots \mu_m$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. That is, $D( \mu_j ) = \partial_{z_j} V \cdot 1_X$ (\textbf{todo} justify lack of symmetrisation).
 
-We compute for a homogeneous element $\varphi \in \End(X)$ that
-\begin{align}
-\str(H \varphi) &= \str( \mathcal{Z} \varphi ) - \str(\varphi) \nonumber\\
-&= \sum_i (-1)^{|e_i|} e^*_i \big( \mathcal Z(\varphi(e_i)) \big) - \str(\varphi)\nonumber \\
-& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n} e^*_i \Big( \big\langle\!\big\langle \str( \Lambda \At^n (\varphi(e_i)\otimes e^*_j \otimes e_j)) \big\rangle\!\big\rangle \Big) - \str(\varphi)\nonumber \\
-& = \sum_{i,j} (-1)^{|e_i| + |e_j| + n + n|e_j|} e^*_i \Big( \big\langle\!\big\langle \str( \Lambda \At^n (\varphi(e_i)\otimes e^*_j )) \big\rangle\!\big\rangle e_j \Big) - \str(\varphi)\nonumber \\
-& = \big\langle\!\big\langle \str \big( \Lambda \At^n \big(\sum_i \varphi(e_i)\otimes e^*_j \big)\big) \big\rangle\!\big\rangle - \str(\varphi)\nonumber \\
-& = \big\langle\!\big\langle \str \big( \Lambda \At^n (\varphi)\big) \big\rangle\!\big\rangle - \str(\varphi) \nonumber\\
-&= \sum_{p=0}^{n-1} h_i( D \At^{n-p-1}(\varphi) ) \label{strlambdaAtn}
-\end{align}
-where in the last step we use Lemma \ref{lemma:langlecalc1}. For the final steps in the argument we will need the following lemma.
+To prove that $H: X \lto X$ is null-homotopic it is therefore sufficient to prove that $\langle H, - \rangle_X$ is a coboundary in the complex $\Hom_k( \End(X), k)$, or what is the same, that it can be factored through the differential $D$. This will follow from a careful study of the map $\str( H \circ - )$, the crux of which is
 
-\begin{lemma}\label{lem:PsiToTheRight}
-Let $\omega\in\Omega(k[x_1,\ldots,x_n])$ be an $n$-form. Then $\Psi(\omega f)=\Psi(\omega) f(y)$ for any $f\in k[x]$. 
+\begin{lemma}\label{lemma:strhalpha} For any even degree $\alpha \in \End(X)$,
+\be\label{eq:strhalpha}
+\str( H \circ \alpha ) = \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} h_p( D \At^{n-p-1} \alpha )\,.
+\ee
 \end{lemma}
-
 \begin{proof}
-We may assume that $\omega$ is of the form $da_1\ldots da_n$ for some $a_i\in k[x]$. Then
-\begin{align*}
-\Psi(\omega f) & = \Psi \Big( \sum_{i=1}^n (-1)^{n-i} da_1\ldots da_{i-1} d(a_i a_{i+1}) da_{i+2}\ldots da_n df + (-1)^n a_1 da_2\ldots da_n df \Big) \\
-& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \partial_{[i]} (a_i a_{i+1}) \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
-& \qquad + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
-& = \sum_{i=1}^n (-1)^{n-i} \partial_{[1]} a_1\ldots \partial_{[i-1]} a_{i-1} \Big(\partial_{[i]} a_i {}	^{t_1\ldots t_i}a_{i+1} + {}^{t_1\ldots t_{i-1}} a_i \partial_{[i]} a_{i+1} \Big) \\
-& \qquad \cdot  \partial_{[i+1]} a_{i+2} \ldots \partial_{[n-1]} a_n \partial_{[n]} f + (-1)^n a_1 \partial_{[1]} a_2 \ldots \partial_{[n-1]} a_n \partial_{[n]} f \\
-& = \partial_{[1]} a_1 \ldots \partial_{[n]} a_n f(y) \\
-& = \Psi(\omega) f(y) \, ,
-\end{align*}
-where we used Lemma~\ref{lem:LeibnizForDQO} in the third step. 
+By an argument similar to the one given in \eqref{eq:eatthemoon} one checks that for $r \in R$,
+\be\label{eq:hpisgoodyes}
+h_p( D \At^{n-p-1}( \alpha r ) ) = h_p( D \At^{n-p-1}(\alpha) ) \cdot r\,.
+\ee
+Hence to verify \eqref{eq:strhalpha} it suffices to check the case where $\alpha = e_i \circ e_j^*$ for some $i,j$, and this follows from the definition of $H$.
 \end{proof}
 
 \begin{theorem}\label{theorem:mainzorro} The Zorro map $\mathcal{Z}$ is homotopic to $1_X$.
 \end{theorem}
 \begin{proof}
-As we have already mentioned, it suffices by nondegeneracy of \eqref{eq:bracketkl} to prove that $\langle H, - \rangle_X$ is a null-homotopic function $\Hom_{k[x,z]}(X,X) \lto k$. For $\varphi' \in \End(X)$ the numerator in the residue which computes $\langle H, \varphi' \rangle_X$ is, using \eqref{strlambdaAtn}, a differential form multiplied by
-\[
-\str( H \varphi' \Lambda^{(x)} \Lambda^{(z)}) = \sum_{p=0}^{n-1} h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) )
-\]
-But given $\varphi' \in \End(X)$ if we set $\varphi = \varphi' \circ \Lambda^{(x)} \Lambda^{(z)}$ and substitute in (\ref{??}) we find that the two functionals $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ differ by a term which is an expression in residues of
-\begin{equation}\label{eq:mainzorro1}
-h_p( D \At^{n-p-1}(\varphi) ) = h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) )\,.
-\end{equation}
-But $\At$ is closed, so 
-\begin{align}
-h_p( D \At^{n-p-1}(\varphi' \Lambda^{(x)} \Lambda^{(z)}) ) &= h_p \At^{n-p-1}D(\varphi' \Lambda^{(x)} \Lambda^{(z)}) ) \nonumber\\
-&= h_p \At^{n-p-1}\big( D(\varphi') \Lambda^{(x)} \Lambda^{(z)} )\\
-&\qquad + (-1)^{|\phi'|} h_p \At^{n-p-1}\big( \varphi' D(\Lambda^{(x)}) \Lambda^{(z)} ) \label{eq:mainzorro4}\\
-&\qquad + (-1)^{|\phi'| + n} h_p \At^{n-p-1}\big( \varphi' \Lambda^{(x)} D(\Lambda^{(z)}) ) \, . \label{eq:mainzorro5}
-\end{align}
-Now $D(\Lambda^{(z)})$ is a linear combination of terms divisible by the $\partial_{z_j} V$, and since $h_p$ and $\At$ are $k[z]$-linear these coefficients pass through to annihilate with the denominator in the residue in  (\ref{eq:bracketkl}). 
-
-Similarly $\varphi' D(\Lambda^{(x)}) \Lambda^{(z)}$ is a sum of terms of the form $f_j \alpha$ for various $j$. But the Atiyah class and the commutator $[\Lambda_{i_1,\ldots,i_p}, \nabla]$ are right linear so
+It suffices to prove that $\langle H, - \rangle_X$ can factored via the differential $D$. Writing $\Res\,\big[ - \big]$ for the residue in \eqref{eq:bracketkl} we compute using Lemma \ref{lemma:strhalpha} that for $\alpha \in \End(X)$,
 \begin{align*}
-h_p \At^{n-p-1}\big( \alpha f_j ) &= h_p\left( \At^{n-p-1}(\alpha) \cdot f_j \right)\\
-&= \sum_{\ell(\bs{i}) = p} (-1)^{\gamma(\bs{i}) +p} \Big\langle\!\!\Big\langle \nabla \left\{ f_{i_1} \ldots \nabla f_{i_p} \str\big( [ \Lambda_{i_1,\ldots,i_p}, \nabla]\At^{n-p-1}(\alpha) \big) \cdot f_j \right\} \Big\rangle\!\!\Big\rangle\,.
+\langle H, \alpha \rangle_X &= \Res\,\big[ \str( H \circ \alpha \circ \Lambda^{(x)} \Lambda^{(z)} ) \big]\\
+&= \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} \Res\,\big[ h_p D\At^{n-p-1}( \alpha \circ \Lambda^{(x)} \Lambda^{(z)} ) ) \big]\\
+&= \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} \Res\,\big[ h_p \At^{n-p-1}D( \alpha \circ \Lambda^{(x)} \Lambda^{(z)} ) \big]\\
+&= \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} \Res\,\big[ h_p \At^{n-p-1}\left( D( \alpha ) \circ \Lambda^{(x)} \Lambda^{(z)} + \alpha \circ D(\Lambda^{(x)} \Lambda^{(z)})\right) \big]\,.
 \end{align*}
-But $\nabla( f_{i_1} \beta f_j ) = f_{i_1} \nabla( \beta f_j ) + df_{i_1} \beta f_j$. The first summand vanishes in the residue for obvious reasons, and the second vanishes since by Lemma~\ref{lem:PsiToTheRight}
+The $\partial_{x_i} W$'s and $\partial_{z_i} V$'s which appear in the expansion of $D( \Lambda^{(x)} \Lambda^{(z)} )$ pass outside of $h_p$, in the first case by \eqref{eq:hpisgoodyes} and in the second case since everything in sight is $S$-linear, and annihilate with the denominator of the residue \eqref{eq:bracketkl}. We conclude that
 \[
-\dlangle - \cdot f_j \drangle = \dlangle - \drangle \cdot f_j(x')
+\langle H, \alpha \rangle_X = \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} \Res\,\big[ h_p \At^{n-p-1}\left( D( \alpha ) \circ \Lambda^{(x)} \Lambda^{(z)} \right) \big]
 \]
-which vanishes in the residue.
-
-The upshot is that (\ref{eq:mainzorro4}) and (\ref{eq:mainzorro5}) do not contribute under the residue, so that
-\[
-\langle H, - \rangle_X = 
-\frac{1}{n!} \sum_{\sigma \in S_n}\sum_{p=0}^{n-1} (-1)^{|\sigma|} \Res_{k[x,z]/k} \left[ \frac{ h_p \At^{n-p-1}( D(-) \Lambda^{(x)} \Lambda^{(z)} ) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W, \ldots, \partial_{x_n} W, \partial_{z_1} V, \ldots, \partial_{z_m} V} \right]\,.
-\]
-This proves that $\langle H, - \rangle_X$ is null-homotopic, and thus $\langle \mathcal{Z}, - \rangle_X$ and $\langle 1_X, - \rangle_X$ are homotopic functionals. Hence by the nondegeneracy of Theorem~\ref{theorem:generalkl} we conclude that $\mathcal{Z}$ and $1_X$ are homotopic.
+which proves that $\langle H, - \rangle_X$ is null-homotopic, and \emph{ipso facto} that $\mathcal{Z}$ is homotopic to the identity.
 \end{proof}
 
 \begin{remark}\label{remark:otherzorros} \textbf{todo} Fix signs. To establish the adjunction $X \dashv X^\dual$ it remains to prove the second Zorro move in \eqref{otherZorros}. In the above the Atiyah classes ``created'' in the coevaluation go the left and pair with the Atiyah classes created in the inverse of the right unit action. Looking at the picture of the second Zorro move, we see that the Atiyah classes created in the coevaluation must go to the \textsl{right} to meet the unit action, and so we use the formula \eqref{eq:alt_formula_coev} for the coevaluation in terms of $\At_1$.
