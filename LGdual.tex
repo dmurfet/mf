@@ -2463,16 +2463,28 @@ With the notation of Remark \ref{remark:integral_functors} this shows that there
 } .
 \]
 That is, for any $Y \in \hmf(k[x], W)^\omega$ and $Z \in \hmf(k[z], V)^\omega$ there are natural isomorphisms
-\begin{align*}
-\Hom( X \otimes_{k[x]} Y, Z ) & \xlto{\cong} \Hom( Y, X^\dual \otimes_{k[z]} Z )\,,\\
-\Hom( {}^\dual X \otimes_{k[z]} Z, Y ) & \xlto{\cong} \Hom( Z, X \otimes_{k[x]} Y ) \, .
-\end{align*}
+\begin{align}
+\underline{\Hom}( X \otimes_{k[x]} Y, Z ) & \xlto{\cong} \underline{\Hom}( Y, X^\dual \otimes_{k[z]} Z )\,,\\
+\underline{\Hom}( {}^\dual X \otimes_{k[z]} Z, Y ) & \xlto{\cong} \underline{\Hom}( Z, X \otimes_{k[x]} Y ) \label{eq:crunchyacorns}
+\end{align}
+where $\underline{\Hom}$ denotes mapping spaces in one of the categories $\hmf(k[z], V)^\omega$ or $\hmf(k[x], W)^\omega$.
+
 The units and counits of adjunction are derived from the evaluation and coevaluation maps of Section~\ref{sec:derivcoeval} in the obvious way; for example, the counit of the adjunction $\Phi_X \dashv \Phi_{X^\dual}$ is the natural transformation $\Phi_X \circ \Phi_{X^\dual} \lto 1$ which, evaluated on an object $Z \in \hmf(k[z], V)$, is the morphism
 \[
 \xymatrix@C+2pc{
 (\Phi_X \circ \Phi_{X^\dual})(Z) = X \otimes_{k[x]} X^\dual \otimes_{k[z]} Z \ar[r]^-{\widetilde\eval_X \otimes 1_Z} & \Delta_V \otimes_{k[z]} Z \ar[r]^-{\lambda_Z} & Z
 }\,.
 \]
+
+\begin{remark} We recover Serre duality in the triangulated categories $\hmf(k[z], V)^\omega$ as the special case of a $1$-morphism $X: \mathbb{I} \lto V$ where $\mathbb{I} = (k,0)$, with its left adjoint ${}^\dual X = X^{\vee}[m]: V \lto \mathbb{I}$. 
+
+In this case $X \in \hmf(k[z], V)$ and, taking $Y = k$, there is a natural isomorphism \eqref{eq:crunchyacorns}
+\begin{align*}
+H^m \Hom_k( \Hom_{k[z]}(X,Z), k ) &\cong \underline{\Hom}( \Hom_{k[z]}(X, Z)[m], k )\\
+&\cong \underline{\Hom}( X^{\vee}[m] \otimes_{k[z]} Z, k )\\
+&\cong \underline{\Hom}( Z, X )\,.
+\end{align*}
+\end{remark}
 
 \begin{remark}
 The same results also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
