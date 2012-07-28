@@ -1305,47 +1305,62 @@ But considering \eqref{eq:powerofatiyah} it is straightforward to check that the
 
 \subsection{Connections}\label{section:connections}
 
-It is better to construct the Atiyah class from a choice of connection, rather than a choice of basis, and such is the purpose of this section. However, as we have already explained, these remarks will not be needed in the sequel and are included only for the sake of completeness. For this reason we restrict ourselves to a discussion of only one of the many ``types'' of Atiyah class presented above, the modifications for the other cases being left to the reader.
+It is better to construct the Atiyah class from a choice of connection rather than a choice of basis, and such is the purpose of this section. However as we have already explained, these remarks will not be needed in the sequel and are included only for the sake of completeness. For this reason we restrict ourselves to a discussion of only one of the many ``types'' of Atiyah class presented above, the modifications for the other cases being left to the reader.
 
-Let $k$ be a ring and $R$ a $k$-algebra, $\Omega R = \Omega_k R$ the differential graded algebra $(\Omega R, d, \cdot)$ of noncommutative differential forms explained in Section \ref{subsec:Bar}. A \textsl{connection} on a $\mathbb{Z}_2$-graded $R$-module $X$ is a $k$-linear map
+Let $R$ be a ring, $A$ an $R$-algebra and $\Omega A = \Omega_R A$ the differential graded algebra $(\Omega A, d, \cdot)$ of noncommutative differential forms explained in Section \ref{subsec:Bar}. An $R$-linear \textsl{connection} on a $\mathbb{Z}_2$-graded $A$-module $X$ is an $R$-linear map
 \[
-\nabla: X \lto X \otimes_R \Omega^1 R\,,
+\nabla: X \lto X \otimes_A \Omega^1 A\,,
 \]
-which sends $X^i$ into $X^i \otimes_R \Omega^1 R$ and satisfies the graded Leibniz rule
+which sends $X^i$ into $X^i \otimes_A \Omega^1 A$ and satisfies the graded Leibniz rule
 \[
 \nabla( x a ) = \nabla( x ) a + (-1)^{|x|} x da 
 \]
-for $x \in X, a \in R$. Notice that by left and right multiplication $\Omega R$ is an $R$-bimodule, and so $X \otimes_R \Omega^1 R$ is naturally an $R$-bimodule. Let us write $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ so that the right $R$-module structure on $X \otimes_R \Omega^1 R$ is the action of $R_2$. The next lemma is an exercise in the Leibniz rule.
-
-\begin{lemma} Let $(X,D)$ be a linear factorisation of $W \in R$. If $\nabla$ is a connection on $X$ then
+for $x \in X, a \in A$. A connection extends uniquely to a degree one $R$-linear operator on $X \otimes_A \Omega A$, still denoted $\nabla$, with the property that for homogeneous $\xi \in X \otimes_A \Omega A$ and $\omega \in \Omega A$
 \[
-[ \nabla, D ] = \nabla D + D \nabla: X \lto X \otimes_R \Omega^1 R
+\nabla( \xi \omega ) = \nabla( \xi ) \omega + (-1)^{|\xi|} \xi d \omega\,.
 \]
-is $R_2$-linear.
-\end{lemma}
+Notice left and right multiplication make $\Omega A$ into an $A$-bimodule, and so $X \otimes_A \Omega A$ is an $A$-bimodule. Using the Leibniz rule it is easy to check that for any odd $A$-linear operator $D$ on $X$ the operator $[\nabla, D]$ on $X \otimes_A \Omega A$ is right $A$-linear, and we call this the \emph{Atiyah class} of the pair $(X,D)$.
 
-The element $[ \nabla, D ]$ of $\Hom_{R_2}(X, X \otimes_R \Omega^1 R)$ is not necessarily closed unless $W$ belongs to the image of the structure morphism $k \lto W$, which we indicate by saying that $W \in k$.
+If $D^2 = W \cdot 1_X$ for some $W \in R$ then $[\nabla, D]$ is a closed map, i.e., it gives a cohomology class in $\Hom_R(X, X \otimes_R \Omega^1 R)$. By a standard argument this cohomology class is independent of the choice of connection on $X$.
 
-\begin{lemma} If $W \in k$ then $[ \nabla, D ]$ is a morphism of linear factorisations of $W$ over $R_2$.
-\end{lemma}
-
-\begin{lemma} If $\nabla'$ is another connection on $X$ then
+\begin{remark} To relate this to the earlier construction let $k$ be a ring, $R$ a $k$-algebra and set $A = R^e$ in the above. Then as dg-algebras the Bar complex of $R$ over $k$ is
 \[
-[ \nabla, D ] - [ \nabla', D] = [ \nabla - \nabla', D]
+\Bar = \Omega R \otimes_k R \cong \Omega_{R_2}(R_1 \otimes_k R_2) = \Omega_{R_2}(R^e).
 \]
-is $R_2$-linear. In particular if $W \in k$ then the homology class of $[ \nabla, D ]$ in $H^0 \Hom_{R_2}(X, X \otimes_R \Omega^1 R)$ is independent of the choice of connection.
-\end{lemma}
-
-\begin{remark} To relate this to the earlier construction, observe that if $X$ is a free $\Re $-module with basis $\{ e_i \}_{i}$ then $\Omega R$ can be identified with $\Bar$ and the operator $d: X \lto X \otimes \Bar_1 = X \otimes_R \Omega^1 R$ of \eqref{eq:extendd} is a connection. \textbf{todo} Talk about extending $\nabla$ to operator on $X \otimes \Omega$. Reference for connections.
+For the canonical isomorphism between the second and third dg-algebras see \cite{cuntzquillen}. If $X$ is a free $\Re $-module with basis $\{ e_i \}_{i}$ then the operator
+\[
+d: X \lto X \otimes_{R^e} \Bar_1 \cong X \otimes_{R^e} \Omega^1_{R_2} R^e
+\]
+of \eqref{eq:extendd} is an $R_2$-linear connection, and so the definition just given of the Atiyah class is a generalisation of Definition \ref{defn:atiyahclassbasis}.
 \end{remark}
+
+We will also need to know that the Atiyah class is natural, up to homotopy. Let $X$ and $X'$ be $\mathbb{Z}_2$-graded $A$-modules equipped with odd $A$-linear operators which for convenience we denote by $D$ in both cases, and suppose $X$ and $X'$ admit $R$-linear connections, both of which we denote $\nabla$.
+
+\begin{lemma} Given an $A$-linear homogeneous map $\varphi: X \lto X'$ consider the diagram
+\[
+\xymatrix@C+1pc@R+1pc{
+X \ar[r]^-{\varphi}\ar[d]_-{[\nabla, D]}\ar@{.>}[dr]^-{g} & X' \ar[d]^-{[\nabla, D]}\\
+X \otimes_A \Omega^1 A \ar[r]_{\varphi \otimes 1} & X' \otimes_A \Omega^1 A
+}
+\]
+where $g = [\varphi, \nabla]$. This is a right $A$-linear map, and
+\[
+[\varphi, [\nabla, D]] = (-1)^{|\varphi|} [ D, [\varphi, \nabla]] - [ \nabla, [D, \varphi]]\,.
+\]
+\end{lemma}
+\begin{proof}
+Follows from the graded Jacobi identity for commutators.
+\end{proof}
+
+In particular if $(X,D)$ and $(X', D)$ are linear factorisations of some $W \in k$, so that $[\nabla, D]$ is a closed map in both cases, then for any morphism $\varphi$ of linear factorisations we see that there is a right $A$-linear homotopy $g$ between $f \circ [ \nabla, D]$ and $[\nabla, D] \circ f$.
 
 The Atiyah class can be viewed as a component of the curvature of a superconnection.
 
-\begin{remark}\label{remark:curvature_superconnection} A \textsl{superconnection} $\Theta$ on a $\mathbb{Z}_2$-graded $R$-module $X$ is a $k$-linear degree one operator~$\Theta$ on $X \otimes_R \Omega R$ satisfying the graded Leibniz rule
+\begin{remark}\label{remark:curvature_superconnection} A \textsl{superconnection} $\Theta$ on a $\mathbb{Z}_2$-graded $A$-module $X$ is an $R$-linear degree one operator~$\Theta$ on $X \otimes_A \Omega A$ satisfying the graded Leibniz rule
 \[
 \Theta( \xi \omega ) = \Theta( \xi ) \omega + (-1)^{|\xi|} \xi d \omega
 \]
-for all homogeneous $\xi \in X \otimes_R \Omega R$ and $\omega \in \Omega R$. If $\nabla$ is a connection on $X$ then we can extend $\nabla$ to an operator on $X \otimes_R \Omega R$, and it is easily checked that for any odd $R$-linear operator $D$ on $X$ the operator
+for all homogeneous $\xi \in X \otimes_A \Omega A$ and $\omega \in \Omega A$. If $\nabla$ is a connection on $X$ then we extend $\nabla$ to an operator on $X \otimes_A \Omega A$ and it is easily checked that for any odd $A$-linear operator $D$ on $X$ the operator
 \[
 \Theta = \nabla + D
 \]
@@ -2312,7 +2327,7 @@ Given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1, \ldots, n\}$ (not necessar
 \be
 |\bs{i}| = \sum_{1 \le a < b \le p} \delta_{i_a > i_b}\, , \qquad \gamma(\bs{i}) = |\bs{i}| + i_1 + \ldots + i_p\,.
 \ee
-The empty sequence $\emptyset$ is the unique sequence of length zero. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \ldots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted, and $f_i = \partial_{x_i} W$ as before.
+The empty sequence $\emptyset$ has length zero. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \ldots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted, and $f_i = \partial_{x_i} W$ as before.
 %Let $D$ denote the differential on $\End(X)$, i.\,e.~the commutator with~$d_X$.
 
 % see przor4
@@ -4360,9 +4375,9 @@ Having constructed the maps in \eqref{eq:twoidempotents} we now proceed to trans
 Here $\nabla_{\operatorname{gr}} = \sum_{j=1}^n \partial_{f_j} \circ \theta_j$ where $\theta_j$ denotes left multiplication on $Z \otimes K(f)$ with attendant Koszul sign, and $\partial_{f_j}$ is the operator extended to $Z$ using our chosen homogeneous basis. Consider now the diagram
 \be\label{eq:finalidempotents}
 \xymatrix@C+2pc{
-& & Z[n] \ar@<-0.7ex>[dl]_-{\vartheta}\\
+& & Z[n] \ar@<-0.7ex>[dl]_-{\vartheta'}\\
 \bar{Z} \ar@<-0.7ex>[r]_-{\sigma_\infty} & Z \otimes K(f) \ar@<-0.7ex>[ur]_-{\varepsilon}\ar@<-0.7ex>[l]_-{\pi} \ar@<-0.7ex>[dr]_-{\rho}\\
-& & Z \ar@<-0.7ex>[ul]_-{\kappa}
+& & Z \ar@<-0.7ex>[ul]_-{\kappa'}
 }\,.
 \ee
 From this we deduce two diagrams of $k$-linear factorisations of $W$, writing $\vartheta = \pi \circ \vartheta'$ and $\kappa = \pi \circ \kappa'$
