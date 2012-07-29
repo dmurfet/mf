@@ -817,15 +817,7 @@ We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect 
 \be\label{DeltaWstabmap}
 \pi: \Delta_W \lra R\,,
 \ee
-given by the projection $\Delta_W \lra \Re$ to $\theta$-degree~$0$ followed by multiplication $\Re \lra R$, is universal in the homotopy category of linear factorisations among all morphisms from finite-rank matrix factorisations to $R$.
-
-By making a choice of how to order the~$\theta_i$ we obtain an $\Re$-linear map 
-\be\label{eq:vareps}
-\varepsilon: \Delta_W \lra \Re[n] 
-\, , \qquad 
-\theta_1\ldots \theta_n \lmt 1
-\ee
-that is non-zero only on elements in top $\theta$-degree.
+given by the projection $\Delta_W \lra \Re$ to $\theta$-degree~$0$ followed by multiplication $\Re \lra R$, is universal in the homotopy category of linear factorisations among all morphisms from finite-rank matrix factorisations to $R$. Observe that the matrix factorisation $(\Delta_W, d_{\Delta_W})$ depends on the chosen ordering of the ring variables via the operators $\partial_{[i]}$ in the differential $\delta_{+}$. Another ordering will yield a different, but isomorphic, matrix factorisation; we address this point carefully in Section \ref{??}.
 
 For $X\in \HMF(R_1 \otimes_k R_2,W_2-W_1)$ there are natural maps
 \be\label{lambdarho}
@@ -1049,6 +1041,14 @@ We may assume that $\omega$ is of the form $da_1\ldots da_n$ for some $a_i\in R$
 where we used Lemma~\ref{lem:LeibnizForDQO} in the third step. 
 \end{proof}
 
+Using the ordering of the ring variables to order the $\theta$'s, we obtain an $\Re$-linear map 
+\be\label{eq:vareps}
+\varepsilon: \Delta \lra \Re[n] 
+\, , \qquad 
+\theta_1\ldots \theta_n \lmt 1
+\ee
+that is non-zero only on elements in top $\theta$-degree.
+
 On a practical level both the bar and Koszul complexes resolve the diagonal, so there must be a chain map lifting the identity on the diagonal, and $\Psi$ gives one particular example of such a chain map. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{appendix:mapeppsi}.
 
 Now we come back to consider any $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
@@ -1058,11 +1058,12 @@ $\Psi: (\Bar, d_\Bar) \lra (\Delta_W, d_{\Delta_W})$ is a morphism in $\HF(\Re,\
 
 \begin{proof}
 We need to show $d_{\Delta_W} \Psi = \Psi d_\Bar$. But since $d_{\Delta_W} = \delta_+ + \delta_-$ and $d_\Bar = b' + d\widetilde W \times (-)$ by Lemma~\eqref{PhiPsiDG} what remains to be checked is $\delta_+ \Psi = \Psi (d\widetilde W\times (-))$. This can be done: 
-$$
+\be\label{eq:deltaplusandpsi}
 \delta_+ \Psi = \Big( \sum_{i=1}^n \partial_{[i]} W \cdot \theta_i^* \Big) \wedge \Psi(-) = \Psi(dW\otimes 1) \wedge \Psi(-) = \Psi (d\widetilde W\times (-)) \, . 
-$$
+\ee
 \end{proof}
 
+Although $(\Bar, d_{\Bar})$ depends only on the pair $(R,W)$, the matrix factorisation $(\Delta_W, d_{\Delta_W})$ depends in addition on an ordering of the ring variables. The compatibility of $\delta_{+}$ and $\Psi$ in \eqref{eq:deltaplusandpsi} depends on the fact that $\Delta_W$ and $\Psi$ are defined using the \emph{same} ordering.
 
 %\begin{remark}
 %Instead of the bar complex $\Bar = \bigoplus_{n\geq 0} \Bar_n$ one can also consider its completed version
