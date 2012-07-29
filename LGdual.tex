@@ -1093,7 +1093,8 @@ together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\opera
 
 In the next result we use the divided difference operators of \eqref{diffquotop}.
 
-\begin{proposition} The element $\delta = \det( (\partial_{[i]} f_j)_{i,j} )$ in $k[x,x']$ has the property that for any $g \in k[x]$
+\begin{proposition}\label{prop:determinantresidue} 
+The element $\delta = \det( (\partial_{[i]} f_j)_{i,j} )$ in $k[x,x']$ has the property that for any $g \in k[x]$
 \be\label{eq:integrateagainstd}
 \Res_{k[x,x']/k[x']} \left[ \frac{g \delta \,  \underline{\operatorname{d}\! x}}{f_1, \ldots, f_n} \right] = g(x')
 \ee
@@ -1704,7 +1705,7 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 
 Every $1$-morphism in $\LG$ has both a left and right adjoint. Specifically, if a $1$-morphism $W \lto V$ is represented by a finite-rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials, then the $1$-morphisms
 \[
-X^\dual = X^\vee[n] , \, \qquad {}^\dual X = X^\vee[m]
+X^\dual = X^\vee[n] \, , \qquad {}^\dual X = X^\vee[m]
 \]
 are respectively the right and left adjoints of $X$ in $\LG$. These are objects of $\hmf(k[x,z], W-V)$, with the differentials spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
 
@@ -1727,7 +1728,7 @@ While the homotopy classes of these morphisms are canonical the formulas depend 
 \widetilde\coev_X(\gamma) & = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge  (-1)^{l+nl} \Psi \Atlarrow_2(X^\dual)^l( \iota_X ) \right) , \label{eq:coev10}\\
 \coev_X( \gamma ) & = \sum_{l \ge 0} \varepsilon \left( \gamma \wedge (-1)^{l+ml} \Psi \Atlarrow_2(X)^l( \iota'_X ) \right) ,\label{eq:coev102}
 \end{align}
-where $\varepsilon$ is as defined in~\eqref{eq:vareps} and
+where $\varepsilon$ and $\Psi$ is as defined in~\eqref{eq:vareps} and~\eqref{intro_psi}, respectively,  and
 \be\label{eq:iotaX}
 \iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_{k[z]} X \, , \qquad 
 \iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X \, . 
@@ -1740,11 +1741,11 @@ A representative for the evaluation morphism is given by
 \ee
 where $\Lambda^{(x)} = (-1)^n \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$ and $(\eta',\nu)$ denotes the evaluation of $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. For the precise statement see Proposition \ref{prop:constructevalmap}. 
 
-In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda$, and the resulting functional-valued form is evaluated on $\eta$. The formula is
+In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda^{(z)}$ with $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X)$, and the resulting functional-valued form is evaluated on $\eta$: 
 \be\label{eq:constructevalmap01}
 \eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{l+m|\nu|} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]
 \ee
-where $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X), \underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
+where $\underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
 
 Throughout we write $R = k[x]$, $S = k[z]$ and $\Re  = R_1 \otimes_k R_2$ with $R_i = R$ and $\Se  = S_1 \otimes_k S_2$ with $S_i = S$. Then $\Delta_W$, $X^\dual \otimes X$, ${}^\dual X \otimes X$ are $\Re $-linear factorisations of $\widetilde{W} = W \otimes 1 - 1 \otimes W$ and $\eval_X, \widetilde\coev_X$ are $\Re$-linear, while $\Delta_V$ and $X \otimes X^\dual$, $X \otimes {}^\dual X$ are $\Se$-linear factorisations of $\widetilde{V} = V \otimes 1 - 1 \otimes V$ and $\coev_X, \widetilde\eval_X$ are $\Se$-linear. The differentials on $\Delta_V, \Delta_W$ are given by~\eqref{DeltaW}. We will also frequently make use of the canonical maps from Section~\ref{section:canonicalmaps}.
 
@@ -1827,7 +1828,7 @@ with the second equality holding because $s$ is $R$-linear.
 \begin{proposition}\label{prop:alt_formula_coev} 
 A representative for $\widetilde\coev_X$ is the chain map
 \be\label{eq:alt_formula_coev}
-\gamma \mapsto \varepsilon \left( \sum_{l \ge 0} (-1)^{l+nl} \Psi \At_{1}(X)^l( \iota_X ) \wedge \gamma \right) .
+\gamma \lmt \varepsilon \left( \sum_{l \ge 0} (-1)^{l+nl} \Psi \At_{1}(X)^l( \iota_X ) \wedge \gamma \right) .
 \ee
 \end{proposition}
 
@@ -1842,7 +1843,7 @@ A representative for $\coev_X$ is the chain map \eqref{eq:coev102}.
 \begin{proposition} 
 A representative for $\coev_X$ is the chain map
 \be
-\gamma \mapsto \sum_{l \ge 0} (-1)^{l + ml} \varepsilon \left( \Psi \At_1(X^{\vee})^l( \iota'_X ) \wedge \gamma \right) .
+\gamma \lmt \sum_{l \ge 0} (-1)^{l + ml} \varepsilon \left( \Psi \At_1(X^{\vee})^l( \iota'_X ) \wedge \gamma \right) .
 \ee
 where $\iota'_X$ is as given in~\eqref{eq:iotaX}.
 \end{proposition}
@@ -1850,11 +1851,10 @@ where $\iota'_X$ is as given in~\eqref{eq:iotaX}.
 \begin{remark}\label{remark:coev_divideddiff} 
 The above formulas can be rewritten in terms of divided difference operators. Applying \eqref{eq:atlarrow_formula} and \eqref{intro_psi} one computes that $\widetilde \coev_X$ has the description given in \eqref{eq:formula_intro_coev} of the introduction. Similarly if $\gamma = \theta_{a_1} \ldots \theta_{a_l} \in \Delta_V$ there is a unique $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ with $\gamma \wedge \gamma'$ a nonzero multiple of the top degree form, say $(-1)^{s(\gamma)} \theta_1 \cdots \theta_m$. So $l + r = n$ and one computes
 \be\label{eq:coev_divideddiff}
-\coev_X(\gamma) = \sum_{j,i} (-1)^{\binom{r}{2} + s(\gamma) + r + mr + m|e_j|} \big\{ \partial_{[b_1]}(d_X) \ldots \partial_{[b_r]}(d_X) \big\}_{ij} e_{i} \otimes e_j^*\,.
+\coev_X(\gamma) = \sum_{j,i} (-1)^{\binom{r}{2} + s(\gamma) + r + mr + m|e_j|} \big\{ \partial_{[b_1]}(d_X) \ldots \partial_{[b_r]}(d_X) \big\}_{ij} e_{i} \otimes e_j^* 
 \ee
+where the divided difference operators act on $\Se = k[z,z']$.
 \end{remark}
-
-\textbf{todo} which divided diff operator is this?
 
 \subsection{Evaluation}\label{subsec:eval}
 % see (eval)
@@ -1983,7 +1983,7 @@ which we can compose with
 \bar{X}^{\vee} \otimes_S \bar{X} \ar[r]^-{\can} & S \otimes_{\Se}( \bar{X}^{\vee} \otimes_S \bar{X} ) \cong \Hom_{R \otimes_k S}(\bar{X}, \bar{X}) \ar[r]^-{\str} & R \otimes_k \bar{S} \ar[r]^-{\Res} & R
 }
 \ee
-where the last map is the $R$-linear residue symbol (we write $\underline{\ud z} = \ud z_1 \ldots \ud z_m$)
+where the last map is the $R$-linear residue symbol 
 \[
 \Res_{S/k} \left[ \frac{ (-) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]: R \otimes_k \bar{S} \lto R\,.
 \]
@@ -2063,7 +2063,7 @@ We will reflect this difference from~\eqref{eq:constructevalmap01} and~\eqref{eq
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.3cm]
 \draw[directed] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.1,0) .. controls +(0.1,0.5) and +(-0.5,-0.45) .. (2.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.1,0) .. controls +(0.1,0.5) and +(-0.5,-0.45) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : (X^\vee \otimes_S S[m]) \otimes_S X \lra \Delta_W
@@ -2071,7 +2071,7 @@ We will reflect this difference from~\eqref{eq:constructevalmap01} and~\eqref{eq
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.4cm,rotate=180]
 \draw[redirected] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1.87,0) .. controls +(0.1,0.5) and +(-0.7,-0.15) .. (2.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1.87,0) .. controls +(0.1,0.5) and +(-0.7,-0.15) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : \Delta_V \lra X \otimes_R (X^\vee \otimes_S S[m]) \, , \\
@@ -2079,7 +2079,7 @@ We will reflect this difference from~\eqref{eq:constructevalmap01} and~\eqref{eq
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.3cm]
 \draw[redirected] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.9,0) .. controls +(-0.1,0.5) and +(0.5,-0.45) .. (2.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.9,0) .. controls +(-0.1,0.5) and +(0.5,-0.45) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : X \otimes_R ( R[n] \otimes_R X^\vee) \lra \Delta_V
@@ -2087,7 +2087,7 @@ We will reflect this difference from~\eqref{eq:constructevalmap01} and~\eqref{eq
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.4cm,rotate=180]
 \draw[directed] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.13,0) .. controls +(-0.1,0.5) and +(0.7,-0.15) .. (2.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.13,0) .. controls +(-0.1,0.5) and +(0.7,-0.15) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : \Delta_W \lra (R[n]\otimes_R X^\vee) \otimes_S  X \, . 
@@ -2100,7 +2100,7 @@ $$
 \draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
 \draw (-1,0) -- (-1,1.25); 
 \draw (1,0) -- (1,-1.25); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.5,-0.75) .. controls +(0.75,0) and +(-0.5,-0.35) .. (0.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.5,-0.75) .. controls +(0.75,0) and +(-0.5,-0.35) .. (0.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \;=\;
@@ -2116,15 +2116,15 @@ $$
 \draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
 \draw (-1,0) -- (-1,-1.25); 
 \draw (1,0) -- (1,1.25); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.9,-1.25) .. controls +(0,0.5) and +(-0.5,-0.35) .. (-0.5,0.75); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,-0.75) .. controls +(0.8,0.05) and +(0,-1) .. (1.1,1.25); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.9,-1.25) .. controls +(0,0.5) and +(-0.5,-0.35) .. (-0.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,-0.75) .. controls +(0.8,0.05) and +(0,-1) .. (1.1,1.25); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \;=\;
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw (0,-1.25) -- (0,1.25); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.15,-1.25) -- (0.15,1.25); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.15,-1.25) -- (0.15,1.25); 
 \end{tikzpicture} \, .
 %%%%%%%%%%%%%%%%%%%%%%
 $$
@@ -2134,8 +2134,8 @@ There are two ways for wiggly lines to meet in a diagram. One is that they ``ann
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.3cm]
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0,0) -- (0.5,0.75);
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1,0) -- (0.5,0.75);
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0,0) -- (0.5,0.75);
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1,0) -- (0.5,0.75);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : R[n] \otimes_R R[n] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, . 
@@ -2145,7 +2145,7 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 & 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (0.3,0.75);
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (0.3,0.75);
 \draw (0,-0.75) -- (0,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -2153,7 +2153,7 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 & 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (-0.3,0.75);
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (-0.3,0.75);
 \draw (0,-0.75) -- (0,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -2228,7 +2228,7 @@ $$
 $$
 We use the maps $\varepsilon$ and $\Psi$ of Section~\ref{sec:Background} and $\underline{\operatorname{d}\!x}=\operatorname{d}\!x_1\ldots \operatorname{d}\!x_n$. To be clear, this differential form and the $\partial_{x_i} W$ in the denominator of the residue are all viewed as elements of $R_1$, the copy of $R$ which is integrated out by the residue.
 
-Let $\{ e_i \}_{i}$ be a homogeneous $(S \otimes_k R)$-basis of $X$, $\{ e_i^* \}_{i}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i,j}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. Throughout this section an undecorated $\At$ denotes the Atiyah class $\At_2( \End(X) )$ of this complex, which recall is the operator on $\End(X) \otimes_{R_1} \Bar$ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
+Let $\{ e_i \}_{i}$ be a homogeneous $(S \otimes_k R)$-basis of $X$, $\{ e_i^* \}_{i}$ the dual basis and $\{ e_{ij} = e_i \circ e_j^* \}_{i,j}$ the determined basis of $\End(X) = \Hom_{S \otimes_k R}(X,X)$. Throughout this section an undecorated $\At$ denotes the Atiyah class $\At_2( \End(X) )$ of this complex, which we recall is the operator on $\End(X) \otimes_{R_1} \Bar$ determined by the basis $e_{ij}$ using the convention of Remark \ref{remark:linearatother}.
 
 As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_{x_i} W$, for example $\lambda_i= -\partial_{x_i}d_X(x,z)$, and set $\Lambda = \lambda_1\ldots \lambda_n$. Postcomposition with $\Lambda$ gives a well-defined operator $\Lambda^\bullet$ on $\End(X) \otimes_{R_1} \Bar$.
 
@@ -2238,11 +2238,11 @@ As before let $\lambda_i$ be a null-homotopy on $X$ for the action of $\partial_
 \ee
 \end{lemma}
 
-\begin{remark} Before giving the proof of the lemma, let us sketch out the proof that $\mathcal Z$ is homotopic to the identity. The idea is that this should follow from skew-symmetry of $\At$, i.e., a homotopy
+\begin{remark} Before giving the proof of the lemma, let us sketch out the proof that $\mathcal Z$ is homotopic to the identity. The idea is that this should follow from skew-symmetry of $\At$, i.\,e.~up to homotopy
 \be\label{eq:untrueformula}
 \big\langle\!\big\langle \str \big( - \circ \At (-)\big) \big\rangle\!\big\rangle \simeq - \big\langle\!\big\langle \str \big( \At(-) \circ -\big) \big\rangle\!\big\rangle\,.
 \ee
-Unfortunately we do not know how to make sense of the right hand side of this identity, let alone prove it. We expect a more thorough study of associative Atiyah classes will make possible a precise statement about skew-symmetry of the Atiyah class of $\End(X)$. But let us ignore this problem for a moment, freely use \eqref{eq:untrueformula}, and see where our daring gets us: we calculate that for $\varphi \in \End(X) \otimes_{R_1} \Bar$, there are homotopies of functionals of the variable $\varphi$
+Unfortunately we do not know how to make sense of the right-hand side of this identity, let alone prove it. We expect a more thorough study of associative Atiyah classes will make possible a precise statement about skew-symmetry of the Atiyah class of $\End(X)$. But let us ignore this problem for a moment, freely use \eqref{eq:untrueformula}, and see where our daring gets us: we calculate that for $\varphi \in \End(X) \otimes_{R_1} \Bar$, there are homotopies of functionals of the variable $\varphi$: 
 \begin{align*}
 \dlangle \str \big( \lambda_1 \cdots \lambda_n \circ \At (\varphi) \big) \drangle &\simeq -\dlangle \str \big( \At(\lambda_1 \cdots \lambda_n) \circ \varphi \big) \drangle\\
 &\simeq - \sum_{i=1}^n (-1)^{i+1}\dlangle \str \big( \lambda_1 \cdots \At(\lambda_i) \cdots \lambda_n \circ \varphi \big) \drangle\\
@@ -2261,13 +2261,13 @@ Taking $\varphi = \At^{n-1}(\alpha)$ in the above, we prove in Lemma \ref{lemma:
 \end{align*}
 where in the last step we use a standard fact of the residue calculus: integrating against the determinant of the matrix $( \partial_{[i]}(f_j) )$ is the identity. Applied to the formula \eqref{Zorrointermediate} this yields
 \begin{equation}\label{eq:trueproofeq2}
-\mathcal{Z} \simeq \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j = \sum_j \str(e_j^* \circ -) \cdot e_j = 1_X\,.
+\mathcal{Z} \simeq \sum_j (-1)^{|e_j|} \str(-\circ e_j^*) \cdot e_j = \sum_j \str(e_j^* \circ -) \cdot e_j = 1_X\, ,
 \end{equation}
 and the Zorro move is proved.
 \end{remark}
 
 \begin{proof}[Proof of Lemma \ref{lemma:Zorrointermediate}]
-The proof rests on the central identity in Lemma~\ref{lemma:atshufat} for computing with Atiyah classes. Throughout we write $\At$ for $\At_2$. The image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1} is computed by the expressions in \eqref{eq:formula_rhoinverse} and \eqref{eq:coev10}
+The proof rests on the central identity in Lemma~\ref{lemma:atshufat} for computing with Atiyah classes. Throughout we write $\At$ for $\At_2$. The image of a basis element $e_q$ under the first two maps of \eqref{eq:zorro1a1} is computed by the expressions in \eqref{eq:formula_rhoinverse} and \eqref{eq:coev10}, 
 \begin{align}
 (1 \otimes \widetilde{\coev}) \circ \rho^{-1}( e_q ) &= (1 \otimes \widetilde{\coev}) \sum_{l \ge 0} (-1)^l \Psi \At(X)^l (e_q)\nonumber\\
 &= \sum_{j} \sum_{l+l'=n} (-1)^{n+nl'+|e_j|} \varepsilon\Big( \Psi \At(X)^l( e_q ) \wedge \Psi \Atlarrow(X^{\dual})^{l'}( e_j^* ) \otimes e_j \Big) \nonumber\\
@@ -2275,7 +2275,7 @@ The proof rests on the central identity in Lemma~\ref{lemma:atshufat} for comput
 \end{align} 
 where in the last step we use that $\Psi$ intertwines the shuffle product with the exterior product. 
 
-In this formula $\At(X)$ is an operator on $X \otimes_{R_1} \Bar$, $\At(X^\dual)$ is an operator on $\gamma_*(\Bar) \otimes_{R_1} X^\dual$, and respectively these operators can be identified with Atiyah classes of the $(S \otimes_k \Re)$-modules $X \otimes_{R_1} \Re$ and $\Re \otimes_{R_1} X^\dual$. Tensored over $\Re$ these modules form the $\Se \otimes \Re$-module
+In this formula $\At(X)$ is an operator on $X \otimes_{R_1} \Bar$, $\At(X^\dual)$ is an operator on $\gamma_*(\Bar) \otimes_{R_1} X^\dual$, and respectively these operators can be identified with Atiyah classes of the $(S \otimes_k \Re)$-modules $X \otimes_{R_1} \Re$ and $\Re \otimes_{R_1} X^\dual$. Tensored over $\Re$ these modules form the $(\Se \otimes \Re)$-module
 \be\label{eq:spacehipposattack}
 (X \otimes_{R_1} \Re) \otimes_{\Re} (\Re \otimes_{R_1} X^\dual) \cong \Re \otimes_{R_1} ( X \otimes_R X^\dual )\,.
 \ee
@@ -2307,18 +2307,19 @@ To finish applying $\widetilde\eval_0$ we compose with $\Lambda$, multiply by th
 &= \sum_j (-1)^{n + (n+1)|e_j|+ n|e_q|}\Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( e_q \circ e_j^* ) \Big) \underline{\operatorname{d}\! x} }{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right] \cdot e_j\\
 &= \sum_j (-1)^{n + (n+1)|e_j|+n|e_q|} \big\langle\!\big\langle \str \big( \Lambda \circ \At^n (e_q\circ e_j^*) \big) \big\rangle\!\big\rangle \cdot e_j\,.
 \end{align*}
-The nonvanishing summands have $|e_q| = |e_j|$, so the sign in the last formula is $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$ and we have proven that the left and right hand sides of \eqref{Zorrointermediate} agree on basis elements $e_q$. To complete the proof it therefore suffices to argue that the right hand side is $S \otimes_k R$-linear. But $S$-linearity is trivial and for $r \in R$ we use that the Atiyah class is right $\Re$-linear and Lemma \ref{lem:PsiToTheRight} to see that for $\eta \in X$
+The nonvanishing summands have $|e_q| = |e_j|$, so the sign in the last formula is $(-1)^{n+(n+1)|e_j| + n|e_q|} = (-1)^{n+|e_j|}$ and we have proven that the left- and right-hand sides of \eqref{Zorrointermediate} agree on basis elements $e_q$. To complete the proof it therefore suffices to argue that the right-hand side is $(S \otimes_k R)$-linear. But $S$-linearity is trivial and for $r \in R$ we use that the Atiyah class is right $\Re$-linear and Lemma \ref{lem:PsiToTheRight} to see that for $\eta \in X$
 \begin{align}
 \dlangle \str \big( \Lambda \circ \At^n (r \eta) \big) \drangle &= \dlangle \str \big( \Lambda \circ \At^n (\eta) \big) \cdot (r \otimes 1) \drangle\nonumber\\
 &= \Res_{\Re /R_2}\! \left[ \frac{ \varepsilon\Psi \str\Big( \Lambda \circ \At^n( \eta ) \Big) \cdot (1 \otimes r) \underline{\operatorname{d}\! x} }{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]\nonumber\\
 &= \dlangle \str \big( \Lambda \circ \At^n (\eta) \big) \drangle \cdot r\,.\label{eq:eatthemoon}
 \end{align}
-Hence both sides of \eqref{Zorrointermediate} are $S \otimes_k R$-linear and therefore agree.
+Hence both sides of \eqref{Zorrointermediate} are $(S \otimes_k R)$-linear and therefore agree.
 \end{proof}
 
 We write $\psi^\bullet$ for the operator $\psi^\bullet(\alpha \otimes \omega) = \psi \circ \alpha \otimes \omega$ on $\End(X) \otimes_{R_1} \Bar$, and $D = [d_X,-]$.
 
-\begin{lemma}\label{lemma:lameadjoints} Given homogeneous $\psi \in \End(X)$ and $\varphi \in \End(X) \otimes_{R_1} \Bar$
+\begin{lemma}\label{lemma:lameadjoints} 
+Given homogeneous $\psi \in \End(X)$ and $\varphi \in \End(X) \otimes_{R_1} \Bar$, 
 \begin{align*}
 \big\langle\!\big\langle \str( \psi \circ \At(\varphi) ) \big\rangle\!\big\rangle = - &\big\langle\!\big\langle d \str( D( \psi ) \circ \varphi ) \big\rangle\!\big\rangle + \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle\\
 &- (-1)^{|\psi|}\dlangle \str\big( D(\psi) \circ d\varphi ) \big) \drangle \, . 
@@ -2329,7 +2330,7 @@ The super Jacobi identity for operators on this tensor product gives
 \be\label{superJacobi0}
 \big[ \psi^\bullet, \At \big] = \big[ \psi^\bullet, [d, D] \big] = (-1)^{|\psi|}\big[ D, \big[ \psi^\bullet, d \big] \big] - \big[ d, \big[ D, \psi^\bullet \big] \big]\,.
 \ee
-It is easy to see that $\str \circ d = d \circ \str$ and hence $\str \circ \At = 0$ so if we apply~\eqref{superJacobi0} to~$\varphi$
+It is easy to see that $\str \circ d = d \circ \str$ and hence $\str \circ \At = 0$ so if we apply~\eqref{superJacobi0} to~$\varphi$ we find 
 \begin{align*}
 \dlangle \str\big( \psi \circ \At(\varphi) \big) \drangle &= (-1)^{|\psi|} \dlangle \str\big( \big[ D, \big[ \psi^\bullet, d \big] \big] \varphi \big) \drangle - \dlangle \str\big( \big[ d, \big[ D, \psi^\bullet \big] \big] \varphi \big) \drangle\\
 &= \dlangle \str\big( \big[ \psi^\bullet, d \big] ( D\varphi ) \big) \drangle -  \dlangle d \str\big( \big[ D, \psi^\bullet \big] \varphi \big) \drangle - (-1)^{|\psi|}\dlangle \str\big( \big[ D, \psi^\bullet \big]( d \varphi ) \big) \drangle \, .
@@ -2364,7 +2365,7 @@ Set $\psi = \Lambda_{i_1,\ldots,i_p}$ and $\eta = d f_{i_1} \cdots d f_{i_p}$. T
 \begin{align}
 \dlangle \eta\, \str\big( \psi \circ \At(\varphi) \big) \drangle &= -\dlangle \eta\, d\, \str\big( D(\psi) \circ \varphi \big) \drangle \label{eq:hutch1}\\
 &\qquad+  \dlangle \eta\, \str\big( [\psi^\bullet, d]( D\varphi ) \big) \drangle\label{eq:hutch2}\\
-&\qquad- (-1)^{n-p}\dlangle \eta\, \str\big( D(\psi) \circ d\varphi \big) \drangle\label{eq:hutch3}
+&\qquad- (-1)^{n-p}\dlangle \eta\, \str\big( D(\psi) \circ d\varphi \big) \drangle \, . \label{eq:hutch3}
 \end{align}
 Since $D(\lambda_i) = f_i$,
 \be\label{eq:expansiondpsi}
@@ -2380,7 +2381,7 @@ which vanishes by Lemma \ref{lemma:langlecalc1} below, proving the claim.
 The signed sum over all sequences of the remaining terms (\ref{eq:hutch1}) and (\ref{eq:hutch2}) gives us the right-hand side of the equation in the statement of the lemma, completing the proof.
 \end{proof}
 
-\begin{lemma}\label{lemma:banatechn} Given a sequence $\bs{i} = (i_1,\ldots,i_p)$ of length $p \ge 2$ and any $\omega \in \Bar$
+\begin{lemma}\label{lemma:banatechn} Given a sequence $\bs{i} = (i_1,\ldots,i_p)$ of length $p \ge 2$ and any $\omega \in \Bar$, 
 \[
 \sum_{\sigma \in S_p} (-1)^{|\sigma|} \dlangle d f_{i_{\sigma(1)}} \cdots d f_{i_{\sigma(p-1)}} f_{i_{\sigma(p)}} \omega \drangle = 0\,.
 \]
@@ -2389,7 +2390,7 @@ The signed sum over all sequences of the remaining terms (\ref{eq:hutch1}) and (
 For any permutation $\sigma$,
 \begin{align}
 \dlangle d f_{i_{\sigma(1)}} \cdots d f_{i_{\sigma(p-1)}} f_{i_{\sigma(p)}} \omega \drangle &= \dlangle d f_{i_{\sigma(1)}} \cdots d(f_{i_{\sigma(p-1)}} f_{i_{\sigma(p)}}) \omega \drangle\label{eq:bana1}\\
-&- \dlangle d f_{i_{\sigma(1)}} \cdots f_{i_{\sigma(p-1)}} df_{i_{\sigma(p)}} \omega \drangle\,.
+& \qquad - \dlangle d f_{i_{\sigma(1)}} \cdots f_{i_{\sigma(p-1)}} df_{i_{\sigma(p)}} \omega \drangle\,. \nonumber
 \end{align}
 When we sum over all permutations $\sigma$ the terms \eqref{eq:bana1} cancel pairwise due to the symmetry in exchanging $\sigma$ with $\sigma \circ (a, a-1)$. In this way we ``migrate'' the undifferentiated $f_i$ to the very left of the expression, where it annihilates with the residue in $\dlangle - \drangle$.
 \end{proof}
@@ -2412,7 +2413,7 @@ After $n$ steps we find that, writing $h(\alpha)$ for the second summand in \eqr
 &= (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \dlangle df_{\sigma(1)} \cdots df_{\sigma(n)} \str(\alpha) \drangle + h(\alpha)\\
 &= (-1)^n \str(\varphi) + h(\alpha)\,.
 \end{align*}
-where in the last step we use the residue identity from Lemma \ref{??}.
+where in the last step we use the residue identity from Proposition~\ref{prop:determinantresidue}.
 \end{proof}
 
 Using the explicit formula for $\mathcal{Z}$ from Lemma \ref{lemma:Zorrointermediate} and the previous calculation, we compute that
@@ -2438,8 +2439,7 @@ induced by the pairing
 \end{equation}
 where $\Lambda^{(x)} = \lambda_1 \cdots \lambda_n$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)} = \mu_1 \cdots \mu_m$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. That is, $D( \mu_j ) = \partial_{z_j} V \cdot 1_X$ (\textbf{todo} justify lack of symmetrisation).
 
-To prove that $H: X \lto X$ is null-homotopic it is therefore sufficient to prove that $\langle H, - \rangle_X$ is a coboundary in the complex $\Hom_k( \End(X), k)$, or what is the same, that it can be factored through the differential $D$. This will follow from a careful study of the map $\str( H \circ - )$, the crux of which is
-
+To prove that $H: X \lto X$ is null-homotopic it is therefore sufficient to prove that $\langle H, - \rangle_X$ is a coboundary in the complex $\Hom_k( \End(X), k)$, or what is the same, that it can be factored through the differential $D$. This will follow from a careful study of the map $\str( H \circ - )$, the crux of which is: 
 \begin{lemma}\label{lemma:strhalpha} For any even degree $\alpha \in \End(X)$,
 \be\label{eq:strhalpha}
 \str( H \circ \alpha ) = \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} h_p( D \At^{n-p-1} \alpha )\,.
@@ -2456,7 +2456,7 @@ Hence to verify \eqref{eq:strhalpha} it suffices to check the case where $\alpha
 \begin{theorem}\label{theorem:mainzorro} The Zorro map $\mathcal{Z}$ is homotopic to $1_X$.
 \end{theorem}
 \begin{proof}
-It suffices to prove that $\langle H, - \rangle_X$ can factored via the differential $D$. Writing $\Res\,\big[ - \big]$ for the residue in \eqref{eq:bracketkl} we compute using Lemma \ref{lemma:strhalpha} that for $\alpha \in \End(X)$,
+It suffices to prove that $\langle H, - \rangle_X$ can be factored via the differential $D$. Writing $\Res\,\big[ - \big]$ for the residue in \eqref{eq:bracketkl} we compute using Lemma \ref{lemma:strhalpha} that for $\alpha \in \End(X)$,
 \begin{align*}
 \langle H, \alpha \rangle_X &= \Res\,\big[ \str( H \circ \alpha \circ \Lambda^{(x)} \Lambda^{(z)} ) \big]\\
 &= \sum_{p=0}^{n-1} (-1)^{n+\binom{p}{2}} \Res\,\big[ h_p D\At^{n-p-1}( \alpha \circ \Lambda^{(x)} \Lambda^{(z)} ) ) \big]\\
@@ -2522,7 +2522,7 @@ The units and counits of adjunction are derived from the evaluation and coevalua
 \[
 \xymatrix@C+2pc{
 (\Phi_X \circ \Phi_{X^\dual})(Z) = X \otimes_{k[x]} X^\dual \otimes_{k[z]} Z \ar[r]^-{\widetilde\eval_X \otimes 1_Z} & \Delta_V \otimes_{k[z]} Z \ar[r]^-{\lambda_Z} & Z
-}\,.
+}.
 \]
 
 \begin{remark} We recover Serre duality in the triangulated categories $\hmf(k[z], V)^\omega$ as the special case of a $1$-morphism $X: \mathbb{I} \lto V$ where $\mathbb{I} = (k,0)$, with its left adjoint ${}^\dual X = X^{\vee}[m]: V \lto \mathbb{I}$. 
@@ -2533,11 +2533,11 @@ H^m \Hom_k( \Hom_{k[z]}(X,Z), k ) &\cong \underline{\Hom}( \Hom_{k[z]}(X, Z)[m],
 &\cong \underline{\Hom}( X^{\vee}[m] \otimes_{k[z]} Z, k )\\
 &\cong \underline{\Hom}( Z, X )\,.
 \end{align*}
-Recall that $k$ is arbitrary, so the left hand side is not necessarily the dual of $\underline{\Hom}(X, Z[m])$.
+Recall that $k$ is arbitrary, so the left-hand side is not necessarily the dual of $\underline{\Hom}(X, Z[m])$.
 \end{remark}
 
 \begin{remark}
-The same results also holds for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
+The same results also hold for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
 \end{remark}
 
 
@@ -2941,11 +2941,11 @@ where the right-hand side map is shifted to match the left-hand side's source an
 \draw[dotted] (0,0) -- (1,0);
 \draw (-1,0) -- (XY);
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,1.6); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,1.6); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-0.65) .. controls +(0,1) and +(0.7,-0.15) .. (1.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-0.65) .. controls +(0,1) and +(0.7,-0.15) .. (1.5,0.75); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-0.65) .. controls +(0,1.1) and +(1.8,0) .. (1.5,1.5); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-0.65) .. controls +(0,1.1) and +(1.8,0) .. (1.5,1.5); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -2963,11 +2963,11 @@ where the right-hand side map is shifted to match the left-hand side's source an
 %\draw[dotted] (0,0) -- (1,0);
 %\draw (2,0) -- (XY);
 %%
-%\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1.85,1.59) .. controls +(-0.01,-1.6) and +(0.7,0.1) .. (1.25,-0.7); 
+%\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1.85,1.59) .. controls +(-0.01,-1.6) and +(0.7,0.1) .. (1.25,-0.7); 
 %%
-%\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.15,-0.65) .. controls +(0,1) and +(-0.7,0) .. (-0.4,0.77); 
+%\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.15,-0.65) .. controls +(0,1) and +(-0.7,0) .. (-0.4,0.77); 
 %%
-%\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2.15,-0.65) .. controls +(0,1.1) and +(-1.8,0) .. (-0.4,1.5); 
+%\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2.15,-0.65) .. controls +(0,1.1) and +(-1.8,0) .. (-0.4,1.5); 
 %\end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -2984,11 +2984,11 @@ where the right-hand side map is shifted to match the left-hand side's source an
 \draw[dotted] (0,0) -- (1,0);
 \draw (2,0) -- (XY);
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,1.59) .. controls +(-0.01,-1.0) and +(0.7,0.1) .. (1.25,-0.7); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,1.59) .. controls +(-0.01,-1.0) and +(0.7,0.1) .. (1.25,-0.7); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.85,-0.65) .. controls +(-0.3,0.9) and +(-0.7,0) .. (-0.4,0.77); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.85,-0.65) .. controls +(-0.3,0.9) and +(-0.7,0) .. (-0.4,0.77); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-0.65) .. controls +(-0.3,1.0) and +(-1.8,0) .. (-0.4,1.5); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-0.65) .. controls +(-0.3,1.0) and +(-1.8,0) .. (-0.4,1.5); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
@@ -3014,11 +3014,11 @@ To establish part~(ii), let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ 
 \draw[dotted] (0,0) -- (1,0);
 \draw (-1,0) -- (XY);
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,2.67); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,2.67); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-1.735) .. controls +(0,2) and +(0.7,-0.15) .. (1.5,0.75); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-1.735) .. controls +(0,2) and +(0.7,-0.15) .. (1.5,0.75); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-1.735) .. controls +(0,2) and +(1.8,0) .. (1.5,1.5); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-1.735) .. controls +(0,2) and +(1.8,0) .. (1.5,1.5); 
 %
 %
 \fill (0.5,0) circle (2.2pt) node[below] {{\small$\kappa$}};
@@ -3050,12 +3050,12 @@ Similarly with~\eqref{eq:formula_rhoinverse} and~\eqref{eq:coev10} we compute th
 \end{align*}
 Next we apply the map~$\kappa$ which is simply the projection. Thus by the naturality of the Atiyah class the sole effect of~$\kappa$ on the above is to replace $\At_1((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\vee)$ by $\At_1((\bar Y\otimes \bar X)\otimes( \bar Y \otimes \bar X)^\vee)$. (TODO: $g_\alpha$...) This means we are precisely in the same situation as in the proof of the Zorro move for $\bar Y \otimes \bar X$, i.\,e.~after applying $\widetilde\eval_{\bar Y \otimes \bar X}$ and~$\rho$ we are left with
 $$
-(-1)^{{n\choose 2} + m|e_b| + (m+n)|f_a|} \, 
+(-1)^{ n + m|e_b| + (m+n)|f_a| } \, 
 g_\alpha^* \circ \varepsilon \Psi \At_2(X^\vee \otimes Y^\vee)^m (e_b^* \otimes f_a^*) \, . 
 $$
-(TODO: explain notation in rest of argument) Similarly the right-hand side of~\eqref{eq:leftmonoidaldetail} maps $(f_a \otimes g_\alpha e_b)^*$ to 
+(TODO: explain notation in rest of argument) Similarly the right-hand side of~\eqref{eq:leftmonoidaldetail} maps $(f_a \otimes g_\alpha e_b)^*$ to (TODO: that's before wiggly-line-crossing!)
 $$
-(-1)^{{p\choose 2} + mp + m|e_b| + (m+p) |f_a|} \, 
+(-1)^{ p + mp + m|e_b| + (m+p) |f_a| } \, 
 g_\alpha^* \circ \varepsilon \Psi \At_1 (X^\vee \otimes Y^\vee)^m (e_b^* \otimes f_a^*) \, . 
 $$
 TODO
@@ -3118,7 +3118,7 @@ TODO
 
 In any pivotal bicategory with adjoints there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its adjoint). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
-Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\Hom$ and $\End$ we mean the spaces of 2-(endo)morphisms in $\LG$. We define \textsl{defect operators} (\textbf{todo} these are closed maps, point this out, also rewrite following formulas)
+Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\Hom$ and $\End$ we mean the spaces of 2-(endo)morphisms in $\LG$. We define \textsl{defect operators} 
 $$
 \mathcal D_l(X): \End(\Delta_V) \longrightarrow \Hom(\Delta_W, \Delta_W[m+n]) \, , \qquad
 \mathcal D_r(X): \End(\Delta_W) \longrightarrow \Hom(\Delta_V, \Delta_V[m+n])
@@ -3170,7 +3170,7 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \nicepalecolourscheme (0,0) circle (2);
 \fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
+\draw[very thin, color=blue!85!black, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(-3,0) and +(-3,-1) .. (90:2); 
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
 \draw[<-, very thick] (-0.100,2) -- (0.101,2) node[below] {}; 
@@ -3220,7 +3220,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \nicecolourscheme (0,0) circle (2);
 \fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
@@ -3245,7 +3245,7 @@ in the nontrivial case, where we use the adjunction maps and notation of Section
 $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose nondegenerate pairing
 \be\label{bulktopmet}
 \langle \phi, \psi \rangle_W = 
-(-1)^{n\choose 2} \Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right]
+\Res_{k[x]/k} \left[ \frac{\phi \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right]
 \ee
 describes 2-point correlators on the sphere, see also Section~\ref{sec:ocTFT}. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{leftdefectaction} and~\eqref{rightdefectaction} have the natural interpretation in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is nonsingular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
 
@@ -3316,13 +3316,13 @@ node[near end,right] {{{\small$\Delta_V$}}};
 For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \End(X)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
 \begin{align*}
 \mathcal D_l^\Phi(X)(\phi) & 
-= (-1)^{{{n+1}\choose 2}}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V, \ldots, \partial_{z_m} V} \right] \, , \\
-\mathcal D_r^\Phi(X)(\psi) & = (-1)^{{{m+1}\choose 2}}  \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] \, . 
+= (-1)^{{{n+1}\choose 2}}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V, \ldots, \partial_{z_m} V} \right] , \\
+\mathcal D_r^\Phi(X)(\psi) & = (-1)^{{{m+1}\choose 2}}  \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] . 
 \end{align*}
 \end{proposition}
 
 \begin{proof}
-We treat the case of $\mathcal D_r^\Phi(X)$ in detail, the argument for $\mathcal D_l^\Phi(X)$ works similarly. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to to identify the variables on both sides of the unit 1-endomorphisms at appropriate places. Furthermore, $\rho_X$ will project out all non-zero degree contributions coming from the action of $\rho_{X}^{-1}$, so $\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
+We treat the case of $\mathcal D_r^\Phi(X)$ in detail, the argument for $\mathcal D_l^\Phi(X)$ works similarly. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to identify the variables on both sides of the unit 1-endomorphisms at appropriate places. Furthermore, $\rho_X$ will project out all non-zero degree contributions coming from the action of $\rho_{X}^{-1}$, so $\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
 
 In the lower part of the expression for $\mathcal D_r^\Phi(X)(\psi)$ in~\eqref{defectactionwithfieldinsertion} we have 
 $$
@@ -3337,7 +3337,8 @@ $$
 %which we identify with $(-1)^{{n\choose 2}} \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X}$ in $\End(X)$. Note that in the last step leading to~\eqref{coevtilde1} we set $\partial_{[i]} d_{X}(x,z) = \partial_{x_i} d_{X}(x,z)$ since $x=x'$ in $\End(\Delta_W)$. 
 Next we apply~$\Phi$, $\psi$ and $\widetilde\eval_X$. Since the latter maps back to~$\Delta_V$ we may set $\partial_{[i]} d_X = \partial_{z_i} d_X$. Thus we obtain
 $$
-\mathcal D_r^\Phi(X)(\psi) = (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
+\mathcal D_r^\Phi(X)(\psi) = 
+(-1)^{{m+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
 $$
 Here we collectively denote the contributions from $\widetilde\eval_X$ of non-zero degree in the Koszul complex $\Delta_V$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_r^\Phi(X)(\psi)$ is a morphism in $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
 \end{proof}
@@ -3445,9 +3446,9 @@ $$
 	(-2,-2) arc (180:360:2);
 %	
 % wiggly lines: 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,2) .. controls +(-3,-1.5) and +(-4,0.4) .. (0,-4); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
@@ -3500,13 +3501,13 @@ $$
 	] 
 	(2.75,-3.5) arc (180:360:0.625);	
 % wiggly lines: 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,2) .. controls +(-3,-1.5) and +(-4,0.4) .. (0,-4); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (2.25,-0.625) .. controls +(1.5,0.4) and +(-1,-1) .. (3.375,2.1); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (2.25,-1.375) .. controls +(0.5,-1) and +(-1.5,0) .. (3.375,-4.1); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
@@ -3565,13 +3566,13 @@ $$
 	] 
 	(2.75,-3.5) arc (180:360:0.625);
 % wiggly lines: 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,2) .. controls +(-3,-1.5) and +(-4,0.4) .. (0,-4); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (2.25,-0.625) .. controls +(1.5,0.4) and +(-1,-1) .. (3.375,2.1); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (2.25,-1.375) .. controls +(0.5,-1) and +(-1.5,0) .. (3.375,-4.1); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
@@ -3644,14 +3645,14 @@ $$
 	] 
 	(-5.75,-3.5) .. controls +(0,-2) and +(0,-2) .. (4,-3.5);
 % wiggly lines: 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (-3,-3) .. controls +(2.3,0.2) and +(-2.3,-0.2) .. (0,2); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (-3,-4) .. controls +(3.7,0.2) and +(-1.3,-0.32) .. (0,1); 
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (2.25,-0.625) .. controls +(1.4,0.2) and +(-1.0,-0.32) .. (3.375,2.1); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (-1,-5) .. controls +(-7.9,-0.1) and +(-0.3,-0.75) .. (-5.25,-1.375); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
@@ -3692,7 +3693,7 @@ $$
 	(-1,-2) arc (180:360:1);
 %	
 % wiggly lines: 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
@@ -3719,7 +3720,7 @@ $$
 	(-1,-2) arc (180:360:1);
 %	
 % wiggly lines: 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
 (0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
@@ -4018,10 +4019,10 @@ $$
 	 (Phi5) .. controls +(0.2,0.5) and +(0,-1) .. (4.2,0); 	% X_4
 %
 % wiggly lines:
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2,0.5) .. controls +(-3.5,0) and +(-4,-0.5) .. (0,5.2); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2,-3.5) .. controls +(-2.5,0) and +(-2,-1) .. (-2,-0.5); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2,-3.5) .. controls +(-3,0) and +(0,-1) .. (0,3); 
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2,0.5) .. controls +(-1.7,0) and +(0,-1) .. (0,3); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2,0.5) .. controls +(-3.5,0) and +(-4,-0.5) .. (0,5.2); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-2,-3.5) .. controls +(-2.5,0) and +(-2,-1) .. (-2,-0.5); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2,-3.5) .. controls +(-3,0) and +(0,-1) .. (0,3); 
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2,0.5) .. controls +(-1.7,0) and +(0,-1) .. (0,3); 
 %
 % label arrowheads: 
 \fill (0,5.4) circle (0pt) node {{\small$\eval_{Y_1}$}}; %Y_1
@@ -4086,7 +4087,7 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
 %
-\draw[very thin, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:1) .. controls +(-2,0) and +(-2,-0.2) .. (90:2); %decorate, decoration={zigzag}
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ee
