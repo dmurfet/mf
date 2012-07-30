@@ -2541,6 +2541,138 @@ Recall that $k$ is arbitrary, so the left-hand side is not necessarily the dual 
 The same results also hold for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
 \end{remark}
 
+\section{How I Learned To Stop Worrying and Love Signs}
+
+Objects of the bicategory $\LG$ are pairs consisting of a polynomial ring $R$ and potential $W$, together with a chosen ordering of the ring variables. Thus the value of a diagram in $\LG$ depends \emph{a priori} on the ordering of the ring variables in each of its $2$-dimensional regions. In this section we show that the value is actually independent of these orderings, up to the natural signs.
+
+To take a concrete example, consider for $X \in \hmf(k[z_1,\ldots,z_m], V)$ the diagram
+\be\label{eq:signdependencepermdia}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
+\nicepalecolourscheme (0,0) circle (3.5);
+\fill (-2.1,-2.1) circle (0pt) node[white] {{\small$V$}};
+\shadedraw[top color=white, bottom color=white, draw=white] (0,0) circle (2);
+%
+\draw[very thin, color=blue!85!black, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
+\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ee
+We show in Section \ref{sec:defectaction} that the value of this diagram is the endomorphism of $\Delta_V$ given by multiplication with the polynomial $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} d_X \ldots \partial_{z_m} d_X )$. While there is an obvious dependence on the variable ordering, we prove that the homotopy equivalence class of this endomorphism changes only by a sign (the sign of the permutation) if we permute the ordering of the variables $z_i$ in the outer region of the diagram.
+
+Let $(R = k[x_1,\ldots,x_n], W)$ be an object of $\LG$. Given $\sigma \in S_n$ consider the matrix factorisation $(\Delta^\sigma_W, d_{\Delta^\sigma_W})$ of $\widetilde W$ over $\Re$ with the same underlying graded module as $\Delta_W$, but the differential that we would have written down if we had begun with the variable ordering $x_{\sigma(1)},\ldots,x_{\sigma(n)}$, namely
+\be
+d_{\Delta^\sigma_W} = \delta^\sigma_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial^{\,\sigma}_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*
+\ee
+where $\partial^{\,\sigma}_{[i]}$ are the modified difference quotient operators, defined for $1 \le i \le n$ with $\sigma(j) = i$ by
+\be\label{diffquotopmod}
+\partial^{\,\sigma}_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_{\sigma(1)}\ldots t_{\sigma(j-1)}}f - {}^{t_{\sigma(1)}\ldots t_{\sigma(j)}}f}{x_i-x'_i} \, . 
+\ee
+Together with the morphisms $\rho, \lambda$ of \eqref{lambdarho} this matrix factorisation serves as an alternative unit $1$-endomorphism of $(R,W)$. That is, $\rho$ and $\lambda$ are both isomorphisms and the coherence axiom for the unit in a bicategory holds for $\Delta^\sigma_W$. 
+
+By uniqueness of units in a bicategory there is an isomorphism in $\hmf(\Re, \widetilde W)$
+\[
+\xi: \Delta_W \lto \Delta^\sigma_W
+\]
+unique with the property that, for any $1$-morphism $X: (k[x],W) \lto (k[z],V)$, the diagram
+\be\label{eq:propertydeltasigma}
+\xymatrix{
+X \otimes_R \Delta_W \ar[dr]_{\rho}\ar[rr]^-{1 \otimes \xi} & & X \otimes_R \Delta^\sigma_W \ar[dl]^{\rho}\\
+& X
+}
+\ee
+commutes in $\HMF(k[x,z], V - W)$. Explicitly, $\xi$ can be constructed as the composite
+\[
+\xymatrix@C+1pc{
+\Delta_W \ar[r]^-{\lambda_{\Delta_W}^{-1}} & \Delta^\sigma_W \otimes_R \Delta_W \ar[r]^-{\rho_{\Delta^\sigma_W}} & \Delta^\sigma_W
+}\,,
+\]
+but we will only use commutativity of \eqref{eq:propertydeltasigma}. Taking $X = \Delta_W^{\vee}$ in this diagram we deduce that
+\[
+\xymatrix{
+\Delta_W \ar[dr]_{\pi}\ar[rr]^-{\xi} & & \Delta^\sigma_W\ar[dl]^{\pi}\\
+& R
+}
+\]
+commutes in $\HF(\Re, \widetilde W)$, i.e. $\xi$ is the isomorphism connecting these two stabilisations of the diagonal.
+
+To understand how permuting variables affects the values of diagrams like \eqref{eq:signdependencepermdia}, we need to understand the effect on the evaluation and coevaluation maps of Section \ref{sec:derivcoeval}. For the remainder of the section we fix potentials $W \in R = k[x_1,\ldots,x_n], V \in S = k[z_1,\ldots,z_m]$ and $X \in \hmf(k[x,z], V - W)$.
+
+By inspection $\widetilde\coev_X$ depends only on the order of the $x$-variables and $\coev_X$ depends only on the order of the $z$-variables, through the maps $\Psi, \varepsilon$. Since $\Psi$ is independent of the ordering up to homotopy, the only ``real'' dependence in both cases is via $\varepsilon$. Similarly $\widetilde \eval_X$ depends on the order of the $x$-variables via $\Lambda^{(x)}, \underline{\ud x}$ and the order of the partial derivatives in the denominator of the residue and $\eval_X$ depends on the order of the $z$-variables via $\Lambda^{(z)}, \underline{\ud z}$ and the residue denominator.
+
+Let us fix permutations $\sigma \in S_n$ and $\tau \in S_m$. If we take the variable orderings $x_{\sigma(1)},\ldots,x_{\sigma(n)}$ and $z_{\tau(1)}, \ldots, z_{\tau(m)}$ in Section \ref{sec:derivcoeval} the result will be morphisms
+\begin{align}
+\coev^{\sigma,\tau}_X &: \Delta^\tau_V \lto X \otimes_R {}^\dual X
+\, , \qquad
+\eval^{\sigma,\tau}_X: {}^\dual X \otimes_{S} X \lto \Delta^\sigma_W \, ,\label{eq:permutedevcoev1}\\
+\widetilde\coev^{\sigma,\tau}_X&: \Delta^\sigma_W \lto X^\dual \otimes_{S} X
+\, , \qquad
+\widetilde\eval^{\sigma,\tau}_X: X \otimes_{R} X^\dual \lto \Delta^\tau_V\,. \label{eq:permutedevcoev2}
+\end{align}
+These are related to the original evaluation and coevaluation maps as follows.
+
+\begin{lemma}\label{lemma:evsignspermute} The diagrams
+\be\label{eq:evsignspermute}
+\xymatrix@C+3pc@R-1pc{
+& \Delta_V \ar[dd]^-{\xi}\\
+X \otimes_R X^{\dual}\ar[ur]^-{\widetilde\eval_X}\ar[dr]_-{(-1)^{|\sigma|} \widetilde \eval^{\sigma, \tau}_X} \\
+& \Delta^\tau_V
+}
+\qquad
+\xymatrix@C+3pc@R-1pc{
+& \Delta_W \ar[dd]^-{\xi}\\
+{}^\dual X \otimes_S X \ar[ur]^-{\eval_X}\ar[dr]_-{(-1)^{|\tau|} \eval^{\sigma,\tau}_X}\\
+& \Delta^\sigma_W
+}
+\ee
+commute in $\HMF(S^e, \widetilde V)$ and $\HMF(\Re, \widetilde W)$ respectively.
+\end{lemma}
+\begin{proof}
+We give the argument for the first diagram, the second is similar. By the universal property of the stabilisation it suffices to prove that the $\Se$-linear morphisms
+\[
+\widetilde \eval_0, (-1)^{|\sigma|} \widetilde \eval^{\sigma, \tau}_0: X \otimes_R X^\dual \lto S
+\]
+are homotopic. For this it is enough to show that the $S$-linear maps
+\[
+\Res_{k[x]/k} \!\!\left[ \frac{ \str( \lambda_1 \ldots \lambda_n \circ (-) ) \underline{\ud x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] \quad
+(-1)^{|\sigma|}\Res_{k[x]/k} \!\!\left[  \frac{\str( \lambda_{\sigma(1)} \ldots \lambda_{\sigma(n)} \circ (-) ) \ud x_{\sigma(1)} \ldots \ud x_{\sigma(n)}}{\partial_{x_{\sigma(1)}} W \ldots \partial_{x_{\sigma(n)}} W} \right]
+\]
+are homotopic. But this follows from Appendix \ref{app:reshom}.
+\end{proof}
+
+\begin{lemma}\label{lemma:coevsignspermute} The diagrams
+\be\label{eq:coevsignspermute}
+\xymatrix@C+3pc@R-1pc{
+\Delta_W \ar[dr]^-{\widetilde \coev_X} \ar[dd]_-{\xi}\\
+& X^\dual \otimes_S X\\
+\Delta^\sigma_W \ar[ur]_-{(-1)^{|\sigma|} \widetilde \coev^{\sigma, \tau}}
+},
+\qquad
+\xymatrix@C+3pc@R-1pc{
+\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev^{\sigma,\tau}_X}\\
+& X \otimes_R {}^\dual X\\
+\Delta^\tau_V \ar[ur]_-{(-1)^{|\tau|} \coev^{\sigma,\tau}_X}
+}
+\ee
+commute in $\HMF(\Re, \widetilde W)$ and $\HMF(\Se, \widetilde V)$ respectively.
+\end{lemma}
+\begin{proof}
+The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satisfy the Zorro moves, so commutativity of the diagrams in \eqref{eq:coevsignspermute} follows from commutativity of those in \eqref{eq:evsignspermute}.
+\end{proof}
+
+\textbf{todo} Signs follow wigglies rule.
+
+Returning to the example \eqref{eq:signdependencepermdia} we have a diagram, in which the top row computes the value of the diagram with outer region given the usual variable ordering, and the bottom row computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
+\[
+\xymatrix@C+2pc{
+\Delta_V \ar[d] \ar[r] & X \otimes_R X^{\vee} \otimes_S S[m] \ar[r] & X \otimes_R R[m] \otimes_R X^{\vee} \ar[r] & \Delta_V \ar[d]\\
+\Delta^\tau_V \ar[r] & X \otimes_R X^{\vee} \otimes_S S[m] \ar[r] & X \otimes_R R[m] \otimes_R X^{\vee} \ar[r] & \Delta^\tau_V
+}
+\]
+We have shown that this diagram commutes in $\HMF(\Se, \widetilde V)$ up to a sign $(-1)^{|\tau|}$.
 
 \section{Pivotality}\label{sec:pivotality}
 
