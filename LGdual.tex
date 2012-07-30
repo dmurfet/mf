@@ -738,8 +738,8 @@ satisfying the associated Zorro moves
 \ee
 Note that in general there is no reason for the left and right adjoints to coincide.
 
-\begin{remark} \textbf{todo} We can scale the evaluation and coevaluation by signs.
-\end{remark}
+%\begin{remark} \textbf{todo} We can scale the evaluation and coevaluation by signs.
+%\end{remark}
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
@@ -1422,17 +1422,17 @@ X \in \HMF(S \otimes_k \Re, U)
 \ee
 is given with homogeneous basis $\{ e_i \}_{i}$ as an $(S \otimes_k \Re)$-module. Let~$D$ denote the differential on~$X$ and unless specified otherwise in this section $\otimes$ denotes the tensor product $\otimes_{\Re}$. Consider the module
 \[
-X \,\widehat{\otimes}\, \Bar := \prod_{m \ge 0} X \otimes \Bar_m
+X \,\widehat{\otimes}\, \Bar := \prod_{l \ge 0} X \otimes \Bar_l
 \]
 with the $\nZ _2$-grading
 \[
-\big( X \,\widehat{\otimes}\, \Bar \big)^i = \left( \prod_{m \in \nZ } X^i \otimes \Bar_{2m} \right) \oplus \left( \prod_{m \in \nZ } X^{i+1} \otimes \Bar_{2m+1} \right) . 
+\big( X \,\widehat{\otimes}\, \Bar \big)^i = \left( \prod_{l \in \nZ } X^i \otimes \Bar_{2l} \right) \oplus \left( \prod_{l \in \nZ } X^{i+1} \otimes \Bar_{2l+1} \right) . 
 \]
 It is sometimes helpful to view $X \,\widehat{\otimes}\, \Bar$ as the inverse limit of the system
 \[
 \cdots \lto X \otimes \Bar/\Bar_{\ge 2} \lto X \otimes \Bar/\Bar_{\ge 1}
 \]
-where $\Bar_{\ge m} = \bigoplus_{i \ge m} \Bar_i \subseteq \Bar$ and the maps are the obvious quotients $\Bar/\Bar_{\ge m+1} \lto \Bar/\Bar_{\ge m}$. Since $\Bar$ is an $\Re $-bimodule via left and right multiplication there are natural left and right $\Re $-actions on $X \,\widehat{\otimes}\, \Bar$. Since the left and right actions of $R_2$ on $\Bar$ agree, this amounts to an $R_2$-action on $X \,\widehat{\otimes}\, \Bar$ together with the structure of an $R_1$-bimodule. There is of course an $S$-module structure as well, which is preserved by all maps and which we will henceforth not emphasise.
+where $\Bar_{\ge l} = \bigoplus_{i \ge l} \Bar_i \subseteq \Bar$ and the maps are the obvious quotients $\Bar/\Bar_{\ge l+1} \lto \Bar/\Bar_{\ge l}$. Since $\Bar$ is an $\Re $-bimodule via left and right multiplication there are natural left and right $\Re $-actions on $X \,\widehat{\otimes}\, \Bar$. Since the left and right actions of $R_2$ on $\Bar$ agree, this amounts to an $R_2$-action on $X \,\widehat{\otimes}\, \Bar$ together with the structure of an $R_1$-bimodule. There is of course an $S$-module structure as well, which is preserved by all maps and which we will henceforth not emphasise.
 
 Let $W \in R$ be arbitrary and set $\widetilde{W} = W \otimes 1 - 1 \otimes W \in \Re$. Our first observation is that $X \,\widehat{\otimes}\, \Bar$ can be equipped as a linear factorisation of $U + \widetilde{W}$. One checks that there are well-defined operators on $X \,\widehat{\otimes}\, \Bar$ given by
 \begin{align*}
@@ -1446,7 +1446,7 @@ where $d$ and $s$ are extended to $X \otimes \Bar$ as in Section \ref{section:at
 
 %For the next result assume that $U + \widetilde{W}$ belongs to the image of $S \otimes_k R_i$ in $S \otimes_k \Re $ for some $i \in \{1,2\}$ so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over $S \otimes_k R_i$.
 
-\begin{lemma} $( X \, \widehat{\otimes}_R\, \Bar, d_X + b' + d\widetilde{W} \times (-) )$ is a linear factorisation of $U + \widetilde{W}$.
+\begin{lemma} $( X \, \widehat{\otimes}\, \Bar, d_X + b' + d\widetilde{W} \times (-) )$ is a linear factorisation of $U + \widetilde{W}$.
 \end{lemma}
 \begin{proof}
 This can be checked on the inverse system, where it follows from Lemma \ref{lemma:barisafactorisation}.
@@ -1454,7 +1454,7 @@ This can be checked on the inverse system, where it follows from Lemma \ref{lemm
 
 There is a morphism of linear factorisations
 \begin{equation}\label{eq:pibar}
-\pi: X \, \widehat{\otimes}\, \Bar = \prod_{m \ge 0} X \otimes \Bar_m \lto X \otimes \Bar_0 \lto X \otimes R
+\pi: X \, \widehat{\otimes}\, \Bar = \prod_{l \ge 0} X \otimes \Bar_l \lto X \otimes \Bar_0 \lto X \otimes R
 \end{equation}
 where the first map is the projection and the second is the product $\Re \lto R$. Next we show using the perturbation lemma that this map is a homotopy equivalence, and we give an explicit homotopy inverse in terms of Atiyah classes. In fact we give two homotopy inverses, one which is $R_2$-linear and the other left $R_1$-linear. We begin with the deformation retract arising from the fact that~$s$ and~$d$ are contracting homotopies for the differential $b'$.
 
@@ -1494,7 +1494,7 @@ The required identities $b' d + d b' = 1 - \sigma \pi$ and $b' s + s b' = 1 - \s
 \begin{lemma}\label{lemma:smallpertde} The perturbation $\delta = D + d\widetilde{W} \times (-)$ is small on $X\,\widehat{\otimes} \, \Bar$ with respect to both of the above deformation retract data. That is, both $1 + \delta d$ and $1 + \delta s$ are invertible.
 \end{lemma}
 \begin{proof}
-Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{m \ge 0} X \otimes \Bar_m$ it is clear that the sum $\sum_{m \ge 0} (\delta h)^m$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
+Let $h$ be $-d$ or $-s$. Because we are working with $\prod_{l \ge 0} X \otimes \Bar_l$ it is clear that the sum $\sum_{l \ge 0} (\delta h)^l$ converges as an operator on $X \, \widehat{\otimes}\, \Bar$ and this gives the desired inverse to $1 - \delta h$.
 \end{proof}
 
 In the notation of Section \ref{section:atiyahclasses} we can now describe the homotopy inverses of $\pi$ using Atiyah classes. Note that $X$ is a free $(S \otimes_k \Re)$-module so we are using the convention of Remark \ref{remark:linearatother}.
@@ -1517,7 +1517,7 @@ It follows from the perturbation lemma (Proposition \ref{prop:pertlemma}) with L
 (X \otimes R, b_\infty) \ar@<-1ex>[r]_-{\sigma_\infty} & (X \, \widehat{\otimes} \, \Bar, D + b' + d\widetilde{W} \times (-)) \ar@<-1ex>[l]_-{\pi_\infty}
 }
 \]
-is a deformation retract datum, where with $\tau = \sum_{m \ge 0} (-1)^m (\delta d) \delta$ we have
+is a deformation retract datum, where $\tau = \sum_{m \ge 0} (-1)^m (\delta d) \delta$
 \begin{align*}
 \sigma_\infty = \sum_{m \ge 0} (-1)^m (d \delta)^m \sigma_2 \, , \qquad
 \pi_\infty = \pi + \pi \tau h\, , \qquad
@@ -1529,9 +1529,9 @@ Clearly $\pi \delta = \pi D$ and $\pi$ vanishes on $\delta d$, so $\pi \tau = \p
 \]
 Expanding this yields $\sum_{m \ge 0} (-1)^m [d, D]^m \sigma_2$ plus terms involving factors of the form
 \begin{equation}\label{eq:finalpertdefo2}
-[d, d\widetilde{W} \times (-)] [d,D]^i \sigma_2
+[d, d\widetilde{W} \times (-)] [d,D]^i \sigma_2\,.
 \end{equation}
-for some $i \ge 0$. Applying $[d,D]^i \sigma_2$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below applying $[d, d\widetilde{W} \times (-)]$ to such a tensor yields zero, so all terms of the form (\ref{eq:finalpertdefo2}) must vanish and $\sigma_\infty$ is as given in the statement of the proposition.
+Applying $[d,D]^i \sigma_2$ to an element of $X \otimes R$ produces a tensor whose form component is of the type $da_0 \ldots da_n \otimes a_{n+1}$. By Lemma \ref{lemma:shortobs} below $[d, d\widetilde{W} \times (-)]$ vanishes on such a tensor, so all terms of the form (\ref{eq:finalpertdefo2}) vanish and $\sigma_\infty$ is as given in the statement of the proposition.
 \end{proof}
 
 \begin{lemma}\label{lemma:shortobs} On $\Bar$ we have $[d, d\widetilde{W} \times (-)] = d \widetilde{W} \cdot d(-)$ and $[s, d\widetilde{W} \times (-)] = s(-) \cdot d\widetilde{W}$.
@@ -1569,7 +1569,7 @@ Using the second equation of Lemma \ref{lemma:shortobs} the proof is almost iden
 %\begin{remark} In the situation of Remark \ref{remark:specialcaseinvert} we have shown that $\pi: X' \,\widehat{\otimes}_R\, \Bar \lto X'$ is an $R$-linear homotopy equivalence for the two possible $R$-actions on $X' \,\widehat{\otimes}_R\, \Bar$, the $R$-action on $X'$ which moves across the tensor to act as $R_1$ on $\Bar$, and the $R_2$-action on $\Bar$.
 %\end{remark}
 
-Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ and let $(\Delta, d_{\Delta})$ be the finite-rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. We continue to assume that $X$ is a matrix factorisation as given in \eqref{eq:xisamf}. 
+Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ and let $(\Delta, d_{\Delta})$ be the finite-rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. We continue to assume that $X$ is a matrix factorisation as given in \eqref{eq:xisamf}, and we emphasise that $W$ is arbitrary, not necessarily a potential.
 
 With $\pi_{\Delta}: \Delta \lto R$ the stabilisation morphism of \eqref{DeltaWstabmap} there is a morphism
 \begin{equation}\label{eq:koszulpi}
@@ -1582,14 +1582,22 @@ X \,\widehat{\otimes}\, \Bar \ar[dr]_-{\pi}\ar[rr]^{1 \otimes \Psi} & & X \otime
 & X \otimes R
 }
 \]
-in which every side is a homotopy equivalence: 
+in which the horizontal map is the morphism of linear factorisations
+\[
+1 \otimes \Psi: \xymatrix{
+X \,\widehat{\otimes}\, \Bar = \prod_{l \ge 0} X \otimes \Bar_l \ar@{->>}[r] & \bigoplus_{0 \le l \le n} X \otimes \Bar_l \ar[r]^-{1 \otimes \Psi} & X \otimes \Delta
+}
+\]
+in which the first map is the projection.
 
 \begin{lemma}\label{lemma:koszulstab1} $\pi_\Delta$ is an $R_2$-linear homotopy equivalence and a left $R_1$-linear homotopy equivalence.
 \end{lemma}
 \begin{proof}
 With $\Delta_j = \bigwedge^j (\bigoplus_{i=1}^n \Re \theta_i)$ there is a split exact sequence
 \[
-0 \lto \Delta_n \lto \cdots \lto \Delta_0 \lto R \lto 0
+\xymatrix{
+0 \ar[r] & \Delta_n \ar[r]^-{\delta_{-}} & \cdots \ar[r]^-{\delta_{-}} & \Delta_0 \ar[r]^-{\delta_{-}} R \ar[r] & 0
+}
 \]
 and the splittings provide the $R_2$-linear (resp.~left $R_1$-linear) $\sigma: R \lto \Delta$ and homotopy $h$ making
 \[
@@ -1607,7 +1615,7 @@ into an $R_2$-linear deformation retract datum (resp.left $R_1$-linear). Moreove
 \begin{equation}\label{eq:koszulstab2_1}
 \pi^{-1}_2 = \sum_{l \ge 0} (-1)^l \Psi \At_{2}(X)^l \sigma_2\,,
 \end{equation}
-while a left $R_1$-linear homotopy inverse is given by
+while an $R_1$-linear homotopy inverse is given by
 \begin{equation}\label{eq:koszulstab2_2}
 \pi^{-1}_1 = \sum_{l \ge 0} (-1)^l \Psi \At_{1}(X)^l \sigma_1\,.
 \end{equation}
@@ -1642,7 +1650,7 @@ Writing $\Se = S_1 \otimes_k S_2$, we seek an $S_1$-$R$-bilinear inverse to $\pi
 \be\label{eq:mashedkoalas}
 X' \otimes_{\Se} \Delta_V \lto X' \otimes_{\Se} S
 \ee
-and then compose on both ends with swap isomorphisms, provided we keep in mind that we want an $S_1$-linear, not $S_2$-linear, inverse to \eqref{eq:mashedkoalas}. But switching the role of $R$ and $S$ in the above this is exactly what is provided by \eqref{eq:koszulstab2_2}. Postcomposing with the swap isomorphism has the effect of converting $\At_{1}$ into $\Atlarrow_{1}$, so the conclusion is that an $S_1$-$R$-bilinear homotopy inverse for $\lambda$ is
+and then compose on both ends with swap isomorphisms, provided we keep in mind that we want an $S_1$-linear, not $S_2$-linear, inverse to \eqref{eq:mashedkoalas}. But switching the role of $R$ and $S$ in the above, this is exactly what is provided by \eqref{eq:koszulstab2_2}. Postcomposing with the swap isomorphism has the effect of converting $\At_{1}$ into $\Atlarrow_{1}$, so the conclusion is that an $S_1$-$R$-bilinear homotopy inverse for $\lambda$ is
 \be\label{eq:formulalambdainv}
 \lambda^{-1} = \sum_{l \ge 0} (-1)^l \Psi \Atlarrow_{1}(X)^l \sigma_1\,.
 \ee
@@ -2585,18 +2593,18 @@ X \otimes_R \Delta_W \ar[dr]_{\rho}\ar[rr]^-{1 \otimes \xi} & & X \otimes_R \Del
 }
 \ee
 commutes in $\HMF(k[x,z], V - W)$. Explicitly, $\xi$ can be constructed as the composite
-\[
+\be
 \xymatrix@C+1pc{
 \Delta_W \ar[r]^-{\lambda_{\Delta_W}^{-1}} & \Delta^\sigma_W \otimes_R \Delta_W \ar[r]^-{\rho_{\Delta^\sigma_W}} & \Delta^\sigma_W
 }\,,
-\]
+\ee
 but we will only use commutativity of \eqref{eq:propertydeltasigma}. Taking $X = \Delta_W^{\vee}$ in this diagram we deduce that
-\[
+\be
 \xymatrix{
 \Delta_W \ar[dr]_{\pi}\ar[rr]^-{\xi} & & \Delta^\sigma_W\ar[dl]^{\pi}\\
 & R
 }
-\]
+\ee
 commutes in $\HF(\Re, \widetilde W)$, i.e. $\xi$ is the isomorphism connecting these two stabilisations of the diagonal.
 
 To understand how permuting variables affects the values of diagrams like \eqref{eq:signdependencepermdia}, we need to understand the effect on the evaluation and coevaluation maps of Section \ref{sec:derivcoeval}. For the remainder of the section we fix potentials $W \in R = k[x_1,\ldots,x_n], V \in S = k[z_1,\ldots,z_m]$ and $X \in \hmf(k[x,z], V - W)$.
@@ -2665,14 +2673,15 @@ The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satis
 
 \textbf{todo} Signs follow wigglies rule.
 
-Returning to the example \eqref{eq:signdependencepermdia} we have a diagram, in which the top row computes the value of the diagram with outer region given the usual variable ordering, and the bottom row computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
+Returning to the example \eqref{eq:signdependencepermdia} we have a diagram, in which the top path computes the value of the diagram with outer region given the usual variable ordering, and the bottom path computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
 \[
-\xymatrix@C+2pc{
-\Delta_V \ar[d] \ar[r] & X \otimes_R X^{\vee} \otimes_S S[m] \ar[r] & X \otimes_R R[m] \otimes_R X^{\vee} \ar[r] & \Delta_V \ar[d]\\
-\Delta^\tau_V \ar[r] & X \otimes_R X^{\vee} \otimes_S S[m] \ar[r] & X \otimes_R R[m] \otimes_R X^{\vee} \ar[r] & \Delta^\tau_V
+\xymatrix@C+2pc@R-1pc{
+\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev_X} &  & & \Delta_V \ar[dd]^-{\xi}\\
+& X \otimes_R X^{\vee} \otimes_S S[m] \ar[r]^-{\cong} & X \otimes_R R[m] \otimes_R X^{\vee} \ar[ur]^-{\widetilde \eval_X} \ar[dr]_-{\widetilde \eval^{\tau}_X}\\
+\Delta^\tau_V \ar[ur]_-{\coev^{\tau}_X} & & & \Delta^\tau_V
 }
 \]
-We have shown that this diagram commutes in $\HMF(\Se, \widetilde V)$ up to a sign $(-1)^{|\tau|}$.
+We have shown that the left hand triangle commutes in $\HMF(\Se, \widetilde V)$ up to a sign $(-1)^{|\tau|}$, and the right hand triangle commutes.
 
 \section{Pivotality}\label{sec:pivotality}
 
@@ -5271,7 +5280,7 @@ In this section $k$ is any commutative ring, $R = k[x_1,\ldots,x_n]$. We write $
 & R
 }
 \]
-commute. As indicated in this diagram there is a second canonical chain map $\varepsilon: (\Delta, \delta_{-}) \lto \Re[n]$, see \eqref{eq:vareps}, and the composite $\varepsilon \Psi$ gives a cocycle in Hochschild cohomology
+commute. As indicated in this diagram there is a second chain map $\varepsilon: (\Delta, \delta_{-}) \lto \Re[n]$, see \eqref{eq:vareps}, and the composite $\varepsilon \Psi$ gives a cocycle in Hochschild cohomology
 \[
 \varepsilon \Psi \in H^n \Hom_{\Re}( \Bar, \Re ) = H^n( R, \Re )\,.
 \]
