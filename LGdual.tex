@@ -1712,10 +1712,14 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 
 Every $1$-morphism in $\LG$ has both a left and right adjoint. Specifically, if a $1$-morphism $W \lto V$ is represented by a finite-rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials, then the $1$-morphisms
+\be\label{eq:derivcoeval11}
+X^\dual = R[n] \otimes_R X^\vee \, , \qquad {}^\dual X = X^\vee \otimes_S S[m]
+\ee
+are respectively the right and left adjoints of $X$ in $\LG$. These matrix factorisations are canonically isomorphic to $X^\vee[n]$ and $X^\vee[m]$ respectively, but there are good reasons to prefer the presentation of \eqref{eq:derivcoeval11}, see for example the graphical calculus in Section \ref{sec:wiggliesandsigns}. While $R[n] \otimes_R X^\vee$ is isomorphic to $X^\vee[n]$ with no intervention of signs and we freely interchange these two objects, the second isomorphism
 \[
-X^\dual = X^\vee[n] \, , \qquad {}^\dual X = X^\vee[m]
+X^\vee[m] \cong X^\vee \otimes_S S[m], \qquad \nu \mapsto (-1)^{m|\nu|} \nu
 \]
-are respectively the right and left adjoints of $X$ in $\LG$. These are objects of $\hmf(k[x,z], W-V)$, with the differentials spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
+involves signs. The dual $X^\vee$ is the object of $\hmf(k[x,z], W-V)$ with the differentials spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
 
 In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define evaluation and coevaluation maps
 \begin{align}
@@ -1739,7 +1743,7 @@ While the homotopy classes of these morphisms are canonical the formulas depend 
 where $\varepsilon$ and $\Psi$ is as defined in~\eqref{eq:vareps} and~\eqref{intro_psi}, respectively,  and
 \be\label{eq:iotaX}
 \iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_{k[z]} X \, , \qquad 
-\iota'_X = \sum_j (-1)^{m|e_j|} e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X \, . 
+\iota'_X = \sum_j e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X \, . 
 \ee
 The Atiyah classes involved in \eqref{eq:coev10} and \eqref{eq:coev102} are actually those of the $k[x]$-bimodule $X^\dual \otimes_{k[z]} X$ and the $k[z]$-bimodule $X \otimes_{k[x]} X^\dual$, respectively, but these simplify to the Atiyah classes given in the formulas; see the discussion preceeding Proposition \ref{prop:coev1}.
 
@@ -1751,7 +1755,7 @@ where $\Lambda^{(x)} = (-1)^n \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $
 
 In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda^{(z)}$ with $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X)$, and the resulting functional-valued form is evaluated on $\eta$: 
 \be\label{eq:constructevalmap01}
-\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{l+m|\nu|} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]
+\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{l} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]
 \ee
 where $\underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
 
@@ -1842,26 +1846,24 @@ A representative for $\widetilde\coev_X$ is the chain map
 
 We conclude this section by explaining how one defines, and derives an explicit formula for, the other coevaluation. To begin with one constructs a canonical homotopy equivalence
 \be\label{eq:othercoev11}
-\Hom_{\Se}(\Delta_V, X \otimes_R X^{\vee}[m]) \lto \Hom_{R \otimes_k S}(X, X)
+\Hom_{\Se}(\Delta_V, X \otimes_R {}^\dual X) \lto \Hom_{R \otimes_k S}(X, X)
 \ee
-in the same way that we constructed the homotopy equivalence of Proposition \ref{prop:isogivescoev}. The coevaluation $\coev_X$ is defined to be the morphism $\Delta_V \lto X \otimes_R X^{\vee}[m]$ in $\HMF(\Se, \widetilde{V})$ whose cohomology class is the preimage of the identity under the quasi-isomorphism \eqref{eq:othercoev11}. Once again using the homotopy inverses computed in Corollary \ref{corollary:koszulstab2} one finds two different chain maps lifting the identity: 
+in the same way that we constructed the homotopy equivalence of Proposition \ref{prop:isogivescoev}. The coevaluation $\coev_X$ is defined to be the morphism $\Delta_V \lto X \otimes_R {}^\dual X$ in $\HMF(\Se, \widetilde{V})$ whose cohomology class is the preimage of the identity under the quasi-isomorphism \eqref{eq:othercoev11}. Once again using the homotopy inverses computed in Corollary \ref{corollary:koszulstab2} one finds two different chain maps lifting the identity: 
 \begin{proposition} 
 A representative for $\coev_X$ is the chain map \eqref{eq:coev102}.
 \end{proposition}
 \begin{proposition} 
 A representative for $\coev_X$ is the chain map
 \be
-\gamma \lmt \sum_{l \ge 0} (-1)^{l + ml} \varepsilon \left( \Psi \At_1(X^{\vee})^l( \iota'_X ) \wedge \gamma \right) .
+\gamma \lmt \sum_{l \ge 0} (-1)^{l + ml} \varepsilon \left( \Psi \At_1({}^\dual X)^l( \iota'_X ) \wedge \gamma \right) .
 \ee
 where $\iota'_X$ is as given in~\eqref{eq:iotaX}.
 \end{proposition}
 
-\textbf{todo} Change to Atiyah of $X^{\vee}[m]$.
-
 \begin{remark}\label{remark:coev_divideddiff} 
 The above formulas can be rewritten in terms of divided difference operators. Applying \eqref{eq:atlarrow_formula} and \eqref{intro_psi} one computes that $\widetilde \coev_X$ has the description given in \eqref{eq:formula_intro_coev} of the introduction. Similarly if $\gamma = \theta_{a_1} \ldots \theta_{a_l} \in \Delta_V$ there is a unique $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ with $\gamma \wedge \gamma'$ a nonzero multiple of the top degree form, say $(-1)^{s(\gamma)} \theta_1 \cdots \theta_m$. So $l + r = n$ and one computes
 \be\label{eq:coev_divideddiff}
-\coev_X(\gamma) = \sum_{j,i} (-1)^{\binom{r}{2} + s(\gamma) + r + mr + m|e_j|} \big\{ \partial_{[b_1]}(d_X) \ldots \partial_{[b_r]}(d_X) \big\}_{ij} e_{i} \otimes e_j^* 
+\coev_X(\gamma) = \sum_{j,i} (-1)^{\binom{r}{2} + s(\gamma) + r + mr} \big\{ \partial_{[b_1]}(d_X) \ldots \partial_{[b_r]}(d_X) \big\}_{ij} e_{i} \otimes e_j^* 
 \ee
 where the divided difference operators act on $\Se = k[z,z']$.
 \end{remark}
@@ -1984,7 +1986,7 @@ We define an operator $\lambda_{i \bullet}^{(z)}$ on $X^{\vee}$ by
 It is easily checked that $[d_{X^\vee}, \lambda_{i \bullet}^{(z)}] = \partial_{z_i} V \cdot 1_{X^\vee}$, so this is a null-homotopy for the action of $\partial_{z_i} V$. With $\bar{S} = S/(\partial_{z_1} V, \ldots, \partial_{z_m} V)$ there is an $\Re$-linear morphism of linear factorisations of $\widetilde{W}$
 \be\label{eq:ordinaryeval00}
 \xymatrix{
-X^{\vee}[m] \otimes_S X \ar[r] & ( X^{\vee}[m] \otimes_S X ) \otimes_S \bar{S} \cong \bar{X}^{\vee}[m] \otimes_S \bar{X} \ar[rrr]^-{\lambda^{(z)}_{m \bullet} \circ \cdots \circ \lambda^{(z)}_{1 \bullet} \otimes 1} & & & \bar{X}^{\vee} \otimes_S \bar{X}
+{}^\dual X \otimes_S X \cong X^{\vee}[m] \otimes_S X \ar[r] & \bar{X}^{\vee}[m] \otimes_S \bar{X} \ar[rrr]^-{\lambda^{(z)}_{m \bullet} \circ \cdots \circ \lambda^{(z)}_{1 \bullet} \otimes 1} & & & \bar{X}^{\vee} \otimes_S \bar{X}
 }
 \ee
 which we can compose with
@@ -2003,8 +2005,8 @@ where the last map is the $R$-linear residue symbol
 
 \begin{lemma} $\eval_0$ is a morphism of linear factorisations of $\widetilde W$ over $\Re$, and for $\eta \in X, \nu \in X^\vee$
 \begin{align}
-\eval_0( \nu \otimes \eta ) &= (-1)^{(m+1)|\nu|} \Res_{S/k}\left[ \frac{ \str( \Lambda^{(z)} \circ \eta \circ \nu ) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]\\
-&= (-1)^{m|\nu|} \Res_{S/k} \left[ \frac{ \nu \Lambda^{(z)}( \eta ) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]\,.
+\eval_0( \nu \otimes \eta ) &= (-1)^{|\nu|} \Res_{S/k}\left[ \frac{ \str( \Lambda^{(z)} \circ \eta \circ \nu ) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]\\
+&= \Res_{S/k} \left[ \frac{ \nu \Lambda^{(z)}( \eta ) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]\,.
 \end{align}
 \end{lemma}
 
@@ -2015,7 +2017,7 @@ We define $\eval_X$ to be the unique morphism in $\HMF(\Re, \widetilde{W})$ maki
 & R
 } .
 \ee
-The existence of such a unique morphism, and the explicit formula for it, are established as before. First we have to write the infinite-rank matrix factorisation $X^{\vee}[m] \otimes_S X$ as a direct summand of a finite-rank factorisation as in \eqref{eq:idempotentpushdia}. Then Proposition \ref{prop:liftingresult} applies to this finite-rank factorisation in which we have embedded to produce the desired lifting. The conclusion is that (\textbf{todo} give formula for $\eval_0$)
+The existence of such a unique morphism, and the explicit formula for it, are established as before. First we have to write the infinite-rank matrix factorisation $X^{\vee}[m] \otimes_S X$ as a direct summand of a finite-rank factorisation as in \eqref{eq:idempotentpushdia}. Then Proposition \ref{prop:liftingresult} applies to this finite-rank factorisation in which we have embedded to produce the desired lifting.
 
 \begin{proposition}\label{prop:constructevalmapnontilde} A representative for $\eval_X$ is the chain map \eqref{eq:constructevalmap01}.
 \end{proposition}
@@ -2045,7 +2047,7 @@ The morphisms $\widetilde\eval_X$ and $\eval_X$ are independent, up to homotopy,
 \end{align}
 In this formula the divided difference operators act on $\Se = k[z,z']$. Similarly for $g \in S$,
 \begin{align}
-\eval_X( e_i^* \otimes g e_j ) = \sum_{l \ge 0} \sum_{i_1 < \cdots < i_l} &(-1)^{\binom{l}{2}+ml+(m+l)|e_i|} \, \theta_{i_1} \ldots \theta_{i_l}  \\
+\eval_X( e_i^* \otimes g e_j ) = \sum_{l \ge 0} \sum_{i_1 < \cdots < i_l} &(-1)^{\binom{l}{2}+ml+l|e_i|} \, \theta_{i_1} \ldots \theta_{i_l}  \\
 &\cdot \Res_{S/k} \left[ \frac{ \left\{ \Lambda^{(z)} \partial_{[i_1]}( d_X ) \ldots \partial_{[i_l]}(d_X) \right\}_{ij} g \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right] ,\nonumber
 \end{align}
 where the divided difference operators in this case act on $\Re = k[x,x']$.
@@ -2279,7 +2281,6 @@ node[below] {{{\small${}^\dual Y$}}};
 $$
 The obvious analogous identities for $\widetilde\eval$ and $\widetilde\coev$ follow in the same way. 
 \end{proof}
-
 
 \section{Zorro moves}\label{sec:Zorro}
 
@@ -2607,7 +2608,7 @@ The verification of the adjunction ${}^\dual X \dashv X$ follows in the same way
 The bicategory $\LG$ has left and right adjoints: for any $1$-morphism $Y: W \lto V$,
 \[
 \xymatrix{
-Y^{\vee}[m] = {}^\dual Y \ar@{-|}[r] & Y \ar@{-|}[r] & Y^\dual = Y^{\vee}[n]
+Y^{\vee} \otimes_S S[m] = {}^\dual Y \ar@{-|}[r] & Y \ar@{-|}[r] & Y^\dual = R[n] \otimes_R Y^{\vee}
 } .
 \]
 Explicit expressions for the evaluation and coevaluation maps are those of Section~\ref{sec:derivcoeval}. 
@@ -2619,7 +2620,7 @@ The detailed argument is given in Appendix \ref{section:extendduality}, and we n
 \[
 (-)^\dual = (-)^\vee[n]: \LG(W,V) \lto \LG(V,W)
 \]
-is well-defined, and hypothesis (ii) of the Appendix is checked below in Proposition \ref{prop.morphismmigration}. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $Y^{\vee}[n]$, and similarly one proves that $Y^{\vee}[m]$ is left adjoint to $Y$.
+is well-defined, and hypothesis (ii) of the Appendix is checked below in Proposition \ref{prop.morphismmigration}. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $R[n] \otimes_R Y^{\vee}$, and similarly one proves that $Y^{\vee} \otimes_S S[m]$ is left adjoint to $Y$.
 \end{proof}
 
 With the notation of Remark \ref{remark:integral_functors} this shows that there are adjunctions of integral functors
