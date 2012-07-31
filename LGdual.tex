@@ -256,7 +256,7 @@
 \classification{TODO}
 
 \begin{abstract}
-In this paper we study the bicategory of all Landau-Ginzburg models. Our main result is the construction of adjoints for arbitrary (possibly graded) matrix factorisations in terms of Atiyah classes and homological perturbation. Being simultaneously conceptual and explicit, our construction lends itself to applications in numerous directions. In particular, the bicategorical perspective offers a unified approach to Landau-Ginburg models: we show how to compute arbitrary correlators and recover the full structure of open/closed TFT, including the Kapustin-Li disk correlator and a simple proof of the Cardy condition, in terms of defect operators which in turn are directly computable from the adjunctions. 
+In this paper we study the bicategory of Landau-Ginzburg models. Our main result is the construction of adjoints for (possibly graded) matrix factorisations in terms of Atiyah classes and homological perturbation. Being simultaneously conceptual and explicit, our construction lends itself to applications in numerous directions. In particular, the bicategorical perspective offers a unified approach to Landau-Ginburg models: we show how to compute arbitrary correlators and recover the full structure of open/closed TFT, including the Kapustin-Li disk correlator and a simple proof of the Cardy condition, in terms of defect operators which in turn are directly computable from the adjunctions. 
 \end{abstract}
 
 \maketitle
@@ -379,6 +379,7 @@ The mixture of explicitness and conceptual control affords various applications 
 \fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
 \draw (0,0) circle (2);
+\fill (0:2) circle (0pt) node[right] {{\small$X$}};
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (135:0) circle (3.3pt) node[right] {{\small$\psi$}};
@@ -402,7 +403,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \nicecolourscheme (0,0) circle (2);
 \fill (1.1,-1.1) circle (0pt) node[white] {{\small$W$}};
 %
-\fill (180:2) circle (0pt) node[left] {{\small$X$}};
+\fill (0:2) circle (0pt) node[right] {{\small$X$}};
 \draw (0,0) circle (2);
 \draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
@@ -417,25 +418,8 @@ where as usual (and explained in more detail in Section~\ref{subsec:bicatLG}) ev
 \ee
 as well as various properties such as $\mathcal D_r(X\otimes Y) = \mathcal D_r(X) \circ \mathcal D_r(Y)$. (TODO: sign?)
 
-One may also consider the situation in~\eqref{defectactionIntro} with an additional defect field $\Phi\in\End(X)$ inserted on the $X$-loop. We will see that this simply amounts to the insertion of~$\Phi$ as a factor inside the supertrace in~\eqref{DrXpsi}. As the two special cases $V=0$ and $W=0$ we thus obtain
+One may also consider the situation in~\eqref{defectactionIntro} with an additional defect field $\Phi\in\End(X)$ inserted on the $X$-loop. We will see that this simply amounts to the insertion of~$\Phi$ as a factor inside the supertrace in~\eqref{DrXpsi}. As the two special cases $W=0$ and $V=0$ we thus obtain
 $$
-\!\!
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (2);
-\fill (-1.0,-1.0) circle (0pt) node[white] {{\small$W$}};
-%
-\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
-\fill (130:2) circle (3.3pt) node[left] {{\small$\Phi$}};
-\draw (0,0) circle (2);
-\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-= 
-\Res_{k[x]/k} \!\!\left[ \frac{\psi \str\big( \Phi \Lambda_X^{(x)} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] , 
-\qquad
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
 \nicepalecolourscheme (0,0) circle (3.5);
@@ -451,9 +435,25 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
  = 
 (-1)^{{m+1\choose 2}} \str\big( \Phi \Lambda_X^{(z)} \big)
+\, , \qquad
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\fill (-1.0,-1.0) circle (0pt) node[white] {{\small$W$}};
+%
+\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
+\fill (130:2) circle (3.3pt) node[left] {{\small$\Phi$}};
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (135:0) circle (3.3pt) node[left] {{\small$\psi$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+= 
+\Res_{k[x]/k} \!\!\left[ \frac{\psi \str\big( \Phi \Lambda_X^{(x)} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] 
 $$
 where $\Lambda_X^{(x)} = \partial_{x_1} D\ldots \partial_{x_n} D$ and $\Lambda_X^{(z)} = \partial_{z_1} D\ldots \partial_{z_m} D$. 
-In this way we respectively recover the \textsl{Kapustin-Li disk correlator} and the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$). 
+In this way we respectively recover the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$) and the  \textsl{Kapustin-Li disk correlator}. As a matter of fact we will in addition give a new proof for the nondegeneracy of the Kapustin-Li pairing that does not only hold for the case $k=\nC$ but in the full generality that we allow. 
 
 Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:ocTFT} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} and~\cite{dm1102.2957} for $k=\nC$ using rather heavy or technical machinery. Or proof works for any commutative noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
 $$
@@ -478,15 +478,13 @@ $$
 $$
 (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\dual \otimes Y)$-loop. Applying special cases of our evaluation and coevaluation maps then immediately produces the Cardy condition, see Theorem~\ref{thm:CardyCondition}. 
 
-[TODO: mention new, more general Kapustin-Li proof here or somewhere else]
-
 Let us conclude this introductory section by naming some further motivations for and future applications of the results presented in this paper. One of the most intriguing properties of Landau-Ginzburg models is that they are on one of the two sides of the \textsl{CFT/LG correspondence}. It roughly states that many aspects of a large class of conformal field theories (CFTs) can be described in terms of (non-conformal) Landau-Ginzburg models. CFTs have an extremely rich structure, and the subclass of \textsl{rational} CFTs are particularly well-understood. Starting with~\cite{tft1} their description in terms of a beautiful categorical theory has been developed, and one may wonder which structures encountered in rational CFT can also be found in the theory of Landau-Ginzburg models -- whether or not they correspond to a rational CFT. The complete answer to this question is not known, but at least all the formal properties of $\LG$ that we establish in this paper also hold for the bicategory of topological defects in rational conformal field theory. Of course this by no means exhausts the richness of rational CFT, and there remain many properties of Landau-Ginzburg models to be uncovered, inspired by the CFT/LG correspondence. 
 
 One example is the \textsl{generalised orbifold} procedure of~\cite{ffrs0909.5013} which constructs all rational CFTs of fixed central charge and with identical left and right chiral algebras from any given single such CFT. Carried over to Landau-Ginzburg models this leads to the following picture: under the right circumstances a Landau-Ginzburg model with potential~$V$ can be obtained from a model with completely different potential~$W$ by identifying a 1-endomorphism~$F$ in $\LG(W,W)$ that can be equipped with the structure of a special symmetric Frobenius algebra (see e.\,g.~\cite[Section~3]{tft1}). Then the category of matrix factorisations of~$V$ is equivalent to the category of $F$-modules. The results of the present paper facilitate the construction of suitable algebras as follows: for any defect $X\in \LG(W,V)$ with invertible \textsl{quantum dimension} $\mathcal D_r(X)(1)$ we obtain a special symmetric Frobenius algebra $F = X^\dual \otimes X$ that allows to recast everything about theory~$V$ in terms of theory~$W$. Also note that with our explicit formula~\eqref{DrXpsi} the condition of invertibility of the quantum dimension is very easy to check in practice. The details of this construction will be described along with examples in the forthcoming paper~\cite{genorb}. 
 
 [TODO: 2-representations]
 
-The rest of the present paper is organised as follows. In Section~\ref{sec:Background} we collect necessary background material on matrix factorisations, bicategories with adjoints, noncommutative forms, residues, and homological perturbation theory. Section~\ref{section:atiyahclasses} introduces various notions of associative Atiyah classes, which together with homological perturbation allow us to invert or lift up to homotopy certain maps pertaining to the stabilised diagonal in Section~\ref{section:pertandhtpy}. Using these results we construct explicit evaluation and coevaluation maps in Section~\ref{sec:derivcoeval} and prove that they indeed endow the bicategory $\LG$ with left and right adjoints in Section~\ref{sec:Zorro}. After some technical observations about the two kinds of adjunctions in Section~\ref{sec:wiggliesandsigns} we discuss their relation in Section~\ref{sec:pivotality}. The next three sections discuss applications of this main result: defect action on bulk fields in Section~\ref{sec:defectaction}, open/closed TFT and in particular the Cardy condition in Section~\ref{sec:ocTFT}, and a bicategorical trace in Section~\ref{sec:shadows}. Finally, in Section~\ref{section:dualityadjointop} we provide a proof, similar in spirit to the construction of Section~\ref{sec:Zorro}, of the nondegeneracy of the Kapustin-Li pairing, for the general base~$k$ over which we work also in the bulk of the paper. 
+The rest of the present paper is organised as follows. In Section~\ref{sec:Background} we collect necessary background material on bicategories with adjoints, matrix factorisations, noncommutative forms, residues, and homological perturbation theory. Section~\ref{section:atiyahclasses} introduces various notions of associative Atiyah classes, which together with homological perturbation allow us to invert and lift up to homotopy certain maps pertaining to the stabilised diagonal in Section~\ref{section:pertandhtpy}. Using these results we construct explicit evaluation and coevaluation maps in Section~\ref{sec:derivcoeval} and prove that they indeed endow the bicategory $\LG$ with left and right adjoints in Section~\ref{sec:Zorro}. In Section~\ref{sec:wiggliesandsigns} we discuss a few technicalities and lay the remaining groundwork for applications of our main result, some of which we describe in the following three sections: defect action on bulk fields in Section~\ref{sec:defectaction}, open/closed TFT and in particular the Cardy condition in Section~\ref{sec:ocTFT}, and a bicategorical trace in Section~\ref{sec:shadows}. Finally, in Section~\ref{section:dualityadjointop} we provide a proof, similar in spirit to the construction of Section~\ref{sec:Zorro}, of the nondegeneracy of the Kapustin-Li pairing, for the general base~$k$ over which we work also in the bulk of the paper. 
 
 
 \begin{acknowledgements}
@@ -547,11 +545,11 @@ Equivalently, the following two composites evaluate to the identity:
 \xymatrix@C+1.5pc
 {
 f \ar[r]^-{\lambda_f^{-1}} & \Delta_B \otimes f \ar[r]^-{\coev \otimes 1_f} & ( f \otimes g ) \otimes f \ar[r]^-{\alpha_{f,g,f}} & f \otimes ( g \otimes f ) \ar[r]^-{1_f \otimes \eval} & f \otimes \Delta_A \ar[r]^-{\rho_f} & f
-}\,,\\
+} ,\\
 \xymatrix@C+1.5pc
 {
 g \ar[r]^-{\rho_g^{-1}} & g \otimes \Delta_B \ar[r]^-{1_g \otimes \coev} & g \otimes ( f \otimes g ) \ar[r]^-{\alpha^{-1}_{g,f,g}} & (g \otimes f) \otimes g \ar[r]^-{\eval \otimes 1_g} & \Delta_A \otimes g \ar[r]^-{\lambda_g} & g
-}\,.
+} .
 \end{align*}
 In this case we say that $g$ is \textsl{left adjoint} to $f$ and that $f$ is \textsl{right adjoint} to $g$, and we write $g \dashv f$. The $2$-morphisms $\eval$ and $\coev$ are referred to as the \textsl{evaluation} and \textsl{coevaluation} maps.
 \end{definition}
@@ -1085,7 +1083,7 @@ $$
 \Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1, \ldots, f_n} \right] 
 = 
 \Res_{k[x,y]/k[y]} \left[ \frac{\det(C) g \, \underline{\operatorname{d}\! x}}{f'_1, \ldots, f'_n} \right] 
-\, , \qquad
+, \qquad
 f'_i = \sum_{j=1}^n C_{ij} f_j 
 \, , \qquad
 C_{ij} \in k[x,y] \, ,
@@ -2050,6 +2048,235 @@ In this formula the divided difference operators act on $\Se = k[z,z']$. Similar
 where the divided difference operators in this case act on $\Re = k[x,x']$.
 \end{remark}
 
+\subsection{Compatibility with adjoint morphisms}
+
+We end this section with a brief discussion of the basic compatibility properties of the adjunction maps with arbitrary 2-morphisms. For a map $\varphi: X \lra Y$ between matrix factorisations in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ 
+we define its adjoints to be
+$$
+{}^\dual \varphi = \varphi^\vee[m] : {}^\dual Y \lra {}^\dual X \, , \qquad
+\varphi^\dual = \varphi^\vee[n] : Y^\dual \lra X^\dual \, . 
+$$
+
+\begin{proposition}
+\label{prop.morphismmigration}
+ For a 2-morphism $\varphi: X \lra Y$ in $\LG$ we have
+\begin{enumerate}
+\item $(\varphi \otimes 1_{{}^\dual X}) \circ \coev_X = (1_Y \otimes {}^\dual \varphi) \circ \coev_Y$, 
+\item $\eval_Y \circ (1_{{}^\dual Y} \otimes \varphi) = \eval_X \circ ({}^\dual \varphi \otimes 1_X)$, 
+\item ${}^\dual \varphi = \lambda_{{}^\dual X} \circ (\eval_Y \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \varphi \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \coev_X) \circ \rho^{-1}_{{}^\dual Y}$
+\end{enumerate}
+and similarly for $\widetilde\eval$ and $\widetilde\coev$. Diagrammatically the above identities read
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw (3,0.35) -- (3,1)
+node[above] {{{\small${}^\dual X$}}};
+\draw (2,0.35) -- (2,1)
+node[above] {{{\small$Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
+\draw (3,0.35) -- (3,1)
+node[above] {{{\small${}^\dual X$}}};
+\draw (2,0.35) -- (2,1)
+node[above] {{{\small$Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\, , \qquad
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (3,0.65) -- (3,0)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,0)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
+\draw (3,0.65) -- (3,0)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,0)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\, , \qquad
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
+\draw (3,0) -- (3,1.5)
+node[above] {{{\small${}^\dual X$}}};
+\draw (3,0) -- (3,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(2,0.5) node[line width=0pt] (D) {}
+(1,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small${}^\dual X$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\, . 
+$$
+\end{proposition}
+
+\begin{proof}
+Consider the diagrams
+$$
+\xymatrix{%
+\Hom(\Delta, X \otimes {}^\dual X) \ar[rr]^-{(\varphi \otimes 1)\circ(-)} && \Hom(\Delta, Y \otimes {}^\dual X) \\
+\Hom(X,X) \ar[rr]_-{\varphi\circ(-)} \ar[u]^-{\cong} && \Hom(X,Y)\,, \ar[u]_-{\cong}
+}%
+\quad
+\xymatrix{%
+\Hom(\Delta, Y \otimes {}^\dual Y) \ar[rr]^-{(1 \otimes {}^\dual \varphi)\circ(-)} && \Hom(\Delta, Y \otimes {}^\dual X) \\
+\Hom(Y,Y) \ar[rr]_-{(-)\circ\varphi} \ar[u]^-{\cong} && \Hom(X,Y)\,, \ar[u]_-{\cong}
+}%
+$$
+where the vertical maps are analogous to~\eqref{eq:isogivescoev2}. By their naturality both diagrams commute. The counterclockwise maps send $1_X \in \Hom(X,X)$ and $1_Y \in \Hom(Y,Y)$ to the same element in $\Hom(\Delta, {}^\dual X \otimes Y)$. Thus the two sides of part~(i) are equal as they are the images of~$1_X$,~$1_Y$ under the clockwise maps. 
+
+To prove part~(iii) we only have to apply a Zorro move and use part~(i), and with this part~(ii) follows together with another Zorro move: 
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
+\draw (3,0) -- (3,1.5)
+node[above] {{{\small${}^\dual X$}}};
+\draw (3,0) -- (3,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (3,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(2,0.5) node[line width=0pt] (D) {}
+(1,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small${}^\dual X$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(2,0.5) node[line width=0pt] (D) {}
+(1,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small${}^\dual X$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\Rightarrow
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (3,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw (3,0.65) -- (3,-0.5)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(0,0.5) node[line width=0pt] (D) {}
+(-1,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (0,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
+\draw (2,0.65) -- (2,-0.5)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (-1,0.65) -- (-1,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(2,0.5) node[line width=0pt] (D) {}
+(1,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(0,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\draw (1,0.32) -- (1,0.68);
+\draw (0,0.32) -- (0,0.5);
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
+\fill (2,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
+\draw (3,0.65) -- (3,-0.5)
+node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
+\draw (2,0.65) -- (2,-0.5)
+node[below] {{{\small${}^\dual Y$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\, . 
+$$
+The obvious analogous identities for $\widetilde\eval$ and $\widetilde\coev$ follow in the same way. 
+\end{proof}
+
 
 \section{Zorro moves}\label{sec:Zorro}
 
@@ -2428,9 +2655,11 @@ The same results also hold for the graded bicategory $\LG^{\mathrm{gr}}$ of Rema
 \end{remark}
 
 
-\section{How I Learned To Stop Worrying and Love Signs}\label{sec:wiggliesandsigns}
+\section{Relations between adjoints}\label{sec:wiggliesandsigns}
 
-With the proof that the bicategory $\LG$ has adjoints behind us we now want reap some further rewards of our efforts by turning to applications. These will be discussed in the next sections, while in the present one we shall pave the way by clarifying two technical though practically relevant issues: the choice of representative of the isomorphism class of adjoints, and the independence of variable orderings up to signs for all string diagrams in $\LG$. 
+With the proof that the bicategory $\LG$ has adjoints behind us we now want to reap some further rewards of our efforts by turning to applications. These will be discussed in the next sections, while in the present one we shall pave the way by clarifying two technical though practically relevant issues: the choice of representative of the isomorphism class of adjoints, and the nature of the double-adjoint. 
+
+%and the independence of variable orderings up to signs for all string diagrams in $\LG$. 
 
 \subsection{Alternative adjoints and their graphical presentation}\label{subsec:alternatives}
 
@@ -2486,7 +2715,7 @@ We will reflect this difference from~\eqref{eq:constructevalmap01} and~\eqref{eq
 %%%%%%%%%%%%%%%%%%%%%%
 : \Delta_W \lra (R[n]\otimes_R X^\vee) \otimes_S  X \, . 
 \end{align*}
-In this notation the Zorro moves e.\,g.~for the left adjoints read (TODO: other Zorros as well, with arrows)
+In this notation the Zorro moves for the left and right adjoints read
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
@@ -2500,10 +2729,13 @@ $$
 \;=\;
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw (0,-1.25) -- (0,1.25); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,-1.25) -- (0,1.25); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad
+\; , \qquad
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
@@ -2517,12 +2749,61 @@ $$
 \;=\;
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw (0,-1.25) -- (0,1.25); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{<}}}, postaction={decorate}
+	]
+	(0,-1.25) -- (0,1.25); 
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.15,-1.25) -- (0.15,1.25); 
-\end{tikzpicture} \, .
+\end{tikzpicture} 
+\; , \qquad 
+%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+%
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
+\draw (-1,0) -- (-1,1.25); 
+\draw (1,0) -- (1,-1.25); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.1,1.25) .. controls +(0,-1) and +(-0.85,0) .. (-0.5,-0.75); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,0.75) .. controls +(0.75,-0.05) and +(0,1) .. (1.1,-1.25); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\;=\;
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{<}}}, postaction={decorate}
+	]
+	(0,-1.25) -- (0,1.25); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.15,-1.25) -- (-0.15,1.25); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\; , \qquad
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
+\draw (-1,0) -- (-1,-1.25); 
+\draw (1,0) -- (1,1.25); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.5,0.75) .. controls +(0.35,-0.1) and +(-0.8,-0.15) .. (0.5,-0.75); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\;=\;
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,-1.25) -- (0,1.25); 
+\end{tikzpicture} \; .
 %%%%%%%%%%%%%%%%%%%%%%
 $$
-By definition a wiggly line in a domain associated to an object $(R,W)\in\LG$ represents the ring~$R$ shifted by the parity of its variables. Furthermore we adopt the convention that in diagrams with wiggly lines a downwards oriented solid line represents the dual factorisation~$X^\vee$ of the associated 1-morphism~$X$ (and not necessarily its left or right adjoint~${}^\dual X$ or~$X^\dual$). 
+By definition a wiggly line in a domain associated to an object $(R,W)\in\LG$ represents the ring~$R$ shifted by the parity of its variables. Furthermore we adopt the convention that in diagrams with wiggly lines a downwards oriented solid line represents the dual factorisation~$X^\vee$ (and not necessarily its left or right adjoint~${}^\dual X$ or~$X^\dual$) if the line is labelled by the 1-morphism~$X$. 
 
 There are two ways for wiggly lines to meet in a diagram. One is that they ``annihilate'', i.\,e.~we have a map
 $$
@@ -2554,439 +2835,77 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 : X \otimes_R R[n] \lra S[n] \otimes_S X \, , \qquad \eta \otimes 1 \lmt (-1)^{n |\eta|} 1\otimes \eta \, . 
 \end{align*}
 
-\subsection{Independence of variable ordering}\label{subsec:variableordering}
 
-Objects of the bicategory $\LG$ are pairs consisting of a polynomial ring $R$ and potential $W$, together with a chosen ordering of the ring variables. Thus the value of a diagram in $\LG$ depends \textsl{a priori} on the ordering of the ring variables in each of its $2$-dimensional regions. In this section we show that the value is actually independent of these orderings, up to the natural permutation signs.
+\subsection{Pivotality}\label{sec:pivotality}
 
-To take a concrete example, consider for $X \in \hmf(k[z_1,\ldots,z_m], V)$ the diagram
-\be\label{eq:signdependencepermdia}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
-\nicecolourscheme (0,0) circle (3.5);
-\fill (-2.1,-2.1) circle (0pt) node[white] {{\small$V$}};
-\shadedraw[top color=white, bottom color=white, draw=white] (0,0) circle (2);
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
-\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
-\draw (0,0) circle (2);
-\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\, . 
-\ee
-We show in Section \ref{sec:defectaction} that the value of this diagram is the endomorphism of $\Delta_V$ given by multiplication with the polynomial $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} d_X \ldots \partial_{z_m} d_X )$. While there is an obvious dependence on the variable ordering, we prove that the homotopy equivalence class of this endomorphism changes only by a permutation sign if we change the ordering of the variables~$z_i$ in the outer region of the diagram.
+In this section we clarify the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$. Of particular importance is the identity~\eqref{eq:monoidalproperty} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:ocTFT}, e.\,g.~to prove the Cardy condition. 
 
-Let $(R = k[x_1,\ldots,x_n], W)$ be an object of $\LG$. Given $\sigma \in S_n$ consider the matrix factorisation $(\Delta^\sigma_W, d_{\Delta^\sigma_W})$ of $\widetilde W$ over $\Re$ with the same underlying graded module as $\Delta_W$, but the differential that we would have written down if we had begun with the variable ordering $x_{\sigma(1)},\ldots,x_{\sigma(n)}$, namely
-\be
-d_{\Delta^\sigma_W} = \delta^\sigma_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial^{\,\sigma}_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*
-\ee
-where $\partial^{\,\sigma}_{[i]}$ are the modified difference quotient operators, defined for $1 \le i \le n$ with $\sigma(j) = i$ by
-\be\label{diffquotopmod}
-\partial^{\,\sigma}_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_{\sigma(1)}\ldots t_{\sigma(j-1)}}f - {}^{t_{\sigma(1)}\ldots t_{\sigma(j)}}f}{x_i-x'_i} \, . 
-\ee
-Together with the morphisms $\rho, \lambda$ of \eqref{lambdarho} this matrix factorisation serves as an alternative unit $1$-endomorphism of $(R,W)$. That is, $\rho$ and $\lambda$ are both isomorphisms and the coherence axioms for the unit in a bicategory holds for $\Delta^\sigma_W$. 
 
-By uniqueness of units in a bicategory there is an isomorphism in $\hmf(\Re, \widetilde W)$
-\[
-\xi: \Delta_W \lto \Delta^\sigma_W
-\]
-unique with the property that, for any $1$-morphism $X: (k[x],W) \lto (k[z],V)$, the diagram
-\be\label{eq:propertydeltasigma}
-\xymatrix{
-X \otimes_R \Delta_W \ar[dr]_{\rho}\ar[rr]^-{1 \otimes \xi} & & X \otimes_R \Delta^\sigma_W \ar[dl]^{\rho}\\
-& X
-}
-\ee
-commutes in $\HMF(k[x,z], V - W)$. Explicitly, $\xi$ can be constructed as the composite
-$$
-\xymatrix@C+1pc{
-\Delta_W \ar[r]^-{\lambda_{\Delta^\sigma_W}^{-1}} & \Delta^\sigma_W \otimes_R \Delta_W \ar[r]^-{\rho_{\Delta_W}} & \Delta^\sigma_W
-} ,
-$$
-but we will only use commutativity of \eqref{eq:propertydeltasigma}. Taking $X = \Delta_W^{\vee}$ in this diagram we deduce that
-\be
-\xymatrix{
-\Delta_W \ar[dr]_{\pi}\ar[rr]^-{\xi} & & \Delta^\sigma_W\ar[dl]^{\pi}\\
-& R
-}
-\ee
-commutes in $\HF(\Re, \widetilde W)$, i.\,e.~$\xi$ is the isomorphism connecting these two stabilisations of the diagonal.
+%\begin{definition}\label{def.pivotal}
+%We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a natural monoidal 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\overline\eval_X = \widetilde\eval_{X^\dual}\circ (1_{X^\dual} \otimes \delta_{X})$ and $\overline\coev_X = (\delta_X^{-1} \otimes 1_{X^\dual} ) \circ \widetilde\coev_{X^\dual}$. By the condition for~$\delta$ to be natural monoidal we mean that the identities
+%$$
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+%\draw[line width=0] 
+%(-1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
+%(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+%\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
+%\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
+%\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
+%\draw (-1,0) -- (A); 
+%\draw (1,0) -- (A2); 
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+%=
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+%\draw[line width=0] 
+%(1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
+%(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
+%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+%\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
+%\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
+%\draw (-1,0) -- (A2); 
+%\draw (1,0) -- (A); 
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+%\, , \qquad 
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
+%\draw[line width=1pt] 
+%(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
+%(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
+%(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+%\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+%\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+%\draw (-1,0) -- (Y);
+%\draw (-2,0) -- (X);
+%\draw[dotted] (0,0) -- (1,0);
+%\draw (2,0) -- (XY);
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+%=
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
+%\draw[line width=1pt] 
+%(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
+%(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
+%(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+%\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+%\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+%\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+%\draw (2,0) -- (Y);
+%\draw (3,0) -- (X);
+%\draw[dotted] (0,0) -- (1,0);
+%\draw (-1,0) -- (XY);
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+%$$
+%hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
+%\end{definition}
 
-To understand how permuting variables affects the values of diagrams like \eqref{eq:signdependencepermdia}, we need to understand the effect on the evaluation and coevaluation maps of Section \ref{sec:derivcoeval}. For the remainder of this section we fix potentials $W \in R = k[x_1,\ldots,x_n]$, $V \in S = k[z_1,\ldots,z_m]$ and $X \in \hmf(k[x,z], V - W)$.
-
-By inspection $\widetilde\coev_X$ depends only on the order of the $x$-variables and $\coev_X$ depends only on the order of the $z$-variables, through the maps $\Psi, \varepsilon$. Since $\Psi$ is independent of the ordering up to homotopy, the only ``real'' dependence in both cases is via $\varepsilon$. Similarly $\widetilde \eval_X$ depends on the order of the $x$-variables via $\Lambda^{(x)}$, $\underline{\ud x}$ and the order of the partial derivatives in the denominator of the residue, and $\eval_X$ depends on the order of the $z$-variables via $\Lambda^{(z)}$, $\underline{\ud z}$ and the residue denominator.
-
-Let us fix permutations $\sigma \in S_n$ and $\tau \in S_m$. If we take the variable orderings $x_{\sigma(1)},\ldots,x_{\sigma(n)}$ and $z_{\tau(1)}, \ldots, z_{\tau(m)}$ in Section \ref{sec:derivcoeval} the result will be morphisms
-\begin{align}
-\coev^{\sigma,\tau}_X &: \Delta^\tau_V \lto X \otimes_R {}^\dual X
-\, , \qquad
-\eval^{\sigma,\tau}_X: {}^\dual X \otimes_{S} X \lto \Delta^\sigma_W \, ,\label{eq:permutedevcoev1}\\
-\widetilde\coev^{\sigma,\tau}_X&: \Delta^\sigma_W \lto X^\dual \otimes_{S} X
-\, , \qquad
-\widetilde\eval^{\sigma,\tau}_X: X \otimes_{R} X^\dual \lto \Delta^\tau_V\,. \label{eq:permutedevcoev2}
-\end{align}
-These are related to the original evaluation and coevaluation maps as follows.
-
-\begin{lemma}\label{lemma:evsignspermute} The diagrams
-\be\label{eq:evsignspermute}
-\xymatrix@C+3pc@R-1pc{
-& \Delta_V \ar[dd]^-{\xi}\\
-X \otimes_R X^{\dual}\ar[ur]^-{\widetilde\eval_X}\ar[dr]_-{(-1)^{|\sigma|} \widetilde \eval^{\sigma, \tau}_X} \\
-& \Delta^\tau_V, 
-}
-\qquad
-\xymatrix@C+3pc@R-1pc{
-& \Delta_W \ar[dd]^-{\xi}\\
-{}^\dual X \otimes_S X \ar[ur]^-{\eval_X}\ar[dr]_-{(-1)^{|\tau|} \eval^{\sigma,\tau}_X}\\
-& \Delta^\sigma_W
-}
-\ee
-commute in $\HMF(S^e, \widetilde V)$ and $\HMF(\Re, \widetilde W)$ respectively.
-\end{lemma}
-\begin{proof}
-We give the argument for the first diagram, the second is similar. By the universal property of the stabilisation it suffices to prove that the $\Se$-linear morphisms
-\[
-\widetilde \eval_0\, , \; (-1)^{|\sigma|} \widetilde \eval^{\sigma, \tau}_0: X \otimes_R X^\dual \lto S
-\]
-are homotopic. For this it is enough to show that the $S$-linear maps
-\[
-\Res_{k[x]/k} \!\!\left[ \frac{ \str( \lambda_1 \ldots \lambda_n \circ (-) ) \, \underline{\ud x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] , \qquad
-(-1)^{|\sigma|}\Res_{k[x]/k} \!\!\left[  \frac{\str( \lambda_{\sigma(1)} \ldots \lambda_{\sigma(n)} \circ (-) ) \, \ud x_{\sigma(1)} \ldots \ud x_{\sigma(n)}}{\partial_{x_{\sigma(1)}} W \ldots \partial_{x_{\sigma(n)}} W} \right]
-\]
-are homotopic. But this follows from Appendix \ref{app:reshom}.
-\end{proof}
-
-\begin{lemma}\label{lemma:coevsignspermute} The diagrams
-\be\label{eq:coevsignspermute}
-\xymatrix@C+3pc@R-1pc{
-\Delta_W \ar[dr]^-{\widetilde \coev_X} \ar[dd]_-{\xi}\\
-& X^\dual \otimes_S X , \\
-\Delta^\sigma_W \ar[ur]_-{(-1)^{|\sigma|} \widetilde \coev^{\sigma, \tau}}
-}
-\qquad
-\xymatrix@C+3pc@R-1pc{
-\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev^{\sigma,\tau}_X}\\
-& X \otimes_R {}^\dual X\\
-\Delta^\tau_V \ar[ur]_-{(-1)^{|\tau|} \coev^{\sigma,\tau}_X}
-}
-\ee
-commute in $\HMF(\Re, \widetilde W)$ and $\HMF(\Se, \widetilde V)$ respectively.
-\end{lemma}
-\begin{proof}
-The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satisfy the Zorro moves, so commutativity of the diagrams in \eqref{eq:coevsignspermute} follows from commutativity of those in \eqref{eq:evsignspermute}.
-\end{proof}
-
-\textbf{todo} Signs follow wigglies rule.
-
-Returning to the example \eqref{eq:signdependencepermdia} we have a diagram, in which the top path computes the value of the diagram with outer region given the usual variable ordering, and the bottom path computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
-\[
-\xymatrix@C+2pc@R-1pc{
-\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev_X} &  & & \Delta_V \ar[dd]^-{\xi}\\
-& X \otimes_R X^{\vee} \otimes_S S[m] \ar[r]^-{\cong} & X \otimes_R R[m] \otimes_R X^{\vee} \ar[ur]^-{\widetilde \eval_X} \ar[dr]_-{\widetilde \eval^{\tau}_X}\\
-\Delta^\tau_V \ar[ur]_-{\coev^{\tau}_X} & & & \Delta^\tau_V.
-}
-\]
-We have shown that the left-hand triangle commutes in $\HMF(\Se, \widetilde V)$ up to a sign $(-1)^{|\tau|}$, and the right-hand triangle commutes.
-
-\section{Pivotality}\label{sec:pivotality}
-
-In this section we clarify the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$, and we list some of their properties. Of particular importance is the identity~\eqref{eq:monoidalproperty} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:ocTFT}, e.\,g.~to prove the Cardy condition. 
-
-For a map $\varphi: X \lra Y$ between matrix factorisations in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ 
-we define its adjoints to be
-$$
-{}^\dual \varphi = \varphi^\vee[m] : {}^\dual Y \lra {}^\dual X \, , \qquad
-\varphi^\dual = \varphi^\vee[n] : Y^\dual \lra X^\dual \, . 
-$$
-
-\begin{proposition}
-\label{prop.morphismmigration}
- For a 2-morphism $\varphi: X \lra Y$ in $\LG$ we have
-\begin{enumerate}
-\item $(\varphi \otimes 1_{{}^\dual X}) \circ \coev_X = (1_Y \otimes {}^\dual \varphi) \circ \coev_Y$, 
-\item $\eval_Y \circ (1_{{}^\dual Y} \otimes \varphi) = \eval_X \circ ({}^\dual \varphi \otimes 1_X)$, 
-\item ${}^\dual \varphi = \lambda_{{}^\dual X} \circ (\eval_Y \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \varphi \otimes 1_{{}^\dual X}) \circ (1_{{}^\dual Y} \otimes \coev_X) \circ \rho^{-1}_{{}^\dual Y}$
-\end{enumerate}
-and similarly for $\widetilde\eval$ and $\widetilde\coev$. Diagrammatically the above identities read
-$$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
-\draw (3,0.35) -- (3,1)
-node[above] {{{\small${}^\dual X$}}};
-\draw (2,0.35) -- (2,1)
-node[above] {{{\small$Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
-\draw (3,0.35) -- (3,1)
-node[above] {{{\small${}^\dual X$}}};
-\draw (2,0.35) -- (2,1)
-node[above] {{{\small$Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (3,0.65) -- (3,0)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (2,0.65) -- (2,0)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
-\draw (3,0.65) -- (3,0)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (2,0.65) -- (2,0)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
-\draw (3,0) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (3,0) -- (3,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(2,0.5) node[line width=0pt] (D) {}
-(1,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\, . 
-$$
-\end{proposition}
-
-\begin{proof}
-Consider the diagrams
-$$
-\xymatrix{%
-\Hom(\Delta, X \otimes {}^\dual X) \ar[rr]^-{(\varphi \otimes 1)\circ(-)} && \Hom(\Delta, Y \otimes {}^\dual X) \\
-\Hom(X,X) \ar[rr]_-{\varphi\circ(-)} \ar[u]^-{\cong} && \Hom(X,Y)\,, \ar[u]_-{\cong}
-}%
-\quad
-\xymatrix{%
-\Hom(\Delta, Y \otimes {}^\dual Y) \ar[rr]^-{(1 \otimes {}^\dual \varphi)\circ(-)} && \Hom(\Delta, Y \otimes {}^\dual X) \\
-\Hom(Y,Y) \ar[rr]_-{(-)\circ\varphi} \ar[u]^-{\cong} && \Hom(X,Y)\,, \ar[u]_-{\cong}
-}%
-$$
-where the vertical maps are analogous to~\eqref{eq:isogivescoev2}. By their naturality both diagrams commute. The counterclockwise maps send $1_X \in \Hom(X,X)$ and $1_Y \in \Hom(Y,Y)$ to the same element in $\Hom(\Delta, {}^\dual X \otimes Y)$. Thus the two sides of part~(i) are equal as they are the images of~$1_X$,~$1_Y$ under the clockwise maps. 
-
-To prove part~(iii) we only have to apply a Zorro move and use part~(i), and with this part~(ii) follows together with another Zorro move: 
-$$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\fill (3,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
-\draw (3,0) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (3,0) -- (3,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[left] {{\small ${}^\dual \varphi$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(2,0.5) node[line width=0pt] (D) {}
-(1,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(2,0.5) node[line width=0pt] (D) {}
-(1,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\Rightarrow
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (3,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
-\draw (3,0.65) -- (3,-0.5)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (2,0.65) -- (2,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(0,0.5) node[line width=0pt] (D) {}
-(-1,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (0,0.5) circle (2.5pt) node[left] {{\small $\varphi$}};
-\draw (2,0.65) -- (2,-0.5)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (-1,0.65) -- (-1,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(2,0.5) node[line width=0pt] (D) {}
-(1,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(0,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\draw (1,0.32) -- (1,0.68);
-\draw (0,0.32) -- (0,0.5);
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,1) and +(0,1) .. (s);
-\fill (2,0.5) circle (2.5pt) node[right] {{\small ${}^\dual \varphi$}};
-\draw (3,0.65) -- (3,-0.5)
-node[below] {{{\small$X\vphantom{{}^\dual Y}$}}};
-\draw (2,0.65) -- (2,-0.5)
-node[below] {{{\small${}^\dual Y$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\, . 
-$$
-The obvious analogous identities for $\widetilde\eval$ and $\widetilde\coev$ follow in the same way. 
-\end{proof}
-
-(TODO: either make everything wiggly above, or repeat the diagrams of Proposition~\ref{prop.morphismmigration} in wiggly notation here. I'd prefer the second option and start using wigglies exclusively only in Proposition~\ref{prop:monoidalproperty}, one reason being that Definition~\ref{def.pivotal} does not want wigglies.)
-
-(TODO: get rid of Definition of pivotal, just discuss it a little bit...)
-
-\begin{definition}\label{def.pivotal}
-We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a natural monoidal 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\overline\eval_X = \widetilde\eval_{X^\dual}\circ (1_{X^\dual} \otimes \delta_{X})$ and $\overline\coev_X = (\delta_X^{-1} \otimes 1_{X^\dual} ) \circ \widetilde\coev_{X^\dual}$. By the condition for~$\delta$ to be natural monoidal we mean that the identities
-$$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[line width=0] 
-(-1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
-(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
-\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
-\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
-\draw (-1,0) -- (A); 
-\draw (1,0) -- (A2); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
-\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (-1,0) -- (A2); 
-\draw (1,0) -- (A); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-\, , \qquad 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
-\draw[line width=1pt] 
-(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
-(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
-(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (-1,0) -- (Y);
-\draw (-2,0) -- (X);
-\draw[dotted] (0,0) -- (1,0);
-\draw (2,0) -- (XY);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-=
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
-\draw[line width=1pt] 
-(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
-(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
-(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (Y);
-\draw (3,0) -- (X);
-\draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (XY);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-$$
-hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
-\end{definition}
+As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is interpreted as describing the same defect condition as~$X$ buth with the opposite orientation. Since reversing the orientation twice is doing nothing, a natural expectation is thus that $X^{\dagger\dagger}$ should be identified with~$X$ in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the results that there is a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. 
 
 In the bicategory $\LG$ the natural candidate for a pivotal structure is
 \be\label{delta}
@@ -3035,9 +2954,9 @@ node[below] {{{\small${}^\dual X^{\dual}$}}};
 \ee
 for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, one straightforwardly verifies that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
 
-For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below we will establish that then it also satisfies the conditions in Definition~\ref{def.pivotal}. In particular this means that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. However, for $m+n$ odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$). Thus $\LG$ cannot be pivotal in the above sense. 
+For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below in Proposition~\ref{prop:monoidalproperty} we will establish properties of the adjunction maps that are equivalent to pivotality in this case. In particular this means that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. However, for $m+n$ odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$). Thus $\LG$ cannot be pivotal in the strict above sense. 
 
-What is important for applications though is that identities like those in Definition~\ref{def.pivotal} hold. The precise statement is the next proposition, which can also be read as ``$\LG$ is pivotal up to shifts''. To formulate this result let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$ be potentials and $Y\in \hmf(k[y,z],U-V)$, $X,Z\in \hmf(k[x,z],V-W)$. Then as explained in Appendices~\ref{section:symidem} and~\ref{app:adjoints}, the infinite-rank matrix factorisation $Y\otimes X$ is homotopic to a direct summand of the finite-rank matrix factorisation
+What what is important for applications thought, and what we deem the appropriate notion of pivotality in our setting, is that identities of Proposition~\ref{prop:monoidalproperty} hold, which can also be read as ``$\LG$ is pivotal up to shifts''. To formulate this result let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$ be potentials and $Y\in \hmf(k[y,z],U-V)$, $X,Z\in \hmf(k[x,z],V-W)$. Then as explained in Appendices~\ref{section:symidem} and~\ref{app:adjoints}, the infinite-rank matrix factorisation $Y\otimes X$ is homotopic to a direct summand of the finite-rank matrix factorisation
 $$
 \bar Y \otimes \bar X := (Y \otimes_{k[z]} X) \otimes_{k[z]} k[z]/(\partial_{z_1}V, \ldots, \partial_{z_m}V) \, . 
 $$
@@ -3052,52 +2971,97 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(-1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
-(1,-1.25) node[line width=0pt] (A2) {{\small $X^\dual$}}; 
+(-1,1.25) node[line width=0pt, right] (A) {{\small $Z$}}
+(1,-1.25) node[line width=0pt, right] (A2) {{\small $X$}}; 
 \fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
 \draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
 \draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
-\draw (-1,0) -- (A); 
-\draw (1,0) -- (A2); 
+\draw (-1,0) -- (-1,1.25); 
+\draw (1,0) -- (1,-1.25); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.5,-0.76) .. controls +(-0.9,0.1) and +(0.1,-1) .. (-1.15,1.25);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,0.76) .. controls +(0.35,-0.2) and +(0,1) .. (0.85,-1.25);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-=
+=\;
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
-(1,1.25) node[line width=0pt] (A) {{\small ${}^\dual Z$}}
-(-1,-1.25) node[line width=0pt] (A2) {{\small ${}^\dual X$}}; 
+(0,1.25) node[line width=0pt, right] (A) {{\small $Z$}}
+(0,-1.25) node[line width=0pt, right] (A2) {{\small $X$}}; 
+\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi^\vee$}};
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,1.25) -- (0,0); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,0) -- (0,-1.25); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.15,1.25) -- (-0.15,-1.25); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\, , \qquad
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(1,1.25) node[line width=0pt, left] (A) {{\small $Z$}}
+(-1,-1.25) node[line width=0pt, left] (A2) {{\small $X$}}; 
 \draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
 \fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
-\draw (-1,0) -- (A2); 
-\draw (1,0) -- (A); 
+\draw (-1,0) -- (-1,-1.25); 
+\draw (1,0) -- (1,1.25); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.5,0.76) .. controls +(-0.35,-0.2) and +(0,1) .. (-0.85,-1.25);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,-0.76) .. controls +(0.8,0.1) and +(0,-1) .. (1.15,1.25);
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-[m+n]
+=\;
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[line width=0] 
+(0,1.25) node[line width=0pt, left] (A) {{\small $Z$}}
+(0,-1.25) node[line width=0pt, left] (A2) {{\small $X$}}; 
+\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi^\vee$}};
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,1.25) -- (0,0); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,0) -- (0,-1.25); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.15,1.25) -- (0.15,-1.25); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\; .
 $$
-where the right-hand side map is shifted to match the left-hand side's source and target. 
 \item (TODO: sign?)
 \be\label{eq:monoidalproperty}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
 \draw[line width=1pt] 
-(2,-1) node[line width=0pt] (Y) {{\small $Y^\vee$}}
-(3,-1) node[line width=0pt] (X) {{\small $X^\vee$}}
-(-1,2) node[line width=0pt] (XY) {{\small $(\bar Y\otimes \bar X)^\vee$}}; 
+(2,-1) node[line width=0pt, right] (Y) {{\small $Y$}}
+(3,-1) node[line width=0pt, right] (X) {{\small $X$}}
+(-1,2) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
 \draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
 \draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (Y);
-\draw (3,0) -- (X);
+\draw (2,0) -- (2,-1);
+\draw (3,0) -- (3,-1);
 \draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (XY);
+\draw (-1,0) -- (-1,2);
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,1.6); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,2); 
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-0.65) .. controls +(0,1) and +(0.7,-0.15) .. (1.5,0.75); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-1) .. controls +(0,1) and +(0.7,-0.15) .. (1.5,0.75); 
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-0.65) .. controls +(0,1.1) and +(1.8,0) .. (1.5,1.5); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-1) .. controls +(0,1.1) and +(1.8,0) .. (1.5,1.5); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -3125,22 +3089,22 @@ where the right-hand side map is shifted to match the left-hand side's source an
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
 \draw[line width=1pt] 
-(-2,-1) node[line width=0pt] (X) {{\small $Y^\vee$}}
-(-1,-1) node[line width=0pt] (Y) {{\small $X^\vee$}}
-(2,2) node[line width=0pt] (XY) {{\small $(\bar Y\otimes \bar X)^\vee$}}; 
+(-2,-1) node[line width=0pt, right] (X) {{\small $Y$}}
+(-1,-1) node[line width=0pt, right] (Y) {{\small $X$}}
+(2,2) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
 \draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[redirected] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
 \draw[redirected] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (-1,0) -- (Y);
-\draw (-2,0) -- (X);
+\draw (-1,0) -- (-1,-1);
+\draw (-2,0) -- (-2,-1);
 \draw[dotted] (0,0) -- (1,0);
-\draw (2,0) -- (XY);
+\draw (2,0) -- (2,2);
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,1.59) .. controls +(-0.01,-1.0) and +(0.7,0.1) .. (1.25,-0.7); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,2) .. controls +(-0.01,-1.0) and +(0.7,0.1) .. (1.25,-0.7); 
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.85,-0.65) .. controls +(-0.3,0.9) and +(-0.7,0) .. (-0.4,0.77); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.85,-1) .. controls +(-0.3,0.9) and +(-0.7,0) .. (-0.4,0.77); 
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-0.65) .. controls +(-0.3,1.0) and +(-1.8,0) .. (-0.4,1.5); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-1) .. controls +(-0.3,1.0) and +(-1.8,0) .. (-0.4,1.5); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
@@ -3155,22 +3119,22 @@ To establish part~(ii), let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline, rotate=180]
 \draw[line width=1pt] 
-(2,-2) node[line width=0pt] (Y) {{\small $Y^\vee$}}
-(3,-2) node[line width=0pt] (X) {{\small $X^\vee$}}
-(-1,3) node[line width=0pt] (XY) {{\small $(\bar Y\otimes \bar X)^\vee$}}; 
+(2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
+(3,-2) node[line width=0pt, right] (X) {{\small $X$}}
+(-1,3) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
 \draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
 \draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (Y);
-\draw (3,0) -- (X);
+\draw (2,0) -- (2,-2);
+\draw (3,0) -- (3,-2);
 \draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (XY);
+\draw (-1,0) -- (-1,3);
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,2.67); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,3); 
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-1.735) .. controls +(0,2) and +(0.7,-0.15) .. (1.5,0.75); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-2) .. controls +(0,2) and +(0.7,-0.15) .. (1.5,0.75); 
 %
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-1.735) .. controls +(0,2) and +(1.8,0) .. (1.5,1.5); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,2) and +(1.8,0) .. (1.5,1.5); 
 %
 %
 \fill (0.5,0) circle (2.2pt) node[below] {{\small$\kappa$}};
@@ -4418,7 +4382,7 @@ $$
 \langle\!\langle {}^\dual Y \otimes Y \otimes Z \rangle\!\rangle \ar[rr]^-{\langle\!\langle\eval_Y \otimes 1\rangle\!\rangle} && 
 \langle\!\langle Z \rangle\!\rangle 
 }%
-\, . 
+. 
 $$
 \end{definition}
 
@@ -4439,13 +4403,13 @@ respectively. Substituting the expressions for the adjiunction maps in Section~\
 \beta_X : k[x]/(\partial V)[n] & \lra \End_{k[x,z]}(X)[m] \, , \\
 \phi & \lmt \phi \cdot 1_{X}[m] \, , \\
 \beta^X : \End_{k[x,z]}(X)[m] & \lra k[x]/(\partial V)[n] \, , \\
-\psi & \lmt (-1)^{{m\choose 2} + {n\choose 2}} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\,  \partial_{x_1} d_X \ldots \partial_{x_n} d_X \partial_{z_1} d_X \ldots \partial_{z_m} d_X \right) \underline{\operatorname{d}\!x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] \, . 
+\psi & \lmt (-1)^{{m+1\choose 2}} \Res_{k[x,z]/k[x]} \left[ \frac{\str\left( \psi\,  \partial_{x_1} d_X \ldots \partial_{x_n} d_X \partial_{z_1} d_X \ldots \partial_{z_m} d_X \right) \underline{\operatorname{d}\!x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] . 
 \end{align*}
 
 
 \section{Duality via adjoint operators}\label{section:dualityadjointop}
 
-Let $k$ be a noetherian $\nQ$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{??,??} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a nondegenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
+Let $k$ be a noetherian $\nQ$-algebra and $R = k[x_1,\ldots,x_n]$. If $k$ is a field then we know from \cite{m0912.1629, dyckmurf} that for any polynomial $W$ with an isolated singularity, the Kapustin-Li formula gives a nondegenerate pairing on the mapping spaces of the triangulated category of matrix factorisations of $W$ over $R$. In this section we prove the analogue of this result for an arbitrary base $k$. In particular, the mapping spaces of the triangulated category will not be flat over $k$, so we work instead with dg-categories.
 
 Given $W \in R$ and two finite-rank matrix factorisations $X,Y$ of $W$ let $\Hom(X,Y) = \Hom_R(X,Y)$ denote the $\nZ _2$-graded Hom-complex. We define a natural $k$-bilinear pairing
 \[
@@ -5286,6 +5250,143 @@ commutes by (iii) and (i). But then
 \widetilde\eval'_x = \widetilde\eval'_x \circ (p \otimes 1) \circ (q \otimes 1) = \widetilde\eval_f \circ (1 \otimes p^\dual) \circ (q \otimes 1) = \widetilde\eval_x
 \]
 and similarly for $\coev'_x$.
+
+
+\section{Independence of variable ordering}\label{app:variableordering}
+
+Objects of the bicategory $\LG$ are pairs consisting of a polynomial ring $R$ and potential $W$, together with a chosen ordering of the ring variables. Thus the value of a diagram in $\LG$ depends \textsl{a priori} on the ordering of the ring variables in each of its $2$-dimensional regions. In this appendix we show that the value is actually independent of these orderings, up to the natural permutation signs.
+
+To take a concrete example, consider for $X \in \hmf(k[z_1,\ldots,z_m], V)$ the diagram
+\be\label{eq:signdependencepermdia}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.4,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (3.5);
+\fill (-2.1,-2.1) circle (0pt) node[white] {{\small$V$}};
+\shadedraw[top color=white, bottom color=white, draw=white] (0,0) circle (2);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (270:2) .. controls +(3,0) and +(3,-1) .. (90:2); 
+\fill (180:1.8) circle (0pt) node[left] {{\small$X$}};
+\draw (0,0) circle (2);
+\draw[<-, very thick] (0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[<-, very thick] (-0.100,-2) -- (0.101,-2) node[below] {}; 
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\, . 
+\ee
+We show in Section \ref{sec:defectaction} that the value of this diagram is the endomorphism of $\Delta_V$ given by multiplication with the polynomial $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} d_X \ldots \partial_{z_m} d_X )$. While there is an obvious dependence on the variable ordering, we prove that the homotopy equivalence class of this endomorphism changes only by a permutation sign if we change the ordering of the variables~$z_i$ in the outer region of the diagram.
+
+Let $(R = k[x_1,\ldots,x_n], W)$ be an object of $\LG$. Given $\sigma \in S_n$ consider the matrix factorisation $(\Delta^\sigma_W, d_{\Delta^\sigma_W})$ of $\widetilde W$ over $\Re$ with the same underlying graded module as $\Delta_W$, but the differential that we would have written down if we had begun with the variable ordering $x_{\sigma(1)},\ldots,x_{\sigma(n)}$, namely
+\be
+d_{\Delta^\sigma_W} = \delta^\sigma_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial^{\,\sigma}_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*
+\ee
+where $\partial^{\,\sigma}_{[i]}$ are the modified difference quotient operators, defined for $1 \le i \le n$ with $\sigma(j) = i$ by
+\be\label{diffquotopmod}
+\partial^{\,\sigma}_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_{\sigma(1)}\ldots t_{\sigma(j-1)}}f - {}^{t_{\sigma(1)}\ldots t_{\sigma(j)}}f}{x_i-x'_i} \, . 
+\ee
+Together with the morphisms $\rho, \lambda$ of \eqref{lambdarho} this matrix factorisation serves as an alternative unit $1$-endomorphism of $(R,W)$. That is, $\rho$ and $\lambda$ are both isomorphisms and the coherence axioms for the unit in a bicategory holds for $\Delta^\sigma_W$. 
+
+By uniqueness of units in a bicategory there is an isomorphism in $\hmf(\Re, \widetilde W)$
+\[
+\xi: \Delta_W \lto \Delta^\sigma_W
+\]
+unique with the property that, for any $1$-morphism $X: (k[x],W) \lto (k[z],V)$, the diagram
+\be\label{eq:propertydeltasigma}
+\xymatrix{
+X \otimes_R \Delta_W \ar[dr]_{\rho}\ar[rr]^-{1 \otimes \xi} & & X \otimes_R \Delta^\sigma_W \ar[dl]^{\rho}\\
+& X
+}
+\ee
+commutes in $\HMF(k[x,z], V - W)$. Explicitly, $\xi$ can be constructed as the composite
+$$
+\xymatrix@C+1pc{
+\Delta_W \ar[r]^-{\lambda_{\Delta^\sigma_W}^{-1}} & \Delta^\sigma_W \otimes_R \Delta_W \ar[r]^-{\rho_{\Delta_W}} & \Delta^\sigma_W
+} ,
+$$
+but we will only use commutativity of \eqref{eq:propertydeltasigma}. Taking $X = \Delta_W^{\vee}$ in this diagram we deduce that
+\be
+\xymatrix{
+\Delta_W \ar[dr]_{\pi}\ar[rr]^-{\xi} & & \Delta^\sigma_W\ar[dl]^{\pi}\\
+& R
+}
+\ee
+commutes in $\HF(\Re, \widetilde W)$, i.\,e.~$\xi$ is the isomorphism connecting these two stabilisations of the diagonal.
+
+To understand how permuting variables affects the values of diagrams like \eqref{eq:signdependencepermdia}, we need to understand the effect on the evaluation and coevaluation maps of Section \ref{sec:derivcoeval}. For the remainder of this section we fix potentials $W \in R = k[x_1,\ldots,x_n]$, $V \in S = k[z_1,\ldots,z_m]$ and $X \in \hmf(k[x,z], V - W)$.
+
+By inspection $\widetilde\coev_X$ depends only on the order of the $x$-variables and $\coev_X$ depends only on the order of the $z$-variables, through the maps $\Psi, \varepsilon$. Since $\Psi$ is independent of the ordering up to homotopy, the only ``real'' dependence in both cases is via $\varepsilon$. Similarly $\widetilde \eval_X$ depends on the order of the $x$-variables via $\Lambda^{(x)}$, $\underline{\ud x}$ and the order of the partial derivatives in the denominator of the residue, and $\eval_X$ depends on the order of the $z$-variables via $\Lambda^{(z)}$, $\underline{\ud z}$ and the residue denominator.
+
+Let us fix permutations $\sigma \in S_n$ and $\tau \in S_m$. If we take the variable orderings $x_{\sigma(1)},\ldots,x_{\sigma(n)}$ and $z_{\tau(1)}, \ldots, z_{\tau(m)}$ in Section \ref{sec:derivcoeval} the result will be morphisms
+\begin{align}
+\coev^{\sigma,\tau}_X &: \Delta^\tau_V \lto X \otimes_R {}^\dual X
+\, , \qquad
+\eval^{\sigma,\tau}_X: {}^\dual X \otimes_{S} X \lto \Delta^\sigma_W \, ,\label{eq:permutedevcoev1}\\
+\widetilde\coev^{\sigma,\tau}_X&: \Delta^\sigma_W \lto X^\dual \otimes_{S} X
+\, , \qquad
+\widetilde\eval^{\sigma,\tau}_X: X \otimes_{R} X^\dual \lto \Delta^\tau_V\,. \label{eq:permutedevcoev2}
+\end{align}
+These are related to the original evaluation and coevaluation maps as follows.
+
+\begin{lemma}\label{lemma:evsignspermute} The diagrams
+\be\label{eq:evsignspermute}
+\xymatrix@C+3pc@R-1pc{
+& \Delta_V \ar[dd]^-{\xi}\\
+X \otimes_R X^{\dual}\ar[ur]^-{\widetilde\eval_X}\ar[dr]_-{(-1)^{|\sigma|} \widetilde \eval^{\sigma, \tau}_X} \\
+& \Delta^\tau_V, 
+}
+\qquad
+\xymatrix@C+3pc@R-1pc{
+& \Delta_W \ar[dd]^-{\xi}\\
+{}^\dual X \otimes_S X \ar[ur]^-{\eval_X}\ar[dr]_-{(-1)^{|\tau|} \eval^{\sigma,\tau}_X}\\
+& \Delta^\sigma_W
+}
+\ee
+commute in $\HMF(S^e, \widetilde V)$ and $\HMF(\Re, \widetilde W)$ respectively.
+\end{lemma}
+\begin{proof}
+We give the argument for the first diagram, the second is similar. By the universal property of the stabilisation it suffices to prove that the $\Se$-linear morphisms
+\[
+\widetilde \eval_0\, , \; (-1)^{|\sigma|} \widetilde \eval^{\sigma, \tau}_0: X \otimes_R X^\dual \lto S
+\]
+are homotopic. For this it is enough to show that the $S$-linear maps
+\[
+\Res_{k[x]/k} \!\!\left[ \frac{ \str( \lambda_1 \ldots \lambda_n \circ (-) ) \, \underline{\ud x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] , \qquad
+(-1)^{|\sigma|}\Res_{k[x]/k} \!\!\left[  \frac{\str( \lambda_{\sigma(1)} \ldots \lambda_{\sigma(n)} \circ (-) ) \, \ud x_{\sigma(1)} \ldots \ud x_{\sigma(n)}}{\partial_{x_{\sigma(1)}} W \ldots \partial_{x_{\sigma(n)}} W} \right]
+\]
+are homotopic. But this follows from Appendix \ref{app:reshom}.
+\end{proof}
+
+\begin{lemma}\label{lemma:coevsignspermute} The diagrams
+\be\label{eq:coevsignspermute}
+\xymatrix@C+3pc@R-1pc{
+\Delta_W \ar[dr]^-{\widetilde \coev_X} \ar[dd]_-{\xi}\\
+& X^\dual \otimes_S X , \\
+\Delta^\sigma_W \ar[ur]_-{(-1)^{|\sigma|} \widetilde \coev^{\sigma, \tau}}
+}
+\qquad
+\xymatrix@C+3pc@R-1pc{
+\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev^{\sigma,\tau}_X}\\
+& X \otimes_R {}^\dual X\\
+\Delta^\tau_V \ar[ur]_-{(-1)^{|\tau|} \coev^{\sigma,\tau}_X}
+}
+\ee
+commute in $\HMF(\Re, \widetilde W)$ and $\HMF(\Se, \widetilde V)$ respectively.
+\end{lemma}
+\begin{proof}
+The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satisfy the Zorro moves, so commutativity of the diagrams in \eqref{eq:coevsignspermute} follows from commutativity of those in \eqref{eq:evsignspermute}.
+\end{proof}
+
+\textbf{todo} Signs follow wigglies rule.
+
+Returning to the example \eqref{eq:signdependencepermdia} we have a diagram, in which the top path computes the value of the diagram with outer region given the usual variable ordering, and the bottom path computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
+\[
+\xymatrix@C+2pc@R-1pc{
+\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev_X} &  & & \Delta_V \ar[dd]^-{\xi}\\
+& X \otimes_R X^{\vee} \otimes_S S[m] \ar[r]^-{\cong} & X \otimes_R R[m] \otimes_R X^{\vee} \ar[ur]^-{\widetilde \eval_X} \ar[dr]_-{\widetilde \eval^{\tau}_X}\\
+\Delta^\tau_V \ar[ur]_-{\coev^{\tau}_X} & & & \Delta^\tau_V.
+}
+\]
+We have shown that the left-hand triangle commutes in $\HMF(\Se, \widetilde V)$ up to a sign $(-1)^{|\tau|}$, and the right-hand triangle commutes.
+
 
 \section{The map $\boldsymbol{\varepsilon \Psi}$}\label{appendix:mapeppsi}
 % see divop
