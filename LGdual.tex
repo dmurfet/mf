@@ -2843,6 +2843,21 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 
 (TODO: add labelled wigglies and their crossings, show map $X^\dual[m+n]\lra {}^\dual X$)
 
+Let $W\in R = k[x_1,\ldots,x_n]$, $V\in S = k[z_1,\ldots,z_m]$ be potentials and $X \in \hmf(k[x,z],V-W)$. Then
+\[
+X^\dual[m+n] \cong X^{\vee}[n][m+n] \cong X^{\vee}[m] \cong {}^\dual X\,.
+\]
+
+\begin{definition} We define the isomorphism
+\[
+q_X: R[m] \otimes_R R[n] \otimes_R X^\dual \lto {}^\dual X, \qquad q(\nu) = (-1)^{m|\nu|} \nu\,.
+\]
+\end{definition}
+
+We write $X^\dual[m+n]$ in this unusual way so as to have a simple diagrammatic interpretation:
+\[
+diagram
+\]
 
 \subsection{Pivotality}\label{sec:pivotality}
 
@@ -2917,42 +2932,342 @@ As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is
 
 The story for the bicategory $\LG$ is subtler, as we only expect the left and right adjoints of $X$ to be isomorphic when the number of variables in the regions on either side of $X$ agree mod $2$. This is the case, for example, when $X$ is an endomorphism of an object of $\LG$. Indeed, we prove that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. See Remark \ref{remark:notpivotal} for the construction of an isomorphism between $X$ and $X^{\dual \dual}$.
 
-In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double dual, but in terms of the relationship between the left and right adjoints. It is clear from Theorem \ref{theorem:adjointbicategoryyeah} that the left adjoint of any $1$-morphism is isomorphic to a suspension of the right adjoint, and we show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
+In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double dual, but in terms of the relationship between the left and right adjoints. We have specified in \eqref{??} above a choice of isomorphism $q$ between the left adjoint and a suspension of the right adjoint of any $1$-morphism. We show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
 
-Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$ be potentials and $X \in \hmf(k[x,z],V-W)$. Then
+To explain what we mean, first we recall a formal result of category theory. If $X: W \lto V$ and $Y: V \lto U$ are $1$-morphisms in $\LG$ then the composite $X^{\dual} \otimes Y^{\dual}$ is right adjoint to $Y \otimes X$ and so by uniqueness of adjoints there is a canonical isomorphism
 \[
-X^\dual[m+n] \cong X^{\vee}[n][m+n] \cong X^{\vee}[m] \cong {}^\dual X\,.
+\mathscr{R}: (Y \otimes X)^{\dual} \cong X^{\dual} \otimes Y^{\dual}\,.
 \]
+Similarly, there is an isomorphism
+\[
+\mathscr{L}: {}^\dual (Y \otimes X) \cong {}^\dual X \otimes {}^\dual Y\,.
+\]
+Concretely, we define these morphisms by the diagrams
+\[
+diagrams
+\]
+One can ask whether or not these isomorphisms $\mathscr{R}, \mathscr{L}$ are compatible in a sutiable sense with the isomorphism $q$ which exchanges left and right adjoints, and this is precisely the content of the next result. For the statement, we let
+\begin{align*}
+W &\in R = k[x_1,\ldots,x_n],\\
+V &\in S = k[z_1,\ldots,z_m],\\
+U &\in k[y_1,\ldots,y_p],
+\end{align*}
+be potentials and $X \in \hmf(k[x,z],V-W)$ and $Y\in \hmf(k[y,z],U-V)$.
 
-\begin{definition} We define the isomorphism
-\[
-q_X: R[m] \otimes_R R[n] \otimes_R X^\dual \lto {}^\dual X, \qquad q(\nu) = (-1)^{m|\nu|} \nu\,.
-\]
-\end{definition}
+\begin{proposition}\label{prop:monoidalproperty} The diagram
+\be\label{eq:monoidalpropertycomd}
+\xymatrix@C+2pc{
+R[p] \otimes R[n] \otimes (Y \otimes X)^{\dual} \ar[d]_-{(-1)^m\mathscr{R}} \ar[rr]^-{q_{Y \otimes X}} & & {}^\dual( Y \otimes_S X ) \ar[ddd]^{\mathscr{L}}\\
+R[p] \otimes R[n] \otimes (X^\dual \otimes Y^\dual) \ar[d]\\
+R[p] \otimes R[m] \otimes R[m] \otimes R[n] \otimes (X^\dual \otimes Y^\dual) \ar[d]\\
+(R[m] \otimes R[n] \otimes X^\dual) \otimes ( S[p] \otimes S[m] \otimes Y^\dual ) \ar[rr]_-{q_X \otimes q_Y} & & {}^\dual X \otimes {}^\dual Y
+}
+\ee
+commutes up to homotopy (beware the sign). Equivalently, the following identity holds true: 
+\be\label{eq:monoidalproperty}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
+\draw[line width=1pt] 
+(2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
+(3,-2) node[line width=0pt, right] (X) {{\small $X$}}
+(-1,3) node[line width=0pt, right] (XY) {{\small $Y\otimes X$}}; 
+% wiggly labels:
+\draw[line width=1pt] 
+(2.65,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}m$}}
+(3.55,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}n$}}
+(3.9,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}n$}}
+(4.25,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
+(-0.45,2.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}};
+%
+%
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (2,-2);
+\draw (3,0) -- (3,-2);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (-1,3);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.5,-2) -- (3.5,3);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.85,-2) -- (3.85,3);
+%
+%
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,3); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-2) .. controls +(0,1.3) and +(0.8,0.05) .. (1.5,0.75); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,1.5) and +(2.0,0.05) .. (1.5,1.5); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+= (-1)^m
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
+\draw[line width=1pt] 
+(-2,-2) node[line width=0pt, right] (X) {{\small $Y$}}
+(-1,-2) node[line width=0pt, right] (Y) {{\small $X$}}
+(2,3) node[line width=0pt, right] (XY) {{\small $Y\otimes X$}}; 
+% wiggly labels:
+\draw[line width=1pt] 
+(2.6,2.1) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
+(2.9,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
+(-1.7,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
+(-0.5,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
+(-1.3,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $m$}};
+%
+%
+\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+\draw[redirected] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (-1,0) -- (-1,-2);
+\draw (-2,0) -- (-2,-2);
+\draw[dotted] (0,0) -- (1,0);
+\draw (2,0) -- (2,3);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.75,3) .. controls +(-0.01,-1.0) and +(0.7,0.1) .. (1.25,-0.7); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.25,3) .. controls +(0,-0.9) and +(0,-0.9) .. (2.50,3); 
+%
+%
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-2) .. controls +(0,0.7) and +(-1.2,0.1) .. (-0.4,0.75); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.25,-2) .. controls +(-0.2,2.2) and +(-3.8,-0.4) .. (-0.4,1.5); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.75,-2) .. controls +(0,0.9) and +(0,0.9) .. (-.50,-2); 
+%
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\ee
+\end{proposition}
+\begin{proof}
+The equivalence of commutativity of \eqref{eq:monoidalpropertycomd} and the identity \eqref{eq:monoidalproperty} is an exercise in the diagrammatic calculus for wiggly lines, which we leave to the reader. 
 
-We write $X^\dual[m+n]$ in this unusual way so as to have a simple diagrammatic interpretation:
-\[
-diagram
-\]
-For the rest of this section, in addition to $W, V$ and $X$ above, let $U\in k[y_1,\ldots,y_p]$ be a potential and let $Y\in \hmf(k[y,z],U-V)$ be given. The property of the isomorphisms $q$ that we wish to prove is that they are, in an appropriate sense, monoidal: the isomorphism
-\[
-q_{Y \otimes X}: R[p] \otimes_R R[n] \otimes_R (Y \otimes X)^\dual \lto {}^\dual(Y \otimes X)
-\]
-can be constructed out of $q_X$ and $q_Y$.
-
-Then as explained in Appendices~\ref{section:symidem} and~\ref{app:adjoints}, the infinite-rank matrix factorisation $Y\otimes X$ of $U - W$ over $k[x,y]$ is homotopy equivalent to a direct summand of a finite-rank matrix factorisation. More precisely, we show that the quotient map
+As explained in Appendices~\ref{section:symidem} and~\ref{app:adjoints}, the infinite-rank matrix factorisation $Y\otimes X$ of $U - W$ over $k[x,y]$ is homotopy equivalent to a direct summand of a finite-rank matrix factorisation. More precisely, the appendix shows that the quotient map
 $$
 \kappa: Y \otimes X \lto \bar Y \otimes \bar X := (Y \otimes_{k[z]} X) \otimes_{k[z]} k[z]/(\partial_{z_1}V, \ldots, \partial_{z_m}V)
 $$
 is a split monomorphism in $\HMF(k[x,y], U - W)$, i.e. there is a morphism $\xi$ such that $\kappa\xi = 1$.
 
-(TODO: remark that part (ii) isn't so bad if $m=p=0$ mod 2. Also explain why we talk about $\bar{Y} \otimes \bar{X}$ and not $Y \otimes X$)
+But then the dual $\kappa^{\vee}: (\bar Y \otimes \bar X)^\vee \lto (Y \otimes X)^\vee$ is a split epimorphism, and to prove that the two sides of \eqref{eq:monoidalproperty} are homotopic it is enough to prove that they are homotopic after precomposing (i.e. inserting at the bottom of the diagram) with the morphism $\kappa^{\vee}$. By the morphism migration rules of Proposition \ref{??} is equivalent to prove that the two sides of \eqref{eq:monoidalproperty} are homotopic with $Y \otimes X$ replaced by $\bar Y \otimes \bar X$ and the junction labelled $1_{Y \otimes X}$ replaced by a junction labelled $\kappa$.
 
-\begin{proposition}\label{prop:monoidalproperty}
-In the above setting the following identities hold true: 
-\begin{enumerate}
-\item 
-For any map~$\varphi:Z\lra X$ in $\hmf(k[x,z], V-W)$ we have 
+Thus on the left hand side we have (ignoring the suspensions) the map
+\be\label{eq:leftmonoidaldetail}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline, rotate=180]
+\draw[line width=1pt] 
+(2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
+(3,-2) node[line width=0pt, right] (X) {{\small $X$}}
+(-1,3) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (2,-2);
+\draw (3,0) -- (3,-2);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (-1,3);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,3); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-2) .. controls +(0,2) and +(0.7,-0.15) .. (1.5,0.75); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,2) and +(1.8,0) .. (1.5,1.5); 
+%
+%
+\fill (0.5,0) circle (2.2pt) node[below] {{\small$\kappa$}};
+%
+\coordinate (lambdainv) at ($ (-1,2.2) $);
+\fill (lambdainv) circle (2.2pt) node[right] {{\small$\lambda^{-1}$}};
+\coordinate (rhoinv) at ($ (2.3,1.28) $);
+\fill (rhoinv) circle (2.2pt) node[above] {{\small$\rho^{-1}$}};
+\coordinate (rho) at ($ (2,-1.4) $);
+\fill (rho) circle (2.2pt) node[below right] {{\small$\rho$}};
+%
+\draw[dashed] (rho)  .. controls +(-1,0.3) and +(0,-1) ..  (-0.31,-0.72);
+\draw[dashed] (rhoinv)  .. controls +(-0.1,-0.5) and +(0,0.5) ..  (1.45,0.74);
+\draw[dashed] (1.45,1.49)  .. controls +(-0.1,0.5) and +(0,-0.5) ..  (lambdainv);
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\, .
+\ee
+We denote this morphism by $\mathscr{R}: (\bar{Y} \otimes \bar{X})^\dual \lto X^\dual \otimes Y^\dual$. 
+
+Similarly, after adding $\kappa^{\vee}$ and migrating, the right hand side becomes the morphism $\mathscr{L}$:
+\[
+diagram (including the wiggly rearrangement on top and bottom)
+\]
+It remains to compute $\mathscr{R}$ and $\mathscr{L}$ and then prove that $\mathscr{R} = (-1)^m \mathscr{L}$.
+
+Let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ a $k[y,z]$-basis of~$Y$, and $\{g_\alpha\}_\alpha$ a $k$-basis of $k[z]/(\partial V)$. Then $\{ f_j \otimes g_\alpha e_i \}_{i,j,\alpha}$ is a $k[x,y]$-basis of $\bar{Y} \otimes \bar{X}$. Using the expressions~\eqref{eq:formulalambdainv} and~\eqref{eq:alt_formula_coev} together with Lemma~\ref{lemma:atshufat} we find that $\lambda^{-1}$ and $\widetilde\coev_X$ send $(f_q \otimes g_\alpha e_p)^* \in (\bar Y \otimes \bar X)^\vee$ to
+$$
+\sum_j (-1)^{n + |e_j| + n|f_q| + n|e_p|} \, e_j^* \otimes \varepsilon \Psi \At_1 \big(X\otimes (\bar Y \otimes \bar X)^\dual \big)^n \big(e_j\otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
+$$
+Similarly with~\eqref{eq:formula_rhoinverse} and~\eqref{eq:coev10} we compute that $\rho^{-1}$ and $\widetilde\coev_Y$ map this to
+\begin{align*}
+&\sum_{j,k} 
+(-1)^{n + (m+1)|f_k| + |e_j| + n|f_q| + n|e_p|} \, \\
+& \qquad\; \cdot \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_j^* \otimes f_k^*)
+\otimes \varepsilon \Psi \At_1\big((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual\big)^n \big( f_k \otimes e_j \otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
+\end{align*}
+Here there is a recurrence of the subtlety mentioned in Remark \ref{??} and which also appeared in the proof of the Zorro move. Namely that the output of the $\varepsilon \Psi \At_2$ term is an element of $\Se = S_1 \otimes_k S_2$, with the $S_2$ component going to act on the $f_k$ which is subsequently introduced as an argument of the $\varepsilon \Psi \At_1$ term, so we keep in mind that this input is actually a sum of terms of the form $g_\beta f_k$.
+
+Next we apply the quotient map~$\kappa$. By naturality of the Atiyah class (Lemma \ref{lemma:atiyahnat}) the sole effect of~$\kappa$ on the above is to replace $\At_1((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual)$ by $\At_1((\bar Y\otimes \bar X)\otimes( \bar Y \otimes \bar X)^\dual)$. This means that we are in precisely the same situation as in the proof of the Zorro move for $\bar Y \otimes \bar X$, i.\,e.~after applying $\widetilde\eval_{\bar Y \otimes \bar X}$ and~$\rho$ we are left with
+\be\label{eq:valueofLpivot}
+\mathscr{R}( (f_q \otimes g_\alpha e_p )^* ) = (-1)^{m|f_q|} \, 
+(1 \otimes g_\alpha^*) \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*) \, . 
+\ee
+To explain the notation: the output of $\varepsilon$ is an element of $(X^\dual \otimes Y^\dual) \otimes_{S_1} \Se$ and to this we apply the functional $1 \otimes g_\alpha^*$ which sends $s \otimes t \in \Se$ to $s \cdot g_\alpha^*(t)$ (it is the $g_\beta$ factors mentioned above which become integrated into basis elements $f_k \otimes g_\beta e_j$ of $\bar{Y} \otimes \bar{X}$ and by the argument of the Zorro proof ultimately fed into $g_\alpha^*$).
+
+Similarly one computes that $\mathscr{L}$ is given by
+\be\label{eq:valueofRpivot}
+\mathscr{L}( (f_q \otimes g_\alpha e_p)^* ) = (-1)^{m|f_q|} \, 
+(g_\alpha^* \otimes 1) \varepsilon \Psi \At_1 (X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*) \, . 
+\ee
+We prove now that $\mathscr{R}$ is homotopic to $(-1)^m \mathscr{L}$.
+
+The main discrepancy is that $\mathscr{R}$ involves $\At_2$ while $\mathscr{L}$ involves $\At_1$. In order to match these let $\mathscr{R}'$ be the morphism computed by the diagram \eqref{eq:leftmonoidaldetail} but with the variable ordering $z_{m}, z_{m-1}, \ldots, z_1$ on the ring $k[z]$. By Appendix \ref{app:variableordering}, $\mathscr{R}'$ is homotopic to $(-1)^{\binom{m}{2}} \mathscr{R}$ so we must prove that
+\be\label{eq:lversusrbeforeh}
+\mathscr{R}' = (-1)^{\binom{m+1}{2}} \mathscr{L}.
+\ee
+Again we need to reduce to finite rank, using the split monomorphism in $\HMF(k[x,y], U - W)$
+\[
+\kappa': X^\dual \otimes Y^\dual \lto \bar{X}^\dual \otimes \bar{Y}^\dual = (X^\dual \otimes Y^\dual) \otimes_{k[z]} k[z]/(\partial_{z_1}V, \ldots, \partial_{z_m}V)\,.
+\]
+To prove \eqref{eq:lversusrbeforeh} it therefore suffices to prove
+\be\label{eq:lversusrafterh}
+\kappa' \circ \mathscr{R}' = (-1)^{\binom{m+1}{2}} \kappa' \circ \mathscr{L}\,.
+\ee
+Actually we show that these two maps are \emph{equal} as module maps, not just homotopic. Since $\bar{X}^\dual \otimes \bar{Y}^\dual$ has a $k[x,y]$-basis consisting of tensors $e_i^* \otimes g_\alpha f_j^*$, to prove \eqref{eq:lversusrafterh} it suffices to prove both sides are equal after applying $g_\beta^*$ for every $\beta$. In light of \eqref{eq:valueofLpivot} and \eqref{eq:valueofRpivot}, we have to show
+\be
+(g_\beta^* \otimes g_\alpha^*) \varepsilon \Psi_\sigma \At_2(X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*) = (-1)^{\binom{m+1}{2}} (g_\alpha^* \otimes g_\beta^*) \varepsilon \Psi \At_1 (X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*)\,.
+\ee
+Here $\Psi_\sigma$ denotes the map computed using the variable ordering $z_{\sigma(1)}, \ldots, z_{\sigma(m)}$ with $\sigma(i) = m - i + 1$. Let $\tau: \Se \lto \Se$ be the isomorphism $\tau(s \otimes s') = s' \otimes s$. It is easily checked that for $a \in S$, using the notation of Appendix \ref{app:variableordering},
+\[
+\tau \partial_{[i]}(a) = \partial^{\,\sigma}_{[m-i+1]}(a)\,.
+\]
+Hence
+\begin{align*}
+\varepsilon \Psi_\sigma( da_1 \cdots da_m ) &= \partial^{\,\sigma}_{[1]}(a_1) \cdots \partial^{\,\sigma}_{[m]}(a_m)\\
+&= \tau\left( \partial_{[m]}(a_1) \cdots \partial_{[1]}(a_m) \right)\,.
+\end{align*}
+And so we compute using the formulas of Section \ref{section:atiyahclasses}, with $D$ the differential on $X^\dual \otimes Y^\dual$,
+\begin{align*}
+&(g_\alpha^* \otimes g_\beta^*) \varepsilon \Psi \At_1 (X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*)\\
+&= (g_\beta^* \otimes g_\alpha^*) \tau \big( (-1)^{m|e_p| + m|f_q|} \sum_{p',q'} \left\{ \partial_{[m]} D \cdots \partial_{[1]} D \right\}_{p'q', pq} e_{p'}^* \otimes f_{q'}^* \big)\\
+&= (g_\beta^* \otimes g_\alpha^*) (-1)^{m|e_p| + m|f_q|} \sum_{p',q'} \left\{ \partial^{\,\sigma}_{[1]} D \cdots \partial^{\,\sigma}_{[m]} D \right\}_{p'q', pq} e_{p'}^* \otimes f_{q'}^*\\
+&= (-1)^{\binom{m+1}{2}} (g_\beta^* \otimes g_\alpha^*) \varepsilon \Psi_{\sigma} \At_2(X^\dual \otimes Y^\dual)^m( e_p^* \otimes f_q^* )
+\end{align*}
+which completes the proof.
+%[TODO: include signs!] To establish part (ii) we start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}_i$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
+%$$
+%\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right]
+%= 
+%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \alpha \circ \Lambda^{(y)}_X)(\alpha) \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] . 
+%$$
+%The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous and we find 
+%\begin{align*}
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+%\draw[line width=1pt] 
+%(-2,-1) node[line width=0pt] (X) {{\small ${}^\dual Y$}}
+%(-1,-1) node[line width=0pt] (Y) {{\small ${}^\dual X$}}
+%(2,2) node[line width=0pt] (XY) {{\small ${}^\dual (X\otimes Y)$}}; 
+%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+%\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+%\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+%\draw (-1,0) -- (Y);
+%\draw (-2,0) -- (X);
+%\draw[dotted] (0,0) -- (1,0);
+%\draw (2,0) -- (XY);
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+%& =
+%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{{}^\dual X} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots. \partial_{y_m} W_2} \right] ,
+%\\
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+%\draw[line width=1pt] 
+%(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
+%(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
+%(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
+%\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+%\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+%\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+%\draw (2,0) -- (Y);
+%\draw (3,0) -- (X);
+%\draw[dotted] (0,0) -- (1,0);
+%\draw (-1,0) -- (XY);
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+%& = 
+%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] .
+%\end{align*}
+%
+%To show that the above two expressions are equal up to homotopy we again make use of the nondegeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
+%$$
+%\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1), (\prod_{j=1}^m \partial_{y_j} W_2), (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
+%$$
+%but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
+\end{proof}
+
+\textbf{todo} Here go the diagrams from (cardc3).
+
+\begin{corollary} Give the better versions of the pivotality diagram.
+\end{corollary}
+
+\begin{remark}\label{remark:notpivotal}
+In the bicategory $\LG$ the natural candidate for a pivotal structure is
+\be\label{delta}
+\delta_X = 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2.6,-0.3) circle (0pt) node[below] {{\small $\coev_{X^\dual}$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\fill (1.6,1.23) circle (0pt) node[above] {{\small $\widetilde\eval_{X}$}};
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small${}^\dual X^{\dual}$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small$X$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+: X\stackrel{\cong}{\lra} {}^\dual X^\dual \cong X^{\vee\vee}[n+n] = X^{\vee\vee}
+\, , \qquad 
+\delta_X^{-1} = 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[redirected] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2.6,-0.28) circle (0pt) node[below] {{\small $\widetilde\coev_{X}$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[redirected] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\fill (1.6,1.23) circle (0pt) node[above] {{\small $\eval_{X^\dual}$}};
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small$X$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small${}^\dual X^{\dual}$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\ee
+for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, it is straightforward to verify that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
+
+For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below in Proposition~\ref{prop:monoidalproperty} we will establish properties of the adjunction maps that are equivalent to pivotality in this case. However, when $m+n$ is odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$).
+\end{remark}
+
+\begin{proposition} For any map~$\varphi:Z\lra X$ in $\hmf(k[x,z], V-W)$ we have 
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
@@ -3027,264 +3342,10 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
 \; .
 $$
-\item 
-\be\label{eq:monoidalproperty}
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
-\draw[line width=1pt] 
-(2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
-(3,-2) node[line width=0pt, right] (X) {{\small $X$}}
-(-1,3) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
-% wiggly labels:
-\draw[line width=1pt] 
-(2.65,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}m$}}
-(3.55,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}n$}}
-(3.9,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}n$}}
-(4.25,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
-(-0.45,2.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}};
-%
-%
-\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-\draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (2,-2);
-\draw (3,0) -- (3,-2);
-\draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (-1,3);
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.5,-2) -- (3.5,3);
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.85,-2) -- (3.85,3);
-%
-%
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,3); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-2) .. controls +(0,1.3) and +(0.8,0.05) .. (1.5,0.75); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,1.5) and +(2.0,0.05) .. (1.5,1.5); 
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-= (-1)^m
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
-\draw[line width=1pt] 
-(-2,-2) node[line width=0pt, right] (X) {{\small $Y$}}
-(-1,-2) node[line width=0pt, right] (Y) {{\small $X$}}
-(2,3) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
-% wiggly labels:
-\draw[line width=1pt] 
-(2.6,2.1) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
-(2.9,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
-(-1.7,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
-(-0.5,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
-(-1.3,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $m$}};
-%
-%
-\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-\draw[redirected] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-\draw[redirected] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (-1,0) -- (-1,-2);
-\draw (-2,0) -- (-2,-2);
-\draw[dotted] (0,0) -- (1,0);
-\draw (2,0) -- (2,3);
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.75,3) .. controls +(-0.01,-1.0) and +(0.7,0.1) .. (1.25,-0.7); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.25,3) .. controls +(0,-0.9) and +(0,-0.9) .. (2.50,3); 
-%
-%
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-2) .. controls +(0,0.7) and +(-1.2,0.1) .. (-0.4,0.75); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.25,-2) .. controls +(-0.2,2.2) and +(-3.8,-0.4) .. (-0.4,1.5); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.75,-2) .. controls +(0,0.9) and +(0,0.9) .. (-.50,-2); 
-%
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-\ee
-\end{enumerate}
 \end{proposition}
-
 \begin{proof}
-Part (i) follows in a standard way by applying Zorro moves together with the ``morphism migration properties'' of Proposition~\ref{prop.morphismmigration}. 
-
-To establish part~(ii), let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ a $k[y,z]$-basis of~$Y$, and $\{g_\alpha\}_\alpha$ a $k$-basis of $k[z]/(\partial V)$. Then $\{ f_j \otimes g_\alpha e_i \}_{i,j,\alpha}$ is a $k[x,y]$-basis of $\bar{Y} \otimes \bar{X}$. 
-
-We want to compute the left-hand side of~\eqref{eq:monoidalproperty} which we write in more detail as
-\be\label{eq:leftmonoidaldetail}
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline, rotate=180]
-\draw[line width=1pt] 
-(2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
-(3,-2) node[line width=0pt, right] (X) {{\small $X$}}
-(-1,3) node[line width=0pt, right] (XY) {{\small $\bar Y\otimes \bar X$}}; 
-\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-\draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-\draw (2,0) -- (2,-2);
-\draw (3,0) -- (3,-2);
-\draw[dotted] (0,0) -- (1,0);
-\draw (-1,0) -- (-1,3);
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,3); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-2) .. controls +(0,2) and +(0.7,-0.15) .. (1.5,0.75); 
-%
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,2) and +(1.8,0) .. (1.5,1.5); 
-%
-%
-\fill (0.5,0) circle (2.2pt) node[below] {{\small$\kappa$}};
-%
-\coordinate (lambdainv) at ($ (-1,2.2) $);
-\fill (lambdainv) circle (2.2pt) node[right] {{\small$\lambda^{-1}$}};
-\coordinate (rhoinv) at ($ (2.3,1.28) $);
-\fill (rhoinv) circle (2.2pt) node[above] {{\small$\rho^{-1}$}};
-\coordinate (rho) at ($ (2,-1.4) $);
-\fill (rho) circle (2.2pt) node[below right] {{\small$\rho$}};
-%
-\draw[dashed] (rho)  .. controls +(-1,0.3) and +(0,-1) ..  (-0.31,-0.72);
-\draw[dashed] (rhoinv)  .. controls +(-0.1,-0.5) and +(0,0.5) ..  (1.45,0.74);
-\draw[dashed] (1.45,1.49)  .. controls +(-0.1,0.5) and +(0,-0.5) ..  (lambdainv);
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-\, .
-\ee
-This diagram depicts a morphism $\mathscr{L}: (\bar{Y} \otimes \bar{X})^\dual \lto X^\dual \otimes Y^\dual$. Using the expressions~\eqref{eq:formulalambdainv} and~\eqref{eq:alt_formula_coev} together with Lemma~\ref{lemma:atshufat} we find that $\lambda^{-1}$ and $\widetilde\coev_X$ send $(f_q \otimes g_\alpha e_p)^* \in (\bar Y \otimes \bar X)^\vee$ to
-$$
-\sum_j (-1)^{n + |e_j| + n|f_q| + n|e_p|} \, e_j^* \otimes \varepsilon \Psi \At_1 \big(X\otimes (\bar Y \otimes \bar X)^\dual \big)^n \big(e_j\otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
-$$
-Similarly with~\eqref{eq:formula_rhoinverse} and~\eqref{eq:coev10} we compute that $\rho^{-1}$ and $\widetilde\coev_Y$ map this to
-\begin{align*}
-&\sum_{j,k} 
-(-1)^{n + (m+1)|f_k| + |e_j| + n|f_q| + n|e_p|} \, \\
-& \qquad\; \cdot \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_j^* \otimes f_k^*)
-\otimes \varepsilon \Psi \At_1\big((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual\big)^n \big( f_k \otimes e_j \otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
-\end{align*}
-Here there is a recurrence of the subtlety mentioned in Remark \ref{??} and which also appeared in the proof of the Zorro move. Namely that the output of the $\varepsilon \Psi \At_2$ term is an element of $\Se = S_1 \otimes_k S_2$, with the $S_2$ component going to act on the $f_k$ which is subsequently introduced as an argument of the $\varepsilon \Psi \At_1$ term, so we keep in mind that this input is actually a sum of terms of the form $g_\beta f_k$ for some $\beta$.
-
-Next we apply the quotient map~$\kappa$. By naturality of the Atiyah class (Lemma \ref{lemma:atiyahnat}) the sole effect of~$\kappa$ on the above is to replace $\At_1((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual)$ by $\At_1((\bar Y\otimes \bar X)\otimes( \bar Y \otimes \bar X)^\dual)$. This means that we are in precisely the same situation as in the proof of the Zorro move for $\bar Y \otimes \bar X$, i.\,e.~after applying $\widetilde\eval_{\bar Y \otimes \bar X}$ and~$\rho$ we are left with
-\be\label{eq:valueofLpivot}
-\mathscr{L}( (f_q \otimes g_\alpha e_p )^* ) = (-1)^{m|f_q|} \, 
-(1 \otimes g_\alpha^*) \circ \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*) \, . 
-\ee
-To explain the notation: the output of $\varepsilon$ is an element of $(X^\dual \otimes Y^\dual) \otimes_{S_1} \Se$ and to this we apply the functional $1 \otimes g_\alpha^*$ which sends $s \otimes t \in \Se$ to $s \cdot g_\alpha^*(t)$ (it is the $g_\beta$ factors mentioned above which become integrated into basis elements $f_k \otimes g_\beta e_j$ of $\bar{Y} \otimes \bar{X}$ and by the argument of the Zorro proof ultimately fed into $g_\alpha^*$).
-
-Similarly the right-hand side of~\eqref{eq:leftmonoidaldetail}, before the engineering of wiggly lines, is
-\[
-diagram
-\]
-This depicts a morphism $\mathscr{R}: {}^\dual( \bar{Y} \otimes \bar{X} ) \lto {}^\dual X \otimes {}^\dual Y$. One computes that $\mathscr{R}$ is given by
-\be\label{eq:valueofRpivot}
-\mathscr{R}( (f_q \otimes g_\alpha e_p)^* ) = (-1)^{m|f_q| + mp} \, 
-(g_\alpha^* \otimes 1) \circ \varepsilon \Psi \At_1 ({}^\dual X \otimes {}^\dual Y)^m (e_p^* \otimes f_q^*) \, . 
-\ee
-Here the output of $\varepsilon$ is an element of $({}^\dual X \otimes {}^\dual Y) \otimes_{S_2} \Se$ and $g_\alpha^*$ now acts on the first factor of $\Se$. 
-
-To relate $\mathscr{L}$ and $\mathscr{R}$ we evidently 
-%[TODO: include signs!] To establish part (ii) we start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}_i$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
-%$$
-%\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right]
-%= 
-%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \alpha \circ \Lambda^{(y)}_X)(\alpha) \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] . 
-%$$
-%The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous and we find 
-%\begin{align*}
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
-%\draw[line width=1pt] 
-%(-2,-1) node[line width=0pt] (X) {{\small ${}^\dual Y$}}
-%(-1,-1) node[line width=0pt] (Y) {{\small ${}^\dual X$}}
-%(2,2) node[line width=0pt] (XY) {{\small ${}^\dual (X\otimes Y)$}}; 
-%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-%\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-%\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-%\draw (-1,0) -- (Y);
-%\draw (-2,0) -- (X);
-%\draw[dotted] (0,0) -- (1,0);
-%\draw (2,0) -- (XY);
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%& =
-%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{{}^\dual X} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots. \partial_{y_m} W_2} \right] ,
-%\\
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
-%\draw[line width=1pt] 
-%(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
-%(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
-%(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-%\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-%\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-%\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-%\draw (2,0) -- (Y);
-%\draw (3,0) -- (X);
-%\draw[dotted] (0,0) -- (1,0);
-%\draw (-1,0) -- (XY);
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%& = 
-%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] .
-%\end{align*}
-%
-%To show that the above two expressions are equal up to homotopy we again make use of the nondegeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
-%$$
-%\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1), (\prod_{j=1}^m \partial_{y_j} W_2), (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
-%$$
-%but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
+Part (i) follows in a standard way by applying Zorro moves together with the ``morphism migration properties'' of Proposition~\ref{prop.morphismmigration}. \textbf{todo} Where does this go?
 \end{proof}
-
-\begin{remark}\label{remark:notpivotal}
-In the bicategory $\LG$ the natural candidate for a pivotal structure is
-\be\label{delta}
-\delta_X = 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2.6,-0.3) circle (0pt) node[below] {{\small $\coev_{X^\dual}$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\fill (1.6,1.23) circle (0pt) node[above] {{\small $\widetilde\eval_{X}$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X^{\dual}$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$X$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-: X\stackrel{\cong}{\lra} {}^\dual X^\dual \cong X^{\vee\vee}[n+n] = X^{\vee\vee}
-\, , \qquad 
-\delta_X^{-1} = 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[redirected] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2.6,-0.28) circle (0pt) node[below] {{\small $\widetilde\coev_{X}$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[redirected] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\fill (1.6,1.23) circle (0pt) node[above] {{\small $\eval_{X^\dual}$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small${}^\dual X^{\dual}$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\ee
-for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, it is straightforward to verify that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
-
-For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below in Proposition~\ref{prop:monoidalproperty} we will establish properties of the adjunction maps that are equivalent to pivotality in this case. However, when $m+n$ is odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$).
-\end{remark}
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
