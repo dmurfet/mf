@@ -1352,7 +1352,7 @@ of \eqref{eq:extendd} is an $R_2$-linear connection, and so the definition just 
 
 We will also need to know that the Atiyah class is natural, up to homotopy. Let $X$ and $X'$ be $\nZ _2$-graded $A$-modules equipped with odd $A$-linear operators which for convenience we denote by $D$ in both cases, and suppose $X$ and $X'$ admit $R$-linear connections, both of which we denote $\nabla$.
 
-\begin{lemma} Given an $A$-linear homogeneous map $\varphi: X \lto X'$ consider the diagram
+\begin{lemma}\label{lemma:atiyahnat} Given an $A$-linear homogeneous map $\varphi: X \lto X'$ consider the diagram
 \[
 \xymatrix@C+1pc@R+1pc{
 X \ar[r]^-{\varphi}\ar[d]_-{[\nabla, D]}\ar@{.>}[dr]^-{g} & X' \ar[d]^-{[\nabla, D]}\\
@@ -2604,7 +2604,7 @@ The verification of the adjunction ${}^\dual X \dashv X$ follows in the same way
 \end{remark}
 % see the ozor series
 
-\begin{theorem}
+\begin{theorem}\label{theorem:adjointbicategoryyeah}
 The bicategory $\LG$ has left and right adjoints: for any $1$-morphism $Y: W \lto V$,
 \[
 \xymatrix{
@@ -2913,64 +2913,40 @@ In this section we clarify the relation between the adjunctions given by $\eval_
 %hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
 %\end{definition}
 
-As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is interpreted as describing the same defect condition as~$X$ buth with the opposite orientation. Since reversing the orientation twice is doing nothing, a natural expectation is thus that $X^{\dagger\dagger}$ should be identified with~$X$ in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the results that there is a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. 
+As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is interpreted as describing the same defect condition as~$X$ but with the opposite orientation. Since reversing the orientation twice is doing nothing, it is natural to expect that $X^{\dagger\dagger}$ should be identified with~$X$, in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the results which state that there is a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. This implies in particular that the left and right adjoints are isomorphic.
 
-In the bicategory $\LG$ the natural candidate for a pivotal structure is
-\be\label{delta}
-\delta_X = 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2.6,-0.3) circle (0pt) node[below] {{\small $\coev_{X^\dual}$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\fill (1.6,1.23) circle (0pt) node[above] {{\small $\widetilde\eval_{X}$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small${}^\dual X^{\dual}$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small$X$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-: X\stackrel{\cong}{\lra} {}^\dual X^\dual \cong X^{\vee\vee}[n+n] = X^{\vee\vee}
-\, , \qquad 
-\delta_X^{-1} = 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
-\draw[line width=0pt] 
-(3,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[redirected] (D) .. controls +(0,-1) and +(0,-1) .. (s);
-\fill (2.6,-0.28) circle (0pt) node[below] {{\small $\widetilde\coev_{X}$}};
-\draw (2,0.32) -- (2,0.68);
-\draw[line width=0pt] 
-(1,0.5) node[line width=0pt] (D) {}
-(2,0.5) node[line width=0pt] (s) {}; 
-\draw[redirected] (D) .. controls +(0,+1) and +(0,+1) .. (s);
-\fill (1.6,1.23) circle (0pt) node[above] {{\small $\eval_{X^\dual}$}};
-\draw (3,0.35) -- (3,1.5)
-node[above] {{{\small$X$}}};
-\draw (1,0.65) -- (1,-0.5)
-node[below] {{{\small${}^\dual X^{\dual}$}}};
-\end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-\ee
-for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, one straightforwardly verifies that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
+The story for the bicategory $\LG$ is subtler, as we only expect the left and right adjoints of $X$ to be isomorphic when the number of variables in the regions on either side of $X$ agree mod $2$. This is the case, for example, when $X$ is an endomorphism of an object of $\LG$. Indeed, we prove that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. See Remark \ref{remark:notpivotal} for the construction of an isomorphism between $X$ and $X^{\dual \dual}$.
 
-For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below in Proposition~\ref{prop:monoidalproperty} we will establish properties of the adjunction maps that are equivalent to pivotality in this case. In particular this means that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. However, for $m+n$ odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$). Thus $\LG$ cannot be pivotal in the strict above sense. 
+In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double dual, but in terms of the relationship between the left and right adjoints. It is clear from Theorem \ref{theorem:adjointbicategoryyeah} that the left adjoint of any $1$-morphism is isomorphic to a suspension of the right adjoint, and we show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
 
-What what is important for applications thought, and what we deem the appropriate notion of pivotality in our setting, is that identities of Proposition~\ref{prop:monoidalproperty} hold, which can also be read as ``$\LG$ is pivotal up to shifts''. To formulate this result let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$ be potentials and $Y\in \hmf(k[y,z],U-V)$, $X,Z\in \hmf(k[x,z],V-W)$. Then as explained in Appendices~\ref{section:symidem} and~\ref{app:adjoints}, the infinite-rank matrix factorisation $Y\otimes X$ is homotopic to a direct summand of the finite-rank matrix factorisation
+Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$ be potentials and $X \in \hmf(k[x,z],V-W)$. Then
+\[
+X^\dual[m+n] \cong X^{\vee}[n][m+n] \cong X^{\vee}[m] \cong {}^\dual X\,.
+\]
+
+\begin{definition} We define the isomorphism
+\[
+q_X: R[m] \otimes_R R[n] \otimes_R X^\dual \lto {}^\dual X, \qquad q(\nu) = (-1)^{m|\nu|} \nu\,.
+\]
+\end{definition}
+
+We write $X^\dual[m+n]$ in this unusual way so as to have a simple diagrammatic interpretation:
+\[
+diagram
+\]
+For the rest of this section, in addition to $W, V$ and $X$ above, let $U\in k[y_1,\ldots,y_p]$ be a potential and let $Y\in \hmf(k[y,z],U-V)$ be given. The property of the isomorphisms $q$ that we wish to prove is that they are, in an appropriate sense, monoidal: the isomorphism
+\[
+q_{Y \otimes X}: R[p] \otimes_R R[n] \otimes_R (Y \otimes X)^\dual \lto {}^\dual(Y \otimes X)
+\]
+can be constructed out of $q_X$ and $q_Y$.
+
+Then as explained in Appendices~\ref{section:symidem} and~\ref{app:adjoints}, the infinite-rank matrix factorisation $Y\otimes X$ of $U - W$ over $k[x,y]$ is homotopy equivalent to a direct summand of a finite-rank matrix factorisation. More precisely, we show that the quotient map
 $$
-\bar Y \otimes \bar X := (Y \otimes_{k[z]} X) \otimes_{k[z]} k[z]/(\partial_{z_1}V, \ldots, \partial_{z_m}V) \, . 
+\kappa: Y \otimes X \lto \bar Y \otimes \bar X := (Y \otimes_{k[z]} X) \otimes_{k[z]} k[z]/(\partial_{z_1}V, \ldots, \partial_{z_m}V)
 $$
-This direct summand is the splitting of an idempotent~$e$ on $Y\otimes X$, i.\,e.~there are maps $\kappa: Y \otimes X \lra \bar Y \otimes \bar X$ and $\xi: \bar Y \otimes \bar X \lra Y \otimes X$ such that $\kappa\xi = 1$ and $\xi\kappa=e$. The adjunction maps for $Y\otimes X$ are appropriate compositions of those for $\bar Y \otimes \bar X$ with the maps~$\kappa$ and~$\xi$, see Appendix~\ref{app:adjoints}. 
+is a split monomorphism in $\HMF(k[x,y], U - W)$, i.e. there is a morphism $\xi$ such that $\kappa\xi = 1$.
 
-(TODO: remark that part (ii) isn't so bad if $m=p=0$ mod 2)
+(TODO: remark that part (ii) isn't so bad if $m=p=0$ mod 2. Also explain why we talk about $\bar{Y} \otimes \bar{X}$ and not $Y \otimes X$)
 
 \begin{proposition}\label{prop:monoidalproperty}
 In the above setting the following identities hold true: 
@@ -3089,7 +3065,7 @@ $$
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,1.5) and +(2.0,0.05) .. (1.5,1.5); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-=
+= (-1)^m
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
 \draw[line width=1pt] 
@@ -3134,7 +3110,9 @@ $$
 \begin{proof}
 Part (i) follows in a standard way by applying Zorro moves together with the ``morphism migration properties'' of Proposition~\ref{prop.morphismmigration}. 
 
-To establish part~(ii), let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ a $k[y,z]$-basis of~$Y$, and $\{g_\alpha\}_\alpha$ a $k$-basis of $k[z]/(\partial V)$. We want to compute the left-hand side of~\eqref{eq:monoidalproperty} which we write in more detail as
+To establish part~(ii), let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ a $k[y,z]$-basis of~$Y$, and $\{g_\alpha\}_\alpha$ a $k$-basis of $k[z]/(\partial V)$. Then $\{ f_j \otimes g_\alpha e_i \}_{i,j,\alpha}$ is a $k[x,y]$-basis of $\bar{Y} \otimes \bar{X}$. 
+
+We want to compute the left-hand side of~\eqref{eq:monoidalproperty} which we write in more detail as
 \be\label{eq:leftmonoidaldetail}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline, rotate=180]
@@ -3173,30 +3151,38 @@ To establish part~(ii), let $\{e_i\}_i$ be a $k[x,z]$-basis of~$X$, $\{f_j\}_j$ 
 %%%%%%%%%%%%%%%%%%%%%%
 \, .
 \ee
-Using the expressions~\eqref{eq:formulalambdainv} and~\eqref{eq:alt_formula_coev} together with Lemma~\ref{lemma:atshufat} we find that $\lambda^{-1}$ and $\widetilde\coev_X$ send $(f_a \otimes g_\alpha e_b)^* \in (\bar Y \otimes \bar X)^\vee$ to
+This diagram depicts a morphism $\mathscr{L}: (\bar{Y} \otimes \bar{X})^\dual \lto X^\dual \otimes Y^\dual$. Using the expressions~\eqref{eq:formulalambdainv} and~\eqref{eq:alt_formula_coev} together with Lemma~\ref{lemma:atshufat} we find that $\lambda^{-1}$ and $\widetilde\coev_X$ send $(f_q \otimes g_\alpha e_p)^* \in (\bar Y \otimes \bar X)^\vee$ to
 $$
-\sum_i (-1)^{n + |e_i| + n(|f_a| + |e_b| + |e_i|)} \, e_i^* \otimes \varepsilon \Psi \At_1 \big(X\otimes (\bar Y \otimes \bar X)^\vee \big)^n \big(e_i\otimes (f_a \otimes g_\alpha e_b)^*\big) \, . 
+\sum_j (-1)^{n + |e_j| + n|f_q| + n|e_p|} \, e_j^* \otimes \varepsilon \Psi \At_1 \big(X\otimes (\bar Y \otimes \bar X)^\dual \big)^n \big(e_j\otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
 $$
 Similarly with~\eqref{eq:formula_rhoinverse} and~\eqref{eq:coev10} we compute that $\rho^{-1}$ and $\widetilde\coev_Y$ map this to
 \begin{align*}
-&\sum_{i,j} 
-(-1)^{ n + (m+n+1)|e_i| + (m+1)|f_j| + n( |f_a| + |e_b| ) } \, \\
-& \qquad\; \cdot \varepsilon \Psi \At_2(X^\vee \otimes Y^\vee)^m (e_i^* \otimes f_j^*)
-\otimes \varepsilon \Psi \At_1\big((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\vee\big)^n \big( f_j \otimes e_i \otimes (f_a \otimes g_\alpha e_b)^*\big) \, . 
+&\sum_{j,k} 
+(-1)^{n + (m+1)|f_k| + |e_j| + n|f_q| + n|e_p|} \, \\
+& \qquad\; \cdot \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_j^* \otimes f_k^*)
+\otimes \varepsilon \Psi \At_1\big((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual\big)^n \big( f_k \otimes e_j \otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
 \end{align*}
-Next we apply the map~$\kappa$ which is simply the projection. Thus by the naturality of the Atiyah class the sole effect of~$\kappa$ on the above is to replace $\At_1((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\vee)$ by $\At_1((\bar Y\otimes \bar X)\otimes( \bar Y \otimes \bar X)^\vee)$. (TODO: $g_\alpha$...) This means we are precisely in the same situation as in the proof of the Zorro move for $\bar Y \otimes \bar X$, i.\,e.~after applying $\widetilde\eval_{\bar Y \otimes \bar X}$ and~$\rho$ we are left with
-$$
-(-1)^{ n + m|e_b| + (m+n)|f_a| } \, 
-g_\alpha^* \circ \varepsilon \Psi \At_2(X^\vee \otimes Y^\vee)^m (e_b^* \otimes f_a^*) \, . 
-$$
-(TODO: explain notation in rest of argument) Similarly the right-hand side of~\eqref{eq:leftmonoidaldetail} maps $(f_a \otimes g_\alpha e_b)^*$ to (TODO: that's before wiggly-line-crossing!)
-$$
-(-1)^{ p + mp + m|e_b| + (m+p) |f_a| } \, 
-g_\alpha^* \circ \varepsilon \Psi \At_1 (X^\vee \otimes Y^\vee)^m (e_b^* \otimes f_a^*) \, . 
-$$
-TODO
+Here there is a recurrence of the subtlety mentioned in Remark \ref{??} and which also appeared in the proof of the Zorro move. Namely that the output of the $\varepsilon \Psi \At_2$ term is an element of $\Se = S_1 \otimes_k S_2$, with the $S_2$ component going to act on the $f_k$ which is subsequently introduced as an argument of the $\varepsilon \Psi \At_1$ term, so we keep in mind that this input is actually a sum of terms of the form $g_\beta f_k$ for some $\beta$.
 
+Next we apply the quotient map~$\kappa$. By naturality of the Atiyah class (Lemma \ref{lemma:atiyahnat}) the sole effect of~$\kappa$ on the above is to replace $\At_1((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual)$ by $\At_1((\bar Y\otimes \bar X)\otimes( \bar Y \otimes \bar X)^\dual)$. This means that we are in precisely the same situation as in the proof of the Zorro move for $\bar Y \otimes \bar X$, i.\,e.~after applying $\widetilde\eval_{\bar Y \otimes \bar X}$ and~$\rho$ we are left with
+\be\label{eq:valueofLpivot}
+\mathscr{L}( (f_q \otimes g_\alpha e_p )^* ) = (-1)^{m|f_q|} \, 
+(1 \otimes g_\alpha^*) \circ \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_p^* \otimes f_q^*) \, . 
+\ee
+To explain the notation: the output of $\varepsilon$ is an element of $(X^\dual \otimes Y^\dual) \otimes_{S_1} \Se$ and to this we apply the functional $1 \otimes g_\alpha^*$ which sends $s \otimes t \in \Se$ to $s \cdot g_\alpha^*(t)$ (it is the $g_\beta$ factors mentioned above which become integrated into basis elements $f_k \otimes g_\beta e_j$ of $\bar{Y} \otimes \bar{X}$ and by the argument of the Zorro proof ultimately fed into $g_\alpha^*$).
 
+Similarly the right-hand side of~\eqref{eq:leftmonoidaldetail}, before the engineering of wiggly lines, is
+\[
+diagram
+\]
+This depicts a morphism $\mathscr{R}: {}^\dual( \bar{Y} \otimes \bar{X} ) \lto {}^\dual X \otimes {}^\dual Y$. One computes that $\mathscr{R}$ is given by
+\be\label{eq:valueofRpivot}
+\mathscr{R}( (f_q \otimes g_\alpha e_p)^* ) = (-1)^{m|f_q| + mp} \, 
+(g_\alpha^* \otimes 1) \circ \varepsilon \Psi \At_1 ({}^\dual X \otimes {}^\dual Y)^m (e_p^* \otimes f_q^*) \, . 
+\ee
+Here the output of $\varepsilon$ is an element of $({}^\dual X \otimes {}^\dual Y) \otimes_{S_2} \Se$ and $g_\alpha^*$ now acts on the first factor of $\Se$. 
+
+To relate $\mathscr{L}$ and $\mathscr{R}$ we evidently 
 %[TODO: include signs!] To establish part (ii) we start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}_i$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
 %$$
 %\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right]
@@ -3249,6 +3235,56 @@ TODO
 %but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
 \end{proof}
 
+\begin{remark}\label{remark:notpivotal}
+In the bicategory $\LG$ the natural candidate for a pivotal structure is
+\be\label{delta}
+\delta_X = 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2.6,-0.3) circle (0pt) node[below] {{\small $\coev_{X^\dual}$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[directed] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\fill (1.6,1.23) circle (0pt) node[above] {{\small $\widetilde\eval_{X}$}};
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small${}^\dual X^{\dual}$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small$X$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+: X\stackrel{\cong}{\lra} {}^\dual X^\dual \cong X^{\vee\vee}[n+n] = X^{\vee\vee}
+\, , \qquad 
+\delta_X^{-1} = 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(3,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[redirected] (D) .. controls +(0,-1) and +(0,-1) .. (s);
+\fill (2.6,-0.28) circle (0pt) node[below] {{\small $\widetilde\coev_{X}$}};
+\draw (2,0.32) -- (2,0.68);
+\draw[line width=0pt] 
+(1,0.5) node[line width=0pt] (D) {}
+(2,0.5) node[line width=0pt] (s) {}; 
+\draw[redirected] (D) .. controls +(0,+1) and +(0,+1) .. (s);
+\fill (1.6,1.23) circle (0pt) node[above] {{\small $\eval_{X^\dual}$}};
+\draw (3,0.35) -- (3,1.5)
+node[above] {{{\small$X$}}};
+\draw (1,0.65) -- (1,-0.5)
+node[below] {{{\small${}^\dual X^{\dual}$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+\ee
+for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, it is straightforward to verify that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
+
+For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and below in Proposition~\ref{prop:monoidalproperty} we will establish properties of the adjunction maps that are equivalent to pivotality in this case. However, when $m+n$ is odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$).
+\end{remark}
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
