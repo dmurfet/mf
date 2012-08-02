@@ -417,7 +417,7 @@ where as usual (and explained in more detail in Section~\ref{subsec:bicatLG}) ev
 \be\label{DrXpsi}
 \mathcal D_r(X)(\psi)  = (-1)^{{m+1}\choose 2} \Res_{k[x,z]/k[z]} \left[ \frac{\psi \str\big( \partial_{x_1} D\ldots \partial_{x_n} D \, \partial_{z_1} D\ldots \partial_{z_m} D\big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right]
 \ee
-as well as various properties such as $\mathcal D_r(X\otimes Y) = \mathcal D_r(X) \circ \mathcal D_r(Y)$. (TODO: sign?)
+as well as various properties such as $\mathcal D_r(X\otimes Y) = \mathcal D_r(X) \circ \mathcal D_r(Y)$. 
 
 One may also consider the situation in~\eqref{defectactionIntro} with an additional defect field $\Phi\in\End(X)$ inserted on the $X$-loop. We will see that this simply amounts to the insertion of~$\Phi$ as a factor inside the supertrace in~\eqref{DrXpsi}. As the two special cases $W=0$ and $V=0$ we thus obtain
 $$
@@ -2963,7 +2963,7 @@ $$
 r_1 \otimes r_2 \lmt (-1)^{mn} r_2 \otimes r_1 \, .
 $$
 For $m=n$~mod~2 such a crossing can be ``resolved'', i.\,e.~we have the following identities between maps: 
-$$
+\be\label{eq:wigglyresolution}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.4cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) -- (0.75,1); 
@@ -2990,7 +2990,7 @@ $$
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \, . 
-$$
+\ee
 
 Let $W\in R=k[x_1,\ldots,x_n]$, $V\in S=k[z_1,\ldots,z_m]$ be potentials and $X\in\hmf(k[x,z], V-W)$. Then 
 $$
@@ -2998,7 +2998,7 @@ X^\dual[m+n] \cong X^\vee[n][m+n] \cong X^\vee[m] \cong {}^\dual X \, .
 $$
 Using $X^\dual[m+n] \cong R[m]\otimes_R R[n] \otimes_R X^\dual$ we write this as the isomorphism
 \be\label{eq:isoq}
-q_x 
+q_X 
 \; = \; 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=1cm]
@@ -3404,61 +3404,12 @@ and so we compute using the formulas of Section \ref{section:atiyahclasses}, wit
 &= (-1)^{\binom{m+1}{2}} (g_\beta^* \otimes g_\alpha^*) \varepsilon \Psi_{\sigma} \At_2(X^\dual \otimes Y^\dual)^m( e_p^* \otimes f_q^* )
 \end{align*}
 which completes the proof.
-%[TODO: include signs!] To establish part (ii) we start by computing the left-hand side of~\eqref{eq:monoidalproperty}. As explained in the previous section one may choose a representative for $\coev_{Y\otimes X}$ where all Atiyah classes act only on the single factor~$Y$ in the tensor product $Y\otimes X \otimes (Y\otimes X)^\dual$. Hence the Zorro move for the $Y^\dual$-line can be performed, after which the only contribution left from $\coev_{Y\otimes X}$ is the sum $\sum_i e_i \otimes e_i^*$ for a basis $\{e_i\}_i$ of~$X$. Applying the remaining map $\lambda_{(Y\otimes X)^\dual} \circ (\eval_X \otimes 1_{(Y\otimes X)^\dual})$ we compute that the left-hand side of~\eqref{eq:monoidalproperty} maps $\alpha\otimes \beta \in X^\dual \otimes Y^\dual$ to 
-%$$
-%\sum_i \Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str \big( (e_i \circ \alpha \circ \Lambda^{(y)}_X \big)\cdot e_i^* \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right]
-%= 
-%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \alpha \circ \Lambda^{(y)}_X)(\alpha) \otimes \beta \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] . 
-%$$
-%The argument for the right-hand side of~\eqref{eq:monoidalproperty} is analogous and we find 
-%\begin{align*}
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
-%\draw[line width=1pt] 
-%(-2,-1) node[line width=0pt] (X) {{\small ${}^\dual Y$}}
-%(-1,-1) node[line width=0pt] (Y) {{\small ${}^\dual X$}}
-%(2,2) node[line width=0pt] (XY) {{\small ${}^\dual (X\otimes Y)$}}; 
-%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-%\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-%\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-%\draw (-1,0) -- (Y);
-%\draw (-2,0) -- (X);
-%\draw[dotted] (0,0) -- (1,0);
-%\draw (2,0) -- (XY);
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%& =
-%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( \Lambda^{(y)}_{{}^\dual X} \otimes 1) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots. \partial_{y_m} W_2} \right] ,
-%\\
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
-%\draw[line width=1pt] 
-%(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
-%(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
-%(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-%\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-%\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-%\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-%\draw (2,0) -- (Y);
-%\draw (3,0) -- (X);
-%\draw[dotted] (0,0) -- (1,0);
-%\draw (-1,0) -- (XY);
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%& = 
-%\Res_{k[x,y,z]/k[x,z]} \left[ \frac{\str ( 1 \otimes \Lambda^{(y)}_{Y^\dual}) \, \underline{\operatorname{d}\!y}}{\partial_{y_1} W_2, \ldots, \partial_{y_m} W_2} \right] .
-%\end{align*}
-%
-%To show that the above two expressions are equal up to homotopy we again make use of the nondegeneracy of the Kapustin-Li pairing. To wit, we have to show that the difference~$\delta$ of the two maps paired with any closed map $\Phi\in \Hom((Y\otimes X)^\dual, X^\dual \otimes Y^\dual)$ gives zero, i.\,e.~$\langle \Phi, \delta \rangle_{X^\dual \otimes Y^\dual} = 0$. Evaluating this pairing gives
-%$$
-%\Res_{k[x,y,z]/k} \left[ \frac{\str \big( \Phi \circ (\Lambda^{(y)}_{X^\dual} \otimes 1 - 1 \otimes \Lambda^{(y)}_{Y^\dual})) \circ (\Lambda^{(x)}_{X^\dual} \otimes \Lambda^{(z)}_{Y^\dual}) \big) \,\underline{\operatorname{d}\!x} \underline{\operatorname{d}\!y} \underline{\operatorname{d}\!z}}{(\prod_{i=1}^n \partial_{x_i} W_1), (\prod_{j=1}^m \partial_{y_j} W_2), (\prod_{l=1}^p \partial_{z_l} W_3)} \right] , 
-%$$
-%but since $\partial_{y_j} d_{X^\dual} \otimes 1$ is as good a homotopy for the action of $\partial_{y_j} W_2$ on $X^\dual \otimes Y^\dual$ as $1\otimes \partial_{y_j} d_{X^\dual}$, the above residue indeed vanishes. 
 \end{proof}
 
 \textbf{todo} Here go the diagrams from (cardc3).
 
-\begin{corollary} Give the better versions of the pivotality diagram.
+\begin{corollary}\label{cor:nicerpivotalitydiagrams}
+Give the better versions of the pivotality diagram.
 \end{corollary}
 
 \begin{remark}\label{remark:notpivotal}
@@ -3813,7 +3764,7 @@ Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$
 \begin{enumerate}
 \item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$. 
 \item $\mathcal D_l(X) = \mathcal D_r(X^\dual)$. 
-\item $\mathcal D_l(X) \circ \mathcal D_l(Y) = \mathcal D_l(Y \otimes X)$ and $\mathcal D_r(Y) \circ \mathcal D_r(X) = \mathcal D_r(Y \otimes X)$. (TODO: maybe have to decorate with signs)
+\item $\mathcal D_l(X) \circ \mathcal D_l(Y) = \mathcal D_l(Y \otimes X)$ and $\mathcal D_r(Y) \circ \mathcal D_r(X) = \mathcal D_r(Y \otimes X)$. 
 \end{enumerate}
 \end{proposition}
 
@@ -3824,9 +3775,9 @@ Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$
 
 (iii): We prove the identity for $\mathcal D_l$ under the assumption that the variable numbers $n,m,p$ all have the same parity (note that $\mathcal D_l(X) \circ \mathcal D_l(Y)$ would be zero otherwise). The other cases work analogously. 
 
-The basic argument is a standard calculation with string diagrams. There are however slight modifications needed due to the fact that $\LG$ is only ``pivotal up to shifts'' as discussed in Section~\ref{BLA}. 
+The basic argument is a standard calculation with string diagrams. There are however slight modifications needed due to the fact that $\LG$ is only ``pivotal up to shifts'' as discussed in Section~\ref{sec:pivotality}. 
 
-In this setting we compute $\mathcal D_l(X) \circ \mathcal D_l(Y) = \mathcal D_l(Y \otimes X)$ as
+We start by writing $\mathcal D_l(X) \circ \mathcal D_l(Y)$ as
 $$
 \!\!\!\!\!\!\!\!\!\!\!\!
 %%%%%%%%%%%%%%%%%%%%%%
@@ -3931,7 +3882,86 @@ $$
 \draw (4.7,0.225) node {{\scriptsize $Y \otimes X$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-\,=\!\!\!\!\!\!\!\!\!\!\!\!\!
+%\,=\!\!\!\!\!\!\!\!\!\!\!\!\!
+%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline=-0.75cm,>=stealth]
+%% semicircles: 
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(0:1) arc (0:180:1);
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(0:2) arc (0:180:2);
+%%
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(-1,-2) arc (180:360:1);
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(-2,-2) arc (180:360:2);
+%%
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(2.75,0) arc (360:180:0.625);
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(1.5,-2) arc (180:0:0.625);
+%%
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{<}}}, postaction={decorate}
+%	] 
+%	(2.75,1.5) arc (180:0:0.625);
+%\draw[
+%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+%	] 
+%	(2.75,-3.5) arc (180:360:0.625);
+%% wiggly lines: 
+%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+%(0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
+%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+%(0,2) .. controls +(-3,-1.5) and +(-4,0.4) .. (0,-4); 
+%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+%(2.25,-0.625) .. controls +(1.5,0.4) and +(-1,-1) .. (3.375,2.1); 
+%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
+%(2.25,-1.375) .. controls +(0.5,-1) and +(-1.5,0) .. (3.375,-4.1); 
+%% vertical lines: 
+%\draw (-1,0) -- (-1,-2);
+%\draw (-2,0) -- (-2,-2);
+%%
+%\draw (2.75,-2) -- (2.75,-3.5);
+%\draw (2.75,0) -- (2.75,1.5);
+%%
+%\draw (4,-3.5) -- (4,1.5);
+%% horizontal lines: 
+%\draw[dotted] (1,0) -- (2,0);
+%\draw[dotted] (1,-2) -- (2,-2);
+%% 2-morphisms: 
+%\coordinate (psi) at ($ (1.5,0) $);
+%\fill (psi) circle (2.5pt) node[below left] {{\small$\xi$}};
+%\coordinate (theta) at ($ (4,0) $);
+%\fill (theta) circle (2.5pt) node[right] {{\small$\kappa$}};
+%%
+%\coordinate (psi2) at ($ (4,-2) $);
+%\fill (psi2) circle (2.5pt) node[right] {{\small$\xi$}};
+%\coordinate (theta2) at ($ (1.5,-2) $);
+%\fill (theta2) circle (2.5pt) node[above left] {{\small$\kappa$}};
+%% line labels: 
+%\draw (0.7,0.23) node {{\scriptsize $Y$}};
+%\draw (1.7,0.23) node {{\scriptsize $X$}};
+%\draw (4.7,0.75) node {{\scriptsize $\bar Y \otimes \bar X$}};
+%\draw (4.7,-1) node {{\scriptsize $Y \otimes X$}};
+%\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%%
+$$
+where we used the Zorro moves to reexpress the identity on $Y\otimes X$, and here and below we do not display the argument of the defect operators. Now we are in a position to apply Corollary~\ref{cor:nicerpivotalitydiagrams} to the lower part of the diagram on the right-hand side to find that $\mathcal D_l(X) \circ \mathcal D_l(Y)$ is equal to
+$$
+\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline=-0.75cm,>=stealth]
 % semicircles: 
@@ -3947,11 +3977,11 @@ $$
 \draw[
 	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
 	] 
-	(-1,-2) arc (180:360:1);
+	(-1,-2) arc (360:180:2);
 \draw[
 	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
 	] 
-	(-2,-2) arc (180:360:2);
+	(-2,-2) arc (360:180:1);
 %
 \draw[
 	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
@@ -3960,7 +3990,7 @@ $$
 \draw[
 	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
 	] 
-	(1.5,-2) arc (180:0:0.625);
+	(-4.5,-2) arc (0:180:0.625);
 %
 \draw[
 	decoration={markings, mark=at position 0.5 with {\arrow{<}}}, postaction={decorate}
@@ -3969,46 +3999,37 @@ $$
 \draw[
 	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
 	] 
-	(2.75,-3.5) arc (180:360:0.625);
+	(-5.75,-3.5) .. controls +(0,-2) and +(0,-2) .. (4,-3.5);
 % wiggly lines: 
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-(0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
+(-3,-3) .. controls +(2.3,0.2) and +(-1.3,-0.2) .. (0,1); 
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-(0,2) .. controls +(-3,-1.5) and +(-4,0.4) .. (0,-4); 
+(-3,-4) .. controls +(-3.4,0.2) and +(0,-0.72) .. (-5.25,-1.375); 
+%
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-(2.25,-0.625) .. controls +(1.5,0.4) and +(-1,-1) .. (3.375,2.1); 
+(2.25,-0.625) .. controls +(1.4,0.2) and +(-1.0,-0.32) .. (3.375,2.1); 
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-(2.25,-1.375) .. controls +(0.5,-1) and +(-1.5,0) .. (3.375,-4.1); 
+(-1,-5) .. controls +(-11.9,-0.1) and +(-3.3,-0.75) .. (0,2); 
 % vertical lines: 
 \draw (-1,0) -- (-1,-2);
 \draw (-2,0) -- (-2,-2);
 %
-\draw (2.75,-2) -- (2.75,-3.5);
+\draw (-5.75,-2) -- (-5.75,-3.5);
 \draw (2.75,0) -- (2.75,1.5);
 %
 \draw (4,-3.5) -- (4,1.5);
 % horizontal lines: 
 \draw[dotted] (1,0) -- (2,0);
-\draw[dotted] (1,-2) -- (2,-2);
-% 2-morphisms: 
-\coordinate (psi) at ($ (1.5,0) $);
-\fill (psi) circle (2.5pt) node[below left] {{\small$\xi$}};
-\coordinate (theta) at ($ (4,0) $);
-\fill (theta) circle (2.5pt) node[right] {{\small$\kappa$}};
-%
-\coordinate (psi2) at ($ (4,-2) $);
-\fill (psi2) circle (2.5pt) node[right] {{\small$\xi$}};
-\coordinate (theta2) at ($ (1.5,-2) $);
-\fill (theta2) circle (2.5pt) node[above left] {{\small$\kappa$}};
+\draw[dotted] (-4,-2) -- (-5,-2);
 % line labels: 
 \draw (0.7,0.23) node {{\scriptsize $Y$}};
 \draw (1.7,0.23) node {{\scriptsize $X$}};
-\draw (4.7,0.75) node {{\scriptsize $\bar Y \otimes \bar X$}};
-\draw (4.7,-1) node {{\scriptsize $Y \otimes X$}};
+\draw (4.7,0.23) node {{\scriptsize $Y \otimes X$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
+\, . 
 $$
-where here and below we do not display the argument of the defect operators. In the first step we used the Zorro moves to rewrite the identity on $Y\otimes X$, and in the second step we used $1_{Y\otimes X} = \kappa\xi$ together with the ``morphism migration properties'' of Proposition~\ref{prop.morphismmigration}. Next we apply Proposition~\ref{prop:monoidalproperty} to find that up to a factor of $(-1)^{TODO}$, the above equals
+Next we employ the calculus of wiggly lines, in particular the identity~\eqref{eq:wigglyresolution}, in conjunction with the Zorro moves to find that the above equals 
 $$
 \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 %%%%%%%%%%%%%%%%%%%%%%
@@ -4070,21 +4091,21 @@ $$
 % horizontal lines: 
 \draw[dotted] (1,0) -- (2,0);
 \draw[dotted] (-4,-2) -- (-5,-2);
-% 2-morphisms: 
-\coordinate (psi) at ($ (1.5,0) $);
-\fill (psi) circle (2.5pt) node[below left] {{\small$\xi$}};
-\coordinate (theta) at ($ (4,-1) $);
-\fill (theta) circle (2.5pt) node[right] {{\small$e$}};
-%
-\coordinate (theta2) at ($ (-4.5,-2) $);
-\fill (theta2) circle (2.5pt) node[above right] {{\small$\kappa$}};
+%% 2-morphisms: 
+%\coordinate (psi) at ($ (1.5,0) $);
+%\fill (psi) circle (2.5pt) node[below left] {{\small$\xi$}};
+%\coordinate (theta) at ($ (4,-1) $);
+%\fill (theta) circle (2.5pt) node[right] {{\small$e$}};
+%%
+%\coordinate (theta2) at ($ (-4.5,-2) $);
+%\fill (theta2) circle (2.5pt) node[above right] {{\small$\kappa$}};
 % line labels: 
 \draw (0.7,0.23) node {{\scriptsize $Y$}};
 \draw (1.7,0.23) node {{\scriptsize $X$}};
-\draw (4.7,0.5) node {{\scriptsize $\bar Y \otimes \bar X$}};
+\draw (4.7,0.23) node {{\scriptsize $Y \otimes X$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-\,= \!\!\!
+=
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline=-0.75cm,>=stealth]
 % semicircles: 
@@ -4104,43 +4125,13 @@ $$
 \draw (-1,0) -- (-1,-2);
 \draw (1,0) -- (1,-2);
 %
-% 2-morphisms: 
-\coordinate (e) at ($ (1,-1) $);
-\fill (e) circle (2.5pt) node[right] {{\small$e$}};
 % line labels: 
-\draw (1.6,0.5) node {{\scriptsize $\bar Y \otimes \bar X$}};
+\draw (1.6,0.23) node {{\scriptsize $Y \otimes X$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-\,= \!\!\!
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline=-0.75cm,>=stealth]
-% semicircles: 
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	] 
-	(0:1) arc (0:180:1);
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	] 
-	(-1,-2) arc (180:360:1);
-%	
-% wiggly lines: 
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-(0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
-% vertical lines: 
-\draw (-1,0) -- (-1,-2);
-\draw (1,0) -- (1,-2);
-%
-% 2-morphisms: 
-\coordinate (one) at ($ (1,-1) $);
-\fill (one) circle (2.5pt) node[right] {{\small$\kappa\xi$}};
-% line labels: 
-\draw (1.6,0.5) node {{\scriptsize $Y \otimes X$}};
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-\, . 
+\, , 
 $$
-Here we used the Zorro moves for $Y, X, \bar Y \otimes \bar X$ as well as $e^2=e=\xi\kappa$ and another application of Proposition~\ref{prop.morphismmigration}. 
+thus ending the proof. 
 \end{proof}
 
 
@@ -5803,7 +5794,7 @@ N.~Carqueville and I.~Runkel, \textsl{Rigidity and defect actions in
   \href{http://arxiv.org/abs/1006.5609}{[arXiv:1006.5609]}.
 
 \bibitem[CR]{genorb}
-N.~Carqueville and I.~Runkel, TODO: \textsl{Generalised orbifolds of Landau-Ginzburg models}, in preparation. 
+N.~Carqueville and I.~Runkel, \textsl{Orbifold completion of defect bicategories}, in preparation. 
 
 \bibitem[Cra]{c0403266}
 M.~Crainic, \textsl{On the perturbation lemma, and deformations},
