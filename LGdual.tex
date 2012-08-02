@@ -546,7 +546,7 @@ node[midway, left] {{{\small$g$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
-represents a $2$-morphism $\gamma: f \otimes h \lto g$ in $\cat{B}$ with $f: A \lto B, g: C \lto B$ and $h: C \lto A$ all $1$-morphisms. We call $\gamma$ the \textsl{value} of the diagram \eqref{eq:demonstratediagram}. In the following we will often refrain from displaying objects as labels for two-dimensional domains in such diagrams. Blah.
+represents a $2$-morphism $\gamma: f \otimes h \lto g$ in $\cat{B}$ with $f: A \lto B, g: C \lto B$ and $h: C \lto A$ all $1$-morphisms. We call $\gamma$ the \textsl{value} of the diagram \eqref{eq:demonstratediagram}. In the following we will often refrain from displaying objects as labels for two-dimensional domains in such diagrams.
 
 In this diagrammatic calculus all diagrams are \textsl{progressively planar} in the sense of \cite{JSGoTCI}, i.\,e.~arcs proceed strictly upwards. It is straightforward to check \cite[Theorem $1.2$]{JSGoTCI} that an arbitrary such diagram may be unambiguously assigned a value as a $2$-morphism in $\cat{B}$, by ``tensoring horizontally and composing vertically'' and this justifies rigorously the use of diagrams like the one above. Where appropriate, we allow ourselves to migrate the arc labels so that they decorate the top and bottom horizontal boundaries, as e.\,g.~in the diagrams \eqref{Zorros} below.
 
@@ -4520,9 +4520,11 @@ $$
 
 \subsection{Cardy condition}
 
-Diagrams much simpler than the one in Figure~\ref{fig:worldsheet} can already lead to relevant insight. As another application of the adjunctions in $\LG$ we will now give a novel proof of the Cardy condition. For Landau-Ginzburg models this deep result long eluded rigirous proofs, which were only recently given in~\cite{pv1002.2116, dm1102.2957} using rather heavy machinery. With our expressions for evaluation and coevaluation maps in $\LG$ it will follow rather effortlessly for arbitrary commutative noetherian $\nQ$-algebras~$k$, e.\,g.~$k=\nC[t_1,\ldots,t_d]$, simply from considerations of one single diagram. 
+The diagrammatic language for adjunctions in $\LG$ enables us to prove deep results about matrix factorisations in a way that directly follows the physical intuition. Moreover, since the diagrammatics work over an arbitrary noetherian $\mathbb{Q}$-algebra $k$, any statement about matrix factorisations that can be proven using diagrams automatically extends from the absolute case $k = \mathbb{C}$ to families (viewing e.g. $k = \nC[t_1,\ldots,t_d]$ as the base space of a deformation).
 
-Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factorisations $X,Y \in \hmf(k[x], W)$, and also two maps $\varphi: X\lra X$, $\psi: Y\lra Y$. We interpret~$X$ and~$Y$ as 1-morphisms $(k,0)\lra (k[x],W)$ in $\LG$, and in this way we obtain the 2-morphism
+Even very simple diagrams can encode nontrivial theorems. For example in this section we give a novel proof of the Cardy condition by thinking about the possible ways of computing the value of a decorated annulus. For Landau-Ginzburg models the Cardy condition was proven recently for $k$ a field, by different methods, in~\cite{pv1002.2116} and there were subsequent proofs in \cite{dm1102.2957,buchweitzstratten}. 
+
+We fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, matrix factorisations $X,Y \in \hmf(k[x], W)$, and two morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$. Then the $2$-morphism
 \be\label{annulus}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
@@ -4562,18 +4564,20 @@ Let us again fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, two matrix factori
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ee
-which is a map $k\lra k$ that we call~$C$. We can think of~$C$ as the value of the annulus correlator with boundary conditions $X,Y$ and boundary fields $\varphi,\psi$. 
+is a map $k\lra k$, i.e. an element of $k$, that we call~$C$. We can think of~$C$ as the value of the annulus correlator with boundary conditions $X,Y$ and boundary fields $\varphi,\psi$. 
 
-To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions in Section~\ref{sec:derivcoeval} for evaluation and coevaluation maps we find
-\begin{align}
-& \widetilde\eval_X (e_i \otimes e_j^*) = (-1)^{|e_j|} \delta_{ij} + \mathcal O(\theta) \, , \qquad 
-\eval_Y (f_i^* \otimes f_j) = (-1)^{n} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] , \nonumber \\
-& \coev_X (1) = \sum_j (-1)^{{n\choose 2}} \bar\Lambda_X e_j \otimes e_j^* \, , \qquad 
-\widetilde\coev_Y (1) = \sum_j (-1)^{|f_j|} f_j^* \otimes f_j \label{evcoeveasy}
-\end{align}
-where $\bar\Lambda_X = \partial_{[1]} d_X\ldots \partial_{[n]} d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$, and $\{ e_i \}_i$ and $\{ f_j \}_j$ are homogeneous bases of~$X$ and~$Y$, respectively. 
+%To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions in Section~\ref{sec:derivcoeval} for evaluation and coevaluation maps we find
+%\begin{align}
+%& \widetilde\eval_X (e_i \otimes e_j^*) = (-1)^{|e_j|} \delta_{ij} + \mathcal O(\theta) \, , \qquad 
+%\eval_Y (f_i^* \otimes f_j) = (-1)^{n} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] , \nonumber \\
+%& \coev_X (1) = \sum_j (-1)^{{n\choose 2}} \bar\Lambda_X e_j \otimes e_j^* \, , \qquad 
+%\widetilde\coev_Y (1) = \sum_j (-1)^{|f_j|} f_j^* \otimes f_j \label{evcoeveasy}
+%\end{align}
+%where $\bar\Lambda_X = \partial_{[1]} d_X\ldots \partial_{[n]} d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$, and $\{ e_i \}_i$ and $\{ f_j \}_j$ are homogeneous bases of~$X$ and~$Y$, respectively. 
 
-The diagram~\eqref{annulus} can be computed in two different ways; equating the respective results amounts to the Cardy condition. One possibility to compute~\eqref{annulus} is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse its boundary loop~$Y$ in turn to arrive at an expression for $C:k \lra k$. It follows from the general results of Section~\ref{sec:defectaction} or directly from~\eqref{evcoeveasy} that the first step of collapsing~$X$ produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$. Similarly, the second step of collapsing~$Y$ produces a residue
+The diagram~\eqref{annulus} can be computed in two different ways. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse the boundary loop of this bubble in turn to arrive at a scalar. It follows from the main result on defect actions (Proposition \ref{prop:defectaction}) that the first step of collapsing~$X$ produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$ where we write $\Lambda_Z = \partial_{x_1}(d_Z) \ldots \partial_{x_n}(d_Z)$ for $Z \in \{X,Y\}$. 
+
+Similarly, the second step of collapsing~$Y$ produces a residue
 $$
 C 
 = 
@@ -4617,7 +4621,7 @@ C = (-1)^{n+1\choose 2} \,
 \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 \ee
 
-On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y = \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$. Then we use
+On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y \cong \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$. Then we use
 $$
 \eval_{{}^\dual X \otimes Y} ((e_i^* \otimes f_j)^* \otimes (e_a^* \otimes f_b)) = \delta_{ia} \, \delta_{jb} 
 \, , \qquad 
