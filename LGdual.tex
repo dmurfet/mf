@@ -791,11 +791,11 @@ c_{W_1, W_2, W_3}: \LG( W_1, W_2 ) \times \LG( W_2, W_3 ) \lto \LG( W_1, W_3 ) \
 Also note that there are obvious natural isomorphisms $\alpha_{X,Y,Z}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. In the rest of the paper we drop the ``$\circ$'' notation for composition and simply write tensor products.
 
 Finally, we discuss the unit $1$-morphisms $\Delta_W$ and the left and right unit actions $\lambda, \rho$. Given $W\in R=k[x_1,\ldots,x_n]$ there is always the \textsl{unit matrix factorisation} $\Delta_W \in \hmf(\Re, \widetilde W)$ where $\Re = R\otimes_k R$ and $\widetilde W = W\otimes 1 - 1\otimes W$. 
-Choosing an $\Re$-basis $\{ \theta_i \}_i$ of $(\Re)^{\oplus n}$, we have 
+Using formal symbols $\theta_i$ we define the $\Re$-module
 \be\label{DeltaW}
 \Delta_W = \bigwedge \Big( \bigoplus_{i=1}^n \Re \theta_i \Big)
 \ee
-as an $\Re$-module whose $\nZ_2$-grading is given by $\theta$-degree modulo~2. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
+with the grading given by $\theta$-degree. Typically we will omit the wedge product and write  e.\,g.~$\theta_i\wedge \theta_j$ simply as $\theta_i \theta_j$. To describe the differential $d_{\Delta_W}$ we further need the variable-changing map
 $$
 {}^{t_i}(-): k[x,x'] \lra k[x,x'] \, , \qquad f \lmt f\big|_{x_i\lmt x'_i}
 $$
@@ -868,13 +868,13 @@ The key point comes in the proof of the Zorro moves: in \eqref{eq:zorroequalsH} 
 \end{remark}
 
 \begin{remark}\label{remark:gradedbicategory}
-Analogous statements are also true of the bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$. Its objects are pairs $(R,W)$ as above but with the additional requirement that~$R$ is a $\nZ$-graded ring and~$W$ is homogeneus of some degree $2c$. A graded linear factorisation is then a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. As shown in~\cite{cr0909.4381} this is in particular true of the structure maps $\alpha, \lambda, \rho$. 
+The bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$ is defined as follows: its objects are pairs $(R = k[x_1,\ldots,x_n],W)$ as above with the additional data of a degree $|x_i| \ge 0$ for each variable, such that $W$ is homogeneous of even degree $2c$. A graded linear factorisation is a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ to be homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. Our conventions for the graded Hom and tensor products follow \cite{kr0401268} and \cite[Section $2.1$]{ khovhompaper}.
 
-As a relevant example let us discuss the graded Hom. For graded linear factorisations $X,Y$ of $W,W' \in R_{2c}$, respectively, we can form the $\nZ$-graded $R$-module $\Hom_{\mathrm{gr}}(X,Y) = \bigoplus_{i \in \mathds{Z}} \Hom_R(X,Y)_i$, where $\Hom_R(X,Y)_i$ denotes the space of all $R$-linear maps $X \lto Y$ of $\nZ$-degree~$i$. This is a submodule of $\Hom_R(X,Y)$, and if~$X,Y$ are finitely generated then $\Hom_{\mathrm{gr}}(X,Y) = \Hom_R(X,Y)$. This graded module has a $\nZ_2$-decomposition into even and odd maps, 
-\begin{align*}
-\Hom_{\mathrm{gr}}(X,Y) &= \Big( \Hom_{\mathrm{gr}}(X^0, Y^0) \oplus \Hom_{\mathrm{gr}}(X^1, Y^1) \Big) \oplus \Big( \Hom_{\mathrm{gr}}(X^0, Y^1) \oplus \Hom_{\mathrm{gr}}(X^1, Y^0) \Big) \, .
-\end{align*}
-Together with the differential defined on a $\nZ$-homogeneous map $\alpha$ by $\alpha \lmt d_Y \circ \alpha - (-1)^{|\alpha|} \alpha \circ d_X$, the graded module $\Hom_{\mathrm{gr}}(X,Y)$ is a graded linear factorisation of $W' - W$. In particular if $W = W'$ we have a $(\ZZ \times \nZ_2)$-graded complex. This construction is functorial, in the sense that if $\varphi: Y \lra Y'$ is a morphism of graded linear factorisations of degree~$i$, then $\Hom_{\mathrm{gr}}(1_X,\varphi)$ is another morphism of degree~$i$, and similarly in the first variable.
+In this bicategory the $1$-morphisms are given by homotopy categories
+\[
+\LG^{\mathrm{gr}}((R,W),(S,V)) = \hmf^{\mathrm{gr}}(R \otimes_k S, V - W)
+\]
+of finite-rank graded matrix factorisations, and together with the tensor product and the same structure maps $\alpha, \lambda, \rho$ this defines a bicategory \cite{cr0909.4381}. We make $\Delta_W$ into a graded matrix factorisation with the same differential, and the grading given by assigning $\theta_i$ the bidegree $|\theta_i| = (-1,|x_i| - c)$.
 \end{remark}
 
 \subsection{Bar complex}\label{subsec:Bar}
@@ -946,7 +946,6 @@ We now return to the $k$-algebra $R=k[x_1,\ldots,x_n]$. Earlier we set $\widetil
 $$
 d_{\Bar} = b' + d\widetilde W \times (-) \, . 
 $$
-(\textbf{todo} Cite other places where this bar model of the diagonal appears)
 
 \begin{lemma}\label{lemma:barisafactorisation}
 $(\Bar,d_{\Bar})$ is a linear factorisation of $\widetilde W\in \Re$. 
@@ -1064,13 +1063,8 @@ We need to show $d_{\Delta_W} \Psi = \Psi d_\Bar$. But since $d_{\Delta_W} = \de
 
 Although $(\Bar, d_{\Bar})$ depends only on the pair $(R,W)$, the matrix factorisation $(\Delta_W, d_{\Delta_W})$ depends in addition on an ordering of the ring variables. The compatibility of $\delta_{+}$ and $\Psi$ in \eqref{eq:deltaplusandpsi} depends on the fact that $\Delta_W$ and $\Psi$ are defined using the \textsl{same} ordering.
 
-%\begin{remark}
-%Instead of the bar complex $\Bar = \bigoplus_{n\geq 0} \Bar_n$ one can also consider its completed version
-%$$
-%\cBar = \prod_{n\geq 0} \Bar_n \, .
-%$$
-%It has differential graded structures $(\cBar,d,\cdot)$ and $(\cBar,b',\times)$ analogous to~$\Bar$, and the maps~$\Phi$ and~$\Psi$ lift to maps to and from the completed bar complex~$\cBar$ with the same properties as in Lemmas~\ref{PhiPsiDG} and~\ref{PsiHF}. 
-%\end{remark}
+\begin{remark}\label{remark:gradedbarmf} Suppose that $R$ is graded with $|x_i| \ge 0$ and that $W$ is homogeneous of degree $2c$. We make $\Bar$ into a graded $\Re$ module with $\Bar_n = R \otimes \bar{R}(c)^{\otimes n} \otimes R$ so that $d$ has polynomial degree $-c$, and $b'$ has degree $c$. Then $(\Bar, d_{\Bar})$ is a graded matrix factorisation of $\widetilde W$ and $\Psi$ is a degree zero morphism of graded matrix factorisations.
+\end{remark}
 
 \subsection{Residues}\label{section:residuebackground}
 
@@ -1719,7 +1713,7 @@ are respectively the right and left adjoints of $X$ in $\LG$. These matrix facto
 \[
 X^\vee[m] \cong X^\vee \otimes_S S[m], \qquad \nu \mapsto (-1)^{m|\nu|} \nu
 \]
-involves signs. The dual $X^\vee$ is the object of $\hmf(k[x,z], W-V)$ with the differentials spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
+involves signs. The dual $X^\vee$ is the object of $\hmf(k[x,z], W-V)$ with the differential spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
 
 In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define evaluation and coevaluation maps
 \begin{align}
@@ -2654,8 +2648,19 @@ H^m \Hom_k( \Hom_{k[z]}(X,Z), k ) &\cong \underline{\Hom}( \Hom_{k[z]}(X, Z)[m],
 Recall that $k$ is arbitrary, so the left-hand side is not necessarily the dual of $\underline{\Hom}(X, Z[m])$.
 \end{remark}
 
-\begin{remark}
-The same results also hold for the graded bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory}. To see this all we have to check is that the evaluation and coevaluation 2-morphisms have $\nZ$-degree~0. For a potential~$W$ of degree $2c$ we fix the $\nZ$-grading of the unit $\Delta_W$ by assigning degree $-c$ to the~$\theta_i$ in~\eqref{DeltaW}; similarly an $n$-form in the bar complex~\eqref{BarComplex} has degree $-nc$. In this way both the left and right unit actions $\lambda, \rho$ as well as their homotopy inverses manifestly have degree~0. Furthermore, by Definition~\ref{def:coeval} the coevaluation is the image of the (degree~0) identity under the sequence of (degree~0) maps~\eqref{eq:isogivescoev2} and thus has degree~0. That the evaluation also has degree~0 then follows from the Zorro move. 
+\begin{remark} The bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory} also has left and right adjoints. In the notation of the theorem, with $R = k[x_1,\ldots,x_n]$ and $S = k[z_1,\ldots,z_m]$ both graded and $W,V$ homogeneous of even degrees $2c, 2e$ respectively and $Y$ a finite-rank graded matrix factorisation of $V - W$, the adjoints of $Y$ have the same underlying matrix factorisations as before but the grading
+\be\label{eq:derivcoeval11graded}
+Y^\dual = R[n](a_R) \otimes_R Y^\vee \, , \qquad {}^\dual Y = Y^\vee \otimes_S S[m](a_S)
+\ee
+where
+\[
+a_R = nc - \sum_{i=1}^n |x_i|\,, \qquad a_S = me - \sum_{j=1}^m |z_j|\,.
+\]
+To prove this suffices to check that the evaluation and coevaluation maps defined in the ungraded case are homogeneous, since then these morphisms give adjoint pairs in $\LG^{\mathrm{gr}}$. Keeping in mind Remark \ref{remark:gradedbarmf} everything in the formula for $\widetilde \coev_X$ in \eqref{eq:coev10} manifestly has $\nZ$-degree zero except for
+\[
+\varepsilon: \Delta_W \lto \Re[n]
+\]
+which has $\nZ$-degree $a_R = -|\theta_1 \cdots \theta_n|$, so that with the grading shifts in \eqref{eq:derivcoeval11graded} the coevaluation maps have $\nZ$-degree zero. That the evaluation maps have degree zero follows from the Zorro moves, or one can observe this directly using Lemma \ref{lemma:residuesarehomog}.
 \end{remark}
 
 
@@ -4552,13 +4557,13 @@ is a homotopy equivalence over $k$. The main theorem here is that in complete ge
 %This nondegeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
 
 There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
-\[
+\be\label{eq:hombarappendix}
 \Hom(\bar{X},\bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}
-\]
+\ee
 and
-\[
+\be
 \Hom_k( \Hom(\bar{Y}, \bar{X}), k) = \Hom_k( \Hom(Y,X) \otimes_R \bar{R}, k )
-\]
+\ee
 in the homotopy category of $\nZ _2$-graded $k$-complexes. There is an isomorphism
 \begin{equation}\label{eq:frobnondeg}
 \Hom(\bar{X}, \bar{Y}) \cong \Hom_k( \Hom(\bar{Y}, \bar{X}), k)
@@ -4829,17 +4834,17 @@ Similarly there are $2^n$ ways to embed $\Hom(Y,X)$ as a summand in $\Hom(\bar{Y
 e' = \frac{1}{(n!)^2} (-1)^{\binom{n+1}{2}}\sum_{\sigma, \tau \in S_n} (-1)^{|\sigma\tau|} \At_{\tau(1)} \ldots \At_{\tau(n)} {\lambda_{\sigma(1)}}_\bullet \ldots {\lambda_{\sigma(n)}}_\bullet\,.
 \]
 To be precise, taking $Z = \Hom(X,Y)$ in \eqref{eq:finalidempotents2} we have a diagram of degree zero $k$-linear morphisms
-\[
+\be\label{eq:homxysummand}
 \xymatrix@C+2pc{
 \Hom(\bar{X}, \bar{Y}) \ar@<-0.7ex>[r]_-{\psi} & \Hom(X,Y)[n] \ar@<-0.7ex>[l]_-{\vartheta}
 }
-\]
+\ee
 with $\psi \circ \vartheta = 1$ and $\vartheta \circ \psi = e$ (equalities meaning equal up to $k$-linear homotopy) and a diagram
-\[
+\be
 \xymatrix@C+2pc{
 \Hom(\bar{Y}, \bar{X}) \ar@<-0.7ex>[r]_-{\psi'} & \Hom(Y,X) \ar@<-0.7ex>[l]_-{\kappa}
 }
-\]
+\ee
 with $\psi' \circ \kappa = 1$ and $\kappa \circ \psi' = e'$. A concrete description of $\psi, \psi'$ is not important for us, but we will need to know that $\kappa$ is simply the quotient map, and that
 \[
 \vartheta = \frac{1}{n!} (-1)^n \sum_{\sigma \in S_n} (-1)^{|\sigma|} \lambda_{\sigma(1)}^\bullet \ldots \lambda_{\sigma(n)}^{\bullet}\,.
@@ -4923,18 +4928,18 @@ is a homotopy equivalence of $\nZ _2$-graded complexes over $k$. But this is a c
 
 \subsection{Graded duality}\label{section:gradedduality}
 
-In this section we collect together the modifications necessary in order to make Theorem \ref{theorem:generalkl} compatible with an additional $\nZ $-grading on matrix factorisations. Our conventions for graded modules and matrix factorisations are contained in Section \ref{??}.
+In this section we collect together the modifications necessary in order to make Theorem \ref{theorem:generalkl} compatible with an additional $\nZ $-grading on matrix factorisations. Our conventions for graded modules and matrix factorisations are contained in Remark \ref{remark:gradedbicategory}.
 
-Let $k$ be a noetherian $\nQ$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$ and let $X,Y$ be finite-rank graded matrix factorisations of $W$ over $R$. Define
+Let $k = \oplus_{i \ge 0 } k_i$ be a noetherian $\nQ$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero and $|x_i| \ge 0$ for $1 \le i \le n$. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$, with the property that the $f_i = \partial_{x_i} W$ form a regular sequence and $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module. Define
 \[
-a = \sum_{i=1}^n |x_i| - nc \, . 
+a = nc - \sum_{i=1}^n |x_i|\,
 \]
-Then the graded analogue of the earlier theorem is:
+and let $X,Y$ be finite-rank graded matrix factorisations of $W$ over $R$.
 
 \begin{theorem}\label{theorem:generalklgraded} 
-Under the conditions (H1)--(H3) of Theorem \ref{theorem:generalkl} the pairing $\langle -, - \rangle$ is adjoint to a homotopy equivalence of $\nZ  \times \nZ _2$-graded complexes over $k$
+The pairing $\langle -, - \rangle_{XY}$ of \eqref{eq:generalklpairing} is adjoint to a homotopy equivalence of $\nZ  \times \nZ _2$-graded complexes over $k$
 \[
-\Hom(X,Y) \lto \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k )[n](a)\,.
+\Hom(X,Y) \lto \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k )[n](-a)\,.
 \]
 \end{theorem}
 
@@ -4947,7 +4952,7 @@ Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is
 is homogeneous of degree $\sum_{i=1}^n( |x_i| - |f_i| )$.
 \end{lemma}
 \begin{proof}
-(\textbf{todo}) Follows from the determinantal formula for residues in Lipman's book.
+Follows from the determinantal formula for residues in Lipman's book \cite[(1.10.5)]{Lipman}.
 \end{proof}
 
 \begin{proof}[Proof of Theorem \ref{theorem:generalklgraded}]
@@ -4955,18 +4960,12 @@ Consider the following diagram of $\nZ _2$-graded complexes
 \[
 \xymatrix@C+2pc{
 \Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{\operatorname{gr}}} \ar[r]^-{\xi} & \Hom(\Hom(Y,X),k)[n]\\
-& \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k)[n](a) \ar[u]_{\iota = \inc}
+& \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k)[n](-a) \ar[u]_{\iota = \inc}
 }
 \]
 where $\xi$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\xi$ lies in the subspace of homogeneous maps, and we let $\zeta_{\operatorname{gr}}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{\operatorname{gr}}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{\operatorname{gr}}$ is a homotopy equivalence of $\nZ _2$-graded complexes (forgetting the $\nZ $-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
 
-It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\nZ _2$-graded complexes. This would be a tautology if $\Hom(Y,X)$ were a finitely generated $k$-module, and in general we use the fact that $\Hom(Y,X)$ embeds up to homotopy in a finitely generated complex. That is: by \cite[Section ??]{blah} we have a diagram
-\begin{equation}\label{eq:generalklgraded}
-\xymatrix@C+2pc{
-\Hom(\bar{Y}, \bar{X}) \ar@<-0.5ex>[r]_-{\psi} & \Hom(Y,X)[n] \ar@<-0.5ex>[l]_-{\vartheta}
-}
-\end{equation}
-of $\nZ _2$-graded complexes over $k$ with $\psi \circ \vartheta \simeq 1$. But if one examines the explicit expressions for $\vartheta, \psi$ given in loc.\,cit.~it is clear that $\vartheta$ has degree $-a$, $\psi$ has degree $a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{\operatorname{gr}}(-,k)$ to (\ref{eq:generalklgraded}) we obtain a diagram
+It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\nZ _2$-graded complexes. This would be a tautology if $\Hom(Y,X)$ were a finitely generated $k$-module, and in general we use the fact that $\Hom(Y,X)$ embeds up to homotopy in a finitely generated complex via morphisms $\psi, \vartheta$ as in \eqref{eq:homxysummand} above. Examining the expressions for $\vartheta, \psi$ in \cite[Section $7$]{dm1102.2957} we see that $\vartheta$ has degree $a$, $\psi$ has degree $-a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{\operatorname{gr}}(-,k)$ to \eqref{eq:homxysummand} we obtain a diagram
 \[
 \xymatrix@C+2pc{
 \Hom_k( \Hom(\bar{Y}, \bar{X}), k ) \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k(\Hom(Y,X),k)[n] \ar@<-0.5ex>[l]_-{\psi^*}\\
@@ -5621,6 +5620,10 @@ R.-O. Buchweitz and H.~Flenner, \textsl{A semiregularity map for modules and
 %  {$sl(m)$} case}, Invent. Math. \textbf{174} (2008), 165--232,
 %  \href{http://arxiv.org/abs/math/0710.3216}{[math.AG/0710.3216]}.
 %
+
+\bibitem[CM]{khovhompaper}
+N.~Carqueville and D.~Murfet, \textsl{Computing {K}hovanov-{R}ozansky homology and defect fusion}, \href{http://arxiv.org/abs/1108.1081}{[arXiv:1108.1081]}
+
 %\bibitem[CM]{cmWebCompileCode}
 %N.~Carqueville and D.~Murfet, \textsl{Code to compute {K}hovanov-{R}ozansky
 %  homology and defect fusion in {L}andau-{G}inzburg models},
@@ -5790,10 +5793,10 @@ M.~Khovanov, \textsl{Categorifications from planar diagrammatics}, Japanese J. o
 %  Adv. Theor. Math. Phys. \textbf{11} (2007), 233--259,
 %  \href{http://arxiv.org/abs/hep-th/0404189}{[hep-th/0404189]}.
 %
-%\bibitem[KR08a]{kr0401268}
-%M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology}, Fund. Math.
-%  \textbf{199} (2008), 1--91,
-%  \href{http://arxiv.org/abs/math/0401268}{[math/0401268]}.
+\bibitem[KR08a]{kr0401268}
+M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology}, Fund. Math.
+  \textbf{199} (2008), 1--91,
+  \href{http://arxiv.org/abs/math/0401268}{[math/0401268]}.
 %
 %\bibitem[KR08b]{kr0505056}
 %M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology {II}}, Geometry \&
@@ -5819,6 +5822,9 @@ C.~I. Lazaroiu, \textsl{On the boundary coupling of topological {L}andau-{G}inzb
 
 \bibitem[LM]{Calinetal}
 C.~I. Lazaroiu and D.~McNamee, unpublished.
+
+\bibitem[Li]{Lipman}
+J.~Lipman, \textsl{Residues and traces of differential forms via {H}ochschild homology}, Contemporary Mathematics Vol. \textbf{61}.
 
 \bibitem[Lo]{Loday}
 J.-L. Loday, \textsl{Cyclic homology}, Springer, 1997.
