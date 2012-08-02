@@ -1809,7 +1809,7 @@ with the second equality holding because $d$ is $R_2$-linear. For this reason we
 \[
 \varepsilon \Psi \Atlarrow_2(X^\dual)(e_i^* \otimes e_j)
 \]
-the output of $\varepsilon$ contains elements of $\Re = R_1 \otimes R_2$ with $R_1$-acting on $X^\dual$ and $R_2$ acting on $X$.
+the output of $\varepsilon$ contains elements of $\Re = R_1 \otimes R_2$ with $R_1$ acting on $X^\dual$ and $R_2$ acting on $X$.
 \end{remark}
 
 In the formula for the coevaluation, we apply the map
@@ -2669,7 +2669,7 @@ where
 \[
 a_R = nc - \sum_{i=1}^n |x_i|\,, \qquad a_S = me - \sum_{j=1}^m |z_j|\,.
 \]
-To prove this suffices to check that the evaluation and coevaluation maps defined in the ungraded case are homogeneous, since then these morphisms give adjoint pairs in $\LG^{\mathrm{gr}}$. Keeping in mind Remark \ref{remark:gradedbarmf} everything in the formula for $\widetilde \coev_X$ in \eqref{eq:coev10} manifestly has $\nZ$-degree zero except for
+To prove this it suffices to check that the evaluation and coevaluation maps defined in the ungraded case are homogeneous, since then these morphisms give adjoint pairs in $\LG^{\mathrm{gr}}$. Keeping in mind Remark \ref{remark:gradedbarmf} everything in the formula for $\widetilde \coev_X$ in \eqref{eq:coev10} manifestly has $\nZ$-degree zero except for
 \[
 \varepsilon: \Delta_W \lto \Re[n]
 \]
@@ -2681,63 +2681,51 @@ which has $\nZ$-degree $a_R = -|\theta_1 \cdots \theta_n|$, so that with the gra
 
 With the proof that the bicategory $\LG$ has adjoints behind us we now want to reap some further rewards of our efforts by turning to applications. These will be discussed in the next sections, while in the present one we shall pave the way by clarifying two technical though practically relevant issues: the choice of representative of the isomorphism class of adjoints, and the nature of the double-adjoint. 
 
-%and the independence of variable orderings up to signs for all string diagrams in $\LG$. 
+\subsection{Alternative graphical presentation of adjoints}\label{subsec:alternatives}
 
-\subsection{Alternative adjoints and their graphical presentation}\label{subsec:alternatives}
+% If adjoints exist for 1-morphisms in a bicategory then they are unique only up to isomorphism. For many purposes this freedom is irrelevant, but in practice a particular choice of isomorphism may prove more useful than another. As we saw above for a 1-morphism~$X$ in $\LG$ its left and right adjoints~${}^\dagger X$ and~$X^\dagger$ are one natural choice. 
 
-(TODO: there are no new adjoints here anymore, only the graphical notation is new)
-
-If adjoints exist for 1-morphisms in a bicategory then they are unique only up to isomorphism. For many purposes this freedom is irrelevant, but in practice a particular choice of isomorphism may prove more useful than another. As we saw above for a 1-morphism~$X$ in $\LG$ its left and right adjoints~${}^\dagger X$ and~$X^\dagger$ are one natural choice. 
-
-On the other hand, we found that a slightly different choice for left adjoints is more suitable in practice, and in this section we will introduce them together with their graphical presentation (which we basically borrow from~\cite{ct1007.2679}). Before doing so we wish however to give reasons for imposing new conventions and notation on the reader, halfway through the paper. While the presentation of adjoints introduced in Section~\ref{subsec:bicat} and employed until now is standard and conceptually clean, for technical computations like in Section~\ref{sec:pivotality} or in our proof of the Cardy condition the choice of adjoints presented below turns out to be more useful. Furthermore, we will see in Section~\ref{sec:ocTFT} that it allows us to unambigiously translate TFT correlators into computable 2-morphisms. And finally, in the new notation we will no longer have to deal with two kinds of daggered adjoints~${}^\dagger X$ and~$X^\dagger$, but only with the dual matrix factorisation~$X^\vee$ (however at the expense of introducing shifted rings into string diagrams). 
+In this section we introduce a slightly different graphical presentation presentation of adjoints (which we basically borrow from~\cite{ct1007.2679}). Before doing so we wish however to give reasons for imposing new conventions on the reader, halfway through the paper. While the presentation of adjoints introduced in Section~\ref{subsec:bicat} and employed until now is standard and conceptually clean, for technical computations like in Section~\ref{sec:pivotality} or in our proof of the Cardy condition the slightly modified notation presented below turns out to be more useful. Furthermore, we will see in Section~\ref{sec:ocTFT} that it allows us to unambigiously translate TFT correlators into computable 2-morphisms. And finally, in the new notation we will no longer have to deal with two kinds of daggered adjoints~${}^\dagger X$ and~$X^\dagger$, but only with the dual matrix factorisation~$X^\vee$ (however at the expense of introducing shifted rings into string diagrams). 
 
 
-We begin by observing that for each 1-morphism $X: (R,W) \lra (S,V)$ in $\LG$ with $R=k[x_1,\ldots,x_n]$ and $S=k[z_1,\ldots,z_m]$ there are isomorphisms
-\begin{align*}
-X^\dual & = X^\vee[n] \lra (R \otimes_R X^\vee)[n] \lra R[n] \otimes_R X^\vee \, , \\
-{}^\dual X & = X^\vee[m] \lra (X^\vee \otimes_S S)[m] \lra X^\vee \otimes_S S[m] \, . 
-\end{align*}
-By Lemma~\ref{lem:shiftsigns} the first map sends~$\nu$ to $1\otimes \nu$, and in this way we identify~$X^\dual$ and $R[n] \otimes_R X^\dual$, while the second map involves a sign: $\nu \lmt (-1)^{m |\nu|} 1\otimes \nu$. Thus the adjunction maps exhibiting $R[n] \otimes_R X^\vee$ as a right adjoint of~$X$ are precisely the maps $\widetilde\eval_X$ and $\widetilde\coev_X$ we derived earlier in Section~\ref{sec:derivcoeval}, while the adjunction maps making $X^\vee \otimes_S S[m]$ into a left adjoint of~$X$ differ from $\eval_X$ and $\coev_X$ by signs. Namely, the former are 
-\begin{align*}
-& (X^\vee \otimes_S S[m]) \otimes_S X \ni \nu \otimes \eta \lmt 
-\sum_{l \ge 0} (-1)^{l} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right] \in \Delta_W \, , \\
-& \Delta_V \ni \gamma  \lmt
-\sum_{l \ge 0} \sum_j \varepsilon \left( \gamma \wedge (-1)^{l+ml} \Psi \Atlarrow_2(X)^l( e_j \otimes e_j^* ) \right) \in X \otimes_R (X^\vee \otimes_S S[m]) \, . 
-\end{align*}
-We will reflect this difference from~\eqref{eq:constructevalmap01} and~\eqref{eq:coev102} not by introducing new symbols for the above maps but by diagrammatical notation that makes the tensor factors of shifted rings explicit. To wit, while we continue to associate upwards oriented solid lines to 1-morphisms~$X$, we will use thin wiggly lines to represent rings shifted by the number of variables on which they depend. Accordingly we will use the following presentation for the above adjunction maps: 
+Recall that for a 1-morphism $X: (R,W) \lra (S,V)$ in $\LG$ with $R=k[x_1,\ldots,x_n]$ and $S=k[z_1,\ldots,z_m]$ we have ${}^\dual X = X^\vee \otimes_S S[m]$ and $X^\dual = R[n] \otimes_R X^\vee$. From now on we will reflect the presence of shifted rings in the adjoints by explicitly representing them by special lines in our graphical notation. To wit, while we continue to associate upwards oriented solid lines to 1-morphisms~$X$, we will use thin wiggly lines to represent rings shifted by the number of variables on which they depend. Accordingly we will use the following presentation for the adjunction maps: 
 \begin{align*}
 &
+\coev_X = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.3cm]
 \draw[directed] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.1,0) .. controls +(0.1,0.5) and +(-0.5,-0.45) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: (X^\vee \otimes_S S[m]) \otimes_S X \lra \Delta_W
+: {}^\dual X \otimes_S X \lra \Delta_W
 \, , \qquad
+\eval_X = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.4cm,rotate=180]
 \draw[redirected] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1.87,0) .. controls +(0.1,0.5) and +(-0.7,-0.15) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: \Delta_V \lra X \otimes_R (X^\vee \otimes_S S[m]) \, , \\
+: \Delta_V \lra X \otimes_R {}^\dual X \, , \\
 &
+\widetilde\eval_X = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.3cm]
 \draw[redirected] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.9,0) .. controls +(-0.1,0.5) and +(0.5,-0.45) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: X \otimes_R ( R[n] \otimes_R X^\vee) \lra \Delta_V
+: X \otimes_R X^\dual \lra \Delta_V
 \, , \qquad
+\widetilde\coev_X = 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.4cm,rotate=180]
 \draw[directed] (3,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.13,0) .. controls +(-0.1,0.5) and +(0.7,-0.15) .. (2.5,0.75); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: \Delta_W \lra (R[n]\otimes_R X^\vee) \otimes_S  X \, . 
+: \Delta_W \lra X^\dual \otimes_S  X \, . 
 \end{align*}
 In this notation the Zorro moves for the left and right adjoints read
 $$
@@ -2794,7 +2782,7 @@ $$
 \draw (-1,0) -- (-1,1.25); 
 \draw (1,0) -- (1,-1.25); 
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.1,1.25) .. controls +(0,-1) and +(-0.85,0) .. (-0.5,-0.75); 
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,0.75) .. controls +(0.75,-0.05) and +(0,1) .. (1.1,-1.25); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.5,0.75) .. controls +(0.35,-0.05) and +(0,1) .. (0.85,-1.25); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \;=\;
@@ -2829,23 +2817,43 @@ $$
 $$
 By definition a wiggly line in a domain associated to an object $(R,W)\in\LG$ represents the ring~$R$ shifted by the parity of its variables. Furthermore we adopt the convention that in diagrams with wiggly lines a downwards oriented solid line represents the dual factorisation~$X^\vee$ (and not necessarily its left or right adjoint~${}^\dual X$ or~$X^\dual$) if the line is labelled by the 1-morphism~$X$. 
 
-There are two ways for wiggly lines to meet in a diagram. One is that they ``annihilate'', i.\,e.~we have a map
+There are several ways for wiggly lines to meet in a diagram. For example they can ``annihilate'' or be ``created in pairs'', i.\,e.~we have maps
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.3cm]
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0,0) -- (0.5,0.75);
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1,0) -- (0.5,0.75);
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: R[n] \otimes_R R[n] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, . 
+: R[n] \otimes_R R[n] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, , 
+\qquad
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-0.4cm, rotate=180]
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+: r \lra R[n] \otimes_R R[n]  \, , \qquad 1 \lmt 1 \otimes 1 \, . 
 $$
+These maps satisfy the useful identity
+$$
+TODO
+$$
+
 Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same number of variables~$n$ mod~2, wiggly lines can also ``cross over'' to another domain. By this we mean that there are maps 
 \begin{align*}
 & 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (0.3,0.75);
-\draw (0,-0.75) -- (0,0.75); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,-0.75) -- (0,0); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,0) -- (0,0.75); 
+\draw[line width=1pt] 
+(0,-0.75) node[line width=0pt, right] {{\small $X$}}; 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : S[n] \otimes_S X \lra X \otimes_R R[n] \, , \qquad 1\otimes \eta \lmt (-1)^{n |\eta|} \eta \otimes 1 \, , \\
@@ -2853,29 +2861,98 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (-0.3,0.75);
-\draw (0,-0.75) -- (0,0.75); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,-0.75) -- (0,0); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,0) -- (0,0.75); 
+\draw[line width=1pt] 
+(0,-0.75) node[line width=0pt, left] {{\small $X$}}; 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : X \otimes_R R[n] \lra S[n] \otimes_S X \, , \qquad \eta \otimes 1 \lmt (-1)^{n |\eta|} 1\otimes \eta \, . 
 \end{align*}
+We also want to allow wiggly lines to cross solid lines when the two domains are associated to rings whose variable parity differs. To facilitate this we adopt the additional convention that we label a wiggly line by the number of times the associated ring get shifter whenever necessary; for instance for a 1-morphism $X\in \hmf(R\otimes_k S, V-W)$ as before we have a map
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (0.3,0.75);
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,-0.75) -- (0,0); 
+\draw[
+	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
+	]
+	(0,0) -- (0,0.75); 
+\draw[line width=1pt] 
+(0,-0.75) node[line width=0pt, right] {{\small $X$}}; 
+%
+\draw[line width=1pt] 
+(0.45,0.6) node[color=blue!55!white, line width=0pt] {{\tiny $m$}}; 
+%
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+: S[m] \otimes_S X \lra X \otimes_R R[m] \, , \qquad 1\otimes \eta \lmt (-1)^{m |\eta|} \eta \otimes 1 \, .
+$$
 
-(TODO: add labelled wigglies and their crossings, show map $X^\dual[m+n]\lra {}^\dual X$)
+Labelled wiggly lines can cross each other, giving rise to maps of the type (TODO: cross!)
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.3cm]
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.35,1.0) and +(-0.35,-1.0) .. (0.75,1); 
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,1) .. controls +(0.5,-1.0) and +(-0.35,1.0) .. (0.75,0); 
+%
+\draw[line width=1pt] 
+(-0.13,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $m$}}
+(0.85,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
+(-0.1,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
+(0.87,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $m$}};
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+: R[m]\otimes_R R[n] \lra R[n] \otimes_R R[m] \, , \qquad
+r_1 \otimes r_2 \lmt (-1)^{mn} r_2 \otimes r_1 \, .
+$$
+For $m=n$~mod~2 such a crossing can be ``resolved'', i.\,e.~we have the following identities between maps: 
+$$
+TODO
+cross_n = (-1)^n wiggly wiggly
+$$
 
-Let $W\in R = k[x_1,\ldots,x_n]$, $V\in S = k[z_1,\ldots,z_m]$ be potentials and $X \in \hmf(k[x,z],V-W)$. Then
-\[
-X^\dual[m+n] \cong X^{\vee}[n][m+n] \cong X^{\vee}[m] \cong {}^\dual X\,.
-\]
 
-\begin{definition} We define the isomorphism
-\[
-q_X: R[m] \otimes_R R[n] \otimes_R X^\dual \lto {}^\dual X, \qquad q(\nu) = (-1)^{m|\nu|} \nu\,.
-\]
-\end{definition}
 
-We write $X^\dual[m+n]$ in this unusual way so as to have a simple diagrammatic interpretation:
-\[
-diagram
-\]
+
+
+BLA
+
+$$
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline]
+\draw[line width=1pt] 
+(0,0) node[line width=0pt, right] (XY) {{\small $X$}}; 
+% wiggly labels:
+\draw[line width=1pt] 
+(-0.62,0.1) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
+(-1.23,0.1) node[color=blue!55!white, line width=0pt, right] {{\tiny $m$}};
+%
+\draw[
+	decoration={markings, mark=at position 0.35 with {\arrow{<}}}, postaction={decorate}
+	]
+	(0,0) -- (0,3);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.75,0) .. controls +(0.01,1.0) and +(0,-1.0) .. (0.25,3); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.5,0) .. controls +(0,0.9) and +(0,00.9) .. (-0.25,0); 
+%
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+$$
+
+
+
 
 \subsection{Pivotality}\label{sec:pivotality}
 
@@ -4943,14 +5020,14 @@ is a homotopy equivalence of $\nZ _2$-graded complexes over $k$. But this is a c
 
 In this section we collect together the modifications necessary in order to make Theorem \ref{theorem:generalkl} compatible with an additional $\nZ $-grading on matrix factorisations. Our conventions for graded modules and matrix factorisations are contained in Remark \ref{remark:gradedbicategory}.
 
-Let $k = \oplus_{i \ge 0 } k_i$ be a noetherian $\nQ$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero and $|x_i| \ge 0$ for $1 \le i \le n$. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$, with the property that the $f_i = \partial_{x_i} W$ form a regular sequence and $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module. Define
+Let $k = \bigoplus_{i \ge 0 } k_i$ be a noetherian $\nQ$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero and $|x_i| \ge 0$ for $1 \le i \le n$. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$, with the property that the $f_i = \partial_{x_i} W$ form a regular sequence and $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module. Define
 \[
 a = nc - \sum_{i=1}^n |x_i|\,
 \]
 and let $X,Y$ be finite-rank graded matrix factorisations of $W$ over $R$.
 
 \begin{theorem}\label{theorem:generalklgraded} 
-The pairing $\langle -, - \rangle_{XY}$ of \eqref{eq:generalklpairing} is adjoint to a homotopy equivalence of $\nZ  \times \nZ _2$-graded complexes over $k$
+The pairing $\langle -, - \rangle_{XY}$ of \eqref{eq:generalklpairing} is adjoint to a homotopy equivalence of $(\nZ  \times \nZ _2)$-graded complexes over $k$
 \[
 \Hom(X,Y) \lto \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k )[n](-a)\,.
 \]
@@ -5502,7 +5579,7 @@ commute in $\HMF(\Re, \widetilde W)$ and $\HMF(\Se, \widetilde V)$ respectively.
 The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satisfy the Zorro moves, so commutativity of the diagrams in \eqref{eq:coevsignspermute} follows from commutativity of those in \eqref{eq:evsignspermute}.
 \end{proof}
 
-The general rule is that permuting the variables in a region by $\tau$ changes the value of a diagram by a factor of $(-1)^{M|\tau|}$ where $M$ is the number of wiggly lines (see Section \ref{??}) entering or departing an evaluation or coevaluation within that region. The simplest example is \eqref{eq:signdependencepermdia} where the value changes by the sign $(-1)^{|\tau|}$.
+The general rule is that permuting the variables in a region by $\tau$ changes the value of a diagram by a factor of $(-1)^{M|\tau|}$ where $M$ is the number of wiggly lines (see Section~\ref{subsec:alternatives}) entering or departing an evaluation or coevaluation within that region. The simplest example is \eqref{eq:signdependencepermdia} where the value changes by the sign $(-1)^{|\tau|}$.
 
 %Returning to the example  we have a diagram, in which the top path computes the value of the diagram with outer region given the usual variable ordering, and the bottom path computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
 %\[
