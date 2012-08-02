@@ -528,6 +528,18 @@ This data is subject to two coherence axioms, one involving the associator $\alp
 
 The identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ is denoted $1_f$ and the identity $2$-endomorphism of $\Delta_A$ is denoted $1_A$. For the remainder of this section, $\cat{B}$ denotes a bicategory.
 
+It is convenient to denote $2$-morphisms in a bicategory using \emph{string diagram} notation. This was introduced in \cite{JSGoTCI,JSGoTCII} and the reader can also find very clear explanations in \cite{ladia,khovdia}. In order to fix our notation, recall that the diagram
+\be\label{eq:demonstratediagram}
+\xymatrix{
+B & & C  \\
+& \gamma \ar[u]^g\\
+\ar[ur]^f & A & \ar[ul]_h
+}
+\ee
+represents a $2$-morphism $\gamma: f \otimes h \lto g$ in $\cat{B}$ with $f: A \lto B, g: C \lto B$ and $h: C \lto A$ all $1$-morphisms. We call $\gamma$ the \emph{value} of the diagram \eqref{eq:demonstratediagram}.
+
+In this diagrammatic calculus all diagrams are \emph{progressively planar} in the sense of \cite{JSGoTCI}, i.e. arcs proceed strictly upwards. It is straightforward to check \cite[Theorem $1.2$]{JSGoTCI} that an arbitrary such diagram may be unambiguously assigned a value as a $2$-morphism in $\cat{B}$, by ``tensoring horizontally and composing vertically'' and this justifies rigorously the use of diagrams like the one above. Where appropriate, we allow ourselves to migrate the arc labels so that they decorate the top and bottom horizontal boundaries, as in the diagrams \eqref{Zorros} below.
+
 We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{app:adjoints}.
 
 Our references for adjunction in bicategories are \cite[Chapter $6$]{gray} and \cite{kellystreet}.
@@ -567,7 +579,7 @@ For the adjunction $f \dashv f^\dual$ we write the evaluation and coevaluation m
 \be\label{evcoev3}
 \widetilde\eval_f : f \otimes f^\dual \lra \Delta_B \, , \qquad \widetilde\coev_f : \Delta_A \lra f^\dual \otimes f\,.
 \ee
-It is convenient to denote identities in bicategories with adjoints in \textsl{string diagram} notation. We will explain a refined version of this notation in Section~\ref{subsec:alternatives}, but for the moment string diagrams have the meaning given in \cite{JSGoTCI,JSGoTCII} and also explained very clearly in \cite{ladia,khovdia}. In this language the evaluation and coevaluation maps~\eqref{evcoev2} are written as
+It is very useful to use string diagrams when working with adjoints in a bicategory. In this language the evaluation and coevaluation maps~\eqref{evcoev2} are written as
 $$
 \eval_{f} = 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -609,7 +621,11 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
  \, . 
 $$
-Note that such diagrams are always to be read from bottom to top. Then the defining relations~\eqref{uglyZorro1} and~\eqref{uglyZorro2} translate into the \textsl{Zorro moves}
+We stress that, while suggestive, the arrows in these two diagrams have no meaning beyond that of the dot in \eqref{eq:demonstratediagram}. They are merely decorations intended to remind us that this diagram depicts an evaluation or coevaluation, with the direction of the arrow alerting us to the type. In particular, we do \emph{not} intend to communicate with this diagram that there is an oriented arc labelled with $f$, rather, there are three unoriented arcs adjacent to the vertex, which in the case of $\coev_f$ are labelled $f, {}^\dual f$ and $\Delta_B$.
+
+In Section~\ref{subsec:alternatives} we will explain a richer kind of diagrammatics in which the arcs are honestly oriented and a label $f$ on a downwards oriented arc is understood in terms of the adjoints of $f$, but until then our diagrams have the simpler meaning described above.
+
+With this notation the defining relations~\eqref{uglyZorro1} and~\eqref{uglyZorro2} translate into the \textsl{Zorro moves}
 \be\label{Zorros}
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
 \draw[line width=0] 
@@ -1739,7 +1755,7 @@ where $\varepsilon$ and $\Psi$ is as defined in~\eqref{eq:vareps} and~\eqref{int
 \iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j \in X^\dual \otimes_{k[z]} X \, , \qquad 
 \iota'_X = \sum_j e_j \otimes e_j^* \in X \otimes_{k[x]} {}^\dual X \, . 
 \ee
-The Atiyah classes involved in \eqref{eq:coev10} and \eqref{eq:coev102} are actually those of the $k[x]$-bimodule $X^\dual \otimes_{k[z]} X$ and the $k[z]$-bimodule $X \otimes_{k[x]} X^\dual$, respectively, but these simplify to the Atiyah classes given in the formulas; see the discussion preceeding Proposition \ref{prop:coev1}.
+The Atiyah classes involved in \eqref{eq:coev10} and \eqref{eq:coev102} are actually those of the $k[x]$-bimodule $X^\dual \otimes_{k[z]} X$ and the $k[z]$-bimodule $X \otimes_{k[x]} X^\dual$, respectively, but with a slight abuse of notation these simplify to the Atiyah classes given in the formulas; see Remark \ref{remark:ringactionsubtle}.
 
 A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
@@ -1796,17 +1812,25 @@ where for $f \in X^\vee$ and $g,g' \in X$ we define $\kappa( f \otimes g \otimes
 
 To give a representative chain map for the coevaluation we begin with $1_X$ at the bottom of (\ref{eq:isogivescoev2}) and apply the various maps in turn; the only nontrivial step will be to apply the homotopy inverse for $\pi$ found in Section \ref{section:pertandhtpy}. The two different choices of inverse provided there will lead to two different (but homotopic) chain level representatives for the coevaluation.
 
-With $\reprod$ as in (\ref{eq:attau}) we consider on the tensor product $\reprod_*(\Bar) \otimes_{\Re} ( X^\vee \otimes_{S} X)$ the operator
+\begin{remark}\label{remark:ringactionsubtle} With $\reprod$ as in (\ref{eq:attau}) consider on $\reprod_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{S} X)$ the operator
 \[
 \Atlarrow_{2}(X^\dual \otimes X) = [d, d_{X^\dual \otimes X}] = [d, d_{X^\dual}]
 \]
-with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow_2(X^\dual)$ for $\Atlarrow_{2}(X^\dual \otimes X)$. Consider the map
+with the second equality holding because $d$ is $R_2$-linear. For this reason we abuse notation and write $\Atlarrow_2(X^\dual)$ for $\Atlarrow_{2}(X^\dual \otimes X)$. We adopt this notation in order to make make calculations like the ones in Section \ref{sec:Zorro} comprehensible, but the reader should keep in mind that while only the differential of $X^{\dual}$ contributes to the Atiyah class, in an expression like
+\[
+\varepsilon \Psi \Atlarrow_2(X^\dual)(e_i^* \otimes e_j)
+\]
+the output of $\varepsilon$ contains elements of $\Re = R_1 \otimes R_2$ with $R_1$-acting on $X^\dual$ and $R_2$ acting on $X$.
+\end{remark}
+
+In the formula for the coevaluation, we apply the map
 \[
 \xymatrix@C+0.5pc{
 X^\dual \otimes_{S} X \ar[rr]^-{\Atlarrow_2(X^\dual)^l} & & \reprod_*(\Bar) \otimes_{\Re} ( X^\dual \otimes_{S} X ) \ar[r]^-{\Psi} & \Delta_W \otimes_{\Re} (X^\dual \otimes_{S} X)
 }
 \]
-which we can apply to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
+to the tensor $\iota_X = \sum_{j} (-1)^{|e_j|} e_j^* \otimes e_j$.
+
 
 \begin{proposition}\label{prop:coev1} A representative for $\widetilde\coev_X$ is the chain map \eqref{eq:coev10}.
 \end{proposition}
@@ -1827,9 +1851,9 @@ This vanishes unless $|\gamma| + |\omega| = n$, so the final sign is $(-1)^{|\om
 
 There is an alternative presentation which we will need. On $( X^\dual \otimes_S X) \otimes_{\Re } \Bar$ consider
 \[
-\At_{1}(X^\dual \otimes X) = [s, d_{X^\dual \otimes X}] = [s, d_X] = \At_1(X)
+\At_{1}(X^\dual \otimes X) = [s, d_{X^\dual \otimes X}] = [s, d_X]
 \]
-with the second equality holding because $s$ is $R$-linear. 
+which we denote by $\At_1(X)$. This abuse of notation has the same disclaimer as in Remark \ref{remark:ringactionsubtle}.
 
 \begin{proposition}\label{prop:alt_formula_coev} 
 A representative for $\widetilde\coev_X$ is the chain map
@@ -2387,9 +2411,9 @@ The proof rests on the central identity in Lemma~\ref{lemma:atshufat} for comput
 \end{align} 
 where in the last step we use that $\Psi$ intertwines the shuffle product with the exterior product. 
 
-In this formula $\At(X)$ is an operator on $X \otimes_{R_1} \Bar$, $\At(X^\dual)$ is an operator on $\gamma_*(\Bar) \otimes_{R_1} X^\dual$, and respectively these operators can be identified with Atiyah classes of the $(S \otimes_k \Re)$-modules $X \otimes_{R_1} \Re$ and $\Re \otimes_{R_1} X^\dual$. Tensored over $\Re$ these modules form the $(\Se \otimes \Re)$-module
+In this formula $\At(X)$ is an operator on $X \otimes_{R_1} \Bar$, $\At(X^\dual)$ is an operator on $\gamma_*(\Bar) \otimes_{R_1} (X^\dual \otimes X)$, and we keep in mind the abuse detailed in Remark \ref{remark:ringactionsubtle}. Respectively these operators are the Atiyah classes of the $(S \otimes_k \Re)$-modules $X \otimes_{R_1} \Re$ and the pair $(X^\dual \otimes_S X, d_{X^\dual})$. Tensored over $\Re$ these modules form the $(\Se \otimes \Re)$-module
 \be\label{eq:spacehipposattack}
-(X \otimes_{R_1} \Re) \otimes_{\Re} (\Re \otimes_{R_1} X^\dual) \cong \Re \otimes_{R_1} ( X \otimes_R X^\dual )\,.
+(X \otimes_{R_1} \Re) \otimes_{\Re} (X^\dual \otimes_S X) \cong X \otimes_R X^\dual \otimes_S X\,.
 \ee
 Thus we are in a position to apply Lemma \ref{lemma:atshufat} and rewrite the shuffle product of Atiyah classes in \eqref{eq:zorro1a12} as a single Atiyah class, of the module in \eqref{eq:spacehipposattack}. In \eqref{eq:zorro1a12} the term inside the $\varepsilon \Psi ( - )$ belongs to $X \otimes \gamma_*(\Bar) \otimes X^\vee[n] \otimes X$. Moving the $\Bar$ to the right of the $X^\vee[n]$ introduces a sign $(-1)^{n( |e_j| + n + l' )}$.
 
@@ -3115,7 +3139,7 @@ Similarly with~\eqref{eq:formula_rhoinverse} and~\eqref{eq:coev10} we compute th
 & \qquad\; \cdot \varepsilon \Psi \At_2(X^\dual \otimes Y^\dual)^m (e_j^* \otimes f_k^*)
 \otimes \varepsilon \Psi \At_1\big((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual\big)^n \big( f_k \otimes e_j \otimes (f_q \otimes g_\alpha e_p)^*\big) \, . 
 \end{align*}
-Here there is a recurrence of the subtlety mentioned in Remark \ref{??} and which also appeared in the proof of the Zorro move. Namely that the output of the $\varepsilon \Psi \At_2$ term is an element of $\Se = S_1 \otimes_k S_2$, with the $S_2$ component going to act on the $f_k$ which is subsequently introduced as an argument of the $\varepsilon \Psi \At_1$ term, so we keep in mind that this input is actually a sum of terms of the form $g_\beta f_k$.
+Here there is a recurrence of the subtlety mentioned in Remark \ref{remark:ringactionsubtle}. Namely, the output of the $\varepsilon \Psi \At_2$ term is an element of $\Se = S_1 \otimes_k S_2$, with the $S_2$ component going to act on the $f_k$ which is subsequently introduced as an argument of the $\varepsilon \Psi \At_1$ term, so we keep in mind that this input is actually a sum of terms of the form $g_\beta f_k$.
 
 Next we apply the quotient map~$\kappa$. By naturality of the Atiyah class (Lemma \ref{lemma:atiyahnat}) the sole effect of~$\kappa$ on the above is to replace $\At_1((Y\otimes X)\otimes( \bar Y \otimes \bar X)^\dual)$ by $\At_1((\bar Y\otimes \bar X)\otimes( \bar Y \otimes \bar X)^\dual)$. This means that we are in precisely the same situation as in the proof of the Zorro move for $\bar Y \otimes \bar X$, i.\,e.~after applying $\widetilde\eval_{\bar Y \otimes \bar X}$ and~$\rho$ we are left with
 \be\label{eq:valueofLpivot}
@@ -5698,6 +5722,9 @@ J.~W.~Gray, \textsl{Formal category theory: adjointness for 2-categories}, Sprin
 M.~Herbst and C.~I. Lazaroiu, \textsl{Localization and traces in open-closed
   topological {L}andau-{G}inzburg models}, JHEP \textbf{0505} (2005), 044,
   \href{http://www.arxiv.org/abs/hep-th/0404184}{[hep-th/0404184]}.
+
+\bibitem[Huy06]{huybrechts}
+D.~Huybrechts, \textsl{Fourier-Mukai Transforms in Algebraic Geometry}, Oxford Math. Monogr., Oxford Univ. Press, New York, 2006.
 
 %\bibitem[FFRS07]{ffrs0607247}
 %J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
