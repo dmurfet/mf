@@ -456,7 +456,7 @@ $$
 where $\Lambda_X^{(x)} = \partial_{x_1} D\ldots \partial_{x_n} D$ and $\Lambda_X^{(z)} = \partial_{z_1} D\ldots \partial_{z_m} D$. 
 In this way we respectively recover the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$) and the  \textsl{Kapustin-Li disk correlator}. As a matter of fact we will in addition give a new proof for the nondegeneracy of the Kapustin-Li pairing that does not only hold for the case $k=\nC$ but in the full generality that we allow. 
 
-Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:ocTFT} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} and~\cite{dm1102.2957} for $k=\nC$ using rather heavy or technical machinery. Or proof works for any commutative noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
+Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:ocTFT} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} and~\cite{dm1102.2957} for $k=\nC$. Our proof works for any noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
 $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
@@ -752,9 +752,6 @@ satisfying the associated Zorro moves
 %%%%%%%%%%%%%%%%%%%%%%
 \ee
 Note that in general there is no reason for the left and right adjoints to coincide.
-
-%\begin{remark} \textbf{todo} We can scale the evaluation and coevaluation by signs.
-%\end{remark}
 
 \subsection{Bicategory of Landau-Ginzburg models}\label{subsec:bicatLG}
 
@@ -1084,7 +1081,9 @@ Although $(\Bar, d_{\Bar})$ depends only on the pair $(R,W)$, the matrix factori
 
 \subsection{Residues}\label{section:residuebackground}
 
-Since residues feature prominently in the Kapustin-Li pairing and in the evaluation maps constructed in Section~\ref{sec:derivcoeval} we briefly recall their definition and basic property; see~\cite{TODO} for more details. Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x]$ the residue is the $k[y]$-linear map that sends a polynomial $g\in k[x,y]$ to the expression
+Residues feature prominently in the Kapustin-Li pairing and the evaluation maps, so we briefly recall their definition and basic property; see~\cite{Lipman84, Lipman} for more details. 
+
+Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x,y]$ the residue is the $k[y]$-linear map that sends a polynomial $g\in k[x,y]$ to the expression
 $$
 \Res_{k[x,y]/k[y]} \left[ \frac{g \, \underline{\operatorname{d}\! x}}{f_1, \ldots, f_n} \right] 
 \in k[y]
@@ -1099,7 +1098,7 @@ f'_i = \sum_{j=1}^n C_{ij} f_j
 \, , \qquad
 C_{ij} \in k[x,y] \, ,
 $$
-together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\operatorname{d}\! x}/(x_1^{a_1} ,\ldots, x_n^{a_n}) \right] = \delta_{a_1,1}\ldots \delta_{a_n,1}$. Note that the order of the elements of the regular sequence in the denominator plays a role; changing that order produces a permutation sign. 
+together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\operatorname{d}\! x}/(x_1^{a_1} ,\ldots, x_n^{a_n}) \right] = \delta_{a_1,1}\ldots \delta_{a_n,1}$. Note that the order of the elements of the regular sequence in the denominator plays a role; changing that order produces a permutation sign. There are various intrinsic ways of defining residues which make sense in very general contexts, not just for polynomials; using e.g. Hochschild homology \cite{Lipman}.
 
 In the next result we use the divided difference operators of \eqref{diffquotop}.
 
@@ -1112,9 +1111,9 @@ as an element of the algebra $k[x']/(f_1(x'),\ldots,f_n(x'))$.
 \end{proposition}
 % see rfper3
 \begin{proof}
-As far as we know the first proof for $k$ a field is contained in \cite{pv1002.2116}, and the proof given there should generalise to the present setting. A related result in the literature is due to Tate \cite[Theorem A$.3$]{mazur}, who shows that there is an isomorphism of $k[x]$-modules between $J = k[x]/(f_1,\ldots,f_n)$ and $\Hom_k(J,k)$ sending the identity to a functional which has a property analogous to \eqref{eq:integrateagainstd}. 
+As far as we know the first proof for $k$ a field is contained in \cite{pv1002.2116}, and the proof given there should generalise to the present setting. A related result appears in the Appendix to a paper of Mazur and Roberts, who attribute the argument to Tate \cite[Theorem A$.3$]{mazur}. They show that there is an isomorphism of $k[x]$-modules between $J = k[x]/(f_1,\ldots,f_n)$ and $\Hom_k(J,k)$ sending the identity to a functional which has a property analogous to \eqref{eq:integrateagainstd}. 
 
-If one knew \textsl{a priori} that this functional was the residue map, this would prove \eqref{eq:integrateagainstd}, but we do not know a reference for this fact! In any case, we give a proof in \cite{??}, which in particular proves \eqref{eq:integrateagainstd} for any noetherian $\nQ$-algebra $k$.
+If one knew \textsl{a priori} that this functional was the residue map, this would prove \eqref{eq:integrateagainstd}, but we do not know a reference for this fact. In any case, we give a proof in \cite{??}, which in particular proves \eqref{eq:integrateagainstd} for any noetherian $\nQ$-algebra $k$.
 \end{proof}
 
 \subsection{Perturbation}
@@ -1168,23 +1167,18 @@ In the cases of interest to us the sum $\sum_{m \ge 0} (\delta h)^m$ converges, 
 \subsection{Canonical morphisms}\label{section:canonicalmaps}
 % see NMF and NMF2
 
-We end this section by recalling the definition of several canonical maps. Throughout~$R$ is a ring and all factorisations are over~$R$. Let~$X$ and~$Y$ denote linear factorisations of~$W$ and~$V$, respectively.
-
-\begin{lemma}\label{lemma:iso_tensorhom1} There is a natural morphism of linear factorisations of $V - W$, 
-$$
+In this section~$R$ is a ring and~$X$ and~$Y$ denote linear factorisations of~$W$ and~$V$ over $R$, respectively. There is a natural morphism of linear factorisations of $V - W$, 
+\be
 \xi: X^{\vee} \otimes_R Y \lto \Hom_R(X,Y)\, , \qquad
 \xi( \nu \otimes y )(x) = (-1)^{|\nu||y|} \nu(x) \cdot y \, ,
-$$
+\ee
 which is an isomorphism if~$X$ is a finitely generated projective $R$-module.
-\end{lemma}
 
-\begin{lemma} There is a natural isomorphism of linear factorisations of $W + V$, 
-$$
+There is a natural isomorphism of linear factorisations of $W + V$, 
+\be
 \textup{swap}: X \otimes_R Y \lto Y \otimes_R X\,, \qquad
 x \otimes y \lmt (-1)^{|x||y|} y \otimes x\,.
-$$
-\end{lemma}
-
+\ee
 Precomposing~$\xi$ with this swap isomorphism we have a canonical morphism
 \be\label{eq:iso_tensorhom2}
 Y \otimes_R X^{\vee} \lto \Hom_R(X,Y)\,, \qquad
@@ -1192,18 +1186,13 @@ y \otimes \nu \lmt \big\{ x \lmt \nu(x) \cdot y \big\}\,.
 \ee
 Since it is unlikely to cause confusion, we also denote this map by $\xi$.
 
-\begin{lemma}\label{lem:shiftsigns}
 There are natural isomorphisms of linear factorisations of $W + V$, 
-$$
-X[i] \otimes_R Y \lto (X \otimes_R Y)[i]\,, \qquad
-x \otimes y \lmt x \otimes y\,,
-$$
-and
-$$
-X \otimes_R Y[i] \lto (X \otimes _R Y)[i]\,,\qquad 
+\begin{align}
+X[i] \otimes_R Y &\lto (X \otimes_R Y)[i]\,, \qquad
+x \otimes y \lmt x \otimes y\,,\\
+X \otimes_R Y[i] &\lto (X \otimes _R Y)[i]\,,\qquad 
 x \otimes y \lmt (-1)^{i|x|} x \otimes y\,.
-$$
-\end{lemma}
+\end{align}
 
 \section{Atiyah classes}\label{section:atiyahclasses}
 % see assat, the onct series
@@ -2573,7 +2562,7 @@ induced by the pairing
 \begin{equation}\label{eq:bracketkl}
 \langle \beta, \alpha \rangle_X = \Res_{R \otimes S/k} \left[ \frac{ \str( \beta \circ \alpha \circ \Lambda^{(x)} \Lambda^{(z)}) \, \underline{\operatorname{d}\!x} \underline{\operatorname{d}\!z}}{\partial_{x_1}W, \ldots, \partial_{x_n} W, \partial_{z_1} V, \ldots, \partial_{z_m} V} \right]
 \end{equation}
-where $\Lambda^{(x)} = \lambda_1 \cdots \lambda_n$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)} = \mu_1 \cdots \mu_m$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. That is, $D( \mu_j ) = \partial_{z_j} V \cdot 1_X$ (\textbf{todo} justify lack of symmetrisation).
+where $\Lambda^{(x)} = \lambda_1 \cdots \lambda_n$ is the product of homotopies for the action of $\partial_{x_i}W$ introduced earlier, and $\Lambda^{(z)} = \mu_1 \cdots \mu_m$ is the product of homotopies for the action of $\partial_{z_j}V$ on~$X$. That is, $D( \mu_j ) = \partial_{z_j} V \cdot 1_X$. To be precise, the pairing \eqref{eq:generalklpairing} of the theorem symmetrises over permutations, but Lemma \ref{lemma:symmetrystrres} shows that this is not necessary; the pairings \eqref{eq:generalklpairing} and \eqref{eq:bracketkl} are homotopic.
 
 To prove that $H: X \lto X$ is null-homotopic it is therefore sufficient to prove that $\langle H, - \rangle_X$ is a coboundary in the complex $\Hom_k( \End(X), k)$, or what is the same, that it can be factored through the differential $D$. This will follow from a careful study of the map $\str( H \circ - )$, the crux of which is: 
 \begin{lemma}\label{lemma:strhalpha} For any even degree $\alpha \in \End(X)$,
@@ -5166,7 +5155,7 @@ The first summand inside the supertrace gives a null-homotopic functional, and i
 as claimed.
 \end{proof}
 
-\begin{lemma} For any $\sigma \in S_n$ the map
+\begin{lemma}\label{lemma:symmetrystrres} For any $\sigma \in S_n$ the map
 \[
 (-1)^{|\sigma|} \langle \str( - \circ \lambda_{\sigma(1)} \cdots \lambda_{\sigma(n)} ) \rangle: \End(X) \lto k
 \]
@@ -5850,8 +5839,14 @@ C.~I. Lazaroiu, \textsl{On the boundary coupling of topological {L}andau-{G}inzb
 \bibitem[LM]{Calinetal}
 C.~I. Lazaroiu and D.~McNamee, unpublished.
 
-\bibitem[Li]{Lipman}
-J.~Lipman, \textsl{Residues and traces of differential forms via {H}ochschild homology}, Contemporary Mathematics Vol. \textbf{61}.
+\bibitem[Lip84]{Lipman84}
+J.~Lipman, \emph{Dualizing sheaves, differentials and residues on algebraic
+  varieties}, Ast\'erisque (1984), no.~117, ii+138.
+
+\bibitem[Lip87]{Lipman}
+\bysame, \emph{Residues and traces of differential forms via {H}ochschild
+  homology}, Contemporary Mathematics \textbf{61}, American Mathematical Society,
+  Providence, 1987.
 
 \bibitem[Lo]{Loday}
 J.-L. Loday, \textsl{Cyclic homology}, Springer, 1997.
