@@ -530,15 +530,25 @@ The identity $2$-endomorphism of a $1$-morphism $f: A \lto B$ is denoted $1_f$ a
 
 It is convenient to denote $2$-morphisms in a bicategory using \textsl{string diagram} notation. This was introduced in \cite{JSGoTCI,JSGoTCII} and the reader can also find very clear explanations in \cite{ladia,khovdia}. In order to fix our notation, recall that the diagram
 \be\label{eq:demonstratediagram}
-\xymatrix{
-B & & C  \\
-& \gamma \ar[u]^g\\
-\ar[ur]^f & A & \ar[ul]_h
-}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=.4cm]
+\draw[line width=0pt] 
+(0,0) node[line width=0pt] (gamma) {{\small $\gamma$}}
+(0,-1) node[line width=0pt] (A) {{\small $A$}}
+(-1,0.75) node[line width=0pt] (B) {{\small $B$}}
+(1,0.75) node[line width=0pt] (C) {{\small $C$}};
+\draw[->] (-1.5,-1.5) -- (gamma)
+node[midway, left] {{{\small$f$}}};
+\draw[->] (1.5,-1.5) -- (gamma)
+node[midway, right] {{{\small$h$}}};
+\draw[->] (gamma) -- (0,1.5)
+node[midway, left] {{{\small$g$}}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
 \ee
-represents a $2$-morphism $\gamma: f \otimes h \lto g$ in $\cat{B}$ with $f: A \lto B, g: C \lto B$ and $h: C \lto A$ all $1$-morphisms. We call $\gamma$ the \textsl{value} of the diagram \eqref{eq:demonstratediagram}.
+represents a $2$-morphism $\gamma: f \otimes h \lto g$ in $\cat{B}$ with $f: A \lto B, g: C \lto B$ and $h: C \lto A$ all $1$-morphisms. We call $\gamma$ the \textsl{value} of the diagram \eqref{eq:demonstratediagram}. In the following we will often refrain from displaying objects as labels for two-dimensional domains in such diagrams. 
 
-In this diagrammatic calculus all diagrams are \textsl{progressively planar} in the sense of \cite{JSGoTCI}, i.\,e.~arcs proceed strictly upwards. It is straightforward to check \cite[Theorem $1.2$]{JSGoTCI} that an arbitrary such diagram may be unambiguously assigned a value as a $2$-morphism in $\cat{B}$, by ``tensoring horizontally and composing vertically'' and this justifies rigorously the use of diagrams like the one above. Where appropriate, we allow ourselves to migrate the arc labels so that they decorate the top and bottom horizontal boundaries, as in the diagrams \eqref{Zorros} below.
+In this diagrammatic calculus all diagrams are \textsl{progressively planar} in the sense of \cite{JSGoTCI}, i.\,e.~arcs proceed strictly upwards. It is straightforward to check \cite[Theorem $1.2$]{JSGoTCI} that an arbitrary such diagram may be unambiguously assigned a value as a $2$-morphism in $\cat{B}$, by ``tensoring horizontally and composing vertically'' and this justifies rigorously the use of diagrams like the one above. Where appropriate, we allow ourselves to migrate the arc labels so that they decorate the top and bottom horizontal boundaries, as e.\,g.~in the diagrams \eqref{Zorros} below.
 
 We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{app:adjoints}.
 
@@ -2996,10 +3006,9 @@ Let $W\in R=k[x_1,\ldots,x_n]$, $V\in S=k[z_1,\ldots,z_m]$ be potentials and $X\
 $$
 X^\dual[m+n] \cong X^\vee[n][m+n] \cong X^\vee[m] \cong {}^\dual X \, . 
 $$
-Using $X^\dual[m+n] \cong R[m]\otimes_R R[n] \otimes_R X^\dual$ we write this as the isomorphism
+Using $X^\dual[m+n] \cong R[m]\otimes_R R[n] \otimes_R X^\dual$ we have a simple diagrammatic presentation for this isomorphism: 
 \be\label{eq:isoq}
-q_X 
-\; = \; 
+q_X :=
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=1cm]
 \draw[line width=1pt] 
@@ -3021,16 +3030,13 @@ q_X
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : R[m]\otimes_R R[n] \otimes_R X^\dual \lra {}^\dual X \, , \qquad
-q(\nu) = (-1)^{m|\nu|} \nu 
+q(\nu) = (-1)^{m|\nu|} \nu \, .
 \ee
-which has a simple diagrammatic presentation. 
-
-
 
 
 \subsection{Pivotality}\label{sec:pivotality}
 
-In this section we clarify the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$. Of particular importance is the identity~\eqref{eq:monoidalproperty} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:ocTFT}, e.\,g.~to prove the Cardy condition. 
+In this section we clarify the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$. Of particular importance is the identity~\eqref{eq:nicepivotality} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:ocTFT}, e.\,g.~to prove the Cardy condition. 
 
 
 %\begin{definition}\label{def.pivotal}
@@ -3097,11 +3103,11 @@ In this section we clarify the relation between the adjunctions given by $\eval_
 %hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
 %\end{definition}
 
-As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is interpreted as describing the same defect condition as~$X$ but with the opposite orientation. Since reversing the orientation twice is doing nothing, it is natural to expect that $X^{\dagger\dagger}$ should be identified with~$X$, in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the results which state that there is a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. This implies in particular that the left and right adjoints are isomorphic.
+As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is interpreted as describing the same defect condition as~$X$ but with the opposite orientation. Since reversing the orientation twice is doing nothing, it is natural to expect that $X^{\dagger\dagger}$ should be identified with~$X$, in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the result which states that in this setting there is always a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. This implies in particular that the left and right adjoints are isomorphic.
 
-The story for the bicategory $\LG$ is subtler, as we only expect the left and right adjoints of $X$ to be isomorphic when the number of variables in the regions on either side of $X$ agree mod $2$. This is the case, for example, when $X$ is an endomorphism of an object of $\LG$. Indeed, what we prove in this section implies that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. See Remark \ref{remark:notpivotal} for the construction of an isomorphism between $X$ and $X^{\dual \dual}$ in the case of equal variable parity.
+The story for the bicategory $\LG$ is subtler (TODO: more subtle?), as we only expect the left and right adjoints of $X$ to be isomorphic when the number of variables in the regions on either side of $X$ agree mod $2$. This is the case, for example, when $X$ is an endomorphism of an object of $\LG$. Indeed, what we prove in this section implies that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. See Remark \ref{remark:notpivotal} for the construction of an isomorphism between $X$ and $X^{\dual \dual}$ in the case of equal variable parity.
 
-In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double dual, but in terms of the relationship between the left and right adjoints. We have specified in~\eqref{eq:isoq} above a choice of isomorphism $q$ between the left adjoint and a suspension of the right adjoint of any $1$-morphism. We show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
+In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double-adjoint, but in terms of the relationship between the left and right adjoints. We have specified in~\eqref{eq:isoq} above a choice of isomorphism $q$ between the left adjoint and a suspension of the right adjoint of any $1$-morphism. We show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
 
 To explain what we mean, first we recall a formal result of category theory. If $X: W \lto V$ and $Y: V \lto U$ are $1$-morphisms in $\LG$ then the composite $X^{\dual} \otimes Y^{\dual}$ is right adjoint to $Y \otimes X$ and so by uniqueness of adjoints there is a canonical isomorphism
 \[
@@ -3111,7 +3117,7 @@ Similarly, there is an isomorphism
 \[
 \mathscr{L}: {}^\dual (Y \otimes X) \stackrel{\cong}{\lra} {}^\dual X \otimes {}^\dual Y\,.
 \]
-Concretely, we define these morphisms by the diagrams
+Concretely, we define these morphisms by the diagrams (TODO: relate to Corollary \ref{cor:nicerpivotalitydiagrams})
 \[
 TODO: diagrams
 \]
@@ -3406,11 +3412,80 @@ and so we compute using the formulas of Section \ref{section:atiyahclasses}, wit
 which completes the proof.
 \end{proof}
 
-\textbf{todo} Here go the diagrams from (cardc3).
-
 \begin{corollary}\label{cor:nicerpivotalitydiagrams}
-Give the better versions of the pivotality diagram.
+For $X$ and $Y$ as above we have 
+\be\label{eq:nicepivotality}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
+\draw[line width=1pt] 
+(2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
+(3,-2) node[line width=0pt, right] (X) {{\small $X$}}
+(-1,3) node[line width=0pt, right] (XY) {{\small $Y\otimes X$}}; 
+%% wiggly labels:
+%\draw[line width=1pt] 
+%(2.65,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}m$}}
+%(3.55,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}n$}}
+%(-0.45,2.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}};
+%
+%
+\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
+\draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
+\draw[redirected] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (2,0) -- (2,-2);
+\draw (3,0) -- (3,-2);
+\draw[dotted] (0,0) -- (1,0);
+\draw (-1,0) -- (-1,3);
+%
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.35,-0.76) .. controls +(-0.7,0.5) and +(0.1,-1) .. (-0.85,3); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.15,-2) .. controls +(0,1.3) and +(0.8,0.05) .. (1.5,0.75); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (3.15,-2) .. controls +(0,1.5) and +(2.0,0.05) .. (1.5,1.5); 
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+= (-1)^{m+p} \; 
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline, rotate=180]
+\draw[line width=1pt] 
+(-2,-2) node[line width=0pt, right] (X) {{\small $Y$}}
+(-1,-2) node[line width=0pt, right] (Y) {{\small $X$}}
+(2,3) node[line width=0pt, right] (XY) {{\small $Y\otimes X$}}; 
+%% wiggly labels:
+%\draw[line width=1pt] 
+%(2.6,2.1) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
+%(2.9,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
+%(-1.7,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
+%(-0.5,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
+%(-1.3,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $m$}};
+%
+%
+\draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
+\draw[redirected] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
+\draw[redirected] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
+\draw (-1,0) -- (-1,-2);
+\draw (-2,0) -- (-2,-2);
+\draw[dotted] (0,0) -- (1,0);
+\draw (2,0) -- (2,3);
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (2.25,3) -- (2.25,-2); 
+%
+%
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-1.85,-2) .. controls +(0,0.7) and +(-1.2,0.1) .. (-0.4,0.75); 
+%
+\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (1.25,-0.75) .. controls +(0.7,0.5) and +(2.5,-0.2) .. (-0.4,1.5); 
+%
+\end{tikzpicture}
+%%%%%%%%%%%%%%%%%%%%%%
+\, . 
+\ee
 \end{corollary}
+
+\begin{proof}
+TODO: \textsl{Say} something about wiggly calculus, no more diagrams! 
+\end{proof}
+
 
 \begin{remark}\label{remark:notpivotal}
 In the bicategory $\LG$ the natural candidate for a pivotal structure is
