@@ -60,6 +60,8 @@
 \def\sing{\operatorname{Sg}}
 \def\Hom{\operatorname{Hom}}
 \def\uHom{\underline{\Hom}}
+\def\End{\operatorname{End}}
+\def\uEnd{\underline{\End}}
 \def\modd{\operatorname{mod}}
 \def\Modd{\operatorname{Mod}}
 \def\Grmodd{\operatorname{GrMod}}
@@ -78,7 +80,6 @@
 \DeclareMathOperator{\Map}{Map}
 \DeclareMathOperator{\Qco}{Qco}
 \DeclareMathOperator{\Tr}{Tr}
-\DeclareMathOperator{\End}{End}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\tot}{Tot}
 \DeclareMathOperator{\skos}{K}
@@ -3670,20 +3671,20 @@ For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
-In any pivotal bicategory with adjoints there are natural maps between the endomorphism spaces of unit 1-morphisms. Roughly, these maps are constructed by capturing a 2-morphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism (and its adjoint). Below we present the details for the case of the bicategory $\LG$. We will also give the interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
+In the bicategory $\LG$ there are natural maps between the endomorphism spaces of unit 1-morphisms constructed by ``capturing'' a 2-endomorphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism. We give natural interpretation of this process in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
-Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\Hom$ and $\End$ we mean the spaces of 2-(endo)morphisms in $\LG$. We define \textsl{defect operators} 
+Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\uHom$ and $\uEnd$ we mean the spaces of 2-morphisms in $\LG$. We define \textsl{defect operators} 
 $$
-\mathcal D_l(X): \End(\Delta_V) \longrightarrow \Hom(\Delta_W, \Delta_W[m+n]) \, , \qquad
-\mathcal D_r(X): \End(\Delta_W) \longrightarrow \Hom(\Delta_V, \Delta_V[m+n])
+\mathcal D_l(X): \uEnd(\Delta_V) \longrightarrow \uHom(\Delta_W, \Delta_W[m+n]) \, , \qquad
+\mathcal D_r(X): \uEnd(\Delta_W) \longrightarrow \uHom(\Delta_V, \Delta_V[m+n])
 $$
-in terms of the morphisms encoding the monoidal and adjunction structures as follows. For $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we set 
+as follows. For $\phi\in \uEnd(\Delta_V)$ and $\psi\in \uEnd(\Delta_W)$ we set 
 \begin{align}
 \mathcal D_l(X)(\phi) & = \eval_X[m+n] \circ (1_{X^\dual}\otimes (\lambda_X \circ (\phi\otimes 1_X)\circ \lambda_X^{-1})) \circ \widetilde\coev_X \, , \nonumber \\ 
 \mathcal D_r(X)(\psi) & = \widetilde\eval_X[m+n] \circ (1_{X}\otimes (\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1})) \circ \coev_X \, . \label{defectactionwrittenout}
 \end{align}
-Note that since $\Hom(\Delta,\Delta[1]) = 0$ in $\LG$ the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$ are zero if $m+n$ is odd, while for even $m+n$ they map to $\End(\Delta_W)$ and $\End(\Delta_V)$, respectively. 
-In the special case $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
+Since $\uHom(\Delta,\Delta[1]) = 0$ for any unit $1$-morphism $\Delta$ in $\LG$ the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$ are zero if $m+n$ is odd, while for even $m+n$ they map to $\uEnd(\Delta_W)$ and $\uEnd(\Delta_V)$, respectively. 
+In the special case where $\phi=1$ and $\psi=1$ we obtain the left and right \textsl{quantum dimensions} $\operatorname{qdim}_l(X) = \mathcal D_l(X)(1)$ and $\operatorname{qdim}_r(X) = \mathcal D_r(X)(1)$. 
 
 Diagrammatically these definitions read
 \begin{align}
@@ -3797,10 +3798,10 @@ node[near end,right] {{{\small$\Delta_V$}}};
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{rightdefectaction}
 \end{align}
-in the nontrivial case, where we use the adjunction maps and notation of Section~\ref{subsec:alternatives} on the right-hand side. 
+in the nontrivial case, where we use the notation of Section~\ref{subsec:alternatives} on the right-hand side. 
 
 \begin{remark}
-$\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose nondegenerate pairing
+$\uEnd(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf(k[x], W)$~\cite{d0904.4713}. This space also precisely describes bulk fields of Landau-Ginzburg models with potential~$W$, it is a commutative Frobenius algebra whose nondegenerate pairing
 \be\label{bulktopmet}
 \langle \phi, \psi \rangle_W = 
 \Res_{k[x]/k} \left[ \frac{\phi\,  \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right]
@@ -3873,7 +3874,7 @@ node[near end,right] {{{\small$\Delta_V$}}};
 \ee
 
 \begin{proposition}\label{prop:defectaction}
-For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \End(X)$, $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$ we have
+For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \uEnd(X)$, $\phi\in \uEnd(\Delta_V)$ and $\psi\in \uEnd(\Delta_W)$ we have
 \begin{align*}
 \mathcal D_l^\Phi(X)(\phi) & 
 = (-1)^{{{n+1}\choose 2}}\Res_{k[x,z]/k[x]} \left[ \frac{\phi(z) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! z}}{\partial_{z_1} V, \ldots, \partial_{z_m} V} \right] , \\
@@ -3882,7 +3883,7 @@ For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \End(X)$, 
 \end{proposition}
 
 \begin{proof}
-We treat the case of $\mathcal D_r^\Phi(X)$ in detail, the argument for $\mathcal D_l^\Phi(X)$ works similarly. Since $\End(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to identify the variables on both sides of the unit 1-endomorphisms at appropriate places. Furthermore, $\rho_X$ will project out all non-zero degree contributions coming from the action of $\rho_{X}^{-1}$, so $\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
+We treat the case of $\mathcal D_r^\Phi(X)$ in detail, the argument for $\mathcal D_l^\Phi(X)$ is similar. Since $\uEnd(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\uEnd(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to identify the variables on both sides of the unit 1-endomorphisms at appropriate places. Furthermore, $\rho_X$ will project out all non-zero degree contributions coming from the action of $\rho_{X}^{-1}$, so $\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
 
 In the lower part of the expression for $\mathcal D_r^\Phi(X)(\psi)$ in~\eqref{defectactionwithfieldinsertion} we have 
 $$
@@ -3900,7 +3901,7 @@ $$
 \mathcal D_r^\Phi(X)(\psi) = 
 (-1)^{{m+1\choose 2}} \Res_{k[x,z]/k[z]} \left[ \frac{\psi(x) \str\big( \Phi \, \partial_{x_1} d_{X}\ldots \partial_{x_n} d_{X} \partial_{z_1} d_{X}\ldots \partial_{z_m} d_{X} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W, \ldots, \partial_{x_n} W} \right] + \mathcal O(\theta) \, . 
 $$
-Here we collectively denote the contributions from $\widetilde\eval_X$ of non-zero degree in the Koszul complex $\Delta_V$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_r^\Phi(X)(\psi)$ is a morphism in $\End(\Delta_V) = k[z]/(\partial_{z_i}V)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
+Here we collectively denote the contributions from $\widetilde\eval_X$ of non-zero degree in the Koszul complex $\Delta_V$ by $\mathcal O(\theta)$. Since we know that $\mathcal D_r^\Phi(X)(\psi)$ is a morphism in $\uEnd(\Delta_V) = k[z]/(\partial_{z_i}V)$ it follows that $\mathcal O(\theta)$ must be null-homotopic, thus concluding the proof. 
 \end{proof}
 
 \begin{corollary}
@@ -3908,7 +3909,7 @@ For any $X\in \hmf(k[x,z], V-W)$ the operators $\mathcal D_l(X)$ and $\mathcal D
 \be\label{Dadjoint}
 \big\langle \mathcal D_l(X)(\phi), \psi \big\rangle_W = \big\langle \phi , \mathcal D_r(X)(\psi) \big\rangle_V
 \ee
-for all $\phi\in \End(\Delta_V)$ and $\psi\in \End(\Delta_W)$. 
+for all $\phi\in \uEnd(\Delta_V)$ and $\psi\in \uEnd(\Delta_W)$. 
 \end{corollary}
 
 \begin{proof}
@@ -3967,19 +3968,19 @@ The defect operators satisfy the following compatibility conditions:
 Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$ be potentials and $Y\in \hmf(k[y,z],U-V)$, $X\in \hmf(k[x,z],V-W)$. 
 \begin{enumerate}
 \item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$. 
-\item $\mathcal D_l(X) = \mathcal D_r(X^\dual)$. 
+\item $\mathcal D_l(X) = \mathcal D_r(X^\vee)$ and $\mathcal D_r(X) = \mathcal D_l(X^\vee)$.
 \item $\mathcal D_l(X) \circ \mathcal D_l(Y) = \mathcal D_l(Y \otimes X)$ and $\mathcal D_r(Y) \circ \mathcal D_r(X) = \mathcal D_r(Y \otimes X)$. 
+\item $\mathcal D_l(X[a]) = (-1)^a \mathcal D_l(X)$ and $\mathcal D_r(X[a]) = (-1)^a \mathcal D_r(X)$.
 \end{enumerate}
+Analogous results hold when the operators are decorated with endomorphisms $\Phi, \Phi'$ of $X$ and $Y$.
 \end{proposition}
 
 \begin{proof}
-(i) This is a direct consequence of Proposition~\ref{prop:defectaction} together with the results of~\cite[Section\,5.1, Eq.\,(21)]{kr0405232}. 
+(i) is a direct consequence of Proposition~\ref{prop:defectaction} and the results of~\cite[Section\,5.1, Eq.\,(21)]{kr0405232} while (iv) is trivial.
 
-(ii): By the argument of Remark~\ref{remark:indeptlambda} reordering the partial derivatives of $d_{X^\dual}$ leaves $\mathcal D_r(X^\dual)$ invariant up to a sign. Together with $(d_{X^\vee})_{ij} = (-1)^{|e_j|}(d_X)_{ji}$ one checks that the claim then follows from Proposition~\ref{prop:defectaction}. 
+(ii): By the argument of Remark~\ref{remark:indeptlambda} reordering the partial derivatives of $d_{X^\vee}$ leaves $\mathcal D_r(X^\vee)$ invariant up to a sign. Together with $(d_{X^\vee})_{ij} = (-1)^{|e_i|}(d_X)_{ji}$ one checks that the claim then follows from Proposition~\ref{prop:defectaction}. 
 
-(iii): We prove the identity for $\mathcal D_l$ under the assumption that the variable numbers $n,m,p$ all have the same parity (note that $\mathcal D_l(X) \circ \mathcal D_l(Y)$ would be zero otherwise). The other cases work analogously. 
-
-The basic argument is a standard calculation with string diagrams. There are however slight modifications needed due to the fact that $\LG$ is only ``pivotal up to shifts'' as discussed in Section~\ref{sec:pivotality}. 
+(iii): We give the proof for $\mathcal D_l$, the other case is analogous. It suffices to prove the identity for $\mathcal D_l$ under the assumption that the variable numbers $n,m,p$ all have the same parity, since otherwise $\mathcal D_l(X) \circ \mathcal D_l(Y)$ is zero. The basic argument is a standard calculation with string diagrams. There are however slight modifications needed due to the fact that $\LG$ is only ``pivotal up to shifts'' as discussed in Section~\ref{sec:pivotality}. 
 
 We start by writing $\mathcal D_l(X) \circ \mathcal D_l(Y)$ as
 $$
@@ -4163,7 +4164,7 @@ $$
 %\end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%%
 $$
-where we used the Zorro moves to reexpress the identity on $Y\otimes X$, and here and below we do not display the argument of the defect operators. Now we are in a position to apply Corollary~\ref{cor:nicerpivotalitydiagrams} to the lower part of the diagram on the right-hand side to find that $\mathcal D_l(X) \circ \mathcal D_l(Y)$ is equal to
+where we used the Zorro moves to re-express the identity on $Y\otimes X$, and here and below we do not display the argument of the defect operators. Now we are in a position to apply Corollary~\ref{cor:nicerpivotalitydiagrams} to the lower part of the diagram on the right-hand side to find that $\mathcal D_l(X) \circ \mathcal D_l(Y)$ is equal to
 $$
 \!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
 %%%%%%%%%%%%%%%%%%%%%%
@@ -4744,53 +4745,93 @@ C
 (-1)^{n+1\choose 2} \,  
 \Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 $$
-Using the expressions $\beta^X(\varphi) = (-1)^{n+1\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n+1\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps we thus find from the above that
+Writing $\beta^X(\varphi) = (-1)^{n+1\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n+1\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps we thus find from the above that
 \be\label{C1}
 C = (-1)^{n+1\choose 2} \,  
 \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 \ee
-
-On the other hand, we may compute~$C$ by first fusing the two loops in~\eqref{annulus} together to obtain a single loop labelled by ${}^\dual X\otimes Y \cong \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$. Then we use
-$$
-\eval_{{}^\dual X \otimes Y} ((e_i^* \otimes f_j)^* \otimes (e_a^* \otimes f_b)) = \delta_{ia} \, \delta_{jb} 
-\, , \qquad 
-\widetilde\coev_{{}^\dual X \otimes Y} (1) = \sum_{i,j} (-1)^{|e_i| + |f_j|} (e_i^* \otimes f_j)^* \otimes (e_i^* \otimes f_j)
-$$
-to arrive at
-\be\label{C2}
-C 
-= 
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+On the other hand, we may compute~$C$ by inflating the $X$-loop in \eqref{annulus} and fusing it with the outer $Y$-loop, creating a single loop labelled by $X^\vee[n] \otimes Y \cong \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$. Rigorously, this process is described by the series of equalities
+\[
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
 \nicecolourscheme (0,0) circle (2);
 \nicereallynocolourscheme (0,0) circle (1);
 \fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
 \draw (0,0) circle (2);
-\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
-\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; %{{\small$\eval_Y$}}; 
+%\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; % {{\small$\widetilde\coev_Y$}}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
 %
 \draw (0,0) circle (1);
-\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; 
-\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; 
+\draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
+%\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
+\fill (180:0.9) circle (0pt) node[right] {{\small$X$}};
+\fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
 \end{tikzpicture} 
-%%%%%%%%%%%%%%%%%%%%%%
-= 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
+\nicecolourscheme (0,0) circle (2);
+\nicereallynocolourscheme (0,0) circle (1);
+\fill (1.5,0) circle (0pt) node[white] {{\small$W$}};
+\draw (0,0) circle (2);
+\draw[->, very thick] (-0.100,2) -- (-0.101,2) node[above] {}; %{{\small$\eval_Y$}}; 
+%\draw[->, very thick] (0.100,-2) -- (0.101,-2) node[below] {}; % {{\small$\widetilde\coev_Y$}}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$\psi$}};
+%
+\draw (0,0) circle (1);
+\draw[->, very thick] (-0.100,1) -- (-0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
+%\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
+\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi^{\vee}$}};
+\fill (180:0.9) circle (0pt) node[right] {{\small$X^{\vee}[n]$}};
+\fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+=
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
 \draw[ultra thick] (0,0) circle (2);
 \draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
-\fill (135:2) circle (2.5pt) node[left] {{\small$1\otimes\varphi$}};
+\fill (135:2) circle (2.5pt) node[left] {{\small$\varphi^{\vee}\otimes 1$}};
+\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee}[n] \otimes Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
-= 
-\str ( {}_\psi m_\varphi ) 
+\]
+where in the first step we use Proposition \ref{prop:defectactionproperties}(ii) to reorient the inner loop, and in the second step we use (iii) to fuse the two loops (note that the proof of (iii) relies on Proposition~\ref{prop:monoidalproperty}). The complexes $X^{\vee}[n] \otimes Y$ and $\Hom(X,Y)[n]$ are isomorphic, so
+\be\label{eq:finaldiagramcardycond}
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\draw[ultra thick] (0,0) circle (2);
+\draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
+\fill (135:2) circle (2.5pt) node[left] {{\small$\varphi^{\vee}\otimes 1$}};
+\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee}[n] \otimes Y$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+=
+%%%%%%%%%%%%%%%%%%%%%%
+\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\draw[ultra thick] (0,0) circle (2);
+\draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
+\draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
+\fill (45:2) circle (2.5pt) node[right] {{\small${}_\psi m_{\varphi}$}};
+\fill (0:2.7) circle (0pt) node[right] {{\small$\Hom(X,Y)[n]$}};
+\end{tikzpicture} 
+%%%%%%%%%%%%%%%%%%%%%%
+= (-1)^n\str({}_\psi m_{\varphi})
 \ee
-where $ {}_\psi m_\varphi \in \End_k(\Hom_{\hmf(k[x],W)}(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
-The second equality in~\eqref{C2} follows from Proposition~\ref{prop:defectactionproperties}(iii) (whose proof in turn relies on Proposition~\ref{prop:monoidalproperty}). Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
+where $ {}_\psi m_\varphi \in \End_k(\Hom(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
+
+The value of an oriented loop, labelled by a finite rank $\mathbb{Z}_2$-graded $k$-complex $F$ with the insertion of a morphism of complexes $\phi: F \lto F$, is easily checked to be the supertrace of $\phi$. In this case $\Hom(X,Y)$ is a complex of infinite rank $\mathbb{Z}_2$-graded free modules. If $k$ were a field this complex would be isomorphic, in $\HMF(k,0)$, to the finite dimensional $\mathbb{Z}_2$-graded vector space $H^*\Hom(X,Y)$ and the value of \eqref{eq:finaldiagramcardycond} would be the supertrace of the action of ${}_\psi m_{\varphi}$ on this cohomology.
+
+In general $\Hom(X,Y)$ is not isomorphic to its cohomology, but it is at least a summand in the homotopy category of a finite rank $\mathbb{Z}_2$-graded free $k$-module and therefore any operator on $\Hom(X,Y)$ has a well-defined supertrace. Indeed, once we choose such a split embedding of $\Hom(X,Y)$ in something finite rank, the supertrace can be computed by writing out the diagram \eqref{eq:finaldiagramcardycond} as a series of morphisms, using the evaluation and coevaluation maps for infinite rank objects produced in Appendix \ref{??} from such a choice of embedding.
+
+Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
 
 \begin{theorem}\label{thm:CardyCondition}
 The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have 
