@@ -236,14 +236,6 @@
 
 
 \title{Adjunctions and defects in Landau-Ginzburg models}
-%
-% Other titles: 
-% On signs
-% Rise of the Planet of the Coevaluations
-% Adjoint defects in Landau-Ginzburg models
-% Adjunction and defects in Landau-Ginzburg models
-% Adjunctions and defects in Landau-Ginzburg models
-% On adjunctions and defects in Landau-Ginzburg models
 
 \dedication{To Ragnar-Olaf Buchweitz on the occasion of his sixtieth birthday}
 
@@ -255,9 +247,8 @@
 \email{daniel.murfet@math.ucla.edu}
 \address{Department of Mathematics, UCLA}
 
-\classification{18D05, 18D25, 57R56}
+\classification{18D05, 57R56}
 %18D05  	Double categories, $2$-categories, bicategories and generalizations
-%18D25  	Strong functors, strong adjunctions
 %57R56  	Topological quantum field theories
 
 \begin{abstract}
@@ -480,11 +471,11 @@ $$
 $$
 (which is to be identified with an annulus correlator) can be evaluated in two ways: either by first contracting the inner $X$-loop and then contracting the outer $Y$-loop, or by first fusing~$X$ with~$Y$ and then contracting the fused $(X^\vee \otimes Y)$-loop. Applying special cases of our evaluation and coevaluation maps then immediately produces the Cardy condition, see Theorem~\ref{thm:CardyCondition}. 
 
-Let us conclude this introductory section by naming some further motivations for, and future applications of, the results presented in this paper. One of the most intriguing properties of Landau-Ginzburg models is that they are on one of the \textsl{CFT/LG correspondence}. This roughly states that many aspects of a large class of conformal field theories (CFTs) can be described in terms of (non-conformal) Landau-Ginzburg models. CFTs have an extremely rich structure, and the subclass of \textsl{rational} CFTs are particularly well-understood. Starting with~\cite{tft1} their description in terms of a beautiful categorical theory has been developed, and one may wonder which structures encountered in rational CFT can also be found in the theory of Landau-Ginzburg models -- whether or not they correspond to a rational CFT. The complete answer to this question is not known, but at least all the formal properties of $\LG$ that we establish in this paper also hold for the bicategory of topological defects in rational conformal field theory. Of course this by no means exhausts the richness of rational CFT, and there remain many properties of Landau-Ginzburg models to be uncovered, inspired by the CFT/LG correspondence. 
+Let us conclude this introductory section by naming some further motivations for, and future applications of, the results presented in this paper. One of the most intriguing properties of Landau-Ginzburg models is that they are on one side of the \textsl{CFT/LG correspondence}. This roughly states that many aspects of a large class of conformal field theories (CFTs) can be described in terms of (non-conformal) Landau-Ginzburg models. CFTs have an extremely rich structure, and the subclass of \textsl{rational} CFTs are particularly well-understood. Starting with~\cite{tft1} their description in terms of a beautiful categorical theory has been developed, and one may wonder which structures encountered in rational CFT can also be found in the theory of Landau-Ginzburg models -- whether or not they correspond to a rational CFT. The complete answer to this question is not known, but at least all the formal properties of $\LG$ that we establish in this paper also hold for the bicategory of topological defects in rational conformal field theory. Of course this by no means exhausts the richness of rational CFT, and there remain many properties of Landau-Ginzburg models to be uncovered, inspired by the CFT/LG correspondence. 
 
 One example is the \textsl{generalised orbifold} procedure of~\cite{ffrs0909.5013} which constructs all rational CFTs of fixed central charge and with identical left and right chiral algebras from any given single such CFT. Carried over to Landau-Ginzburg models this leads to the following picture: under the right circumstances a Landau-Ginzburg model with potential~$V$ can be obtained from a model with completely different potential~$W$ by identifying a 1-endomorphism~$F$ in $\LG(W,W)$ that can be equipped with the structure of a special symmetric Frobenius algebra (see e.\,g.~\cite[Section~3]{tft1}). Then the category of matrix factorisations of~$V$ is equivalent to the category of $F$-modules. The results of the present paper facilitate the construction of suitable algebras as follows: for any defect $X\in \LG(W,V)$ with invertible \textsl{quantum dimension} $\mathcal D_r(X)(1)$ we obtain a special symmetric Frobenius algebra $F = X^\dual \otimes X$ that allows to recast everything about theory~$V$ in terms of theory~$W$. Also note that with our explicit formula~\eqref{DrXpsi} the condition of invertibility of the quantum dimension is very easy to check in practice. The details of this construction will be described along with examples in the forthcoming paper~\cite{genorb}. 
 
-We also expect the results of this paper to be relevant to the construction of $2$-representations of quantum groups from matrix factorisations. This should be related to the link homology of Khovanov and Rozansky \cite{kr0401268}. 
+Finally, we also expect the results of the present paper to be relevant to the construction of $2$-representations of quantum groups from matrix factorisations. This should be related to the link homology of Khovanov and Rozansky \cite{kr0401268}, and ultimately form a crucial part in constructing of the four-dimensional TFT which is believed to be the origin of categorified link invariants. 
 
 The rest of the present paper is organised as follows. In Section~\ref{sec:Background} we collect necessary background material on bicategories with adjoints, matrix factorisations, noncommutative forms, residues, and homological perturbation theory. Section~\ref{section:atiyahclasses} introduces various notions of associative Atiyah classes, which together with homological perturbation allow us to invert and lift up to homotopy certain maps pertaining to the stabilised diagonal in Section~\ref{section:pertandhtpy}. Using these results we construct explicit evaluation and coevaluation maps in Section~\ref{sec:derivcoeval} and prove that they indeed endow the bicategory $\LG$ with left and right adjoints in Section~\ref{sec:Zorro}. In Section~\ref{sec:wiggliesandsigns} we discuss the details of the graphical calculus as well as pivotality, both important for applications of our main result, some of which we describe in the following three sections: defect action on bulk fields in Section~\ref{sec:defectaction}, open/closed TFT and in particular the Cardy condition in Section~\ref{sec:ocTFT}, and a bicategorical trace in Section~\ref{sec:shadows}. Finally, in Section~\ref{section:dualityadjointop} we provide a proof, similar in spirit to the construction of Section~\ref{sec:Zorro}, of the nondegeneracy of the Kapustin-Li pairing, for the general base~$k$ over which we work also in the bulk of the paper. 
 
@@ -955,10 +946,6 @@ of~$R$, where the degree-lowering differential~$b'$ is the $R$-bilinear map
 $$
 (a_0,\ldots,a_n)\otimes a_{n+1} \lmt \sum_{i=0}^{n-1} (-1)^i (a_0,\ldots,a_i a_{i+1},\ldots, a_n) \otimes a_{n+1} + (-1)^n (a_0,\ldots,a_{n-1}) \otimes a_n a_{n+1} \, . 
 $$
-%Equivalently, in differential form notation~$b'$ acts as
-%$$
-%b': da_0\ldots da_n\otimes a_{n+1} \lmt (-1)^{n-1} a_0da_1\ldots da_{n-1} \cdot a_n \otimes a_{n+1} + (-1)^n a_0 da_1\ldots da_{n-1} \otimes a_n a_{n+1} \, . 
-%$$
 From this it is straightforward to check that we have the identities
 \be\label{b'd+db'} 
 b'd+db'=1_{\Bar} \, , \qquad b' s + s b' = 1_{\Bar}\,.
@@ -1300,8 +1287,6 @@ We will also need % see shati2
 \ee
 \end{remark}
 
-% \subsection{Calculus of Atiyah classes}\label{section:calculusatiyah}
-
 With the above notation, let $(X,d_X)$ and $(Y,d_Y)$ be $\nZ _2$-graded free $\Re $-modules equipped with odd $\Re $-linear differentials (again, no condition on $d_X^2$ or $d_Y^2$) and respective homogeneous bases $\{ e_i \}_{i}$ and $\{ \by_j \}_{j}$. Giving $X \otimes Y$ the differential $d_{X \otimes Y} = d_X \otimes 1 + 1 \otimes d_Y$ and the basis $\{ e_i \otimes \by_j \}_{i,j}$ we have for $u \in \{1,2\}$ three operators
 \begin{align*}
 \At_u(X) &\in \End_k( X \otimes \Bar ) \, ,\\
@@ -1314,7 +1299,7 @@ An important property of the commutative Atiyah class is that the class of $X \o
 X \otimes \reprod_*(\Bar) \otimes \reprod_*(\Bar) \otimes Y \ar[r]^-{1 \otimes \times \otimes 1} & X \otimes \reprod_*(\Bar) \otimes Y \ar[r]^-{\cong} & X \otimes Y \otimes \Bar
 }
 \end{equation}
-where the last map is the graded twist on the second two components. %The following lemma is sufficient for our purposes, but it would be desirable to have a natural, basis-free analogue.
+where the last map is the graded twist on the second two components. 
 
 \begin{lemma}\label{lemma:atshufat} 
 For $l \ge 0$ and $u \in \{1,2\}$ we have
@@ -1339,13 +1324,9 @@ q = |e_{i_{l-p}}| + \ldots + |e_{i_1}| + |\by_{j_p}| + \ldots + |\by_{j_1}| + (l
 But considering \eqref{eq:powerofatiyah} it is straightforward to check that the right-hand side of~\eqref{eq:atshufat} is a sum over the same collection of terms, and the signs match, so that \eqref{eq:atshufat} holds for $u = 2$. The situation for $\At_1$ is similar.
 \end{proof}
 
-%\begin{remark}\label{remark:twistshufat} If in \eqref{eq:shuffle_opat} instead of twisting $\Bar$ to the right we twisted it to the left, so that the operation terminated in $\gamma_*(\Bar) \otimes X \otimes Y$, then \eqref{eq:atshufat} would instead compute $\Atlarrow(X \otimes Y)^m( e_i \otimes \by_j )$.
-%\end{remark}
-
 \subsection{Connections}\label{section:connections}
 
 It is better to construct the Atiyah class from a choice of connection rather than a choice of basis, and such is the purpose of this section. However as we have already explained, these remarks will not be needed in the sequel and are included only for the sake of completeness. For this reason we restrict ourselves to a discussion of only one of the many ``types'' of Atiyah class presented above. 
-%, the modifications for the other cases being left to the reader.
 
 Let $R$ be a ring, $A$ an $R$-algebra and $\Omega A = \Omega_R A$ the differential graded algebra $(\Omega A, d, \cdot)$ of noncommutative differential forms explained in Section \ref{subsec:Bar}. An $R$-linear \textsl{connection} on a $\nZ _2$-graded $A$-module $X$ is an $R$-linear map
 \[
@@ -1410,7 +1391,7 @@ is a superconnection. The \textsl{curvature} of this superconnection is
 \]
 In this paper our connections $\nabla$ are flat, i.\,e.~$\nabla^2 = 0$, and so if $(X,D)$ is a complex the curvature~$\Theta^2$ is precisely the Atiyah class $[\nabla, D]$.
 \end{remark}
-%  \cite[Appendix $1$]{arnold}
+
 
 \section{Perturbation and inverting unit actions}\label{section:pertandhtpy}
 % mostly from barmf5, unitlg. The stuff involving s is from coevc3.
@@ -1466,8 +1447,6 @@ s(x_0,x_1,\ldots) &= (0, s(x_0), s(x_1), \ldots) \, , \\
 d \widetilde{W} \times (x_0,x_1,\ldots) &= (0, d \widetilde{W} \times x_0, d \widetilde{W} \times x_1, \ldots)
 \end{align*}
 where $d$ and $s$ are extended to $X \otimes \Bar$ as in Section \ref{section:atiyahclasses} using the chosen basis. 
-
-%For the next result assume that $U + \widetilde{W}$ belongs to the image of $S \otimes_k R_i$ in $S \otimes_k \Re $ for some $i \in \{1,2\}$ so that it makes sense to talk about linear factorisations of $U + \widetilde{W}$ over $S \otimes_k R_i$.
 
 \begin{lemma} $( X \, \widehat{\otimes}\, \Bar, d_X + b' + d\widetilde{W} \times (-) )$ is a linear factorisation of $U + \widetilde{W}$.
 \end{lemma}
@@ -1588,9 +1567,6 @@ More precisely, there is a left $R_1$-linear deformation retract datum
 \begin{proof}
 Using the second equation of Lemma \ref{lemma:shortobs} the proof is almost identical to that of Proposition \ref{prop:finalpertdefo}, so we omit it.
 \end{proof}
-
-%\begin{remark} In the situation of Remark \ref{remark:specialcaseinvert} we have shown that $\pi: X' \,\widehat{\otimes}_R\, \Bar \lto X'$ is an $R$-linear homotopy equivalence for the two possible $R$-actions on $X' \,\widehat{\otimes}_R\, \Bar$, the $R$-action on $X'$ which moves across the tensor to act as $R_1$ on $\Bar$, and the $R_2$-action on $\Bar$.
-%\end{remark}
 
 Now we turn to the Koszul stabilisation of the diagonal. Assume that $R = k[x_1,\ldots,x_n]$ and let $(\Delta, d_{\Delta})$ be the finite-rank matrix factorisation of $\widetilde{W}$ given in Section~\ref{subsec:bicatLG} where $d_{\Delta} = \delta_{+} + \delta_{-}$. We continue to assume that $X$ is a matrix factorisation as given in \eqref{eq:xisamf}, and we emphasise that $W$ is arbitrary, not necessarily a potential.
 
@@ -1730,8 +1706,6 @@ A straightforward computation yields (with $D = d_Y$)
 which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:liftingresult}.
 \end{proof}
 
-%\begin{remark} As the proof makes clear, we could have made use of $\pi^{-1}_1$ instead of $\pi^{-1}_2$ in the construction of $\varphi_{\textup{lift}}$, so that an alternative chain level representative of this homotopy class could be given using $\lAt_{1}$ instead of $\lAt_{2}$.
-%\end{remark}
 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 
@@ -1757,7 +1731,6 @@ In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define evalu
 and derive explicit formulas for these maps in terms of Atiyah classes. We already give these formulas below; the rest of the section will be spent justifying that these expressions do in fact define chain maps representing canonical morphisms \eqref{eq:derivcoeval1} and \eqref{eq:derivcoeval2} in the homotopy category of matrix factorisations. In Section~\ref{sec:Zorro} we will prove that these maps determine adjunctions ${}^\dual X \dashv X$ and $X \dashv X^\dual$ by proving the Zorro moves. 
 
 Using the formulas for exponentiated Atiyah classes from Section \ref{section:atiyahclasses} and the explicit formula~\eqref{intro_psi} for the map $\Psi: \Bar \lra \Delta$ we also give completely elementary expressions for these maps involving only divided difference operators, see Remarks \ref{remark:explicitev} and \ref{remark:coev_divideddiff}. These explicit expressions can be useful in concrete examples, but in general they are difficult to manipulate, hence for example in the proof of the Zorro moves we will use the presentations \eqref{eq:coev10}--\eqref{eq:constructevalmap01} in terms of Atiyah classes. 
-%While concrete, these expressions are very difficult to work with directly, and in particular they will not be used in the sequel.
 
 While the homotopy classes of these morphisms are canonical the formulas depend on a choice of homogeneous basis $\{ e_i \}_{i}$ for $X$ with dual basis $\{ e_i^* \}_{i}$. Representatives for the coevaluation morphisms are given by the chain maps
 \begin{align}
@@ -2493,7 +2466,6 @@ Given a sequence $\bs{i} = (i_1,\ldots,i_p)$ in $\{1, \ldots, n\}$ (not necessar
 |\bs{i}| = \sum_{1 \le a < b \le p} \delta_{i_a > i_b}\, , \qquad \gamma(\bs{i}) = |\bs{i}| + i_1 + \ldots + i_p\,.
 \ee
 The empty sequence $\emptyset$ has length zero. We write $\Lambda_{i_1,\ldots,i_p}$ for the product $\Lambda = \lambda_1 \ldots \lambda_n$ with the $\lambda_{i_1},\ldots,\lambda_{i_p}$ omitted, and $f_i = \partial_{x_i} W$ as before.
-%Let $D$ denote the differential on $\End(X)$, i.\,e.~the commutator with~$d_X$.
 
 % see przor4
 \begin{lemma}\label{lemma:zorromain} For $\varphi \in \End(X) \otimes_{R_1} \Bar$ and $0 \le p < n$ we have
@@ -3058,71 +3030,6 @@ q(\nu) = (-1)^{m|\nu|} \nu \, .
 \subsection{Pivotality}\label{sec:pivotality}
 
 In this section we clarify the relation between the adjunctions given by $\eval_X, \coev_X$ and $\widetilde\eval_X, \widetilde\coev_X$. Of particular importance are the identities~\eqref{eq:nicepivotality} and~\eqref{eq:nicepivotality2} which we will later need for applications in Sections~\ref{sec:defectaction} and~\ref{sec:ocTFT}, e.\,g.~to prove the Cardy condition. 
-
-
-%\begin{definition}\label{def.pivotal}
-%We call a bicategory with right adjoints \textsl{pivotal} if for each 1-morphism~$X$ there is a natural monoidal 2-isomorphism $\delta_X: X\lra X^{\dual\dual}$. It then follows that~$X^\dual$ is also left adjoint to~$X$, with adjunction maps $\overline\eval_X = \widetilde\eval_{X^\dual}\circ (1_{X^\dual} \otimes \delta_{X})$ and $\overline\coev_X = (\delta_X^{-1} \otimes 1_{X^\dual} ) \circ \widetilde\coev_{X^\dual}$. By the condition for~$\delta$ to be natural monoidal we mean that the identities
-%$$
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-%\draw[line width=0] 
-%(-1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
-%(1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-%\fill (0,0) circle (2.5pt) node[left] {{\small $\varphi$}};
-%\draw[redirected] (0,0) .. controls +(0,-1) and +(0,-1) .. (-1,0);
-%\draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (0,0);
-%\draw (-1,0) -- (A); 
-%\draw (1,0) -- (A2); 
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%=
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-%\draw[line width=0] 
-%(1,1.25) node[line width=0pt] (A) {{\small $Z^\dual$}}
-%(-1,-1.25) node[line width=0pt] (A2) {{\small $Y^\dual$}}; 
-%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-%\draw[directed] (1,0) .. controls +(0,-1) and +(0,-1) .. (0,0);
-%\fill (0,0) circle (2.5pt) node[right] {{\small $\varphi$}};
-%\draw (-1,0) -- (A2); 
-%\draw (1,0) -- (A); 
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%\, , \qquad 
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
-%\draw[line width=1pt] 
-%(-2,-1) node[line width=0pt] (X) {{\small $Y^\dual$}}
-%(-1,-1) node[line width=0pt] (Y) {{\small $X^\dual$}}
-%(2,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-%\draw[directed] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
-%\draw[directed] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
-%\draw[directed] (2,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-%\draw (-1,0) -- (Y);
-%\draw (-2,0) -- (X);
-%\draw[dotted] (0,0) -- (1,0);
-%\draw (2,0) -- (XY);
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%=
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline=0.45cm]
-%\draw[line width=1pt] 
-%(2,-1) node[line width=0pt] (Y) {{\small $Y^\dual$}}
-%(3,-1) node[line width=0pt] (X) {{\small $X^\dual$}}
-%(-1,2) node[line width=0pt] (XY) {{\small $(X\otimes Y)^\dual$}}; 
-%\draw[directed] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
-%\draw[directed] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
-%\draw[directed] (-1,0) .. controls +(0,-1) and +(0,-1) .. (0.5,0);
-%\draw (2,0) -- (Y);
-%\draw (3,0) -- (X);
-%\draw[dotted] (0,0) -- (1,0);
-%\draw (-1,0) -- (XY);
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
-%$$
-%hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
-%\end{definition}
 
 As mentioned in the Introduction, the adjoint $X^{\dual}$ of a $1$-morphism $X$ is interpreted as describing the same defect condition as $X$ but with the opposite orientation. Since reversing the orientation twice is doing nothing, it is natural to expect that $X^{\dagger\dagger}$ should be identified with~$X$, in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the result which states that in this setting there is always a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. This implies in particular that the left and right adjoints are isomorphic.
 
@@ -3691,10 +3598,6 @@ Diagrammatically these definitions read
 \nicepalecolourscheme (0,0) circle (2);
 \fill (-1.1,-1.1) circle (0pt) node[white] {{\small$V$}};
 %
-%\fill (180:2) circle (0pt) node[left] {{\small$x\vphantom{z'}$}};
-%\fill (180:2) circle (0pt) node[right] {{\small$z\vphantom{z'}$}};
-%\fill (0:2) circle (0pt) node[left] {{\small$z'\vphantom{z'}$}};
-%\fill (0:2) circle (0pt) node[right] {{\small$x'\vphantom{z'}$}};
 \draw (0,0) circle (2);
 \fill (180:2) circle (0pt) node[right] {{\small$X$}};
 \draw[<-, very thick] (0.100,-2) -- (-0.101,-2) node[above] {}; 
@@ -3801,8 +3704,6 @@ $\uEnd(\Delta_W) = k[x]/(\partial_{x_i}W)$ is the Hochschild cohomology of $\hmf
 \Res_{k[x]/k} \left[ \frac{\phi\,  \psi \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W}\right]
 \ee
 describes 2-point correlators on the sphere, see also Section~\ref{sec:ocTFT}. Furthermore, matrix factorisations of $V-W$ describe defect conditions between different Landau-Ginzburg models. Hence the maps~\eqref{leftdefectaction} and~\eqref{rightdefectaction} have the natural interpretation in terms of defect operators on bulk fields: for example, a bulk field~$\phi$ in the theory with potential~$V$ is mapped to the bulk field $\mathcal D_l(X)(\phi)$ in the theory with potential~$W$ by wrapping around its insertion on the worldsheet a defect line labelled by~$X$, and then collapsing this loop onto the insertion point. This limiting process is nonsingular as the bicategory $\LG$ describes the purely topological sector of Landau-Ginzburg models. 
-
-%As already observed in Section~\ref{sec:Introduction}, for the special case $V=0$ the right defect action in~\eqref{defectaction} is precisely the disk correlator of the bulk field~$\psi$ in the presence of the boundary condition~$X$. If we allow for boundary field insertions on the $X$-line we naturally recover the general disk correlator as a 2-morphism in our setting, as follows from the proof of Proposition~\ref{prop:defectaction}. This is another example of the general fact that string diagrams in the bicategory $\LG$ exactly compute the correlators of worldsheets with insertions that they intuitively depict. 
 \end{remark}
 
 Using the ``folding trick'', which relates defects to boundary conditions in a product theory, one can argue for explicit expressions for $\mathcal D_l(X)$ and $\mathcal D_r(X)$ (in particular, from this perspective it is also immediate that $\mathcal D_l(X)$ and $\mathcal D_r(X)$ should vanish for odd $m+n$). This was done in~\cite{cr1006.5609} for the case $V=W$ in one variable. Here we use our adjunction formulas to directly prove it for the general case. In addition, we want to allow for the additional decoration with a map $\Phi: X \lra X$ for which we define the following variants of the operators $\mathcal D_l(X)$ and $\mathcal D_r(X)$: 
@@ -3883,13 +3784,6 @@ In the lower part of the expression for $\mathcal D_r^\Phi(X)(\psi)$ in~\eqref{d
 $$
 \coev_X(1) = \sum_j (-1)^{{m\choose 2}} \partial_{[1]} d_X \ldots \partial_{[m]} d_X e_j \otimes e_j^* \, . 
 $$
-%\begin{align}
-%\widetilde\coev_X (1) & = \sum_j (-1)^{|e_j|} (\varepsilon\Psi) \left( (-\At_{X})^n (e_j^*\otimes e_j) \right) \nonumber \\
-%& = \sum_j (-1)^{|e_j| + n} (-1)^{(|e_j| + 1)+\ldots +(|e_j| + n) + n|e_j|} e^*_{j} \otimes e_{k_n} \otimes (\varepsilon\Psi) \left( d(d_{X})_{k_n k_{n-1}} \ldots d(d_{X})_{k_1 j} \right) \nonumber \\
-%& = \sum_j (-1)^{|e_j|(|e_j| + n) + {n+1\choose 2} + n} e_j^* \otimes e_{k_n}\big( \partial_{[1]} d_{X} \ldots \partial_{[n]} d_{X} \big)_{k_n j} \nonumber \\
-%& = \sum_j (-1)^{|e_j|(|e_j| + n) + {n\choose 2}} e_j^* \otimes \big( \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X} \big) (e_{j}) \label{coevtilde1}
-%\end{align}
-%which we identify with $(-1)^{{n\choose 2}} \partial_{x_1} d_{X} \ldots \partial_{x_n} d_{X}$ in $\End(X)$. Note that in the last step leading to~\eqref{coevtilde1} we set $\partial_{[i]} d_{X}(x,z) = \partial_{x_i} d_{X}(x,z)$ since $x=x'$ in $\End(\Delta_W)$. 
 Next we apply~$\Phi$, $\psi$ and $\widetilde\eval_X$. Since the latter maps back to~$\Delta_V$ we may set $\partial_{[i]} d_X = \partial_{z_i} d_X$. Thus we obtain
 $$
 \mathcal D_r^\Phi(X)(\psi) = 
@@ -4080,83 +3974,6 @@ $$
 \draw (1.7,0.23) node {{\scriptsize $X$}};
 \draw (4.7,0.225) node {{\scriptsize $Y \otimes X$}};
 \end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-%\,=\!\!\!\!\!\!\!\!\!\!\!\!\!
-%%%%%%%%%%%%%%%%%%%%%%%
-%\begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline=-0.75cm,>=stealth]
-%% semicircles: 
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(0:1) arc (0:180:1);
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(0:2) arc (0:180:2);
-%%
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(-1,-2) arc (180:360:1);
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(-2,-2) arc (180:360:2);
-%%
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(2.75,0) arc (360:180:0.625);
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(1.5,-2) arc (180:0:0.625);
-%%
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{<}}}, postaction={decorate}
-%	] 
-%	(2.75,1.5) arc (180:0:0.625);
-%\draw[
-%	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-%	] 
-%	(2.75,-3.5) arc (180:360:0.625);
-%% wiggly lines: 
-%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-%(0,1) .. controls +(-2,-1.5) and +(-2,0.4) .. (0,-3); 
-%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-%(0,2) .. controls +(-3,-1.5) and +(-4,0.4) .. (0,-4); 
-%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-%(2.25,-0.625) .. controls +(1.5,0.4) and +(-1,-1) .. (3.375,2.1); 
-%\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] 
-%(2.25,-1.375) .. controls +(0.5,-1) and +(-1.5,0) .. (3.375,-4.1); 
-%% vertical lines: 
-%\draw (-1,0) -- (-1,-2);
-%\draw (-2,0) -- (-2,-2);
-%%
-%\draw (2.75,-2) -- (2.75,-3.5);
-%\draw (2.75,0) -- (2.75,1.5);
-%%
-%\draw (4,-3.5) -- (4,1.5);
-%% horizontal lines: 
-%\draw[dotted] (1,0) -- (2,0);
-%\draw[dotted] (1,-2) -- (2,-2);
-%% 2-morphisms: 
-%\coordinate (psi) at ($ (1.5,0) $);
-%\fill (psi) circle (2.5pt) node[below left] {{\small$\xi$}};
-%\coordinate (theta) at ($ (4,0) $);
-%\fill (theta) circle (2.5pt) node[right] {{\small$\kappa$}};
-%%
-%\coordinate (psi2) at ($ (4,-2) $);
-%\fill (psi2) circle (2.5pt) node[right] {{\small$\xi$}};
-%\coordinate (theta2) at ($ (1.5,-2) $);
-%\fill (theta2) circle (2.5pt) node[above left] {{\small$\kappa$}};
-%% line labels: 
-%\draw (0.7,0.23) node {{\scriptsize $Y$}};
-%\draw (1.7,0.23) node {{\scriptsize $X$}};
-%\draw (4.7,0.75) node {{\scriptsize $\bar Y \otimes \bar X$}};
-%\draw (4.7,-1) node {{\scriptsize $Y \otimes X$}};
-%\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%%
 $$
 where we used the Zorro moves to re-express the identity on $Y\otimes X$, and here and below we do not display the argument of the defect operators. Now we are in a position to apply Corollary~\ref{cor:nicerpivotalitydiagrams} to the lower part of the diagram on the right-hand side to find that $\mathcal D_l(X) \circ \mathcal D_l(Y)$ is equal to
 $$
@@ -4290,14 +4107,7 @@ $$
 % horizontal lines: 
 \draw[dotted] (1,0) -- (2,0);
 \draw[dotted] (-4,-2) -- (-5,-2);
-%% 2-morphisms: 
-%\coordinate (psi) at ($ (1.5,0) $);
-%\fill (psi) circle (2.5pt) node[below left] {{\small$\xi$}};
-%\coordinate (theta) at ($ (4,-1) $);
-%\fill (theta) circle (2.5pt) node[right] {{\small$e$}};
-%%
-%\coordinate (theta2) at ($ (-4.5,-2) $);
-%\fill (theta2) circle (2.5pt) node[above right] {{\small$\kappa$}};
+%
 % line labels: 
 \draw (0.7,0.23) node {{\scriptsize $Y$}};
 \draw (1.7,0.23) node {{\scriptsize $X$}};
@@ -4938,8 +4748,6 @@ is a homotopy equivalence over $k$. The main theorem here is that in complete ge
 \begin{theorem}\label{theorem:generalkl} The pairing $\langle -, - \rangle_{XY}$ is homotopically nondegenerate.
 \end{theorem}
 
-%This nondegeneracy is used in Section~\ref{sec:Zorro} to prove that specified evaluation and coevaluation morphisms give rise to adjoint $1$-morphisms in the bicategory of Landau-Ginzburg models over $k$.
-
 There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
 \be\label{eq:hombarappendix}
 \Hom(\bar{X},\bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}
@@ -4955,7 +4763,6 @@ in the homotopy category of $\nZ _2$-graded $k$-complexes. There is an isomorphi
 of complexes which identifies these idempotents, and from this the theorem will follow. The existence of the isomorphism (\ref{eq:frobnondeg}) is an easy consequence of the fact that $\bar{R}$ is Frobenius over $k$. The hard work lies in showing that this isomorphism identifies the two idempotents, and for this we need to carefully study adjointness between operators on dg-categories. Thus the first part of the proof, in Section \ref{section:adjointopdg}, consists in formalising this kind of adjointness.
 
 \subsection{Adjoint operators on dg-categories}\label{section:adjointopdg}
-% TODO: Point out that these Atiyah classes are from connections over k[f], not k like in the associative case.
 
 In this section $\otimes$ denotes $\otimes_k$. Let $\cat{C}$ be a $\nZ _2$-graded dg-category over $k$ equipped with the data of a $k$-linear morphism of complexes 
 \[
@@ -5874,16 +5681,6 @@ The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satis
 
 The general rule is that permuting the variables in a region by $\tau$ changes the value of a diagram by a factor of $(-1)^{M|\tau|}$ where $M$ is the number of wiggly lines (see Section~\ref{subsec:alternatives}) entering or departing an evaluation or coevaluation within that region. The simplest example is \eqref{eq:signdependencepermdia} where the value changes by the sign $(-1)^{|\tau|}$.
 
-%Returning to the example  we have a diagram, in which the top path computes the value of the diagram with outer region given the usual variable ordering, and the bottom path computes the value given the ordering $z_{\tau(1)}, \ldots, z_{\tau(m)}$
-%\[
-%\xymatrix@C+2pc@R-1pc{
-%\Delta_V \ar[dd]_-{\xi} \ar[dr]^-{\coev_X} &  & & \Delta_V \ar[dd]^-{\xi}\\
-%& X \otimes_R X^{\vee} \otimes_S S[m] \ar[r]^-{\cong} & X \otimes_R R[m] \otimes_R X^{\vee} \ar[ur]^-{\widetilde \eval_X} \ar[dr]_-{\widetilde \eval^{\tau}_X}\\
-%\Delta^\tau_V \ar[ur]_-{\coev^{\tau}_X} & & & \Delta^\tau_V.
-%}
-%\]
-%We have shown that the left-hand triangle commutes in $\HMF(\Se, \widetilde V)$ up to a sign $(-1)^{|\tau|}$, and the right-hand triangle commutes.
-
 
 \section[The map $\varepsilon \Psi$]{The map $\boldsymbol{\varepsilon \Psi}$}\label{appendix:mapeppsi}
 % see divop
@@ -5957,16 +5754,6 @@ V.~I.~Arnold, \textsl{Mathematical methods of classical mechanics}, Graduate Tex
 
 \bibitem[ABCDG]{MB2}
 P.~S.~Aspinwall, T.~Bridgeland, A.~Craw, M.~R.~Douglas, and M.~Gross, \textsl{Dirichlet Branes and Mirror Symmetry}, Clay Mathematics Monographs, AMS, 2009.
-
-%\bibitem[BN]{bnKhovanov11crossings}
-%D.~Bar-Natan, \textsl{Khovanov {H}omology for {K}nots and {L}inks with up to 11
-%  {C}rossings}, available at
-%  \href{http://www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}{http:%
-%//www.math.toronto.edu/drorbn/papers/KHTables/KHTables.pdf}.
-%
-%\bibitem[Bec]{b1105.0702}
-%H.~Becker, \textsl{Khovanov-Rozansky homology via Cohen-Macaulay approximations and Soergel bimodules},
-%  \href{http://arxiv.org/abs/1105.0702}{[arXiv:1105.0702]}.
 
 \bibitem[Ati57]{atiyahconn}
 M.~Atiyah, \textsl{Complex analytic connections in fibre bundles}, Trans. Amer.
