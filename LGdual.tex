@@ -642,7 +642,7 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
  \, . 
 $$
-We stress that, while suggestive, the arrows in these two diagrams have no meaning beyond that of the dot in \eqref{eq:demonstratediagram}. They are merely decorations intended to remind us that this diagram depicts an evaluation or coevaluation, with the direction of the arrow alerting us to the type. In particular, we do \textsl{not} intend to communicate with this diagram that there is an oriented arc labelled with $f$, rather, there are three unoriented arcs adjacent to the vertex, which in the case of $\coev_f$ are labelled $f, {}^\dual f$ and $\Delta_B$.
+We stress that, while suggestive, the arrows in these two diagrams have no meaning beyond that of the dot in \eqref{eq:demonstratediagram}. They are merely decorations intended to remind us that this diagram depicts an evaluation or coevaluation, with the direction of the arrow alerting us to the type. In particular, we do \textsl{not} mean that there is an oriented arc labelled with $f$, rather, there are three unoriented arcs adjacent to the vertex, which in the case of $\coev_f$ are labelled $f, {}^\dual f$ and $\Delta_B$.
 
 In Section~\ref{subsec:alternatives} we will explain a richer kind of diagrammatics in which the arcs are honestly oriented and a label $f$ on a downwards oriented arc is understood in terms of the adjoints of $f$, but until then our diagrams have the simpler meaning described above.
 
@@ -842,11 +842,11 @@ It is easy to check that the $\partial_{[i]}$ satisfy the following kind of Leib
 For $f,g \in k[x,x']$ we have $\partial_{[i]}(fg) = (\partial_{[i]}f) ({}^{t_1\ldots t_{i}}g) + ({}^{t_1\ldots t_{i-1}}f) (\partial_{[i]}g)$. 
 \end{lemma}
 
-The differential on $\Delta_W$ is then given by (\textbf{todo} contraction)
+The differential on $\Delta_W$ is then given by
 \be\label{DeltaW}
-d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*  \,. 
+d_{\Delta_W} = \delta_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial_{[i]}W\cdot \theta_i \wedge (-)\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^* 
 \ee
-We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. It is also referred to as the \textsl{stabilised diagonal} \cite{d0904.4713} or \textsl{Koszul model} of the diagonal since the morphism of linear factorisations of $\widetilde W$
+where $\theta_i^*$ acts on an element $\theta_{i_1} \ldots \theta_{i_n}$ of the exterior algebra with Koszul signs. We call $\Delta_W$ the unit matrix factorisation as it is the unit with respect to the tensor product of matrix factorisations. It is also referred to as the \textsl{stabilised diagonal} \cite{d0904.4713} or \textsl{Koszul model} of the diagonal since the morphism of linear factorisations of $\widetilde W$
 \be\label{DeltaWstabmap}
 \pi: \Delta_W \lra R\,,
 \ee
@@ -1230,11 +1230,15 @@ s&: X \otimes \Bar \lto X \otimes \Bar, &\qquad s( e_i \otimes \omega ) = (-1)^{
 So for example $d( a e_i \otimes \omega ) = (-1)^{|e_i|} e_i \otimes d( a \omega )$ for $a \in \Re $. 
 
 \begin{definition}\label{defn:atiyahclassbasis}
-The \textsl{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes \Bar$ defined by the graded commutators 
+The \textsl{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes \Bar$ defined by
 \begin{align*}
 \At_{2}(X) &= [d, D] = d D + D d\,,\\
 \At_{1}(X) &= [s, D] = s D + D s\,.
 \end{align*}
+Here we use the notation of graded commutators: for homogeneous operators $F_1, F_2$
+\[
+[F_1,F_2] = F_1 F_2 - (-1)^{|F_1||F_2|} F_2 F_1\,.
+\]
 \end{definition}
 
 One checks that for $\omega \in \Bar$
@@ -2081,10 +2085,10 @@ In this formula the divided difference operators act on $\Se = k[z,z']$. Similar
 where the divided difference operators in this case act on $\Re = k[x,x']$.
 \end{remark}
 
-\subsection{Compatibility with adjoint morphisms}
+\subsection{Migration of $2$-morphisms}\label{section:natevcoev}
 
-We end this section with a brief discussion of the basic compatibility properties of the adjunction maps with arbitrary 2-morphisms. For a map $\varphi: X \lra Y$ between matrix factorisations in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ 
-we define its adjoints to be
+We end this section with a discussion of the naturality of the evaluation and coevaluation maps, which in diagrammatic notation amounts to a freedom to ``migrate'' $2$-morphisms around a cap or a cup. For a morphism $\varphi: X \lra Y$ in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ 
+we define
 $$
 {}^\dual \varphi = \varphi^\vee[m] : {}^\dual Y \lra {}^\dual X \, , \qquad
 \varphi^\dual = \varphi^\vee[n] : Y^\dual \lra X^\dual \, . 
@@ -2092,7 +2096,7 @@ $$
 
 \begin{proposition}
 \label{prop.morphismmigration}
- For a 2-morphism $\varphi: X \lra Y$ in $\LG$ we have
+ For a morphism $\varphi: X \lra Y$ as above we have
 \begin{enumerate}
 \item $(\varphi \otimes 1_{{}^\dual X}) \circ \coev_X = (1_Y \otimes {}^\dual \varphi) \circ \coev_Y$, 
 \item $\eval_Y \circ (1_{{}^\dual Y} \otimes \varphi) = \eval_X \circ ({}^\dual \varphi \otimes 1_X)$, 
@@ -2651,6 +2655,9 @@ The detailed argument is given in Appendix \ref{section:extendduality}, and we n
 is well-defined, and hypothesis (ii) of the Appendix is checked below in Proposition \ref{prop.morphismmigration}. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $R[n] \otimes_R Y^{\vee}$, and similarly one proves that $Y^{\vee} \otimes_S S[m]$ is left adjoint to $Y$.
 \end{proof}
 
+\begin{remark} It follows from Appendix \ref{section:extendduality} that the $2$-morphism migration properties of Proposition \ref{prop.morphismmigration} hold for $2$-morphisms between arbitrary $1$-morphisms in $\LG$, not just those represented by finite rank matrix factorisations.
+\end{remark}
+
 With the notation of Remark \ref{remark:integral_functors} this shows that there are adjunctions of integral functors
 \[
 \xymatrix@C+1pc{
@@ -2698,18 +2705,19 @@ which has $\nZ$-degree $a_R = -|\theta_1 \cdots \theta_n|$, so that with the gra
 \end{remark}
 
 
-\section{Diagrammatical calculus and pivotality}\label{sec:wiggliesandsigns}
+\section{Diagrammatic calculus and pivotality}\label{sec:wiggliesandsigns}
 
-With the proof that the bicategory $\LG$ has adjoints behind us we now want to reap some further rewards of our efforts by turning to applications. These will be discussed in the next sections, while in the present one we shall pave the way by clarifying two conceptual and practically relevant issues: an suitable refinement of the graphical calculus with adjoints, and the nature of double-adjoints. 
+With the proof that the bicategory $\LG$ has adjoints behind us, we turn in the next several sections to applications. But first we need to introduce a refined diagrammatic calculus more appropriate for working with adjoints in this bicategory; in particular, we realise the goal stated in the introduction of translating arbitrary correlators directly into diagrams in $\LG$. The new diagrams are also the appropriate language for clarifying the nature of double-adjoints. 
 
 \subsection{Alternative graphical presentation of adjoints}\label{subsec:alternatives}
 
-% If adjoints exist for 1-morphisms in a bicategory then they are unique only up to isomorphism. For many purposes this freedom is irrelevant, but in practice a particular choice of isomorphism may prove more useful than another. As we saw above for a 1-morphism~$X$ in $\LG$ its left and right adjoints~${}^\dagger X$ and~$X^\dagger$ are one natural choice. 
+The string diagrams introduced in Section~\ref{subsec:bicat} and employed until now have the problem that the adjoints enter on an artifical footing: lines do not carry orientations, and the adjoints are added to the diagrams ``by hand''. In a bicategory where left and right adjoints coincide, or more precisely a bicategory with a pivotal structure, it is standard to employ the richer diagrammatics of \cite{JSGoTCII} where we consider non-progressive diagrams with oriented lines (i.e. lines may double back, forming caps and cups) and in computing the value of a diagram one interprets a line labelled $f$ with a downward orientation in terms of the adjoint $f^\dual$. See for example \cite{khovdia, ladia}.
 
-In this section we introduce a slightly different graphical presentation of adjoints (which we basically borrow from~\cite{ct1007.2679}). Before doing so we wish however to give reasons for imposing new conventions on the reader, halfway through the paper. While the presentation of adjoints introduced in Section~\ref{subsec:bicat} and employed until now is standard and conceptually clean, for technical computations like in Section~\ref{sec:pivotality} or in our proof of the Cardy condition the slightly modified notation presented below turns out to be more useful. Furthermore, we will see in Section~\ref{sec:ocTFT} that it allows us to unambigiously translate TFT correlators into computable 2-morphisms. And finally, in the new notation we will no longer have to deal with two kinds of daggered adjoints~${}^\dagger X$ and~$X^\dagger$, but only with the dual matrix factorisation~$X^\vee$ (however at the expense of introducing shifted rings into string diagrams). 
+Unfortunately the bicategory $\LG$ is not pivotal: the left and right adjoints differ by a shift. The solution, which we basically borrow from \cite{ct1007.2679}, is to follow the prescription of \cite{JSGoTCII} but enhancing the diagrams with a new type of ``wiggly'' line which stand for shifts. In particular, in the new notation we no longer have to deal with two daggered adjoints~${}^\dagger X$ and~$X^\dagger$, but only with the dual matrix factorisation~$X^\vee$. The basic properties of this setup are worked out in Section \ref{sec:pivotality} which shows that $\LG$ is pivotal ``up to shifts''. We will also see in Section~\ref{sec:ocTFT} that this notation allows us to unambigiously translate TFT correlators into computable 2-morphisms.
 
+The new convention is as follows: a wiggly line with label $a \in \mathbb{Z}$ in a domain associated to an object $(R = k[x_1,\ldots,x_n],W)\in\LG$ represents $R[a]$, that is, the ring~$R$ shifted by $a$. A wiggly line in this domain with no label represents $R[n]$, where $n$ is the number of variables.
 
-Recall that for a 1-morphism $X: (R,W) \lra (S,V)$ in $\LG$ with $R=k[x_1,\ldots,x_n]$ and $S=k[z_1,\ldots,z_m]$ we have ${}^\dual X = X^\vee \otimes_S S[m]$ and $X^\dual = R[n] \otimes_R X^\vee$. From now on we will reflect the presence of shifted rings in the adjoints by explicitly representing them in our graphical notation. To wit, while we continue to associate upwards oriented solid lines to 1-morphisms~$X$, we will use thin wiggly lines to represent rings shifted by the number of variables on which they depend. Accordingly we will use the following presentation for the adjunction maps: 
+Recall that for a $1$-morphism $X: (R,W) \lra (S,V)$ in $\LG$ with $R=k[x_1,\ldots,x_n]$ and $S=k[z_1,\ldots,z_m]$ we have ${}^\dual X = X^\vee \otimes_S S[m]$ and $X^\dual = R[n] \otimes_R X^\vee$. In the new notation we use the following presentation for the adjunction maps defined earlier: 
 \begin{align}
 &
 \eval_X = 
@@ -2748,7 +2756,7 @@ Recall that for a 1-morphism $X: (R,W) \lra (S,V)$ in $\LG$ with $R=k[x_1,\ldots
 %%%%%%%%%%%%%%%%%%%%%%
 : \Delta_W \lra X^\dual \otimes_S  X \, . \label{eq:wigglyadjunctionmaps}
 \end{align}
-In this notation the Zorro moves for the left and right adjoints read
+The Zorro moves for the left and right adjoints now read
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
@@ -2836,25 +2844,26 @@ $$
 \end{tikzpicture} \; .
 %%%%%%%%%%%%%%%%%%%%%%
 $$
-By definition a wiggly line in a domain associated to an object $(R,W)\in\LG$ represents the ring~$R$ shifted by the parity of its variable number. Furthermore we adopt the convention that in diagrams with wiggly lines a downwards oriented solid line represents the dual factorisation~$X^\vee$ (and not necessarily its left or right adjoint~${}^\dual X$ or~$X^\dual$) if the line is labelled by the 1-morphism~$X$. 
+The value of a diagram is computed in the same way as before, by tensoring horizontally and composing vertically, with shifted rings inserted in the tensor products according to their appearance in each horizontal slice of the diagram. If unlabelled, a cap or a cup is associated with the appropriate kind of evaluation or coevaluation, and  
+a downwards oriented solid line labelled by a $1$-morphism $X$ represents the dual factorisation~$X^\vee$.
 
-There are several ways for wiggly lines to meet in a diagram. For example they can ``annihilate'' or be ``created in pairs'', i.\,e.~we have maps
+There are several ways for wiggly lines to meet in a diagram. For example they can ``annihilate'' or be ``created in pairs'', i.\,e.~we have maps (\textbf{todo} give labels $a$)
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.3cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: R[n] \otimes_R R[n] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, , 
+: R[a] \otimes_R R[a] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, , 
 \qquad
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-0.4cm, rotate=180]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: r \lra R[n] \otimes_R R[n]  \, , \qquad 1 \lmt 1 \otimes 1 \, . 
+: R \lra R[a] \otimes_R R[a]  \, , \qquad 1 \lmt 1 \otimes 1 \, . 
 $$
-These maps satisfy the identity
+These maps satisfy the identity (\textbf{todo} also label $a$)
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.9cm]
@@ -2874,7 +2883,7 @@ $$
 \, . 
 $$
 
-Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same number of variables~$n$ mod~2, wiggly lines can also ``cross over'' to another domain. By this we mean that there are maps 
+Secondly, wiggly lines can cross a 1-morphism $X: (R,W) \lra (S,V)$. There are morphisms 
 \begin{align*}
 & 
 %%%%%%%%%%%%%%%%%%%%%%
@@ -2890,9 +2899,11 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 	(0,0) -- (0,0.75); 
 \draw[line width=1pt] 
 (0,-0.75) node[line width=0pt, right] {{\small $X$}}; 
+\draw[line width=1pt] 
+(0.45,0.6) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: S[n] \otimes_S X \lra X \otimes_R R[n] \, , \qquad 1\otimes \eta \lmt (-1)^{n |\eta|} \eta \otimes 1 \, , \\
+: S[a] \otimes_S X \lra X \otimes_R R[a] \, , \qquad 1\otimes \eta \lmt (-1)^{a |\eta|} \eta \otimes 1 \, , \\
 & 
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
@@ -2907,34 +2918,13 @@ Secondly, for a 1-morphism $X: (R,W) \lra (S,V)$ where~$R$ and~$S$ have the same
 	(0,0) -- (0,0.75); 
 \draw[line width=1pt] 
 (0,-0.75) node[line width=0pt, left] {{\small $X$}}; 
+\draw[line width=1pt] 
+(0.45,-0.75) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: X \otimes_R R[n] \lra S[n] \otimes_S X \, , \qquad \eta \otimes 1 \lmt (-1)^{n |\eta|} 1\otimes \eta \, . 
+: X \otimes_R R[a] \lra S[a] \otimes_S X \, , \qquad \eta \otimes 1 \lmt (-1)^{a |\eta|} 1\otimes \eta \, . 
 \end{align*}
-We also want to allow wiggly lines to cross solid lines when the two domains are associated to rings whose variable parity differs. To facilitate this we adopt the additional convention that we label a wiggly line by the number of times the associated ring get shifted whenever necessary; for instance for a 1-morphism $X\in \hmf(R\otimes_k S, V-W)$ as before we have a map
-$$
-%%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
-\draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (-0.3,-0.75) .. controls +(0,0.5) and +(0,-0.5) ..  (0.3,0.75);
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	]
-	(0,-0.75) -- (0,0); 
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	]
-	(0,0) -- (0,0.75); 
-\draw[line width=1pt] 
-(0,-0.75) node[line width=0pt, right] {{\small $X$}}; 
-%
-\draw[line width=1pt] 
-(0.45,0.6) node[color=blue!55!white, line width=0pt] {{\tiny $m$}}; 
-%
-\end{tikzpicture}
-%%%%%%%%%%%%%%%%%%%%%%
-: S[m] \otimes_S X \lra X \otimes_R R[m] \, , \qquad 1\otimes \eta \lmt (-1)^{m |\eta|} \eta \otimes 1 \, .
-$$
-Using these maps we can freely move wiggly lines around (when paying attention to signs). In particular there are variants of the adjunction maps in~\eqref{eq:wigglyadjunctionmaps} where the wiggly lines enter the vertex from different directions. For example we define
+Using these maps we can freely move wiggly lines around (while paying attention to signs). In particular there are variants of the adjunction maps in~\eqref{eq:wigglyadjunctionmaps} where the wiggly lines enter the vertex from different directions. For example we define
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-.4cm, rotate=180]
@@ -2974,16 +2964,16 @@ $$
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,1) -- (0.75,0); 
 %
 \draw[line width=1pt] 
-(-0.13,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $m$}}
-(0.85,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
-(-0.1,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
-(0.87,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $m$}};
+(-0.13,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $b$}}
+(0.85,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(-0.1,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.87,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $b$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-: R[m]\otimes_R R[n] \lra R[n] \otimes_R R[m] \, , \qquad
-r_1 \otimes r_2 \lmt (-1)^{mn} r_2 \otimes r_1 \, .
+: R[a]\otimes_R R[b] \lra R[a] \otimes_R R[b] \, , \qquad
+r_1 \otimes r_2 \lmt (-1)^{ab} r_2 \otimes r_1 \, .
 $$
-For $m=n$~mod~2 such a crossing can be ``resolved'', i.\,e.~we have the following identities between maps: 
+For $a=b$~mod~2 such a crossing can be ``resolved'', i.\,e.~we have the following identity:
 \be\label{eq:wigglyresolution}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.4cm]
@@ -2991,13 +2981,13 @@ For $m=n$~mod~2 such a crossing can be ``resolved'', i.\,e.~we have the followin
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,1) -- (0.75,0); 
 %
 \draw[line width=1pt] 
-(-0.13,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
-(0.85,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
-(-0.1,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $n$}}
-(0.87,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $n$}};
+(-0.13,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.85,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(-0.1,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.87,0.9) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
-\; = (-1)^n \;
+\; = (-1)^a \;
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.4cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}] (0,0) .. controls +(0.2,0.4) and +(0.2,-0.4) .. (0,1); 
@@ -3013,11 +3003,11 @@ For $m=n$~mod~2 such a crossing can be ``resolved'', i.\,e.~we have the followin
 \, . 
 \ee
 
-Let $W\in R=k[x_1,\ldots,x_n]$, $V\in S=k[z_1,\ldots,z_m]$ be potentials and $X\in\hmf(k[x,z], V-W)$. Then 
+Let $W\in R=k[x_1,\ldots,x_n]$, $V\in S=k[z_1,\ldots,z_m]$ be potentials and $X\in\hmf(k[x,z], V-W)$. Then there is an isomorphism of matrix factorisations
 $$
 X^\dual[m+n] \cong X^\vee[n][m+n] \cong X^\vee[m] \cong {}^\dual X \, . 
 $$
-Using $X^\dual[m+n] \cong R[m]\otimes_R R[n] \otimes_R X^\dual$ we have a simple diagrammatic presentation for this isomorphism: 
+Using $X^\dual[m+n] \cong R[m]\otimes_R R[n] \otimes_R X^\dual$ this has a simple diagrammatic presentation:
 \be\label{eq:isoq}
 q_X :=
 %%%%%%%%%%%%%%%%%%%%%%
@@ -3114,13 +3104,13 @@ In this section we clarify the relation between the adjunctions given by $\eval_
 %hold for every 2-morphism $\varphi: Z \lra Y$, where above (and only there!) the caps and cups with left-oriented arrows represent $\overline\eval$ and $\overline\coev$. 
 %\end{definition}
 
-As mentioned in the Introduction, the adjoint $X^\dagger$ of a 1-morphism~$X$ is interpreted as describing the same defect condition as~$X$ but with the opposite orientation. Since reversing the orientation twice is doing nothing, it is natural to expect that $X^{\dagger\dagger}$ should be identified with~$X$, in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the result which states that in this setting there is always a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. This implies in particular that the left and right adjoints are isomorphic.
+As mentioned in the Introduction, the adjoint $X^{\dual}$ of a $1$-morphism $X$ is interpreted as describing the same defect condition as $X$ but with the opposite orientation. Since reversing the orientation twice is doing nothing, it is natural to expect that $X^{\dagger\dagger}$ should be identified with~$X$, in a suitable sense. In the categorical approach to rational conformal field theory (conjecturally related to Landau-Ginzburg models via the CFT/LG correspondence) this is made precise by the result which states that in this setting there is always a \textsl{pivotal structure}, i.\,e.~a natural monoidal transformation~$\delta$ between the identity and the functor $(-)^{\dagger\dagger}$. This implies in particular that the left and right adjoints are isomorphic.
 
 The story for the bicategory $\LG$ is subtler, as we only expect the left and right adjoints of $X$ to be isomorphic when the number of variables in the regions on either side of $X$ agree mod $2$. This is the case, for example, when $X$ is an endomorphism of an object of $\LG$. Indeed, what we prove in this section implies that the rigid monoidal categories $\hmf(\Re,\widetilde W)^\omega = \LG(W,W)$ are pivotal for any potential $W\in R$. See Remark \ref{remark:notpivotal} for the construction of an isomorphism between $X$ and $X^{\dual \dual}$ in the case of equal variable parity.
 
 In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double-adjoint, but in terms of the relationship between the left and right adjoints. We have specified in~\eqref{eq:isoq} above a choice of isomorphism $q$ between the left adjoint and a suspension of the right adjoint of any $1$-morphism. We show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
 
-To explain what we mean, first we recall a formal result of category theory. If $X: W \lto V$ and $Y: V \lto U$ are $1$-morphisms in $\LG$ then the composites $X^{\dual} \otimes Y^{\dual}$ and ${}^\dual X \otimes {}^\dual Y$ are the right and left adjoint to $Y \otimes X$, respectively, and so by uniqueness of adjoints there is a canonical isomorphisms
+To explain what we mean, we first recall a formal result of category theory. If $X: W \lto V$ and $Y: V \lto U$ are $1$-morphisms in $\LG$ then $X^{\dual} \otimes Y^{\dual}$ and ${}^\dual X \otimes {}^\dual Y$ are the right and left adjoint to $Y \otimes X$, respectively, and so by uniqueness of adjoints there are canonical isomorphisms
 \[
 \mathscr{R}: (Y \otimes X)^{\dual} \stackrel{\cong}{\lra} X^{\dual} \otimes Y^{\dual}\, , \qquad 
 \mathscr{L}: {}^\dual (Y \otimes X) \stackrel{\cong}{\lra} {}^\dual X \otimes {}^\dual Y\,.
@@ -3192,13 +3182,13 @@ Concretely, we define these morphisms by the diagrams
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \]
-whose precise relation is the content of Corollary~\ref{cor:nicerpivotalitydiagrams} below. Note that the graphical presentation makes it manifest that the above two maps are indeed isomorphisms in $\LG$: applying the Zorro moves one checks their inverses are given by copies of themselves if rotated by 180 degrees. 
+Note that the graphical presentation makes it manifest that the above two maps are indeed isomorphisms in $\LG$: applying the Zorro moves one checks their inverses are given by copies of themselves if rotated by 180 degrees. 
 
-One can ask whether or not these isomorphisms $\mathscr{R}, \mathscr{L}$ are compatible in a sutiable sense with the isomorphism $q$ which exchanges left and right adjoints, and this is precisely the content of the next result. For the statement, we let $W \in R = k[x_1,\ldots,x_n]$, $V \in S = k[z_1,\ldots,z_m]$, $U \in T = k[y_1,\ldots,y_p]$ be potentials and $X \in \hmf(k[x,z],V-W)$ and $Y\in \hmf(k[y,z],U-V)$.
+One can ask whether or not these isomorphisms $\mathscr{R}, \mathscr{L}$ are compatible with the isomorphism $q$ which exchanges left and right adjoints, and this is precisely the content of the next result. For the statement, we let $W \in R = k[x_1,\ldots,x_n]$, $V \in S = k[z_1,\ldots,z_m]$, $U \in T = k[y_1,\ldots,y_p]$ be potentials and $X \in \hmf(k[x,z],V-W)$ and $Y\in \hmf(k[y,z],U-V)$.
 
 \begin{proposition}\label{prop:monoidalproperty} 
 \begin{enumerate}
-\item For any map~$\varphi:Z\lra X$ in $\hmf(k[x,z], V-W)$ we have 
+\item For any morphism~$\varphi:Z\lra X$ in $\hmf(k[x,z], V-W)$ we have 
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0cm]
@@ -3357,7 +3347,7 @@ The following identity holds true:
 \begin{proof}
 Part (i) follows in a standard way by applying Zorro moves together with the ``morphism migration properties'' of Proposition~\ref{prop.morphismmigration}. 
 
-Regarding part (ii), we claim that the equality~\eqref{eq:monoidalproperty} is equivalent to the commutativity up to homotopy of the diagram 
+Regarding part (ii), we claim that the equality~\eqref{eq:monoidalproperty} is equivalent to the commutativity up to homotopy of the diagram
 \be\label{eq:monoidalpropertycomd}
 \xymatrix@C+2pc{
 R[p] \otimes R[n] \otimes (Y \otimes X)^{\dual} \ar[d]_-{(-1)^m\mathscr{R}} \ar[rr]^-{q_{Y \otimes X}} & & {}^\dual( Y \otimes_S X ) \ar[ddd]^{\mathscr{L}}\\
@@ -3671,7 +3661,7 @@ For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
-In the bicategory $\LG$ there are natural maps between the endomorphism spaces of unit 1-morphisms constructed by ``capturing'' a 2-endomorphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism. We give natural interpretation of this process in terms of defect actions on bulk fields in Landau-Ginzburg models. 
+In any bicategory with adjoints which is pivotal, in the sense that left and right adjoints are related in the way described in Section \ref{sec:pivotality}, there are natural maps between the endomorphism spaces of unit 1-morphisms constructed by ``capturing'' a 2-endomorphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism. Below we present the details for the bicategory $\LG$ and give a natural interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
 Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\uHom$ and $\uEnd$ we mean the spaces of 2-morphisms in $\LG$. We define \textsl{defect operators} 
 $$
@@ -3885,7 +3875,7 @@ For any $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$, $\Phi \in \uEnd(X)$,
 \begin{proof}
 We treat the case of $\mathcal D_r^\Phi(X)$ in detail, the argument for $\mathcal D_l^\Phi(X)$ is similar. Since $\uEnd(\Delta_W) = k[x]/(\partial_{x_i}W)$ and $\uEnd(\Delta_V) = k[z]/(\partial_{z_i}V)$ we are free to identify the variables on both sides of the unit 1-endomorphisms at appropriate places. Furthermore, $\rho_X$ will project out all non-zero degree contributions coming from the action of $\rho_{X}^{-1}$, so $\rho_{X} \circ (1_X \otimes \psi)\circ \rho_{X}^{-1}$ is simply multiplication by the polynomial $\psi(z)$. 
 
-In the lower part of the expression for $\mathcal D_r^\Phi(X)(\psi)$ in~\eqref{defectactionwithfieldinsertion} we have 
+In the lower part of the expression for $\mathcal D_r^\Phi(X)(\psi)$ in~\eqref{defectactionwithfieldinsertion} we have using \eqref{eq:coev_divideddiff}
 $$
 \coev_X(1) = \sum_j (-1)^{{m\choose 2}} \partial_{[1]} d_X \ldots \partial_{[m]} d_X e_j \otimes e_j^* \, . 
 $$
@@ -3970,9 +3960,9 @@ Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$
 \item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$. 
 \item $\mathcal D_l(X) = \mathcal D_r(X^\vee)$ and $\mathcal D_r(X) = \mathcal D_l(X^\vee)$.
 \item $\mathcal D_l(X) \circ \mathcal D_l(Y) = \mathcal D_l(Y \otimes X)$ and $\mathcal D_r(Y) \circ \mathcal D_r(X) = \mathcal D_r(Y \otimes X)$. 
-\item $\mathcal D_l(X[a]) = (-1)^a \mathcal D_l(X)$ and $\mathcal D_r(X[a]) = (-1)^a \mathcal D_r(X)$.
+\item $\mathcal D_l(X[a]) = (-1)^a \mathcal D_l(X)$ and $\mathcal D_r(X[a]) = (-1)^a \mathcal D_r(X)$ for $a \in \mathbb{Z}$.
 \end{enumerate}
-Analogous results hold when the operators are decorated with endomorphisms $\Phi, \Phi'$ of $X$ and $Y$.
+Analogous results hold for the operators $\mathcal D^\Phi_l, \mathcal D^\Phi_r$ decorated with endomorphisms of $X$ and $Y$.
 \end{proposition}
 
 \begin{proof}
@@ -4705,9 +4695,9 @@ is a map $k\lra k$, i.e. an element of $k$, that we call~$C$. We can think of~$C
 %\end{align}
 %where $\bar\Lambda_X = \partial_{[1]} d_X\ldots \partial_{[n]} d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$, and $\{ e_i \}_i$ and $\{ f_j \}_j$ are homogeneous bases of~$X$ and~$Y$, respectively. 
 
-The diagram~\eqref{annulus} can be computed in two different ways. One possibility is to first collapse the $X$-loop to obtain a ``$(k[x],W)$-bubble'', and then collapse the boundary loop of this bubble in turn to arrive at a scalar. It follows from the main result on defect actions (Proposition \ref{prop:defectaction}) that the first step of collapsing~$X$ produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$ where we write $\Lambda_Z = \partial_{x_1}(d_Z) \ldots \partial_{x_n}(d_Z)$ for $Z \in \{X,Y\}$. 
+There are two natural ways to compute the value of~\eqref{annulus}. One possibility is to first collapse the $X$-loop to obtain a ``$W$-bubble'', and then to collapse the boundary loop of this bubble to arrive at a scalar. The main result on defect actions (Proposition \ref{prop:defectaction}) shows that the first step produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$ where $\Lambda_Z = \partial_{x_1}(d_Z) \ldots \partial_{x_n}(d_Z)$ for $Z \in \{X,Y\}$. 
 
-Similarly, the second step of collapsing~$Y$ produces a residue
+Similarly, the second step of collapsing the~$Y$-loop produces a residue
 $$
 C 
 = 
@@ -4750,7 +4740,7 @@ Writing $\beta^X(\varphi) = (-1)^{n+1\choose 2} \str(\varphi \Lambda_X)$ and $\b
 C = (-1)^{n+1\choose 2} \,  
 \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 \ee
-On the other hand, we may compute~$C$ by inflating the $X$-loop in \eqref{annulus} and fusing it with the outer $Y$-loop, creating a single loop labelled by $X^\vee[n] \otimes Y \cong \Hom(X,Y)[n] \in \End_{\LG}( (k,0) )$. Rigorously, this process is described by the series of equalities
+A second way of computing~$C$ is to inflate the $X$-loop in \eqref{annulus} and fuse it with the outer $Y$-loop, creating a single loop labelled by $X^\vee \otimes Y \in \End_{\LG}( (k,0) )$. Rigorously, this process is described by the series of equalities
 \[
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
@@ -4785,7 +4775,7 @@ On the other hand, we may compute~$C$ by inflating the $X$-loop in \eqref{annulu
 \draw[->, very thick] (-0.100,1) -- (-0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
 %\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi^{\vee}$}};
-\fill (180:0.9) circle (0pt) node[right] {{\small$X^{\vee}[n]$}};
+\fill (180:0.9) circle (0pt) node[right] {{\small$X^{\vee}$}};
 \fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4797,11 +4787,11 @@ On the other hand, we may compute~$C$ by inflating the $X$-loop in \eqref{annulu
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
 \fill (135:2) circle (2.5pt) node[left] {{\small$\varphi^{\vee}\otimes 1$}};
-\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee}[n] \otimes Y$}};
+\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee} \otimes Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \]
-where in the first step we use Proposition \ref{prop:defectactionproperties}(ii) to reorient the inner loop, and in the second step we use (iii) to fuse the two loops (note that the proof of (iii) relies on Proposition~\ref{prop:monoidalproperty}). The complexes $X^{\vee}[n] \otimes Y$ and $\Hom(X,Y)[n]$ are isomorphic, so
+where in the first step we use Proposition \ref{prop:defectactionproperties}(ii) to reorient the inner loop, and in the second step we use (iii) to fuse the two loops (note that the proof of (iii) relies on Proposition~\ref{prop:monoidalproperty}). The complexes $X^{\vee} \otimes Y$ and $\Hom(X,Y)$ are isomorphic, so
 \be\label{eq:finaldiagramcardycond}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
@@ -4810,7 +4800,7 @@ where in the first step we use Proposition \ref{prop:defectactionproperties}(ii)
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
 \fill (135:2) circle (2.5pt) node[left] {{\small$\varphi^{\vee}\otimes 1$}};
-\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee}[n] \otimes Y$}};
+\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee} \otimes Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -4820,21 +4810,21 @@ where in the first step we use Proposition \ref{prop:defectactionproperties}(ii)
 \draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
 \fill (45:2) circle (2.5pt) node[right] {{\small${}_\psi m_{\varphi}$}};
-\fill (0:2.7) circle (0pt) node[right] {{\small$\Hom(X,Y)[n]$}};
+\fill (0:2.7) circle (0pt) node[right] {{\small$\Hom(X,Y)$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
-= (-1)^n\str({}_\psi m_{\varphi})
+= \str({}_\psi m_{\varphi})
 \ee
 where $ {}_\psi m_\varphi \in \End_k(\Hom(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
 
-The value of an oriented loop, labelled by a finite rank $\mathbb{Z}_2$-graded $k$-complex $F$ with the insertion of a morphism of complexes $\phi: F \lto F$, is easily checked to be the supertrace of $\phi$. In this case $\Hom(X,Y)$ is a complex of infinite rank $\mathbb{Z}_2$-graded free modules. If $k$ were a field this complex would be isomorphic, in $\HMF(k,0)$, to the finite dimensional $\mathbb{Z}_2$-graded vector space $H^*\Hom(X,Y)$ and the value of \eqref{eq:finaldiagramcardycond} would be the supertrace of the action of ${}_\psi m_{\varphi}$ on this cohomology.
+The value of an oriented loop labelled by a finite rank $\mathbb{Z}_2$-graded $k$-complex $F$ with the insertion of a morphism of complexes $\phi: F \lto F$ is easily checked to be the supertrace of $\phi$. If $k$ were a field the infinite rank $k$-complex $\Hom(X,Y)$ would be isomorphic, in $\HMF(k,0)$, to the finite dimensional $\mathbb{Z}_2$-graded vector space $H^*\Hom(X,Y)$ with zero differential, and the value of \eqref{eq:finaldiagramcardycond} would be the supertrace of the action of ${}_\psi m_{\varphi}$ on this cohomology.
 
-In general $\Hom(X,Y)$ is not isomorphic to its cohomology, but it is at least a summand in the homotopy category of a finite rank $\mathbb{Z}_2$-graded free $k$-module and therefore any operator on $\Hom(X,Y)$ has a well-defined supertrace. Indeed, once we choose such a split embedding of $\Hom(X,Y)$ in something finite rank, the supertrace can be computed by writing out the diagram \eqref{eq:finaldiagramcardycond} as a series of morphisms, using the evaluation and coevaluation maps for infinite rank objects produced in Appendix \ref{??} from such a choice of embedding.
+In general $\Hom(X,Y)$ is not isomorphic to its cohomology, but it is at least a summand in the homotopy category of a finite rank $\mathbb{Z}_2$-graded free $k$-module and therefore any operator on $\Hom(X,Y)$ has a well-defined supertrace. Indeed, once we choose such a split embedding of $\Hom(X,Y)$ in something finite rank, the supertrace can be computed by writing out the diagram \eqref{eq:finaldiagramcardycond} as a series of morphisms, using the evaluation and coevaluation maps for infinite rank objects produced in Appendix \ref{app:adjoints} from a choice of embedding.
 
-Comparing~\eqref{C1} and~\eqref{C2} we thus observe: 
+Comparing~\eqref{C1} and~\eqref{eq:finaldiagramcardycond} we thus observe: 
 
 \begin{theorem}\label{thm:CardyCondition}
-The Cardy condition holds in $\LG$: for 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have 
+The Cardy condition holds in $\LG$: given 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have 
 $$
 \str ( {}_\psi m_\varphi ) 
 = 
@@ -4842,11 +4832,11 @@ $$
 \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W,
  \ldots, \partial_n W} \right] 
 $$
-with ${}_\psi m_\varphi(\alpha) = \psi\circ\alpha\circ\varphi$ for $\alpha\in \Hom_{\hmf(k[x],W)}(X,Y)$. 
+with ${}_\psi m_\varphi(\alpha) = \psi\circ\alpha\circ\varphi$ for $\alpha\in \Hom(X,Y)$. 
 \end{theorem}
 
 \begin{remark}
-The Cardy condition also holds if one or both of the maps $\varphi, \psi$ are odd (which we present as maps such as $X\lra X[1]$ in $\LG$). The proof of this fact proceeds similarly to the above. 
+The Cardy condition also holds if one or both of the maps $\varphi, \psi$ are odd (which we present as morphisms $X\lra X[1]$ in $\LG$). The proof of this fact proceeds similarly to the above. 
 \end{remark}
 
 
