@@ -452,7 +452,7 @@ $$
 \Res_{k[x]/k} \!\!\left[ \frac{\psi \str\big( \Phi \Lambda_X^{(x)} \big) \underline{\operatorname{d}\! x}}{\partial_{x_1} W \ldots \partial_{x_n} W} \right] 
 $$
 where $\Lambda_X^{(x)} = \partial_{x_1} D\ldots \partial_{x_n} D$ and $\Lambda_X^{(z)} = \partial_{z_1} D\ldots \partial_{z_m} D$. 
-In this way we respectively recover the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$) and the  \textsl{Kapustin-Li disk correlator}. As part of the general development we also give a new proof for the nondegeneracy of the Kapustin-Li pairing that holds over any noetherian $\mathbb{Q}$-algebra $k$.
+In this way we respectively recover the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$) and the  \textsl{Kapustin-Li disk correlator}. As part of the general development we also give a new proof for the nondegeneracy of the Kapustin-Li pairing that holds over any noetherian $\nQ$-algebra $k$.
 
 Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:ocTFT} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} for $k=\nC$. Our proof works for any noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
 $$
@@ -1230,9 +1230,9 @@ The \textsl{associative Atiyah classes} of $(X,D)$ are operators on $X \otimes \
 \At_{2}(X) &= [d, D] = d D + D d\,,\\
 \At_{1}(X) &= [s, D] = s D + D s\,.
 \end{align*}
-Here we use the notation of graded commutators: for homogeneous operators $F_1, F_2$
+Here we use the notation of graded commutators: for homogeneous operators $F, G$, 
 \[
-[F_1,F_2] = F_1 F_2 - (-1)^{|F_1||F_2|} F_2 F_1\,.
+[F,G] = FG - (-1)^{|F||F|} GF \,.
 \]
 \end{definition}
 
@@ -2080,7 +2080,7 @@ In this formula the divided difference operators act on $\Se = k[z,z']$. Similar
 where the divided difference operators in this case act on $\Re = k[x,x']$.
 \end{remark}
 
-\subsection{Migration of $2$-morphisms}\label{section:natevcoev}
+\subsection{Migration of 2-morphisms}\label{section:natevcoev}
 
 We end this section with a discussion of the naturality of the evaluation and coevaluation maps, which in diagrammatic notation amounts to a freedom to ``migrate'' $2$-morphisms around a cap or a cup. For a morphism $\varphi: X \lra Y$ in $\hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ 
 we define
@@ -2653,7 +2653,7 @@ is well-defined, and hypothesis (ii) of the Appendix is checked below in Proposi
 \begin{remark} It follows from Appendix \ref{section:extendduality} that the $2$-morphism migration properties of Proposition \ref{prop.morphismmigration} hold for $2$-morphisms between arbitrary $1$-morphisms in $\LG$, not just those represented by finite rank matrix factorisations.
 \end{remark}
 
-\begin{remark} When $k$ is a field the triangulated categories $\hmf(k[x], W)^\omega$ all have Serre functors, and so the \emph{existence} of adjoints in $\LG$ can be derived from representability theorems, see for example \cite{ballard}. But these general methods are not well-suited for explicit computations, and in particular for deriving explicit evaluation and coevaluation maps.
+\begin{remark} When $k$ is a field the triangulated categories $\hmf(k[x], W)^\omega$ all have Serre functors, and so the \textsl{existence} of adjoints in $\LG$ can be derived from representability theorems, see for example \cite{ballard}. But these general methods are not well-suited for explicit computations, and in particular for deriving explicit evaluation and coevaluation maps.
 \end{remark}
 
 With the notation of Remark \ref{remark:integral_functors} this shows that there are adjunctions of integral functors
@@ -2705,15 +2705,15 @@ which has $\nZ$-degree $a_R = -|\theta_1 \cdots \theta_n|$, so that with the gra
 
 \section{Diagrammatic calculus and pivotality}\label{sec:wiggliesandsigns}
 
-With the proof that the bicategory $\LG$ has adjoints behind us, we turn in the next several sections to applications. But first we need to introduce a refined diagrammatic calculus more appropriate for working with adjoints in this bicategory; in particular, we realise the goal stated in the introduction of translating arbitrary correlators directly into diagrams in $\LG$. The new diagrams are also the appropriate language for clarifying the nature of double-adjoints. 
+With the proof that the bicategory $\LG$ has adjoints behind us, we turn in the next several sections to applications. But first we need to introduce a refined diagrammatic calculus more appropriate for working with adjoints in this bicategory; in particular, with this in Section~\ref{sec:ocTFT} we will realise the goal stated in the Introduction of translating arbitrary TFT correlators directly into diagrams in $\LG$. The new diagrams are also the appropriate language for clarifying the nature of double-adjoints. 
 
 \subsection{Alternative graphical presentation of adjoints}\label{subsec:alternatives}
 
-The string diagrams introduced in Section~\ref{subsec:bicat} and employed until now have the problem that the adjoints enter on an artifical footing: lines do not carry orientations, and the adjoints are added to the diagrams ``by hand''. In a bicategory where left and right adjoints coincide, or more precisely a bicategory with a pivotal structure, it is standard to employ the richer diagrammatics of \cite{JSGoTCII} where we consider non-progressive diagrams with oriented lines (i.e. lines may double back, forming caps and cups) and in computing the value of a diagram one interprets a line labelled $f$ with a downward orientation in terms of the adjoint $f^\dual$. See for example \cite{khovdia, ladia}.
+The string diagrams introduced in Section~\ref{subsec:bicat} and employed until now have the problem that the adjoints enter on an artificial footing: lines do not carry orientations, and the adjoints are added to the diagrams ``by hand''. In a bicategory where left and right adjoints coincide, or more precisely a bicategory with a pivotal structure, it is standard to employ the richer diagrammatics of \cite{JSGoTCII} where we consider non-progressive diagrams with oriented lines (i.\,e.~lines may double back, forming caps and cups) and in computing the value of a diagram one interprets a line labelled $f$ with a downward orientation in terms of the adjoint $f^\dual$. See for example \cite{khovdia, ladia}.
 
-Unfortunately the bicategory $\LG$ is not pivotal: the left and right adjoints differ by a shift. The solution, which we basically borrow from \cite{ct1007.2679}, is to follow the prescription of \cite{JSGoTCII} but enhancing the diagrams with a new type of ``wiggly'' line which stand for shifts. In particular, in the new notation we no longer have to deal with two daggered adjoints~${}^\dagger X$ and~$X^\dagger$, but only with the dual matrix factorisation~$X^\vee$. The basic properties of this setup are worked out in Section \ref{sec:pivotality} which shows that $\LG$ is pivotal ``up to shifts''. We will also see in Section~\ref{sec:ocTFT} that this notation allows us to unambigiously translate TFT correlators into computable 2-morphisms.
+Unfortunately the bicategory $\LG$ is not pivotal in the strict sense: the left and right adjoints differ by a shift. The solution, which we basically borrow from \cite{ct1007.2679}, is to follow the prescription of \cite{JSGoTCII} but enhancing the diagrams with a new type of ``wiggly'' line which stand for shifts. In particular, in the new notation we no longer have to deal with two daggered adjoints~${}^\dagger X$ and~$X^\dagger$, but only with the dual matrix factorisation~$X^\vee$. The basic properties of this setup are worked out in Section \ref{sec:pivotality} which shows that $\LG$ is pivotal ``up to shifts''. We will also see in Section~\ref{sec:ocTFT} that this notation allows us to unambigiously translate TFT correlators into computable 2-morphisms.
 
-The new convention is as follows: a wiggly line with label $a \in \mathbb{Z}$ in a domain associated to an object $(R = k[x_1,\ldots,x_n],W)\in\LG$ represents $R[a]$, that is, the ring~$R$ shifted by $a$. A wiggly line in this domain with no label represents $R[n]$, where $n$ is the number of variables.
+The new convention is as follows: a wiggly line with label $a \in \nZ$ in a domain associated to an object $(R = k[x_1,\ldots,x_n],W)\in\LG$ represents $R[a]$, that is, the ring~$R$ shifted by $a$. A wiggly line in this domain with no label represents $R[n]$, where $n$ is the number of variables in the given domain.
 
 Recall that for a $1$-morphism $X: (R,W) \lra (S,V)$ in $\LG$ with $R=k[x_1,\ldots,x_n]$ and $S=k[z_1,\ldots,z_m]$ we have ${}^\dual X = X^\vee \otimes_S S[m]$ and $X^\dual = R[n] \otimes_R X^\vee$. In the new notation we use the following presentation for the adjunction maps defined earlier: 
 \begin{align}
@@ -2845,11 +2845,14 @@ $$
 The value of a diagram is computed in the same way as before, by tensoring horizontally and composing vertically, with shifted rings inserted in the tensor products according to their appearance in each horizontal slice of the diagram. If unlabelled, a cap or a cup is associated with the appropriate kind of evaluation or coevaluation, and  
 a downwards oriented solid line labelled by a $1$-morphism $X$ represents the dual factorisation~$X^\vee$.
 
-There are several ways for wiggly lines to meet in a diagram. For example they can ``annihilate'' or be ``created in pairs'', i.\,e.~we have maps (\textbf{todo} give labels $a$)
+There are several ways for wiggly lines to meet in a diagram. For example they can ``annihilate'' or be ``created in pairs'', i.\,e.~we have maps
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.3cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
+\draw[line width=1pt] 
+(0.15,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.6,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : R[a] \otimes_R R[a] \lra R \, , \qquad r_1\otimes r_2 \lmt r_1 r_2 \, , 
@@ -2857,17 +2860,26 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=-0.4cm, rotate=180]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
+\draw[line width=1pt] 
+(0.15,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.6,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : R \lra R[a] \otimes_R R[a]  \, , \qquad 1 \lmt 1 \otimes 1 \, . 
 $$
-These maps satisfy the identity (\textbf{todo} also label $a$)
+These maps satisfy the identity
 $$
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline=0.9cm]
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) .. controls +(0.1,1.0) and +(-0.1,1.0) .. (0.75,0); 
 %
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,1.85) .. controls +(0.1,-1.0) and +(-0.1,-1.0) .. (0.75,1.85); 
+%
+\draw[line width=1pt] 
+(0.15,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.6,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.15,1.75) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.6,1.75) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \;=\;
@@ -2876,6 +2888,9 @@ $$
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0,0) -- (0,1.85); 
 %
 \draw[very thin, color=blue!55!white, decorate, decoration={snake, amplitude=0.2mm, segment length=1.0mm}]  (0.25,0) -- (0.25,1.85); 
+\draw[line width=1pt] 
+(-0.15,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(0.4,0.1) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \, . 
@@ -2898,6 +2913,7 @@ Secondly, wiggly lines can cross a 1-morphism $X: (R,W) \lra (S,V)$. There are m
 \draw[line width=1pt] 
 (0,-0.75) node[line width=0pt, right] {{\small $X$}}; 
 \draw[line width=1pt] 
+(-0.45,-0.6) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
 (0.45,0.6) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
@@ -2917,7 +2933,8 @@ Secondly, wiggly lines can cross a 1-morphism $X: (R,W) \lra (S,V)$. There are m
 \draw[line width=1pt] 
 (0,-0.75) node[line width=0pt, left] {{\small $X$}}; 
 \draw[line width=1pt] 
-(0.45,-0.75) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
+(0.45,-0.6) node[color=blue!55!white, line width=0pt] {{\tiny $a$}}
+(-0.45,0.6) node[color=blue!55!white, line width=0pt] {{\tiny $a$}};
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 : X \otimes_R R[a] \lra S[a] \otimes_S X \, , \qquad \eta \otimes 1 \lmt (-1)^{a |\eta|} 1\otimes \eta \, . 
@@ -3122,12 +3139,6 @@ Concretely, we define these morphisms by the diagrams
 (2,-2) node[line width=0pt, right] (Y) {{\small $Y$}}
 (3,-2) node[line width=0pt, right] (X) {{\small $X$}}
 (-1,3) node[line width=0pt, right] (XY) {{\small $Y\otimes X$}}; 
-%% wiggly labels:
-%\draw[line width=1pt] 
-%(2.65,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}m$}}
-%(3.55,-1.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $\vphantom{p}n$}}
-%(-0.45,2.5) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}};
-%
 %
 \draw[redirected] (1,0) .. controls +(0,1) and +(0,1) .. (2,0);
 \draw[redirected] (0,0) .. controls +(0,2) and +(0,2) .. (3,0);
@@ -3153,14 +3164,6 @@ Concretely, we define these morphisms by the diagrams
 (-2,-2) node[line width=0pt, left] (X) {{\small $Y$}}
 (-1,-2) node[line width=0pt, left] (Y) {{\small $X$}}
 (2,3) node[line width=0pt, left] (XY) {{\small $Y\otimes X$}}; 
-%% wiggly labels:
-%\draw[line width=1pt] 
-%(2.6,2.1) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
-%(2.9,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
-%(-1.7,1.4) node[color=blue!55!white, line width=0pt, right] {{\tiny $p$}}
-%(-0.5,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $n$}}
-%(-1.3,-1.2) node[color=blue!55!white, line width=0pt, right] {{\tiny $m$}};
-%
 %
 \draw[redirected] (0,0) .. controls +(0,1) and +(0,1) .. (-1,0);
 \draw[redirected] (1,0) .. controls +(0,2) and +(0,2) .. (-2,0);
@@ -3180,7 +3183,7 @@ Concretely, we define these morphisms by the diagrams
 \end{tikzpicture}
 %%%%%%%%%%%%%%%%%%%%%%
 \]
-Note that the graphical presentation makes it manifest that the above two maps are indeed isomorphisms in $\LG$: applying the Zorro moves one checks their inverses are given by copies of themselves if rotated by 180 degrees. 
+Note that this graphical presentation makes it manifest that the above two maps are indeed isomorphisms in $\LG$: applying the Zorro moves one checks that their inverses are given by copies of themselves if rotated by 180 degrees and with the three wiggly lines on the other sides of the solid lines. 
 
 One can ask whether or not these isomorphisms $\mathscr{R}, \mathscr{L}$ are compatible with the isomorphism $q$ which exchanges left and right adjoints, and this is precisely the content of the next result. For the statement, we let $W \in R = k[x_1,\ldots,x_n]$, $V \in S = k[z_1,\ldots,z_m]$, $U \in T = k[y_1,\ldots,y_p]$ be potentials and $X \in \hmf(k[x,z],V-W)$ and $Y\in \hmf(k[y,z],U-V)$.
 
@@ -3362,9 +3365,7 @@ $$
 $$
 is a split monomorphism in $\HMF(k[x,y], U - W)$, i.\,e.~there is a morphism $\xi$ such that $\kappa\xi = 1$.
 
-But then the dual $\kappa^{\vee}: (\bar Y \otimes \bar X)^\vee \lto (Y \otimes X)^\vee$ is a split epimorphism, and to prove that the two sides of \eqref{eq:monoidalproperty} are homotopic it is enough to prove that they are homotopic after precomposing (i.\,e.~inserting at the bottom of the diagram) with the morphism $\kappa^{\vee}$. By the morphism migration rules of Proposition~\ref{prop.morphismmigration} it is equivalent to prove that the two sides of \eqref{eq:monoidalproperty} are homotopic with $Y \otimes X$ replaced by $\bar Y \otimes \bar X$ and the junction labelled $1_{Y \otimes X}$ replaced by a junction labelled $\kappa$.
-
-Thus on the left-hand side we have (ignoring the suspensions) the map
+But then the dual $\kappa^{\vee}: (\bar Y \otimes \bar X)^\vee \lto (Y \otimes X)^\vee$ is a split epimorphism, and to prove that the two sides of \eqref{eq:monoidalproperty} are homotopic it is enough to prove that they are homotopic after precomposing (i.\,e.~inserting at the bottom of the diagram) with the morphism $\kappa^{\vee}$. By the morphism migration rules of Proposition~\ref{prop.morphismmigration} it is equivalent to prove that the two sides of \eqref{eq:monoidalproperty} are homotopic with $Y \otimes X$ replaced by $\bar Y \otimes \bar X$ and the junction labelled $1_{Y \otimes X}$ replaced by a junction labelled $\kappa$. With this change on the left-hand side of~\eqref{eq:monoidalproperty} we have (ignoring the suspensions) the map
 \be\label{eq:leftmonoidaldetail}
 %%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=1.0,color=blue!50!black, baseline, rotate=180]
@@ -3653,13 +3654,13 @@ node[below] {{{\small${}^\dual X^{\dual}$}}};
 \ee
 for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, it is straightforward to verify that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
 
-For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and the results of this section imply that in this case the properties of pivotality hold. However, when $m+n$ is odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general in the strict sense (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$).
+For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and the results of this section imply that in this case the properties of pivotality hold. However, when $m+n$ is odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$).
 \end{remark}
 
 
 \section{Defect action on bulk fields}\label{sec:defectaction}
 
-In any bicategory with adjoints which is pivotal, in the sense that left and right adjoints are related in the way described in Section \ref{sec:pivotality}, there are natural maps between the endomorphism spaces of unit 1-morphisms constructed by ``capturing'' a 2-endomorphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism. Below we present the details for the bicategory $\LG$ and give a natural interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
+In any bicategory with adjoints which is pivotal up to shifts, in the sense that left and right adjoints are related in the way described in Section \ref{sec:pivotality}, there are natural maps between the endomorphism spaces of unit 1-morphisms constructed by ``capturing'' a 2-endomorphism of a unit 1-morphism inside a loop labelled by an arbitrary 1-morphism. Below we present the details for the bicategory $\LG$ and give a natural interpretation in terms of defect actions on bulk fields in Landau-Ginzburg models. 
 
 Let $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$ as before. In this section when we write $\uHom$ and $\uEnd$ we mean the spaces of 2-morphisms in $\LG$. We define \textsl{defect operators} 
 $$
@@ -3958,7 +3959,7 @@ Let $W\in k[x_1,\ldots,x_n]$, $V\in k[z_1,\ldots,z_m]$, $U\in k[y_1,\ldots,y_p]$
 \item $\mathcal D_l(\Delta) = 1 = \mathcal D_r(\Delta)$. 
 \item $\mathcal D_l(X) = \mathcal D_r(X^\vee)$ and $\mathcal D_r(X) = \mathcal D_l(X^\vee)$.
 \item $\mathcal D_l(X) \circ \mathcal D_l(Y) = \mathcal D_l(Y \otimes X)$ and $\mathcal D_r(Y) \circ \mathcal D_r(X) = \mathcal D_r(Y \otimes X)$. 
-\item $\mathcal D_l(X[a]) = (-1)^a \mathcal D_l(X)$ and $\mathcal D_r(X[a]) = (-1)^a \mathcal D_r(X)$ for $a \in \mathbb{Z}$.
+\item $\mathcal D_l(X[a]) = (-1)^a \mathcal D_l(X)$ and $\mathcal D_r(X[a]) = (-1)^a \mathcal D_r(X)$ for $a \in \nZ$.
 \end{enumerate}
 Analogous results hold for the operators $\mathcal D^\Phi_l, \mathcal D^\Phi_r$ decorated with endomorphisms of $X$ and $Y$.
 \end{proposition}
@@ -4638,9 +4639,9 @@ $$
 
 \subsection{Cardy condition}
 
-The diagrammatic language for adjunctions in $\LG$ enables us to prove deep results about matrix factorisations in a way that directly follows the physical intuition. Moreover, since the diagrammatics work over an arbitrary noetherian $\mathbb{Q}$-algebra $k$, any statement about matrix factorisations that can be proven using diagrams automatically extends from the absolute case $k = \mathbb{C}$ to families (viewing e.g. $k = \nC[t_1,\ldots,t_d]$ as the base space of a deformation).
+The diagrammatic language for adjunctions in $\LG$ enables us to prove deep results about matrix factorisations in a way that directly follows the physical intuition. Moreover, since the diagrammatics work over an arbitrary noetherian $\nQ$-algebra~$k$, any statement about matrix factorisations that can be proven using diagrams automatically extends from the absolute case $k = \nC$ to families (viewing e.\,g.~$k = \nC[t_1,\ldots,t_d]$ as the base space of a deformation).
 
-Even very simple diagrams can encode nontrivial theorems. For example in this section we give a novel proof of the Cardy condition by thinking about the possible ways of computing the value of a decorated annulus. For Landau-Ginzburg models the Cardy condition was proven recently for $k$ a field, by different methods, in~\cite{pv1002.2116} and there were subsequent proofs in \cite{dm1102.2957,buchweitzstratten}. 
+Even very simple diagrams can encode nontrivial theorems. For example in this section we give a novel proof of the Cardy condition by thinking about the possible ways of computing the value of a decorated annulus. For Landau-Ginzburg models the Cardy condition was recently proven using different methods for~$k$ a field in~\cite{pv1002.2116}, and there were subsequent proofs in \cite{dm1102.2957,buchweitzstratten}. 
 
 We fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, matrix factorisations $X,Y \in \hmf(k[x], W)$, and two morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$. Then the $2$-morphism
 \be\label{annulus}
@@ -4682,20 +4683,9 @@ We fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, matrix factorisations $X,Y \
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%% 
 \ee
-is a map $k\lra k$, i.e. an element of $k$, that we call~$C$. We can think of~$C$ as the value of the annulus correlator with boundary conditions $X,Y$ and boundary fields $\varphi,\psi$. 
+is a map $k\lra k$, i.\,e.an element of $k$, that we call~$C$. We can think of~$C$ as the value of the annulus correlator with boundary conditions $X,Y$ and boundary fields $\varphi,\psi$. 
 
-%To put ourselves in a position to better understand and manipulate~\eqref{annulus} let us spell out its constituents. From the general expressions in Section~\ref{sec:derivcoeval} for evaluation and coevaluation maps we find
-%\begin{align}
-%& \widetilde\eval_X (e_i \otimes e_j^*) = (-1)^{|e_j|} \delta_{ij} + \mathcal O(\theta) \, , \qquad 
-%\eval_Y (f_i^* \otimes f_j) = (-1)^{n} \Res_{k[x]/k} \left[ \frac{ (\Lambda_Y)_{ij} \,\underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] , \nonumber \\
-%& \coev_X (1) = \sum_j (-1)^{{n\choose 2}} \bar\Lambda_X e_j \otimes e_j^* \, , \qquad 
-%\widetilde\coev_Y (1) = \sum_j (-1)^{|f_j|} f_j^* \otimes f_j \label{evcoeveasy}
-%\end{align}
-%where $\bar\Lambda_X = \partial_{[1]} d_X\ldots \partial_{[n]} d_X$ and $\Lambda_Y = \partial_1 d_Y\ldots \partial_n d_Y$, and $\{ e_i \}_i$ and $\{ f_j \}_j$ are homogeneous bases of~$X$ and~$Y$, respectively. 
-
-There are two natural ways to compute the value of~\eqref{annulus}. One possibility is to first collapse the $X$-loop to obtain a ``$W$-bubble'', and then to collapse the boundary loop of this bubble to arrive at a scalar. The main result on defect actions (Proposition \ref{prop:defectaction}) shows that the first step produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$ where $\Lambda_Z = \partial_{x_1}(d_Z) \ldots \partial_{x_n}(d_Z)$ for $Z \in \{X,Y\}$. 
-
-Similarly, the second step of collapsing the~$Y$-loop produces a residue
+There are two natural ways to compute the value of~\eqref{annulus}. One possibility is to first collapse the $X$-loop to obtain a ``$W$-bubble'', and then to collapse the boundary loop of this bubble to arrive at a scalar. The main result on defect actions (Proposition \ref{prop:defectaction}) shows that the first step produces the 2-morphism $(-1)^{n+1\choose 2} \str(\varphi \Lambda_X)\in\End(\Delta_W)$ where $\Lambda_Z = \partial_{x_1}(d_Z) \ldots \partial_{x_n}(d_Z)$ for $Z \in \{X,Y\}$. Similarly, the second step of collapsing the~$Y$-loop produces a residue: 
 $$
 C 
 = 
@@ -4733,11 +4723,12 @@ C
 (-1)^{n+1\choose 2} \,  
 \Res_{k[x]/k} \left[ \frac{\str\! \big( \str( \varphi \Lambda_X) \psi \Lambda_Y \big) \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 $$
-Writing $\beta^X(\varphi) = (-1)^{n+1\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n+1\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps we thus find from the above that
+We observe that this expression vanishes unless~$n$ is even. Writing $\beta^X(\varphi) = (-1)^{n+1\choose 2} \str(\varphi \Lambda_X)$ and $\beta^Y(\psi) = (-1)^{n+1\choose 2} \str(\psi \Lambda_Y)$ for the boundary-bulk maps we thus find from the above that
 \be\label{C1}
 C = (-1)^{n+1\choose 2} \,  
 \Res_{k[x]/k} \left[ \frac{\beta^X(\varphi) \, \beta^Y (\psi) \, \underline{\operatorname{d}\! x}}{\partial_1 W, \ldots, \partial_n W} \right] .
 \ee
+
 A second way of computing~$C$ is to inflate the $X$-loop in \eqref{annulus} and fuse it with the outer $Y$-loop, creating a single loop labelled by $X^\vee \otimes Y \in \End_{\LG}( (k,0) )$. Rigorously, this process is described by the series of equalities
 \[
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4754,7 +4745,7 @@ A second way of computing~$C$ is to inflate the $X$-loop in \eqref{annulus} and 
 \draw[->, very thick] (0.100,1) -- (0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
 %\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
 \fill (135:1) circle (2.5pt) node[left] {{\small$\varphi$}};
-\fill (180:0.9) circle (0pt) node[right] {{\small$X$}};
+\fill (180:1.0) circle (0pt) node[right] {{\small$X$}};
 \fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -4772,20 +4763,19 @@ A second way of computing~$C$ is to inflate the $X$-loop in \eqref{annulus} and 
 \draw (0,0) circle (1);
 \draw[->, very thick] (-0.100,1) -- (-0.101,1) node[above] {}; % {{\small$\widetilde\eval_X$}}; 
 %\draw[->, very thick] (-0.100,-1) -- (-0.101,-1) node[below] {}; % {{\small$\coev_X$}}; 
-\fill (135:1) circle (2.5pt) node[left] {{\small$\varphi^{\vee}$}};
-\fill (180:0.9) circle (0pt) node[right] {{\small$X^{\vee}$}};
+\fill (45:1) circle (2.5pt) node[right] {{\small$\varphi^{\vee}$}};
+\fill (180:1.0) circle (0pt) node[right] {{\small$X^{\vee}$}};
 \fill (0:2.7) circle (0pt) node[left] {{\small$Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 =
 %%%%%%%%%%%%%%%%%%%%%%
-\begin{tikzpicture}[very thick,scale=0.6,color=blue!50!black, baseline,>=stealth]
+\begin{tikzpicture}[very thick,scale=0.8,color=blue!50!black, baseline,>=stealth]
 \draw[ultra thick] (0,0) circle (2);
 \draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
-\fill (135:2) circle (2.5pt) node[left] {{\small$\varphi^{\vee}\otimes 1$}};
-\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee} \otimes Y$}};
+\fill (45:2) circle (3.3pt) node[right] {{\small$\varphi^\vee\otimes\psi$}};
+\fill (0:2.0) circle (0pt) node[right] {{\small$X^{\vee} \otimes Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 \]
@@ -4796,9 +4786,8 @@ where in the first step we use Proposition \ref{prop:defectactionproperties}(ii)
 \draw[ultra thick] (0,0) circle (2);
 \draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small$1\otimes\psi$}};
-\fill (135:2) circle (2.5pt) node[left] {{\small$\varphi^{\vee}\otimes 1$}};
-\fill (0:2.7) circle (0pt) node[right] {{\small$X^{\vee} \otimes Y$}};
+\fill (45:2) circle (3.3pt) node[right] {{\small$\varphi^\vee\otimes\psi$}};
+\fill (-30:2) circle (0pt) node[right] {{\small$X^{\vee} \otimes Y$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 =
@@ -4807,19 +4796,19 @@ where in the first step we use Proposition \ref{prop:defectactionproperties}(ii)
 \draw[ultra thick] (0,0) circle (2);
 \draw[->, ultra thick] (-0.100,2) -- (-0.101,2) node[above] {}; 
 \draw[->, ultra thick] (0.100,-2) -- (0.101,-2) node[below] {}; 
-\fill (45:2) circle (2.5pt) node[right] {{\small${}_\psi m_{\varphi}$}};
-\fill (0:2.7) circle (0pt) node[right] {{\small$\Hom(X,Y)$}};
+\fill (45:2) circle (3.3pt) node[right] {{\small${}_\psi m_{\varphi}$}};
+\fill (-30:2) circle (0pt) node[right] {{\small$\Hom(X,Y)$}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%
 = \str({}_\psi m_{\varphi})
 \ee
 where $ {}_\psi m_\varphi \in \End_k(\Hom(X,Y))$ is the operator that sends~$\alpha$ to $ \psi\circ\alpha\circ\varphi$. 
 
-The value of an oriented loop labelled by a finite rank $\mathbb{Z}_2$-graded $k$-complex $F$ with the insertion of a morphism of complexes $\phi: F \lto F$ is easily checked to be the supertrace of $\phi$. If $k$ were a field the infinite rank $k$-complex $\Hom(X,Y)$ would be isomorphic, in $\HMF(k,0)$, to the finite dimensional $\mathbb{Z}_2$-graded vector space $H^*\Hom(X,Y)$ with zero differential, and the value of \eqref{eq:finaldiagramcardycond} would be the supertrace of the action of ${}_\psi m_{\varphi}$ on this cohomology.
+The value of an oriented loop labelled by a finite-rank $\nZ_2$-graded $k$-complex $F$ with the insertion of a morphism of complexes $\phi: F \lto F$ is easily checked to be the supertrace of $\phi$. If $k$ were a field the infinite-rank $k$-complex $\Hom(X,Y)$ would be isomorphic, in $\HMF(k,0)$, to the finite-dimensional $\nZ_2$-graded vector space $H^*\Hom(X,Y)$ with zero differential, and the value of \eqref{eq:finaldiagramcardycond} would be the supertrace of the action of ${}_\psi m_{\varphi}$ on this cohomology.
 
-In general $\Hom(X,Y)$ is not isomorphic to its cohomology, but it is at least a summand in the homotopy category of a finite rank $\mathbb{Z}_2$-graded free $k$-module and therefore any operator on $\Hom(X,Y)$ has a well-defined supertrace. Indeed, once we choose such a split embedding of $\Hom(X,Y)$ in something finite rank, the supertrace can be computed by writing out the diagram \eqref{eq:finaldiagramcardycond} as a series of morphisms, using the evaluation and coevaluation maps for infinite rank objects produced in Appendix \ref{app:adjoints} from a choice of embedding.
+In general $\Hom(X,Y)$ is not isomorphic to its cohomology, but it is at least a summand in the homotopy category of a finite-rank $\nZ_2$-graded free $k$-module and therefore any operator on $\Hom(X,Y)$ has a well-defined supertrace. Indeed, once we choose such a split embedding of $\Hom(X,Y)$ in something finite-rank, the supertrace can be computed by writing out the diagram \eqref{eq:finaldiagramcardycond} as a series of morphisms, using the evaluation and coevaluation maps for infinite-rank objects produced in Appendix \ref{app:adjoints} from a choice of embedding.
 
-Comparing~\eqref{C1} and~\eqref{eq:finaldiagramcardycond} we thus observe: 
+Comparing~\eqref{C1} and~\eqref{eq:finaldiagramcardycond} we arrive at:
 
 \begin{theorem}\label{thm:CardyCondition}
 The Cardy condition holds in $\LG$: given 1-morphisms $X,Y \in \hmf( k[x_1,\ldots,x_n], W)$ and 2-morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$ we have 
@@ -5975,7 +5964,7 @@ P.~S.~Aspinwall, T.~Bridgeland, A.~Craw, M.~R.~Douglas, and M.~Gross, \textsl{Di
 %  \href{http://arxiv.org/abs/1105.0702}{[arXiv:1105.0702]}.
 
 \bibitem[Ati57]{atiyahconn}
-M.~Atiyah, \emph{Complex analytic connections in fibre bundles}, Trans. Amer.
+M.~Atiyah, \textsl{Complex analytic connections in fibre bundles}, Trans. Amer.
   Math. Soc. \textbf{85} (1957), 181--207.
 
 \bibitem[BFK]{ballard}
@@ -6001,30 +5990,12 @@ R.-O. Buchweitz and H.~Flenner, \textsl{A semiregularity map for modules and
 \bibitem[BF08]{buchweitz08}
 R.-O. Buchweitz and H.~Flenner, \textsl{The global decomposition theorem for {H}ochschild (co-)homology of singular spaces via the Atiyah-Chern character}, Adv. Math. \textbf{217} (2008), no. 1, 243--281.
 
-%\bibitem[CF94]{cf9405183}
-%L.~Crane and I.~B. Frenkel, \textsl{Four dimensional topological quantum field
-%  theory, {H}opf categories, and the canonical bases}, J. Math. Phys.
-%  \textbf{35} (1994), 5136--5154,
-%  \href{http://arxiv.org/abs/hep-th/9405183}{[hep-th/9405183]}.
-%
-%\bibitem[CK08a]{ck0701194}
-%S.~Cautis and J.~Kamnitzer, \textsl{Knot homology via derived categories of
-%  coherent sheaves {I}, {$sl(2)$} case}, Duke Math. J. \textbf{142} (2008),
-%  511--588, \href{http://arxiv.org/abs/math/0701194}{[math.AG/0701194]}.
-%
-%\bibitem[CK08b]{ck0710.3216}
-%S.~Cautis and J.~Kamnitzer, \textsl{Knot homology via derived categories of coherent sheaves {II},
-%  {$sl(m)$} case}, Invent. Math. \textbf{174} (2008), 165--232,
-%  \href{http://arxiv.org/abs/math/0710.3216}{[math.AG/0710.3216]}.
-%
+\bibitem[BvS11]{buchweitzstratten}
+R.-O. Buchweitz and D.~van Straten, \textsl{An Index Theorem for Modules on a Hypersurface Singularity}, 
+\href{http://arxiv.org/abs/1103.5574}{[arXiv:1103.5574]}. 
 
 \bibitem[CM]{khovhompaper}
-N.~Carqueville and D.~Murfet, \textsl{Computing {K}hovanov-{R}ozansky homology and defect fusion}, \href{http://arxiv.org/abs/1108.1081}{[arXiv:1108.1081]}
-
-%\bibitem[CM]{cmWebCompileCode}
-%N.~Carqueville and D.~Murfet, \textsl{Code to compute {K}hovanov-{R}ozansky
-%  homology and defect fusion in {L}andau-{G}inzburg models},
-%  \href{http://www.carqueville.net/nils/webCompilations}{http://www.carqueville.net/nils/webCompilations}.
+N.~Carqueville and D.~Murfet, \textsl{Computing {K}hovanov-{R}ozansky homology and defect fusion}, \href{http://arxiv.org/abs/1108.1081}{[arXiv:1108.1081]}. 
 
 \bibitem[CW10]{ct1007.2679}
 A.~{C\u ald\u araru} and S.~Willerton, \textsl{The Mukai pairing, I: a categorical approach},
@@ -6048,11 +6019,6 @@ N.~Carqueville and I.~Runkel, \textsl{Orbifold completion of defect bicategories
 M.~Crainic, \textsl{On the perturbation lemma, and deformations},
   \href{http://arxiv.org/abs/math/0403266}{[math.AT/0403266]}.
 
-%\bibitem[DGR06]{dgr0505662}
-%N.~M. Dunfield, S.~Gukov, and J.~Rasmussen, \textsl{The {S}uperpolynomial for
-%  {K}not {H}omologies}, Experimental Math. \textbf{15} (2006), 129--159,
-%  \href{http://arxiv.org/abs/math/0505662}{[math.GT/0505662]}.
-
 \bibitem[CQ95]{cuntzquillen}
 J.~Cuntz and D.~Quillen, \textsl{Algebra extensions and nonsingularity}, Journal of the AMS \textbf{8}, No. 2 (1995).
 
@@ -6061,10 +6027,6 @@ A.~Davydov, L.~Kong, and I.~Runkel, \textsl{Field theories with defects and the
   centre functor}, Mathematical Foundations of Quantum Field Theory and Perturbative String Theory, 
   Proceedings of Symposia in Pure Mathematics, AMS, 2011, \href{http://arxiv.org/abs/1107.0495}{[arXiv:1107.0495]}.
 
-%\bibitem[DBM{\etalchar{+}}11]{dbmmss1106.4305}
-%P.~Dunin-Barkowski, A.~Mironov, A.~Morozov, A.~Sleptsov, A.~Smirnov, \textsl{Superpolynomials for toric knots from evolution induced by cut-and-join operators},
-%  \href{http://arxiv.org/abs/1106.4305}{[arXiv:1106.4305]}. 
-%  
 \bibitem[Dyc11]{d0904.4713}
 T.~Dyckerhoff, \textsl{Compact generators in categories of matrix factorizations},
   Duke Math. J. \textbf{159} (2011), 223--274,
@@ -6103,46 +6065,8 @@ D.~Huybrechts, \textsl{Fourier-Mukai Transforms in Algebraic Geometry}, Oxford M
 D.~Huybrechts and R.~P.~Thomas, \textsl{Deformation-obstruction theory for complexes via Atiyah and Kodaira-Spencer classes}, Math. Ann. (2010) 346:545--569.
 
 \bibitem[Ill72]{illusie}
-L.~Illusie, \emph{Complexe cotangent et d\'eformations I, II}, vol. 239,
-  Springer New York, 1971, 1972.
-
-%\bibitem[FFRS07]{ffrs0607247}
-%J.~Fr\"ohlich, J.~Fuchs, I.~Runkel, and C.~Schweigert, \textsl{Duality and
-%  defects in rational conformal field theory}, Nucl. Phys. B \textbf{763}
-%  (2007), 354--430,
-%  \href{http://arxiv.org/abs/hep-th/0607247}{[hep-th/0607247]}.
-%
-%\bibitem[FYH{\etalchar{+}}85]{Homfly}
-%P.~Freyd, D.~Yetter, J.~Hoste, W.~B.~R. Lickorish, K.~Millett, and A.~Ocneanu,
-%  \textsl{A new polynomial invariant of knots and links}, Bull. Amer. Math. Soc.
-%  \textbf{12} (1985), 239--246.
-%
-%\bibitem[GIKV10]{gikv0705.1368}
-%S.~Gukov, A.~Iqbal, C.~Koz\c{c}az, and C.~Vafa, \textsl{Link {H}omologies and the
-%  {R}efined {T}opological {V}ertex}, Comm. Math. Phys. \textbf{298} (2010),
-%  757--785, \href{http://arxiv.org/abs/0705.1368}{[arXiv:0705.1368]}.
-%
-%\bibitem[GSV05]{gsv0412243}
-%S.~Gukov, A.~Schwarz, and C.~Vafa, \textsl{Khovanov-{R}ozansky {H}omology and
-%  {T}opological {S}trings}, Lett. Math. Phys. \textbf{74} (2005), 53--74,
-%  \href{http://arxiv.org/abs/hep-th/0412243}{[hep-th/0412243]}.
-%
-%\bibitem[GV99]{gv9811131}
-%R.~Gopakumar and C.~Vafa, \textsl{On the {G}auge {T}heory/{G}eometry
-%  {C}orrespondence}, Adv. Theor. Math. Phys. \textbf{3} (1999), 1415--1443,
-%  \href{http://arxiv.org/abs/hep-th/9811131}{[hep-th/9811131]}.
-%
-%\bibitem[GW]{gw0512298}
-%S.~Gukov and J.~Walcher, \textsl{Matrix {F}actorizations and {K}auffman
-%  {H}omology}, \href{http://arxiv.org/abs/hep-th/0512298}{[hep-th/0512298]}.
-%
-%\bibitem[Jae]{j1101.3302}
-%T.~C. Jaeger, \textsl{Khovanov-{R}ozansky {H}omology and {C}onway {M}utation},
-%  \href{http://arxiv.org/abs/1101.3302}{[arXiv:1101.3302]}.
-%
-%\bibitem[Jon85]{JonesPolynomialPaper}
-%V.~F.~R. Jones, \textsl{A polynomial invariant for knots via von {N}eumann
-%  algebras}, Bull. Amer. Math. Soc. \textbf{12} (1985), 103--111.
+L.~Illusie, \textsl{Complexe cotangent et d\'eformations I, II}, vol. 239,
+  Springer, New York, 1971, 1972.
 
 \bibitem[JS91]{JSGoTCI}
 A.~Joyal and R.~Street, \textsl{The geometry of tensor calculus I}, Advances in Math. \textbf{88} (1991), 55--112.
@@ -6153,7 +6077,7 @@ draft available at
 \href{http://maths.mq.edu.au/~street/GTCII.pdf}{http://maths.mq.edu.au/\textasciitilde street/GTCII.pdf}
 
 \bibitem[Kap]{kapranov}
-M.~Kapranov, \textsl{{R}ozansky�{W}itten invariants via {A}tiyah classes}, Compositio Math. \textbf{115} (1999), no. 1, 71--113.
+M.~Kapranov, \textsl{{R}ozansky-{W}itten invariants via {A}tiyah classes}, Compositio Math. \textbf{115} (1999), no. 1, 71--113.
 
 \bibitem[Ka]{k1004.2307}
 A.~Kapustin, \textsl{Topological {F}ield {T}heory, {H}igher {C}ategories, and
@@ -6182,48 +6106,13 @@ G.~M.~Kelly and R.~Street, \textsl{Review of the elements of 2-categories}, In C
 \bibitem[Kho10]{khovdia}
 M.~Khovanov, \textsl{Categorifications from planar diagrammatics}, Japanese J. of Mathematics \textbf{5} (2010), 153--181, \href{http://arxiv.org/abs/1008.5084}{[arXiv:1008.5084v1]}.
 
-%\bibitem[Kaw96]{kawauchibook}
-%A.~Kawauchi, \textsl{A {S}urvey of {K}not {T}heory}, Birkh\"auser, 1996.
-%
-%\bibitem[Kho00]{k9908171}
-%M.~Khovanov, \textsl{A categorification of the {J}ones polynomial}, Duke Math. J.
-%  \textbf{101} (2000), 359--426,
-%  \href{http://arxiv.org/abs/math/9908171}{[math.QA/9908171]}.
-%
-%\bibitem[Kho07]{k0510265}
-%M.~Khovanov, \textsl{Triply-graded link homology and Hochschild homology of Soergel bimodules},
-%  Int. Journal of Math. \textbf{18} (2007), 869--885,
-%  \href{http://arxiv.org/abs/math/0510265}{[math.GT/0510265]}.
-%
-%\bibitem[KR07a]{kr0701333}
-%M.~Khovanov and L.~Rozansky, \textsl{Virtual crossings, convolutions and a
-%  categorification of the {$\operatorname{SO}(2N)$} {K}auffman polynomial},
-%  Journal of G\"okova Geometry Topology \textbf{1} (2007), 116--214,
-%  \href{http://arxiv.org/abs/math/0701333}{[math.QA/0701333]}.
-%
-%\bibitem[KR07b]{kr0404189}
-%M.~Khovanov and L.~Rozansky, \textsl{Topological Landau-Ginzburg models on the world-sheet foam},
-%  Adv. Theor. Math. Phys. \textbf{11} (2007), 233--259,
-%  \href{http://arxiv.org/abs/hep-th/0404189}{[hep-th/0404189]}.
-%
 \bibitem[KR08a]{kr0401268}
 M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology}, Fund. Math.
   \textbf{199} (2008), 1--91,
   \href{http://arxiv.org/abs/math/0401268}{[math/0401268]}.
-%
-%\bibitem[KR08b]{kr0505056}
-%M.~Khovanov and L.~Rozansky, \textsl{Matrix factorizations and link homology {II}}, Geometry \&
-%  Topology \textbf{12} (2008), 1387--1425,
-%  \href{http://arxiv.org/abs/math/0505056}{[math.QA/0505056]}.
-%
-%\bibitem[Ko]{Kock}
-%J.~Kock, \textsl{Frobenius Algebras and 2D Topological Quantum Field Theories}, Cambridge University Press, 2003.
-%
-%\bibitem[Lam86]{LambekRingsModules}
-%J.~Lambek, \textsl{Lectures on rings and modules}, AMS Chelsea Publishing, 1986.
 
 \bibitem[Lack]{lack}
-S.~Lack, \textsl{A $2$-categories companion}, \href{http://arxiv.org/abs/math/0702535}{[arXiv:math/0702535v1]}.
+S.~Lack, \textsl{A $2$-categories companion}, \href{http://arxiv.org/abs/math/0702535}{[math/0702535v1]}.
 
 \bibitem[Lau12]{ladia}
 A.~D.~Lauda, \textsl{An introduction to diagrammatic algebra and categorified quantum $\mathfrak{sl}_2$}, Bulletin of the Institute of Mathematics Academia Sinica (New Series), Vol. \textbf{7} (2012), No. 2, 165--270, \href{http://arxiv.org/abs/1106.2128}{[arXiv:1106.2128v2]}.
@@ -6248,23 +6137,9 @@ J.~Lipman, \textsl{Residues and traces of differential forms via {H}ochschild
 \bibitem[Lo]{Loday}
 J.-L. Loday, \textsl{Cyclic homology}, Springer, 1997.
 
-%\bibitem[LMnV00]{lmv0010102}
-%J.~M.~F. Labastida, M.~Mari\~{n}o, and C.~Vafa, \textsl{Knot {I}nvariants and
-%  {T}opological {S}trings}, JHEP \textbf{0011} (2000), 007,
-%  \href{http://arxiv.org/abs/hep-th/0010102}{[hep-th/0010102]}.
-%
-%\bibitem[MSV09]{msv0708.2228}
-%M.~Mackaay, M.~Sto\v{s}i\'{c}, and P.~Vaz, \textsl{$\mathfrak{sl}(N)$ link homology ($N\geq 4$) using foams and the Kapustin-Li formula}, Geometry \& Topology \textbf{13} (2009), 1075--1128,
-%  \href{http://arxiv.org/abs/0708.2228}{[arXiv:0708.2228]}.
-%
-%\bibitem[Man07]{m0601629}
-%C.~Manolescu, \textsl{Link homology theories from symplectic geometry}, Adv. in
-%  Math. \textbf{211} (2007), 363--416,
-%  \href{http://www.arxiv.org/abs/math.AG/0601629}{[math.SG/0601629]}.
-
 \bibitem[Mar]{markarian}
-N.~Markarian, \emph{The {A}tiyah class, {H}ochschild cohomology and the
-  {R}iemann-{R}och theorem}, arXiv:math/0610553.
+N.~Markarian, \textsl{The {A}tiyah class, {H}ochschild cohomology and the
+  {R}iemann-{R}och theorem},  \href{http://arxiv.org/abs/math/0610553}{[math/0610553]}.
 
 \bibitem[MR]{mazur}
 B.~Mazur and L.~Roberts, \textsl{Local Euler Characteristics}, Inventiones math. \textbf{9} (1970), 201--234.
@@ -6273,39 +6148,20 @@ B.~Mazur and L.~Roberts, \textsl{Local Euler Characteristics}, Inventiones math.
 D.~McNamee, \textsl{On the mathematical structure of topological defects in
   {L}andau-{G}inzburg models}, MSc Thesis, Trinity College Dublin, 2009.
   
-\bibitem[Mu]{m0912.1629}
+\bibitem[Mu09]{m0912.1629}
 D.~Murfet, \textsl{Residues and duality for singularity categories of isolated {G}orenstein singularities},
   \href{http://arxiv.org/abs/0912.1629}{[arXiv:0912.1629]}.  
 
-\bibitem[Mub]{meres}
+\bibitem[Mu]{meres}
 D.~Murfet, \textsl{Residues via the perturbation lemma}, in preparation.
-
-%\bibitem[Mn05]{marinoknotbook}
-%M.~Mari\~{n}o, \textsl{Chern-{S}imons {T}heory, {M}atrix {M}odels, and
-%  {T}opological s{t}rings}, Oxford University Press, 2005.
-%
-%\bibitem[MOY98]{moy1998}
-%H.~Murakami, T.~Ohtsuki, and S.~Yamada, \textsl{Homfly polynomial via an
-%  invariant of colored plane graphs}, Enseign. Math. \textbf{44} (1998),
-%  325--360.
 
 \bibitem[MS]{ms0609042}
 G.~W. Moore and G.~Segal, \textsl{D-branes and {K}-theory in {2D} topological
   field theory}, \href{http://arxiv.org/abs/hep-th/0609042}{[hep-th/0609042]}.
 
 \bibitem[Nee01]{NeemanBook}
-\bysame, \emph{Triangulated categories}, Annals of Mathematics Studies, vol.
+G.~W. Moore and G.~Segal, \textsl{Triangulated categories}, Annals of Mathematics Studies, vol.
   148, Princeton University Press, Princeton, NJ, 2001.
-
-%\bibitem[MS]{ms0709.1971}
-%V.~Manzorchuck and C.~Stroppel, \textsl{A combinatorial approach to functorial
-%  quantum {$\mathfrak{sl}_k$} knot invariants},
-%  \href{http://arxiv.org/abs/0709.1971}{[arXiv:0709.1971]}.
-%
-%\bibitem[OV00]{ov9912123}
-%H.~Ooguri and C.~Vafa, \textsl{Knot {I}nvariants and {T}opological {S}trings},
-%  Nucl. Phys. B \textbf{577} (2000), 419--438,
-%  \href{http://arxiv.org/abs/hep-th/9912123}{[hep-th/9912123]}.
 
 \bibitem[P10]{p0807.1471}
 K.~Ponto, \textsl{Shadows and traces in bicategories}, 
@@ -6320,41 +6176,6 @@ K.~Ponto and M.~Shulman, \textsl{Shadows and traces in bicategories},
 A.~Polishchuk and A.~Vaintrob, \textsl{Chern characters and {H}irzebruch-{R}iemann-{R}och formula for matrix factorizations}, 
 \href{http://arxiv.org/abs/1002.2116}{[arXiv:1002.2116]}. 
 
-
-%\bibitem[PT87]{HomflyPT}
-%J.~Przytycki and P.~Traczyk, \textsl{Conway algebras and skein equivalence of
-%  links}, Proc. Amer. Math. Soc. \textbf{100} (1987), 744--748.
-%
-%\bibitem[Ras]{r0607544}
-%J.~Rasmussen, \textsl{Some differentials on {K}hovanov-{R}ozansky homology},
-%  \href{http://arxiv.org/abs/math/0607544}{[math.GT/0607544]}.
-%
-%\bibitem[Ras07]{r0508510}
-%J.~Rasmussen, \textsl{Khovanov-{R}ozansky homology of two-bridge knots and links},
-%  Duke Math. J. \textbf{136} (2007), 551--583,
-%  \href{http://arxiv.org/abs/math/0508510}{[math.GT/0508510]}.
-%  
-%\bibitem[Ric94]{rickard}
-%J.~Rickard, \textsl{Translation functors and equivalences of derived categories for blocks of algebraic groups}, in “Finite dimensional algebras and related topics”, Kluwer (1994), 255-–264.
-%
-%\bibitem[Rou06]{RouquierMexico}
-%R.~Rouquier, \textsl{Categorification of {$\mathfrak{sl}_{2}$} and braid groups},
-%  Trends in representation theory of algebras and related topics (2006),
-%  137--167.
-%
-%\bibitem[RT90]{RT1990}
-%N.~Reshetikhin and V.~Turaev, \textsl{Ribbon graphs and their invariants derived
-%  from quantum groups}, Comm. Math. Phys. \textbf{127} (190), 1--26.
-%
-%\bibitem[RT91]{RT1991}
-%N.~Reshetikhin and V.~Turaev, \textsl{Invariants of 3-manifolds via link polynomials and quantum
-%  groups}, Invent. Math. \textbf{103} (1991), 547--597.
-%
-%\bibitem[SS06]{ss0405089}
-%P.~Seidel and I.~Smith, \textsl{A link invariant from the symplectic geometry of
-%  nilpotent slices}, Duke Math. J. \textbf{134} (2006), 453--514,
-%  \href{http://arxiv.org/abs/math/0405089}{[math.SG/0405089]}.
-
 \bibitem[Qui85]{superquillen}
 D.~Quillen, \textsl{Superconnections and the {C}hern character}, Topology \textbf{24}, No. 1 (1985), 89--95. 
 
@@ -6364,59 +6185,6 @@ J.~Roberts and S.~Willerton, \textsl{On the {R}ozansky-{W}itten weight systems},
 \bibitem[SW11]{sw0911.0917}
 C.~V.~Shepler and S.~Witherspoon, \textsl{Quantum differentiation and chain maps of bimodule complexes}, Algebra and Number Theory \textbf{5}-3 (2011), 339--360, 
 \href{http://arxiv.org/abs/0911.0917}{[arXiv:0911.0917]}. 
-
-%\bibitem[Str05]{sCatTLcTCpf}
-%C.~Stroppel, \textsl{Categorification of the {T}emperley-{L}ieb category,
-%  tangles, and cobordisms via projective functors}, Duke Math. J. \textbf{126}
-%  (2005), 547--596.
-%
-%\bibitem[Sus]{s0701045}
-%J.~Sussan, \textsl{Category {$\mathcal O$} and {$\mathfrak{sl}_k$} link
-%  invariants}, \href{http://arxiv.org/abs/math/0701045}{[math.QA/0701045]}.
-%
-%\bibitem[Tur88]{t1988YB}
-%V.~Turaev, \textsl{The {Y}ang-{B}axter equation and invariants of links}, Invent.
-%  Math. \textbf{92} (1988), 527--553.
-%
-%\bibitem[Tur10]{turaevbook}
-%V.~Turaev, \textsl{Quantum invariants of knots and 3-manifolds}, de Gruyter, 2010,
-%  2nd edition.
-%
-%\bibitem[Weba]{w0610650}
-%B.~Webster, \textsl{Khovanov-Rozansky homology via a canopolis formalism},
-%  \href{http://arxiv.org/abs/math/0610650}{[math.GT/0610650]}.
-%
-%\bibitem[Webb]{w1005.4559}
-%B.~Webster, \textsl{Knot invariants and higher representation theory {II}: the
-%  categorification of quantum knot invariants},
-%  \href{http://arxiv.org/abs/1005.4559}{[arXiv:1005.4559]}.
-%
-%\bibitem[Wit]{w1101.3216}
-%E.~Witten, \textsl{Fivebranes and {K}nots},
-%  \href{http://arxiv.org/abs/1101.3216}{[arXiv:1101.3216]}.
-%
-%\bibitem[Wit89]{wittenjones}
-%E.~Witten, \textsl{Quantum field theory and the {J}ones polynomial}, Comm. Math.
-%  Phys. \textbf{121} (1989), 351--399.
-%
-%\bibitem[Wit95]{w9207094}
-%E.~Witten, \textsl{Chern-{S}imons {G}auge {T}heory {A}s {A} {S}tring {T}heory},
-%  Prog. Math. \textbf{133} (1995), 637--678,
-%  \href{http://arxiv.org/abs/hep-th/9207094}{[hep-th/9207094]}.
-%
-%\bibitem[Wu]{w0907.0695}
-%H.~Wu, \textsl{A colored {$\mathfrak{sl}(N)$}-homology for links in {$S^3$}},
-%  \href{http://arxiv.org/abs/0907.0695}{[arXiv:0907.0695]}.
-%
-%\bibitem[Wu08]{w0508064}
-%H.~Wu, \textsl{Braids, {T}ransversal links and the {K}hovanov-{R}ozansky {T}heory},
-%  \href{http://arxiv.org/abs/math/0508064}{[math.GT/0508064]}, Trans. Amer. Math. Soc. \textbf{360}
-%  (2008), 3365--3389.
-%
-%\bibitem[Yon]{y0906.0220}
-%Y.~Yonezawa, \textsl{Quantum {$(\mathfrak{sl}_n, \wedge V_n)$} link invariant and
-%  matrix factorizations},
-%  \href{http://arxiv.org/abs/0906.0220}{[arXiv:0906.0220]}.
 
 \end{thebibliography}
 
