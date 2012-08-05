@@ -497,7 +497,7 @@ In this section we recall the basic theory of bicategories, with \cite{bor94} as
 \begin{definition} A bicategory $\cat{B}$ consists of the following data:
 \begin{itemize}
 \item A class $|\cat{B}|$ of \textsl{objects}.
-\item For each pair $A,B$ of objects a small category $\cat{B}(A,B)$ whose objects we call \textsl{$1$-morphisms} and whose arrows we call \textsl{$2$-morphisms}. Composition of $2$-morphisms is denoted $\gamma \circ \delta$.
+\item For each pair $A,B$ of objects a small category $\cat{B}(A,B)$ whose objects we call \textsl{1-morphisms} and whose arrows we call \textsl{2-morphisms}. Composition of $2$-morphisms is denoted $\gamma \circ \delta$.
 \item For each triple $A,B,C$ of objects a functor
 \[
 c_{ABC}: \cat{B}(A,B) \times \cat{B}(B,C) \lto \cat{B}(A,C)\,.
@@ -506,7 +506,7 @@ Given $1$-morphisms $f: A \lto B$ and $g: B \lto C$ we write $g \otimes f$ for t
 \item For each object $A$ an identity $1$-morphism $\Delta_A: A \lto A$.
 \item For each triple of composable $1$-morphisms $h, g, f$ a $2$-isomorphism
 \[
-\alpha_{f,g,h}: (h \otimes g) \otimes f \lto h \otimes (g \otimes f)
+\alpha_{fgh}: (h \otimes g) \otimes f \lto h \otimes (g \otimes f)
 \]
 natural with respect to $2$-morphisms in all three variables.
 \item For each $1$-morphism $f: A \lto B$ a pair of $2$-isomorphisms
@@ -563,18 +563,18 @@ Our references for adjunction in bicategories are \cite[Chapter $6$]{gray} and \
 \ee
 satisfying 
 \begin{align}
-\rho_f \circ (1_f \otimes \eval) \circ \alpha_{f,g,f} \circ (\coev \otimes 1_f) \circ \lambda_f^{-1} & = 1_f \, , \label{uglyZorro1}\\
-\lambda_{g} \circ (\eval \otimes 1_{g}) \circ \alpha^{-1}_{g,f,g} \circ (1_{g} \otimes \coev) \circ \rho_{g}^{-1} & = 1_{g} \, . \label{uglyZorro2}
+\rho_f \circ (1_f \otimes \eval) \circ \alpha_{fgf} \circ (\coev \otimes 1_f) \circ \lambda_f^{-1} & = 1_f \, , \label{uglyZorro1}\\
+\lambda_{g} \circ (\eval \otimes 1_{g}) \circ \alpha^{-1}_{gfg} \circ (1_{g} \otimes \coev) \circ \rho_{g}^{-1} & = 1_{g} \, . \label{uglyZorro2}
 \end{align}
 Equivalently, the following two composites evaluate to the identity:
 \begin{align*}
 \xymatrix@C+1.5pc
 {
-f \ar[r]^-{\lambda_f^{-1}} & \Delta_B \otimes f \ar[r]^-{\coev \otimes 1_f} & ( f \otimes g ) \otimes f \ar[r]^-{\alpha_{f,g,f}} & f \otimes ( g \otimes f ) \ar[r]^-{1_f \otimes \eval} & f \otimes \Delta_A \ar[r]^-{\rho_f} & f
+f \ar[r]^-{\lambda_f^{-1}} & \Delta_B \otimes f \ar[r]^-{\coev \otimes 1_f} & ( f \otimes g ) \otimes f \ar[r]^-{\alpha_{fgf}} & f \otimes ( g \otimes f ) \ar[r]^-{1_f \otimes \eval} & f \otimes \Delta_A \ar[r]^-{\rho_f} & f
 } ,\\
 \xymatrix@C+1.5pc
 {
-g \ar[r]^-{\rho_g^{-1}} & g \otimes \Delta_B \ar[r]^-{1_g \otimes \coev} & g \otimes ( f \otimes g ) \ar[r]^-{\alpha^{-1}_{g,f,g}} & (g \otimes f) \otimes g \ar[r]^-{\eval \otimes 1_g} & \Delta_A \otimes g \ar[r]^-{\lambda_g} & g
+g \ar[r]^-{\rho_g^{-1}} & g \otimes \Delta_B \ar[r]^-{1_g \otimes \coev} & g \otimes ( f \otimes g ) \ar[r]^-{\alpha^{-1}_{gfg}} & (g \otimes f) \otimes g \ar[r]^-{\eval \otimes 1_g} & \Delta_A \otimes g \ar[r]^-{\lambda_g} & g
 } .
 \end{align*}
 In this case we say that $g$ is \textsl{left adjoint} to $f$ and that $f$ is \textsl{right adjoint} to $g$, and we write $g \dashv f$. The $2$-morphisms $\eval$ and $\coev$ are referred to as the \textsl{evaluation} and \textsl{coevaluation} maps.
