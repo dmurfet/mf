@@ -1,5 +1,12 @@
 % Authors:  Nils Carqueville, Daniel Murfet
  
+ % changes since version 1:
+ % -- fixed "gamma =" typo on page 3
+ % -- fixed protruding line on page 9
+ % -- gave names to rings at the beginning of Section 5
+ % -- added reference BRS10 and added "For earlier work in this direction see~\cite{brs0909.0696, cr1006.5609}." on page 28 % -- fixed spaces in Equations (5.7) and (5.8)
+
+ 
 \documentclass{compositio}
 \usepackage{stmaryrd}
 \usepackage{amsmath, amscd, amssymb, mathrsfs, accents, amsfonts}
@@ -359,7 +366,7 @@ On the other hand our general construction also allows for concrete calculations
 \be\label{eq:formula_intro_coev}
 \widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(r+1)|e_j| + s} \big\{ \partial_{[b_r]}(d_X) \ldots \partial_{[b_1]}(d_X) \big\}_{ji} \cdot e_i^* \otimes e_j
 \ee
-and there is a similar expression for $\coev_X$. Here $\gamma = $ is an element of the exterior algebra $\Delta$ and $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ is the ``complement'' of $\gamma$ in the sense that~$b_1 < \cdots < b_r$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, see \eqref{diffquotop}. The evaluation maps have similar elementary presentations, which involve in addition supertraces and residues, see Section~\ref{sec:derivcoeval}.
+and there is a similar expression for $\coev_X$. Here $\gamma = \theta_{a_1}\ldots \theta_{a_{n-r}}$ with is an element of the exterior algebra $\Delta$ and $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ is the ``complement'' of $\gamma$ in the sense that~$b_1 < \cdots < b_r$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, see \eqref{diffquotop}. The evaluation maps have similar elementary presentations, which involve in addition supertraces and residues, see Section~\ref{sec:derivcoeval}.
 
 The mixture of conceptual control and concreteness leads to applications which are important in their own right, two of which we briefly mention now. Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation $(X,D)$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
 \begin{align}\label{defectactionIntro}
@@ -790,7 +797,7 @@ d_{X^\vee} = \begin{pmatrix} 0 & (d_X^0)^\vee \\ -(d_X^1)^\vee & 0\end{pmatrix} 
 
 The \textsl{(homotopy) category of linear factorisations} $\HF(R,W)$ is the category of linear factorisations of $W\in R$ modulo homotopy relations. We denote by $\HMF(R,W)$ its full subcategory of matrix factorisations, and we write $\hmf(R,W)$ for the full subcategory of \textsl{finite-rank matrix factorisations}, i.\,e.~the matrix factorisations $X$ whose underlying $R$-module is free of finite rank. These three categories have standard triangulated structures whose shift functor we denote $[1]$. 
 
-Since we work with polynomials rather than power series, $\hmf(R,W)$ is not necessarily idempotent complete; for an example of this phenomenon see \cite[Example A$.5$]{keller}. However $\HMF(R,W)$ has arbitrary coproducts and is therefore idempotent complete \cite{NeemanBook}, and $\hmf(R,W)^\omega$ denotes the idempotent closure of $\hmf(R,W)$ in this larger triangulated category. More concretely, this idempotent closure is the full subcategory of $\HMF(R,W)$ whose objects are those matrix factorisations~$Y$ which are direct summands of finite-rank matrix factorisations (in the homotopy category). This is an idempotent complete triangulated category.
+Since we work with polynomials rather than power series, $\hmf(R,W)$ is not necessarily idempotent complete; for an example of this phenomenon we refer to~\cite[Example A$.5$]{keller}. However $\HMF(R,W)$ has arbitrary coproducts and is therefore idempotent complete \cite{NeemanBook}, and $\hmf(R,W)^\omega$ denotes the idempotent closure of $\hmf(R,W)$ in this larger triangulated category. More concretely, this idempotent closure is the full subcategory of $\HMF(R,W)$ whose objects are those matrix factorisations~$Y$ which are direct summands of finite-rank matrix factorisations (in the homotopy category). This is an idempotent complete triangulated category.
 
 For objects $(R = k[x], W)$ and $(S = k[z], V)$ of $\LG$ we define
 \be
@@ -1713,7 +1720,7 @@ which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:l
 
 \section{Evaluation and coevaluation}\label{sec:derivcoeval}
 
-Every $1$-morphism in $\LG$ has both a left and right adjoint. Specifically, if a $1$-morphism $W \lto V$ is represented by a finite-rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in k[x] = k[x_1,\ldots,x_n]$ and $V\in k[z] = k[z_1,\ldots,z_m]$ are potentials, then the $1$-morphisms
+Every $1$-morphism in $\LG$ has both a left and right adjoint. Specifically, if a $1$-morphism $W \lto V$ is represented by a finite-rank matrix factorisation $X$ of $V - W$ over $k[x,z]$, where $W\in R = k[x_1,\ldots,x_n]$ and $V\in S = k[z_1,\ldots,z_m]$ are potentials, then the $1$-morphisms
 \be\label{eq:derivcoeval11}
 X^\dual = R[n] \otimes_R X^\vee \, , \qquad {}^\dual X = X^\vee \otimes_S S[m]
 \ee
@@ -1721,7 +1728,7 @@ are respectively the right and left adjoints of $X$ in $\LG$. These matrix facto
 \[
 X^\vee[m] \cong X^\vee \otimes_S S[m], \qquad \nu \lmt (-1)^{m|\nu|} \nu
 \]
-involves signs. The dual $X^\vee$ is the object of $\hmf(k[x,z], W-V)$ with the differential spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}.
+involves signs. The dual $X^\vee$ is the object of $\hmf(k[x,z], W-V)$ with the differential spelled out in \eqref{eq:differentials_adjoints}. To prove that these $1$-morphisms are adjoint to $X$ we have to exhibit two pairs of evaluation and coevaluation maps, and prove that they satisfy the Zorro moves~\eqref{Zorros} and~\eqref{otherZorros}. For earlier work in this direction see~\cite{brs0909.0696, cr1006.5609}. 
 
 In Sections \ref{subsec:derivcoeval} and \ref{subsec:eval} below we define evaluation and coevaluation maps
 \begin{align}
@@ -1750,13 +1757,13 @@ The Atiyah classes involved in \eqref{eq:coev10} and \eqref{eq:coev102} are actu
 
 A representative for the evaluation morphism is given by
 \be\label{eq:constructevalmap00}
-\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\globalsigneval+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \, \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]
+\widetilde\eval_X( \eta \otimes \nu ) = \sum_{l \ge 0} (-1)^{\globalsigneval+l+n|\eta|} \Res_{k[x]/k} \left[ \frac{ \Psi \left( \lAt_2(X)^l( \Lambda^{(x)} \eta ), \nu \right) \underline{\operatorname{d}\!x}}{\partial_{x_1}W, \ldots, \partial_{x_n} W} \right]
 \ee
 where $\Lambda^{(x)} = (-1)^n \partial_{x_1}(d_X) \ldots \partial_{x_n}(d_X)$, $\underline{\operatorname{d}\!x} = \ud x_1 \ldots \ud x_n$, and $(\eta',\nu)$ denotes the evaluation of $\nu$ on an element $\eta'$ of $X$, with an appropriate Koszul sign and taking into account the fact that $\nu$ and $\eta$ involve different copies of the $z$-variables. For the precise statement see Proposition \ref{prop:constructevalmap}. 
 
 In the other evaluation the Atiyah class of $X^{\vee}$ is applied to the functional $\nu \circ \Lambda^{(z)}$ with $\Lambda^{(z)} = \partial_{z_1}(d_X) \ldots \partial_{z_m}(d_X)$, and the resulting functional-valued form is evaluated on $\eta$: 
 \be\label{eq:constructevalmap01}
-\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{l} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \, \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]
+\eval_X( \nu \otimes \eta ) = \sum_{l \ge 0} (-1)^{l} \Res_{k[z]/k} \left[ \frac{ \Psi \left( \lAt_2(X^{\vee})^l( \nu \circ \Lambda^{(z)} ), \eta\right) \underline{\operatorname{d}\!z}}{\partial_{z_1}V, \ldots, \partial_{z_m} V} \right]
 \ee
 where $\underline{\ud z} = \ud z_1 \ldots \ud z_m$. Here $(\nu', \eta)$ denotes the evaluation of a functional $\nu'$ on $\eta$, without signs but distinguishing between the two copies of the $x$-variables involved; a more careful explanation is given after Proposition \ref{prop:constructevalmapnontilde}. 
 
@@ -5726,6 +5733,10 @@ F.~Borceux, \textsl{Handbook of categorical algebra $1$}, volume $50$ of \textsl
 I.~Brunner and D.~Roggenkamp, \textsl{B-type defects in {L}andau-{G}inzburg
   models}, JHEP \textbf{0708} (2007), 093,
   \href{http://arxiv.org/abs/0707.0922}{[arXiv:0707.0922]}.
+
+\bibitem[BRS10]{brs0909.0696}
+I.~Brunner, D.~Roggenkamp and S.~Rossi \textsl{Defect Perturbations in Landau-Ginzburg Models}, JHEP \textbf{1003} (2010), 015,
+  \href{http://arxiv.org/abs/0909.0696}{[arXiv:0909.0696]}.
 
 \bibitem[BF03]{buchweitz03}
 R.-O. Buchweitz and H.~Flenner, \textsl{A semiregularity map for modules and
