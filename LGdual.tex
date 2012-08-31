@@ -8,6 +8,10 @@
  % -- fixed order of 2-morphisms in (9.3) and (9.4)
  % -- swapped Moore and Murfets in references
  % -- changed wrong reference [Laz05] to [Laz01]
+ % -- added part (ii) to Remark 7.3
+ % -- rephrased beginning of second paragraph in Section 2.3 (so that R/k makes more sense)
+ % -- deleted commas in last display on bottom of page 27
+ %  -- cosmetic change to (2.11)
 
  
 \documentclass{compositio}
@@ -823,7 +827,7 @@ Y \circ X = Y \otimes_{R_2} X \in \hmf( R_1 \otimes_k R_3, W_3 - W_1 )^\omega = 
 Letting the tensor product act in the obvious way on morphisms this defines a functor
 \be\label{eq:backgroundcomptensor}
 c_{W_1 W_2 W_3}: \LG( W_1, W_2 ) \times \LG( W_2, W_3 ) \lto \LG( W_1, W_3 ) \, , 
-\qquad c( X, Y ) = Y \otimes_{R_2} X\,.
+\qquad ( X, Y ) \lmt Y \otimes_{R_2} X\,.
 \ee
 There is an obvious natural isomorphism $\alpha_{XYZ}: (X\otimes Y)\otimes Z \lra X\otimes (Y \otimes Z)$. In the rest of the paper we drop the ``$\circ$'' notation for composition and use only tensor products.
 
@@ -920,7 +924,7 @@ of finite-rank graded matrix factorisations, and together with the tensor produc
 
 For a polynomial ring the standard resolutions of the diagonal are the Koszul and bar resolutions. Above we defined the unit $1$-morphisms in $\LG$ using a Koszul model for the diagonal, but in the study of adjoints it will quickly become necessary to use the bar model for the diagonal as well. For this reason we recall in this section the necessary background on noncommutative forms and the bar complex from \cite{Loday, cuntzquillen}. We explain how to use the bar complex to construct a second model for the diagonal, and construct a map $\Psi$ which relates the Koszul and bar models.
 
-For the moment $R$ is an arbitrary ring. \textsl{Noncommutative $n$-forms over~$R$} are elements in 
+\textsl{Noncommutative $n$-forms} over a unital ring~$R$ are elements in 
 $$
 \Omega^n R = R\otimes \bar R^{\otimes n} 
 $$
@@ -1715,7 +1719,7 @@ is a homotopy equivalence, with $\xi$ denoting the canonical isomorphisms (see S
 \]
 A straightforward computation yields (with $D = d_Y$)
 \[
-\varphi_{\textup{lift}}(e_j) = \sum_{l \ge 0}\sum_{i_0, i_1, \ldots, i_{l-1}} (-1)^{l|e_{i_0}| + l} \Psi\left( d( D_{i_{l-1},j}) d( D_{i_{l-2},i_{l-1}} ) \ldots d( D_{i_0, i_1} ) \cdot (1 \otimes \varphi(e_{i_0}) ) \right)
+\varphi_{\textup{lift}}(e_j) = \sum_{l \ge 0}\sum_{i_0, i_1, \ldots, i_{l-1}} (-1)^{l|e_{i_0}| + l} \Psi\left( d( D_{i_{l-1} j}) d( D_{i_{l-2} i_{l-1}} ) \ldots d( D_{i_0 i_1} ) \cdot (1 \otimes \varphi(e_{i_0}) ) \right)
 \]
 which by \eqref{eq:leftatiyahexp} agrees with the right-hand side of \eqref{eq:liftingresult}.
 \end{proof}
@@ -3534,6 +3538,8 @@ This follows from the previous proposition by applying the wiggly line calculus 
 
 
 \begin{remark}\label{remark:notpivotal}
+\begin{enumerate}
+\item 
 In the bicategory $\LG$ the natural candidate for a pivotal structure is
 \be\label{delta}
 \delta_X = 
@@ -3582,6 +3588,10 @@ node[below] {{{\small${}^\dual X^{\dual}$}}};
 for each 1-morphism $X\in \hmf(k[x_1,\ldots,x_n,z_1,\ldots,z_m], V-W)$. Observing that~$\delta_X$ is simply the Zorro map~\eqref{eq:trueproofeq2} with~$e_j$ exchanged by $e_j^{**}$, it is straightforward to verify that~$\delta_X$ is the canonical map given by $(\delta_X(a))(\Phi) = \sigma(\Phi(a))$ for all $a\in X, \Phi\in X^\dual$, where $\sigma: R\otimes_k S \lra S\otimes_k R$ is the linear map that swaps tensor factors. 
 
 For~$\delta$ to describe a pivotal structure it must be an isomorphism between~$X$ and $X^{\dual\dual} = X^\vee[n]^\dual \cong X^{\vee\vee}[m+n]$. This is indeed true ``half of the time'', to wit whenever $m+n$ is even, and the results of this section imply that in this case the properties of pivotality hold. However, when $m+n$ is odd~$X$ and $X^{\dual\dual}$ are not isomorphic in general (a counterexample being $W=0$, $V=z^d$, $X=S^{\oplus 2}$, $d_X = (\begin{smallmatrix}0&z^n\\z^{d-n}&0\end{smallmatrix})$ for $n\notin d/2$).
+
+\item 
+All the results of this section also hold in the graded case, i.\,e.~in the bicategory $\LG^{\mathrm{gr}}$. 
+\end{enumerate}
 \end{remark}
 
 
