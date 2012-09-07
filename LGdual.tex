@@ -12,6 +12,8 @@
  % -- rephrased beginning of second paragraph in Section 2.3 (so that R/k makes more sense)
  % -- deleted commas in last display on bottom of page 27
  %  -- cosmetic change to (2.11)
+ % -- added new footnote about Chern = exp(At) on page 55
+ % -- corrected Remark 2.9 so that V-W is homogeneous
 
  
 \documentclass{compositio}
@@ -911,20 +913,20 @@ The key point comes in \eqref{eq:zorroequalsH} where we find that the Zorro move
 \end{remark}
 
 \begin{remark}\label{remark:gradedbicategory}
-The bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$ is defined as follows: its objects are pairs $(R = k[x_1,\ldots,x_n],W)$ as above with the additional data of a degree $|x_i| \in \nN$ for each variable, such that $W$ is homogeneous of even degree $2c$. A graded linear factorisation is a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ to be homogeneous of degree~$c$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. Our conventions for the graded Hom and tensor products follow \cite{kr0401268} and \cite[Section $2.1$]{ khovhompaper}.
+The bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$ is defined as follows: its objects are pairs $(R = k[x_1,\ldots,x_n],W)$ as above with the additional data of a degree $|x_i| \in \nN$ for each variable, such that $W$ is homogeneous of even degree $2c_W$. A graded linear factorisation is a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ to be homogeneous of degree~$c_W$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. Our conventions for the graded Hom and tensor products follow \cite{kr0401268} and \cite[Section $2.1$]{ khovhompaper}.
 
 In this bicategory the 1- and 2-morphisms are given by homotopy categories
 \[
 \LG^{\mathrm{gr}}((R,W),(S,V)) = \hmf^{\mathrm{gr}}(R \otimes_k S, V - W)
 \]
-of finite-rank graded matrix factorisations, and together with the tensor product and the same structure maps $\alpha, \lambda, \rho$ this defines a bicategory \cite{cr0909.4381}. We make $\Delta_W$ into a graded matrix factorisation with the same differential, and the grading given by assigning $\theta_i$ the bidegree $|\theta_i| = (-1,|x_i| - c)$.
+of finite-rank graded matrix factorisations, together with the same structure maps $\alpha, \lambda, \rho$ as before. We make $\Delta_W$ into a graded matrix factorisation with the same differential, and the grading given by assigning $\theta_i$ the bidegree $|\theta_i| = (-1,|x_i| - c_W)$. To have the tensor product well-defined we have to ensure that $V-W$ is homogeneous; for this we define~$c$ to be the least common multiple of $c_W$ and $c_V$, and we rescale the degrees of the variables in the rings~$R$ and~$S$ by $\frac{c}{c_W}$ and $\frac{c}{c_V}$, respectively, so that $V-W$ is homogeneous of degree $2c$. Then $\LG^{\mathrm{gr}}$ is indeed a bicategory \cite{cr0909.4381, ballard}. 
 \end{remark}
 
 \subsection{Bar complex}\label{subsec:Bar}
 
 For a polynomial ring the standard resolutions of the diagonal are the Koszul and bar resolutions. Above we defined the unit $1$-morphisms in $\LG$ using a Koszul model for the diagonal, but in the study of adjoints it will quickly become necessary to use the bar model for the diagonal as well. For this reason we recall in this section the necessary background on noncommutative forms and the bar complex from \cite{Loday, cuntzquillen}. We explain how to use the bar complex to construct a second model for the diagonal, and construct a map $\Psi$ which relates the Koszul and bar models.
 
-\textsl{Noncommutative $n$-forms} over a unital ring~$R$ are elements in 
+\textsl{Noncommutative $n$-forms} over a $k$-algebra~$R$ are elements in 
 $$
 \Omega^n R = R\otimes \bar R^{\otimes n} 
 $$
@@ -4194,7 +4196,7 @@ node[near end,right] {{{\small$\Delta_W$}}};
 \end{tikzpicture} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 $$
-where we used the identification $R/(\partial W) \cong \End_{\hmf(R,W)}(\Delta_W)$ and a special case of Proposition~\ref{prop:defectaction}. Another special case of the same proposition allows us to recover the Kapustin-Li pairing as the obvious 2-morphism representing the disk correlator: 
+where we used the identification $R/(\partial W) \cong \End_{\hmf(R,W)}(\Delta_W)$ and a special case of Proposition~\ref{prop:defectaction}.\footnote{As a side remark we observe that the Chern character $\operatorname{ch}(X) = \beta^X(1_X)$ can be thought of as the exponential of the associative Atiyah class of~$X$ as follows from the expressions~\eqref{eq:coev102} and~\eqref{eq:constructevalmap00} that compose to $\operatorname{ch}(X)$.} Another special case of the same proposition allows us to recover the Kapustin-Li pairing as the obvious 2-morphism representing the disk correlator: 
 $$
 \langle \psi_1 , \psi_2 \rangle_X = 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
