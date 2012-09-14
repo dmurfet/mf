@@ -4,7 +4,8 @@
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "mfweb.lib";
-ring rr=0,(u,v,x,y),dp;
+//ring rr=0,(u,v,x,y),dp;
+ring rr=11,(u,v,x,y),dp;
 printlevel = 1;
 
 // We are looking for matrix factorisations of V - W
@@ -111,17 +112,24 @@ proc findkoszul(list allowed, list allowed_coeff, poly Q, list #)
     {
         print("In step " + string(i) + " / " + string(size(mlist)) );
         
-        for(j = 1; j <= size(mlist); j++ )
+        list l1 = mlist[i];
+        poly a1;
+        
+        for(c = 1; c <= size(l1); c++ )
         {
-            list l1 = mlist[i];
+            a1 = a1 + allowed_coeff[ l1[c] ] * allowed[ c ];
+        }
+        
+        for(j = i+1; j <= size(mlist); j++ )
+        {
+
             list l2 = mlist[j];
         
             // Assemble the polynomials a1, a2
-            poly a1, a2;
+            poly a2;
         
             for(c = 1; c <= size(l1); c++ )
             {
-                a1 = a1 + allowed_coeff[ l1[c] ] * allowed[ c ];
                 a2 = a2 + allowed_coeff[ l2[c] ] * allowed[ c ];
             }
         
@@ -164,8 +172,15 @@ list l = findkoszul( allowed, allowed_coeff, x3 - xy2 - u6 + v2, 2 );
 //
 // Looking for a defect between u12 - v2 and x3 + y4
 
-list allowed = u, v, x, y, u2, v2, x2, y2, uv, ux, uy, vx, vy, u3, v3, x3, y3;
-//list allowed = u, v, x, y, u2, v2, x2, y2, uv, ux, uy, vx, vy, u3, v3, x3, y3, u2v, u2x, u2y, uv2, v2x, v2y, ux2, vx2, x2y, uy2, vy2, xy2, u4, v4, x4, y4;
+list allowed = u, v, x, y, u2, v2, x2, y2, uv, ux, uy, vx, vy, u3, v3, x3, y3, u4;
+// u2v, u2x, u2y, uv2, v2x, v2y, ux2, vx2, x2y, uy2, vy2, xy2, u4, v4, x4, y4;
 list allowed_coeff = 0, -1, 1;
 
-list l = findkoszul( allowed, allowed_coeff, x3 + y4 - u12 + v2, 2 );
+list l = findkoszul( allowed, allowed_coeff, x3 + y4 - u12 + v2, 3 );
+
+// List of tried things
+//
+// u, v, x, y, u2, v2, x2, y2, uv, ux, uy, vx, vy, u3, v3, x3, y3, allowed_coeff = 0, -1, 1, size = 2
+//      RESULT: reports only -u3+y and x3+v2
+// u, v, x, y, u2, v2, x2, y2, uv, ux, uy, vx, vy, u3, v3, x3, y3, u4, allowed_coeff = 0, -1, 1, size = 3
+//      RESULT: reports only -u3+y and x3+v2
