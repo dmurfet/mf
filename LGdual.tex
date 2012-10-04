@@ -15,8 +15,13 @@
  % -- added new footnote about Chern = exp(At) on page 55
  % -- corrected Remark 2.9 so that V-W is homogeneous
  % -- corrected wrong wiggly labels from n to a in (7.2)
+ % -- removed all references to graded matrix factorisations
+ % -- removed arrows from (2.1)
+ % -- removed blurb about adjunctions
+ % -- removed Section 11.5
+ % -- removed Appendix E
+ % -- reduced details in Appendix C
 
- 
 \documentclass{compositio}
 \usepackage{stmaryrd}
 \usepackage{amsmath, amscd, amssymb, mathrsfs, accents, amsfonts}
@@ -269,18 +274,18 @@
 %57R56  	Topological quantum field theories
 
 \begin{abstract}
-We study the bicategory of Landau-Ginzburg models, which has potentials as objects and matrix factorisations as $1$-morphisms. Our main result is the existence of adjoints in this bicategory and a description of evaluation and coevaluation maps in terms of Atiyah classes and homological perturbation. Being simultaneously conceptual and explicit, our construction lends itself to applications in numerous directions. In particular, the bicategorical perspective offers a unified approach to Landau-Ginzburg models: we show how to compute arbitrary correlators and recover the full structure of open/closed TFT, including the Kapustin-Li disk correlator and a simple proof of the Cardy condition, in terms of defect operators which in turn are directly computable from the adjunctions. 
+We study the bicategory of Landau-Ginzburg models, which has potentials as objects and matrix factorisations as $1$-morphisms. Our main result is the existence of adjoints in this bicategory and a description of evaluation and coevaluation maps in terms of Atiyah classes and homological perturbation. The bicategorical perspective offers a unified approach to Landau-Ginzburg models: we show how to compute arbitrary correlators and recover the full structure of open/closed TFT, including the Kapustin-Li disk correlator and a simple proof of the Cardy condition, in terms of defect operators which in turn are directly computable from the adjunctions. 
 \end{abstract}
 
 \maketitle
 
 \section{Introduction}\label{sec:Introduction}
 
-Landau-Ginzburg models play an important role in many areas of mathematical physics and pure mathematics. Among them are diverse fields such as singularity theory, representation theory, (homological) mirror symmetry, knot invariants, and conformal or topological field theory. These areas are intimately interrelated, and this richness is one of the aesthetic motivations for studying Landau-Ginzburg models. Another general motivation is their dual nature of affording insight into deep structure while at the same time being concrete enough to allow for hands-on computations. 
+Landau-Ginzburg models play an important role in many areas of mathematical physics and pure mathematics. Among them are diverse fields such as singularity theory, representation theory, (homological) mirror symmetry, knot invariants, and conformal or topological field theory. The rich interplay between these areas is one of the aesthetic motivations for studying Landau-Ginzburg models. Another general motivation is their dual nature of affording insight into deep structure while at the same time being concrete enough to allow for hands-on computations. 
 
 In this paper we will show how this dichotomy manifests itself in the context of two-dimensional topological field theory (TFT) with defects. In short, we explain how Landau-Ginzburg models give rise to a bicategory with adjoints and we show that there is a simple description of the structure maps in this bicategory in terms of basic invariants called Atiyah classes \cite{atiyahconn}. These structure maps are explicit enough that one can do nontrivial computations, but also conceptually elegant in the sense that working with diagrams in the bicategory reduces to a calculus of Atiyah classes.
 
-To set the stage and provide some background, we recall a few aspects of TFTs with defects in an informal fashion; for more detailed accounts we refer to~\cite{k1004.2307} and~\cite[Section~2]{dkr1107.0495}. We imagine \textsl{bulk sector theories}~$T_I$ to ``live'' on a two-dimensional surface called the \textsl{worldsheet}. More precisely, the worldsheet may be partitioned into various domains to which the (not necessarily distinct) theories~$T_I$ are associated, and which are separated by one-dimensional oriented \textsl{defect lines} $D_\alpha$. A sketch of a typical such partitioned worldsheet is shown in Figure~\ref{worldsheetwithdefects}. 
+To set the stage we recall a few aspects of TFTs with defects in an informal fashion; for more detailed accounts we refer to~\cite{k1004.2307} and~\cite[Section~2]{dkr1107.0495}. We imagine \textsl{bulk sector theories}~$T_I$ to ``live'' on a two-dimensional surface called the \textsl{worldsheet}. More precisely, the worldsheet may be partitioned into various domains to which the (not necessarily distinct) theories~$T_I$ are associated, and which are separated by one-dimensional oriented \textsl{defect lines} $D_\alpha$. A sketch of a typical such partitioned worldsheet is shown in Figure~\ref{worldsheetwithdefects}. 
 
 In addition to the labels $T_I$ for the two-dimensional domains and $D_\alpha$ for the one-dimensional defect lines, we also include labels~$\phi_i$ for zero-dimensional points. These labels are interpreted as describing \textsl{fields} inserted at the points on the worldsheet. Note that the fields can also be placed at junctions of multiple defect lines. 
 
@@ -360,7 +365,7 @@ Thus any TFT with defects is expected to be associated with a bicategory. Standa
 
 The subject of this paper is the bicategory $\LG$ of Landau-Ginzburg models over a base ring~$k$.\footnote{We will allow any commutative noetherian $\nQ$-algebra~$k$ for the coefficients of polynomial rings, e.\,g.~$k=\nC$ or $k=\nC[t_1,\ldots,t_d]$ where the~$t_i$ may be interpreted as deformation parameters.} An object (or bulk theory) is a polynomial ring $R=k[x_1,\ldots,x_n]$ together with an element $W \in R$ (the \textsl{potential}) satisfying a finiteness condition that in the case of $k$ a field amounts to the critical points of $W$ being isolated. The 1- and 2-morphisms (or defects and fields) are described by the triangulated categories of matrix factorisations of potential differences $V-W$. The fusion of 1-morphisms is the tensor product~\cite{yoshino98,br0707.0922}, and the invisible defect is the stabilised diagonal $\Delta = \bigwedge (\bigoplus_{i=1}^n (R\otimes_k R)\cdot \theta_i)$. That $\LG$ is indeed a bicategory was worked out in~\cite{McNameethesis, Calinetal, cr0909.4381}.
 
-On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, the fact that defect lines are \textsl{oriented} means that we expect adjunctions on the level of 1-morphisms: any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X\equiv (X,D)$ with $D^2 = (V-W)\cdot 1_X$, viewed as a 1-morphism between the bulk theories described by potentials $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, we expect a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
+On general grounds it is expected that the bicategorical description of TFTs with defects involves additional structure. For example, defect lines are \textsl{oriented} so we expect that any defect line should be adjoint to the ``same'' defect line with reversed orientation. In the case of Landau-Ginzburg models this means that for every matrix factorisation~$X\equiv (X,D)$ with $D^2 = (V-W)\cdot 1_X$, viewed as a 1-morphism between the bulk theories described by potentials $W \in k[x_1,\ldots,x_n]$ and $V \in k[z_1,\ldots,z_m]$, we expect a matrix factorisation~$X^\dual$ of $W-V$ together with evaluation and coevaluation maps
 \be\label{evcoevintro}
 \widetilde\eval_X: X \otimes_{k[x]} X^\dual \lra \Delta 
 \, , \qquad
@@ -507,7 +512,7 @@ It is a pleasure to thank Ilka Brunner, Daniel Plencner, Peter Petersen and Ingo
 
 \section{Background}\label{sec:Background}
 
-Throughout rings are commutative and $k$ is a noetherian $\nQ$-algebra, unless specified otherwise.
+Throughout rings are commutative and $k$ is a noetherian $\nQ$-algebra.
 
 \subsection{Bicategories and adjunction}\label{subsec:bicat}
 
@@ -550,19 +555,13 @@ It is convenient to denote $2$-morphisms in a bicategory using \textsl{string di
 (0,-1) node[line width=0pt] (A) {{\small $A$}}
 (-1,0.75) node[line width=0pt] (B) {{\small $B$}}
 (1,0.75) node[line width=0pt] (C) {{\small $C$}};
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	]
+\draw
 	(-1.5,-1.5) -- (0,0)
 node[midway, left] {{{\small$f$}}};
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	]
+\draw
 	(1.5,-1.5) -- (0,0)
 node[midway, right] {{{\small$h$}}};
-\draw[
-	decoration={markings, mark=at position 0.5 with {\arrow{>}}}, postaction={decorate}
-	]
+\draw
 	(0,0) -- (0,1.5)
 node[midway, left] {{{\small$g$}}};
 \end{tikzpicture} 
@@ -572,9 +571,9 @@ represents a $2$-morphism $\gamma: f \otimes h \lto g$ in $\cat{B}$ with $f: A \
 
 In this diagrammatic calculus all diagrams are \textsl{progressively planar} in the sense of \cite{JSGoTCI}, i.\,e.~lines proceed strictly upwards. It is straightforward to check \cite[Theorem $1.2$]{JSGoTCI} that an arbitrary such diagram may be unambiguously assigned a value as a $2$-morphism in $\cat{B}$, by ``tensoring horizontally and composing vertically'' and this justifies rigorously the use of diagrams like the one above. Where appropriate, we allow ourselves to migrate the line labels so that they decorate the top and bottom horizontal boundaries, as e.\,g.~in the diagrams \eqref{Zorros} below.
 
-We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{app:adjoints}.
+%We are interested in the relation of adjointness between $1$-morphisms in $\cat{B}$. In the bicategory of categories, functors and natural transformations, adjunction between functors can be expressed either in terms of a natural isomorphism of mapping spaces, or as an equation involving the units and counits of adjunction. In a general bicategory we define adjunction in terms of an equation; the equivalent description in terms of natural isomorphisms will not be used in the body of the text, but see Appendix \ref{app:adjoints}.
 
-Our references for adjunction in bicategories are \cite[Chapter $6$]{gray} and \cite{kellystreet}.
+Our references for adjunction in bicategories are \cite[Chapter $6$]{gray} and \cite{kellystreet,kelly}.
 
 \begin{definition}\label{def:adjointbicats} Two $1$-morphisms $f: A \lto B$ and $g: B \lto A$ are part of an \textsl{adjoint pair} when there exist $2$-morphisms
 \be\label{evcoev}
@@ -908,20 +907,20 @@ Less tersely, given an adjunction $X \dashv X^\dual$ and $1$-morphisms $Y: \math
 which makes the integral functor $\Phi_X$ left adjoint to $\Phi_{X^\dual}$. For the details see Appendix \ref{lemma:adjoint_nat_iso}.
 \end{remark}
 
-\begin{remark} One of the innovations in this paper is that we do not require our base ring to be a field. Naturally this means that somewhere we have to work harder, and we wish to pinpoint this so that the reader who only cares about $k = \nC $ knows where to get off the bus.
+\begin{remark} We do not require our base ring to be a field, naturally this means that somewhere we have to work harder. We wish to pinpoint this so that the reader who only cares about $k = \nC $ knows where to get off the bus.
 
 The key point comes in \eqref{eq:zorroequalsH} where we find that the Zorro move holds \textsl{up to some map} $H$, which we consequently want to prove is null-homotopic. The only way we know to do this is to use a nondegenerate pairing. If $k$ is a field, then we may use the Kapustin-Li formula of \cite{kl0305,hl0404,m0912.1629,dyckmurf}, but if $k$ is an arbitrary noetherian $\nQ$-algebra there is no longer a nondegenerate pairing on the \textsl{triangulated} category. Instead we use a ``homotopically'' nondegenerate pairing on the dg-category, which is constructed in Section \ref{section:dualityadjointop} for this purpose.
 \end{remark}
 
-\begin{remark}\label{remark:gradedbicategory}
-The bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$ is defined as follows: its objects are pairs $(R = k[x_1,\ldots,x_n],W)$ as above with the additional data of a degree $|x_i| \in \nN$ for each variable, such that $W$ is homogeneous of even degree $2c_W$. A graded linear factorisation is a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ to be homogeneous of degree~$c_W$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. Our conventions for the graded Hom and tensor products follow \cite{kr0401268} and \cite[Section $2.1$]{ khovhompaper}.
+%\begin{remark}\label{remark:gradedbicategory}
+%The bicategory of \textsl{graded} Landau-Ginzburg models $\LG^{\mathrm{gr}}$ is defined as follows: its objects are pairs $(R = k[x_1,\ldots,x_n],W)$ as above with the additional data of a degree $|x_i| \in \nN$ for each variable, such that $W$ is homogeneous of even degree $2c_W$. A graded linear factorisation is a pair $(X,d_X)$ as before, but in addition we ask~$X$ to be a $\nZ$-graded module and~$d_X$ to be homogeneous of degree~$c_W$. Morphisms of graded linear factorisations must have $\nZ$-degree zero. Our conventions for the graded Hom and tensor products follow \cite{kr0401268} and \cite[Section $2.1$]{ khovhompaper}.
 
-In this bicategory the 1- and 2-morphisms are given by homotopy categories
-\[
-\LG^{\mathrm{gr}}((R,W),(S,V)) = \hmf^{\mathrm{gr}}(R \otimes_k S, V - W)
-\]
-of finite-rank graded matrix factorisations, together with the same structure maps $\alpha, \lambda, \rho$ as before. We make $\Delta_W$ into a graded matrix factorisation with the same differential, and the grading given by assigning $\theta_i$ the bidegree $|\theta_i| = (-1,|x_i| - c_W)$. To have the tensor product well-defined we have to ensure that $V-W$ is homogeneous; for this we define~$c$ to be the least common multiple of $c_W$ and $c_V$, and we rescale the degrees of the variables in the rings~$R$ and~$S$ by $\frac{c}{c_W}$ and $\frac{c}{c_V}$, respectively, so that $V-W$ is homogeneous of degree $2c$. Then $\LG^{\mathrm{gr}}$ is indeed a bicategory \cite{cr0909.4381, ballard}. 
-\end{remark}
+%In this bicategory the 1- and 2-morphisms are given by homotopy categories
+%\[
+%\LG^{\mathrm{gr}}((R,W),(S,V)) = \hmf^{\mathrm{gr}}(R \otimes_k S, V - W)
+%\]
+%of finite-rank graded matrix factorisations, together with the same structure maps $\alpha, \lambda, \rho$ as before. We make $\Delta_W$ into a graded matrix factorisation with the same differential, and the grading given by assigning $\theta_i$ the bidegree $|\theta_i| = (-1,|x_i| - c_W)$. To have the tensor product well-defined we have to ensure that $V-W$ is homogeneous; for this we define~$c$ to be the least common multiple of $c_W$ and $c_V$, and we rescale the degrees of the variables in the rings~$R$ and~$S$ by $\frac{c}{c_W}$ and $\frac{c}{c_V}$, respectively, so that $V-W$ is homogeneous of degree $2c$. Then $\LG^{\mathrm{gr}}$ is indeed a bicategory \cite{cr0909.4381, ballard}. 
+%\end{remark}
 
 \subsection{Bar complex}\label{subsec:Bar}
 
@@ -1087,9 +1086,9 @@ Using the ordering of the ring variables to order the $\theta$'s, we obtain an $
 \, , \qquad 
 \theta_1\ldots \theta_n \lmt 1
 \ee
-that is non-zero only on elements in top $\theta$-degree.
+that is non-zero only on elements in top $\theta$-degree. In our constructions $\Psi$ appears as part of the Hochschild cocycle $\varepsilon \Psi: \Bar \lto \Re[n]$ which is a free generator of $H^n(R, \Re)$. We note in passing that this class can be viewed as the product in Hochschild cohomology of $1$-cocycles arising from divided difference operators.
 
-On a practical level both the bar and Koszul complexes resolve the diagonal, so there must be a chain map lifting the identity on the diagonal, and $\Psi$ gives one particular example of such a chain map. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{appendix:mapeppsi}.
+%The bar and Koszul complexes are both resolutions of the diagonal, and $\Psi$ gives a chain map lifting the identity. For the reader looking for more conceptual insight, we mention that in our constructions the map $\Psi$ will almost always appear as part of the composite $\varepsilon \Psi: \Bar \lto \Re[n]$. This composite has a natural interpretation in Hochschild cohomology as a product of $n$ Hochschild cocycles associated to derivations; we explain this perspective in Appendix \ref{appendix:mapeppsi}.
 
 Now we come back to consider any $W\in R$. The map~$\Psi$ continues to be a good map on the level of linear factorisations: 
 \begin{lemma}\label{PsiHF}
@@ -1105,8 +1104,8 @@ We need to show $d_{\Delta_W} \Psi = \Psi d_\Bar$. But since $d_{\Delta_W} = \de
 
 Although $(\Bar, d_{\Bar})$ depends only on the pair $(R,W)$, the matrix factorisation $(\Delta_W, d_{\Delta_W})$ depends in addition on the ordering of the ring variables. The compatibility of $\delta_{+}$ and $\Psi$ in \eqref{eq:deltaplusandpsi} depends on the fact that $\Delta_W$ and $\Psi$ are defined using the \textsl{same} ordering.
 
-\begin{remark}\label{remark:gradedbarmf} Suppose that $R$ is graded with $|x_i| \ge 0$ and that $W$ is homogeneous of degree $2c$. We make $\Bar$ into a graded $\Re$-module with $\Bar_n = R \otimes \bar{R}(c)^{\otimes n} \otimes R$ so that $d$ has polynomial degree $-c$, and $b'$ has degree $c$. Then $(\Bar, d_{\Bar})$ is a graded matrix factorisation of $\widetilde W$ and $\Psi$ is a degree zero morphism of graded matrix factorisations.
-\end{remark}
+%\begin{remark}\label{remark:gradedbarmf} Suppose that $R$ is graded with $|x_i| \ge 0$ and that $W$ is homogeneous of degree $2c$. We make $\Bar$ into a graded $\Re$-module with $\Bar_n = R \otimes \bar{R}(c)^{\otimes n} \otimes R$ so that $d$ has polynomial degree $-c$, and $b'$ has degree $c$. Then $(\Bar, d_{\Bar})$ is a graded matrix factorisation of $\widetilde W$ and $\Psi$ is a degree zero morphism of graded matrix factorisations.
+%\end{remark}
 
 \subsection{Residues}\label{section:residuebackground}
 
@@ -2686,20 +2685,20 @@ H^m \Hom_k( \Hom_{k[z]}(X,Z), k ) &\cong \underline{\Hom}( \Hom_{k[z]}(X, Z)[m],
 Recall that $k$ is arbitrary, so the left-hand side is not necessarily the dual of $\underline{\Hom}(X, Z[m])$.
 \end{remark}
 
-\begin{remark} The bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory} also has left and right adjoints. In the notation of the theorem, with $R = k[x_1,\ldots,x_n]$ and $S = k[z_1,\ldots,z_m]$ both graded and $W,V$ homogeneous of even degrees $2c, 2e$ respectively, and $Y$ a finite-rank graded matrix factorisation of $V - W$, the adjoints of $Y$ have the same underlying matrix factorisations as before but the grading
-\be\label{eq:derivcoeval11graded}
-Y^\dual = R[n](a_R) \otimes_R Y^\vee \, , \qquad {}^\dual Y = Y^\vee \otimes_S S[m](a_S)
-\ee
-where
-\[
-a_R = nc - \sum_{i=1}^n |x_i|\,, \qquad a_S = me - \sum_{j=1}^m |z_j|\,.
-\]
-To prove this it suffices to check that the evaluation and coevaluation maps defined in the ungraded case are homogeneous, since then these morphisms give adjoint pairs in $\LG^{\mathrm{gr}}$. Keeping in mind Remark \ref{remark:gradedbarmf} everything in the formula for $\widetilde \coev_X$ in \eqref{eq:coev10} manifestly has $\nZ$-degree zero except for
-\[
-\varepsilon: \Delta_W \lto \Re[n]
-\]
-which has $\nZ$-degree $a_R = -|\theta_1 \cdots \theta_n|$, so that with the grading shifts in \eqref{eq:derivcoeval11graded} the coevaluation maps have $\nZ$-degree zero. That the evaluation maps have degree zero follows from the Zorro moves, or one can observe this directly using Lemma \ref{lemma:residuesarehomog}.
-\end{remark}
+%\begin{remark} The bicategory $\LG^{\mathrm{gr}}$ of Remark~\ref{remark:gradedbicategory} also has left and right adjoints. In the notation of the theorem, with $R = k[x_1,\ldots,x_n]$ and $S = k[z_1,\ldots,z_m]$ both graded and $W,V$ homogeneous of even degrees $2c, 2e$ respectively, and $Y$ a finite-rank graded matrix factorisation of $V - W$, the adjoints of $Y$ have the same underlying matrix factorisations as before but the grading
+%\be\label{eq:derivcoeval11graded}
+%Y^\dual = R[n](a_R) \otimes_R Y^\vee \, , \qquad {}^\dual Y = Y^\vee \otimes_S S[m](a_S)
+%\ee
+%where
+%\[
+%a_R = nc - \sum_{i=1}^n |x_i|\,, \qquad a_S = me - \sum_{j=1}^m |z_j|\,.
+%\]
+%To prove this it suffices to check that the evaluation and coevaluation maps defined in the ungraded case are homogeneous, since then these morphisms give adjoint pairs in $\LG^{\mathrm{gr}}$. Keeping in mind Remark \ref{remark:gradedbarmf} everything in the formula for $\widetilde \coev_X$ in \eqref{eq:coev10} manifestly has $\nZ$-degree zero except for
+%\[
+%\varepsilon: \Delta_W \lto \Re[n]
+%\]
+%which has $\nZ$-degree $a_R = -|\theta_1 \cdots \theta_n|$, so that with the grading shifts in \eqref{eq:derivcoeval11graded} the coevaluation maps have $\nZ$-degree zero. That the evaluation maps have degree zero follows from the Zorro moves, or one can observe this directly using Lemma \ref{lemma:residuesarehomog}.
+%\end{remark}
 
 
 \section{Diagrammatic calculus and pivotality}\label{sec:wiggliesandsigns}
@@ -4724,7 +4723,7 @@ is a homotopy equivalence over $k$. The main theorem here is that in complete ge
 \begin{theorem}\label{theorem:generalkl} The pairing $\langle -, - \rangle_{XY}$ is homotopically nondegenerate.
 \end{theorem}
 
-There is also version when $X,Y$ are graded matrix factorisations; see Section \ref{section:gradedduality}. The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
+The proof of the theorem takes up the rest of this section. We argue that $\Hom(X,Y)[n]$ and $\Hom_k(\Hom(Y,X),k)$ are homotopy equivalent by showing that they respectively split idempotents on
 \be\label{eq:hombarappendix}
 \Hom(\bar{X},\bar{Y}) = \Hom(X,Y) \otimes_R \bar{R}
 \ee
@@ -5077,68 +5076,68 @@ Set $I = (f_1,\ldots,f_n)R$ and let $\widehat{R}$ denote the $I$-adic completion
 \]
 extended from $R$. 
 
-\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Consider the diagram
+\begin{proof}[Proof of Theorem \ref{theorem:generalkl}] Consider the commutative diagram
 \[
 \xymatrix@C+2pc{
 \Hom_R(X,Y) \ar[d]_{\can} \ar[r] & \Hom_k( \Hom_R(Y,X), k )[n]\\
 \Hom_{\widehat{R}}(\widehat{X}, \widehat{Y}) \ar[r] & \Hom_k( \Hom_{\widehat{R}}(\widehat{X}, \widehat{Y}), k)[n] \ar[u]_{\can}
 }
 \]
-where the columns are the canonical maps, and the rows are adjoint to the two versions of the pairing (\ref{eq:generalklpairing}). It is easy to see that this diagram commutes, and as the bottom row is a homotopy equivalence by Proposition \ref{prop:almostkltheorem}, to prove the theorem it is enough to argue that the canonical map
+where the columns are the canonical maps, and the rows are adjoint to the two versions of the pairing (\ref{eq:generalklpairing}). Since the bottom row is a homotopy equivalence by Proposition \ref{prop:almostkltheorem}, to prove the theorem it is enough to argue that the canonical map
 \[
 \Hom_R(X,Y) \lto \Hom_{\widehat{R}}(\widehat{X}, \widehat{Y})
 \]
 is a homotopy equivalence of $\nZ _2$-graded complexes over $k$. But this is a consequence of the general fact that the ``pushforward commutes with flat base change'', see \cite[Remark 7.7]{dm1102.2957}.
 \end{proof}
 
-\subsection{Graded duality}\label{section:gradedduality}
+%\subsection{Graded duality}\label{section:gradedduality}
 
-In this section we collect together the modifications necessary in order to make Theorem \ref{theorem:generalkl} compatible with an additional $\nZ $-grading on matrix factorisations. Our conventions for graded modules and matrix factorisations are contained in Remark \ref{remark:gradedbicategory}.
+%In this section we collect together the modifications necessary in order to make Theorem \ref{theorem:generalkl} compatible with an additional $\nZ $-grading on matrix factorisations. Our conventions for graded modules and matrix factorisations are contained in Remark \ref{remark:gradedbicategory}.
 
-Let $k = \bigoplus_{i \ge 0 } k_i$ be a noetherian $\nQ$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero and $|x_i| \ge 0$ for $1 \le i \le n$. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$, with the property that the $f_i = \partial_{x_i} W$ form a regular sequence and $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module. Define
-\[
-a = nc - \sum_{i=1}^n |x_i|\,
-\]
-and let $X,Y$ be finite-rank graded matrix factorisations of $W$ over $R$.
+%Let $k = \bigoplus_{i \ge 0 } k_i$ be a noetherian $\nQ$-algebra which is graded, and let $R = k[x_1,\ldots,x_n]$ be a graded ring in such a way that the structural map $k \lto R$ has degree zero and $|x_i| \ge 0$ for $1 \le i \le n$. Let $W \in R$ be given, homogeneous of degree $|W| = 2c$, with the property that the $f_i = \partial_{x_i} W$ form a regular sequence and $\bar{R} = R/(f_1,\ldots,f_n)R$ is a finitely generated free $k$-module. Define
+%\[
+%a = nc - \sum_{i=1}^n |x_i|\,
+%\]
+%and let $X,Y$ be finite-rank graded matrix factorisations of $W$ over $R$.
 
-\begin{theorem}\label{theorem:generalklgraded} 
-The pairing $\langle -, - \rangle_{XY}$ of \eqref{eq:generalklpairing} is adjoint to a homotopy equivalence of $(\nZ  \times \nZ _2)$-graded complexes over $k$
-\[
-\Hom(X,Y) \lto \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k )[n](-a)\,.
-\]
-\end{theorem}
+%\begin{theorem}\label{theorem:generalklgraded} 
+%The pairing $\langle -, - \rangle_{XY}$ of \eqref{eq:generalklpairing} is adjoint to a homotopy equivalence of $(\nZ  \times \nZ _2)$-graded complexes over $k$
+%\[
+%\Hom(X,Y) \lto \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k )[n](-a)\,.
+%\]
+%\end{theorem}
 
-Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is a need to distinguish between $\Hom_k$ and $\Hom_k^{\operatorname{gr}}$. For the proof we need the following fact about residues.
+%Note that $\Hom(Y,X)$ is unlikely to be finitely generated over $k$, so there is a need to distinguish between $\Hom_k$ and $\Hom_k^{\operatorname{gr}}$. For the proof we need the following fact about residues.
 
-\begin{lemma}\label{lemma:residuesarehomog} If $f_1,\ldots,f_n$ is a regular sequence in $R$ of homogeneous elements, then the map
-\[
-\Ress{R/k}\Bigg[ \frac{(-) \, \underline{\ud x}}{ f_1, \ldots, f_n} \Bigg]: R \lto k
-\]
-is homogeneous of degree $\sum_{i=1}^n( |x_i| - |f_i| )$.
-\end{lemma}
-\begin{proof}
-Follows from the determinantal formula for residues in Lipman's book \cite[(1.10.5)]{Lipman}.
-\end{proof}
+%\begin{lemma}\label{lemma:residuesarehomog} If $f_1,\ldots,f_n$ is a regular sequence in $R$ of homogeneous elements, then the map
+%\[
+%\Ress{R/k}\Bigg[ \frac{(-) \, \underline{\ud x}}{ f_1, \ldots, f_n} \Bigg]: R \lto k
+%\]
+%is homogeneous of degree $\sum_{i=1}^n( |x_i| - |f_i| )$.
+%\end{lemma}
+%\begin{proof}
+%Follows from the determinantal formula for residues in Lipman's book \cite[(1.10.5)]{Lipman}.
+%\end{proof}
 
-\begin{proof}[Proof of Theorem \ref{theorem:generalklgraded}]
-Consider the following diagram of $\nZ _2$-graded complexes
-\[
-\xymatrix@C+2pc{
-\Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{\operatorname{gr}}} \ar[r]^-{\xi} & \Hom(\Hom(Y,X),k)[n]\\
-& \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k)[n](-a) \ar[u]_{\iota = \inc}
-}
-\]
-where $\xi$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\xi$ lies in the subspace of homogeneous maps, and we let $\zeta_{\operatorname{gr}}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{\operatorname{gr}}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{\operatorname{gr}}$ is a homotopy equivalence of $\nZ _2$-graded complexes (forgetting the $\nZ $-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
+%\begin{proof}[Proof of Theorem \ref{theorem:generalklgraded}]
+%Consider the following diagram of $\nZ _2$-graded complexes
+%\[
+%\xymatrix@C+2pc{
+%\Hom(X,Y) \ar@{.>}[dr]_-{\zeta_{\operatorname{gr}}} \ar[r]^-{\xi} & \Hom(\Hom(Y,X),k)[n]\\
+%& \Hom^{\operatorname{gr}}_k( \Hom(Y,X), k)[n](-a) \ar[u]_{\iota = \inc}
+%}
+%\]
+%where $\xi$ is adjoint to (\ref{eq:generalklpairing}), and is therefore a homotopy equivalence by the earlier theorem. It is clear from the explicit formula for the pairing and Lemma \ref{lemma:residuesarehomog} that the image of $\xi$ lies in the subspace of homogeneous maps, and we let $\zeta_{\operatorname{gr}}$ denote this factorisation. The value of $a$ is chosen such that $\zeta_{\operatorname{gr}}$ is homogeneous of degree zero. It is enough to prove that $\zeta_{\operatorname{gr}}$ is a homotopy equivalence of $\nZ _2$-graded complexes (forgetting the $\nZ $-grading) since then by an elementary argument we can find a homotopy inverse which is degree zero, and graded homotopies.
 
-It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\nZ _2$-graded complexes. This would be a tautology if $\Hom(Y,X)$ were a finitely generated $k$-module, and in general we use the fact that $\Hom(Y,X)$ embeds up to homotopy in a finitely generated complex via morphisms $\psi, \vartheta$ as in \eqref{eq:homxysummand} above. Examining the expressions for $\vartheta, \psi$ in \cite[Section $7$]{dm1102.2957} we see that $\vartheta$ has degree $a$, $\psi$ has degree $-a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{\operatorname{gr}}(-,k)$ to \eqref{eq:homxysummand} we obtain a diagram
-\[
-\xymatrix@C+2pc{
-\Hom_k( \Hom(\bar{Y}, \bar{X}), k ) \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k(\Hom(Y,X),k)[n] \ar@<-0.5ex>[l]_-{\psi^*}\\
-\Hom_k^{\operatorname{gr}}(\Hom(\bar{Y}, \bar{X}), k) \ar[u]^{=} \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k^{\operatorname{gr}}(\Hom(Y,X),k)[n](a) \ar@<-0.5ex>[l]_-{\psi^*} \ar[u]_{\iota}
-}
-\]
-in which both of the implict squares commute up to homotopy, and from this we deduce that $\iota$ is a homotopy equivalence with inverse $\vartheta^* \circ \psi^*$.
-\end{proof}
+%It suffices to prove that the inclusion $\iota$ is a homotopy equivalence of $\nZ _2$-graded complexes. This would be a tautology if $\Hom(Y,X)$ were a finitely generated $k$-module, and in general we use the fact that $\Hom(Y,X)$ embeds up to homotopy in a finitely generated complex via morphisms $\psi, \vartheta$ as in \eqref{eq:homxysummand} above. Examining the expressions for $\vartheta, \psi$ in \cite[Section $7$]{dm1102.2957} we see that $\vartheta$ has degree $a$, $\psi$ has degree $-a$, and the homotopy between $\psi \circ \vartheta$ and the identity is homogeneous. If we apply both $\Hom_k(-,k)$ and $\Hom_k^{\operatorname{gr}}(-,k)$ to \eqref{eq:homxysummand} we obtain a diagram
+%\[
+%\xymatrix@C+2pc{
+%\Hom_k( \Hom(\bar{Y}, \bar{X}), k ) \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k(\Hom(Y,X),k)[n] \ar@<-0.5ex>[l]_-{\psi^*}\\
+%\Hom_k^{\operatorname{gr}}(\Hom(\bar{Y}, \bar{X}), k) \ar[u]^{=} \ar@<-0.5ex>[r]_-{\vartheta^*} & \Hom_k^{\operatorname{gr}}(\Hom(Y,X),k)[n](a) \ar@<-0.5ex>[l]_-{\psi^*} \ar[u]_{\iota}
+%}
+%\]
+%in which both of the implict squares commute up to homotopy, and from this we deduce that $\iota$ is a homotopy equivalence with inverse $\vartheta^* \circ \psi^*$.
+%\end{proof}
 
 
 \appendix
@@ -5327,15 +5326,13 @@ The argument for a general permutation is the same.
 
 Let $\cat{B}$ be a bicategory. We address the following problem encountered in the construction of adjoints in the bicategory of Landau-Ginzburg models: suppose that for each $1$-morphism $f: A \lto B$ we are given a pair of $1$-morphisms ${}^\dual f, f^\dual: B \lto A$ and that for those $f$ belonging to some subcategory $\cat{C} \subseteq \cat{B}(A, B)$ we are given evaluation and coevaluation maps exhibiting ${}^\dual f, f^\dual$ as adjoints of $f$.
 
-Provided every object of $\cat{B}(A,B)$ is a direct summand of an object of $\cat{C}$ we explain below that there is an essentially unique way of extending the definition of evaluation and coevaluation maps from $\cat{C}$ to all of $\cat{B}(A,B)$.
-
-But before getting into that we need to recall some more background on adjoints in bicategories. Specifically, the way in which the adjoints ${}^\dual f$ and $f^\dual$ are functorial with respect to $2$-morphisms. This is an adaptation of standard material for monoidal categories, so we will be brief.
+Provided every object of $\cat{B}(A,B)$ is a direct summand of an object of $\cat{C}$ we explain below that there is an essentially unique way of extending the definition of evaluation and coevaluation maps from $\cat{C}$ to all of $\cat{B}(A,B)$. But first we recall some background on adjoints in bicategories. Specifically, the way in which the adjoints ${}^\dual f$ and $f^\dual$ are functorial with respect to $2$-morphisms. This is an adaptation of standard material for monoidal categories, so we will be brief.
 
 Throughout this section we write $\Hom(f,g)$ for $\Hom_{\cat{B}(A,B)}(f,g)$.
 
 \subsection{Functoriality of adjoints}\label{section:funcadjoint}
 
-The following lemma recasts the definition of adjunction given in Section \ref{subsec:bicat} in terms of a natural isomorphism. Observe that we insist on naturality with respect to both $1$- and $2$-morphisms. 
+The following lemma recasts the definition of adjunction given in Section \ref{subsec:bicat}. Since the proof is essentially the same as the usual proof for adjoint functors, we omit it.
 
 \begin{lemma}\label{lemma:adjoint_nat_iso} Let $f: A \lto B$ and $g: B \lto A$ be $1$-morphisms with $g$ left adjoint to $f$. Specifying $2$-morphisms $\eval, \coev$ satisfying \eqref{uglyZorro1}, \eqref{uglyZorro2} is equivalent to specifying a family of bijections
 \[
@@ -5355,26 +5352,26 @@ indexed by pairs of $1$-morphisms $h: C \lto B$ and $l: C \lto A$, subject to th
 commutes.
 \end{itemize}
 \end{lemma}
-\begin{proof}
-The proof is essentially the same as the usual proof for adjoint functors, so we can be brief. Given evaluation and coevaluation maps for an adjunction, one defines $\Phi$ of a $2$-morphism $\tau: g \otimes h \lto l$ to be the composite
-\[
-\xymatrix@C+2pc{
-h \ar[r]^-{\lambda^{-1}} & \Delta_B \otimes h \ar[r]^-{\coev \otimes 1_h} & (f \otimes g) \otimes h \ar[r]^-{\alpha} & f \otimes ( g \otimes h ) \ar[r]^-{1_f \otimes \tau} & f \otimes l
-} .
-\]
-The inverse map $\Phi^{-1}$ sends a $2$-morphism $\beta: h \lto f \otimes l$ to the composite
-\[
-\xymatrix@C+2pc{
-g \otimes h \ar[r]^-{1_g \otimes \beta} & g \otimes ( f \otimes l ) \ar[r]^-{\alpha^{-1}} & (g \otimes f) \otimes l \ar[r]^-{\eval \otimes 1_l} & \Delta_A \otimes l \ar[r]^-{\lambda} & l
-} .
-\]
-\end{proof}
+%\begin{proof}
+%The proof is essentially the same as the usual proof for adjoint functors, so we can be brief. Given evaluation and coevaluation maps for an adjunction, one defines $\Phi$ of a $2$-morphism $\tau: g \otimes h \lto l$ to be the composite
+%\[
+%\xymatrix@C+2pc{
+%h \ar[r]^-{\lambda^{-1}} & \Delta_B \otimes h \ar[r]^-{\coev \otimes 1_h} & (f \otimes g) \otimes h \ar[r]^-{\alpha} & f \otimes ( g \otimes h ) \ar[r]^-{1_f \otimes \tau} & f \otimes l
+%} .
+%\]
+%The inverse map $\Phi^{-1}$ sends a $2$-morphism $\beta: h \lto f \otimes l$ to the composite
+%\[
+%\xymatrix@C+2pc{
+%g \otimes h \ar[r]^-{1_g \otimes \beta} & g \otimes ( f \otimes l ) \ar[r]^-{\alpha^{-1}} & (g \otimes f) \otimes l \ar[r]^-{\eval \otimes 1_l} & \Delta_A \otimes l \ar[r]^-{\lambda} & l
+%} .
+%\]
+%\end{proof}
 
-\begin{remark}
-For the careful reader we mention that when working with bicategories one often needs to check commutativity of diagrams constructed from the structure morphisms $\lambda, \rho, \alpha$. Just as for monoidal categories this commutativity is, in most cases, an easy consequence of the coherence axioms. The only exceptions relevant for this paper are the diagrams $(5), (7), (10)$ of \cite{kelly}, whose commutativity follows from the coherence axioms but not in a completely obvious way.
-\end{remark}
+%\begin{remark}
+%For the careful reader we mention that when working with bicategories one often needs to check commutativity of diagrams constructed from the structure morphisms $\lambda, \rho, \alpha$. Just as for monoidal categories this commutativity is, in most cases, an easy consequence of the coherence axioms. The only exceptions relevant for this paper are the diagrams $(5), (7), (10)$ of \cite{kelly}, whose commutativity follows from the coherence axioms but not in a completely obvious way.
+%\end{remark}
 
-Let $f_1,f_2: A \lto B$ be $1$-morphisms with left adjoints ${}^\dual f_i$. By the previous lemma there is an isomorphism
+Let $f_1,f_2: A \lto B$ be $1$-morphisms with left adjoints ${}^\dual f_i$. By the previous lemma
 \be\label{eq:2isolemma}
 \Hom({}^\dual f_2, {}^\dual f_1) \stackrel{\rho}{\cong} \Hom({}^\dual f_2 \otimes \Delta_B, {}^\dual f_1) \stackrel{\Phi}{\cong} \Hom( \Delta_B, f_2 \otimes {}^\dual f_1)\,.
 \ee
@@ -5388,10 +5385,7 @@ f_2 \otimes {}^\dual f_2 \ar[r]_-{1 \otimes {}^\dual \zeta} & f_2 \otimes {}^\du
 commute.
 \end{definition}
 
-\begin{remark}
-\begin{itemize}
-\item[(i)] The construction is functorial, in the sense that ${}^\dual(1_f) = 1_{{}^\dual f}$ and ${}^\dual( \xi \circ \zeta ) = {}^\dual \zeta \circ {}^\dual \xi$.
-\item[(ii)] Using commutativity of \eqref{eq:dualzeta} and the Zorro identities one checks that
+Using commutativity of \eqref{eq:dualzeta} and the Zorro identities one checks that
 \be\label{eq:dualzeta2}
 \xymatrix@C+1pc@R+1pc
 {
@@ -5400,8 +5394,6 @@ commute.
 }
 \ee
 commutes.
-\end{itemize}
-\end{remark}
 
 Let $f_1,f_2: A \lto B$ be $1$-morphisms with right adjoints $f_i^\dual$. There is an isomorphism
 \[
@@ -5495,30 +5487,30 @@ and we define $\widetilde\eval_x$ to be
 \[
 \eval_x = \xymatrix@C+1pc{ x \otimes x^\dual \ar[r]^-{q \otimes p^\dual} & f \otimes f^\dual \ar[r]^-{\widetilde\eval_f} & \Delta_B } .
 \]
-First we check that $\widetilde\eval_x, \widetilde\coev_x$ make $x$ into a left adjoint of $x^\dual$.
+It is routine to check that $\widetilde\eval_x, \widetilde\coev_x$ make $x$ into a left adjoint of $x^\dual$.
 
 \begin{lemma} $\eval_x, \coev_x$ satisfy \eqref{uglyZorro1} and \eqref{uglyZorro2}.
 \end{lemma}
-\begin{proof}
-We explain the proof of \eqref{uglyZorro2}, the other verification is similar. Consider the following diagram, where we omit an associator to avoid clutter: 
-\[
-\xymatrix@C+2pc@R+1pc{
-f \ar[d]_-{p} \ar[r]^-{\rho_f^{-1}} & f \otimes \Delta_A \ar[d]_-{p \otimes 1}\ar[r]^-{1 \otimes \widetilde\coev_f} & f \otimes f^\dual \otimes f \ar@/_1pc/[d]_-{p \otimes q^\dual \otimes p} \ar[r]^-{\widetilde\eval_f \otimes 1} & \Delta_A \otimes f \ar[r]^-{\lambda_f} & f\\
-x \ar[r]_-{\rho_x^{-1}} & x \otimes \Delta_A \ar[r]_-{1 \otimes \widetilde\coev_x} & x \otimes x^\dual \otimes x \ar@/_1pc/[u]_-{q \otimes p^\dual \otimes q} \ar[r]_-{\widetilde\eval_x \otimes 1} & \Delta_A \otimes x \ar[u]_-{1 \otimes q}\ar[r]_-{\lambda_x} & x  \ar[u]_-{q}
-} 
-\]
-Let $Z$ denote the bottom row. By definition each of the squares in this diagram commutes, so
-\begin{align*}
-q \circ Z \circ p &= \lambda_f \circ ( \widetilde\eval_f \otimes 1 ) \circ ( qp \otimes (qp)^\dual \otimes qp ) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1}\\
-&= \lambda_f \circ (\widetilde\eval_f \otimes 1) \circ ((qp)^2 \otimes 1 \otimes qp ) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1}\\
-&= \lambda_f \circ (\widetilde\eval_f \otimes 1) \circ (qp \otimes 1 \otimes qp ) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1}\\
-&= qp \circ \lambda_f \circ (\widetilde\eval_f \otimes 1) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1} \circ qp\\
-&= (qp)^2 = q \circ 1_x \circ p\,,
-\end{align*}
-and hence $Z = 1_x$ as claimed. In the second step we use the fact that $qp$ is a morphism in $\cat{C}$, so by naturality of the evaluation $\widetilde\eval_f \circ ( qp \otimes 1 ) = \widetilde\eval_f \circ ( 1 \otimes (qp)^\dual )$.
-\end{proof}
+%\begin{proof}
+%We explain the proof of \eqref{uglyZorro2}, the other verification is similar. Consider the following diagram, where we omit an associator to avoid clutter: 
+%\[
+%\xymatrix@C+2pc@R+1pc{
+%f \ar[d]_-{p} \ar[r]^-{\rho_f^{-1}} & f \otimes \Delta_A \ar[d]_-{p \otimes 1}\ar[r]^-{1 \otimes \widetilde\coev_f} & f \otimes f^\dual \otimes f \ar@/_1pc/[d]_-{p \otimes q^\dual \otimes p} \ar[r]^-{\widetilde\eval_f \otimes 1} & \Delta_A \otimes f \ar[r]^-{\lambda_f} & f\\
+%x \ar[r]_-{\rho_x^{-1}} & x \otimes \Delta_A \ar[r]_-{1 \otimes \widetilde\coev_x} & x \otimes x^\dual \otimes x \ar@/_1pc/[u]_-{q \otimes p^\dual \otimes q} \ar[r]_-{\widetilde\eval_x \otimes 1} & \Delta_A \otimes x \ar[u]_-{1 \otimes q}\ar[r]_-{\lambda_x} & x  \ar[u]_-{q}
+%} 
+%\]
+%Let $Z$ denote the bottom row. By definition each of the squares in this diagram commutes, so
+%\begin{align*}
+%q \circ Z \circ p &= \lambda_f \circ ( \widetilde\eval_f \otimes 1 ) \circ ( qp \otimes (qp)^\dual \otimes qp ) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1}\\
+%&= \lambda_f \circ (\widetilde\eval_f \otimes 1) \circ ((qp)^2 \otimes 1 \otimes qp ) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1}\\
+%&= \lambda_f \circ (\widetilde\eval_f \otimes 1) \circ (qp \otimes 1 \otimes qp ) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1}\\
+%&= qp \circ \lambda_f \circ (\widetilde\eval_f \otimes 1) \circ (1 \otimes \widetilde\coev_f ) \circ \rho_f^{-1} \circ qp\\
+%&= (qp)^2 = q \circ 1_x \circ p\,,
+%\end{align*}
+%and hence $Z = 1_x$ as claimed. In the second step we use the fact that $qp$ is a morphism in $\cat{C}$, so by naturality of the evaluation $\widetilde\eval_f \circ ( qp \otimes 1 ) = \widetilde\eval_f \circ ( 1 \otimes (qp)^\dual )$.
+%\end{proof}
 
-Using naturality \eqref{eq:funcrightdual}, \eqref{eq:funcrightdual2} of $\widetilde\eval_f, \widetilde\coev_f$ it is straightforward to check that the diagrams \eqref{eq:propuniquext} commute. If we apply the same argument to two presentations of a $1$-morphism $x$ as a summand of $f,f'$ in $\cat{C}$ we see that $\eval_x, \coev_x$ are independent of the choice of presentation, and in particular if $x \in \cat{C}$ then these maps agree with the given ones.
+Using naturality \eqref{eq:funcrightdual}, \eqref{eq:funcrightdual2} of $\widetilde\eval_f, \widetilde\coev_f$ one checks that the diagrams \eqref{eq:propuniquext} commute. If we apply the same argument to two presentations of a $1$-morphism $x$ as a summand of $f,f'$ in $\cat{C}$ we see that $\eval_x, \coev_x$ are independent of the choice of presentation, and in particular if $x \in \cat{C}$ then these maps agree with the given ones.
 
 To complete the proof of the proposition it only remains to argue that this family of $2$-morphisms $\{ \widetilde\eval_x, \widetilde\coev_x \}_{x \in \cat{B}(A,B)}$ is \textsl{unique}. Suppose that we are given $\{\widetilde\eval'_x, \widetilde\coev'_x\}_{x \in \cat{B}(A,B)}$ satisfying (i), (ii), (iii) of the proposition. Given $x$ with presentation as above, the solid square in the diagram
 \[
@@ -5658,68 +5650,68 @@ The morphisms in \eqref{eq:permutedevcoev1} and \eqref{eq:permutedevcoev2} satis
 The general rule is that permuting the variables in a region by $\tau$ changes the value of a diagram by a factor of $(-1)^{M|\tau|}$ where $M$ is the number of wiggly lines (see Section~\ref{subsec:alternatives}) entering or departing an evaluation or coevaluation within that region. The simplest example is \eqref{eq:signdependencepermdia} where the value changes by the sign $(-1)^{|\tau|}$.
 
 
-\section{The map $\boldsymbol{\varepsilon \Psi}$}\label{appendix:mapeppsi}
+%\section{The map $\boldsymbol{\varepsilon \Psi}$}\label{appendix:mapeppsi}
 % see divop
 
-In this section $k$ is any commutative ring, $R = k[x_1,\ldots,x_n]$. We write $\Re = R \otimes_k R = k[x] \otimes_k k[x']$. In the notation of Section \ref{subsec:Bar} both the Koszul complex $(\Delta, \delta_{-})$ and $(\Bar, b')$ give $\Re$-resolutions of the diagonal $R$, and $\Psi$ is the unique chain map up to homotopy making the triangle in the diagram
-\[
-\xymatrix{
-\Bar \ar[dr]_-{\pi} \ar[r]^-{\Psi} & \Delta \ar[d]^-{\pi} \ar[r]^\varepsilon & \Re[n]\\
-& R
-}
-\]
-commute. As indicated in this diagram there is a second chain map $\varepsilon: (\Delta, \delta_{-}) \lto \Re[n]$, see \eqref{eq:vareps}, and the composite $\varepsilon \Psi$ gives a cocycle in Hochschild cohomology
-\[
-\varepsilon \Psi \in H^n \Hom_{\Re}( \Bar, \Re ) = H^n( R, \Re )\,.
-\]
-This Hochschild cohomology module is a free $R$-module of rank one, and $\varepsilon \Psi$ gives a generator. In this appendix we explain that $\varepsilon \Psi$ is a product in Hochschild cohomology of the derivations
-\[
-\partial_{(i)}: R \lra \Re \, , \qquad f \lmt \frac{f - {}^{t_i}f}{x_i-x'_i} \, ,
-\]
-where we use the notation ${}^{t_i}(-)$ of Section \ref{subsec:bicatLG}. 
+%In this section $k$ is any commutative ring, $R = k[x_1,\ldots,x_n]$. We write $\Re = R \otimes_k R = k[x] \otimes_k k[x']$. In the notation of Section \ref{subsec:Bar} both the Koszul complex $(\Delta, \delta_{-})$ and $(\Bar, b')$ give $\Re$-resolutions of the diagonal $R$, and $\Psi$ is the unique chain map up to homotopy making the triangle in the diagram
+%\[
+%\xymatrix{
+%\Bar \ar[dr]_-{\pi} \ar[r]^-{\Psi} & \Delta \ar[d]^-{\pi} \ar[r]^\varepsilon & \Re[n]\\
+%& R
+%}
+%\]
+%commute. As indicated in this diagram there is a second chain map $\varepsilon: (\Delta, \delta_{-}) \lto \Re[n]$, see \eqref{eq:vareps}, and the composite $\varepsilon \Psi$ gives a cocycle in Hochschild cohomology
+%\[
+%\varepsilon \Psi \in H^n \Hom_{\Re}( \Bar, \Re ) = H^n( R, \Re )\,.
+%\]
+%This Hochschild cohomology module is a free $R$-module of rank one, and $\varepsilon \Psi$ gives a generator. In this appendix we explain that $\varepsilon \Psi$ is a product in Hochschild cohomology of the derivations
+%\[
+%\partial_{(i)}: R \lra \Re \, , \qquad f \lmt \frac{f - {}^{t_i}f}{x_i-x'_i} \, ,
+%\]
+%where we use the notation ${}^{t_i}(-)$ of Section \ref{subsec:bicatLG}. 
 
-\begin{definition} Let $\Re_{(i)}$ denote the $R$-bimodule which is $\Re$ with the left and right actions
-\[
-r_1 * s * r_2 = r_1 \cdot s \cdot {}^{t_i} r_2\,, \qquad r_i \in R, s \in \Re
-\]
-where ``$\cdot$'' denotes ring multiplication in $\Re$.
-\end{definition}
+%\begin{definition} Let $\Re_{(i)}$ denote the $R$-bimodule which is $\Re$ with the left and right actions
+%\[
+%r_1 * s * r_2 = r_1 \cdot s \cdot {}^{t_i} r_2\,, \qquad r_i \in R, s \in \Re
+%\]
+%where ``$\cdot$'' denotes ring multiplication in $\Re$.
+%\end{definition}
 
-\begin{lemma} $\partial_{(i)}$ is a $k$-linear derivation of $R$ into the bimodule $\Re_{(i)}$.
-\end{lemma}
-\begin{proof}
-Immediate from the identity in Lemma \ref{lem:LeibnizForDQO}.
-\end{proof}
+%\begin{lemma} $\partial_{(i)}$ is a $k$-linear derivation of $R$ into the bimodule $\Re_{(i)}$.
+%\end{lemma}
+%\begin{proof}
+%Immediate from the identity in Lemma \ref{lem:LeibnizForDQO}.
+%\end{proof}
 
-By the usual correspondence between bimodule derivations and Hochschild $1$-cocycles, each $\partial_{(i)}$ determines a class $[ D_i ] \in H^1(R, \Re_{(i)})$. Taking the product yields a class in
-\[
-[ D_1 ] * \cdots * [D_n] \in H^n(R, \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)})\,.
-\]
-Next we observe that the map
-\begin{gather*}
-\gamma: \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)} \lto \Re\,\\
-\gamma( r_1 \otimes \cdots \otimes r_n ) = r_1 \cdot {}^{t_1} r_2 \cdot {}^{t_1t_2} r_3 \cdots {}^{t_1 \ldots t_{n-1}} r_n
-\end{gather*}
-is a morphism of $R$-bimodules.
+%By the usual correspondence between bimodule derivations and Hochschild $1$-cocycles, each $\partial_{(i)}$ determines a class $[ D_i ] \in H^1(R, \Re_{(i)})$. Taking the product yields a class in
+%\[
+%[ D_1 ] * \cdots * [D_n] \in H^n(R, \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)})\,.
+%\]
+%Next we observe that the map
+%\begin{gather*}
+%\gamma: \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)} \lto \Re\,\\
+%\gamma( r_1 \otimes \cdots \otimes r_n ) = r_1 \cdot {}^{t_1} r_2 \cdot {}^{t_1t_2} r_3 \cdots {}^{t_1 \ldots t_{n-1}} r_n
+%\end{gather*}
+%is a morphism of $R$-bimodules.
 
-\begin{lemma} $\varepsilon \Psi$ is the image of $[D_1] * \cdots * [D_n]$ under the induced map
-\[
-H^n(R, \gamma): H^n(R, \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)}) \lto H^n(R, \Re)\,.
-\]
-That is, in Hochschild cohomology
-\[
-\varepsilon \Psi = H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )\,.
-\]
-\end{lemma}
-\begin{proof}
-We have
-\begin{align*}
-H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )( df_1 \ldots df_p ) &= \gamma\left( \partial_{(1)}f_1 \otimes \partial_{(2)}f_2 \cdots \otimes \partial_{(n)}f_n \right)\\
-&= \partial_{(1)}f_1 {}^{t_1} \partial_{(2)}f_2 \cdots \otimes {}^{t_1 \ldots t_{n-1}}\partial_{(n)}f_n\\
-&= \partial_{[1]}f_1 \partial_{[2]}f_2 \cdots \otimes \partial_{[n]}f_n\\
-&= \varepsilon \Psi( df_1 \ldots df_p )\,.
-\end{align*}
-\end{proof}
+%\begin{lemma} $\varepsilon \Psi$ is the image of $[D_1] * \cdots * [D_n]$ under the induced map
+%\[
+%H^n(R, \gamma): H^n(R, \Re_{(1)} \otimes_R \cdots \otimes_R \Re_{(n)}) \lto H^n(R, \Re)\,.
+%\]
+%That is, in Hochschild cohomology
+%\[
+%\varepsilon \Psi = H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )\,.
+%\]
+%\end{lemma}
+%\begin{proof}
+%We have
+%\begin{align*}
+%H^n(R, \gamma)( [ D_1 ] * \cdots * [D_n] )( df_1 \ldots df_p ) &= \gamma\left( \partial_{(1)}f_1 \otimes \partial_{(2)}f_2 \cdots \otimes \partial_{(n)}f_n \right)\\
+%&= \partial_{(1)}f_1 {}^{t_1} \partial_{(2)}f_2 \cdots \otimes {}^{t_1 \ldots t_{n-1}}\partial_{(n)}f_n\\
+%&= \partial_{[1]}f_1 \partial_{[2]}f_2 \cdots \otimes \partial_{[n]}f_n\\
+%&= \varepsilon \Psi( df_1 \ldots df_p )\,.
+%\end{align*}
+%\end{proof}
 
 \newcommand{\etalchar}[1]{$^{#1}$}
 \providecommand{\href}[2]{#2}
