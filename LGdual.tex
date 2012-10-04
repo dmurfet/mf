@@ -21,6 +21,7 @@
  % -- removed Section 11.5
  % -- removed Appendix E
  % -- reduced details in Appendix C
+ % -- corrected typo in (D.3)
 
 \documentclass{compositio}
 \usepackage{stmaryrd}
@@ -470,7 +471,7 @@ $$
 where $\Lambda_X^{(x)} = \partial_{x_1} D\ldots \partial_{x_n} D$ and $\Lambda_X^{(z)} = \partial_{z_1} D\ldots \partial_{z_m} D$. 
 In this way we respectively recover the \textsl{boundary-bulk map} (which reduces to the \textsl{Chern character} $(-1)^{{m+1\choose 2}} \str( \partial_{z_1} D\ldots \partial_{z_m} D)$ for $\Phi=1$) and the  \textsl{Kapustin-Li disk correlator}. As part of the general development we also give a new proof for the nondegeneracy of the Kapustin-Li pairing that holds over any noetherian $\nQ$-algebra $k$.
 
-Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:ocTFT} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} for $k=\nC$. Our proof works for any noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
+Another application of our construction of adjunctions in $\LG$ is a new proof of the \textsl{Cardy condition} (see Section~\ref{sec:ocTFT} for its precise statement). This generalisation of the Hirzebruch-Riemann-Roch theorem is the most ``quantum'' among the axioms for open/closed TFTs (as it stems from a one-loop diagram) and may accordingly be viewed as a particularly deep structure. In the case of Landau-Ginzburg models it was proved only recently in~\cite{pv1002.2116} when $k$ is a field of characteristic zero. Our proof works for any noetherian $\nQ$-algebra~$k$ and simply follows from the fact that the 2-morphism in $\LG$ to be read off from the diagram 
 $$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{tikzpicture}[very thick,scale=0.7,color=blue!50!black, baseline,>=stealth]
@@ -1012,7 +1013,7 @@ There are two $\Re$-linear maps between~$\Bar$ and~$\Delta$ which will be import
 \Phi & : \Delta \lra \Bar \, , \qquad \theta_{i_1}\ldots \theta_{i_p} \lmt \sum_{\sigma\in S_p} (-1)^{|\sigma|} dx_{i_{\sigma(1)}} \ldots dx_{i_{\sigma(p)}} \otimes 1 \, , \label{intro_phi}\\
 \Psi & : \Bar \lra \Delta \, , \qquad df_1\ldots df_p \otimes 1 \lmt \sum_{1\leq i_1<\ldots<i_p\leq n} \Big( \prod_{k=1}^p \partial_{[i_k]} f_k \Big) \, \theta_{i_1} \ldots \theta_{i_p} \, \label{intro_psi}.
 \end{align}
-These maps were studied in~\cite{sw0911.0917}, we only rephrase the presentation of~$\Psi$ in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$.
+The map $\Psi$ was studied in~\cite{sw0911.0917}, we only rephrase the presentation in terms of the difference quotient operators~$\partial_{[i]}$ suitable for our setting. One easily verifies that $\Psi\Phi = 1_\Delta$.
 
 \begin{lemma}\label{PhiPsiDG}
 Both~$\Phi$ and~$\Psi$ are maps of differential graded algebras between $(\Delta, \delta_-, \wedge)$ and $(\Bar, b', \times)$. 
@@ -5553,9 +5554,9 @@ Let $(R = k[x_1,\ldots,x_n], W)$ be an object of $\LG$. Given $\sigma \in S_n$ c
 \be
 d_{\Delta^\sigma_W} = \delta^\sigma_+ + \delta_- \, , \qquad \delta_+ = \sum_{i=1}^n \partial^{\,\sigma}_{[i]}W\cdot \theta_i\, , \qquad \delta_- =  \sum_{i=1}^n (x_i-x'_i) \cdot \theta_i^*
 \ee
-where $\partial^{\,\sigma}_{[i]}$ are the modified difference quotient operators, defined for $1 \le i \le n$ with $\sigma(j) = i$ by
+where $\partial^{\,\sigma}_{[i]}$ are the modified difference quotient operators, defined for $1 \le i \le n$ by
 \be\label{diffquotopmod}
-\partial^{\,\sigma}_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_{\sigma(1)}\ldots t_{\sigma(j-1)}}f - {}^{t_{\sigma(1)}\ldots t_{\sigma(j)}}f}{x_{\sigma(i)}-x'_{\sigma(i)}} \, . 
+\partial^{\,\sigma}_{[i]}: k[x,x'] \lra k[x,x'] \, , \qquad f \lmt \frac{{}^{t_{\sigma(1)}\ldots t_{\sigma(i-1)}}f - {}^{t_{\sigma(1)}\ldots t_{\sigma(i)}}f}{x_{\sigma(i)}-x'_{\sigma(i)}} \, . 
 \ee
 Together with the morphisms $\rho, \lambda$ of \eqref{lambdarho} this matrix factorisation serves as an alternative unit $1$-endomorphism of $(R,W)$. That is, $\rho$ and $\lambda$ are both isomorphisms and the coherence axioms for the unit in a bicategory holds for $\Delta^\sigma_W$. By uniqueness of units there is an isomorphism in $\hmf(\Re, \widetilde W)$
 \[
@@ -5950,7 +5951,7 @@ D.~Quillen, \textsl{Superconnections and the {C}hern character}, Topology \textb
 J.~Roberts and S.~Willerton, \textsl{On the {R}ozansky-{W}itten weight systems}, Algebr. Geom. Topol. \textbf{10} (2010), no. 3, 1455--1519, \href{http://arxiv.org/abs/math/0602653}{[math/0602653]}.
 
 \bibitem[SW11]{sw0911.0917}
-C.~V.~Shepler and S.~Witherspoon, \textsl{Quantum differentiation and chain maps of bimodule complexes}, Algebra and Number Theory \textbf{5}-3 (2011), 339--360, 
+A.~V.~Shepler and S.~Witherspoon, \textsl{Quantum differentiation and chain maps of bimodule complexes}, Algebra and Number Theory \textbf{5}-3 (2011), 339--360, 
 \href{http://arxiv.org/abs/0911.0917}{[arXiv:0911.0917]}. 
 
 \bibitem[Yos98]{yoshino98}
