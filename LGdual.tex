@@ -380,11 +380,11 @@ In the present paper we prove that every $1$-morphism $X:W\lra V$ in $\LG$ as ab
 
 Regarding the conceptual aspect we note that there is a close analogy between the Atiyah class of a complex of free modules over a ring (or vector bundles on a scheme) and the Riemann curvature operator of a Riemannian manifold. One way of making this precise is that the Atiyah class is the curvature of a superconnection in the sense of Quillen \cite{superquillen}, see Remark \ref{remark:curvature_superconnection}. The symmetries of the Riemann curvature operator, the most basic of which is that it is a skew-symmetric operator, play a fundamental role in differential geometry. One might therefore expect symmetries of the Atiyah class to play a role in algebra, and as an example of this we find that the existence of adjunctions in $\LG$ ultimately rests on the skew-symmetry of the Atiyah class of mapping complexes in dg-categories of matrix factorisations. 
 
-On the other hand our general construction also allows for concrete calculations. To give a flavour of how explicit our results can be made, let $\{ e_i \}_i$ be a basis for the free $k[x,z]$-module~$X$ with dual basis $\{ e_i^* \}_i$. Then e.\,g.~the coevaluation map $\widetilde\coev_X$ is given by
+On the other hand our general construction also allows for concrete calculations. To give a flavour of how explicit our results can be made, let $\{ e_i \}_i$ be a basis for the free $k[x,z]$-module~$X$ with dual basis $\{ e_i^* \}_i$. Then e.\,g.~the value of coevaluation map $\widetilde\coev_X$ on an element $\gamma = \theta_{a_1}\ldots \theta_{a_{r}}$ of the exterior algebra $\Delta$ is
 \be\label{eq:formula_intro_coev}
-\widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(r+1)|e_j| + s} \big\{ \partial_{[b_r]}(d_X) \ldots \partial_{[b_1]}(d_X) \big\}_{ji} \cdot e_i^* \otimes e_j
+\widetilde\coev_X( \gamma ) = \sum_{i,j} (-1)^{(n-r+1)|e_j| + s} \big\{ \partial_{[b_{n-r}]}(D) \ldots \partial_{[b_1]}(D) \big\}_{ji} \cdot e_i^* \otimes e_j
 \ee
-and there is a similar expression for $\coev_X$. Here $\gamma = \theta_{a_1}\ldots \theta_{a_{n-r}}$ with is an element of the exterior algebra $\Delta$ and $\gamma' = \theta_{b_1} \ldots \theta_{b_r}$ is the ``complement'' of $\gamma$ in the sense that~$b_1 < \cdots < b_r$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, see \eqref{diffquotop}. The evaluation maps have similar elementary presentations, which involve in addition supertraces and residues, see Section~\ref{sec:derivcoeval}.
+and there is a similar expression for $\coev_X$. Here $\gamma' = \theta_{b_1} \ldots \theta_{b_{n-r}}$ is the ``complement'' of $\gamma$ in the sense that~$b_1 < \cdots < b_{n-r}$ is the unique sequence with $\gamma \wedge \gamma' = (-1)^{s} \theta_1 \ldots \theta_n$ a scalar multiple of the top degree form, and $\partial_{[i]}$ is a divided difference operator, see \eqref{diffquotop}. The evaluation maps have similar elementary presentations, which involve in addition supertraces and residues, see Section~\ref{sec:derivcoeval}.
 
 The mixture of conceptual control and concreteness leads to applications which are important in their own right, two of which we briefly mention now. Recall that a bulk field in a Landau-Ginzburg model with potential $W\in k[x]$ is described as an endomorphism of the stabilised diagonal $\Delta_W$, so the field is an element in the Jacobi algebra $\operatorname{Jac}(W) = k[x]/(\partial_{x_i} W)$. Given a matrix factorisation $(X,D)$ of $V-W$, i.\,e.~a defect between the theories~$W$ and $V\in k[z_1,\ldots,z_m]$, we obtain an operator $\mathcal D_r(X)$ between the spaces of bulk fields by sending $\psi\in\operatorname{Jac}(W)$ to an element in $\operatorname{Jac}(V)$ obtained by ``wrapping the defect line labelled by~$X$ around~$\psi$''. We can make rigorous sense of this \textsl{defect action on bulk fields} in terms of string diagrams in the bicategory $\LG$ as 
 \begin{align}\label{defectactionIntro}
@@ -910,7 +910,7 @@ Less tersely, given an adjunction $X \dashv X^\dual$ and $1$-morphisms $Y: \math
 which makes the integral functor $\Phi_X$ left adjoint to $\Phi_{X^\dual}$. For the details see Appendix \ref{lemma:adjoint_nat_iso}.
 \end{remark}
 
-\begin{remark} We do not require our base ring to be a field, naturally this means that somewhere we have to work harder. We wish to pinpoint this so that the reader who only cares about $k = \nC $ knows where to get off the bus.
+\begin{remark} We do not require our base ring to be a field, and naturally this means that somewhere we have to work harder. We wish to pinpoint this so that the reader who only cares about $k = \nC $ knows where to get off the bus.
 
 The key point comes in \eqref{eq:zorroequalsH} where we find that the Zorro move holds \textsl{up to some map} $H$, which we consequently want to prove is null-homotopic. The only way we know to do this is to use a nondegenerate pairing. If $k$ is a field, then we may use the Kapustin-Li formula of \cite{kl0305,hl0404,m0912.1629,dyckmurf}, but if $k$ is an arbitrary noetherian $\nQ$-algebra there is no longer a nondegenerate pairing on the \textsl{triangulated} category. Instead we use a ``homotopically'' nondegenerate pairing on the dg-category, which is constructed in Section \ref{section:dualityadjointop} for this purpose.
 \end{remark}
@@ -1134,7 +1134,7 @@ together with the defining property $\Res_{k[x,y]/k[y]} \left[ \underline{\opera
 In the next result we use the divided difference operators of \eqref{diffquotop}.
 
 \begin{proposition}\label{prop:determinantresidue} 
-The element $\delta = \det( (\partial_{[i]} f_j)_{i,j} )$ in $k[x,x']$ has the property that for any $g \in k[x]$
+Given a regular sequence $(f_1,\ldots,f_n)$ in $k[x]$ the determinant $\delta = \det( (\partial_{[i]} f_j)_{i,j} )$ in $k[x,x']$ has the property that for any $g \in k[x]$
 \be\label{eq:integrateagainstd}
 \Res_{k[x,x']/k[x']} \left[ \frac{g \delta \,  \underline{\operatorname{d}\! x}}{f_1, \ldots, f_n} \right] = g(x')
 \ee
@@ -1142,7 +1142,7 @@ as an element of the algebra $k[x']/(f_1(x'),\ldots,f_n(x'))$.
 \end{proposition}
 % see rfper3
 \begin{proof}
-As far as we know the first proof for $k$ a field is contained in \cite{pv1002.2116}, and the proof given there should generalise to the present setting. A related result appears in the appendix to a paper of Mazur and Roberts, who attribute the argument to Tate \cite[Theorem A$.3$]{mazur}. They show that there is an isomorphism of $k[x]$-modules between $J = k[x]/(f_1,\ldots,f_n)$ and $\Hom_k(J,k)$ sending the identity to a functional which has a property analogous to \eqref{eq:integrateagainstd}. 
+As far as we know the first proof for $k$ a field is contained in \cite{pv1002.2116}, and the proof given there generalises to the present setting. A related result appears in the appendix to a paper of Mazur and Roberts, who attribute the argument to Tate \cite[Theorem A$.3$]{mazur}. They show that there is an isomorphism of $k[x]$-modules between $J = k[x]/(f_1,\ldots,f_n)$ and $\Hom_k(J,k)$ sending the identity to a functional which has a property analogous to \eqref{eq:integrateagainstd}. 
 
 If one knew \textsl{a priori} that this functional was the residue map, this would prove \eqref{eq:integrateagainstd}, but we do not know a reference for this fact. In any case, a proof will appear in the forthcoming~\cite{meres}, which in particular proves \eqref{eq:integrateagainstd} for any noetherian $\nQ$-algebra $k$.
 \end{proof}
@@ -1398,7 +1398,7 @@ Follows from the graded Jacobi identity for commutators.
 
 In particular if $(X,D)$ and $(X', D)$ are linear factorisations of some $W \in k$, so that $[\nabla, D]$ is a closed map in both cases, then for any morphism $\varphi$ of linear factorisations we see that there is a right $A$-linear homotopy $g$ between $f \circ [ \nabla, D]$ and $[\nabla, D] \circ f$.
 
-The Atiyah class can be viewed as a component of the curvature of a superconnection.
+The Atiyah class can be viewed as a component of the curvature of a superconnection \cite{superquillen}.
 
 \begin{remark}\label{remark:curvature_superconnection} A \textsl{superconnection} $\Theta$ on a $\nZ _2$-graded $A$-module $X$ is an $R$-linear degree one operator~$\Theta$ on $X \otimes_A \Omega A$ satisfying the graded Leibniz rule
 \[
@@ -2649,13 +2649,13 @@ The detailed argument is given in Appendix \ref{section:extendduality}, and we n
 \[
 (-)^\dual = (-)^\vee[n]: \LG(W,V) \lto \LG(V,W)
 \]
-is well-defined, and hypothesis (ii) of the Appendix is checked below in Proposition \ref{prop.morphismmigration}. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $R[n] \otimes_R Y^{\vee}$, and similarly one proves that $Y^{\vee} \otimes_S S[m]$ is left adjoint to $Y$.
+is well-defined, and hypothesis (ii) of the Appendix is checked in Proposition \ref{prop.morphismmigration}. The upshot is that every $1$-morphism $Y$ in $\LG(W,V)$ has right adjoint $R[n] \otimes_R Y^{\vee}$, and similarly one proves that $Y^{\vee} \otimes_S S[m]$ is left adjoint to $Y$.
 \end{proof}
 
 \begin{remark} It follows from Appendix \ref{section:extendduality} that the $2$-morphism migration properties of Proposition \ref{prop.morphismmigration} hold for $2$-morphisms between arbitrary $1$-morphisms in $\LG$, not just those represented by finite-rank matrix factorisations.
 \end{remark}
 
-\begin{remark} When $k$ is a field the triangulated categories $\hmf(k[x], W)^\omega$ all have Serre functors, and so the \textsl{existence} of adjoints in $\LG$ can be derived from representability theorems, see for example \cite{ballard}. But these general methods are not well-suited for explicit computations, and in particular for deriving explicit evaluation and coevaluation maps.
+\begin{remark} When $k$ is a field the triangulated categories $\hmf(k[x], W)^\omega$ all have Serre functors, and the existence of adjoints in $\LG$ can be derived from representability theorems, see for example \cite{ballard}. But our methods seem better suited for explicit computations.
 \end{remark}
 
 With the notation of Remark \ref{remark:integral_functors} this shows that there are adjunctions of integral functors
@@ -3061,7 +3061,7 @@ The story for the bicategory $\LG$ is subtler, as we only expect the left and ri
 
 In general we do not phrase the discussion in terms of an isomorphism between $X$ and its double-adjoint, but in terms of the relationship between the left and right adjoints. We have specified in~\eqref{eq:isoq} above a choice of isomorphism $q$ between the left adjoint and a suspension of the right adjoint of any $1$-morphism. We show in Proposition~\ref{prop:monoidalproperty} below that these isomorphisms possess nontrivial properties that we might call ``pivotality up to shifts''. These properties are what will be important in applications. 
 
-To explain what we mean, we first recall a formal result of category theory. If $X: W \lto V$ and $Y: V \lto U$ are $1$-morphisms in $\LG$ then $X^{\dual} \otimes Y^{\dual}$ and ${}^\dual X \otimes {}^\dual Y$ are the right and left adjoint to $Y \otimes X$, respectively, and so by uniqueness of adjoints there are canonical isomorphisms
+To explain what we mean, we first recall a formal result of category theory. If $X: W \lto V$ and $Y: V \lto U$ are $1$-morphisms in $\LG$ then $X^{\dual} \otimes Y^{\dual}$ and ${}^\dual X \otimes {}^\dual Y$ are right and left adjoint to $Y \otimes X$, respectively, and so by uniqueness of adjoints there are canonical isomorphisms
 \[
 \mathscr{R}: (Y \otimes X)^{\dual} \stackrel{\cong}{\lra} X^{\dual} \otimes Y^{\dual}\, , \qquad 
 \mathscr{L}: {}^\dual (Y \otimes X) \stackrel{\cong}{\lra} {}^\dual X \otimes {}^\dual Y\,.
@@ -3840,7 +3840,7 @@ Analogous results hold for the operators $\mathcal D^\Phi_l, \mathcal D^\Phi_r$ 
 
 (ii): By the argument of Remark~\ref{remark:indeptlambda} reordering the partial derivatives of $d_{X^\vee}$ leaves $\mathcal D_r(X^\vee)$ invariant up to a sign. Together with $(d_{X^\vee})_{ij} = (-1)^{|e_i|}(d_X)_{ji}$ one checks that the claim then follows from Proposition~\ref{prop:defectaction}. 
 
-(iii): We give the proof for $\mathcal D_l$, the other case is analogous. It suffices to prove the identity for $\mathcal D_l$ under the assumption that the variable numbers $n,m,p$ all have the same parity, since otherwise $\mathcal D_l(X) \circ \mathcal D_l(Y)$ is zero. The basic argument is a standard calculation with string diagrams. There are however slight modifications needed due to the fact that $\LG$ is only ``pivotal up to shifts'' as discussed in Section~\ref{sec:pivotality}. 
+(iii): We give the proof for $\mathcal D_l$, the other case is analogous. We assume that $n,m,p$ all have the same parity, otherwise the operators on the left hand side are not composable. The basic argument is a standard calculation with string diagrams. There are however slight modifications needed due to the fact that $\LG$ is only ``pivotal up to shifts'' as discussed in Section~\ref{sec:pivotality}. 
 
 We start by writing $\mathcal D_l(X) \circ \mathcal D_l(Y)$ as
 $$
@@ -4112,7 +4112,7 @@ $$
 %%%%%%%%%%%%%%%%%%%%%%
 \, , 
 $$
-thus ending the proof. 
+thus ending the proof.
 \end{proof}
 
 
@@ -4426,9 +4426,9 @@ $$
 
 \subsection{Cardy condition}
 
-The diagrammatic language for adjunctions in $\LG$ enables us to prove deep results about matrix factorisations in a way that directly follows the physical intuition. Moreover, since the diagrammatics work over an arbitrary noetherian $\nQ$-algebra~$k$, any statement about matrix factorisations that can be proven using diagrams automatically extends from the absolute case $k = \nC$ to families (viewing e.\,g.~$k = \nC[t_1,\ldots,t_d]$ as the base space of a deformation).
+The diagrammatic language for adjunctions in $\LG$ enables us to prove nontrivial statements about matrix factorisations in a way that follows the physical intuition. Moreover, since the diagrammatics work over an arbitrary noetherian $\nQ$-algebra~$k$, any statement about matrix factorisations that can be proven using diagrams automatically extends from the absolute case $k = \nC$ to families (viewing e.\,g.~$k = \nC[t_1,\ldots,t_d]$ as the base space of a deformation).
 
-Even very simple diagrams can encode nontrivial theorems. As an example in this section we give a novel proof of the Cardy condition by thinking about the possible ways of computing the value of a decorated annulus. For Landau-Ginzburg models the Cardy condition was recently proven using different methods for~$k$ a field in~\cite{pv1002.2116}, and there were subsequent proofs in \cite{dm1102.2957,buchweitzstratten}. 
+As an example we give a new proof of the Cardy condition by thinking about the possible ways of computing the value of a decorated annulus. For Landau-Ginzburg models the Cardy condition was recently proven using different methods for~$k$ a field in~\cite{pv1002.2116}, and there were subsequent proofs in \cite{dm1102.2957,buchweitzstratten}. 
 
 We fix a potential $W\in k[x] = k[x_1,\ldots,x_n]$, matrix factorisations $X,Y \in \hmf(k[x], W)$, and two morphisms $\varphi: X\lra X$, $\psi: Y\lra Y$. Then the $2$-morphism
 \be\label{annulus}
