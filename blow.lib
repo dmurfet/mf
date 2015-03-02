@@ -634,7 +634,7 @@ proc mablow(matrix M, ideal J)
     
     // Roughly speaking mablow takes "difficulty" ms to complete. We only give
     // debugging output if this is likely to take > 10 seconds.
-    int difficulty = nrows(M) * ncols(M) * n / 3;
+    int difficulty = (nrows(M) * ncols(M) * n) div 3;
     if( difficulty > 10000 )
     {
         if( benchmark )
@@ -1205,8 +1205,8 @@ proc blockmat_nsq(matrix block1,matrix block2,matrix block3,matrix block4)
 proc blocksq(matrix m)
 {
     int n=nrows(m);
-    int intnon2=n/2;
-    number non2=number(n)/2;
+    int intnon2=n div 2;
+    number non2=number(n) div 2;
     if(n!=ncols(m))
     {
         printf("Matrix should be square");
@@ -1263,7 +1263,7 @@ proc mfSuspend(matrix A, list #)
     list blocks = extractblockmat(A);
     matrix a0 = blocks[3]; matrix a1 = blocks[2];
     
-    matrix z[ncols(A)/2][ncols(A)/2];
+    matrix z[ncols(A) div 2][ncols(A) div 2];
     
     if( power mod 2 == 0 )
     {
@@ -1290,7 +1290,7 @@ proc mfSuspendGrading(intvec g, list #)
     }
     else
     {
-        int n = size(g)/2;
+        int n = size(g) div 2;
         intvec r = g[(n+1)..2*n], g[1..n];
     
         return(r);
@@ -1313,7 +1313,7 @@ proc mfSuspendMorph(matrix A, list #)
     list blocks = extractblockmat(A);
     matrix a0 = blocks[1]; matrix a1 = blocks[4];
     
-    matrix z[nrows(A)/2][ncols(A)/2];
+    matrix z[nrows(A) div 2][ncols(A) div 2];
     
     if( power mod 2 == 0 )
     {
@@ -1784,8 +1784,8 @@ proc mfSplitIdempotent(matrix A, matrix E, list #)
     if( useGrading )
     {
         intvec Bgr(0), Bgr(1);
-        intvec Agr(0) = Agr[1..(m/2)];
-        intvec Agr(1) = Agr[(m/2+1)..m];
+        intvec Agr(0) = Agr[1..(m div 2)];
+        intvec Agr(1) = Agr[(m div 2+1)..m];
         
         int i;
         for(i=0; i<=1; i++)
@@ -2023,8 +2023,8 @@ proc checkMorphismDegree(matrix A, intvec Agr, matrix B, intvec Bgr, matrix F, i
     
     matrix f0 = extractblockmat(F)[1];
     matrix f1 = extractblockmat(F)[4];
-    int blockCols = ncols(F)/2;
-    int blockRows = nrows(F)/2;
+    int blockCols = ncols(F) div 2;
+    int blockRows = nrows(F) div 2;
     
     int i, j;
     for(i = 1; i <= blockRows; i++) // row
@@ -2068,7 +2068,7 @@ proc isGradingValid(matrix A, intvec g)
     // we view as a graded ring with the grading which assigns degree 2 to
     // each variable.
     
-    int m = ncols(A)/2;
+    int m = ncols(A) div 2;
     poly W = (A * A)[1,1];
     
     if( W == 0 ){ return(1); }
@@ -2197,8 +2197,8 @@ proc MFtensorGradings(intvec g, intvec h)
     // with the gradings described by intvecs g, h resp. then the intvec describing
     // the shifts on the free modules in X x Y is
    
-    int sizeX = size(g)/2;
-    int sizeY = size(h)/2;
+    int sizeX = size(g) div 2;
+    int sizeY = size(h) div 2;
     int rankProduct = sizeX * sizeY;
     
     intvec r;
@@ -2227,8 +2227,8 @@ proc MFtensorBigradings(list g, list h)
     // with the bigradings described by lists g, h resp. then the list describing
     // the shifts on the free modules in X x Y is
    
-    int sizeX = size(g)/2;
-    int sizeY = size(h)/2;
+    int sizeX = size(g) div 2;
+    int sizeY = size(h) div 2;
     int rankProduct = sizeX * sizeY;
     
     list r;
@@ -2258,7 +2258,7 @@ proc MFtensorBigradings(list g, list h)
 proc MFdual(matrix A)
 {
     list blocks = extractblockmat(A);
-    matrix z[nrows(A)/2][ncols(A)/2];
+    matrix z[nrows(A) div 2][ncols(A) div 2];
     matrix dual = blockmat_nsq( z, transpose(blocks[3]), -transpose(blocks[2]), z );
     return(dual);
 }
@@ -2295,7 +2295,7 @@ proc ZZtensor(matrix A, matrix B)
     
     int degb = 0; // Default B to degree 0, i.e. even
     
-    matrix zero[nrows(B)/2][ncols(B)/2];
+    matrix zero[nrows(B) div 2][ncols(B) div 2];
     matrix bigzero[nrows(B)][ncols(B)];
     
     if( B != bigzero && b11 == zero && b22 == zero ){ degb = 1; }
@@ -2318,8 +2318,8 @@ proc ZZtensor(matrix A, matrix B)
 
 proc extractblockmat(matrix block)
 {
-    int nr = nrows(block)/2;
-    int nc = ncols(block)/2;
+    int nr = nrows(block) div 2;
+    int nc = ncols(block) div 2;
     
     matrix a[nr][nc];
     matrix b[nr][nc];
@@ -2422,7 +2422,7 @@ proc fuseDefects(matrix Y, matrix X, poly W)
 
 proc supertrace(matrix m)
 {
-    int r = ncols(m)/2;
+    int r = ncols(m) div 2;
     matrix zero[r][r];
     matrix E[r][r]; E = E + 1; // The unit matrix
 
@@ -2484,8 +2484,8 @@ proc mfReduce(matrix A, list #)
     if( useGrading )
     {
         // The grading on P * b0 * Q, Q^{-1} * b1 * P is induced from Q and Pinv.
-        intvec Agr0 = Agr[1..(ncols(A)/2)];
-        intvec Agr1 = Agr[(ncols(A)/2+1)..ncols(A)];
+        intvec Agr0 = Agr[1..(ncols(A) div 2)];
+        intvec Agr1 = Agr[(ncols(A) div 2+1)..ncols(A)];
         
         Agr0 = computeGradingFromInjection(l[4], Agr0);
         Agr1 = computeGradingFromInjection(l[5], Agr1);
@@ -3399,7 +3399,7 @@ proc chernChar(matrix A)
         X = X * diff(A,var(i));
     }
     
-    int p = (numVars*(numVars-1))/2;
+    int p = (numVars*(numVars-1)) div 2;
     poly ch = (-1)^(p) * supertrace(X);
     ch = reduce( ch, J );
     return(ch);
@@ -3505,8 +3505,8 @@ proc vector2matrixFerm(list V, int r, int r')
 
 proc matrix2vector(matrix M)
 {
-    int r1 = ncols(M)/2;
-    int r2 = nrows(M)/2;
+    int r1 = ncols(M) div 2;
+    int r2 = nrows(M) div 2;
     int i,ii,j,k;
     vector v;
     
@@ -3764,8 +3764,8 @@ proc mfReduceAlt(matrix A, matrix e, list #)
     if( size(#) > 0 )
     {
         intvec Agr = #[1];
-        intvec Agr0 = Agr[1..(ncols(A)/2)];
-        intvec Agr1 = Agr[(ncols(A)/2+1)..ncols(A)];
+        intvec Agr0 = Agr[1..(ncols(A) div 2)];
+        intvec Agr1 = Agr[(ncols(A) div 2+1)..ncols(A)];
         int useGrading = 1;
     }
     

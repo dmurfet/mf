@@ -744,7 +744,7 @@ proc gpoly(poly s1, poly s2, int n)
     poly g = s1^(n+1);
     
     int i;
-    for(i=1;i<=(n+1)/2;i++)
+    for(i=1;i<=(n+1) div 2;i++)
     {
         g = g + (n+1) * (-1)^(i) * ( binomial(n-i,i-1) * s2^(i) * s1^(n+1-2*i) )/i;
     }
@@ -1127,7 +1127,7 @@ proc superblockmat(int numCols, list #)
         return();
     }
     
-    int numRows = size(#)/numCols;
+    int numRows = size(#) div numCols;
     
     // We first collect each row of the block matrix into a list.
     list l;
@@ -2415,7 +2415,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         if( useDegree == 1 )
         {
             intvec b = Z[2];
-            intvec Zodd = b[(size(Z[2])/2+1)..size(Z[2])];
+            intvec Zodd = b[(size(Z[2]) div 2+1)..size(Z[2])];
             list compiledEntry = v, size(Zodd), -1, Zodd;
             kill b, Zodd;
         }
@@ -2423,7 +2423,7 @@ proc linkCompileReduced(list linkData, string fileName, int N, poly reductionMar
         if( useDegree == 0 )
         {
             intvec b = Z[2];
-            intvec Zeven = b[1..(size(Z[2])/2)];
+            intvec Zeven = b[1..(size(Z[2]) div 2)];
             list compiledEntry = v, size(Zeven), -1, Zeven;
             kill b, Zeven;
         }
