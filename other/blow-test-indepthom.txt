@@ -1,0 +1,657 @@
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE - Fusing two defects and seeing if the idempotent depends on the
+// choices of homotopy or not. See the note (idnc) for background.
+
+// !!!!!!!!!!!!!!!
+// You should paste in mfPushforwardAlt and mfPushforwardInductiveAlt from the end of this
+// file before running these examples
+// !!!!!!!!!!!!!!!!
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+ring rr=0,(x,y,z),dp;
+printlevel = 1;
+
+matrix E[2][2] = 0, y - x, y + x, 0;
+matrix F[2][2] = 0, z - y, z + y, 0;
+
+// Define a web with two vertices and three edges
+//
+//    ---- x ----> E ---- y ----> F ---- z ---->
+//
+// The compilation the fusion of F and E
+
+list e1 = list(0,1,list(x),x^2);
+list e2 = list(1,2,list(y),y^2);
+list e3 = list(2,0,list(z),z^2);
+list web = list(2, list(e1,e2,e3), list(E,F));
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePair(web, compStrat);
+print(L[1]);
+
+// Now we can do the same thing by calling mfPushforwardInductive directly; this
+// way we have control over the homotopies that get used
+
+matrix A = MFtensor( E, F );
+matrix H = 1/2*ZZtensor( diff(E,y), unitmat(ncols(F)) );
+matrix H_alt = -1/2*ZZtensor( unitmat(ncols(E)), diff(F,y) );
+
+// Compute the pushforward using two different homotopies
+list L = mfPushforwardAlt(A, y, 1, H); 
+list L_alt = mfPushforwardAlt(A, y, 1, H_alt);
+
+print(L[1]);
+print(L_alt[1]);
+
+matrix e = L[3] * L[2];
+matrix e_alt = L_alt[3] * L_alt[2];
+
+e == e_alt; // These are the same, on the nose.
+
+
+
+
+////////// second example - taken from P-on-T /////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "matrix.lib";
+LIB "mfweb.lib";
+int nx=1;
+int ny=1;
+ring rr=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
+
+int d = 5; // do not change
+poly W = x(1)^d;
+
+int m = 1; // default 1
+int a = 4; // default 2
+
+// Define T and P
+matrix T[2][2] = 0, x(1)^a, x(1)^(d-a), 0;
+matrix P[2][2] = 0, (y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1)), (y(1)^d - x(1)^d)/((y(1) - r^m * x(1)) * (y(1) - r^(m+1) * x(1))), 0;
+
+// Define a web with two vertices and two edges
+//
+//    T ---- x(1) ----> P ---- y(1) ---->
+//
+// The compilation the fusion of P and T
+
+list e1 = list(1,2,list(x(1)),x(1)^d);
+list e2 = list(2,0,list(y(1)),y(1)^d);
+list web = list(2, list(e1,e2), list(T,P));
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePair(web, compStrat);
+print(L[1]);
+
+// Now we can do the same thing by calling mfPushforward directly; this
+// way we have control over the homotopies that get used
+
+number dinv = 1/number(d);
+matrix A = MFtensor( T, P );
+matrix H = dinv*ZZtensor( diff(T,x(1)), unitmat(ncols(P)) );
+matrix H_alt = -dinv*ZZtensor( unitmat(ncols(T)), diff(P,x(1)) );
+
+// Compute the pushforward using two different homotopies
+list L = mfPushforwardAlt(A, x(1), d-1, H); 
+list L_alt = mfPushforwardAlt(A, x(1), d-1, H_alt);
+
+L[1] == L_alt[1]; // the splittings agree
+
+matrix e = L[3] * L[2];
+matrix e_alt = L_alt[3] * L_alt[2];
+
+// Now if you hack mfPushforward to actually return the differential on Ablow, you find
+// that e and e_alt are actually homotopic as endomorphisms of Ablow. So in fact the
+// different homotopies really give homotopic maps.
+
+isMorphismNull(L[4],L[4],e-e_alt);
+
+
+
+
+
+
+///////// third example - taken from Kazama-Suzuki ////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "ring.lib";
+LIB "blow.lib";
+LIB "mfweb.lib";
+int nx=2;
+int ny=4;
+ring RRRR=(0,r),(x(1..nx),y(1..ny)),dp;
+minpoly = rootofUnity(8);
+poly minpolyblow = x(1)^4 + 1;
+printlevel=1;
+
+poly JaXdY=x(1)+x(2)-y(1);
+poly JbXdY=x(1)*x(2)-y(2);
+poly EaXdY=(x(1) + x(2) + y(1))*((x(1) - x(2))^2 + y(1)^2);
+poly EbXdY=2*(x(1)*x(2) - 2*y(1)^2 + y(2));
+matrix X[4][4]=
+   0,0, JaXdY,JbXdY ,
+   0,0, EbXdY,-EaXdY,
+   EaXdY,JbXdY ,0,0,
+   EbXdY,-JaXdY;
+
+poly JaXyDonex= y(3) + y(4)*r^2 - x(1) - x(2);
+poly JbXyDonex=y(3)*y(4)*r^2 - x(1)*x(2);
+poly EaXyDonex=(x(1) + y(3) + x(2) + y(4)*r^2)*((x(1) + x(2))^2 + (y(3) - y(4)*r^2)^2);
+poly EbXyDonex=-4*x(1)^2 - 6*x(1)*x(2) - 4*x(2)^2 + 2*y(3)*y(4)*r^2;
+matrix Y[4][4]=
+   0,0, JaXyDonex,JbXyDonex ,
+   0,0, EbXyDonex,-EaXyDonex,
+   EaXyDonex, JbXyDonex,0,0,
+   EbXyDonex,-JaXyDonex;
+   
+poly W1 = y(1)^4 - 4*y(1)^2*y(2) + 2*y(2)^2;
+poly W2 = x(1)^4 + x(2)^4;
+poly W3 = y(3)^4 + y(4)^4;
+
+// Define a web with two vertices and three edges
+//
+//    ---- W1 ----> X ---- W2 ----> Y ---- W3 ---->
+//
+
+list e1 = list(0,1,list(y(1),y(2)),W1);
+list e2 = list(1,2,list(x(1),x(2)),W2);
+list e3 = list(2,0,list(y(3),y(4)),W3);
+list web = list(2, list(e1,e2,e3), list(X,Y));
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePair(web, compStrat);
+print(L[1]);
+
+// Now we can do the same thing by calling mfPushforward directly; this
+// way we have control over the homotopies that get used
+
+matrix A = MFtensor( X, Y );
+matrix H(1) = 1/4*ZZtensor( diff(X,x(1)), unitmat(ncols(Y)) );
+matrix H(2) = 1/4*ZZtensor( diff(X,x(2)), unitmat(ncols(Y)) );
+matrix H_alt(1) = -1/4*ZZtensor( unitmat(ncols(X)), diff(Y,x(1)) );
+matrix H_alt(2) = -1/4*ZZtensor( unitmat(ncols(X)), diff(Y,x(2)) );
+
+// Compute the pushforward using two different homotopies
+
+list L = mfPushforwardAlt(A, x(1), 3, H(1));
+list L_alt = mfPushforwardAlt(A, x(1), 3, H_alt(1));
+
+L[1] == L_alt[1]; // the splittings agree
+
+matrix e = L[3] * L[2];
+matrix e_alt = L_alt[3] * L_alt[2];
+
+isMorphismNull(L[4],L[4],e-e_alt);
+
+
+
+
+// WARNING: Doesn't really work yet
+
+list L = mfPushforwardInductiveAlt(A, list(x(1),x(2)), list(3,3), list(H(1),H(2)));
+list L_alt = mfPushforwardInductiveAlt(A, list(x(1),x(2)), list(3,3), list(H_alt(1),H_alt(2)));
+
+
+
+
+
+
+
+
+
+///////// Alternative versions of library routines 
+
+proc mfPushforwardAlt(matrix A, poly intvar, int N, Hlist, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks"); 
+    dbprint(printlevel, "[mfPushforward] Pushing forward matrix of size " + string(ncols(A)) + " with N = " + string(N));
+    //dbprint(printlevel, "[mfPushforward] Worst input coeff: " + string(worstMonomialCoeff(A)));
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    def RRR = basering;
+    int useGrading = 0;
+    
+    // Check for a list of homotopies to track
+    int homotopyList;
+    if( typeof(Hlist) == "list" )
+    {
+        matrix H = Hlist[1];
+        Hlist = delete(Hlist,1);    
+        
+        if( size(Hlist) != 0 )
+        {
+            int homotopyList = 1;
+        }
+    }
+    else
+    {
+        matrix H = Hlist;
+    }
+    
+    // Sanity check
+    if( useSanityChecks )
+    {
+        if( A * H + H * A != intvar^N * unitmat(ncols(A)) )
+        {
+            print("[mfPushforward] Not passed valid homotopy, exiting.");
+            return();
+        }
+    }
+    
+    // Convert everything into a more suitable ring. We go through the original
+    // list of ring variables, rename everything apart from intvar to y(i)'s (in
+    // ascending order) and rename intvar to x(1)
+    list rlist = ringlist(RRR);
+    list varlist = rlist[2];
+    
+    // Create the new list of variables
+    list newvar;
+    int i;
+    int ycount;
+    for(i=1;i<=size(varlist);i++)
+    {
+        if( string(intvar) == varlist[i] )
+        {
+            newvar = newvar + list("x(1)");
+        }
+        else
+        {
+            ycount++;
+            string s = "y(" + string(ycount) + ")";
+            newvar = newvar + list(s);
+            kill s;
+        }
+    }
+    kill varlist;
+    
+    list newringList;
+    newringList[1] = rlist[1];
+    newringList[2] = newvar;
+    newringList[3] = rlist[3];
+    newringList[4] = rlist[4];
+    kill rlist;
+    
+    // Fix the variable weighting
+    intvec kk = (1..size(newvar));
+    for(i=1; i<=size(newvar); i++)
+    {
+        kk[i] = 1;
+    }
+    newringList[3][1][2] = kk;
+    kill kk;
+    
+    int useParameter;
+    if( defined(minpolyblow) && defined(r) ) // deal with minpoly
+    { 
+        newringList[1][4][1] = 0;
+        useParameter = 1;
+    }
+    
+    // Create our new ring
+    def nR = ring(newringList);
+    setring nR;
+    
+    // Now complete the correct definition of nR by specifying the right minpoly: 
+    if( useParameter )
+    {
+        // Note that fetch uses the position of the ring variables, not the name, so 
+        // that fetch(var(1)) is always var(1).
+        poly minpolyblow = fetch(RRR,minpolyblow); 
+        export(minpolyblow);
+        poly zz = subst(minpolyblow,var(1),r);
+        number nu = leadcoef(zz);
+        minpoly = nu;
+        kill zz, nu;
+    }    
+    
+    // If we call fetch then the object of RRR is converted to the new renamed variables
+    matrix A = fetch(RRR,A);
+    matrix H = fetch(RRR,H);
+    if( homotopyList )
+    {
+        list Hlist = fetch(RRR,Hlist);
+    }
+        
+    // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
+    // Compute the inflation
+    ideal J = x(1)^N;
+    matrix Ablow = mablow(A,J);
+    if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
+
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = mablow(Hlist[i],J);
+        }
+    }
+    
+    // Compute the idempotent on the inflation
+    ideal J = x(1)^N; 
+    matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J);
+    
+    // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)])
+    if( !useGrading )
+    {
+        // for mfReduceAlt use list l = mfReduceAlt(Ablow,e)
+        list l = mfReduce(Ablow);
+    }
+    else
+    {
+        // For mfReduceAlt use list l = mfReduceAlt(Ablow, e, Ablowgr)
+        list l = mfReduce(Ablow, Ablowgr);
+    }
+    matrix RT = l[1]; // Differential on reduced MF
+    matrix F = l[2]; // A homotopy equivalence Ablow -> RT
+    matrix G = l[3]; // A homotopy equivalence RT -> Ablow
+    
+    // For mfReduceAlt use matrix ep = l[useGrading + 4]
+    matrix ep = F * e * G;
+    
+    kill l;
+
+    // Move the homotopies over to the reduction RT
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = F * Hlist[i] * G;
+        }
+    }
+    
+    // Sanity checks:
+    if( useSanityChecks )
+    {
+        if( ep * RT != RT * ep )
+        {
+            print("[mfPushforward] The reduced idempotent (up to homotopy) ep is not an endomorphism of RT, exiting.");
+            return();
+        }
+    }
+    
+    // Check that ep is idempotent up to homotopy, and strictify it
+    matrix epstrict;
+    if( ep * ep != ep )
+    {
+        matrix epck = ep;
+        for(i=1;i<=ycount;i++)
+        {
+            epck = subst( epck, y(i), 0 );
+        }
+
+        if( epck * epck != epck )
+        {
+            // NOTE: If this test fails to pass, it is usually due to a sign problem...
+
+            // TODO DEBUG DEBUG WARNING UGLY HACK
+            if( epck * epck == -1 * epck )
+            {
+                ep = -ep;
+            }
+        }
+        kill epck;
+
+        epstrict = mfStrictifyIdempotent(RT, ep);
+    }
+    else
+    {
+        epstrict = ep;
+    }
+    
+    // Sanity checks:
+    if( useSanityChecks )
+    {
+        if( epstrict * RT != RT * epstrict || epstrict * epstrict != epstrict )
+        {
+            print("[mfPushforward] The strictified idempotent is not an endomorphism of RT, or not an idempotent on the nose, exiting.");
+            return();
+        }
+        
+        if( useGrading )
+        {
+            if( !checkMorphismDegree( RT, RTgr, RT, RTgr, epstrict, 0 ) )
+            {
+                print("[mfPushforward] Strictified idempotent is not degree zero, exiting.");
+                return();
+            }
+        }
+    }
+    
+    list l;
+    if( !useGrading )
+    {
+        l = mfSplitIdempotent(RT, epstrict);
+    }
+    else
+    {
+        l = mfSplitIdempotent(RT, epstrict, RTgr);
+    }
+
+    // mfSplitIdempotent returns not just the splitting of the idempotent, but the
+    // actual maps splitting the idempotent. In the following notation, this means
+    // that s * t == ep and t * s == unitmat. Here t = l[2] and s = l[3].
+    
+    matrix final = l[1];
+    matrix t = l[2]; // t: RT --> final
+    matrix s = l[3]; // s: final --> RT
+    
+    // We have now split the original idempotent e on Ablow, and the splittings are
+    matrix mapAblowToFinal = t * F;
+    matrix mapFinalToAblow = G * s;
+    
+    // Each of the homotopies in our list is a homotopy on RT, let us replace
+    // these by homotopies on final
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = t * Hlist[i] * s;
+        }
+    }
+    
+    kill s,t,F,G,RT,e,ep,epstrict;
+        
+    // Back to the original ring and return. Note that we use fetch and not imap
+    // because we want to replace variables in nR by the variables in RRR in the same
+    // _position_ in ringlist.
+    setring RRR;
+    matrix final = fetch(nR,final);
+    matrix mapAblowToFinal = fetch(nR,mapAblowToFinal);
+    matrix mapFinalToAblow = fetch(nR,mapFinalToAblow);
+    matrix Ablow = fetch(nR, Ablow);
+    if( homotopyList )
+    {
+        list Hlist = fetch(nR,Hlist);
+    }
+    
+    // Note that we really want a splitting of e[1] on Ablow[1], so let us suspend
+    final = mfSuspend( final );
+    mapAblowToFinal = mfSuspendMorph( mapAblowToFinal );
+    mapFinalToAblow = mfSuspendMorph( mapFinalToAblow );
+    Ablow = mfSuspend( Ablow );
+    
+    if( homotopyList )
+    {
+        for(i=1;i<=size(Hlist);i++)
+        {
+            Hlist[i] = mfSuspend( Hlist[i] ); // homotopies are suspended just like differentials
+        }
+    }
+    
+    list retlist = list(final, mapAblowToFinal,mapFinalToAblow, Ablow);
+
+    if( homotopyList )
+    {
+        retlist = retlist + list(Hlist);
+        kill Hlist;
+    }
+    
+    dbprint(printlevel, "[mfPushforward] result is size " + string(ncols(final)) + ".");
+    dbprint(printlevel, "[mfPushforward] elapsed time " + string(timer-timeElapsed) + "ms.");
+    kill final, mapAblowToFinal, mapFinalToAblow;
+        
+    return(retlist);
+}
+
+proc mfPushforwardInductiveAlt(matrix A, list intvars, list NN, list H, list #)
+{
+    int useSanityChecks = blowFlags("sanity_checks"); // Turn off to run faster
+    
+    system("--ticks-per-sec",1000);
+    int timeElapsed = timer;
+    
+    def RRR = basering;
+    list R;
+    
+    // If we are not passed any internal variables, we perform no pushforward
+    if( size(intvars) == 0 )
+    {
+        list retlist = A;
+        return(retlist);
+    }
+    
+    // Sanity check
+    int i;
+    if( useSanityChecks )
+    {
+        for(i=1;i<=size(intvars);i++)
+        {
+            if( A * H[i] + H[i] * A != intvars[i]^(NN[i]) * unitmat(ncols(A)) )
+            {
+                print("[mfPushforward] Not passed valid homotopies, exiting.");
+                return();
+            }
+        }
+    }
+    
+    // Inductively we contract off the action of each of the external variables, using
+    // the given homotopies. During the process we switch rings, killing off the 
+    // external variables that we have used up
+    
+    int count = 1;
+    def nR(1) = basering;
+    int useParameter;
+    
+    while( size(intvars) > 0 )
+    {
+        dbprint(printlevel, "[mfPushforwardInductive] In step " + string(count) + " with ring vars " + varstr(nR(count))); //debug
+        
+        // Do the reduction with respect to the first variable and homotopy, and
+        // induce homotopies on this reduction for the action of the rest of the variables
+        list l = mfPushforwardAlt(A, intvars[1], NN[1], H);
+            
+        // Return to the original ring and add to R the pair (l[2],l[3],intvar[1],NN[1],l[1][,l[4]]). Note
+        // we have to return to the original ring because l[2],l[3] may depend on
+        // external variables which we are going to delete in a moment
+        poly ivar = intvars[1];
+        
+        setring RRR;
+        
+            // The first time through nR(1) = RRR so there is no need for imap
+            if( count > 1 )
+            {
+                list l = imap(nR(count),l);
+                poly ivar = imap(nR(count),ivar);
+            }
+
+            // Add the tuple (F,G,u,NN,D,Ablow[,r])
+            list tempp = l[2], l[3], ivar, NN[1], l[1], l[4];
+            R = R + list(tempp);
+            kill tempp;
+            
+        setring nR(count);
+        
+        // Remove the variable intvars[1] from our active ring
+        list rlist = ringlist(nR(count));
+        list varlist = rlist[2];
+    
+        // Create the new list of variables
+        int i;
+        for(i=1;i<=size(varlist);i++)
+        {
+            if( varlist[i] == string(intvars[1]) )
+            {
+                varlist = delete(varlist,i);
+                break;
+            }
+        }
+    
+        list newringList;
+        newringList[1] = rlist[1];
+        newringList[2] = varlist;
+        newringList[3] = rlist[3];
+        newringList[4] = rlist[4];
+        // Fix the variable weighting
+        intvec kk = (1..size(varlist));
+        for(i=1; i<=size(varlist); i++)
+        {
+            kk[i] = 1;
+        }
+        newringList[3][1][2] = kk;
+        
+        if( defined(minpolyblow) && defined(r) ) // deal with minpoly
+        { 
+            newringList[1][4][1] = 0;
+            useParameter = 1;
+        } 
+        
+        // Prepare for the next step of the induction
+        A = l[1];
+        
+        intvars = delete(intvars,1);
+        NN = delete(NN,1);
+        
+        if( size(intvars) == 0 )
+        {
+            break;
+        }
+
+        H = l[5];
+    
+        // Create our new ring
+        def nR(count+1) = ring(newringList);
+        setring nR(count+1);
+    
+        // Now complete the correct definition of nR by specifying the right minpoly: 
+        if( useParameter )
+        {
+            // Note that fetch uses the position of the ring variables, not the name, so 
+            // that fetch(var(1)) is always var(1).
+            poly minpolyblow = fetch(nR(count),minpolyblow); 
+            export(minpolyblow);
+            poly zz = subst(minpolyblow,var(1),r);
+            number nu = leadcoef(zz);
+            minpoly = nu;
+            kill zz, nu;
+        }
+        
+        matrix A = imap(nR(count),A);
+        list intvars = imap(nR(count),intvars);
+        list H = imap(nR(count),H);
+        
+        count++;
+    }
+    
+    // Return to the original ring
+    setring RRR;
+    matrix Anew = imap(nR(count),A);
+    
+    list retlist = Anew;
+    
+    if( useGrading )
+    {
+        retlist = retlist + list(Agr);
+    }
+    
+    // Add on the maps
+    retlist = retlist + list(R);
+    dbprint(printlevel, "[mfPushforwardInductive] total elapsed time " + string(timer-timeElapsed) + "ms.");
+    
+    return(retlist);
+}

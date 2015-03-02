@@ -1,0 +1,135 @@
+Calculations for the Fermat quintic
+===================================
+
+LIB "homolog.lib";
+LIB "dualitytrace.lib";
+LIB "matrix.lib";
+
+// Load the polynomial ring k[x,y,z,u,v]
+ring S = 0,(x,y,z,u,v),dp;	
+
+// Now compute the product. If Q and Q' are matrix factorisations
+// with block components f,g resp. f', g' square of size n, then
+// the product Q \otimes Q' will have blocks square of size 2n^2.
+
+// Call the matrices defined above Qx, Qy, Qz, Qu, Qv
+// First we compute Qx \otimes Qy.
+
+matrix fx[1][1] = x2;
+matrix gx[1][1] = x3;
+matrix fy[1][1] = y2;
+matrix gy[1][1] = y3;
+
+matrix Fxy = MFtensorF(fx,gx,fy,gy);
+matrix Gxy = MFtensorG(fx,gx,fy,gy);
+
+// Now compute (Qx \otimes Qy) \otimes Qz
+
+matrix fz[1][1] = z2;
+matrix gz[1][1] = z3;
+
+matrix Fxyz = MFtensorF(Fxy,Gxy,fz,gz);
+matrix Gxyz = MFtensorG(Fxy,Gxy,fz,gz);
+
+// Now compute ((Qx \otimes Qy) \otimes Qz) \otimes Qu
+
+matrix fu[1][1] = u2;
+matrix gu[1][1] = u3;
+
+matrix Fxyzu = MFtensorF(Fxyz,Gxyz,fu,gu);
+matrix Gxyzu = MFtensorG(Fxyz,Gxyz,fu,gu);
+
+// Now compute (((Qx \otimes Qy) \otimes Qz) \otimes Qu) \otimes Qv
+
+matrix fv[1][1] = v2;
+matrix gv[1][1] = v3;
+
+matrix Fxyzuv = MFtensorF(Fxyzu,Gxyzu,fv,gv);
+matrix Gxyzuv = MFtensorG(Fxyzu,Gxyzu,fv,gv);
+
+// In our notation, \varphi = Gxyzuv and \psi = Fxyzuv
+
+matrix phi = Gxyzuv;
+matrix psi = Fxyzuv;
+
+// Check that this is indeed a matrix factorisation
+print(psi * phi - (x5 + y5 + z5+u5+v5)*unitmat(16));
+print(phi * psi - (x5 + y5 + z5+u5+v5)*unitmat(16));
+
+// Calculate the partials
+matrix phiu = diff(phi,u);
+matrix psiz = diff(psi,z);
+matrix phiy = diff(phi,y);
+matrix psix = diff(psi,x);
+
+// Calculate the product
+matrix h = psix * phiy * psiz * phiu * psi;
+
+// This matrix can then be used (by hand, see p.4 of fermat) to calculate
+// the form matrix. First we give the "small" form matrix, which applies
+// to the \alpha_2 matrix in a pair \alpha = (\alpha_1,\alpha_2) determining
+// a morphism of MFs.
+
+matrix sg_small[16][16];
+sg_small[1,16] = 54x2yzuv;
+sg_small[2,15] = -54xy2zuv;
+sg_small[3,14] = 54xyz2uv;
+sg_small[4,13] = -24x2y2z2uv;
+sg_small[5,12] = -54xyzu2v;
+sg_small[6,11] = 24x2y2zu2v;
+sg_small[7,10] = -24x2yz2u2v;
+sg_small[8,9] = 24xy2z2u2v;
+sg_small[9,8] = 81xyzuv2;
+sg_small[10,7] = -36x2y2zuv2;
+sg_small[11,6] = 36x2yz2uv2;
+sg_small[12,5] = -36xy2z2uv2;
+sg_small[13,4] = -36x2yzu2v2;
+sg_small[14,3] = 36xy2zu2v2;
+sg_small[15,2] = -36xyz2u2v2;
+sg_small[16,1] = 16x2y2z2u2v2;
+sg_small = 1/5^4 * sg_small;
+
+// Put the form matrix into block form
+matrix z[16][16];
+matrix sg[32][32] = blockmat(z,z,z,sg_small);
+
+// Compute a set of generators for the space of morphisms from (phi,psi) to (-psi, -phi)
+
+printlevel = 1;
+list endos = MFcohom(psi,phi,-phi,-psi);
+
+// In this case endos is already a basis (512 is the dimension) so we do not have
+// to use:
+//list basis = remove_duplicates_in_morphismlist(endos,psi,phi,-phi,-psi);
+
+// Convert to block format
+list basis = list_vectortoblock(endos,ncols(psi));
+
+// Compute the traces of all these morphisms
+int i;
+for(i=1;i<=512;i++)
+{
+print("Trace of morphism " + string(i) + " is " + string(singtrace(basis[i],sg)));
+}
+
+// When you do this, you see that every morphism has trace 0 except for basis[512] which has trace 1.
+// Let us examine this morphism more closely
+list blocks_socle = extractblockmat(basis[512], ncols(psi));
+matrix socle_morphism[16][16] = blocks_socle[4];
+print(socle_morphism);
+
+// Of course this output is a bit badly wrapped
+for(i=1;i<=16;i++)
+{
+print("Polynomial in position " + string(i) + "," + string(17-i) + " is " + string(socle_morphism[i,17-i]));
+print("");
+}
+
+// Print the other matrix in the pair (one can check these are the only nonzero entries)
+for(i=1;i<=16;i++)
+{
+print("Polynomial in position " + string(i) + "," + string(17-i) + " is " + string(blocks_socle[1][i,17-i]));
+}
+
+// Some of the other morphisms do fit on the screen nicely, try:
+print(extractblockmat(basis[250],ncols(phi))[4]);

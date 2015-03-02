@@ -1,0 +1,339 @@
+///////////////////////////////////////////////////////
+// An examination of some parts of the Hopf computation
+///////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "linkhom.lib";
+list linkData = linkLibrary("hopf");
+int numVar = linkNumberOfVariables(linkData);
+ring rr=0,(x(1..numVar)),dp;
+printlevel = 1;
+
+///////////
+// N = 2 //
+///////////
+
+int N = 2;
+
+list h = linkCompile(linkData, "./temp", N);
+list cp = KRcomplex(linkData, h, N);
+
+// The KR complex begins in degree -2, and lives only in even Z2 degrees
+cp[1] == -2;
+
+// And has three terms in homological degrees -2,-1,0 resp., with grading vectors
+cp[3][1] == intvec(6,4,4,2); // Q{6} + Q{4} + Q{4} + Q{2}, where Q{6} means Q in internal degree +6.
+cp[3][2] == intvec(4,2,4,2);
+cp[3][3] == intvec(4,2,2,0);
+
+// The differentials (two of them) are the matrices
+print(cp[2][1]);
+print(cp[2][2]);
+
+// And find the reduced states, in both odd and even degrees
+list hr_odd = linkCompileReduced(linkData, "./temp-reduced-odd", N, x(1), 1);
+list hr_even = linkCompileReduced(linkData, "./temp-reduced-even", N, x(1), 0);
+list cpr_odd = KRcomplex(linkData, hr_odd, N);
+list cpr_even = KRcomplex(linkData, hr_even, N);
+
+// Both complexes begin in degree -2, and in degree zero they are
+cpr_odd[3][3] == intvec(3,1); // KR reduced complex in Z2-degree 1 and Z-degree 0
+cpr_even[3][3] == intvec(2,0); // KR reduced complex in Z2-degree 0 and Z-degree 0
+
+// Note that, by the KR recipe, these have been shifted two polynomial degrees up,
+// i.e. the actual web compilations sit in degrees 1,-1 and 0,-2 resp. Note that
+// the former (odd degree) is q * the latter (even degree).
+
+
+///////////
+// N = 3 //
+///////////
+
+int N = 3;
+
+list h = linkCompile(linkData, "./temp3", N);
+list cp = KRcomplex(linkData, h, N);
+
+// The KR complex begins in degree -2, and lives only in even Z2 degrees
+cp[1] == -2;
+
+// And has three terms in homological degrees -2,-1,0 resp., with grading vectors
+cp[3][1] == intvec(8,6,4,6,4,2,10,8,6,8,6,4);
+cp[3][2] == intvec(8,6,4,6,4,2,8,6,4,6,4,2);
+cp[3][3] == intvec(8,6,4,6,4,2,4,2,0);
+
+// The KR recipe shifts the web compilation UP by 2N - 2 = 4, so the actual web compilation
+// lives in degrees 4,2,0,2,0,-2,0,-2,-4
+
+// And find the reduced homology, in both odd and even degrees
+list hr_odd = linkCompileReduced(linkData, "./temp3-reduced-odd", N, x(1), 1);
+list hr_even = linkCompileReduced(linkData, "./temp3-reduced-even", N, x(1), 0);
+list cpr_odd = KRcomplex(linkData, hr_odd, N);
+list cpr_even = KRcomplex(linkData, hr_even, N);
+
+// Both complexes begin in degree -2, and in degree zero they are
+cpr_odd[3][3] == intvec(4,6,2);
+cpr_even[3][3] == intvec(2,0,4);
+
+// So the actual web compilations are in degree 0,2,-2 and -2,-4,0. Note that
+// the former (odd) is q^2 times the latter (even).
+
+// Find out what the matrix of multiplication by x(1) is on the web compilation
+// which (after a grading shift down by two) gives the KR complex in degree zero
+def blow_flag_sanity_checks;
+list web = webFromLink(linkData, intvec(0,0), N);
+list compStrat = defaultCompStratForWeb(web);
+matrix M = x(1) * unitmat(4);
+
+// Note we compile as a morphism of ungraded MFs, when
+// you put the gradings on you will see that the compilation
+// has degree +2 (as it must).
+list Mcomp = webCompileMorphism(web, web, compStrat, M, 1);
+print(Mcomp[1]);
+
+// And for N = 4, one would do:
+// list web = webFromLink(linkData, intvec(0,0), 4);
+// list compStrat = defaultCompStratForWeb(web);
+// matrix M = x(1) * unitmat(4);
+// list Mcomp = webCompileMorphism(web, web, compStrat, M, 1);
+// print(Mcomp[1]);
+
+
+
+
+
+// Take the dual web, where we multiply the potentials by -1 and
+// replace all MFs by their dual
+def blow_flag_sanity_checks;
+list web = webFromLink(linkData, intvec(0,0), N);
+list dweb = webDual(web);
+list hd = webCompile(dweb, defaultCompStratForWeb(dweb));
+// Result is that the odd degree is zero and the even degree is
+hd[2] == intvec(12,10,8,10,8,6,8,6,4);
+
+list ho = webCompile(web, defaultCompStratForWeb(web));
+ho[2] == intvec(4,2,0,2,0,-2,0,-2,-4);
+
+// Note that the compilation of the original web is self-dual,
+// and we have H(web^*) = H(web){8} = H(web)^*{8}.
+hd[2] == ho[2] + 8;
+
+// If we run compilations on the state (1,1) we find the same relationship,
+// i.e. the compilation of the original web is self-dual and the compilation
+// of the dual is the original shifted up by 8.
+
+// Don't forget that the wide edge defect is NOT a koszul MF, as it has
+// an overall grading shift of 1.
+
+///////////////////////////////////////////////
+// Test self-duality of compilations of webs in unreduced homology
+// 
+// True for N = 2 trefoil, solomon, figure-eight, hopf, 5_1
+// True for N = 3 trefoil, solomon, figure-eight, hopf, 5_1
+
+///////////////////////////////////////////////
+// Test self-duality of reduced web compilations. Claim: one degree is self-dual, but
+// which degree depends on the knot and N
+//
+// True for N = 2 hopf (odd), trefoil (odd), figure-eight (even), solomon (odd), 5_1 (odd)
+// True for N = 3 hopf (odd), trefoil (odd), figure-eight (even), solomon (odd), 5_1 (odd)
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "linkhom.lib";
+list linkData = linkLibrary("hopf");
+int numVar = linkNumberOfVariables(linkData);
+ring rr=0,(x(1..numVar)),dp;
+int N = 3;
+
+list stateDiagrams = powervec(size(linkData[1]));
+int i;
+LIB "rootsur.lib";
+
+proc isSelfDual(intvec v)
+{
+    int min = v[1];
+    int max = v[1];
+    int i;
+    for(i=1;i<=size(v);i++)
+    {
+        if( v[i] < min ){ min = v[i]; }
+        if( v[i] > max ){ max = v[i]; }
+    }
+    
+    for(i=min;i<=max;i++)
+    {
+        // Check that i the same number of times as -i in v
+        int c1 = 0;
+        int c2 = 0;
+        
+        int j;
+        for(j=1;j<=size(v);j++)
+        {
+            if( v[j] == i ){ c1++; }
+            if( v[j] == -i ){ c2++; }
+        }
+        
+        if( c1 != c2 ){ return(0); }
+    }
+    
+    return(1);
+}
+
+for(i=1;i<=size(stateDiagrams);i++)
+{
+    list web = webFromLink(linkData, stateDiagrams[i], N);
+    list h = webCompile(web, defaultCompStratForWeb(web));
+    
+    intvec hm;
+    if( size(h[2]) > size(h[3]) )
+    {
+        if( i==1 ){ print("Homology in Z2 degree 0"); }
+        hm = h[2];
+    }
+    else
+    {
+        if( i==1 ){ print("Homology in Z2 degree 1"); }
+        hm = h[3];
+    }
+    
+    string(hm);
+    
+    if( !isSelfDual(hm) )
+    {
+        print("State [" + string(stateDiagrams[i]) + "] number [[ " + string(i) + "/" + string(size(stateDiagrams)) + " ]] ---- FAILED");
+    }
+    else
+    {
+        print("State [" + string(stateDiagrams[i]) + "] number [[ " + string(i) + "/" + string(size(stateDiagrams)) + " ]] ---- PASSED");
+    }
+    
+    kill web, h;
+}
+
+// Testing the statement that each web compilation is a direct sum of copies of Q[x]/x^N
+for(i=1;i<=size(stateDiagrams);i++)
+{
+    list web = webFromLink(linkData, stateDiagrams[i], N);
+    list h = webCompile(web, defaultCompStratForWeb(web));
+    
+    intvec hm;
+    if( size(h[2]) > size(h[3]) )
+    {
+        if( i==1 ){ print("Homology in Z2 degree 0"); }
+        hm = h[2];
+    }
+    else
+    {
+        if( i==1 ){ print("Homology in Z2 degree 1"); }
+        hm = h[3];
+    }
+    
+    string(hm);
+    int passed = 1;
+    
+    if( size(hm) mod N == 0 )
+    {
+        int k;
+        for(k=1;k<=(size(hm) div N);k++)
+        {
+            //intvec v = hm[(size(Z[2])/2+1)..size(Z[2])];
+            intvec v = hm[((k-1)*N+1)..(k*N)];
+            string(v);
+            
+            // Check that every entry in v decreases by 2
+            int j;
+            for(j=2;j<=size(v);j++)
+            {
+                if( v[j] != v[1] - 2*(j-1) )
+                {
+                    passed = 0;
+                    break;
+                }
+            }
+            
+            if( passed == 0 ){ break; }
+        }
+    }
+    else
+    {
+        print("Not even divisible!");
+        passed = 0;
+    }
+    
+    if( !passed )
+    {
+        print("State [" + string(stateDiagrams[i]) + "] number [[ " + string(i) + "/" + string(size(stateDiagrams)) + " ]] ---- FAILED");        
+    }
+    else
+    {
+        print("State [" + string(stateDiagrams[i]) + "] number [[ " + string(i) + "/" + string(size(stateDiagrams)) + " ]] ---- PASSED");
+    }
+    
+    kill web, h;
+}
+
+// And the reduced version
+for(i=1;i<=size(stateDiagrams);i++)
+{
+    list web = webFromLink(linkData, stateDiagrams[i], N, x(1));
+    list h = webCompile(web, defaultCompStratForWeb(web));
+    
+    intvec b = h[2];
+    intvec Zodd = b[(size(h[2])/2+1)..size(h[2])];
+    intvec Zeven = b[1..(size(h[2])/2)];
+    
+    print( "[" + string(Zeven) + "] *_* [" + string(Zodd) + "]");
+    
+    if( !isSelfDual(Zodd) && !isSelfDual(Zeven) )
+    {
+        print("State [" + string(stateDiagrams[i]) + "] number [[ " + string(i) + "/" + string(size(stateDiagrams)) + " ]] ---- FAILED");
+    }
+    else
+    {
+        string s;
+        if( isSelfDual(Zodd) )
+        {
+            s = "odd";
+        }
+        else
+        {
+            s = "even";
+        }
+        
+        print("State [" + string(stateDiagrams[i]) + "] number [[ " + string(i) + "/" + string(size(stateDiagrams)) + " ]] ---- PASSED (deg: " + s + ")");
+    }
+    
+    kill web, h;
+}
+
+////////////////
+// N = 2 maps //
+////////////////
+
+// The aim is to compile two states and look at the matrix of a chi map
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "linkhom.lib";
+list linkData = linkLibrary("hopf");
+int numVar = linkNumberOfVariables(linkData);
+ring rr=0,(x(1..numVar)),dp;
+int N = 3;
+printlevel = 1;
+def blow_flag_sanity_checks;
+
+list web00 = webFromLink(linkData, intvec(0,0), N);
+list h00 = webCompile(web00, defaultCompStratForWeb(web00));
+
+list web10 = webFromLink(linkData, intvec(1,0), N);
+list h10 = webCompile(web10, defaultCompStratForWeb(web10));
+
+// Our chi_1 goes from state [1,0] to state [0,0]
+
+matrix M = mfChi(1, x(1), x(2), x(3), x(4), N);
+def Dp = webCompileMorphismFromData( web10, h10, web00, h00, defaultCompStratForWeb(web00), M, 1 );
+
+// The induced map on H1 reduced is
+matrix Mred1[3][2] = 1,0,0,1,0,0;
+// and on H0 reduced
+matrix Mred0[3][2] = 1,0,0,1,0,0;
+

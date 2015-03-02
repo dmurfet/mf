@@ -1,0 +1,297 @@
+//GP, last modified 23.10.06
+///////////////////////////////////////////////////////////////////////////////
+version="$Id: modstd-module.lib"
+category="Commutative Algebra";
+info="
+LIBRARY: modstd-module.lib  Grobner basis of modules, very minor modifications from modstd.lib
+";
+
+LIB "poly.lib";
+LIB "modstd.lib";
+LIB "crypto.lib";
+
+proc pTestSBM(module I, module J, list L)
+{
+  int i,j,k,p;
+  def R=basering;
+  list r= ringlist(R);
+
+  while(!j)
+  {
+    j=1;
+    p=prime(random(1000000000,2134567879));
+    for(i=1;i<=size(L);i++)
+    {
+      if(p==L[i]){j=0;break}
+    }
+    if(j)
+    {
+      for(i=1;i<=ncols(J);i++)
+      {
+        for(k=2;k<=size(J[i]);k++)
+        {
+          if((denominator(leadcoef(J[i][k])) mod
+p)==0){j=0;break}
+        }
+        if(!j){break;}
+      }
+    }
+  }
+  r[1]=p;
+  def @R=ring(r);
+  setring @R;
+  module I=imap(R,I);
+  module J=imap(R,J);
+  attrib(J,"isSB",1);
+  j=1;
+  if(size(reduce(I,J))!=0){j=0;}
+  if(j)
+  {
+    module K=std(J);
+    if(size(reduce(K,J))!=0){j=0;}
+  }
+  setring R;
+  return(j);
+}
+
+proc modStdModule(module I)
+{
+  def R0=basering;
+  list rl=ringlist(R0);
+  if((npars(R0)>0)||(rl[1]>0))
+  {
+     ERROR("characteristic of basering should be zero, basering should have no parameters");
+  }
+
+  int k;
+  int pd=printlevel-voice+2;
+  int j=1;
+  int h=homog(I);
+  int en=2134567879;
+  int an=1000000000;
+
+  intvec opt = option(get);     // Save current options
+  intvec L=primeList(5); //debug default is 10
+  L[5]=prime(random(an,en));
+  list T,TT,TH,LL;
+
+
+  module J,K;
+
+  option(redSB);
+
+  dbprint(printlevel, "[modstd] Groebner basis computations, for " + string(size(L)) + " primes.");
+  while(j<=size(L))
+  {
+      rl[1]=L[j];
+      def @r=ring(rl);
+      setring @r;
+      module i=fetch(R0,I);
+      i=groebner(i);
+      setring R0;
+      T[size(T)+1]=fetch(@r,i); // T is a list of modules
+      kill @r;
+      j++;
+  }
+  
+  dbprint(printlevel, "[modstd] Deleting unlucky primes. |T| = " + string(size(T)));
+  //================= delete unlucky primes ====================
+  // unlucky if and only if the leading ideal is wrong
+  LL=deleteUnluckyPrimesM(T,L);
+  TH=LL[1]; // list of modules, "over" different primes
+  L=LL[2]; // intvec
+  dbprint(printlevel, "[modstd] Number of primes remaining: " + string(size(L)));
+    // Now all leading ideals are the same
+    // J is a module, we lift each vector individually from TH
+     for(j=1;j<=ncols(TH[1]);j++)
+     {
+         dbprint(printlevel, "[modstd] Lifting vector [" + string(j) + "/" + string(ncols(TH[1])) + "] to the rationals.");
+         for(k=1;k<=size(L);k++)
+         {
+             TT[k]=TH[k][j]; // So TT is a list of vectors
+         }
+         // TT is meant to be the residues, mod all the primes in L,
+         // of a fixed single vector over QQ.
+         J[j]=liftVectorAlt(TT,L); //debug remove 1
+     }
+     
+    // Just return without checking
+     return(J);
+}
+
+// T is a list of modules
+// We delete those primes, and the corresponding position in T,
+// where the given vectors do not form a standard basis.
+proc deleteUnluckyPrimesM(list T,intvec L)
+{
+  int j,k;
+  intvec hl,hc;
+  module cT,lT;
+
+  lT=lead(T[size(T)]);
+  attrib(lT,"isSB",1);
+  print("[deleteUnluckyPrimesM] Running hilb");
+  hl=hilb(lT,1);
+  for (j=1;j<size(T);j++)
+  {
+     print("[deleteUnluckyPrimesM] In step " + string(j) + " of " + string(size(T)-1));
+     cT=lead(T[j]);
+     attrib(cT,"isSB",1);
+       print("[deleteUnluckyPrimesM] Running hilb");
+     hc=hilb(cT,1);
+     if(hl==hc)
+     {
+        for(k=1;k<=size(lT);k++)
+        {
+           if(lT[k]<cT[k]){lT=cT;break;}
+           if(lT[k]>cT[k]){break;}
+        }
+     }
+     else
+     {
+        if(hc<hl){lT=cT;hl=hilb(lT,1);}
+     }
+  }
+  j=1;
+  attrib(lT,"isSB",1);
+  while(j<=size(T))
+  {
+     cT=lead(T[j]);
+     attrib(cT,"isSB",1);
+    print("[deleteUnluckyPrimesM] Running reductions");
+     if((size(reduce(cT,lT))!=0)||(size(reduce(lT,cT))!=0))
+     {
+        T=delete(T,j);
+        
+        if( size(T) == 0 ){ print("[deleteUnluckyPrimesM] All primes failed, exiting."); return(); }
+        
+        if(j==1) { L=L[2..size(L)]; }
+        else
+        {
+          if (j==size(L)) { L=L[1..size(L)-1]; }
+          else { L=L[1..j-1],L[j+1..size(L)]; }
+        }
+        j--;
+     }
+     j++;
+  }
+  kill cT;
+  print("[deleteUnluckyPrimesM] Making return list");
+  list ret;
+  ret[1] = T;
+  print("[deleteUnluckyPrimesM] Setting pos 1");
+  ret[2] = L;
+    print("[deleteUnluckyPrimesM] Setting pos 2");
+  ret[3] = lT; kill lT;
+    print("[deleteUnluckyPrimesM] Setting pos 3");
+  return(ret);
+}
+
+proc liftVectorAlt(list T, intvec L)
+{
+    int timeElapsed = timer;
+   int i;
+   list TT;
+   for(i=size(T);i>0;i--)
+   { TT[i]=module(T[i]); }
+   T=TT;
+   kill TT;
+   module hh=chinrem(T,L);
+   vector h=hh[1];
+   kill hh;
+
+   bigint N=L[1];
+   for(i=size(L);i>1;i--)
+   {
+      N=N*L[i];
+   }
+   
+   module hModule = h;
+   module liftM = farey(hModule, N);
+   vector result = liftM[1];
+   dbprint(printlevel, "[liftPolyM]   Lifted poly in " + string(timer-timeElapsed) + "ms.");
+   return(result);
+}
+
+// T is a list of vectors. Meant to be the
+// residue of the same vector over the different
+// primes in L. We return a vector lifting all
+// of these to QQ.
+proc liftVector(list T, intvec L)
+{
+    int timeElapsed = timer;
+   int i;
+   list TT;
+   for(i=size(T);i>0;i--)
+   { TT[i]=module(T[i]); }
+   T=TT;
+   kill TT;
+   module hh=chinrem(T,L);
+   vector h=hh[1];
+   kill hh;
+   vector p=lead(h);
+   vector result;
+   bigint N=L[1];
+   for(i=size(L);i>1;i--)
+   {
+      N=N*L[i];
+   }
+   int count;
+   while(h!=[0])
+   {
+       count++;
+     //print(p);
+     number n=Farey(N,bigint(leadcoef(h)));
+     result=result+n*p;
+     kill n;
+     
+     h=h-lead(h);
+     p=leadmonom(h);
+   }
+   dbprint(printlevel, "[liftPolyM]   Lifted poly with " + string(count) + " monomials, in " + string(timer-timeElapsed) + "ms.");
+   kill p,n,N, count;
+   return(result);
+}
+
+proc liftVector1(list T, intvec L)
+{
+   vector result;
+   int i;
+   vector p;
+   list TT;
+   number n;
+
+   bigint N=L[1];
+   for(i=2;i<=size(L);i++)
+   {
+      N=N*L[i];
+   }
+   while(1)
+   {
+     p=leadmonom(T[1]);
+     for(i=2;i<=size(T);i++)
+     {
+        if(leadmonom(T[i])>p)
+        {
+          p=leadmonom(T[i]);
+        }
+     }
+     if (p==0) {return(result);}
+     for(i=1;i<=size(T);i++)
+     {
+       if(p==leadmonom(T[i]))
+       {
+          TT[i]=leadcoef(T[i]);
+          T[i]=T[i]-lead(T[i]);
+       }
+       else
+       {
+          TT[i]=0;
+       }
+     }
+     n=chineseR(TT,L,N);
+     n=Farey(N,bigint(n));
+     result=result+n*p;
+   }
+}
+

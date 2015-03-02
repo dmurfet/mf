@@ -1,0 +1,50 @@
+///////////////////////////////////////////////////////
+// Testing the Z2 degree of the unreduced homology   //
+///////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "linkhom.lib";
+printlevel = 1;
+int N = 2;
+    
+list allLinks = "3_1", "4_1", "5_1", "5_2", "6_1", "6_2", "6_3", "7_1", "hopf", "solomon";
+
+// All tests pass, i.e. for each of these links the KR homology lives in the Z2
+// degree given by the parity.
+
+int i;
+for(i=1;i<=size(allLinks);i++)
+{
+    print(allLinks[i] + " ---------------------------------- ");
+    print("");
+    
+    list linkData = linkLibrary(allLinks[i]);
+    list stateDiagrams = powervec(size(linkData[1]));
+    
+    int numVar = linkNumberOfVariables(linkData);
+    ring rr=0,(x(1..numVar)),dp;
+
+    list web = webFromLink(linkData, stateDiagrams[1], N);
+    list h = webCompile(web, defaultCompStratForWeb(web));
+    int homDeg;
+    
+    if( size(h[2]) > size(h[3]) )
+    {
+        homDeg = 0;
+    }
+    else
+    {
+        homDeg = 1;
+    }
+ 
+    if( (homDeg - linkParity(linkData)) mod 2 != 0 )
+    {
+        print("TEST FAILED ----------------------------");
+        print("");
+    }
+    else
+    {
+        print("TEST PASSED ----------------------------");
+        print("");
+    }
+}

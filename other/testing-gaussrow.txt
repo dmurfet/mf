@@ -1,0 +1,70 @@
+////////////////////////////////////////////////////////////////////
+// gauss_row bugs
+////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+LIB "control.lib";
+printlevel = 1;
+
+// Define a 512x512 reducible matrix A using the savefile
+def R = loadFromMPfile("./data/mfreduce-bench-512.mp");
+setring R;
+
+matrix A0 = extractblockmat(A)[3];
+list L = gauss_row(A0,1);
+
+matrix A0r = transpose(L[1]);
+matrix tr = transpose(L[2]);
+
+tr * A0 == A0r;
+det(tr);
+
+list M = gauss_col(A0,1);
+
+matrix A0r_c = M[1];
+matrix tr_c = M[2];
+A0r_c == A0 * tr_c;
+det(tr_c);
+
+
+
+matrix mm0 = simplify(interred(A0),1);
+matrix pp0 = lift(mm0,A0);
+A0 == mm0 * pp0;
+matrix ii0 = lift(A0,mm0);
+mm0 == A0 * ii0;
+
+pp0 * ii0 == unitmat(ncols(mm0));
+
+matrix ee0 = unitmat(ncols(A0)) - ii0 * pp0;
+matrix jj0 = simplify(interred(ee0),1);
+
+matrix T = concat(jj0,ii0);
+det(T); // T is invertible
+
+A0 * T == concat(matrix(0,256,160),mm0);
+
+
+// Now do the same in degree 1
+matrix A1 = extractblockmat(A)[2];
+matrix mm1 = simplify(interred(A1),1);
+matrix pp1 = lift(mm1,A1);
+A1 == mm1 * pp1;
+matrix ii1 = lift(A1,mm1);
+mm1 == A1 * ii1;
+pp1 * ii1 == unitmat(96);
+matrix ee1 = unitmat(256) - ii1 * pp1;
+matrix jj1 = simplify(interred(ee1),1);
+
+matrix T1 = concat(jj1,ii1);
+det(T1);
+
+A1 * T1 == concat(matrix(0,256,160),mm1);
+
+matrix B0 = inverse(T1) * A0 * T;
+
+
+

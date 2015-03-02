@@ -1,0 +1,455 @@
+version="0.1";
+category="Miscellaneous";
+// summary description of the library
+info="
+LIBRARY:   sparse.lib  Sparse matrix operations for link homology
+AUTHOR:    Nils Carqueville, Daniel Murfet
+KEYWORDS:  sparse matrix
+
+PROCEDURES:
+";
+
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+
+////////////////////////////////////////////////////////////////////
+// DATA FORMAT - sparse matrix
+//
+// A sparse matrix A is represented by a list L with the following entries
+//
+//  L[1] - number of rows in A
+//  L[2] - number of columns in A
+//  L[3] - a list M
+//
+// The entries of M are themselves lists (i,j,A_{ij}) consisting of the row i
+// column j and entry A_{ij} for every nonzero entry in A. If A is the zero
+// matrix then L[3] is the empty list. The list M is not required to be ordered.
+// Note that the third entry in a tuple in M may be zero.
+
+////////////////////////////////////////////////////////////////////
+// sparseIsValid
+
+proc sparseIsValid(list L)
+{
+    // Check for doubled entries
+    matrix A[L[1]][L[2]];
+
+    int c;
+    for(c=1;c<=size(L[3]);c++)
+    {
+        if( A[L[3][c][1],L[3][c][2]] == 1 )
+        {
+            // We found a doubled entry
+            return(0);
+        }
+        else
+        {
+            A[L[3][c][1],L[3][c][2]] = 1;
+        }
+    }
+
+    return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// normalToSparse
+//
+// Convert a matrix to a sparse matrix
+
+proc normalToSparse(matrix A)
+{
+    list L, e;
+    L[1] = nrows(A);
+    L[2] = ncols(A);
+    L[3] = e;
+    
+    int i,j;
+    for(i=1;i<=nrows(A);i++)
+    {
+        for(j=1;j<=ncols(A);j++)
+        {
+            if( A[i,j] != 0 )
+            {
+                L[3] = L[3] + list(list(i,j,A[i,j]));
+            }
+        }
+    }
+    
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseToNormal
+//
+// Convert a sparse matrix to a matrix
+
+proc sparseToNormal(list L)
+{
+    matrix A[L[1]][L[2]];
+    
+    int c;
+    for(c=1;c<=size(L[3]);c++)
+    {
+        A[L[3][c][1],L[3][c][2]] = L[3][c][3];
+    }
+    
+    return(A);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseDensity
+//
+// Return the "rate of compression" of using a sparse matrix
+
+proc sparseDensity(list L)
+{
+    number total = L[1] * L[2];
+    number used = size(L[3]);
+    
+    return(used/total);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// sparsePermRow
+//
+// Permute rows of a sparse matrix
+
+proc sparsePermRow(list L, int r1, int r2)
+{
+    int c;
+    list entries = L[3];
+    
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][1] == r1 )
+        {
+            entries[c][1] = r2;
+        }
+        else
+        {
+            if( entries[c][1] == r2 )
+            {
+                entries[c][1] = r1;
+            }
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparsePermCol
+//
+// Permute cols of a sparse matrix
+
+proc sparsePermCol(list L, int c1, int c2)
+{
+    int c;
+    list entries = L[3];
+    
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][2] == c1 )
+        {
+            entries[c][2] = c2;
+        }
+        else
+        {
+            if( entries[c][2] == c2 )
+            {
+                entries[c][2] = c1;
+            }
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseAddRowMultToRow
+//
+// Add f * row(r1) to row(r2)
+//
+// TODO: may not be best algorithm.
+
+proc sparseAddRowMultToRow(list L,int r1,int r2,poly f)
+{
+    int c;
+    list entries = L[3];
+    list factors; // factors[j] will be the factor to be added to col j of row r2
+    list colsWithFactors; // Columns in which row r1 is nonzero
+    
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][1] == r1 && entries[c][3] != 0 )
+        {
+            factors[entries[c][2]] = f * entries[c][3];
+            colsWithFactors = colsWithFactors + list(entries[c][2]);
+        }
+    }
+    
+    // Add the factors to each col of row r2. If the factor to add is nonzero, then
+    // we need to create a matrix entry if there is not currently one
+    int lastPosn = 1;
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][1] == r2 )
+        {
+            // If we have recorded a factor for this col, add it
+            if( typeof(factors[entries[c][2]]) != "none" )
+            {
+                entries[c][3] = entries[c][3] + factors[entries[c][2]];
+                
+                // Delete this column from colsWithFactors
+                int k;
+                for(k=1;k<=size(colsWithFactors);k++)
+                {
+                    if( colsWithFactors[k] == entries[c][2] )
+                    {
+                        colsWithFactors = delete(colsWithFactors,k);
+                        break;
+                    }
+                }
+            }
+            
+            lastPosn = c;
+        }
+    }
+    
+    // If there are columns left in colsWithFactors we need to add corresponding entries
+    int k;
+    for(k=1;k<=size(colsWithFactors);k++)
+    {
+        list e = r2, colsWithFactors[k], factors[colsWithFactors[k]];
+        entries = insert(entries,e,lastPosn); 
+        // Note we could insert e anywhere, but lastPosn is at least next to something in the right row
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseAddColMultToCol
+//
+// Add f * col(c1) to col c2
+
+proc sparseAddColMultToCol(list L,int c1,int c2,poly f)
+{
+    int c;
+    list entries = L[3];
+    list factors; // factors[j] will be the factor to be added to row j of col c2
+    list rowsWithFactors;
+    
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][2] == c1 && entries[c][3] != 0 )
+        {
+            factors[entries[c][1]] = f * entries[c][3];
+            rowsWithFactors = rowsWithFactors + list(entries[c][1]);
+        }
+    }
+    
+    // Add the factors to each row of col c2
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][2] == c2 )
+        {
+            if( typeof(factors[entries[c][1]]) != "none" )
+            {
+                entries[c][3] = entries[c][3] + factors[entries[c][1]];
+                
+                // Delete this row from rowsWithFactors
+                int k;
+                for(k=1;k<=size(rowsWithFactors);k++)
+                {
+                    if( rowsWithFactors[k] == entries[c][1] )
+                    {
+                        rowsWithFactors = delete(rowsWithFactors,k);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    // If there are rows left in rowsWithFactors we need to add corresponding entries
+    int k;
+    for(k=1;k<=size(rowsWithFactors);k++)
+    {
+        list e = rowsWithFactors[k], c2, factors[rowsWithFactors[k]];
+        entries = insert(entries,e); 
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseMultByPoly
+//
+// Multiply the entries of a sparse matrix by a polynomial
+
+proc sparseMultByPoly(list L,poly f)
+{
+    int c;
+    list entries = L[3];
+    
+    for(c=1;c<=size(entries);c++)
+    {
+        entries[c][3] = entries[c][3] * f;
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseMultColByPoly
+
+proc sparseMultColByPoly(list L,int col,poly f)
+{
+    int c;
+    list entries = L[3];
+    
+    for(c=1;c<=size(entries);c++)
+    {
+        if( entries[c][2] == col )
+        {
+            entries[c][3] = entries[c][3] * f;
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseDeleteRow
+//
+// Deletes the given row of a sparse matrix.
+
+proc sparseDeleteRow(list L, int r)
+{
+    list entries = L[3];
+    
+    // Reduce number of rows by one
+    L[1] = L[1] - 1;
+    
+    // Delete entries with row equal to r
+    int c = 1;
+    while( c <= size(entries) )
+    {
+        if( entries[c][1] == r )
+        {
+            entries = delete(entries,c);
+        }
+        else
+        {
+            // Decrement row index
+            if( entries[c][1] > r )
+            {
+                entries[c][1] = entries[c][1] - 1;
+            }
+            
+            c++;
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseDeleteCol
+//
+// Deletes the given column of a sparse matrix.
+
+proc sparseDeleteCol(list L, int r)
+{
+    list entries = L[3];
+    
+    // Reduce number of columns by one
+    L[2] = L[2] - 1;
+    
+    // Delete entries with col equal to r
+    int c = 1;
+    while( c <= size(entries) )
+    {
+        if( entries[c][2] == r )
+        {
+            entries = delete(entries,c);
+        }
+        else
+        {
+            // Decrement col index
+            if( entries[c][2] > r )
+            {
+                entries[c][2] = entries[c][2] - 1;
+            }
+            
+            c++;
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseZeroOutRow
+//
+// Sets a given row of a sparse matrix to zero.
+
+proc sparseZeroOutRow(list L, int r)
+{
+    list entries = L[3];
+    
+    // Delete entries with row equal to r
+    int c = 1;
+    while( c <= size(entries) )
+    {
+        if( entries[c][1] == r )
+        {
+            entries = delete(entries,c);
+        }
+        else
+        {
+            c++;
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// sparseZeroOutCol
+//
+// Sets a given column of a sparse matrix to zero.
+
+proc sparseZeroOutCol(list L, int r)
+{
+    list entries = L[3];
+    
+    // Delete entries with col equal to r
+    int c = 1;
+    while( c <= size(entries) )
+    {
+        if( entries[c][2] == r )
+        {
+            entries = delete(entries,c);
+        }
+        else
+        {
+            c++;
+        }
+    }
+    
+    L[3] = entries;
+    return(L);
+}

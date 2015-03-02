@@ -1,0 +1,17 @@
+Instructions on how to use lift
+================================
+
+ring S = 0,(x,y),dp;
+
+poly W = x2y + y4;
+poly Wx = 2xy;
+poly Wy = x2 + 4y3;
+
+ideal diffs = Wx, Wy;
+matrix T = lift(diffs,x3);
+print(T); // Tells you how to write x3 as a linear comb of Wx,Wy
+
+ideal I = W, Wy;
+matrix T = lift(I, x4);
+print(T);
+

@@ -1,0 +1,390 @@
+--------- Example sessions --------
+- test
+
+// Session for E6 singularity, matrix factorisation A as described on p.10 of our E6tot notes. This has a six dimensional endomorphism space, and we will use Singular to calculate traces.
+LIB "homolog.lib";
+LIB "linalg.lib";
+ring S = 0,(x,y),ds;
+ideal I = x3 + y4;
+qring A = std(I);
+
+// Define the matix factorisation corresponding to A
+matrix phi[3][3] = y3,x2,xy2,xy,-y2,x2,x2,-xy,-y3;
+matrix psi[3][3] = y,0,x,x,-y2,0,0,x,-y;
+// zero matrix
+matrix z[3][3];
+matrix Q[6][6] = blockmat(z,phi,psi,z);
+ 
+// Use Nils' methods to get a generating set for the endomorphism space
+// (here it is probably best to use the ring S = 0,(x,y),dp;
+list morph_big = MFcohom_matrix(psi,phi,psi,phi);
+list morph = MFcohom_matrix_first(psi, phi, psi, phi);
+
+// Test that the first list is not rubbish. The output should be all zeros.
+for(i=1;i<=size(morph_big);i++)
+{
+print("Commutator of Q with morphism " + string(i));
+print(Q*morph_big[i] - morph_big[i]*Q);
+}
+
+// Define the coefficient matrix for the trace
+matrix sg_coeff[3][3] = 0,1/3xy,1/3y2,-1/3y,0,1/3x,-1/3x,-1/3y2,0;
+
+// Compute the trace table for the list of morphisms "morph"
+matrix trace_table = sing_trace_table(morph,sg_coeff);
+det(trace_table);
+
+// The result is zero, so we know that morph does not constitute a basis (it has too many elements).
+
+// Define the matrices occurring in the basis
+matrix E[3][3]; E = E + 1;
+matrix delta[3][3] = 0,y,0,0,0,1,-1,0,0;
+matrix gamma[3][3] = 0,x,0,-1,0,0,0,-y,0;
+
+// Define the basis, and calculate the trace table, as given on p.10 of E6tot
+list basis = E, y * E, delta, y * delta, gamma, y * gamma;
+matrix trace_table = sing_trace_table(basis,sg_coeff);
+print(trace_table);
+
+// Now we can use "coefficients_in_basis" to find the product table, for example
+// to compute that gamma * gamma = -y * delta
+print(coefficients_in_basis(gamma * gamma,basis,sg_coeff));
+
+// The output is 0,0,0,-1,0,0 which means that gamma * gamma is -1 * y * delta (since y * delta is the third last element in the basis)
+
+> print(coefficients_in_basis(x * E, basis, sg_coeff));
+0,0,0,1,0,0
+
+// This means that x * E = y * delta
+
+-------------------------
+
+// Session for the E6 singularity, matrix factorisation X as described on p.14 of E6tot. This has a twelve dimensional endomorphism space
+matrix phi[4][4] = x,y2,0,y,y2,-x2,-xy,0,0,0,x2,y2,0,0,y2,-x;
+matrix psi[4][4] = x2,y2,0,xy,y2,-x,-y,0,0,0,x,y2,0,0,y2,-x2;
+matrix sg_coeff[4][4] = 0,-2/3y,0,0,1/3xy,0,0,0,0,1/3y2,0,-1/3xy,1/3y2,-1/3x,2/3y,0;
+
+// Define the matrices in the basis
+matrix epsilon1[4][4] = 0,0,0,1,0,0,-1;
+matrix E[4][4]; E = E + 1;
+matrix nu1[4][4] = y,0,0,0,0,y,0,x;
+matrix tau1[4][4] = 0,0,0,0,x,0,0,0,0,y,0,x,-y;
+matrix gamma[4][4] = 0,-1,0,0,x,0,0,y;
+matrix epsilon2[4][4] = 0,0,1,0,0,0,0,x;
+matrix tau2[4][4] = 0,0,0,0,0,-y,0,0,0,x,0,0,-x,0,0,-y;
+matrix delta[4][4] = 0,0,0,1,-y,0,0,0,x,0,0,y,0,1;
+matrix nu2[4][4] = 0,0,0,0,0,0,0,-y,0,0,0,x,0,0,-1;
+matrix tau3[4][4] = 0,0,0,y,0,0,-y,0,0,0,x,y2;
+
+// Define the basis
+list basis1 = epsilon1, E, nu1, tau1, y * gamma, gamma, epsilon2, tau2, y * delta, delta, nu2, tau3;
+list basis2 = E, epsilon1, epsilon2, nu1, nu2, tau1, tau2, tau3, delta, y * delta, gamma, y * gamma;
+list basis3 = E, x * E, y * E, nu2, epsilon1, epsilon2, nu1, tau1, delta, y * delta, gamma, y * gamma;
+
+
+-----------------------
+
+// Session for the E8 singularity
+
+ring S = 0,(x,y),ds;
+ideal I = x3 + y5;
+qring A = std(I);
+LIB "homolog.lib";
+
+// We want to study the matrix factorisation called "A_2" by Yoshino.
+
+module M = [y,0,x],[-x,y2,0],[0,-x,y2];
+list l = Ext(2,M,M,1);
+// ** redefining l **
+// dimension of Ext^2:  0
+// vdim of Ext^2:       8
+
+// Looking at the output, we guess the following endomorphisms
+
+matrix E[3][3]; E = E + 1;
+matrix gamma[3][3] = 0,1,0,0,0,1,-y,0,0;
+matrix delta[3][3] = 0,0,1,-y,0,0,0,-y,0;
+matrix m[3][3] = y,-x,0,0,y2,-x,x,0,y2;
+matrix n[3][3] = y4,xy2,x2,-x2,y3,xy,-xy2,-x2,y3;
+
+// One can check that gamma and delta are in fact endomorphisms (producing by hand the other matrix in the pair, for example), so that a basis for the endomorphism space is
+
+list basis_old = E, y * E, y2 * E, gamma, y * gamma, y2 * gamma, delta, y * delta;
+
+// From our calculations on p.5 of E8tot we know the form matrix for the duality pairing on A2, and it is given by
+
+> matrix sg_coeff[3][3] = 0, 1/3y2, 1/3x, -1/3xy, 0, 1/3y2, -1/3y3, -1/3xy, 0;
+
+// With all this we can calculate the trace matrix
+
+> LIB "dualitytrace.lib";
+> matrix tt = sing_trace_table(basis, sg_coeff);
+> print(tt);
+0,0,0,0,0,1,0,0, 
+0,0,0,0,1,0,0,0, 
+0,0,0,1,0,0,0,0, 
+0,0,1,0,0,0,0,0, 
+0,1,0,0,0,0,0,0, 
+1,0,0,0,0,0,0,0, 
+0,0,0,0,0,0,0,-1,
+0,0,0,0,0,0,-1,0
+
+// From this we learn that y2 * gamma has trace 1, and everything else has trace zero. This suggests that we reorder our basis to make the diagram prettier, as follows:
+
+> list basis2 = E, y * E, y2 * E, delta, y * delta, gamma, y * gamma, y2 * gamma;
+> matrix tt2 = sing_trace_table(basis2, sg_coeff);
+> print(tt2);
+0,0,0,0, 0, 0,0,1,
+0,0,0,0, 0, 0,1,0,
+0,0,0,0, 0, 1,0,0,
+0,0,0,0, -1,0,0,0,
+0,0,0,-1,0, 0,0,0,
+0,0,1,0, 0, 0,0,0,
+0,1,0,0, 0, 0,0,0,
+1,0,0,0, 0, 0,0,0 
+
+// Which is invertible, so the pairing is nondegenerate on A2. We can calculate the actual product table as follows.
+
+
+
+
+
+
+///// USING THE NEW TECHNIQUES TO CALCULATE A BASIS //////////
+
+Let a polynomial W in two variables x,y be given and a matrix factorisation (phi,psi). To get a list of basis elements for the endomorphism space in the stable category, presented as the first elements \alpha_1 in a pair (\alpha_1,\alpha_2), we use
+
+> list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+
+This presents the morphisms as block matrices (\alpha_1 & 0 \\ 0 & \alpha_2), to extract \alpha_1s we use
+
+> list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+
+Here your ring should be ring S = 0,(x,y),dp;
+
+Let's do an E6 example. The matrix factorisation A as described on p.10 of our E6tot notes. This has a six dimensional endomorphism space, and we will use Singular to calculate traces.
+LIB "homolog.lib";
+LIB "dualitytrace.lib";
+LIB "linalg.lib";
+ring S = 0,(x,y),dp;
+
+// Define the matix factorisation corresponding to A
+matrix phi[3][3] = y3,x2,xy2,xy,-y2,x2,x2,-xy,-y3;
+matrix psi[3][3] = y,0,x,x,-y2,0,0,x,-y;
+ 
+matrix sg_coeff[3][3] = 0,1/3xy,1/3y2,-1/3y,0,1/3x,-1/3x,-1/3y2,0;
+list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+
+// To check that this is a basis, test the trace_table for invertibility
+det(sing_trace_table(basis,sg_coeff));
+
+The answer should be -1, which is nonzero, so this set is linearly independent and of the correct dimension, hence must be a basis!
+
+We can now compare it to the basis constructed "by hand" using singular's Ext2, above
+
+matrix E[3][3]; E = E + 1;
+matrix delta[3][3] = 0,y,0,0,0,1,-1,0,0;
+matrix gamma[3][3] = 0,x,0,-1,0,0,0,-y,0;
+
+list basis_old = E, y * E, delta, y * delta, gamma, y * gamma;
+
+// See what the new proposed basis elements, from Nils' algorithm, are in the old basis
+int i;
+for(i=1;i<=size(basis_old);i++)
+{
+print("Basis element " + string(i) + " in the new basis:");
+print(coefficients_in_basis(basis[i],basis_old,sg_coeff));
+}
+
+You'll see that the new basis is just a permutation of the old one.
+
+----
+
+Consider now another E6 example. The matrix factorisation X described on p.2 of E6tot
+Let us turn on the good output
+
+printlevel = 1;
+matrix phi[4][4] = x,y2,0,y,y2,-x2,-xy,0,0,0,x2,y2,0,0,y2,-x;
+matrix psi[4][4] = x2,y2,0,xy,y2,-x,-y,0,0,0,x,y2,0,0,y2,-x2;
+
+matrix sg_coeff[4][4] = 0,-2/3y,0,0,1/3xy,0,0,0,0,1/3y2,0,-1/3xy,1/3y2,-1/3x,2/3y,0;
+list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+det(sing_trace_table(basis,sg_coeff));
+
+
+-----
+
+Or an E8 example. The matrix factorisation A2 descrbed on p.2 of our E8tot notes.
+
+LIB "homolog.lib";
+LIB "dualitytrace.lib";
+LIB "linalg.lib";
+ring S = 0,(x,y),dp;
+
+printlevel = 1;
+
+matrix phi[3][3] = y,-x,0,0,y2,-x,x,0,y2;
+matrix psi[3][3] = y4,xy2,x2,-x2,y3,xy,-xy2,-x2,y3;
+matrix sg_coeff[3][3] = 0,1/3y2,1/3x,-1/3xy,0,1/3y2,-1/3y3,-1/3xy,0;
+
+list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+det(sing_trace_table(basis,sg_coeff)); // Check that the output really is a basis
+
+// Let us compare to the old basis, given on p.11 of E8tot
+matrix E[3][3]; E = E + 1;
+matrix gamma[3][3] = 0,1,0,0,0,1,-y,0,0;
+matrix delta[3][3] = 0,0,1,-y,0,0,0,-y,0;
+list basis_old = E, y * E, y2 * E, delta, y * delta, gamma, y * gamma, y2 * gamma;
+det(sing_trace_table(basis_old,sg_coeff)); // Check that it is in fact a basis
+
+// See what the new proposed basis elements, from Nils' algorithm, are in the old basis
+int i;
+for(i=1;i<=size(basis);i++)
+{
+print("Basis element " + string(i) + " in the new basis:");
+print(coefficients_in_basis(basis[i],basis_old,sg_coeff));
+}
+
+matrix z[3][3];
+matrix sg_block[6][6] = blockmat(sg_coeff,z,z,z);
+
+------
+
+Another E6 example, the matrix factorisation X as described on p.14 of E6tot. This has a twelve dimensional endomorphism space
+
+LIB "homolog.lib";
+LIB "dualitytrace.lib";
+LIB "linalg.lib";
+ring S = 0,(x,y),dp;
+
+printlevel = 1;
+
+matrix phi[4][4] = x,y2,0,y,y2,-x2,-xy,0,0,0,x2,y2,0,0,y2,-x;
+matrix psi[4][4] = x2,y2,0,xy,y2,-x,-y,0,0,0,x,y2,0,0,y2,-x2;
+matrix sg_coeff[4][4] = 0,-2/3y,0,0,1/3xy,0,0,0,0,1/3y2,0,-1/3xy,1/3y2,-1/3x,2/3y,0;
+
+list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+det(sing_trace_table(basis,sg_coeff)); // Check that the output really is a basis
+
+// Let us compare to the old basis, given on p.14 and on of E6tot
+matrix epsilon1[4][4] = 0,0,0,1,0,0,-1;
+matrix E[4][4]; E = E + 1;
+matrix nu1[4][4] = y,0,0,0,0,y,0,x;
+matrix tau1[4][4] = 0,0,0,0,x,0,0,0,0,y,0,x,-y;
+matrix gamma[4][4] = 0,-1,0,0,x,0,0,y;
+matrix epsilon2[4][4] = 0,0,1,0,0,0,0,x;
+matrix tau2[4][4] = 0,0,0,0,0,-y,0,0,0,x,0,0,-x,0,0,-y;
+matrix delta[4][4] = 0,0,0,1,-y,0,0,0,x,0,0,y,0,1;
+matrix nu2[4][4] = 0,0,0,0,0,0,0,-y,0,0,0,x,0,0,-1;
+matrix tau3[4][4] = 0,0,0,y,0,0,-y,0,0,0,x,y2;
+
+// Define the basis
+list basis2 = E, epsilon1, epsilon2, nu1, nu2, tau1, tau2, tau3, delta, y * delta, gamma, y * gamma;
+
+det(sing_trace_table(basis2,sg_coeff)); // Check that it is in fact a basis
+
+// See what the new proposed basis elements, from Nils' algorithm, are in the old basis
+int i;
+for(i=1;i<=size(basis);i++)
+{
+print("Basis element " + string(i) + " in the new basis:");
+print(coefficients_in_basis(basis[i],basis2,sg_coeff));
+}
+
+
+---------
+
+An E7 example, the matrix factorisation X1 as described on p.11 of E7tot. This has a six dimensional endomorphism space
+
+LIB "homolog.lib";
+LIB "dualitytrace.lib";
+LIB "linalg.lib";
+ring S = 0,(x,y),dp;
+
+printlevel = 1;
+
+matrix phi[3][3] = xy2,-x2,-x2y,xy,y2,-x2,x2,xy,xy2;
+matrix psi[3][3] = y,0,x,-x,xy,0,0,-x,y;
+matrix sg_coeff[3][3] = -1/2y2, -3/2y3 + 1/2x2,1/2xy,0,y2,0,-1/2x,-1/2xy,-1/2y2;
+
+list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+det(sing_trace_table(basis,sg_coeff)); // Check that the output really is a basis
+
+// Consider the basis given on p.11 of E7tot
+matrix E[3][3]; E = E + 1;
+matrix gamma[3][3] = 0,-x,0,0,0,-1,1,0,0;
+matrix delta[3][3] = 0,0,0,1,-y;
+
+list basis_old = E, y * E, gamma, y * gamma, delta, y * delta;
+
+det(sing_trace_table(basis_old,sg_coeff)); // Check that it is in fact a basis
+
+// See what the new proposed basis elements, from Nils' algorithm, are in the old basis
+int i;
+for(i=1;i<=size(basis);i++)
+{
+print("Basis element " + string(i) + " in the new basis:");
+print(coefficients_in_basis(basis[i],basis_old,sg_coeff));
+}
+
+------------
+
+
+An E8 example, X1 of p.2 of E8tot
+
+LIB "homolog.lib";
+LIB "dualitytrace.lib";
+LIB "linalg.lib";
+ring S = 0,(x,y),dp;
+
+printlevel = 1;
+
+matrix phi[6][6] = y4,xy2,x2,0,0,xy,-x2,y3,xy,-x,0,0,-xy2,-x2,y3,0,-xy,0,0,0,0,y,-x,0,0,0,0,0,y2,-x,0,0,0,x,0,y2;
+matrix psi[6][6] = y,-x,0,0,0,-x,0,y2,-x,xy,0,0,x,0,y2,0,xy,0,0,0,0,y4,xy2,x2,0,0,0,-x2,y3,xy,0,0,0,-xy2,-x2,y3;
+matrix sg_coeff[6][6] = 0,-1/3y3,-1/3xy,0,0,0,1/3x,-1/3y2,0,0,0,0,1/3y2,1/3xy,0,0,0,0,0,-1/3x,0,0,1/3y2,1/3x,0,0,-1/3x,-1/3xy,0,1/3y2,1/3x,0,0,-1/3y3,-1/3xy;
+
+list basis_pre = compute_basis_endospace_block(psi,phi,sg_coeff);
+list basis = list_extractblockmattopleft(basis_pre,ncols(phi));
+det(sing_trace_table(basis,sg_coeff)); // Check that the output really is a basis
+
+
+
+
+
+
+//////// Examples ////////////
+
+// D5 surface singularity and matrix factorisation
+//
+// ring S = 0,(x,y,z),ds;
+// ideal I = x2y + y4 + z2;
+// qring A = std(I);
+// matrix m[4][4] = -z,0,xy,y,0,-z,y3,-x,x,y,z,0,y3,-xy,0,z;
+
+// The pair (m,m) is a matrix factorisation of x2y + y4 + z2;
+
+// module M = [-z,0,x,y3],[0,-z,y,-xy],[xy,y3,z,0],[y,-x,0,z];
+//
+// First, define our matrix factorisations Q = (0 & m// m & 0)
+//
+// matrix z[4][4]; a zero matrix
+// matrix Q[8][8] = blockmat(z,m,m,z);
+//
+// Get a list of matrices defining morphisms from Q to its shift, which here is -Q
+//
+// list basis1 = MFcohom(m,m,-m,-m);
+// list basis = list_vectortoblock(basis1,4);
+//
+// Now we want to extract the second part of all the matrices (which are block matrices
+// of the form (a & 0 \\ 0 & d)
+//
+
+// Define the form matrix
+// matrix sg_coeff[4][4] = 1/2x, -1/2y, 0, 0, 0, -1/2x, 0, 1/3y3 - 4/3x2, -1/3y3+4/3x2, 0, -1/6x, -1/3, 0, 0, 1/6y3 - 2/3x2, 1/6x;
+
+

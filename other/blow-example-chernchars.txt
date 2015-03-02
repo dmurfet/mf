@@ -1,0 +1,25 @@
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "linkhom.lib";
+LIB "matrix.lib";
+int nx=4;
+ring rr0=0,(x(1..nx)),dp;
+int N = 2; // The N in sl(N) link homology
+
+matrix D1a = mfIdentityDefect( x(1)^(N+1), x(4)^(N+1), x(1), x(4) );
+matrix D1b = mfIdentityDefect( x(2)^(N+1), x(3)^(N+1), x(2), x(3) );
+matrix D1 = MFtensor(D1b, D1a);
+
+matrix D2a = mfIdentityDefect( x(4)^(N+1), x(1)^(N+1), x(4), x(1) );
+matrix D2b = mfIdentityDefect( x(3)^(N+1), x(2)^(N+1), x(3), x(2) );
+matrix D2 = MFtensor(D2b, D2a);
+
+ideal J = x(1)^N, x(2)^N, x(3)^N, x(4)^N;
+intvec q = N, N, N, N;
+number Nn = N + 1;
+matrix C = 1/Nn * unitmat(4);
+
+poly c1 = supertrace( diff(D1,x(1)) * diff(D1,x(2)) * diff(D1,x(3)) * diff(D1,x(4)) );
+poly c2 = supertrace( diff(D2,x(1)) * diff(D2,x(2)) * diff(D2,x(3)) * diff(D2,x(4)) );
+
+poly total_chern = reduce( c1 * c2, std(J) );

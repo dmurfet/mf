@@ -1,0 +1,347 @@
+proc qdiff(poly f, int v)
+{
+    poly fc = (f - subst(f,x(v),y(v)))/(x(v)-y(v));
+    return(fc);
+}
+
+// Applies the divided difference operator on the variable x(v)
+proc qdiffm(matrix A, int v)
+{
+    int c = ncols(A);
+    int r = nrows(A);
+    matrix ret[r][c];
+
+    int i,j;
+    for(i=1;i<=c;i++)
+    {
+        for(j=1;j<=r;j++)
+        {
+            ret[j,i] = qdiff(A[j,i],v);
+        }   
+    }
+
+    return(ret);
+}
+
+// Computes the "residue" of the matrix entrywise,
+// where we take a monomial and take the coefficient of that
+// monomial
+proc resm(matrix A, poly m)
+{
+    int c = ncols(A);
+    int r = nrows(A);
+    matrix ret[r][c];
+    
+    poly prodrvar = 1;
+    int k;
+    for(k=1;k<=nvars(basering);k++)
+    {
+        prodrvar = prodrvar * var(k);
+    }
+    
+    int i,j;
+    for(i=1;i<=c;i++)
+    {
+        for(j=1;j<=r;j++)
+        {
+            matrix T = coef(A[j,i], prodrvar);
+            
+            int k;
+            for(k=1;k<=ncols(T);k++)
+            {
+                if( T[1,k] == m )
+                {
+                    ret[j,i] = T[2,k];
+                }
+            }
+        }
+    }
+    
+    return(ret);
+}
+
+// Has the effect of applying s_1 ... s_{v-1}, i.e. replacing x_i by y_i for i < v.
+proc switchm(matrix A, int v)
+{
+    int c = ncols(A);
+    int r = ncols(A);
+    matrix ret[r][c];
+    
+    int i,j;
+    for(i=1;i<=c;i++)
+    {
+        for(j=1;j<=r;j++)
+        {
+            ret[j,i] = A[j,i];
+            
+            int k;
+            for(k=1;k<v;k++)
+            {
+                ret[j,i] = subst(ret[j,i], x(k), y(k));
+            }
+        }
+    }
+    
+    return(ret);
+}
+
+// Does qdiff and also applies switchm, i.e. the operator \partial^[v] in our notes
+proc qdiffs(matrix A, int v)
+{
+    matrix ret = switchm(qdiffm(A,v),v);
+    return(ret);
+}
+
+proc isdiag(matrix A)
+{
+    if( nrows(A) != ncols(A) ){ return(0); }
+    
+    int i;
+    int j;
+    for(i=1;i<=nrows(A);i++)
+    {
+        for(j=1;j<=ncols(A);j++)
+        {
+            if( i != j && A[i,j] != 0 )
+            {
+                return(0);
+            }
+        }
+    }
+    
+    return(1);
+}
+
+proc printdiag(matrix A)
+{
+    if( !isdiag(A) )
+    {
+        print("Matrix is not diagonal");
+        return(0);
+    }
+    
+    int i;
+    for(i=1;i<=ncols(A);i++)
+    {
+        print("[" + string(i) + "," + string(i) + "] = " + string(A[i,i]));
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+// Examples
+////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////
+// 2 variables
+////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=0,(x(1..2),y(1..2),z(1..2)),dp;
+
+int N;
+for(N=3;N<=20;N++)
+{
+    // Diagonal
+    //matrix X0[2][2] = 0, x(1)-z(1), (x(1)^N-z(1)^N)/(x(1)-z(1)), 0;
+    //matrix Y0 = subst(subst(X0,x(1),x(2)),z(1),z(2));
+    //matrix D = MFtensor(X0,Y0);
+    //string mfname = "diagonal";
+
+    // Residue field
+    matrix X0[2][2] = 0, x(1), x(1)^(N-1), 0;
+    matrix X1[2][2] = 0, x(2), x(2)^(N-1), 0;
+    matrix Z0[2][2] = 0, -z(1), z(1)^(N-1), 0;
+    matrix Z1[2][2] = 0, -z(2), z(2)^(N-1), 0;
+    matrix D = MFtensor( MFtensor( X0, X1 ), MFtensor( Z0, Z1 ) );
+    string mfname = "residue field";
+
+    matrix Q = diff(D,x(1)) * diff(D,x(2));
+
+    matrix P1 = qdiffs(D,1) * qdiffs(D,2) * Q;
+    matrix P2 = qdiffs(D,1) * Q * qdiffs(D,2);
+    matrix P3 = qdiffs(D,2) * Q * qdiffm(D,1);
+    matrix P4 = Q * qdiffs(D,2) * qdiffm(D,1);
+
+    // Probably need signs
+    matrix P = -P1 + P2 - P3 + P4;
+
+    // for N = 3 -P1 + P2 -P3 + P4 gives the right matrix, i.e. a diagonal matrix
+    // and only term which survives the residue is the N^2 times top degree.
+
+    print("Checking N = " + string(N) + " for the " + mfname);
+    resm(P,x(1)^(N-2)*x(2)^(N-2)) == N^2 * unitmat(ncols(P));
+    
+    if( mfname == "diagonal" )
+    {
+        print("Checking matrix relations");
+        matrix pe2[4][4] = 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0;
+        P1 == - pe2 * P2 * pe2;
+    
+        matrix pe3[4][4] = 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0;
+        P1 == pe3 * P3 * pe3;
+    
+        matrix pe4[4][4] = 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0;
+        P1 == -pe4 * P4 * pe4;
+    }
+    
+    print("");
+}
+
+// Verified for residue field N = 3, .. , 20
+// Verified for diagonal N = 3, .. , 20
+// Also works with Q = - diff(D,x(2)) * diff(D,x(1))
+
+
+////////////////////////////////////////////////////////////////////
+// 3 variables
+////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=0,(x(1..3),y(1..3),z(1..3)),dp;
+
+// Diagonal
+int N;
+for(N=3;N<=10;N++)
+{
+    // Diagonal
+    matrix X0[2][2] = 0, x(1)-z(1), (x(1)^N-z(1)^N)/(x(1)-z(1)), 0;
+    matrix Y0 = subst(subst(X0,x(1),x(2)),z(1),z(2));
+    matrix Z0 = subst(subst(X0,x(1),x(3)),z(1),z(3));
+    matrix D = MFtensor(X0,MFtensor(Y0,Z0));
+    string mfname = "diagonal";
+    // D * D == (x(1)^N + x(2)^N + x(3)^N - z(1)^N - z(2)^N - z(3)^N)*unitmat(ncols(D));
+    
+    // Residue field
+    //matrix X0[2][2] = 0, x(1), x(1)^(N-1), 0;
+    //matrix X1 = subst(X0, x(1), x(2));
+    //matrix X2 = subst(X0, x(1), x(3));
+    //matrix Z0[2][2] = 0, -z(1), z(1)^(N-1), 0;
+    //matrix Z1 = subst(Z0, z(1), z(2));
+    //matrix Z2 = subst(Z0, z(1), z(3));
+    //matrix X = MFtensor( MFtensor( X0, X1 ), X2 );
+    //matrix Z = MFtensor( MFtensor( Z0, Z1 ), Z2 );
+    //matrix D = MFtensor( X, Z );
+    //string mfname = "residue field";
+    
+    // Calculations:
+    
+    matrix Q = diff(D,x(1)) * diff(D, x(2)) * diff(D, x(3));
+
+    // j = \phi
+    matrix P1 = qdiffs(D,1) * qdiffs(D,2) * qdiffs(D,3) * Q;
+
+    // j = 1
+    matrix P2 = qdiffs(D,2) * qdiffs(D,3) * Q * qdiffs(D,1);
+
+    // j = 2
+    matrix P3 = qdiffs(D,1) * qdiffs(D,3) * Q * qdiffs(D,2);
+
+    // j = 3
+    matrix P4 = qdiffs(D,1) * qdiffs(D,2) * Q * qdiffs(D,3);
+
+    // j = 1 < 2
+    matrix P5 = qdiffs(D,3) * Q * qdiffs(D,2) * qdiffs(D,1);
+
+    // j = 1 < 3
+    matrix P6 = qdiffs(D,2) * Q * qdiffs(D,3) * qdiffs(D,1);
+
+    // j = 2 < 3
+    matrix P7 = qdiffs(D,1) * Q * qdiffs(D,3) * qdiffs(D,2);
+
+    // j = 1 < 2 < 3
+    matrix P8 = Q * qdiffs(D,3) * qdiffs(D,2) * qdiffs(D,1);
+
+    matrix P = -P1 - P2 + P3 - P4 + P5 - P6 + P7 + P8;
+
+    print("Checking N = " + string(N) + " for the " + mfname);
+    resm(P,x(1)^(N-2)*x(2)^(N-2)*x(3)^(N-2)) == N^3 * unitmat(ncols(P));
+}
+
+// Checked for N = 3,..,10 for the diagonal
+// Checked for N = 3,..,10 for the residue field
+
+
+////////////////////////////////////////////////////////////////////
+// With a root of unity
+////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=(0,r),(x(1),z(1),y(1)),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = x(1)^4+x(1)^3+x(1)^2+x(1)+1;
+
+int d = 7;
+poly W = x(1)^d;
+
+int m = 2;
+
+// Define P_{m,m+1}
+matrix P[2][2] = 0, (z(1) - r^m * x(1)) * (z(1) - r^(m+1) * x(1)), (z(1)^d - x(1)^d)/((z(1) - r^m * x(1)) * (z(1) - r^(m+1) * x(1))), 0;
+
+// True in this case also that qdiffs(P,1) is a MF
+
+
+
+
+
+
+int j;
+for(j=1;j<=10;j++)
+{
+    int k;
+    matrix Z = D;
+    for(k=1;k<=j;k++){ Z = diff(Z,x(1)); }
+    
+    print( (D * Z + Z * D) == ( D * Z + Z * D)[1,1] * unitmat(ncols(D)) );
+}
+
+////////////////////////////////////////////////////////////////////
+// Factorisation over E6 with six dimensional Hom space and Hom(X,X[1]) six dimensional
+////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+ring rr=0,(x(1..2),y(1..2),z(1..2)),dp;
+poly W = x(1)^3 + x(2)^4;
+
+// Define the matrix factorisation
+matrix phi[3][3] = x(2)^3,x(1)^2,x(1) * x(2)^2,x(1) * x(2),-x(2)^2,x(1)^2,x(1)^2,-x(1) * x(2),-x(2)^3;
+matrix psi[3][3] = x(2),0,x(1),x(1),-x(2)^2,0,0,x(1),-x(2);
+matrix z[3][3];
+matrix D1 = blockmat(z,phi,psi,z);
+matrix D2 = MFdual(subst(subst(D1,x(1),z(1)),x(2),z(2)));
+matrix D = MFtensor(D1,D2);
+
+
+// In this case D * qdiffs(D,1) + qdiffs(D,1) * D is not diagonal
+matrix Q = diff(D,x(1)) * diff(D,x(2));
+// matrix Q = 1/2*( diff(D,x(1)) * diff(D,x(2)) - diff(D,x(2)) * diff(D,x(1)) )
+matrix P1 = qdiffs(D,1) * qdiffs(D,2) * Q;
+matrix P2 = qdiffs(D,1) * Q * qdiffs(D,2);
+matrix P3 = qdiffs(D,2) * Q * qdiffm(D,1);
+matrix P4 = Q * qdiffs(D,2) * qdiffm(D,1);
+
+// Probably need signs
+matrix P = -P1 + P2 - P3 + P4;
+
+// Note the P's are not diagonal! But all the resm(P,x(1)*x(2)^2)'s are
+resm(P,x(1)*x(2)^2) == 12 * unitmat(ncols(P)); // is false! wtf!
+
+// Also strange: replacing Q by -diff(D,x(2))*diff(D,x(1)) we get a different answer!
+// And unfortunately using Q = 1/2( diff(D, x(1)) * diff(D,x(2)) - diff(D,x(2)) * diff(D,x(1)) ) does
+// not produce a matrix with the right diagonal.
+
+// Either there is some subtlety with signs, or the identity is not true on the nose! only up to homotopy.
+// In particular, look at the [4,4] entries
+
+P1[4,4] == -6*x(1)*x(2)^2-2*x(2)^2*y(1);
+P2[4,4] == 3*x(1)*x(2)^2+2*x(2)^2*y(1)+3*x(1)*x(2)*y(2)+2*x(2)*y(1)*y(2);
+P3[4,4] == -2*x(1)*x(2)^2-3*x(2)^2*y(1)-2*x(1)*x(2)*y(2);
+P4[4,4] == 2*x(1)*x(2)^2+x(2)^2*y(1)+2*x(1)*x(2)*y(2)+x(2)*y(1)*y(2)+2*x(1)*y(2)^2;
+
+// Now matter what signs you use, you can't get 6, 3, 2, 2 to add up to 12. So there are two possibilities:
+// either the identity is only true up to homotopy, or there are signs _on each term_ in computing Pi
+// which somehow affect the end result just enough.
