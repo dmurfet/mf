@@ -343,10 +343,14 @@ proc ringWithoutVars(list vars)
         // Note that fetch uses the position of the ring variables, not the name, so 
         // that fetch(var(1)) is always var(1).
         poly minpolyblow = fetch(SSS,minpolyblow);
-        export(minpolyblow);
         poly z = subst(minpolyblow,var(1),r);
         number nu = leadcoef(z);
         minpoly = nu;
+        poly minpolyblow = fetch(SSS,minpolyblow);
+        export(minpolyblow);
+        // NOTE: The double definition of minpolyblow is because Singular nukes
+        // all variables in our ring when we set minpoly
+        
         setring SSS;
     }
     

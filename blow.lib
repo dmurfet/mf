@@ -37,6 +37,9 @@ LIB "ring.lib";
 //
 // We assume currently in dQ, deltaQ and related routines that the polynomial
 // we are passed is a sum of all the x-variables to some specific power.
+//
+// NOTE: With Singular 4 the way minimum polynomials are handled has been changed,
+// see http://www.singular.uni-kl.de/Manual/4-0-1/sing_2235.htm#SEC2313.
 
 ////////////////////////////////////////////////////////////////////
 // GRADED MATRIX FACTORISATIONS
@@ -112,8 +115,11 @@ proc blowFlags(string s)
     // rather than speed, in for example mfReduce.
     if( s == "small_coeffs" )
     {
-        return(1); // default is 1
+        return(0); // default is 0
     }
+    // DEBUG: As of Singular 4, the routine findConstantMin has a bug which
+    // causes the interpreter to crash with a Segmentation fault. So until this
+    // is fixed, DO NOT USE small_coeffs
     
     // Enables some checks only relevant if the calculations involved
     // are for link homology (e.g. maps in webCompileMorphism should
@@ -262,10 +268,13 @@ proc ringWithoutYVars()
         {
             setring nR;
             poly minpolyblow = fetch(RRR,minpolyblow); // Use fetch so the minpoly stays using var(1)
-            export(minpolyblow);
             poly z = subst(minpolyblow,var(1),r);
             number nu = leadcoef(z);
             minpoly = nu;
+            poly minpolyblow = fetch(RRR,minpolyblow);
+	        export(minpolyblow);
+    	    // NOTE: The double definition of minpolyblow is because Singular nukes
+        	// all variables in our ring when we set minpoly
         }
         else
         {
@@ -335,10 +344,13 @@ proc ringWithoutXVars()
         {
             setring nR;
             poly minpolyblow = fetch(RRR,minpolyblow);
-            export(minpolyblow);
             poly z = subst(minpolyblow,var(1),r);
             number nu = leadcoef(z);
             minpoly = nu;
+            poly minpolyblow = fetch(RRR,minpolyblow);
+	        export(minpolyblow);
+    	    // NOTE: The double definition of minpolyblow is because Singular nukes
+        	// all variables in our ring when we set minpoly
         }
         else
         {
@@ -366,11 +378,11 @@ proc ringWithoutXVars()
 //////////////////////////////////////////////////////////////////////////////////
 
 proc dimAlgebraOverInternalVariables(ideal J)
-{
+{	
     def RRR = basering;
     def nR = ringWithoutYVars();
     setring nR;
-
+	
     ideal J = imap(RRR,J);
     ideal Jstd = std(J);
     ideal ba = kbase(Jstd);
@@ -628,10 +640,10 @@ proc mfInflate(matrix A, poly intvar, int N)
 proc mablow(matrix M, ideal J)
 {
     int benchmark = 1; // Set to 1 to output benchmarking data
-    
+
     // Compute dimension of the algebra k[x-vars]/J:
     int n = dimAlgebraOverInternalVariables(J);
-    
+
     // Roughly speaking mablow takes "difficulty" ms to complete. We only give
     // debugging output if this is likely to take > 10 seconds.
     int difficulty = (nrows(M) * ncols(M) * n) div 3;
@@ -645,7 +657,7 @@ proc mablow(matrix M, ideal J)
         
         dbprint(printlevel, "[mablow] Inflating " + string(nrows(M)) + "x" + string(ncols(M)) + " matrix by " + string(n) + "-dim algebra");
     }
-    
+
     // Compute the inflation of individual variables:
     list variableActions = variableInflationList(J);
     
@@ -1206,7 +1218,7 @@ proc blocksq(matrix m)
 {
     int n=nrows(m);
     int intnon2=n div 2;
-    number non2=number(n) div 2;
+    number non2=number(n) / 2;
     if(n!=ncols(m))
     {
         printf("Matrix should be square");
@@ -2455,12 +2467,12 @@ proc mfReduce(matrix A, list #)
         //print("[mfReduce] Content of A: " + string(Acont));
         A = A * 1/Acont;
     }
-    
+
     // Extract the odd and even part of the differential:
     list blocks = extractblockmat(A);
     matrix b0 = blocks[3]; matrix b1 = blocks[2];
     kill blocks;
-    
+
     // Reduce b0. This returns a list b0r,P,Q,n where P,Q are invertible matrices,
     // b0r is a matrix with no nonzero constant entries, and P * b0 * Q = dsum(unitmat(n),b0r).
     // (Unless n = 0 in which case P * b0 * Q = b0r.) 
@@ -2472,7 +2484,7 @@ proc mfReduce(matrix A, list #)
     // Q = l[4];
     // Pinv = l[5];
     // Qinv = l[6];
-    
+
     b0 = l[1];
     b1 = submat(l[6] * b1 * l[5],(l[2]+1)..nrows(b1),(l[2]+1)..ncols(b1));
     
@@ -2480,12 +2492,12 @@ proc mfReduce(matrix A, list #)
     matrix f1 = submat(l[3],(l[2]+1)..nrows(l[3]),1..ncols(l[3]));
     matrix g0 = submat(l[4],1..nrows(l[4]),(l[2]+1)..ncols(l[4]));
     matrix g1 = submat(l[5],1..nrows(l[5]),(l[2]+1)..ncols(l[5]));
-    
+
     if( useGrading )
     {
         // The grading on P * b0 * Q, Q^{-1} * b1 * P is induced from Q and Pinv.
         intvec Agr0 = Agr[1..(ncols(A) div 2)];
-        intvec Agr1 = Agr[(ncols(A) div 2+1)..ncols(A)];
+        intvec Agr1 = Agr[(ncols(A) div 2 + 1)..ncols(A)];
         
         Agr0 = computeGradingFromInjection(l[4], Agr0);
         Agr1 = computeGradingFromInjection(l[5], Agr1);
@@ -2501,7 +2513,7 @@ proc mfReduce(matrix A, list #)
     // Now repeat the awesome feat on b1. This time b1 is replaced by P * b1 * Q
     // and b0 is replaced by Qinv * b0 * Pinv (with a nxn trivial piece removed).
     list l = zoomreduce(b1);
-    
+
     b1 = l[1];
     b0 = submat(l[6] * b0 * l[5],(l[2]+1)..nrows(b0),(l[2]+1)..ncols(b0));
     
@@ -2523,7 +2535,7 @@ proc mfReduce(matrix A, list #)
     }
     
     kill l;
-                
+
     // The maps F = (f0,f1) and G = (g0,g1) now give homotopy equivalences between
     // the original MF and the reduced MF (b0,b1). 
     matrix zb[nrows(b0)][ncols(b0)];
@@ -2583,7 +2595,7 @@ proc mfReduce(matrix A, list #)
             }
         }
     }
-    
+
     //dbprint(printlevel, "[mfReduce]          worst output coeff: " + string(worstMonomialCoeff(B)));
     dbprint(printlevel, "[mfReduce]          result is size " + string(ncols(B)) + ".");
     dbprint(printlevel, "[mfReduce]          elapsed time " + string(timer-timeElapsed) + "ms.");
@@ -2778,7 +2790,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     }
     newringList[3][1][2] = kk;
     kill kk;
-        
+
     int useParam;
     if( defined(minpolyblow) && defined(r) ) // deal with minpoly
     { 
@@ -2796,11 +2808,13 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
         // Note that fetch uses the position of the ring variables, not the name, so 
         // that fetch(var(1)) is always var(1).
         poly minpolyblow = fetch(RRR,minpolyblow); 
-        export(minpolyblow);
         poly zz = subst(minpolyblow,var(1),r);
         number nu = leadcoef(zz);
         minpoly = nu;
-        kill zz, nu;
+        poly minpolyblow = fetch(RRR,minpolyblow);
+        export(minpolyblow);
+        // NOTE: The double definition of minpolyblow is because Singular nukes
+        // all variables in our ring when we set minpoly
     }    
     
     // If we call fetch then the object of RRR is converted to the new renamed variables
@@ -2812,12 +2826,11 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     }
     
     // So now H * A + A * H = x(1)^N * unitmat and the potential W depends only on the y's.
-    // Compute the inflation:
-
+    // Compute the inflation:	
     ideal J = x(1)^N;
     matrix Ablow = mablow(A,J);
     if( useGrading ){ intvec Ablowgr = mablowGrading( Agr, J, N ); }
-    
+
     if( homotopyList )
     {
         for(i=1;i<=size(Hlist);i++)
@@ -2829,7 +2842,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     // Compute the idempotent on the inflation:
     ideal J = x(1)^N; 
     matrix e = mablow( H, J ) * mablow_delta(A, 1, N, J);
-    
+    	
     // Reduce the inflated matrix factorisation (of W over S = QQ[y(1),...,y(??)]):
     if( !useGrading )
     {
@@ -2986,7 +2999,7 @@ proc mfPushforward(matrix A, poly intvar, int N, Hlist, list #)
     kill s,t,F,G,RT,e,ep,epstrict;
     if( !returnAblow ){ kill Ablow; }
     if( useGrading ){ kill RTgr; }
-        
+
     // Back to the original ring and return. Note that we use fetch and not imap
     // because we want to replace variables in nR by the variables in RRR in the same
     // _position_ in ringlist.
@@ -3265,11 +3278,13 @@ proc mfPushforwardInductive(matrix A, list intvars, list NN, list H, list #)
             // Note that fetch uses the position of the ring variables, not the name, so 
             // that fetch(var(1)) is always var(1).
             poly minpolyblow = fetch(nR(count),minpolyblow); 
-            export(minpolyblow);
             poly zz = subst(minpolyblow,var(1),r);
             number nu = leadcoef(zz);
             minpoly = nu;
-            kill zz, nu;
+			poly minpolyblow = fetch(nR(count),minpolyblow);
+	        export(minpolyblow);
+    	    // NOTE: The double definition of minpolyblow is because Singular nukes
+        	// all variables in our ring when we set minpoly
         }
         
         matrix A = imap(nR(count),A);
@@ -3630,7 +3645,7 @@ proc zoomreduce(matrix A)
 {
     int useSmallCoeffs = blowFlags("small_coeffs");
     int useSanityChecks = blowFlags("sanity_checks");
-    
+
     // n is the current size of the top left identity block, begins at zero
     int n = 0;
     int nr = nrows(A);
@@ -3638,12 +3653,12 @@ proc zoomreduce(matrix A)
     int i;
     int ncolsOrig = ncols(A);
     if( useSanityChecks ){ matrix Aorig = A; }
-    
+
     matrix P = unitmat(nr);
     matrix Q = unitmat(nc);
     matrix Pinv = unitmat(nr);
     matrix Qinv = unitmat(nc);
-    
+
     // Always the final matrix B will be P * A * Q
     while( 1 )
     {
@@ -3664,7 +3679,7 @@ proc zoomreduce(matrix A)
         {
             list r = findConstant(A);
         }
-        
+
         if( r[1] != 1 ){ break; }
         
         if( r[2][1] != 1 )
@@ -3717,7 +3732,7 @@ proc zoomreduce(matrix A)
         nr = nr - 1;
         n = n + 1;
     }
-    
+
     if( useSanityChecks ) //debug very slow
     {
         matrix Afin = A;
@@ -3765,7 +3780,7 @@ proc mfReduceAlt(matrix A, matrix e, list #)
     {
         intvec Agr = #[1];
         intvec Agr0 = Agr[1..(ncols(A) div 2)];
-        intvec Agr1 = Agr[(ncols(A) div 2+1)..ncols(A)];
+        intvec Agr1 = Agr[(ncols(A) div 2 + 1)..ncols(A)];
         int useGrading = 1;
     }
     
