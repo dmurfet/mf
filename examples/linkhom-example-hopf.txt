@@ -58,9 +58,12 @@ list cp = KRcomplex(linkData, h, N);
 cp[1] == -2;
 
 // And has three terms in homological degrees -2,-1,0 resp., with grading vectors
-cp[3][1] == intvec(8,6,4,6,4,2,10,8,6,8,6,4);
+cp[3][1] == intvec(8,6,4,6,4,2,10,8,6,8,6,4); 
 cp[3][2] == intvec(8,6,4,6,4,2,8,6,4,6,4,2);
 cp[3][3] == intvec(8,6,4,6,4,2,4,2,0);
+// NOTE (8/7/15): In Singular 4 the orders have changed, so these tests fail, but
+// it's OK - the new intvecs are permutations of the old ones. This applies to
+// some of the other tests below.
 
 // The KR recipe shifts the web compilation UP by 2N - 2 = 4, so the actual web compilation
 // lives in degrees 4,2,0,2,0,-2,0,-2,-4
