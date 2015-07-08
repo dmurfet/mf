@@ -1072,6 +1072,21 @@ proc webCompilePair(list web, list compStrat)
                 //
                 // u^B[uPos] = C[uPos,1] * diff(W,varList[1]) + ... + C[uPos,n] * diff(W,varList[n]).
                 
+                if( useSanityChecks )
+                {
+                	poly TT = 0;
+                	for(k=1; k<=size(varList); k++)
+                	{
+                		TT = TT + C[uPos,k] * diff(W,varList[k]);
+                	}
+                	
+                	if( TT != u^B[uPos] )
+                	{
+                		print("[webCompilePair] Error in description of power of u in terms of differentials, exiting.");
+                		return();
+                	}
+                }
+                                
                 matrix H[nrows(D)][ncols(D)];
                 for(k=1; k<=size(varList); k++)
                 {
@@ -1084,9 +1099,10 @@ proc webCompilePair(list web, list compStrat)
                     }
                     
                     H = H + C[uPos,k] * h;
+                    
                     kill h;
                 }
-                
+                                
                 // Convert this from a homotopy on D to a homotopy on A
                 if( vertexOrder[1] == src )
                 {
