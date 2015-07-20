@@ -1,29 +1,3 @@
 /////////////////////////////////////////////////////////////////////////////
 // Examples of linear logic semantics
 
-//////////////////////////////////////////////////////////////////////////////////////
-// EXAMPLE tests
-//////////////////////////////////////////////////////////////////////////////////////
-
-option(noredefine);option(noloadLib);option(prot);
-LIB "blow.lib";
-LIB "semantics.lib";
-ring rr=0,(x,y),dp;
-printlevel=1;
-poly W = y^3 - x^3;
-
-def nR = moduliOfPotential(W,1,3);
-setring(nR);
-ideal I = groebner(moduli_eqns);
-dim(I);
-
-list P = primdecSY(I);
-
-// By inspection all the primary components are prime,
-// i.e. I is an intersection of primes.
-
-int i;
-for(i=1; i<=size(P); i++)
-{
-	dim(groebner(P[i][1]));
-}

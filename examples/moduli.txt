@@ -1,0 +1,102 @@
+/////////////////////////////////////////////////////////////////////////////
+// Examples of moduli spaces of MFs
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Moduli of self-defects of x^2 - case of rank 1, total degree <= 1
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); //option(prot);
+LIB "blow.lib";
+LIB "semantics.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^2 - x^2;
+
+// Find the moduli space of factorisations of W which are
+// rank 1 (i.e. 2x2 supermatrices) and have entries which
+// are polynomials in x,y of total degree <= 1, that is,
+// a + bx + cy for some a,b,c.
+
+def nR = moduliOfPotential(W,1,1);
+setring(nR);
+ideal I = groebner(moduli_eqns);
+
+// Note here that the middle indices are always (1)(1) because our
+// matrices are rank 1. Let us write f(a)(b) for f(a)(1)(1)(b).
+// The b's are indices into the set of monomials
+// 1,y,x = [0,0],[0,1],[1,0]
+
+// If we write the upper right block as a + by + cx and
+// the lower left block as a' + b'y + c'x then
+
+//I[1]=f(2)(1)(1)(1) = a'
+//I[2]=f(1)(1)(1)(1) = a
+//I[3]=f(1)(1)(1)(3)*f(2)(1)(1)(3)+1 = cc'+1
+//I[4]=f(2)(1)(1)(2)^2-f(2)(1)(1)(3)^2 = (b')^2-(c')^2
+//I[5]=f(1)(1)(1)(3)*f(2)(1)(1)(2)+f(1)(1)(1)(2)*f(2)(1)(1)(3) = cb'+bc'
+//I[6]=f(1)(1)(1)(2)*f(2)(1)(1)(2)-1 = bb'-1
+//I[7]=f(1)(1)(1)(2)^2-f(1)(1)(1)(3)^2 = b^2-c^2
+//I[8]=f(1)(1)(1)(2)*f(2)(1)(1)(3)^2-f(2)(1)(1)(2) = b(c')^2-b'
+
+list P = primdecSY(I);
+
+// P is a list containing the primary decomposition of I,
+// where P[i][1] is the primary component and P[i][2] the associated
+// prime. In our case we see that P[i][1] == P[i][2] for every i,
+// that is, I is an intersection of prime ideals. They are:
+
+P[1][1];
+
+//_[1]=f(2)(1)(1)(2)+f(2)(1)(1)(3) = b' + c'
+//_[2]=f(2)(1)(1)(1) = a'
+//_[3]=f(1)(1)(1)(2)-f(1)(1)(1)(3) = b - c
+//_[4]=f(1)(1)(1)(1) = a
+//_[5]=f(1)(1)(1)(3)*f(2)(1)(1)(3)+1 = cc' + 1
+
+// That is, this component is the space of all MFs where a = a' = 0
+// and b = c, b' = -c' and cc' = -1. This is one-dimensional: it is a hyperbola.
+
+P[2][1];
+
+//_[1]=f(2)(1)(1)(2)-f(2)(1)(1)(3) = b' - c'
+//_[2]=f(2)(1)(1)(1) = a'
+//_[3]=f(1)(1)(1)(2)+f(1)(1)(1)(3) = b + c
+//_[4]=f(1)(1)(1)(1) = a
+//_[5]=f(1)(1)(1)(3)*f(2)(1)(1)(3)+1 = cc' + 1
+
+// The same but with b' = c' and b = -c, again one-dimensional.
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Moduli of self-defects of x^3 - case of rank 1, total degree <= 2
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); //option(prot);
+LIB "blow.lib";
+LIB "semantics.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^3 - x^3;
+
+// Find the moduli space of factorisations of W which are
+// rank 1 (i.e. 2x2 supermatrices) and have entries which
+// are polynomials in x,y of total degree <= 2
+
+def nR = moduliOfPotential(W,1,2);
+setring(nR);
+ideal I = groebner(moduli_eqns);
+
+// Note here that the middle indices are always (1)(1) because our
+// matrices are rank 1. Let us write f(a)(b) for f(a)(1)(1)(b).
+// The b's are indices into the set of monomials
+// 1,y,x,y2,xy,x2 i.e. [0,0],[0,1],[1,0],[0,2],[1,1],[2,0]
+
+list P = primdecSY(I);
+
+// Again all four components are prime and one-dimensional
+
+int i;
+for(i=1; i<=size(P); i++)
+{
+	dim(groebner(P[i][1]));
+}

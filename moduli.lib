@@ -1,0 +1,325 @@
+version="1.0";
+category="Miscellaneous";
+info="
+LIBRARY:   moduli.lib  Moduli of matrix factorisations
+AUTHOR:    Daniel Murfet
+KEYWORDS:  matrix factorisation
+
+PROCEDURES:
+";
+
+// NOTE: We include a version of matrix.lib which suppresses some
+// unnecessary output from the procedure "rowred"
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+
+////////////////////////////////////////////////////////////////////
+// USAGE GUIDE
+//
+// Matrix factorisations are encoded as in blow.lib and other libraries,
+// that is, as odd supermatrices with polynomial entries. To create such
+// a block matrix from a pair of matrices A, B such that A * B = B * A = W . I,
+// use mfblock(A,B), see blow.lib.
+
+////////////////////////////////////////////////////////////////////
+// moduliOfPotential
+//
+// Given a polynomial ring R, a polynomial W in R, a rank r, and
+// a degree cutoff k, returns a quotient ring which parametrises
+// matrix factorisations of W of rank r, with only monomials of
+// total degree <= k.
+//
+// Ref: p. 3 cutsys45 and p. 6 cutsys46
+//
+// Details: a matrix factorisation of W is a pair (A,B) of r x r matrices
+// where we assume here that r >= 1. Corresponding to each position (i,j) in A
+// and monomial in R of total degree <= k we introduce a new variable f(1)(i)(j)(a)
+// where a is some index. Similarly we introduce new variables f(2)(i)(j)(a) for B.
+// These are the variables of our new ring, and the defining equations among these
+// new variables encode the fact that A * B = B * A = W.I
+//
+// We assume R = basering. The return value is a ring nR and in this ring
+// is already declared an ideal moduli_eqns which is the quotient, 
+// i.e. nR/moduli_eqns is the parametrising space.
+
+// TODO: We nuke the coefficients to 0
+
+proc moduliOfPotential(poly W, int r, int k)
+{
+	if( typeof(basering) != "ring" )
+	{
+		print("[moduliOfPotential] We cannot deal with quotient rings yet, sorry. Exiting.");
+		return();
+	}
+	
+	if( W == 0 )
+	{
+		// TODO
+		print("[moduliOfPotentials] Not a good idea to pass W = 0 in here yet.");
+		return();
+	}
+		
+    list varNames = ringlist(basering)[2];
+ 	int numVars = size(varNames);
+ 	
+ 	// Monomials of total weight <= k in the ring variables, as intvecs
+ 	int i;
+ 	list monoms;
+ 	for(i=0; i<=k; i++)
+ 	{
+		monoms = monoms + partitions(i, numVars);
+	}
+	
+	string deb;
+	for(i=1;i<=size(monoms);i++)
+	{
+		deb = deb + "[" + string(monoms[i]) + "] ";
+	}
+	dbprint(printlevel, "[moduliOfPotential] monoms:" + deb);
+	
+ 	int Q = size(monoms);
+ 	    
+    // Get the coefficient vector of W with regards to the monomials of monom
+    poly xprod = 1;
+    for(i=1; i<=numVars; i++)
+    {
+        xprod = xprod * var(i);
+    }
+    matrix koffer = coef(W, xprod);
+    
+    // the first row of koffer contains the monomials and the second row the coeffs
+    // store this as a list of monomial intvecs and the coeffs
+    list mm_list, mc_list;
+    for(i=1; i<=ncols(koffer); i++)
+    {
+    	mm_list = mm_list + list(leadexp(koffer[1,i])); // leadexp extracts intvec
+    	mc_list = mc_list + list(number(koffer[2,i])); // number to force conversion
+    }
+	
+    // The variables of our new ring are
+    // f(z)(i)(j)(a) from f(1,2)(1..r)(1..r)(1..Q)
+    // where z = 1 means top right block A, z = 2 means bottom left B,
+    // i and j are the row and column resp., and a is the monomial index
+    list newVarNames;
+    int z,i,j,a;
+    for( z=1; z<=2; z++ )
+    {
+    	for( i=1; i<=r; i++ )
+    	{
+    		for( j=1; j<=r; j++ )
+    		{
+    			for( a=1; a<=Q; a++ )
+    			{
+    				string nv = "f(" + string(z) + ")(" + string(i) + ")(" + string(j) + ")(" + string(a) + ")";
+    				newVarNames = newVarNames + list(nv);
+    			}
+    		}
+    	}
+    }
+    dbprint(printlevel, "[moduliOfPotential] Var names are f(z)(i)(j)(a) where 1 <= a <= " + string(Q) + " is an index into monoms");
+    dbprint(printlevel, "[moduliOfPotential] Number of moduli variables: " + string(size(newVarNames)));
+    
+    // Now create the new ring
+    def RRR = basering;
+    
+	list nR_list;
+	nR_list[1] = 0; // TOOD: nuking coeffs
+	nR_list[2] = newVarNames;
+	
+	intvec kk = (1..size(newVarNames));
+    for(i=1; i<=size(newVarNames); i++)
+    {
+        kk[i] = 1;
+    }
+	nR_list[3] = list( list( "dp", kk ) );
+	nR_list[4] = ideal(0);
+	
+	def nR = ring(nR_list);
+    setring nR;
+    
+    // mm_list is already available
+    list mc_list = fetch(RRR,mc_list);
+    	
+    // Find the ideal of moduli equations. The equations encode the
+    // fact that A * B = W.I and B * A = W.I. Thus we have one equation
+    // for each pair (i,j) of matrix positions and each monomial which is
+    // either of total weight <= 2k or occurs in W
+    
+    // First make a list of such monomials (as intvecs)
+    list eqn_monoms;
+ 	for(i=0; i<=2*k; i++)
+ 	{
+		eqn_monoms = eqn_monoms + partitions(i, numVars);
+	}
+	
+	// Go through the monomials in W and add them to eqn_monoms if they don't already occur
+	for(i=1;i<=size(mm_list);i++)
+	{
+		if( sum(mm_list[i]) > 2*k )
+		{
+			eqn_monoms = eqn_monoms + list(mm_list[i]);
+		}
+	}
+    
+    // DEBUG
+	//deb = "";
+	//for(i=1;i<=size(eqn_monoms);i++)
+	//{
+	//	deb = deb + "[" + string(eqn_monoms[i]) + "] ";
+	//}
+	//dbprint(printlevel, "[moduliOfPotential] eqn_monoms:" + deb);
+	// DEBUG
+	
+    list moduli_eqn_list;
+    int u;
+    
+    for( i=1; i<=r; i++ )
+    {
+    	for( j=1; j<=r; j++ )
+    	{
+    		for( u=1; u<=size(eqn_monoms); u++ )
+    		{
+    			poly e1,e2;
+    			intvec m = eqn_monoms[u];
+    			
+    			// At row i, col j, and for the monomial m the associated
+    			// equation e1 asserts that the coeff of m in (A*B)_{i,j} equals the coeff
+    			// of m in (W.I)_{i,j} and e2 asserts the same for B*A.
+    		
+    			// The coeff of m in (W.I)_{i,j} is given by cw, where
+    			poly cw;
+    			if( i != j )
+    			{
+    				cw = 0;
+    			}
+    			else
+    			{
+    				// On diagonal i = j
+    				int a = indexinlist(mm_list,m);
+    				
+    				if( a == 0 )
+    				{
+    					// This monomial has zero coeff in W
+    					cw = 0;
+    				}
+    				else
+    				{
+    					cw = mc_list[a];
+    				}
+    			}
+    			
+    			e1 = -cw;
+    			e2 = -cw;
+    			
+    			// The coeff of m in (A*B)_{i,j} is a sum of numbers
+    			// f(1)(i)(k)(c) * f(2)(k)(j)(d) where k ranges over 1...r
+    			// and independently c,d range over indices between 1..Q
+    			// with the condition that monoms[c] + monoms[d] = m.
+    			int k, ac, ad;
+    			for( k=1; k<=r; k++ )
+    			{
+    				for( ac=1; ac<=Q; ac++ )
+    				{
+    					for( ad=1; ad<=Q; ad++ )
+    					{
+    						if( monoms[ac] + monoms[ad] == m )
+    						{
+    							e1 = e1 + f(1)(i)(k)(ac) * f(2)(k)(j)(ad);
+    						}
+    					}
+    				}
+    			}
+    			
+				// The coeff of m in (B*A)_{i,j} is a the same but with 1,2 interchanged
+				for( k=1; k<=r; k++ )
+    			{
+    				for( ac=1; ac<=Q; ac++ )
+    				{
+    					for( ad=1; ad<=Q; ad++ )
+    					{
+    						if( monoms[ac] + monoms[ad] == m )
+    						{
+    							e2 = e2 + f(2)(i)(k)(ac) * f(1)(k)(j)(ad);
+    						}
+    					}
+    				}
+    			}
+     
+     			//dbprint(printlevel, "[moduliOfPotential] At (i,j,m) = (" + string(i) + "," + string(j) + ",[" + string(monoms[a]) + "])");
+		        //dbprint(printlevel, "[moduliOfPotential] Adding e1: " + string(e1));
+		        //dbprint(printlevel, "[moduliOfPotential] Adding e2: " + string(e2));
+    			moduli_eqn_list = moduli_eqn_list + list(e1,e2);
+    		}
+    	}
+    }
+    
+    // convert to a row matrix
+    matrix mat_eqn[1][size(moduli_eqn_list)];
+    for( i=1; i<=size(moduli_eqn_list); i++ )
+    {
+    	mat_eqn[1,i] = moduli_eqn_list[i];
+    }
+    
+    ideal moduli_eqns = ideal(mat_eqn);    
+    export(moduli_eqns);
+        
+	setring RRR;
+	return(nR);
+}
+	
+////////////////////////////////////////////////////////////////////
+// partitions
+//
+// Given integers N and M with N >= 0 and M > 0 returns all elements
+// in NN^M which sum to N (here NN means non-negative integers) as a list
+// of intvecs.
+
+proc partitions(int N, int M)
+{
+	if( N < 0 || M <= 0 )
+	{
+		print("[partitions] Bad integers, exiting.");
+		return();
+	}
+	
+	if( M == 1 )
+	{
+		return(list(intvec(N)));
+	}
+	
+	list P;
+    int i, j;
+    
+    for( i=0; i<=N; i++)
+    {
+    	list miniP = partitions(N-i, M-1);
+    
+    	for( j = 1; j<=size(miniP); j++ )
+    	{
+    		P = P + list( concat_intvec( intvec(i), miniP[j] ) );
+    	}
+    }
+    
+    return(P);
+}
+
+proc concat_intvec( intvec L, intvec R )
+{
+	int n = size(L);
+	int m = size(R);
+	intvec ret;
+	
+	int i;
+	for(i=1;i<=n;i++)
+	{
+		ret[i] = L[i];
+	}
+	
+	for(i=1;i<=m;i++ )
+	{
+		ret[n+i] = R[i];
+	}
+	
+	return(ret);
+}
