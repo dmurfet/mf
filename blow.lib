@@ -1170,6 +1170,32 @@ proc blockmat(matrix block1,matrix block2,matrix block3,matrix block4)
     return(m);
 }
 
+////////////////////////////////////////////////////////////////////
+// mfblocks
+//
+// Given square matrices A, B of the same size creates a block matrix {{0,A},{B,0}}
+
+proc mfblocks(matrix block1, matrix block2)
+{
+	if( nrows(block1) != ncols(block1) || nrows(block2) != ncols(block2) )
+	{
+		print("[mfblocks] Blocks are not square, exiting.");
+        return();
+    }
+    
+    if( nrows(block1) != nrows(block2) )
+    {
+    	printf("[mfblocks] Blocks are not the same size, exiting.");
+    }
+        
+    int n = nrows(block1);
+    
+    matrix z[n][n];
+	matrix Y = blockmat(z,block1,block2,z);
+	return(Y);
+}
+
+
 // Modification of blockmat to accommodate nonsquare entries (consider replacing blockmat with this).
 // We assume only that a block matrix makes sense, i.e. that in the order given the matrices fit
 // together into a matrix. Here is the ASCII diagram:
