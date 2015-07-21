@@ -43,7 +43,9 @@ list P = primdecSY(I);
 // P is a list containing the primary decomposition of I,
 // where P[i][1] is the primary component and P[i][2] the associated
 // prime. In our case we see that P[i][1] == P[i][2] for every i,
-// that is, I is an intersection of prime ideals. They are:
+// that is, I is an intersection of prime ideals. Or what is the same,
+// the locus cut out by I is a union of two irreducible components. They
+// are given by the prime ideals:
 
 P[1][1];
 
@@ -55,6 +57,9 @@ P[1][1];
 
 // That is, this component is the space of all MFs where a = a' = 0
 // and b = c, b' = -c' and cc' = -1. This is one-dimensional: it is a hyperbola.
+// Note that each point [X] determines the same MF X up to isomorphism, they
+// are all isomorphic to the MF (y+x, y-x) which is c = 1, c' = -1. So the
+// chern character is constant with value 2 on this component
 
 P[2][1];
 
@@ -65,7 +70,11 @@ P[2][1];
 //_[5]=f(1)(1)(1)(3)*f(2)(1)(1)(3)+1 = cc' + 1
 
 // The same but with b' = c' and b = -c, again one-dimensional.
+// These MFs are all isomorphic to (y-x,y+x), so the Chern character is constant
+// with value -2 on this component
 
+// We see from these calculations that the irreducible subschemes P[1][1] and P[2][1]
+// are disjoint, and collapse to {(y+x,y-x)} and {(y-x,y+x)} up to isomorphism resp.
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Moduli of self-defects of x^3 - case of rank 1, total degree <= 2
@@ -100,3 +109,177 @@ for(i=1; i<=size(P); i++)
 {
 	dim(groebner(P[i][1]));
 }
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Universal MF of y^2 - x^2 case of rank 1, total degree <= 1
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); //option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y2 - x2;
+
+def uR = universalMF(W,1,1);
+setring(uR);
+
+U; // The universal MF of W of rank 1 and total degree <= 1
+
+// U[1,1]=0
+// U[1,2]=x*f(1)(1)(1)(3)+y*f(1)(1)(1)(2)+f(1)(1)(1)(1)
+// U[2,1]=x*f(2)(1)(1)(3)+y*f(2)(1)(1)(2)+f(2)(1)(1)(1)
+// U[2,2]=0
+
+// U is not a MF of W on the nose, but only up to moduli_eqns
+
+ideal I = groebner(moduli_eqns);
+reduce((U*U)[1,1],I) == y2 - x2;
+reduce((U*U)[2,2],I) == y2 - x2;
+
+// We can compute e.g. the chern Char of U
+poly ch = supertrace(diff(U,x) * diff(U,y));
+reduce(ch,I);
+
+// -2*f(1)(1)(1)(2)*f(2)(1)(1)(3) = -2bc' in the notation used earlier
+// We know that Spec(nR/I) is a disjoint union of two components: on one
+// bc' = 1 and on the other bc' = -1.
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Universal MF of y^3 - x^3 case of rank 1, total degree <= 2
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); //option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^3 - x^3;
+
+def uR = universalMF(W,1,2);
+setring(uR);
+ideal I = groebner(moduli_eqns);
+poly ch = supertrace(diff(U,x) * diff(U,y));
+poly rch = reduce(ch,I);
+
+// Now see the values this rch takes on the four components identified earlier
+list P = primdecSY(I);
+
+ideal p(1) = P[1][1];
+ideal p(2) = P[2][1];
+ideal p(3) = P[3][1];
+ideal p(4) = P[4][1];
+
+reduce(ch,groebner(p(1)));
+// -3*x-3*y
+
+reduce(ch,groebner(p(2)));
+// -3*x*f(1)(1)(1)(2)*f(2)(1)(1)(6)+3*y*f(1)(1)(1)(2)*f(2)(1)(1)(6)+3*y
+
+reduce(ch,groebner(p(3)));
+// 3*x+3*y
+
+reduce(ch,groebner(p(4)));
+// -3*x*f(1)(1)(1)(5)*f(2)(1)(1)(3)+3*y*f(1)(1)(1)(5)*f(2)(1)(1)(3)-3*y
+
+// So on the irreducible subcomponent of the moduli space cut out by p(2),
+// the Chern character does vary. Thus the points do not represent isomorphic
+// matrix factorisations.
+//
+// It seems clear (not checked) that p(1) and p(3) describe a single MF and its
+// shift, while the relation between p(2) and p(4) is less clear?
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Moduli of self-defects of x^3 - case of rank 2, total degree <= 2
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^3 - x^3;
+
+int r = 2;
+int k = 2;
+
+def nR = moduliOfPotential(W,r,k);
+setring(nR);
+
+// Zero out all constant terms
+int z,i,j;
+for(z=1;z<=2;z++)
+{
+for(i=1;i<=r;i++)
+{
+for(j=1;j<=r;j++)
+{
+moduli_eqns = moduli_eqns + f(z)(i)(j)(1);
+}
+}
+}
+
+ideal I = groebner(moduli_eqns);
+
+// TOO HARD!
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Universal MF of y^4 - x^4 case of rank 1, total degree <= 3
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^4 - x^4;
+
+int r = 1;
+int k = 3;
+
+def uR = universalMF(W,r,k);
+setring(uR);
+ideal I = groebner(moduli_eqns); // takes a few minutes
+
+// I has 230 equations in it
+
+list P = primdecSY(I);
+
+// This has 10 components, not all prime
+
+int i;
+ideal p(1..10);
+
+for(i=1;i<=10;i++)
+{
+p(i) = groebner(P[i][2]);
+}
+
+for(i=1;i<=10;i++)
+{
+dim(p(i));
+}
+
+// The dimensions are all 3
+
+poly ch = supertrace(diff(U,x) * diff(U,y));
+poly rch = reduce(ch,I);
+
+// Now see the values this rch takes on the four components identified earlier
+for(i=1;i<=10;i++)
+{
+reduce(rch,p(i));
+}
+
+// -4*x^2*f(1)(1)(1)(2)*f(2)(1)(1)(10)+4*x*y+4*y^2*f(1)(1)(1)(2)*f(2)(1)(1)(10)
+// -4*x^2-4*x*y-4*y^2
+// 4*x^2-4*x*y+4*y^2
+// -4*x^2*f(1)(1)(1)(9)*f(2)(1)(1)(3)-4*x*y+4*y^2*f(1)(1)(1)(9)*f(2)(1)(1)(3)
+// 4*x^2+4*x*y+4*y^2
+// -8*x*y
+// 8*x*y
+// -4*x^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)+4*y^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)+8*y^2
+// -4*x^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)+4*y^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)-8*y^2
+// -4*x^2+4*x*y-4*y^2
+
+// Here we see several families

@@ -22,6 +22,10 @@ LIB "ring.lib";
 // a block matrix from a pair of matrices A, B such that A * B = B * A = W . I,
 // use mfblock(A,B), see blow.lib.
 
+// TODO
+// Universal MF
+// Chern char of universal MF
+
 ////////////////////////////////////////////////////////////////////
 // moduliOfPotential
 //
@@ -43,7 +47,7 @@ LIB "ring.lib";
 // is already declared an ideal moduli_eqns which is the quotient, 
 // i.e. nR/moduli_eqns is the parametrising space.
 
-// TODO: We nuke the coefficients to 0
+// TODO: We do not handle algebraic extensions
 
 proc moduliOfPotential(poly W, int r, int k)
 {
@@ -71,12 +75,12 @@ proc moduliOfPotential(poly W, int r, int k)
 		monoms = monoms + partitions(i, numVars);
 	}
 	
-	string deb;
-	for(i=1;i<=size(monoms);i++)
-	{
-		deb = deb + "[" + string(monoms[i]) + "] ";
-	}
-	dbprint(printlevel, "[moduliOfPotential] monoms:" + deb);
+	//string deb;
+	//for(i=1;i<=size(monoms);i++)
+	//{
+	//	deb = deb + "[" + string(monoms[i]) + "] ";
+	//}
+	//dbprint(printlevel, "[moduliOfPotential] monoms:" + deb);
 	
  	int Q = size(monoms);
  	    
@@ -111,20 +115,22 @@ proc moduliOfPotential(poly W, int r, int k)
     		{
     			for( a=1; a<=Q; a++ )
     			{
+    				// WARNING: If you change the ordering here you should also change it in e.g.
+    				// universalMF and other places where the order is used
     				string nv = "f(" + string(z) + ")(" + string(i) + ")(" + string(j) + ")(" + string(a) + ")";
     				newVarNames = newVarNames + list(nv);
     			}
     		}
     	}
     }
-    dbprint(printlevel, "[moduliOfPotential] Var names are f(z)(i)(j)(a) where 1 <= a <= " + string(Q) + " is an index into monoms");
-    dbprint(printlevel, "[moduliOfPotential] Number of moduli variables: " + string(size(newVarNames)));
+    //dbprint(printlevel, "[moduliOfPotential] Var names are f(z)(i)(j)(a) where 1 <= a <= " + string(Q) + " is an index into monoms");
+    //dbprint(printlevel, "[moduliOfPotential] Number of moduli variables: " + string(size(newVarNames)));
     
     // Now create the new ring
     def RRR = basering;
     
 	list nR_list;
-	nR_list[1] = 0; // TOOD: nuking coeffs
+	nR_list[1] = ringlist(RRR)[1]; // TOOD: minpoly
 	nR_list[2] = newVarNames;
 	
 	intvec kk = (1..size(newVarNames));
@@ -161,15 +167,6 @@ proc moduliOfPotential(poly W, int r, int k)
 			eqn_monoms = eqn_monoms + list(mm_list[i]);
 		}
 	}
-    
-    // DEBUG
-	//deb = "";
-	//for(i=1;i<=size(eqn_monoms);i++)
-	//{
-	//	deb = deb + "[" + string(eqn_monoms[i]) + "] ";
-	//}
-	//dbprint(printlevel, "[moduliOfPotential] eqn_monoms:" + deb);
-	// DEBUG
 	
     list moduli_eqn_list;
     int u;
@@ -246,9 +243,6 @@ proc moduliOfPotential(poly W, int r, int k)
     				}
     			}
      
-     			//dbprint(printlevel, "[moduliOfPotential] At (i,j,m) = (" + string(i) + "," + string(j) + ",[" + string(monoms[a]) + "])");
-		        //dbprint(printlevel, "[moduliOfPotential] Adding e1: " + string(e1));
-		        //dbprint(printlevel, "[moduliOfPotential] Adding e2: " + string(e2));
     			moduli_eqn_list = moduli_eqn_list + list(e1,e2);
     		}
     	}
@@ -267,6 +261,77 @@ proc moduliOfPotential(poly W, int r, int k)
 	setring RRR;
 	return(nR);
 }
+
+////////////////////////////////////////////////////////////////////
+// universalMF
+//
+// Given the same input data as moduliOfPotential returns the
+// universal matrix factorisation of that moduli space. This is 
+// defined over the ring R + nR where R is the basering and
+// nR is the output of moduliOfPotential. 
+//
+// The return value is a ring uR and in this ring is already
+// declared the ideal moduli_eqns from moduliOfPotential and
+// a matrix factorisation U in supermatrix form (the universal MF).
+// Note that this only satisfies U * U = W . I up to moduli_eqns.
+
+proc universalMF(poly W, int r, int k)
+{
+	def RRR = basering;
+	def nR = moduliOfPotential(W,r,k);
+	def uR = RRR + nR; // TODO this fails in a bunch of situations (see docs)
+	
+	setring(uR);
+	
+	// imap works to import stuff from RRR and nR to uR
+	ideal moduli_eqns = imap(nR, moduli_eqns);
+	poly W = imap(RRR,W);
+	export(W);
+	export(moduli_eqns);
+	
+	// Now construct the universal matrix U
+	matrix A(1)[r][r]; matrix A(2)[r][r];
+	
+	list varNames = ringlist(RRR)[2];
+ 	int numVars = size(varNames);
+ 	
+ 	int i;
+ 	list monoms;
+ 	for(i=0; i<=k; i++)
+ 	{
+		monoms = monoms + partitions(i, numVars);
+	}
+	int Q = size(monoms);
+
+	int z,i,j,a;
+    for( z=1; z<=2; z++ )
+    {
+    	for( i=1; i<=r; i++ )
+    	{
+    		for( j=1; j<=r; j++ )
+    		{
+    			for( a=1; a<=Q; a++ )
+    			{
+    				// The RRR variables come first, so if we call
+    				// monomial with something of length <= numVars
+    				// we get the monomial from RRR
+    				A(z)[i,j] = A(z)[i,j] + f(z)(i)(j)(a) * monomial(monoms[a]);
+    			}
+    		}
+    	}
+    }
+	
+	matrix U = mfblocks(A(1),A(2));
+	export(U);
+	
+	setring RRR;
+	return(uR);
+}
+
+
+
+
+
 	
 ////////////////////////////////////////////////////////////////////
 // partitions
