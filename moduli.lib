@@ -21,6 +21,29 @@ LIB "ring.lib";
 // that is, as odd supermatrices with polynomial entries. To create such
 // a block matrix from a pair of matrices A, B such that A * B = B * A = W . I,
 // use mfblock(A,B), see blow.lib.
+//
+// When forming the moduli spaces, moduli variables look like f(z)(i)(j)(a)
+// or f(i)(j)(a) where i,j are row and column indices and a is an index into
+// a list of monomials. To see what this list of monomials is, run
+// displayIndices with the input k you pass the other functions.
+
+////////////////////////////////////////////////////////////////////
+// displayIndices
+
+proc displayIndices(int k)
+{
+	int numVars = nvars(basering);
+	list monoms = monomialdict(k, numVars);
+ 	
+ 	print("Monomials of total degree <= " + string(k));
+	print("");
+ 	
+ 	int i;
+ 	for(i=1;i<=size(monoms);i++)
+ 	{
+ 		print(string(i) + "    " + string(monomial(monoms[i])) + "    [" + string(monoms[i]) + "]");
+ 	}
+}
 
 ////////////////////////////////////////////////////////////////////
 // moduliOfPotential
