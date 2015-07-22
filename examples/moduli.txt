@@ -165,28 +165,31 @@ poly rch = reduce(ch,I);
 // Now see the values this rch takes on the four components identified earlier
 list P = primdecSY(I);
 
-ideal p(1) = P[1][1];
-ideal p(2) = P[2][1];
-ideal p(3) = P[3][1];
-ideal p(4) = P[4][1];
+int i;
+for(i=1;i<=4;i++){ ideal p(i) = groebner(P[i][2]); }
 
-reduce(ch,groebner(p(1)));
-// -3*x-3*y
+for(i=1;i<=4;i++){ reduce(ch,p(i)); }
 
-reduce(ch,groebner(p(2)));
-// -3*x*f(1)(1)(1)(2)*f(2)(1)(1)(6)+3*y*f(1)(1)(1)(2)*f(2)(1)(1)(6)+3*y
+//-3*x-3*y
+//-3*x*f(1)(1)(1)(2)*f(2)(1)(1)(6)+3*y*f(1)(1)(1)(2)*f(2)(1)(1)(6)+3*y
+//3*x+3*y
+//-3*x*f(1)(1)(1)(5)*f(2)(1)(1)(3)+3*y*f(1)(1)(1)(5)*f(2)(1)(1)(3)-3*y
 
-reduce(ch,groebner(p(3)));
-// 3*x+3*y
-
-reduce(ch,groebner(p(4)));
-// -3*x*f(1)(1)(1)(5)*f(2)(1)(1)(3)+3*y*f(1)(1)(1)(5)*f(2)(1)(1)(3)-3*y
-
-// So on the irreducible subcomponent of the moduli space cut out by p(2),
+// So on the irreducible subcomponent of the moduli space cut out by p(2), p(4)
 // the Chern character does vary. Thus the points do not all represent isomorphic
 // matrix factorisations.
 //
-// It seems clear (not checked) that p(1) and p(3) describe a single MF and its shift
+// By inspection we can see that p(1), p(3) parametrise the suspension of one
+// another (see how switching f(1) to f(2) relates them). Writing 
+// a = f(1)(1)(1)(2) and b = f(2)(1)(1)(6) the MF parametrised by p(1) is
+// the pair ( a( y - x ), b( y2 + xy + x2 ) ) with ab = 1. Thus all points are
+// isomorphic to (y-x, y2+xy+x2) and p(3) is the shift.
+//
+// The relation between p(2) and p(4) must be more subtle: we can see from their
+// Chern characters that one is not just a shift of the other.
+//
+// Observe that GL(2) acts on the moduli space by pullback along change of
+// variable isomorphisms of Q[x,y].
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Moduli of self-defects of x^3 - case of rank 2, total degree <= 2

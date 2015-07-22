@@ -22,10 +22,6 @@ LIB "ring.lib";
 // a block matrix from a pair of matrices A, B such that A * B = B * A = W . I,
 // use mfblock(A,B), see blow.lib.
 
-// TODO
-// Universal MF
-// Chern char of universal MF
-
 ////////////////////////////////////////////////////////////////////
 // moduliOfPotential
 //
@@ -63,29 +59,15 @@ proc moduliOfPotential(poly W, int r, int k)
 		print("[moduliOfPotentials] Not a good idea to pass W = 0 in here yet.");
 		return();
 	}
-		
-    list varNames = ringlist(basering)[2];
- 	int numVars = size(varNames);
- 	
- 	// Monomials of total weight <= k in the ring variables, as intvecs
- 	int i;
- 	list monoms;
- 	for(i=0; i<=k; i++)
- 	{
-		monoms = monoms + partitions(i, numVars);
-	}
 	
-	//string deb;
-	//for(i=1;i<=size(monoms);i++)
-	//{
-	//	deb = deb + "[" + string(monoms[i]) + "] ";
-	//}
-	//dbprint(printlevel, "[moduliOfPotential] monoms:" + deb);
-	
+	// Monomials of total weight <= k in the ring variables, as intvecs
+	int numVars = nvars(basering);
+	list monoms = monomialdict(k, numVars);
  	int Q = size(monoms);
- 	    
-    // Get the coefficient vector of W and the monomials that occur
+ 	
+	// Get the coefficient vector of W and the monomials that occur
     poly xprod = 1;
+    int i;
     for(i=1; i<=numVars; i++)
     {
         xprod = xprod * var(i);
@@ -153,11 +135,7 @@ proc moduliOfPotential(poly W, int r, int k)
     // either of total weight <= 2k or occurs in W
     
     // First make a list of such monomials (as intvecs)
-    list eqn_monoms;
- 	for(i=0; i<=2*k; i++)
- 	{
-		eqn_monoms = eqn_monoms + partitions(i, numVars);
-	}
+    list eqn_monoms = monomialdict(2*k, numVars);
 	
 	// Go through the monomials in W and add them to eqn_monoms if they don't already occur
 	for(i=1;i<=size(mm_list);i++)
@@ -296,11 +274,7 @@ proc universalMF(poly W, int r, int k)
  	int numVars = size(varNames);
  	
  	int i;
- 	list monoms;
- 	for(i=0; i<=k; i++)
- 	{
-		monoms = monoms + partitions(i, numVars);
-	}
+ 	list monoms = monomialdict(k, numVars);
 	int Q = size(monoms);
 
 	int z,i,j,a;
@@ -365,21 +339,14 @@ proc moduliOfPotentialDet(poly W, int r, int k)
 		print("[moduliOfPotentialDet] Not a good idea to pass W = 0 in here yet.");
 		return();
 	}
-		
-    list varNames = ringlist(basering)[2];
- 	int numVars = size(varNames);
- 	
+		 	
  	// Monomials of total weight <= k in the ring variables, as intvecs
- 	int i;
- 	list monoms;
- 	for(i=0; i<=k; i++)
- 	{
-		monoms = monoms + partitions(i, numVars);
-	}
-	
+ 	int numVars = nvars(basering);
+ 	list monoms = monomialdict(k, numVars);
  	int Q = size(monoms);
 	
     // Get the coefficient vector of W and the monomials that occur
+    int i;
     poly xprod = 1;
     for(i=1; i<=numVars; i++)
     {
@@ -441,12 +408,7 @@ proc moduliOfPotentialDet(poly W, int r, int k)
     // which occurs in det(A) or W. The former are all monomials of total
     // weight <= rk
     
-    list monoms_rk;
- 	for(i=0; i<=r*k; i++)
- 	{
-		monoms_rk = monoms_rk + partitions(i, numVars);
-	}
-	
+    list monoms_rk = monomialdict(r*k,numVars);
  	int Q_rk = size(monoms_rk);
  	
  	// We need a list L of all intvecs v of length r whose entries
@@ -622,15 +584,8 @@ proc universalMFDet(poly W, int r, int k)
 	// right block, which is what the moduli space parametrises
 	matrix A[r][r]; 
 	
-	list varNames = ringlist(RRR)[2];
- 	int numVars = size(varNames);
- 	
- 	int i;
- 	list monoms;
- 	for(i=0; i<=k; i++)
- 	{
-		monoms = monoms + partitions(i, numVars);
-	}
+ 	int numVars = nvars(RRR);
+ 	list monoms = monomialdict(k,numVars);
 	int Q = size(monoms);
 
 	int i,j,a;
@@ -658,6 +613,24 @@ proc universalMFDet(poly W, int r, int k)
 	return(uR);
 }
 	
+////////////////////////////////////////////////////////////////////
+// monomialdict
+//
+// Given integers k >= 1 and nv >= 1 returns all intvecs of length
+// nv with sum <= k.
+
+proc monomialdict(int k, int nv)
+{
+ 	int i;
+ 	list monoms;
+ 	for(i=0; i<=k; i++)
+ 	{
+		monoms = monoms + partitions(i, nv);
+	}
+	
+	return(monoms);
+}
+
 ////////////////////////////////////////////////////////////////////
 // partitions
 //
