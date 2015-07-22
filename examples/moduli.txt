@@ -59,7 +59,7 @@ P[1][1];
 // and b = c, b' = -c' and cc' = -1. This is one-dimensional: it is a hyperbola.
 // Note that each point [X] determines the same MF X up to isomorphism, they
 // are all isomorphic to the MF (y+x, y-x) which is c = 1, c' = -1. So the
-// chern character is constant with value 2 on this component
+// Chern character is constant with value 2 on this component
 
 P[2][1];
 
@@ -183,11 +183,10 @@ reduce(ch,groebner(p(4)));
 // -3*x*f(1)(1)(1)(5)*f(2)(1)(1)(3)+3*y*f(1)(1)(1)(5)*f(2)(1)(1)(3)-3*y
 
 // So on the irreducible subcomponent of the moduli space cut out by p(2),
-// the Chern character does vary. Thus the points do not represent isomorphic
+// the Chern character does vary. Thus the points do not all represent isomorphic
 // matrix factorisations.
 //
-// It seems clear (not checked) that p(1) and p(3) describe a single MF and its
-// shift, while the relation between p(2) and p(4) is less clear?
+// It seems clear (not checked) that p(1) and p(3) describe a single MF and its shift
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Moduli of self-defects of x^3 - case of rank 2, total degree <= 2
@@ -207,21 +206,28 @@ def nR = moduliOfPotential(W,r,k);
 setring(nR);
 
 // Zero out all constant terms
-int z,i,j;
+int z,i,j,a;
 for(z=1;z<=2;z++)
 {
 for(i=1;i<=r;i++)
 {
 for(j=1;j<=r;j++)
 {
+// Zero out constant terms
 moduli_eqns = moduli_eqns + f(z)(i)(j)(1);
+for(a=2;a<=6;a++)
+{
+// All other coeffs are either zero, 1 or -1
+poly f = f(z)(i)(j)(a);
+moduli_eqns = moduli_eqns + f*(1-f)*(1+f);
+}
 }
 }
 }
 
 ideal I = groebner(moduli_eqns);
 
-// TOO HARD!
+// still TOO HARD! Zero out more terms
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Universal MF of y^4 - x^4 case of rank 1, total degree <= 3
@@ -252,7 +258,7 @@ ideal p(1..10);
 
 for(i=1;i<=10;i++)
 {
-p(i) = groebner(P[i][2]);
+p(i) = groebner(P[i][2]); // take the prime radicals
 }
 
 for(i=1;i<=10;i++)
@@ -265,7 +271,7 @@ dim(p(i));
 poly ch = supertrace(diff(U,x) * diff(U,y));
 poly rch = reduce(ch,I);
 
-// Now see the values this rch takes on the four components identified earlier
+// Now see the values this rch takes on the 10 components identified earlier
 for(i=1;i<=10;i++)
 {
 reduce(rch,p(i));
@@ -282,4 +288,54 @@ reduce(rch,p(i));
 // -4*x^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)+4*y^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)-8*y^2
 // -4*x^2+4*x*y-4*y^2
 
-// Here we see several families
+// Here we see several families. In each case there is a single continuous
+// parameter (e.g. f(1)(1)(1)(2)*f(2)(1)(1)(10)) so modulo isomorphism we
+// expect a 1-dimensional moduli space
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+// Moduli of self-defects of x^3 - case of rank 2, total degree <= 2
+// This time only parametrising determinant MFs
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^3 - x^3;
+
+int r = 2;
+int k = 2;
+
+def uR = universalMFDet(W,r,k);
+setring(uR);
+
+poly ch = supertrace(diff(U,x) * diff(U,y));
+ch;
+// 0 - well that's a bummer
+
+// The full moduli space takes forever to compute so let us
+// stick to the subscheme of MFs where all constant terms
+// and all xy terms are zero
+int i,j;
+for(i=1;i<=r;i++)
+{
+for(j=1;j<=r;j++)
+{
+moduli_eqns = moduli_eqns + f(i)(j)(1);
+moduli_eqns = moduli_eqns + f(i)(j)(5);
+}
+}
+
+ideal I = groebner(moduli_eqns);
+
+poly ch = supertrace(diff(U,x) * diff(U,y));
+poly rch = reduce(ch,I);
+
+list P = primdecSY(I); // takes about a minute
+
+// There are two components
+ideal p(1) = groebner(P[1][2]);
+ideal p(2) = groebner(P[2][2]);
+

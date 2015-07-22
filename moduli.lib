@@ -84,7 +84,7 @@ proc moduliOfPotential(poly W, int r, int k)
 	
  	int Q = size(monoms);
  	    
-    // Get the coefficient vector of W with regards to the monomials of monom
+    // Get the coefficient vector of W and the monomials that occur
     poly xprod = 1;
     for(i=1; i<=numVars; i++)
     {
@@ -328,10 +328,335 @@ proc universalMF(poly W, int r, int k)
 	return(uR);
 }
 
+////////////////////////////////////////////////////////////////////
+// moduliOfPotentialDet
+//
+// Given a polynomial ring R, a polynomial W in R, a rank r, and
+// a degree cutoff k, returns a quotient ring which parametrises
+// _determinantal_ matrix factorisations of W of rank r, with only
+// monomials of total degree <= k.
+//
+// A determinantal MF is a pair (A,B) where det(A) = W and B is the 
+// adjoint matrix of A.
+//
+// Details: Corresponding to each position (i,j) in A
+// and monomial in R of total degree <= k we introduce a new variable f(i)(j)(a)
+// where a is some index. These are the variables of our new ring, and the 
+// defining equations among these new variables encode the fact that
+// det(A) = W.
+//
+// We assume R = basering. The return value is a ring nR and in this ring
+// is already declared an ideal moduli_eqns which is the quotient, 
+// i.e. nR/moduli_eqns is the parametrising space.
 
+// TODO: We do not handle algebraic extensions
 
+proc moduliOfPotentialDet(poly W, int r, int k)
+{
+	if( typeof(basering) != "ring" )
+	{
+		print("[moduliOfPotentialDet] We cannot deal with quotient rings yet, sorry. Exiting.");
+		return();
+	}
+	
+	if( W == 0 )
+	{
+		// TODO
+		print("[moduliOfPotentialDet] Not a good idea to pass W = 0 in here yet.");
+		return();
+	}
+		
+    list varNames = ringlist(basering)[2];
+ 	int numVars = size(varNames);
+ 	
+ 	// Monomials of total weight <= k in the ring variables, as intvecs
+ 	int i;
+ 	list monoms;
+ 	for(i=0; i<=k; i++)
+ 	{
+		monoms = monoms + partitions(i, numVars);
+	}
+	
+ 	int Q = size(monoms);
+	
+    // Get the coefficient vector of W and the monomials that occur
+    poly xprod = 1;
+    for(i=1; i<=numVars; i++)
+    {
+        xprod = xprod * var(i);
+    }
+    matrix koffer = coef(W, xprod);
+    
+    // the first row of koffer contains the monomials and the second row the coeffs
+    // store this as a list of monomial intvecs and the coeffs
+    list mm_list, mc_list;
+    for(i=1; i<=ncols(koffer); i++)
+    {
+    	mm_list = mm_list + list(leadexp(koffer[1,i])); // leadexp extracts intvec
+    	mc_list = mc_list + list(number(koffer[2,i])); // number to force conversion
+    }
+    
+    // The variables of our new ring are
+    // f(i)(j)(a) from f(1..r)(1..r)(1..Q)
+    // i and j are the row and column resp., and a is the monomial index
+    list newVarNames;
+    int i,j,a;
+    for( i=1; i<=r; i++ )
+    {
+    	for( j=1; j<=r; j++ )
+    	{
+    		for( a=1; a<=Q; a++ )
+    		{
+    			// WARNING: If you change the ordering here you should also change it in e.g.
+    			// universalMFDet and other places where the order is used
+    			string nv = "f(" + string(i) + ")(" + string(j) + ")(" + string(a) + ")";
+    			newVarNames = newVarNames + list(nv);
+    		}
+    	}
+    }
+    
+    // Now create the new ring
+    def RRR = basering;
+    
+	list nR_list;
+	nR_list[1] = ringlist(RRR)[1]; // TOOD: minpoly
+	nR_list[2] = newVarNames;
+	
+	intvec kk = (1..size(newVarNames));
+    for(i=1; i<=size(newVarNames); i++)
+    {
+        kk[i] = 1;
+    }
+	nR_list[3] = list( list( "dp", kk ) );
+	nR_list[4] = ideal(0);
+	
+	def nR = ring(nR_list);
+    setring nR;
+    
+    // mm_list is already available
+    list mc_list = fetch(RRR,mc_list);
+    
+    // Find the ideal of moduli equations. The equations encode the
+    // fact that det(A) = W. Thus we have one equation for each monomial
+    // which occurs in det(A) or W. The former are all monomials of total
+    // weight <= rk
+    
+    list monoms_rk;
+ 	for(i=0; i<=r*k; i++)
+ 	{
+		monoms_rk = monoms_rk + partitions(i, numVars);
+	}
+	
+ 	int Q_rk = size(monoms_rk);
+ 	
+ 	// We need a list L of all intvecs v of length r whose entries
+ 	// are between 1 and Q, to index a choice of monomial of weight <= k
+ 	// for each row of A in the determinant calculation
+ 	list L = seqsfrominterval(Q, r);
+ 	
+ 	// Make a list L_sum which adds up all the exponents from L
+ 	// That is, each element L[i] chooses a sequence of r monomials of
+ 	// total weight <= k, namely monoms[L[i][1]], ..., monoms[L[i][r]]
+ 	// and L_sum[i] = monoms[L[i][1]] + ... + monoms[L[i][r]]
+ 	int j;
+ 	list L_sum;
+ 	intvec v;
+ 	for(i=1;i<=size(L);i++)
+ 	{
+ 		v = 0;
+ 		
+ 		for(j=1;j<=r;j++)
+ 		{
+ 			v = v + monoms[L[i][j]];
+ 		}
+ 		
+ 		L_sum[i] = v;
+ 	}
+ 	
+    // To compute the determinant we first need all permutations of r
+    list perms = SGroupintvecs(r);
+    
+    // Zero the list of coefficients of det(A)
+    list det_coeff;
+    for(i=1;i<=Q_rk;i++)
+    {
+    	det_coeff[i] = 0;
+    }
+    
+    // Now for each permutation s = perms[i], and each sequence of choices 
+    // of monomials L[j] (one per row) we get a contribution to the coefficient
+    // of the monomial L_sum[j] in det(A)
+    int i, j, u;
+    intvec s;
+    intvec mseq;
+    intvec lsum;
+    int b;
+    poly t;
+    
+    for(i=1;i<=size(perms);i++)
+    {
+		s = perms[i];
+	    
+    	for(j=1;j<=size(L);j++)
+    	{
+    		mseq = L[j];
+    		
+    		t = (-1)^(LengthSymElement(s));
+    		
+    		// u is the row
+	    	for(u=1;u<=r;u++)
+    		{
+    			t = t * f(u)(s[u])(mseq[u]);
+	    	}	
+	    	
+	    	// Add t to the coefficient of L_sum[j] in det(A)
+	    	b = indexinlist(monoms_rk, L_sum[j]);
+	    	
+	    	det_coeff[b] = det_coeff[b] + t;
+	    }
+    }
+        
+    // The monomials for which we need equations are monoms_rk plus the
+    // monomials in W. Go through the monomials in W and add them
+    // to eqn_monoms if they don't already occur
+    list eqn_monoms = monoms_rk;
+	
+	for(i=1;i<=size(mm_list);i++)
+	{
+		if( sum(mm_list[i]) > r*k )
+		{
+			eqn_monoms = eqn_monoms + list(mm_list[i]);
+		}
+	}
+	
+	string deb;
+	for(i=1;i<=size(monoms);i++)
+	{
+		deb = deb + "[" + string(monoms[i]) + "] ";
+	}
+	//dbprint(printlevel, "[moduliOfPotentialDet] monoms:" + deb);
+	//dbprint(printlevel, "[moduliOfPotentialDet] det_coeff:" + string(det_coeff));
 
+	// Now generate the moduli equations
+	list moduli_eqn_list;
+    int u;
+    
+	for( u=1; u<=size(eqn_monoms); u++ )
+	{
+		poly e;
+    	intvec m = eqn_monoms[u];
+    			
+    	// At row i, col j, and for the monomial m the associated
+    	// equation e asserts that the coeff of m in det(A) equals the coeff
+    	// of m in W.
+    		
+    	// The coeff of m in W is given by cw, where
+    	poly cw;
+    	int a = indexinlist(mm_list,m);
+    				
+    	if( a == 0 )
+    	{
+    		// This monomial has zero coeff in W
+    		cw = 0;
+    	}
+    	else
+    	{
+    		cw = mc_list[a];
+    	}
+    			
+    	e = -cw;
+    			
+    	// The coeff of m in det(A) is similarly computed
+    	int b = indexinlist(monoms_rk,m);
+	    	
+	    if( b != 0 )
+	    {
+	    	e = e + det_coeff[b];
+		}
+    			
+    	moduli_eqn_list = moduli_eqn_list + list(e);
+    }
+    
+    // convert to a row matrix
+    matrix mat_eqn[1][size(moduli_eqn_list)];
+    for( i=1; i<=size(moduli_eqn_list); i++ )
+    {
+    	mat_eqn[1,i] = moduli_eqn_list[i];
+    }
+    
+    ideal moduli_eqns = ideal(mat_eqn);    
+    export(moduli_eqns);
+    
+	setring RRR;
+	return(nR);
+}
 
+////////////////////////////////////////////////////////////////////
+// universalMFDet
+//
+// Given the same input data as moduliOfPotentialDet returns the
+// universal matrix factorisation of that moduli space. This is 
+// defined over the ring R + nR where R is the basering and
+// nR is the output of moduliOfPotential. 
+//
+// The return value is a ring uR and in this ring is already
+// declared the ideal moduli_eqns from moduliOfPotential and
+// a matrix factorisation U in supermatrix form (the universal MF).
+// Note that this only satisfies U * U = W . I up to moduli_eqns.
+
+proc universalMFDet(poly W, int r, int k)
+{
+	def RRR = basering;
+	def nR = moduliOfPotentialDet(W,r,k);
+	def uR = RRR + nR; // TODO this fails in a bunch of situations (see docs)
+	
+	setring(uR);
+	
+	// imap works to import stuff from RRR and nR to uR
+	ideal moduli_eqns = imap(nR, moduli_eqns);
+	poly W = imap(RRR,W);
+	export(W);
+	export(moduli_eqns);
+	
+	// Now construct the universal matrix U beginning with the upper
+	// right block, which is what the moduli space parametrises
+	matrix A[r][r]; 
+	
+	list varNames = ringlist(RRR)[2];
+ 	int numVars = size(varNames);
+ 	
+ 	int i;
+ 	list monoms;
+ 	for(i=0; i<=k; i++)
+ 	{
+		monoms = monoms + partitions(i, numVars);
+	}
+	int Q = size(monoms);
+
+	int i,j,a;
+    for( i=1; i<=r; i++ )
+    {
+    	for( j=1; j<=r; j++ )
+    	{
+    		for( a=1; a<=Q; a++ )
+    		{
+    			// The RRR variables come first, so if we call
+    			// monomial with something of length <= numVars
+    			// we get the monomial from RRR
+    			A[i,j] = A[i,j] + f(i)(j)(a) * monomial(monoms[a]);
+    		}
+    	}
+    }
+    
+    // The other matrix B is the adjugate of A
+	matrix B = adjoint(A);
+	
+	matrix U = mfblocks(A,B);
+	export(U);
+	
+	setring RRR;
+	return(uR);
+}
 	
 ////////////////////////////////////////////////////////////////////
 // partitions
@@ -367,6 +692,49 @@ proc partitions(int N, int M)
     }
     
     return(P);
+}
+
+////////////////////////////////////////////////////////////////////
+// seqsfrominterval
+//
+// Given an integer N >=1 and M >= 1 return the set of all sequences
+// of integers of length M with entries in 1,...,N
+
+proc seqsfrominterval(int N, int M)
+{
+	if( M == 1 )
+	{
+		list L;
+		int i;
+		for(i=1;i<=N;i++)
+		{
+			L = L + list(intvec(i));
+		}
+		return(L);
+	}
+	
+	list L_small = seqsfrominterval(N, M-1);
+	
+	list L;
+	int i,j,k;
+	intvec v;
+	
+	for(i=1;i<=N;i++)
+	{
+		for(j=1;j<=size(L_small);j++)
+		{
+			v[1] = i;
+			
+			for(k=1;k<=M-1;k++)
+			{
+				v[k+1] = (L_small[j])[k];
+			}
+			
+			L = L + list(v);
+		}
+	}
+	
+	return(L);
 }
 
 proc concat_intvec( intvec L, intvec R )
