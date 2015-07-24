@@ -187,7 +187,8 @@ for(i=1;i<=4;i++){ reduce(ch,p(i)); }
 
 // So on the irreducible subcomponent of the moduli space cut out by p(2), p(4)
 // the Chern character does vary. Thus the points do not all represent isomorphic
-// matrix factorisations.
+// matrix factorisations (although that does not mean we have 1-parameter families of
+// non-isomorphic MFs, see below).
 //
 // By inspection we can see that p(1), p(3) parametrise the suspension of one
 // another (see how switching f(1) to f(2) relates them). Writing 
@@ -195,11 +196,26 @@ for(i=1;i<=4;i++){ reduce(ch,p(i)); }
 // the pair ( a( y - x ), b( y2 + xy + x2 ) ) with ab = 1. Thus all points are
 // isomorphic to (y-x, y2+xy+x2) and p(3) is the shift.
 //
-// The relation between p(2) and p(4) must be more subtle: we can see from their
-// Chern characters that one is not just a shift of the other.
+// Before discussing the meaning of p(2), p(4) note that over C we know all the
+// MFs of W, because C[x,y] is a UFD and y^3-x^3 = (y-x)(y-rx)(y-r^2x) where r is
+// a primitive third root of unity, so 1 + r + r^2 = 0. Then a MF of W must just
+// choose a subset of these factors (up to isomorphism). These are the P_S defects.
 //
-// Observe that GL(2) acts on the moduli space by pullback along change of
-// variable isomorphisms of Q[x,y].
+// Over Q the root r does not exist, but still the components p(2), p(4) are "about" 
+// the P_S's, in the sense that the C-points of these components are these MFs.
+//
+// For example consider the component p(2). Let [X] denote a C-point of this scheme,
+// where X is the corresponding MF. Up to isomorphism we may fix f(2)(1)(1)(6) = 1.
+// Set a = f(1)(1)(1)(2). It is easy to check that the condition for [X] to be on p(2)
+// is exactly that 1 + a + a^2 = 0, so either a = r or a = r^2. Since the upper right
+// block in X is x - ay = a( y - a^2x ) we have
+//
+// If a = r then X \cong P_{2}
+// If a = r^2 then X \cong P_{1}
+//
+// Letting f(2)(1)(1)(6) vary again these two points generate lines of isomorphic MFs.
+// So the upshot is: p(2) describes P_{1} and P_{2}. Similarly p(4) must describe
+// P_{1}[1] = P_{0,2} and P_{2}[1] = P_{0,1}, just as p(3) describes P_{0}[1] = P_{1,2}.
 
 //////////////////////////////////////////////////////////////////////////////////////
 // Moduli of self-defects of x^3 - case of rank 2, total degree <= 2
@@ -301,11 +317,6 @@ reduce(rch,p(i));
 // -4*x^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)+4*y^2*f(1)(1)(1)(5)*f(2)(1)(1)(6)-8*y^2
 // -4*x^2+4*x*y-4*y^2
 
-// Here we see several families. In each case there is a single continuous
-// parameter (e.g. f(1)(1)(1)(2)*f(2)(1)(1)(10)) so modulo isomorphism we
-// expect a 1-dimensional moduli space
-
-
 //////////////////////////////////////////////////////////////////////////////////////
 // Moduli of self-defects of x^3 - case of rank 2, total degree <= 2
 // This time only parametrising determinant MFs
@@ -326,7 +337,7 @@ setring(uR);
 
 poly ch = supertrace(diff(U,x) * diff(U,y));
 ch;
-// 0 - well that's a bummer
+// 0 - well duh
 
 // The full moduli space takes forever to compute so let us
 // stick to the subscheme of MFs where all constant terms
