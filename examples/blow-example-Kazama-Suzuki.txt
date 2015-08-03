@@ -41,7 +41,9 @@ matrix RD = l[1]; // Reduced inflation of Y x X
 matrix ep = l[2]; // Idempotent endomorphism of RD
 print(ep * ep - ep); // is ep is an idempotent "on the nose"?
 
-matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx );
+// TODO: there is a problem here, as mfSplitIdempotent detects a complex
+// of Z2 graded things and returns a list instead of a matrix
+matrix final = mfSuspend( mfSplitIdempotent(RD, ep), nx ); 
 print(final);
 
 // Check that this really is a MF: 
