@@ -3,17 +3,19 @@
 //
 //  A - self defects of x^2 rank 1, degree <= 1
 //  B - universal MF of part A
-//  C - Universal MF of y^3 - x^3 rank 1, degree <= 2
-//  D - Universal MF of y^4 - x^4 rank 1, degree <= 3
+//  C - universal MF of y^3 - x^3 rank 1, degree <= 2
+//  D - universal MF of y^4 - x^4 rank 1, degree <= 3
 //  E - determinant MF self-defects of x^3 - rank 2, degree <= 2
 //  F - self-defects of x^2 with homotopies - rank 1, degree <= 1
-//  G - self-defects of y^3 - x^3 with homotopies - rank 1, degree <= 2
+//  G - self-defects of x^3 with homotopies - rank 1, degree <= 2
 
 /////////////////////////////////////////////////////////////////////////////
 // Examples of graded moduli spaces of MFs
 // 
-//  GA - graded self-defects of y^3 - x^3 - case of rank 1, degree <= 2
-//  GB - graded self-defects of y^3 - x^3 - case of rank 2, degree <= 2
+//  GA - graded self-defects of x^3 - case of rank 1
+//  GB - graded self-defects of x^3 - case of rank 2
+
+// NOTE: See blow.lib for our grading conventions
 
 //////////////////////////////////////////////////////////////////////////////////////
 // (A) Moduli of self-defects of x^2 - case of rank 1, total degree <= 1
@@ -378,7 +380,7 @@ reduce(H(1)*U+U*H(1),I);
 // _[2]=x*gen(2)
 
 //////////////////////////////////////////////////////////////////////////////////////
-// (G) Moduli of self-defects of y^3 - x^3 with homotopies - case of rank 1, degree <= 2
+// (G) Moduli of self-defects of x^3 with homotopies - case of rank 1, degree <= 2
 //////////////////////////////////////////////////////////////////////////////////////
 
 // We revisit the example and parameters of (C) but now with homotopies
@@ -411,7 +413,7 @@ ideal J = groebner(p(2) + homotopy_eqns);
 // Again one checks that e.g. [H(1),U] = x^2 modulo J
 
 //////////////////////////////////////////////////////////////////////////////////////
-// (GA) Moduli of graded self-defects of y^3 - x^3 - case of rank 1, degree <= 2
+// (GA) Moduli of graded self-defects of x^3 - case of rank 1, degree <= 2
 //////////////////////////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib); //option(prot);
@@ -460,9 +462,9 @@ ideal G = locusGradedMF(2, 3, r, k, intvec(2,1));
 
 ideal I = groebner(G + moduli_eqns);
 
-//////////////////////////////////////////////////////////////////////////////////////
-// (GB) Moduli of graded self-defects of y^3 - x^3 - case of rank 2, degree <= 2
-//////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+// (GB) Moduli of graded self-defects of x^3 - case of rank 2
+///////////////////////////////////////////////////////////////////////
 
 option(noredefine);option(noloadLib); //option(prot);
 LIB "blow.lib";
@@ -509,4 +511,6 @@ reduce(rch,p(i));
 //3*x+3*y
 //-3*x*f(1)(1)(1)(5)*f(2)(1)(1)(3)+3*y*f(1)(1)(1)(5)*f(2)(1)(1)(3)-3*y
 
-// Note that the -6*x-6*y is obviously a direct sum of two copies of the original guy
+// Note that the -6*x-6*y is obviously a direct sum of two copies of the shifted
+// identity defect, 3*x + 3*y is the identity defect plus something contractible
+// The others I'm not sure about
