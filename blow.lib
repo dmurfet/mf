@@ -52,9 +52,9 @@ LIB "ring.lib";
 // with grading M{1}_i = M_{i-1}.
 //
 // The doubled grading is adopted for the following reason: let R be a polynomial ring
-// with this grading, and W an element of R of degree 2(n+1). If W = fg for homogeneous f,g
-// then we can write W: R -> R as a composite of two maps g: R -> R{n+1-|g|} and f: R{n+1-|g|} -> R
-// of graded R-modules of degree n+1.
+// with this grading, and W an element of R with deg(W) = n+1. If W = fg for homogeneous f,g
+// then we can write W: R -> R as a composite of two maps g: R -> R{n+1-|g|} and
+// f: R{n+1-|g|} -> R of graded R-modules of degree n+1.
 //
 // A matrix factorisation is represented by an odd supermatrix A giving the differential
 // on some Z/2-graded free module X (over a polynomial ring). A _graded_ matrix factorisation
@@ -2117,6 +2117,7 @@ proc isGradingValid(matrix A, intvec g)
     matrix a0 = extractblockmat(A)[3];
     matrix a1 = extractblockmat(A)[2];
     
+    // TODO: this doesn't actually check that the entries are homogeneous!
     int i, j;
     for(i = 1; i <= m; i++) // row
     {

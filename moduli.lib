@@ -30,6 +30,11 @@ LIB "ring.lib";
 //
 // Moduli variables for homotopies are h(t)(z)(i)(j)(a) where t = 1,...,r
 // is the index into the set of variables of the ring.
+//
+// Graded MFs: our conventions are as explained in blow.lib (see 
+// isGradingValid for the gory details).
+//
+// TODO: We do not handle algebraic extensions
 
 ////////////////////////////////////////////////////////////////////
 // moduliOfPotential_H
@@ -117,7 +122,7 @@ proc moduliOfPotential_H(poly W, int r, int k, intvec N)
 	
 	def tempR = ring(tempR_list);
  	
-	def hR = nR + tempR; // TODO this fails in a bunch of situations (see docs)
+	def hR = nR + tempR;
 	
 	setring(hR);
 	
@@ -215,7 +220,7 @@ proc moduliOfPotential_H(poly W, int r, int k, intvec N)
     
     ideal homotopy_eqns = ideal(mat_eqn);    
     export(homotopy_eqns);
-        
+            
 	setring RRR;
 	return(hR);
 }
@@ -225,20 +230,213 @@ proc moduliOfPotential_H(poly W, int r, int k, intvec N)
 //
 // Given the same input data as moduliOfPotential_H returns the
 // universal matrix factorisation of that moduli space, together
-// with its homotopies. This is defined over the ring R + nR
-// where R is the basering and nR is the output of moduliOfPotential_H. 
+// with its homotopies. This is defined over the ring R + hR
+// where R is the basering and hR is the output of moduliOfPotential_H. 
 //
 // The return value is a ring uR and in this ring is already
-// declared the ideal moduli_eqns from moduliOfPotential_H and
+// declared the ideals moduli_eqns,homotopy_eqns from moduliOfPotential_H and
 // a matrix factorisation U in supermatrix form (the universal MF).
 // Note that this only satisfies U * U = W . I up to moduli_eqns.
 // There are homotopies H(1),...,H(r) where r is the number of variables
-// in the basering.
+// in the basering, which satisfies [H(t),U] = x(t)^N[t] up to
+// the ideal homotopy_eqns.
 
-//proc universalMF_H(poly W, int r, int k, intvec N)
-//{
+proc universalMF_H(poly W, int r, int k, intvec N)
+{
+	def RRR = basering;
+	def hR = moduliOfPotential_H(W,r,k,N);
+	def uR = RRR + hR; 
+	
+	setring(uR);
+	
+	// imap works to import stuff from RRR and nR to uR
+	ideal moduli_eqns = imap(hR, moduli_eqns);
+	ideal homotopy_eqns = imap(hR, homotopy_eqns);
+	poly W = imap(RRR,W);
+	export(W);
+	export(moduli_eqns);
+	export(homotopy_eqns);
+	
+	// Now construct the universal matrix U
+	matrix A(1)[r][r]; matrix A(2)[r][r];
+	
+	list varNames = ringlist(RRR)[2];
+ 	int numVars = size(varNames);
+ 	
+ 	int i;
+ 	list monoms = monomialdict(k, numVars);
+	int Q = size(monoms);
 
-//}
+	int z,i,j,a;
+    for( z=1; z<=2; z++ )
+    {
+    	for( i=1; i<=r; i++ )
+    	{
+    		for( j=1; j<=r; j++ )
+    		{
+    			for( a=1; a<=Q; a++ )
+    			{
+    				// The RRR variables come first, so if we call
+    				// monomial with something of length <= numVars
+    				// we get the monomial from RRR
+    				A(z)[i,j] = A(z)[i,j] + f(z)(i)(j)(a) * monomial(monoms[a]);
+    			}
+    		}
+    	}
+    }
+	
+	matrix U = mfblocks(A(1),A(2));
+	export(U);
+	
+	// And the homotopies H(1),...,H(numVars)
+	matrix H(1..numVars);
+	
+	int t;
+	for( t=1; t<=numVars; t++ )
+	{
+		A(1) = zeromat(r);
+		A(2) = zeromat(r);
+		
+		for( z=1; z<=2; z++ )
+	    {
+    		for( i=1; i<=r; i++ )
+    		{
+    			for( j=1; j<=r; j++ )
+	    		{
+    				for( a=1; a<=Q; a++ )
+    				{
+	    				A(z)[i,j] = A(z)[i,j] + h(t)(z)(i)(j)(a) * monomial(monoms[a]);
+    				}
+    			}
+    		}
+	    }
+	    
+	    H(t) = mfblocks(A(1),A(2));
+		export(H(t));
+	}
+		
+	setring RRR;
+	return(uR);
+}
+
+////////////////////////////////////////////////////////////////////
+// maxdegForGradingVector
+//
+// Given Wdeg, r, g as in locusGradedMF, returns the largest
+// total degree possible for a monomial in such a graded MF
+
+proc maxdegForGradingVector(int Wdeg, int r, intvec g)
+{
+	int maxdeg = 0;
+	int n = Wdeg - 1;
+	
+	int i,j,a;
+	
+	for(i=1; i<=r; i++)
+	{
+		for(j=1; j<=r; j++)
+		{
+	    	int P = n + 1 - g[r+i] + g[j];
+	    	int Q = n + 1 - g[i] + g[r+j];
+	    	
+	    	if( P mod 2 == 0 && P > 2 * maxdeg )
+	    	{
+	    		maxdeg = P div 2;
+	    	}
+	    	
+	    	if( Q mod 2 == 0 && Q > 2 * maxdeg )
+	    	{
+	    		maxdeg = Q div 2;
+	    	}
+		}
+	}
+	
+	return(maxdeg);
+}
+
+////////////////////////////////////////////////////////////////////
+// locusGradedMF
+//
+// Returns the equations cutting out graded MFs among all MFs. This is
+// based on isGradingValid from blow.lib.
+//
+// IMPORTANT: this procedure should be called with a current basering
+// which is the output of e.g. moduliOfPotential, that is, it should
+// contain variables f(z)(i)(j)(a) for the same parameters r, k.
+//
+// We are passed the degree of W (the ordinary degree, not the doubled
+// thing discussed in blow.lib), and the intvec encoding the grading
+// which should be of size 2 * r
+
+proc locusGradedMF(int numVars, int Wdeg, int r, int k, intvec g)
+{
+	if( size(g) != 2 * r )
+	{
+		print("[locusGradedMF] g has wrong size, exiting.");
+		return();
+	}
+	
+	if( maxdegForGradingVector(Wdeg, r, g) > k )
+	{
+		print("[locusGradedMF] Polite warning: with this grading vector the degree cutoff k will truncate the moduli space.");	
+	}
+	
+	int n = Wdeg - 1;
+	
+	// Monomials of total weight <= k in the ring variables, as intvecs
+	list monoms = monomialdict(k, numVars);
+ 	int Q = size(monoms);
+	
+	// Pasted from blow.lib:
+	// The doubled grading is adopted for the following reason: let R be a polynomial ring
+	// with this grading, and W an element of R with deg(W) = n+1. If W = fg for homogeneous f,g
+	// then we can write W: R -> R as a composite of two maps g: R -> R{n+1-|g|} and
+	// f: R{n+1-|g|} -> R of graded R-modules of degree n+1.
+
+	// Our matrix is in the shape (0 A newline B 0), in the notation of
+	// isGradingValid this is (0 a1 newline a0 0).
+	
+	int i,j,a;
+	list grading_eqn_list;
+	
+	for(i=1; i<=r; i++)
+	{
+		for(j=1; j<=r; j++)
+		{
+	    	// To be valid the polynomial in B[i,j] must be homogenous, and it must
+		    // define a morphism of graded modules of degree n + 1
+       	    // R{a} -> R{b} where a = g[j] and b = g[r + i]
+            // that is, we must have
+	        // n+1 - g[r+i] + g[j] == 2 * deg(B[i,j])
+            // This means that we impose an equation which zeros out any
+       	    // f(2)(i)(j)(a) where a indexes a monomial that does NOT satisfy
+           	// this identity
+
+			for( a=1; a<=Q; a++ )
+    		{
+				if( n + 1 - g[r+i] + g[j] != 2 * sum(monoms[a]) )
+				{
+					grading_eqn_list = grading_eqn_list + list(f(2)(i)(j)(a));
+				}			
+			
+				if( n + 1 - g[i] + g[r+j] != 2 * sum(monoms[a]) )
+				{
+					grading_eqn_list = grading_eqn_list + list(f(1)(i)(j)(a));
+				}
+			}
+		}
+	}
+	
+	// convert to a row matrix
+    matrix mat_eqn[1][size(grading_eqn_list)];
+    for( i=1; i<=size(grading_eqn_list); i++ )
+    {
+    	mat_eqn[1,i] = grading_eqn_list[i];
+    }
+    
+    ideal grading_eqns = ideal(mat_eqn);    
+	return(grading_eqns);	
+}
 
 ////////////////////////////////////////////////////////////////////
 // moduliOfPotential
@@ -261,19 +459,16 @@ proc moduliOfPotential_H(poly W, int r, int k, intvec N)
 // is already declared an ideal moduli_eqns which is the quotient, 
 // i.e. nR/moduli_eqns is the parametrising space.
 
-// TODO: We do not handle algebraic extensions
-
 proc moduliOfPotential(poly W, int r, int k)
 {
 	if( typeof(basering) != "ring" )
 	{
-		print("[moduliOfPotential] We cannot deal with quotient rings yet, sorry. Exiting.");
+		print("[moduliOfPotential] This is the wrong function for quotient rings. Exiting.");
 		return();
 	}
 	
 	if( W == 0 )
 	{
-		// TODO
 		print("[moduliOfPotentials] Not a good idea to pass W = 0 in here yet.");
 		return();
 	}
@@ -440,7 +635,7 @@ proc moduliOfPotential(poly W, int r, int k)
     
     ideal moduli_eqns = ideal(mat_eqn);    
     export(moduli_eqns);
-        
+            
 	setring RRR;
 	return(nR);
 }
@@ -462,7 +657,7 @@ proc universalMF(poly W, int r, int k)
 {
 	def RRR = basering;
 	def nR = moduliOfPotential(W,r,k);
-	def uR = RRR + nR; // TODO this fails in a bunch of situations (see docs)
+	def uR = RRR + nR; 
 	
 	setring(uR);
 	
@@ -502,7 +697,7 @@ proc universalMF(poly W, int r, int k)
 	
 	matrix U = mfblocks(A(1),A(2));
 	export(U);
-	
+		
 	setring RRR;
 	return(uR);
 }
@@ -528,8 +723,6 @@ proc universalMF(poly W, int r, int k)
 // is already declared an ideal moduli_eqns which is the quotient, 
 // i.e. nR/moduli_eqns is the parametrising space.
 
-// TODO: We do not handle algebraic extensions
-
 proc moduliOfPotentialDet(poly W, int r, int k)
 {
 	if( typeof(basering) != "ring" )
@@ -540,7 +733,6 @@ proc moduliOfPotentialDet(poly W, int r, int k)
 	
 	if( W == 0 )
 	{
-		// TODO
 		print("[moduliOfPotentialDet] Not a good idea to pass W = 0 in here yet.");
 		return();
 	}
@@ -753,7 +945,7 @@ proc moduliOfPotentialDet(poly W, int r, int k)
     
     ideal moduli_eqns = ideal(mat_eqn);    
     export(moduli_eqns);
-    
+        
 	setring RRR;
 	return(nR);
 }
@@ -775,7 +967,7 @@ proc universalMFDet(poly W, int r, int k)
 {
 	def RRR = basering;
 	def nR = moduliOfPotentialDet(W,r,k);
-	def uR = RRR + nR; // TODO this fails in a bunch of situations (see docs)
+	def uR = RRR + nR; 
 	
 	setring(uR);
 	
@@ -813,7 +1005,7 @@ proc universalMFDet(poly W, int r, int k)
 	
 	matrix U = mfblocks(A,B);
 	export(U);
-	
+		
 	setring RRR;
 	return(uR);
 }
