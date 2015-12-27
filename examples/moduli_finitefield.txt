@@ -1,0 +1,149 @@
+/////////////////////////////////////////////////////////////////////////////
+// Examples of moduli spaces of MFs over finite fields
+//
+// (A) Self-defects of x^2 - rank 1, degree <= 1 over the field F2
+
+//////////////////////////////////////////////////////////////////////////////////////
+// (A) Self-defects of x^2 - rank 1, degree <= 1 over the field F2
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); //option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=2,(x,y),dp; // F2
+printlevel=1;
+poly W = y^2 - x^2;
+
+int r = 1;
+int k = 1;
+
+def nR = moduliOfPotential(W,r,k);
+setring(nR);
+
+// Impose the additional equations var(i)^2 - var(i) to get a radical ideal
+int i;
+ideal J;
+for(i=1;i<=nvars(basering);i++)
+{
+poly f = var(i)^2 - var(i);
+J = J + f;
+}
+
+ideal I = groebner(moduli_eqns + J);
+
+// I[1]=f(2)(1)(1)(3)+1
+// I[2]=f(2)(1)(1)(2)+1
+// I[3]=f(2)(1)(1)(1)
+// I[4]=f(1)(1)(1)(3)+1
+// I[5]=f(1)(1)(1)(2)+1
+// I[6]=f(1)(1)(1)(1)
+// That is, there is a single point, the identity MF
+
+vdim(I);
+// 1
+
+//////////////////////////////////////////////////////////////////////////////////////
+// (B) y^3 - x^3 case of rank 1, degree <= 2 over the field F2
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); //option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=2,(x,y),dp;
+printlevel=1;
+poly W = y^3 - x^3;
+
+def uR = universalMF(W,1,2);
+setring(uR);
+
+int i;
+ideal J;
+for(i=1;i<=nvars(basering);i++)
+{
+poly f = var(i)^2 - var(i);
+J = J + f;
+}
+
+ideal I = groebner(moduli_eqns + J);
+
+// I[1]=f(2)(1)(1)(5)+f(2)(1)(1)(6)
+// I[2]=f(2)(1)(1)(4)+f(2)(1)(1)(5)
+// I[3]=f(2)(1)(1)(3)+f(2)(1)(1)(6)+1
+// I[4]=f(2)(1)(1)(2)+f(2)(1)(1)(4)+1
+// I[5]=f(2)(1)(1)(1)+f(2)(1)(1)(3)+f(2)(1)(1)(6)+1
+// I[6]=f(1)(1)(1)(6)+f(2)(1)(1)(6)+1
+// I[7]=f(1)(1)(1)(5)+f(2)(1)(1)(2)+f(2)(1)(1)(4)+f(2)(1)(1)(5)
+// I[8]=f(1)(1)(1)(4)+f(2)(1)(1)(4)+1
+// I[9]=f(1)(1)(1)(3)+f(2)(1)(1)(1)+f(2)(1)(1)(3)+1
+// I[10]=f(1)(1)(1)(2)+f(2)(1)(1)(4)
+// I[11]=f(1)(1)(1)(1)+f(2)(1)(1)(1)
+// I[12]=f(2)(1)(1)(6)^2+f(2)(1)(1)(6)
+// I[13]=y^2+y
+// I[14]=x^2+x
+
+vdim(I);
+// 8 - so there are eight MFs. They can be computed by
+
+list P = primdecSY(groebner(moduli_eqns));
+
+int i;
+for(i=1;i<=size(P);i++){ ideal p(i) = groebner(P[i][2]); }
+
+// For example
+
+p(1);
+
+// p(1)[1]=f(2)(1)(1)(5)+f(2)(1)(1)(6)
+// p(1)[2]=f(2)(1)(1)(4)+f(2)(1)(1)(6)
+// p(1)[3]=f(2)(1)(1)(3)
+// p(1)[4]=f(2)(1)(1)(2)
+// p(1)[5]=f(2)(1)(1)(1)
+// p(1)[6]=f(1)(1)(1)(6)
+// p(1)[7]=f(1)(1)(1)(5)
+// p(1)[8]=f(1)(1)(1)(4)
+// p(1)[9]=f(1)(1)(1)(2)+f(1)(1)(1)(3)
+// p(1)[10]=f(1)(1)(1)(1)
+// p(1)[11]=f(1)(1)(1)(3)*f(2)(1)(1)(6)+1
+
+// Since f(2)(1)(1)(6) is forced to be 1 this is the pair
+// ( y + x , y2 + xy + x2 )
+
+poly ch = supertrace(diff(U,x) * diff(U,y));
+
+for(i=1;i<=size(P);i++){ reduce(ch,p(i)); }
+
+// x+y
+// x*f(1)(1)(1)(2)*f(2)(1)(1)(6)+y*f(1)(1)(1)(2)*f(2)(1)(1)(6)+y
+// x+y
+// x*f(1)(1)(1)(5)*f(2)(1)(1)(3)+y*f(1)(1)(1)(5)*f(2)(1)(1)(3)+y
+
+//////////////////////////////////////////////////////////////////////////////////////
+// (C) Self-defects of x^4 - rank 2, degree <= 3 over the field F2
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); option(prot);
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=2,(x,y),dp; // F2
+printlevel=1;
+poly W = y^4 - x^4;
+
+int r = 2;
+int k = 3;
+
+def nR = moduliOfPotential(W,r,k);
+setring(nR);
+
+// Impose the additional equations var(i)^2 - var(i) to get a radical ideal
+int i;
+ideal J;
+for(i=1;i<=nvars(basering);i++)
+{
+poly f = var(i)^2 - var(i);
+J = J + f;
+}
+
+ideal I = groebner(moduli_eqns + J);
+
+// Too slow
+

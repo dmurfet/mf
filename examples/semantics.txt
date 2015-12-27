@@ -1,3 +1,38 @@
 /////////////////////////////////////////////////////////////////////////////
 // Examples of linear logic semantics
 
+
+//////////////////////////////////////////////////////////////////////////////////////
+// (A) Testing something to do with Grobner bases, relevant for exponentials
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib); option(prot); option(redSB);
+
+LIB "blow.lib";
+LIB "moduli.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y^4 - x^4;
+
+int r = 1;
+int k = 3;
+
+def uR = universalMF(W,r,k);
+setring(uR);
+ideal I = groebner(moduli_eqns); // takes a few minutes
+
+// Compute the Grobner basis of I + one variable
+ideal J = groebner(moduli_eqns + f(1)(1)(1)(7));
+
+int i;
+ideal Iprime;
+for(i=1;i<=size(I);i++)
+{
+Iprime = Iprime + subst(I[i],f(1)(1)(1)(7),0);
+}
+
+// Observe J != Iprime
+
+// Observe
+// > reduce( f(1)(1)(1)(2)^5, I );
+// f(1)(1)(1)(2)*f(1)(1)(1)(3)^4
