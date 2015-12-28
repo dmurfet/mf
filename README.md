@@ -1,18 +1,18 @@
 # mf
 
-This project is a Singular library for computing with [matrix factorisations](https://ncatlab.org/nlab/show/matrix+factorization), which are mathematical objects which appear in singularity theory and topological field theory. Features include:
+This project is a Singular library for computing with [matrix factorisations](https://ncatlab.org/nlab/show/matrix+factorization), mathematical objects appearing in singularity theory and topological field theory. Features include:
 
-* Computing Khovanov-Rozansky knot homology (linkhom.lib)
-* Fusion of defects in Landau-Ginzburg models (blow.lib)
-* Moduli spaces of matrix factorisations (moduli.lib) 
+* Computing Khovanov-Rozansky knot homology (`linkhom.lib`)
+* Fusion of defects in Landau-Ginzburg models (`blow.lib`)
+* Moduli spaces of matrix factorisations (`moduli.lib`) 
 
-The code was written by Nils Carqueville and Daniel Murfet as part of the paper "[Computing Khovanov-Rozansky homology and defect fusion](http://arxiv.org/abs/1108.1081)". Other contributors are most welcome! If you have any questions, please don't hesitate to [get in touch](mailto:d.murfet@unimelb.edu.au).
+The code was written by [Nils Carqueville](http://nils.carqueville.net/) and [Daniel Murfet](http://therisingsea.org) as part of the paper "[Computing Khovanov-Rozansky homology and defect fusion](http://arxiv.org/abs/1108.1081)". Other contributors are most welcome! If you have any questions, please don't hesitate to [get in touch](mailto:d.murfet@unimelb.edu.au).
 
 # Installation & Usage
 
 First you need a working installation of the commutative algebra package [Singular](https://www.singular.uni-kl.de/). Singular is available for Linux, Windows and Mac OS X and is [easy to install](https://www.singular.uni-kl.de/index.php/singular-download.html). Then you should either clone this git repository onto your local machine, or [download it as a ZIP file](https://github.com/dmurfet/mf/archive/master.zip).
 
-Then, from within the folder containing this repository, run `Singular`. You will see a welcome screen like this:
+From within the folder containing this repository, run `Singular`. You will see a welcome screen like this:
 
 ```
                      SINGULAR                                 /
@@ -22,7 +22,7 @@ Then, from within the folder containing this repository, run `Singular`. You wil
 FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
 ```
 
-At this point you can start cutting and pasting the examples in the folder `examples` into the shell. In `examples/blow-example.txt` you will find examples relating to defect fusion (i.e. functors between categories of matrix factorisations) while in `examples/linkhom-example.txt` you will find examples of Khovanov-Rozansky homology calculations.
+At this point you can start cutting and pasting into the Singular shell from the files in the folder `examples` of this repository. In `examples/blow-example.txt` you will find examples relating to defect fusion (i.e. functors between categories of matrix factorisations) while in `examples/linkhom-example.txt` you will find examples of Khovanov-Rozansky homology calculations.
 
 Here is an example from `blow-example.txt`:
 
