@@ -58,4 +58,4 @@ print(final); // This is the differential on the fusion of Y with X
 // The answer is a direct sum of two copies of the Koszul factorisation (y(1),y(1)^4)
 ```
 
-You can paste this directly into the Singular shell. For an explanation of the mathematics behind this code, see [Dyckerhoff-Murfet](http://arxiv.org/abs/1102.2957).
+You can paste this directly into the Singular shell. For an explanation of the mathematics behind this code, see [Dyckerhoff-Murfet](http://arxiv.org/abs/1102.2957) and [Murfet](http://arxiv.org/abs/1402.4541). These papers explain, in particular, what *inflation* means and how the fusion of `Y` with `X` in the above example is computed by splitting an idempotent on an auxiliary matrix factorisation called the *cut*.
