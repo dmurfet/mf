@@ -3,7 +3,7 @@
 This project is a Singular library for computing with [matrix factorisations](https://ncatlab.org/nlab/show/matrix+factorization), mathematical objects appearing in singularity theory and topological field theory. Features include:
 
 * Computing Khovanov-Rozansky knot homology (`linkhom.lib`)
-* Fusion of defects in Landau-Ginzburg models (`blow.lib`)
+* Fusion of defects in Landau-Ginzburg models (`blow.lib`,`mfweb.lib`)
 * Moduli spaces of matrix factorisations (`moduli.lib`) 
 
 The code was written by [Nils Carqueville](http://nils.carqueville.net/) and [Daniel Murfet](http://therisingsea.org) as part of the paper "[Computing Khovanov-Rozansky homology and defect fusion](http://arxiv.org/abs/1108.1081)". Other contributors are most welcome! If you have any questions, please don't hesitate to [get in touch](mailto:d.murfet@unimelb.edu.au).
@@ -24,7 +24,7 @@ FB Mathematik der Universitaet, D-67653 Kaiserslautern        \
 
 At this point you can start cutting and pasting into the Singular shell from the files in the folder `examples` of this repository. In `examples/examples.txt` and `examples/blow-example.txt` you will find examples relating to defect fusion (i.e. functors between categories of matrix factorisations) while in `examples/linkhom-example.txt` you will find examples of Khovanov-Rozansky homology calculations.
 
-Here is an example from `examples.txt` which shows the canonical way to compute fusions using the library:
+Here is an extract from `examples.txt` which shows the canonical way to compute fusions using the library:
 
 ```
 ////////////////////////////////////////////////
@@ -58,11 +58,11 @@ Here is an example from `examples.txt` which shows the canonical way to compute 
 // onto more complicated examples.
 
 option(noredefine);option(noloadLib);option(redSB);
-LIB "linkhom.lib";
+LIB "mfweb.lib";
 ring rr=0,(x(1),y(1)),dp;
 
 // We encode the web given above as a pair of edges, and a pair of vertices.
-// Format for an edge is source, target, variable, potential. Start indexing
+// Format for an edge is (source, target, variable, potential). Start indexing
 // your vertices at 1, since 0 stands for the boundary.
 list e1 = list(1,2,list(x(1)),x(1)^3);
 list e2 = list(2,0,list(y(1)),y(1)^5);
@@ -90,4 +90,4 @@ print(L[1]);
 // The answer is a direct sum of two copies of the Koszul factorisation (y(1),y(1)^4)
 ```
 
-You can paste this directly into the Singular shell. For an explanation of the mathematics behind this code, see [Dyckerhoff-Murfet](http://arxiv.org/abs/1102.2957) and [Murfet](http://arxiv.org/abs/1402.4541). There is also extensive documentation within the libraries themselves, see `blow.lib`, `mfweb.lib` and `linkhom.lib`.
+For an explanation of the mathematics behind this code, see [Dyckerhoff-Murfet](http://arxiv.org/abs/1102.2957) and [Murfet](http://arxiv.org/abs/1402.4541). There is also extensive documentation within the libraries themselves, see `blow.lib`, `mfweb.lib` and `linkhom.lib`.
