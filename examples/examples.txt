@@ -62,12 +62,112 @@ print(L[1]);
 
 ////////////////////////////////////////////////
 // Example of defect-defect fusion
+//
+// Here we use the "permutation type" matrix factorisations P_S, see the papers
+// arXiv:0707.0922 and arXiv:1409.2144 for full details. This example demonstrates
+// both a more complicated web than the previous example (since we are fusing two
+// defects, or what is the same, composing two 1-morphisms in the bicategory LG)
+// and also shows how to use parameters (we use a field extension of QQ by a root
+// of unity). For instructions on how to use parameters see the preamble to mfblow.lib
 ////////////////////////////////////////////////
 
-// TODO
+option(noredefine);option(noloadLib);option(redSB);
+LIB "mfweb.lib";
+ring rr=(0,r),(x,y,z),dp;
+minpoly = rootofUnity(5);
+poly minpolyblow = x^4+x^3+x^2+x+1;
 
-////////////////////////////////////////////////////
-// Example of defect-defect fusion using parameters
-////////////////////////////////////////////////////
+// The web has two vertices (marked with X,Y) and three edges (marked x^5, y^5, z^5)
+//
+//    ---- x^5 ---- X ---- y^5 ----> Y ---- z^5 ---->
+//
+// Here the first and third edge are incident on the boundary. So the y's are
+// internal variables (integrated out by the fusion) while the x,z variables
+// are the external variables.
 
-// TODO
+// We encode the web given above as a pair of edges, and a pair of vertices.
+// Format for an edge is (source, target, variable, potential). Start indexing
+// your vertices at 1, since 0 stands for the boundary.
+list e1 = list(0,1,list(x),x^5);
+list e2 = list(1,2,list(y),y^5);
+list e3 = list(2,0,list(z),z^5);
+list edgeList = list(e1,e2,e3);
+
+// Now define the mfs X,Y to be placed at each vertex. These are P_S-type matrix
+// factorisations, defined (for example) using the factorisation of y^5 - x^5
+// into irreducibles:
+//
+//   y^5 - x^5 = \prod_{i=0}^4( y - r^i x )
+//
+// where r is the primitive 5th root of unity we have adjoined to QQ. The same
+// works for z^5 - y^5, obviously. Any choie of a subset S of {0,1,2,3,4} gives
+// rise to a matrix factorisation of y^5 - x^5 by taking the corresponding set of
+// factors in the above expansion in the upper right of a 2x2 supermatrix, and the
+// remaining factors in the bottom left.
+//
+// Following the articles cited above, we focus on consecutive index sets. That is,
+// for an index A in {0,1,2,3,4} and length L in {0,1,2,3} we take the subset
+// S(A,L) = {A, A+1, A+2, ..., A+L} and the associated matrix factorisation P_{A,L}.
+// (see p.14 of arXiv:1409.2144 for the fusion rules of these factorisations,
+// viewed as 1-endomorphisms of x^5). 
+
+int A(1) = 2; int L(1) = 1; // X is P_{A(1),L(1)}
+int A(2) = 3; int L(2) = 2; // Y is P_{A(2),L(2)}
+
+matrix X[2][2];
+matrix Y[2][2];
+
+int j;
+poly f = 1;
+poly g = 1;
+	
+for(j=0; j<=4; j++)
+{
+    if( j < L(1) )
+    {
+        f = f * ( y - r^(A(1)+j) * x );
+    }
+    else
+    {
+        g = g * (y - r^(A(1)+j) * x );
+    }
+}
+	
+X[1,2] = f; 
+X[2,1] = g;
+
+f = 1;
+g = 1;
+	
+for(j=0; j<=4; j++)
+{
+    if( j < L(2) )
+    {
+        f = f * ( z - r^(A(2)+j)* y );
+    }
+    else
+    {
+        g = g * (z - r^(A(2)+j)* y );
+    }
+}
+
+Y[1,2] = f;
+Y[2,1] = g;
+
+// Continue assembling the web
+list mfs = X, Y;
+
+// Define the web
+list web = list(2, edgeList, mfs); // 2 for the number of vertices
+webVerify(web);
+
+// The compilation of this web is the fusion of Y with X. 
+list compStrat = defaultCompStratForWeb(web);
+list L = webCompilePair(web, compStrat);
+print(L[1]);
+
+// The answer is P_{0,2}, which agrees with the fusion rules given
+// in arXiv:0707.0922 and repeated on p.14 of arXiv:1409.2144. More
+// precisely: we have computed the fusion Y * X which is
+//
+//  Y * X = P_{3,2} * P_{2,1} = P_{0,2}.
