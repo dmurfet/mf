@@ -100,19 +100,19 @@ list edgeList = list(e1,e2,e3);
 //   y^5 - x^5 = \prod_{i=0}^4( y - r^i x )
 //
 // where r is the primitive 5th root of unity we have adjoined to QQ. The same
-// works for z^5 - y^5, obviously. Any choie of a subset S of {0,1,2,3,4} gives
-// rise to a matrix factorisation of y^5 - x^5 by taking the corresponding set of
+// works for z^5 - y^5, obviously. Any choice of a subset S of {0,1,2,3,4} gives
+// rise to a matrix factorisation P_S of y^5 - x^5 by taking the corresponding set of
 // factors in the above expansion in the upper right of a 2x2 supermatrix, and the
 // remaining factors in the bottom left.
 //
 // Following the articles cited above, we focus on consecutive index sets. That is,
 // for an index A in {0,1,2,3,4} and length L in {0,1,2,3} we take the subset
-// S(A,L) = {A, A+1, A+2, ..., A+L} and the associated matrix factorisation P_{A,L}.
+// {A, A+1, A+2, ..., A+L} and the associated matrix factorisation P_{A,A+1, ..., A+L}.
 // (see p.14 of arXiv:1409.2144 for the fusion rules of these factorisations,
 // viewed as 1-endomorphisms of x^5). 
 
-int A(1) = 2; int L(1) = 1; // X is P_{A(1),L(1)}
-int A(2) = 3; int L(2) = 2; // Y is P_{A(2),L(2)}
+int A(1) = 2; int L(1) = 0; // X is associated to A(1),...,A(1)+L(1)
+int A(2) = 1; int L(2) = 2; // Y is associated to A(2),...,A(2)+L(2)
 
 matrix X[2][2];
 matrix Y[2][2];
@@ -123,7 +123,7 @@ poly g = 1;
 	
 for(j=0; j<=4; j++)
 {
-    if( j < L(1) )
+    if( j <= L(1) )
     {
         f = f * ( y - r^(A(1)+j) * x );
     }
@@ -141,7 +141,7 @@ g = 1;
 	
 for(j=0; j<=4; j++)
 {
-    if( j < L(2) )
+    if( j <= L(2) )
     {
         f = f * ( z - r^(A(2)+j)* y );
     }
@@ -166,8 +166,11 @@ list compStrat = defaultCompStratForWeb(web);
 list L = webCompilePair(web, compStrat);
 print(L[1]);
 
-// The answer is P_{0,2}, which agrees with the fusion rules given
+// The answer is P_{3,4,5}, which agrees with the fusion rules given
 // in arXiv:0707.0922 and repeated on p.14 of arXiv:1409.2144. More
 // precisely: we have computed the fusion Y * X which is
 //
-//  Y * X = P_{3,2} * P_{2,1} = P_{0,2}.
+//  Y * X = P_{1,2,3} * P_{2} = P_{3,4,5}
+//
+// Check it by noticing that the upper right entry of L[1] is equal
+// to (z-r^3*x)*(z - r^4*x)*(z - x).
