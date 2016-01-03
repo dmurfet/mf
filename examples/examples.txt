@@ -11,39 +11,39 @@
 // the web. All these terms are defined more precisely in the preamble of mfweb.lib
 // and the paper arXiv: 1108.1081, but let us proceed to the example.
 //
-// The web has two vertices (marked with X,Y) and two edges (marked x(1)^3, y(1)^5)
+// The web has two vertices (marked with X,Y) and two edges (marked x^3, y^5)
 //
-//    X ---- x(1)^3 ----> Y ---- y(1)^5 ---->
+//    X ---- x^3 ----> Y ---- y^5 ---->
 //
-// Here the second edge (labelled with y(1)^5) goes to the boundary.
+// Here the second edge (labelled with y^5) goes to the boundary.
 //
-// For this to be a valid web, Y needs to be a matrix factorisation of y(1)^5 - x(1)^3
+// For this to be a valid web, Y needs to be a matrix factorisation of y^5 - x^3
 // (i.e. outgoing potential minus incoming potential) while X needs to be a matrix
-// factorisation of x(1)^3. The total factorisation is Y \otimes X, as a matrix
-// factorisation of y(1)^5 over the variables y(1). This is infinite rank but is
+// factorisation of x^3. The total factorisation is Y \otimes X, as a matrix
+// factorisation of y^5 over the variables y. This is infinite rank but is
 // homotopy equivalent to a finite rank matrix factorisation.
 //
 // This finite rank matrix factorisation is, by definition, the image of
-// X \in hmf(x(1)^3) under the functor hmf(x(1)^3) --> hmf(y(1)^5) induced
+// X \in hmf(x^3) under the functor hmf(x^3) --> hmf(y^5) induced
 // by the kernel Y. Let us compute this finite rank guy now. Then we will move
 // onto more complicated examples.
 
 option(noredefine);option(noloadLib);option(redSB);
 LIB "mfweb.lib";
-ring rr=0,(x(1),y(1)),dp;
+ring rr=0,(x,y),dp;
 
 // We encode the web given above as a pair of edges, and a pair of vertices.
 // Format for an edge is (source, target, variable, potential). Start indexing
 // your vertices at 1, since 0 stands for the boundary.
-list e1 = list(1,2,list(x(1)),x(1)^3);
-list e2 = list(2,0,list(y(1)),y(1)^5);
+list e1 = list(1,2,list(x),x^3);
+list e2 = list(2,0,list(y),y^5);
 list edgeList = list(e1,e2);
 
 // Now define the mfs X,Y to be placed at each vertex 
-matrix X[2][2] = 0, x(1)^2, x(1), 0;
+matrix X[2][2] = 0, x^2, x, 0;
 
-matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
-matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
+matrix Y0[2][2] = -x, y, -y^4, x^2;
+matrix Y1[2][2] = x^2, -y, y^4, -x;
 matrix z[2][2];
 matrix Y = blockmat(z,Y1,Y0,z);
 
@@ -58,7 +58,7 @@ list compStrat = defaultCompStratForWeb(web);
 list L = webCompilePair(web, compStrat);
 print(L[1]);
 
-// The answer is a direct sum of two copies of the Koszul factorisation (y(1),y(1)^4)
+// The answer is a direct sum of two copies of the Koszul factorisation (y,y^4)
 
 ////////////////////////////////////////////////
 // Example of defect-defect fusion
