@@ -1,0 +1,78 @@
+version="1.0";
+category="Miscellaneous";
+info="
+LIBRARY:   ainfmf.lib  A-infinity minimal models of MFs
+AUTHOR:    Daniel Murfet
+KEYWORDS:  matrix factorisation
+
+PROCEDURES:
+";
+
+// NOTE: We include a version of matrix.lib which suppresses some
+// unnecessary output from the procedure "rowred"
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+
+////////////////////////////////////////////////////////////////////
+// USAGE GUIDE
+//
+
+////////////////////////////////////////////////////////////////////
+// DATA FORMATS
+//
+// Tree: all our trees are rooted binary trees, which are presented
+// as a string of the form "((1,2),(3,4))" with the bracketing representing
+// the tree in the usual way: i.e. the root vertex has subtrees (1,2) and
+// (3,4) each of which are a binary tree with two leaves.
+
+////////////////////////////////////////////////////////////////////
+// enumerateTrees
+//
+// Returns all rooted binary trees with n leaves. 
+
+proc enumerateTrees_r(int n, int offset)
+{
+	// Recursive worker for enumerateTrees, generates all
+	// trees with n leaves, with labels {offset, offset+1, ... }
+}
+
+proc enumerateTrees(int n)
+{
+
+}
+
+////////////////////////////////////////////////////////////////////
+// enumerateLocations
+//
+// Given a tree T returns a list of locations in the tree, of use
+// in the minimal model algorithm. A location is either an input vertex,
+// an internal vertex or an internal edge.
+//
+// An input vertex is formatted as ("k", "input") if is the kth input
+// read from the left.
+//
+// An internal vertex is formatted as (S, "vertex") where S is the string
+// corresponding to the rooted binary tree with the vertex as its root,
+// using the integers which occur on leaves "above" the internal vertex.
+//
+// An internal edge is formatted as (S, "edge") where S is the string
+// associated to the internal vertex which comes immediately after the edge
+// on the unique path to the root.
+
+proc enumerateLocations(int n, string T)
+{
+
+}
+
+////////////////////////////////////////////////////////////////////
+// enumerateConfigs
+//
+// Given a tree T returns a list of all configurations, as defined
+// in p.17 and p.18 of (ainfmf9).
+
+proc enumerateConfigs(int n, string T)
+{
+
+}
+

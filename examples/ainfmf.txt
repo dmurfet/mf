@@ -1,0 +1,26 @@
+/////////////////////////////////////////////////////////////////////////////
+// A-infinity minimal models of matrix factorisations
+//
+// Plan: start with a tree T given, enumerate all configurations and calculate
+// vacuum amplitude for a given tree and configuration on a given input.
+//
+// Trees are given in the form of a string "(1,(2,3))" or "((1,2),(3,4))"
+// On such a tree we need addresses for the input vertices, internal edges and
+// internal vertices. The main thing we want the addressing for is to enumerate given
+// an input the path to the root. Such a path in e.g.
+//
+// A path in ((1,2),(3,4)) can be presented as 2 -> (1,2) -> ((1,2),(3,4)) i.e. as a sequence of subtrees containing the current tree as one of its branches.
+// To denote an internal edge, we use the denotation of the vertex which immediately
+// follows that internal edge on the unique path from that edge to the root.
+
+// When generating the set of all configurations we probably need a linear enumeration of all internal vertices and internal edges. It also needs to be convenient to index into this when we're discussing paths from leaves to the root.
+
+No, just make it a dictionary and then choose a random ordering on the keys in order to generate the set of all configurations (the ordering is not essential).
+
+// We go through and generate a list of input vertices, internal edges, and internal vertices. This is a list of "locations" and the list has the form
+
+(address, type)
+( "((1,2),(3,4))", "vertex" )
+( "2" , "input" )
+( "((1,2),(3,4))", "edge" )
+
