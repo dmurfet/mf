@@ -13,6 +13,8 @@ PROCEDURES:
 LIB "linalg.lib";
 LIB "matrix.lib";
 LIB "ring.lib";
+LIB "moduli.lib";
+	// we use seqsfrominterval, monomialdict
 
 ////////////////////////////////////////////////////////////////////
 // USAGE GUIDE
@@ -21,58 +23,875 @@ LIB "ring.lib";
 ////////////////////////////////////////////////////////////////////
 // DATA FORMATS
 //
-// Tree: all our trees are rooted binary trees, which are presented
-// as a string of the form "((1,2),(3,4))" with the bracketing representing
-// the tree in the usual way: i.e. the root vertex has subtrees (1,2) and
-// (3,4) each of which are a binary tree with two leaves.
+// For us a tree is a connected, acyclic undirected graph in which 
+// each vertex is either a leaf or trivalent, and there is a chosen
+// leaf called the root.
+//
+// We present such a tree as a list ((1,2),(3,4)) with the bracketing
+// representing the tree in the usual way:
+//
+//      1     2    3     4
+//      \     /    \     /
+//       \   /      \   /
+//        \ /        \ /
+//         \          /
+//          \        /
+//           \      /
+//            \    /
+//             \  /
+//              \/
+//               |
+//               |
+//
+// Since it is convenient, we refer to leaves other than the root as
+// "input vertices" and trivalent vertices as "internal vertices".
 
 ////////////////////////////////////////////////////////////////////
 // enumerateTrees
 //
-// Returns all rooted binary trees with n leaves. 
+// Returns all trees with n leaves.
 
-proc enumerateTrees_r(int n, int offset)
+proc enumerateTrees(int q)
 {
-	// Recursive worker for enumerateTrees, generates all
-	// trees with n leaves, with labels {offset, offset+1, ... }
+	if( q < 1 )
+	{
+		print("[enumerateTrees] Number of inputs needs to be at least 2.");
+        return();
+	}
+	
+	return( enumerateTrees_r(q, 0) );
 }
 
-proc enumerateTrees(int n)
+proc enumerateTrees_r(int q, int offset)
 {
-
+	// Recursive worker for enumerateTrees, generates all
+	// trees with q input vertices, with labels {offset+1, offset+2, ... }
+	
+	// By recursion. Associated to each tree with n inputs a partition
+	// of q = l + r where there are l \ge 1 leaves coming into the left
+	// branch and r \ge 1 leaves coming into the right branch (where "coming
+	// into" means that these leaves traverse that branch on their way to
+	// the root)
+	
+	if( q == 1 )
+	{
+		return(offset+1);
+	}
+	
+	if( q < 1 )
+	{
+		print("[enumerateTrees] Integer q needs to be at least 2.");
+        return();
+	}
+	
+	if( offset < 0 )
+	{
+		print("[enumerateTrees] Offset needs to be at least zero.");
+        return();
+	}
+	
+	list allTrees;
+	
+	int i,j,k;
+	list L, R;
+	list tempTree;
+	for(i=1; i<=q-1; i++)
+	{
+		L = enumerateTrees_r(i,offset);
+		R = enumerateTrees_r(q-i,offset+i);
+		
+		for(j=1; j<=size(L); j++)
+		{
+			for(k=1; k<=size(R); k++)
+			{
+				tempTree = list(L[j],R[k]);
+				allTrees = allTrees + list(tempTree);
+			}
+		}
+	}
+	
+	return(allTrees);
 }
 
 ////////////////////////////////////////////////////////////////////
 // enumerateLocations
 //
-// Given a tree T returns a list of locations in the tree, of use
-// in the minimal model algorithm. A location is either an input vertex,
-// an internal vertex or an internal edge.
+// Given a tree T returns a list of locations in the tree. A location
+// is a vertex other than the root, or an internal edge. Vertices are
+// denoted by the subtree that they represent, while edges are denoted
+// by list(S) where S is the subtree which is connected by the edge to
+// the rest of the tree.
 //
-// An input vertex is formatted as ("k", "input") if is the kth input
-// read from the left.
+// The root of the tree is not a location.
 //
-// An internal vertex is formatted as (S, "vertex") where S is the string
-// corresponding to the rooted binary tree with the vertex as its root,
-// using the integers which occur on leaves "above" the internal vertex.
+// For example, in the tree ((1,2),(3,4)) we have the following locations:
 //
-// An internal edge is formatted as (S, "edge") where S is the string
-// associated to the internal vertex which comes immediately after the edge
-// on the unique path to the root.
+//   1, 2, 3, 4 - input vertices
+//   (1,2), (3,4) - internal vertices
+//   ((1,2),(3,4)) - internal vertex
+//   ((1,2)), ((3,4)) - internal edges
+//   
+//
+//      1     2    3     4
+//      \     /    \     /
+//       \   /      \   /
+//        \ /        \ /
+//       (1,2)      (3,4)
+//         \          /
+//          \        /
+//        ((1,2)) ((3,4))
+//            \    /
+//             \  /
+//              \/
+//         ((1,2),(3,4))
+//               |
+//               |
+//
+// Note that input vertices can be distinguished by the fact that they are
+// integers, not lists, and internal edges by the fact that they are lists
+// of size 1, while interval vertices are lists of size 2.
 
-proc enumerateLocations(int n, string T)
+proc enumerateLocations(list T)
 {
-
+	if( size(T) > 2 )
+	{
+		print("[enumerateLocations] Badly formatted tree.");
+        return();
+	}
+	
+	// If T is a single vertex then it only has one location
+	if( size(T) == 1 )
+	{
+		return(T);
+	}
+	
+	// Otherwise we return the union of the locations in each branch
+	list L = T[1];
+	list R = T[2];
+	
+	list loc = enumerateLocations(L) + enumerateLocations(R);
+	
+	// Add the bottom-most vertex
+	loc = loc + list(T);
+	
+	// Plus the internal edge connecting each branch to the root
+	// but e.g. the edge connecting L to the tree is only internal
+	// if L is not a singleton
+	if( size(L) > 1 )
+	{
+		loc = loc + list(list(L));
+	}
+	
+	if( size(R) > 1 )
+	{
+		loc = loc + list(list(R));
+	}
+	
+	return(loc);
 }
 
 ////////////////////////////////////////////////////////////////////
-// enumerateConfigs
+// totalAmplitude
 //
-// Given a tree T returns a list of all configurations, as defined
-// in p.17 and p.18 of (ainfmf9).
+// Given a tree T and an input state Q, returns the total amplitude,
+// defined to the sum over all configurations C of T of O(T,C)(Q) as
+// defined in (20.1) of (ainfmf9). By amplitude we mean vacuum 
+// amplitude.
+// 
+// We are also given a decomposition Wcomp of the potential W, so
+// that W = sum_i var(i) Wcomp[i], i.e. Wcomp[i] is W^i in our notation
+// of (ainfmf9) and elsewhere.
+//
+// A configuration assigns to each location x in the tree T:
+//
+//    - an integer 0 <= m(x) <= n
+//    - an unordered subset J(x) of {1,...,n} with |J(x)| = m(x).
+//      note that since m may be zero, J may be empty.
+//  
+// If further x is an input vertex or an internal edge, the configuration
+// assigns for each j \in J(x) a tuple
+//
+//    - (a_j(x), g_j(x)) where a_j(x) is in {1,...,n} and g_j(x) 
+//      is an element of valid_monoms[j], which is a subset of ZZ^n_{\ge 0}.
+//      Here g_j stands for \gamma_j in our notes.
+//
+// Finally, if x is an internal edge, it is assigned an integer t(x) in {1,...,n}
+//
+// The data format of a configuration c is a list of tuples indexed by the return
+// list loc of enumerateLocations, so that for 1 <= a <= size(loc), c[a] is the 
+// data associated to the location x = loc[a]. The contents varies:
+//
+//    - if x is an input vertex, we have a tuple
+//
+//        c[a] = ( m(x), { (j, a_j(x), g_j(x)) }_{j in J(x)} )
+//
+//    - if x is an internal vertex, 
+//
+//        c[a] = (m(x), J(x) )
+//
+//    - if x is an internal edge
+//
+//        c[a] = (m(x), { (j,a_j(x), g_j(x)) }_{j in J(x)}, t(x) )
+//
+// The input state Q is presented as a list of size q, where q is
+// the number of input vertices of T, with Q[i] being the list of labels
+// for which \psi^*'s appear. So an input state
+//
+//    Q = ( (1,2), (2,3) )
+//
+// denotes 
+//
+//    \psi_1^* \psi_2^* \otimes \psi_2^*\psi_3^* \in A^{\otimes 2}
+//
 
-proc enumerateConfigs(int n, string T)
+proc enumConfigs_mJ(int n)
 {
-
+	list tuples_mJ;
+	
+	int m;
+	for(m=0;m<=n;m++)
+	{
+		if( m == 0 )
+		{
+			tuples_mJ = tuples_mJ + list( list( m, list() ) );
+		}
+		else
+		{
+			list Js = subsetsofinterval(n, m);
+			
+			int j;
+			for(j = 1;j <= size(Js); j++)
+			{
+				tuples_mJ = tuples_mJ + list( list( m, Js[j] ));
+			}
+		}
+	}
+	
+	return(tuples_mJ);
 }
 
+proc enumConfigs_mJexp(int n, list valid_monoms)
+{
+	list tuples_mJ = enumConfigs_mJ(n);
+	
+	list tuples_mJexp;
+	
+	int i;
+	for(i=1;i<=size(tuples_mJ);i++)
+	{
+		int m = tuples_mJ[i][1];
+		list J = tuples_mJ[i][2];
+			
+		// If the list J is empty we just add it to the new list
+		if( size(J) == 0 )
+		{
+			tuples_mJexp = tuples_mJexp + list(tuples_mJ[i]);
+		}
+		else
+		{
+			// We need to find all "expansions" of J. For example, if,
+			// J = (1,2) then an expansion looks like
+			//
+			// ( (1,a_1,g_1), (2,a_2,g_2) )
+				
+			// First we generate m lists, ingred(1..m) where
+			// ingred(j) consists of all pairs (a,g) which are valid
+			// in a tuple (j,a,g)
+				
+			list ingred(1..m);
+			int j;
+			for(j=1;j<=m;j++)
+			{
+				int a;
+				for(a=1;a<=n;a++)
+				{
+					int s;
+					for(s=1;s<=size(valid_monoms[J[j]]);s++)
+					{
+						// NOTE: there is an occurrence of \partial_a( x^g ) in
+						// the operator, so only pairs (a,g) where g[a] > 0 will
+						// contribute
+						
+						intvec g = valid_monoms[J[j]][s];
+						
+						if( g[a] > 0 )
+						{
+							ingred(j) = ingred(j) + list( list( a, g ) );
+						}
+					}
+				}
+			}
+				
+			// The possible expansions are therefore indexed by the set
+			//
+			//   prod = \prod_{j=1}^m ingred(j)
+				
+			list prod;
+				
+			if( m == 1 )
+			{
+				prod = ingred(1);
+			}
+			else
+			{
+				list total_ingred;
+				for(j=1;j<=m;j++)
+				{
+					total_ingred = total_ingred + list( ingred(j) );
+				}
+				prod = prodlist(total_ingred);
+			}
+								
+			int p;
+			for(p=1;p<=size(prod);p++)
+			{
+				// We read off the expansion to be used 
+				list newJ;
+					
+				if( m == 1 )
+				{
+					newJ = list(list( J[1] ) + prod[p]);
+				}
+				else
+				{
+					for(j=1;j<=m;j++)
+					{
+						newJ = newJ + list(list(J[j]) + prod[p][j]);	
+					}
+				}
+					
+				tuples_mJexp = tuples_mJexp + list( list( m, newJ ));
+			}
+		}
+	}
+	
+	return(tuples_mJexp);
+}
+
+proc totalAmplitude(list Wcomp, list T, list Q)
+{	
+	int n = nvars(basering);
+	
+	// valid_monoms[j] is a list of monomials which occur in Wcomp[j]
+
+	int i;
+	list valid_monoms;
+	for(i=1;i<=size(Wcomp);i++)
+	{
+		valid_monoms[i] = monoms_in(Wcomp[i]);
+	}
+	
+	// We begin by generating the list of possible pairs (m, J)
+	// where 0 \le m \le n and J is a subset of {1,...,n} of size m.
+	
+	list tuples_mJ = enumConfigs_mJ(n);
+	
+	// Next we generate the list of tuples (m, { (j,a,g) }_{j in J})
+	// where m is as above, J is as above, and for j in J, a is in
+	// {1,...,n} and g is in valid_monoms[j]. Note that J can be empty.
+		
+	list tuples_mJexp = enumConfigs_mJexp(n, valid_monoms);
+	
+	// Finally, we generate the list of all tuples (m, {(j,a,g)}_{j in J}, t)
+	// where the first two components are as above and t is any integer in
+	// {1,...,n}
+	
+	list tuples_mJexpt;
+	
+	int i,j,t;
+	for(i=1;i<=size(tuples_mJexp);i++)
+	{
+		list L = tuples_mJexp[i];
+		
+		for(t=1;t<=n;t++)
+		{
+			// NOTE: The way that t, J appear in the operator for an internal 
+			// edge, there can only be a nonzero contribution if t does not
+			// occur as a_j for any j in J
+			int flag = 1;
+			
+			// L[2] contains the list of tuples (j,a,g)
+			for(j=1;j<=size(L[2]);j++)
+			{
+				if( t == L[2][j][2] )
+				{
+					flag = 0;
+				}
+			}
+			
+			if( flag == 1 )
+			{
+				tuples_mJexpt = tuples_mJexpt + list( L + list(t) );
+			}
+		}
+	}
+	
+	// Now generate the list of all configurations
+	list loc = enumerateLocations(T);
+	
+	if( size(loc) == 1 )
+	{
+		print("[totalAmplitude] Should not run on a tree with only one location.");
+		return();
+	}
+	
+	// A configuration is a function on loc which assigns to each
+	// input vertex an element of tuples_mJexp, to each internal
+	// edge an element of tuples_mJexpt, and to each internal vertex
+	// an element of tuples_mJ. We represent such a function by its graph.
+	
+	intvec I;
+	int configCount = 1;
+	string configMax;
+	
+	for(i=1;i<=size(loc);i++)
+	{
+		def x = loc[i];
+		
+		if( typeof(x) == "int" )
+		{
+			// Input vertex
+			I[i] = size( tuples_mJexp );
+		}
+		
+		if( typeof(x) == "list" && size(x) == 2 )
+		{
+			// Internal vertex
+			I[i] = size( tuples_mJ );
+		}
+		
+		if( typeof(x) == "list" && size(x) == 1 )
+		{
+			// Internal edge
+			I[i] = size( tuples_mJexpt );
+		}
+		
+		configCount = configCount * I[i];
+		configMax = configMax + string(I[i]);
+		if( i < size(loc) ){ configMax = configMax + ","; }
+	}
+	
+	// A configuration is therefore described by an intvec P, of size size(loc),
+	// with 1 <= P[a] <= I[a] for all a. Here I[a] counts the number of possible
+	// values that the configuration can take on the location loc[a]. So to
+	// enumerate all possible configurations we simply enumerate these intvecs,
+	// and this is done using the variable "index" below.
+	
+	intvec index;
+	int indexCount = 1;
+	
+	int i;
+	for(i=1;i<=size(loc);i++)
+	{
+		index[i] = 1;
+	}
+	
+	// DEBUG
+	print("[totalAmplitudes] ------");
+	
+	list C;
+	while(1)
+	{
+		///////// active part ////////
+		list c;
+		
+		int a;
+		for(a=1;a<=size(loc);a++)
+		{
+			def x = loc[a];
+			
+			// so for example if loc[a] is an internal vertex then index[a] is an
+			// index into tuples_mJ, so that the tuple of the form (m(x), J(x))
+			// assigned to x = loc[a] by the configuration c is the list
+			//
+			//     tuples_mJ[ index[a] ] 
+
+			if( typeof(x) == "int" )
+			{
+				// Input vertex
+				c[a] = tuples_mJexp[ index[a] ];
+			}
+		
+			if( typeof(x) == "list" && size(x) == 2 )
+			{
+				// Internal vertex
+				 c[a] = tuples_mJ[ index[a] ];
+			}
+		
+			if( typeof(x) == "list" && size(x) == 1 )
+			{
+				// Internal edge
+				c[a] = tuples_mJexpt[ index[a] ];
+			}
+		}
+		
+		///////// use the input fermion state Q ///////////
+		
+		string passed = "";
+		def testC = testCompatibility(T,Q,c);
+		
+		if( typeof(testC) == "int" )
+		{
+			C = C + list(c);
+			passed = "passed";
+		}
+		else
+		{
+			passed = "failed: " + testC;
+		}
+		
+		// DEBUG
+		print("    config [" + string(indexCount) + "/" + string(configCount) + "] " + string(index) + "/" + configMax + " " + passed);
+	
+		///////// iteration part ///////
+		indexCount = indexCount+1;
+		index[size(loc)] = index[size(loc)]+1;
+		
+		int curr = size(loc);
+		int ex = 0;
+		while( index[curr] > I[curr] )
+		{
+			if( curr == 1 )
+			{
+				ex = 1;
+				break;
+			}
+			
+			index[curr] = 1;
+			index[curr-1] = index[curr-1] + 1;
+			curr = curr - 1;
+		}
+		
+		if( ex == 1 ){ break; }
+	}
+	
+	return(C);
+}
+
+////////////////////////////////////////////////////////////////////
+// testCompatibility
+//
+// Given a tree T, input state Q, and configuration c, returns 1
+// if we think it is possible the amplitude is nonzero, and otherwise
+// returns a "reason" why it must be zero.
+
+proc testCompatibility(list T,list Q,list c)
+{
+	///// TEST 1: Inputs /////
+	//
+	// Test the operator assigned to each input vertex against the
+	// input state at that vertex. Every [\psi_j,-] must be 
+	// cancelled by some fermion in the input, or we get zero.
+	
+	list loc = enumerateLocations(T);
+	
+	int a;
+	for(a=1;a<=size(loc);a++)
+	{
+		if( typeof(loc[a]) == "int" )
+		{
+			int x = loc[a];
+			
+			list Jexp = c[a][2];
+			int i;
+			for(i=1;i<=size(Jexp);i++)
+			{
+				if( checklist( Q[x], Jexp[i][1] ) == 0 )
+				{
+					// DEBUG
+					//print("    location = " + string(x));
+					//print("    failed j = " + string(Jexp[i][1]));
+					// This means there is a j in J(x) which
+					// does NOT occur in the input fermion at this input
+					// which means this configuration is zero
+					return("input budget");
+				}
+			}
+		}
+	}
+	
+	///// TEST 2: Fermion budget
+	//
+	// In the Feynman rules no interaction generates \psi^*'s,
+	// and every j in J that occurs must annihilate with an incoming \psi^*,
+	// which means that if we sum |J| over all J's in the configuration,
+	// it must be equal to the total number of fermions in Q, denoted |Q|.
+		
+	int totalSizeQ;
+	int i;
+	for(i=1;i<=size(Q);i++)
+	{
+		totalSizeQ = totalSizeQ + size(Q[i]);
+	}
+	
+	int totalSizeJ;
+	for(a=1;a<=size(loc);a++)
+	{
+		totalSizeJ = totalSizeJ + size(c[a][2]);
+	}
+	
+	if( totalSizeQ != totalSizeJ )
+	{
+		return("fermion budget");
+	}
+
+	return(1);
+}
+
+////////////////////////////////////////////////////////////////////
+// operatorsFromConfig
+//
+// Given a configuration, returns LaTeX of the operators associated
+// to each location. This takes the form of a list, each entry in
+// which is a list (x, F) where x is a location and F is a string.
+//
+// To be the clear, the input here is e.g. an element of the list
+// returned by totalAmplitude
+
+proc operatorsFromConfig(list config)
+{
+	int i;
+	for(i=1;i<=size(config);i++)
+	{
+		def x = config[i][1];
+		int m = config[i][2];
+		list J = config[i][3];
+		string F;
+		
+		if( typeof(x) == "int" )
+		{
+			// Input vertex
+			F = "(-1)^" + string(m);
+			
+			if( size(J) > 0 )
+			{
+				F = F + " \prod_{j \in \{";
+				int j;
+				for(j=1;j<=size(J);j++)
+				{
+					F = F + string(J[j][1]);
+					
+					if( j < size(J) )
+					{
+						F = F + ",";
+					}
+				}
+			}
+			
+			
+		}
+		
+		if( typeof(x) == "list" && size(x) == 2 )
+		{
+			// Internal vertex
+		}
+		
+		if( typeof(x) == "list" && size(x) == 1 )
+		{
+			// Internal edge
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// subsetsofinterval
+//
+// Given an integer N >=1 and M >= 1 return the set of all subsets
+// of {1,...,N} of size M. So obviously M should be \le N.
+
+proc subsetsofinterval(int N, int M)
+{
+	// print("(N,M) = " + string(N) + "," + string(M));
+	if( M > N )
+	{
+		print("[subsetsofinterval] should not have M > N");
+		return();
+	}
+	
+	if( M == 1 )
+	{
+		list L;
+		int i;
+		for(i=1;i<=N;i++)
+		{
+			L = L + list(list(i));
+		}
+		return(L);
+	}
+	
+	// So M > 1 and N > 1 and we can divide the subsets
+	// into those containing 1 and those not containing 1.
+	
+	list L;
+	list L_0 = subsetsofinterval(N-1, M-1);
+	
+	// Generate the subsets that contain 1:
+	int i,j;
+	for(i=1;i<=size(L_0);i++)
+	{
+		list S = list(1);
+		
+		for(j=1;j<=size(L_0[i]);j++)
+		{
+			S = S + list(L_0[i][j] + 1);
+		}
+		
+		L = L + list(S);
+	}
+	
+	// And the subsets that do not contain 1:
+	if( M < N )
+	{
+		list L_1 = subsetsofinterval(N-1, M);
+		
+		int i,j;
+		for(i=1;i<=size(L_1);i++)
+		{
+			list S;
+		
+			for(j=1;j<=size(L_1[i]);j++)
+			{
+				S = S + list(L_1[i][j] + 1);
+			}
+		
+			L = L + list(S);
+		}
+	}
+	
+	return(L);
+}
+
+proc monoms_in(poly f)
+{
+	int numVars = nvars(basering);
+    poly xprod = 1;
+    int i;
+    for(i=1; i<=numVars; i++)
+    {
+        xprod = xprod * var(i);
+    }
+    matrix koffer = coef(f, xprod);
+    
+    // the first row of koffer contains the monomials and the second row the coeffs
+    // store this as a list of monomial intvecs and the coeffs
+    list mm_list;
+    for(i=1; i<=ncols(koffer); i++)
+    {
+    	mm_list = mm_list + list(leadexp(koffer[1,i])); // leadexp extracts intvec
+    }
+    
+    return(mm_list);
+}
+
+////////////////////////////////////////////////////////////////////
+// prodlist
+//
+// Given a list L = (L[1], ..., L[k]) of lists, returns the product
+// list, i.e. the list L[1] x ... x L[k] whose entries are lists, 
+// the first entry from L[1], the second from L[2], etc. 
+
+proc prodlist(list L)
+{
+	if( size(L) == 1 )
+	{
+		print("[prodlist] Don't do that.");
+		return();
+	}
+	
+	int i;
+	for(i=1;i<=size(L);i++)
+	{
+		//print(string(size(L[i])));
+		if( size(L[i]) == 0 )
+		{
+			print("[prodlist] No empty lists.");
+			return();
+		}
+	}
+	
+	// Indices are intvecs I of length k, with 1 <= I[i] <= size(L[i]) for
+	// each i. We iterate through these in lexicographic order
+	
+	int k = size(L);
+	
+	intvec index;
+	int i;
+	for(i=1;i<=k;i++)
+	{
+		index[i] = 1;
+	}
+	
+	list retlist;
+	while(1)
+	{
+		// Add the tuple corresponding to index
+		list templist;
+		//print(index);
+		
+		for(i=1;i<=k;i++)
+		{
+			templist[i] = L[i][ index[i] ];
+		}
+		retlist = retlist + list(templist);
+		
+		// Increment
+		index[k] = index[k]+1;
+		
+		int curr = k;
+		int ex = 0;
+		while( index[curr] > size(L[curr]) )
+		{
+			if( curr == 1 )
+			{
+				ex = 1;
+				break;
+			}
+			
+			index[curr] = 1;
+			index[curr-1] = index[curr-1] + 1;
+			curr = curr - 1;
+		}
+		
+		if( ex == 1 ){ break; }
+	}
+		
+	return(retlist);
+}
+
+////////////////////////////////////////////////////////////////////
+// listofints
+//
+// Given N >= 1 returns the list 1,...,N
+
+proc listofints(int n)
+{
+	list L;
+	
+	int i;
+	for(i=1;i<=n;i++)
+	{
+		L = L + list(i);
+	}
+	
+	return(L);
+}
+
+////////////////////////////////////////////////////////////////////
+// checklist
+//
+// checklist(l,p) gives 1 if p is an element of the list l,
+// otherwise it gives 0.
+////////////////////////////////////////////////////////////////////
+
+proc checklist(list l, p)
+{
+    int i;
+    for(int i=1; i<=size(l); i++)
+    {
+        if(p==l[i])
+        {
+            return(1);
+        }
+    }
+    return(0);
+}

@@ -1,26 +1,34 @@
 /////////////////////////////////////////////////////////////////////////////
 // A-infinity minimal models of matrix factorisations
 //
-// Plan: start with a tree T given, enumerate all configurations and calculate
-// vacuum amplitude for a given tree and configuration on a given input.
-//
-// Trees are given in the form of a string "(1,(2,3))" or "((1,2),(3,4))"
-// On such a tree we need addresses for the input vertices, internal edges and
-// internal vertices. The main thing we want the addressing for is to enumerate given
-// an input the path to the root. Such a path in e.g.
-//
-// A path in ((1,2),(3,4)) can be presented as 2 -> (1,2) -> ((1,2),(3,4)) i.e. as a sequence of subtrees containing the current tree as one of its branches.
-// To denote an internal edge, we use the denotation of the vertex which immediately
-// follows that internal edge on the unique path from that edge to the root.
 
-// When generating the set of all configurations we probably need a linear enumeration of all internal vertices and internal edges. It also needs to be convenient to index into this when we're discussing paths from leaves to the root.
+option(noredefine);option(noloadLib);
+LIB "ainfmf.lib";
+ring rr=0,(x,y),dp;
+printlevel=1;
+poly W = y3 - x3;
+list Wcomp = list(-x2,y2);
 
-No, just make it a dictionary and then choose a random ordering on the keys in order to generate the set of all configurations (the ordering is not essential).
+list T = list(list(list(1,2),list(3,4)),list(5,6));
+list Q = list(list(1),list(2),list(1),list(2),list(1,2),list(2));
 
-// We go through and generate a list of input vertices, internal edges, and internal vertices. This is a list of "locations" and the list has the form
+totalAmplitude(Wcomp,T,Q);
 
-(address, type)
-( "((1,2),(3,4))", "vertex" )
-( "2" , "input" )
-( "((1,2),(3,4))", "edge" )
+// We start with an input state and then build a list of configurations
+// which contribute to the amplitude. Here the most important thing is to
+// avoid as many configurations as possible as early as possible. The
+// fermion and boson budgets are important. 
 
+// At current speed this would take 2 months for this single tree.
+
+// We have to take an approach which iterates all possible configurations,
+// rather than try to whittle down the set of all configurations (it is too big).
+
+// Begin by assigning t's to internal edges
+// Then assign [psi_j,-]'s to match the number of input fermions, and do
+// this with a flow analysis of the tree, or rather do it recursively.
+// Then the only thing left to do is choose a_j's and gamma_j's.
+
+15 choose 3 = 15!/3!12! = 15 . 14 . 13 / 3 . 2
+
+15 choose 4
