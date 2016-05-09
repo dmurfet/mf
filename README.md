@@ -4,7 +4,8 @@ This project is a Singular library for computing with [matrix factorisations](ht
 
 * Computing Khovanov-Rozansky knot homology (`linkhom.lib`)
 * Fusion of defects in Landau-Ginzburg models (`blow.lib`,`mfweb.lib`)
-* Moduli spaces of matrix factorisations (`moduli.lib`) 
+* Moduli spaces of matrix factorisations (`moduli.lib`) [preliminary]
+* A-infinity minimal models of matrix factorisations (`ainfmf.lib`) [preliminary]
 
 The code was written by [Nils Carqueville](http://nils.carqueville.net/) and [Daniel Murfet](http://therisingsea.org) as part of the paper "[Computing Khovanov-Rozansky homology and defect fusion](http://arxiv.org/abs/1108.1081)". Other contributors are most welcome! If you have any questions, please don't hesitate to [get in touch](mailto:d.murfet@unimelb.edu.au).
 
