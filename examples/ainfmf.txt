@@ -9,17 +9,10 @@ printlevel=1;
 poly W = y3 - x3;
 list Wcomp = list(-x2,y2);
 
-list T = list(list(list(1,2),list(3,4)),list(5,6));
-list Q = list(list(1),list(2),list(1),list(2),list(1,2),list(2));
+list T = list(1, list(2, list(3, list(4,list(5,6)))));
+//list Q = list(list(1),list(2),list(1),list(2),list(1,2),list(2));
 
-totalAmplitude(Wcomp,T,Q);
-
-// We start with an input state and then build a list of configurations
-// which contribute to the amplitude. Here the most important thing is to
-// avoid as many configurations as possible as early as possible. The
-// fermion and boson budgets are important. 
-
-// At current speed this would take 2 months for this single tree.
+//list C = enumerateConfigs(Wcomp,T,Q);
 
 // We have to take an approach which iterates all possible configurations,
 // rather than try to whittle down the set of all configurations (it is too big).
@@ -29,6 +22,17 @@ totalAmplitude(Wcomp,T,Q);
 // this with a flow analysis of the tree, or rather do it recursively.
 // Then the only thing left to do is choose a_j's and gamma_j's.
 
-15 choose 3 = 15!/3!12! = 15 . 14 . 13 / 3 . 2
+list E = enumerateInternalProp(T, Wcomp)[1];
 
-15 choose 4
+int e;
+for(e=1;e<=size(E);e++)
+{
+list tt = tikzTree_intprop(T, E[e]);
+int i;
+for(i=1;i<=size(tt);i++)
+{
+write(":a temp.txt", tt[i]);
+}
+}
+
+

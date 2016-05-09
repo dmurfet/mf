@@ -21,6 +21,15 @@ LIB "moduli.lib";
 //
 
 ////////////////////////////////////////////////////////////////////
+// TERMINOLOGY
+//
+// There are three types of interactions in the Feynman rules:
+//
+//  - the trivalent vertex we call a Y-type
+//  - the bivalent vertex with one boson and one fermion we call I-type
+//  - the bivalent vertex with two fermions we call U-type
+
+////////////////////////////////////////////////////////////////////
 // DATA FORMATS
 //
 // For us a tree is a connected, acyclic undirected graph in which 
@@ -153,9 +162,8 @@ proc enumerateTrees_r(int q, int offset)
 
 proc enumerateLocations(list T)
 {
-	if( size(T) > 2 )
+	if( isValidTree(T) != 1 )
 	{
-		print("[enumerateLocations] Badly formatted tree.");
         return();
 	}
 	
@@ -191,189 +199,34 @@ proc enumerateLocations(list T)
 }
 
 ////////////////////////////////////////////////////////////////////
-// totalAmplitude
+// enumerateInternalProp
 //
-// Given a tree T and an input state Q, returns the total amplitude,
-// defined to the sum over all configurations C of T of O(T,C)(Q) as
-// defined in (20.1) of (ainfmf9). By amplitude we mean vacuum 
-// amplitude.
-// 
-// We are also given a decomposition Wcomp of the potential W, so
-// that W = sum_i var(i) Wcomp[i], i.e. Wcomp[i] is W^i in our notation
-// of (ainfmf9) and elsewhere.
+// Given a tree T and potential W, enumerates the possible internal
+// propagations of boson and fermions. This comes in the form of a list,
+// each entry of which is one possible propagation pattern. Such a pattern
+// is an oriented labelled graph, stored as a list of tuples
 //
-// A configuration assigns to each location x in the tree T:
+//    ( particle type, source, target )
 //
-//    - an integer 0 <= m(x) <= n
-//    - an unordered subset J(x) of {1,...,n} with |J(x)| = m(x).
-//      note that since m may be zero, J may be empty.
-//  
-// If further x is an input vertex or an internal edge, the configuration
-// assigns for each j \in J(x) a tuple
+// where 
 //
-//    - (a_j(x), g_j(x)) where a_j(x) is in {1,...,n} and g_j(x) 
-//      is an element of valid_monoms[j], which is a subset of ZZ^n_{\ge 0}.
-//      Here g_j stands for \gamma_j in our notes.
+//   - particle type is either "fermion" or "boson"
+//   - source and target are locations in the tree
 //
-// Finally, if x is an internal edge, it is assigned an integer t(x) in {1,...,n}
-//
-// The data format of a configuration c is a list of tuples indexed by the return
-// list loc of enumerateLocations, so that for 1 <= a <= size(loc), c[a] is the 
-// data associated to the location x = loc[a]. The contents varies:
-//
-//    - if x is an input vertex, we have a tuple
-//
-//        c[a] = ( m(x), { (j, a_j(x), g_j(x)) }_{j in J(x)} )
-//
-//    - if x is an internal vertex, 
-//
-//        c[a] = (m(x), J(x) )
-//
-//    - if x is an internal edge
-//
-//        c[a] = (m(x), { (j,a_j(x), g_j(x)) }_{j in J(x)}, t(x) )
-//
-// The input state Q is presented as a list of size q, where q is
-// the number of input vertices of T, with Q[i] being the list of labels
-// for which \psi^*'s appear. So an input state
-//
-//    Q = ( (1,2), (2,3) )
-//
-// denotes 
-//
-//    \psi_1^* \psi_2^* \otimes \psi_2^*\psi_3^* \in A^{\otimes 2}
-//
+// So a pattern is a list of tuples of this kind, and we return the list L
+// of all valid patterns. We are presented W as its components Wcomp, i.e.
+// such that W is x(1) * Wcomp[1] + ... + x(n) * Wcomp[n].
 
-proc enumConfigs_mJ(int n)
+proc enumerateInternalProp(list T, list Wcomp)
 {
-	list tuples_mJ;
-	
-	int m;
-	for(m=0;m<=n;m++)
-	{
-		if( m == 0 )
-		{
-			tuples_mJ = tuples_mJ + list( list( m, list() ) );
-		}
-		else
-		{
-			list Js = subsetsofinterval(n, m);
-			
-			int j;
-			for(j = 1;j <= size(Js); j++)
-			{
-				tuples_mJ = tuples_mJ + list( list( m, Js[j] ));
-			}
-		}
-	}
-	
-	return(tuples_mJ);
-}
-
-proc enumConfigs_mJexp(int n, list valid_monoms)
-{
-	list tuples_mJ = enumConfigs_mJ(n);
-	
-	list tuples_mJexp;
-	
-	int i;
-	for(i=1;i<=size(tuples_mJ);i++)
-	{
-		int m = tuples_mJ[i][1];
-		list J = tuples_mJ[i][2];
-			
-		// If the list J is empty we just add it to the new list
-		if( size(J) == 0 )
-		{
-			tuples_mJexp = tuples_mJexp + list(tuples_mJ[i]);
-		}
-		else
-		{
-			// We need to find all "expansions" of J. For example, if,
-			// J = (1,2) then an expansion looks like
-			//
-			// ( (1,a_1,g_1), (2,a_2,g_2) )
-				
-			// First we generate m lists, ingred(1..m) where
-			// ingred(j) consists of all pairs (a,g) which are valid
-			// in a tuple (j,a,g)
-				
-			list ingred(1..m);
-			int j;
-			for(j=1;j<=m;j++)
-			{
-				int a;
-				for(a=1;a<=n;a++)
-				{
-					int s;
-					for(s=1;s<=size(valid_monoms[J[j]]);s++)
-					{
-						// NOTE: there is an occurrence of \partial_a( x^g ) in
-						// the operator, so only pairs (a,g) where g[a] > 0 will
-						// contribute
-						
-						intvec g = valid_monoms[J[j]][s];
-						
-						if( g[a] > 0 )
-						{
-							ingred(j) = ingred(j) + list( list( a, g ) );
-						}
-					}
-				}
-			}
-				
-			// The possible expansions are therefore indexed by the set
-			//
-			//   prod = \prod_{j=1}^m ingred(j)
-				
-			list prod;
-				
-			if( m == 1 )
-			{
-				prod = ingred(1);
-			}
-			else
-			{
-				list total_ingred;
-				for(j=1;j<=m;j++)
-				{
-					total_ingred = total_ingred + list( ingred(j) );
-				}
-				prod = prodlist(total_ingred);
-			}
-								
-			int p;
-			for(p=1;p<=size(prod);p++)
-			{
-				// We read off the expansion to be used 
-				list newJ;
-					
-				if( m == 1 )
-				{
-					newJ = list(list( J[1] ) + prod[p]);
-				}
-				else
-				{
-					for(j=1;j<=m;j++)
-					{
-						newJ = newJ + list(list(J[j]) + prod[p][j]);	
-					}
-				}
-					
-				tuples_mJexp = tuples_mJexp + list( list( m, newJ ));
-			}
-		}
-	}
-	
-	return(tuples_mJexp);
-}
-
-proc totalAmplitude(list Wcomp, list T, list Q)
-{	
 	int n = nvars(basering);
 	
-	// valid_monoms[j] is a list of monomials which occur in Wcomp[j]
-
+	if( isValidTree(T) != 1 )
+	{
+		return();
+	}
+	
+	// Generate the list of valid monomials
 	int i;
 	list valid_monoms;
 	for(i=1;i<=size(Wcomp);i++)
@@ -381,316 +234,268 @@ proc totalAmplitude(list Wcomp, list T, list Q)
 		valid_monoms[i] = monoms_in(Wcomp[i]);
 	}
 	
-	// We begin by generating the list of possible pairs (m, J)
-	// where 0 \le m \le n and J is a subset of {1,...,n} of size m.
-	
-	list tuples_mJ = enumConfigs_mJ(n);
-	
-	// Next we generate the list of tuples (m, { (j,a,g) }_{j in J})
-	// where m is as above, J is as above, and for j in J, a is in
-	// {1,...,n} and g is in valid_monoms[j]. Note that J can be empty.
-		
-	list tuples_mJexp = enumConfigs_mJexp(n, valid_monoms);
-	
-	// Finally, we generate the list of all tuples (m, {(j,a,g)}_{j in J}, t)
-	// where the first two components are as above and t is any integer in
-	// {1,...,n}
-	
-	list tuples_mJexpt;
-	
-	int i,j,t;
-	for(i=1;i<=size(tuples_mJexp);i++)
-	{
-		list L = tuples_mJexp[i];
-		
-		for(t=1;t<=n;t++)
-		{
-			// NOTE: The way that t, J appear in the operator for an internal 
-			// edge, there can only be a nonzero contribution if t does not
-			// occur as a_j for any j in J
-			int flag = 1;
-			
-			// L[2] contains the list of tuples (j,a,g)
-			for(j=1;j<=size(L[2]);j++)
-			{
-				if( t == L[2][j][2] )
-				{
-					flag = 0;
-				}
-			}
-			
-			if( flag == 1 )
-			{
-				tuples_mJexpt = tuples_mJexpt + list( L + list(t) );
-			}
-		}
-	}
-	
-	// Now generate the list of all configurations
+	// First we enumerate the internal edges, inputs and vertices
 	list loc = enumerateLocations(T);
 	
-	if( size(loc) == 1 )
+	list loc_edge;
+	list loc_input;
+	list loc_vertex;
+
+	for(i=1;i<=size(loc);i++)
 	{
-		print("[totalAmplitude] Should not run on a tree with only one location.");
-		return();
+		def x = loc[i];
+		if( locIsEdge(x) == 1 ){ loc_edge = loc_edge + list(x); }
+		if( locIsInput(x) == 1 ){ loc_input = loc_input + list(x); }
+		if( locIsVertex(x) == 1 ){ loc_vertex = loc_vertex + list(x); }
 	}
 	
-	// A configuration is a function on loc which assigns to each
-	// input vertex an element of tuples_mJexp, to each internal
-	// edge an element of tuples_mJexpt, and to each internal vertex
-	// an element of tuples_mJ. We represent such a function by its graph.
+	list loc_inputoredge = loc_edge + loc_input;
 	
-	intvec I;
-	int configCount = 1;
-	string configMax;
+	// First we generate a list of all possible ways of linking up I-vertex
+	// generated fermions with U-vertices. That is, we
+	//
+	//   - choose, for each internal edge e an integer t(e), which means
+	//   that the interaction eats an x(e)-variable and emits a theta_e
+	//   fermion.
+	//
+	//   - then we choose at which U-vertex v this theta is annihilated (this
+	//   must be downstream from e, and the path from e to the root must
+	//   enter v ON THE RIGHT.
+	//
+	//   - and which Y-vertex emitted the boson (this must be upstream from e)
+	//
+	// so our patterns should contain two edges (i.e. two tuples of the kind
+	// discussed above)
+	
+	list L1;
+	
+	int i,k,l;
+	
+	for(i=1;i<=size(loc_edge);i++)
+	{
+		def e = loc_edge[i];
+		list templist;
+		
+		for(k=1;k<=size(loc_vertex);k++)
+		{
+			def v = loc_vertex[k];
+			
+			// We have to make sure that v is downstream from e,
+			// and that e is linked to the right part of v
+			list edge_aboveright = list(v[2]);
+				
+			if( locIsAbove(e, edge_aboveright) )
+			{
+				// And where does the boson originate
+				for(l=1;l<=size(loc_inputoredge);l++)
+				{
+					def u = loc_inputoredge[l];
+					// u must be upstream from e, and _different_ from e
+					if( locToString(u) != locToString(e) && locIsAbove(u, e) )
+					{
+						//print("      And Y-interaction at " + locToString(u) );
+						list c = list( "fermion", e, v );
+						list d = list( "boson", u, e );
+						templist = templist + list(list(c,d));
+					}
+				}
+			}
+		}
+				
+		L1[i] = templist;
+	}
+		
+	return(L1);
+} 
+
+////////////////////////////////////////////////////////////////////
+// tikzTree_locpos
+
+proc tikzTree_locpos(def x, int input_offset, list T)
+{
+	if( locIsInput(x) )
+	{
+		return( list((x-1) * input_offset,0) );
+	}
+	
+	if( locIsVertex(x) )
+	{
+		list l = tikzTree_locpos(x[1], input_offset, T);
+		list r = tikzTree_locpos(x[2], input_offset, T);
+		
+		number x_coord = number( l[1] + r[1] ) / 2;
+		number y_coord = l[2] - 10;
+		
+		return( list(x_coord,y_coord) );
+	}
+	
+	if( locIsEdge(x) )
+	{
+		list loc = enumerateLocations(T);
+		// Find the next vertex down
+		def next_vertex;
+		
+		int i;
+		for(i=1;i<=size(loc);i++)
+		{
+			def y = loc[i];
+			
+			if( locIsVertex(y) )
+			{
+				if( locIsVertex(y[1]) && locToString(y[1]) == locToString(x[1]) )
+				{
+					next_vertex = y;
+				}
+				
+				if( locIsVertex(y[2]) && locToString(y[2]) == locToString(x[1]) )
+				{
+					next_vertex = y;
+				}
+			}	 
+		}
+		
+		// We are halfway between x[1] and next_vertex
+		list above = tikzTree_locpos(x[1], input_offset, T);
+		list below = tikzTree_locpos(next_vertex, input_offset, T);
+		
+		number x_coord = number( above[1] + below[1] ) / 2;
+		number y_coord = number( above[2] + below[2] ) / 2;
+		
+		return(list(x_coord, y_coord));
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// tikzTree_intprop
+//
+// Given a tree and a pattern of internal propagations
+// outputs a series of TikZ commands to draw the tree
+// in LaTeX (to be added 
+
+proc tikzTree_intprop(list T, list prop)
+{
+	list L_intro = tikzTree_intro();
+	list L_core = tikzTree_core(T);
+	list L_end = tikzTree_end();
+	
+	// We just add to L_core our additional instructions
+	// prop is a list of tuples of the form
+	// 
+	//
+	//    ( particle type, source, target )
+	//
+	// where 
+	//
+	//   - particle type is either "fermion" or "boson"
+	//   - source and target are locations in the tree
+	
+	int i;
+	for(i=1;i<=size(prop);i++)
+	{
+		def s = prop[i][2];
+		def t = prop[i][3];
+		
+		string A = "\\draw" + prop[i][1] + " (" + locToString(s) + ") to (" + locToString(t) + ");";
+		
+		L_core = L_core + list(A);
+	}
+	
+	return(L_intro + L_core + L_end);
+}
+
+////////////////////////////////////////////////////////////////////
+// tikzTree
+//
+// Given a tree, outputs a series of TikZ commands to draw the tree
+// in LaTeX. Returns the commands as a list of strings (one string
+// = 1 line of TeX).
+
+proc tikzTree_intro()
+{
+	list L;
+	
+	L = L + list("\\def\\drawl{\\draw[color=black!10, line width=1pt]}");
+	L = L + list("\\def\\drawfermion{\\draw[color=black, line width=1pt]}");
+	L = L + list("\\def\\drawboson{\\draw[color=teal, dashed, line width=1pt]}");
+	L = L + list("\\begin{center}");
+	L = L + list("\\begin{tikzpicture}[scale=0.2,auto]");
+	
+	return(L);
+}
+
+proc tikzTree_core(list T)
+{
+	list L;
+	
+	// Some constants
+	int input_offset = 10;
+	
+	// First we enumerate the internal edges, inputs and vertices
+	list loc = enumerateLocations(T);
+	
+	list loc_edge;
+	list loc_input;
+	list loc_vertex;
+
+	int i;
+	for(i=1;i<=size(loc);i++)
+	{
+		def x = loc[i];
+		if( locIsEdge(x) == 1 ){ loc_edge = loc_edge + list(x); }
+		if( locIsInput(x) == 1 ){ loc_input = loc_input + list(x); }
+		if( locIsVertex(x) == 1 ){ loc_vertex = loc_vertex + list(x); }
+	}
+	
+	int i;
+	for(i=1;i<=size(loc_input);i++)
+	{
+		string s = "\\node (" + string(i) + ") at (" + string( (i-1)*input_offset ) + ",0) {$" + string(i) + "$};";
+		L = L + list(s);
+	}
 	
 	for(i=1;i<=size(loc);i++)
 	{
 		def x = loc[i];
 		
-		if( typeof(x) == "int" )
+		if( locIsInput(x) != 1 )
 		{
-			// Input vertex
-			I[i] = size( tuples_mJexp );
-		}
-		
-		if( typeof(x) == "list" && size(x) == 2 )
-		{
-			// Internal vertex
-			I[i] = size( tuples_mJ );
-		}
-		
-		if( typeof(x) == "list" && size(x) == 1 )
-		{
-			// Internal edge
-			I[i] = size( tuples_mJexpt );
-		}
-		
-		configCount = configCount * I[i];
-		configMax = configMax + string(I[i]);
-		if( i < size(loc) ){ configMax = configMax + ","; }
-	}
-	
-	// A configuration is therefore described by an intvec P, of size size(loc),
-	// with 1 <= P[a] <= I[a] for all a. Here I[a] counts the number of possible
-	// values that the configuration can take on the location loc[a]. So to
-	// enumerate all possible configurations we simply enumerate these intvecs,
-	// and this is done using the variable "index" below.
-	
-	intvec index;
-	int indexCount = 1;
-	
-	int i;
-	for(i=1;i<=size(loc);i++)
-	{
-		index[i] = 1;
-	}
-	
-	// DEBUG
-	print("[totalAmplitudes] ------");
-	
-	list C;
-	while(1)
-	{
-		///////// active part ////////
-		list c;
-		
-		int a;
-		for(a=1;a<=size(loc);a++)
-		{
-			def x = loc[a];
+			list c = tikzTree_locpos(x, input_offset, T);
 			
-			// so for example if loc[a] is an internal vertex then index[a] is an
-			// index into tuples_mJ, so that the tuple of the form (m(x), J(x))
-			// assigned to x = loc[a] by the configuration c is the list
-			//
-			//     tuples_mJ[ index[a] ] 
-
-			if( typeof(x) == "int" )
-			{
-				// Input vertex
-				c[a] = tuples_mJexp[ index[a] ];
-			}
-		
-			if( typeof(x) == "list" && size(x) == 2 )
-			{
-				// Internal vertex
-				 c[a] = tuples_mJ[ index[a] ];
-			}
-		
-			if( typeof(x) == "list" && size(x) == 1 )
-			{
-				// Internal edge
-				c[a] = tuples_mJexpt[ index[a] ];
-			}
-		}
-		
-		///////// use the input fermion state Q ///////////
-		
-		string passed = "";
-		def testC = testCompatibility(T,Q,c);
-		
-		if( typeof(testC) == "int" )
-		{
-			C = C + list(c);
-			passed = "passed";
-		}
-		else
-		{
-			passed = "failed: " + testC;
-		}
-		
-		// DEBUG
-		print("    config [" + string(indexCount) + "/" + string(configCount) + "] " + string(index) + "/" + configMax + " " + passed);
-	
-		///////// iteration part ///////
-		indexCount = indexCount+1;
-		index[size(loc)] = index[size(loc)]+1;
-		
-		int curr = size(loc);
-		int ex = 0;
-		while( index[curr] > I[curr] )
-		{
-			if( curr == 1 )
-			{
-				ex = 1;
-				break;
-			}
+			string s = "\\coordinate (" + locToString(x) + ") at (" + string(c[1]) + "," + string(c[2]) + ");";
 			
-			index[curr] = 1;
-			index[curr-1] = index[curr-1] + 1;
-			curr = curr - 1;
+			L = L + list(s);
+			
+			// Draw the lines connecting this node to its parents
+			if( locIsVertex(x) )
+			{
+				string c1 = "\\drawl (" + locToString(x) + ") to (" + locToString(x[1]) + ");";
+				string c2 = "\\drawl (" + locToString(x) + ") to (" + locToString(x[2]) + ");";
+				
+				L = L + list(c1);
+				L = L + list(c2);
+			}
 		}
-		
-		if( ex == 1 ){ break; }
 	}
 	
-	return(C);
+	return(L);
 }
 
-////////////////////////////////////////////////////////////////////
-// testCompatibility
-//
-// Given a tree T, input state Q, and configuration c, returns 1
-// if we think it is possible the amplitude is nonzero, and otherwise
-// returns a "reason" why it must be zero.
-
-proc testCompatibility(list T,list Q,list c)
+proc tikzTree_end()
 {
-	///// TEST 1: Inputs /////
-	//
-	// Test the operator assigned to each input vertex against the
-	// input state at that vertex. Every [\psi_j,-] must be 
-	// cancelled by some fermion in the input, or we get zero.
+	list L;
+	L = L + list("\\end{tikzpicture}");
+	L = L + list("\\end{center}");
 	
-	list loc = enumerateLocations(T);
-	
-	int a;
-	for(a=1;a<=size(loc);a++)
-	{
-		if( typeof(loc[a]) == "int" )
-		{
-			int x = loc[a];
-			
-			list Jexp = c[a][2];
-			int i;
-			for(i=1;i<=size(Jexp);i++)
-			{
-				if( checklist( Q[x], Jexp[i][1] ) == 0 )
-				{
-					// DEBUG
-					//print("    location = " + string(x));
-					//print("    failed j = " + string(Jexp[i][1]));
-					// This means there is a j in J(x) which
-					// does NOT occur in the input fermion at this input
-					// which means this configuration is zero
-					return("input budget");
-				}
-			}
-		}
-	}
-	
-	///// TEST 2: Fermion budget
-	//
-	// In the Feynman rules no interaction generates \psi^*'s,
-	// and every j in J that occurs must annihilate with an incoming \psi^*,
-	// which means that if we sum |J| over all J's in the configuration,
-	// it must be equal to the total number of fermions in Q, denoted |Q|.
-		
-	int totalSizeQ;
-	int i;
-	for(i=1;i<=size(Q);i++)
-	{
-		totalSizeQ = totalSizeQ + size(Q[i]);
-	}
-	
-	int totalSizeJ;
-	for(a=1;a<=size(loc);a++)
-	{
-		totalSizeJ = totalSizeJ + size(c[a][2]);
-	}
-	
-	if( totalSizeQ != totalSizeJ )
-	{
-		return("fermion budget");
-	}
-
-	return(1);
+	return(L);
 }
 
-////////////////////////////////////////////////////////////////////
-// operatorsFromConfig
-//
-// Given a configuration, returns LaTeX of the operators associated
-// to each location. This takes the form of a list, each entry in
-// which is a list (x, F) where x is a location and F is a string.
-//
-// To be the clear, the input here is e.g. an element of the list
-// returned by totalAmplitude
-
-proc operatorsFromConfig(list config)
+proc tikzTree(list T)
 {
-	int i;
-	for(i=1;i<=size(config);i++)
-	{
-		def x = config[i][1];
-		int m = config[i][2];
-		list J = config[i][3];
-		string F;
-		
-		if( typeof(x) == "int" )
-		{
-			// Input vertex
-			F = "(-1)^" + string(m);
-			
-			if( size(J) > 0 )
-			{
-				F = F + " \prod_{j \in \{";
-				int j;
-				for(j=1;j<=size(J);j++)
-				{
-					F = F + string(J[j][1]);
-					
-					if( j < size(J) )
-					{
-						F = F + ",";
-					}
-				}
-			}
-			
-			
-		}
-		
-		if( typeof(x) == "list" && size(x) == 2 )
-		{
-			// Internal vertex
-		}
-		
-		if( typeof(x) == "list" && size(x) == 1 )
-		{
-			// Internal edge
-		}
-	}
+	list L_intro = tikzTree_intro();
+	list L_core = tikzTree_core(T);
+	list L_end = tikzTree_end();
+	
+	return(L_intro + L_core + L_end);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -856,6 +661,140 @@ proc prodlist(list L)
 	}
 		
 	return(retlist);
+}
+
+////////////////////////////////////////////////////////////////////
+// locToString
+//
+
+proc locToString(def x)
+{
+	if( locIsInput(x) )
+	{
+		return(string(x));	
+	}
+	
+	if( locIsVertex(x) )
+	{
+		string l = locToString(x[1]);
+		string r = locToString(x[2]);
+		return( "<" + l + r + ">" );
+	}
+	
+	if( locIsEdge(x) )
+	{
+		return( "e" + locToString(x[1]) );
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// locIsAbove
+//
+// Given two locations x,y returns 1 if x is above y in the tree (i.e.
+// the unique path from x to the root passes through y) and 0 otherwise.
+// Note that "above" includes "equal".
+
+proc locIsAbove(def x, def y)
+{
+	if( typeof(x) == typeof(y) )
+	{
+		if( locToString(x) == locToString(y) )
+		{
+			return(1);
+		}
+	}
+	
+	if( typeof(y) != "list" )
+	{
+		return(0);
+	}
+	
+	if( size(y) == 1 )
+	{
+		return(locIsAbove(x,y[1]));
+	}
+	
+	if( size(y) == 2 )
+	{
+		int l = locIsAbove(x,y[1]);
+		int r = locIsAbove(x,y[2]);
+		
+		if( l == 1 || r == 1 )
+		{
+			return(1);
+		}
+		
+		list edge_aboveright = list( y[2] );
+		list edge_aboveleft = list( y[1] );
+		
+		if( locToString(edge_aboveright) == locToString(x) ||
+			locToString(edge_aboveleft) == locToString(x) )
+		{
+			return(1);
+		}
+		
+		return(0);
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// locIsInput
+
+proc locIsInput(def x)
+{
+	if( typeof(x) == "int" )
+	{
+		return(1);
+	}
+	else
+	{
+		return(0);
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// locIsEdge
+
+proc locIsEdge(def x)
+{
+	if( typeof(x) == "list" && size(x) == 1 )
+	{
+		return(1);
+	}
+	else
+	{
+		return(0);
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// locIsVertex
+
+proc locIsVertex(def x)
+{
+	if( typeof(x) == "list" && size(x) == 2 )
+	{
+		return(1);
+	}
+	else
+	{
+		return(0);
+	}
+}
+
+////////////////////////////////////////////////////////////////////
+// isValidTree
+//
+
+proc isValidTree(list T)
+{
+	if( size(T) > 2 )
+	{
+		print("[isValidTree] Badly formatted tree.");
+        return(0);
+	}
+	
+	return(1);
 }
 
 ////////////////////////////////////////////////////////////////////
