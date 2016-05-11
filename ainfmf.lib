@@ -313,6 +313,8 @@ proc enumerateInternalProp(list T, list Wcomp)
 
 proc tikzTree_locpos(def x, int input_offset, list T)
 {
+	int level_offset = 5;
+	
 	if( locIsInput(x) )
 	{
 		return( list((x-1) * input_offset,0) );
@@ -324,8 +326,12 @@ proc tikzTree_locpos(def x, int input_offset, list T)
 		list r = tikzTree_locpos(x[2], input_offset, T);
 		
 		number x_coord = number( l[1] + r[1] ) / 2;
-		number y_coord = l[2] - 10;
 		
+		number lowest = l[2];
+		if( r[2] < l[2] ){ lowest = r[2]; }
+		
+		number y_coord = lowest - level_offset;
+
 		return( list(x_coord,y_coord) );
 	}
 	
@@ -409,6 +415,25 @@ proc tikzTree_intprop(list T, list prop)
 // Given a tree, outputs a series of TikZ commands to draw the tree
 // in LaTeX. Returns the commands as a list of strings (one string
 // = 1 line of TeX).
+
+proc tikzTree_latexpreamble()
+{
+	list L;
+	L = L + list("\\documentclass[english,letter paper,12pt,leqno]{article}");
+	L = L + list("\\usepackage{amsmath, amscd, amssymb, mathrsfs, accents, amsfonts,amsthm}");
+	L = L + list("\\usepackage{tikz}");
+
+	L = L + list("\\setlength{\\evensidemargin}{0.1in}");
+	L = L + list("\\setlength{\\oddsidemargin}{0.1in}");
+	L = L + list("\\setlength{\\textwidth}{6.3in}");
+	L = L + list("\\setlength{\\topmargin}{0.0in}");
+	L = L + list("\\setlength{\\textheight}{8.5in}");
+	L = L + list("\\setlength{\\headheight}{0in}");
+
+	L = L + list("\\begin{document}");
+
+	return(L);
+}
 
 proc tikzTree_intro()
 {

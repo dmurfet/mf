@@ -22,6 +22,16 @@ list T = list(1, list(2, list(3, list(4,list(5,6)))));
 // this with a flow analysis of the tree, or rather do it recursively.
 // Then the only thing left to do is choose a_j's and gamma_j's.
 
+string filename = "ainfmf-diagrams/test.tex";
+
+list L = tikzTree_latexpreamble();
+write(":w " + filename, L[1]);
+int i;
+for(i=2;i<=size(L);i++)
+{
+write(":a " + filename, L[i]);
+}
+
 list E = enumerateInternalProp(T, Wcomp)[1];
 
 int e;
@@ -31,8 +41,9 @@ list tt = tikzTree_intprop(T, E[e]);
 int i;
 for(i=1;i<=size(tt);i++)
 {
-write(":a temp.txt", tt[i]);
+write(":a " + filename, tt[i]);
 }
 }
 
+write(":a " + filename, "\\end{document}");
 
