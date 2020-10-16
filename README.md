@@ -9,6 +9,10 @@ This project is a Singular library for computing with [matrix factorisations](ht
 
 The code was written by [Nils Carqueville](http://nils.carqueville.net/) and [Daniel Murfet](http://therisingsea.org) as part of the paper "[Computing Khovanov-Rozansky homology and defect fusion](http://arxiv.org/abs/1108.1081)". Other contributors are most welcome! If you have any questions, please don't hesitate to [get in touch](mailto:d.murfet@unimelb.edu.au).
 
+Updates:
+
+* 16/10/2020 - code and examples checked against current version of Singular (4.1.0).
+
 # Installation & Usage
 
 First you need a working installation of the commutative algebra package [Singular](https://www.singular.uni-kl.de/). Singular is available for Linux, Windows and Mac OS X and is [easy to install](https://www.singular.uni-kl.de/index.php/singular-download.html). Then you should either clone this git repository onto your local machine, or [download it as a ZIP file](https://github.com/dmurfet/mf/archive/master.zip).
