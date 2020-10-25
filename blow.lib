@@ -520,8 +520,6 @@ proc variableInflationList(ideal J)
 // representing the action of multiplication by each internal variable on the
 // internal algebra (as given by variableInflationList).
 //
-// To avoid computing it repeatedly, we also require that the dimension jdim of
-// the internal algebra be given to us.
 //////////////////////////////////////////////////////////////////////////////////
 
 proc poly2matrix(poly tepo, list variableActions)
@@ -967,7 +965,10 @@ proc deltaQ(matrix F, intvec q)
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-// "dQ" is d Q_X^{wedge n} (where below we have f=Q_X)
+// "dQ" is the symmetrised product of null homotopies in the expression
+// for the idempotent. The matrix f is the differential of the matrix factorisation
+// and q, C refer to the reduction to null-homotopies with respect to powers of
+// variables, see "Computing Khovanov-Rozansky homology and defect fusion".
 /////////////////////////////////////////////////////////////////////////////////////
 
 proc dQ(matrix f, intvec q, matrix C)

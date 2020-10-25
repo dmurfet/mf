@@ -1,0 +1,541 @@
+version="1.0";
+category="Miscellaneous";
+info="
+LIBRARY:   blow.lib  Pushforwards of matrix factorisations
+AUTHOR:    Nils Carqueville, Daniel Murfet
+KEYWORDS:  matrix factorisation
+
+PROCEDURES:
+";
+
+LIB "linalg.lib";
+LIB "matrix.lib";
+LIB "ring.lib";
+LIB "qmatrix.lib";
+LIB "control.lib";
+LIB "blow.lib";
+
+// References
+//
+// [1] D. Murfet, "Computing A-infinity categories of matrix factorisations"
+
+////////////////////////////////////////////////////////////////////
+// atiyahClass
+//
+// Inputs:
+//   ideal I = (t1, ... , tn)
+//   matrix D (differential of a matrix factorisation)
+//   int l
+//
+// Returns:
+//   [D, \partial_{t_l}] as an operator on D \otimes_R R/I
+//
+// ASSUMES: the given generators of I are in the x-variables
+
+proc atiyahClass(ideal I, matrix D, int l)
+{
+	// Suppose D is an operator on the Z2-graded module X
+	// over the ring k[x,y]. Here x are as usual the "internal"
+	// variables and y the "external" variables. If X has a homogenous
+	// basis {e_i}_{i=1}^r then the basis we take for X \otimes_R R/i
+	// is e_i \otimes z_k in lexicographic order, where 1 \le i \le r
+	// and z_k is the basis of R/I returned by kbase(std(I)). With
+	// respect to this basis we return a matrix At_l with entires in
+	// k[y] computing [D, \partial_{t_l}]
+	
+	ideal Istd = std(I);
+	
+	// NOTE: you can't use kbase in the original ring because
+	// the quotient R/I is not finite dimensional over k
+	
+	// Get the Gamma tensor
+	def RRR = basering;
+	def nR = ringWithoutYVars();
+	setring nR;
+	
+	ideal nI = imap(RRR, I);
+	ideal nIstd = std(nI);
+	ideal kb = kbase(nIstd);
+	int mu = size(kb);
+	
+	intvec e_l = 0:mu;
+	e_l[l] = 1;
+	
+	list ngamma_zero = gammaTensorList(nI, (0));
+	list ngamma_el = gammaTensorList(nI, e_l);
+	
+	setring RRR;
+	
+	// gamma_zero[i][j][1,k] is the scalar \Gamma^{ij}_{k,(0)}
+	// gamma_el[i][j][1,k] is the scalar \Gamma^{ij}_{k,e_l)}
+	
+	list gamma_zero = imap(nR, ngamma_zero);
+	list gamma_el = imap(nR, ngamma_el);
+	
+	int atsize = ncols(D) * mu;
+	matrix At[atsize][atsize];
+	
+	print("gamma zero");
+	print(gamma_zero);
+	print("gamma el");
+	print(gamma_el);
+	
+	int i,j;
+	for(i=1; i <= nrows(D); i++)
+	{
+		for(j=1; j <= ncols(D); j++)
+		{
+			print("");
+			print("[in i = " + string(i) + " j = " + string(j) + "]");
+			poly f = D[i,j];
+			
+			// We need to compute f_{(*,0)} and f_{(*,e_d)} for the
+			// weight one intvecs \delta in N^{n} where there are
+			// n generators in I together with the \Gamma tensor
+			// which was computed above
+			
+			// Find all the x-monomials in f
+			list varNames = ringlist(basering)[2];
+			
+			int a;
+			poly product_x_vars = 1;
+			
+			for(a = 1; a <= size(varNames); a++)
+			{
+				if( varNames[a][1] == "x" )
+				{
+					product_x_vars = product_x_vars * var(a);
+				}
+			}
+			
+			// First row of M are monomials in x variables
+			// second row are the coefficients (in y variables)
+			matrix M = coef( f, product_x_vars );
+			print(M);
+			
+			// We need to know the r_{(i, \delta)} coefficients
+			// for all the monomials in the first row of M
+			def RRR = basering;
+			def nR = ringWithoutYVars();
+			
+			setring nR;
+			ideal nI = imap(RRR, I);
+			matrix nM = imap(RRR, M);
+			
+			list nf_zero;
+			list nf_el;
+			
+			int b;
+			for(b = 1; b <= ncols(nM); b++)
+			{
+				matrix nf_monom_zero = sigmaCoef(nI, nM[1,b], (0));
+				matrix nf_monom_el = sigmaCoef(nI, nM[1,b], e_l);	
+				nf_zero[b] = nf_monom_zero;
+				nf_el[b] = nf_monom_el;
+			}
+			
+			setring RRR;
+			
+			// nf_zero[b][1,k] is the scalar r_{(k, (0))} where r is the bth monomial
+			// in the first row of M, that is, the bth monomial in the x-variables
+			// appearing in the polynomial f.
+			// nf_el[b][1,k] is the scalar r_{(k, e_k)}
+			
+			list f_zero = imap(nR, nf_zero);
+			list f_el = imap(nR, nf_el);
+			
+			matrix f_zero_mat[1][mu];
+			matrix f_el_mat[1][mu];
+			
+			int k;
+			for(b = 1; b <= ncols(M); b++)
+			{
+				for(k = 1; k <= mu; k++)
+				{
+					f_zero_mat[1,k] = M[2,b] * f_zero[b][1,k];
+					f_el_mat[1,k] = M[2,b] * f_el[b][1,k];
+				}
+			}
+			
+			print("    f_zero_mat");
+			print(f_zero_mat);
+			print("    f_el_mat");
+			print(f_el_mat);
+			
+			// Now finally we can construct the entry of At
+			// Note that we are currently processing row i and col j
+			// which correspond to homogeneous basis elements of X
+			// the index pair (i, b), (j, k) is given by the formula
+			// 
+			//  \sum_{a=1}^\mu [ f_{(a,0)} \Gamma^{ak}_{b e_l}
+			//      + f_{(a,e_l)} \Gamma^{ak}_{b 0} ] 
+			//
+			
+			int k, b;
+			for(k = 1; k <= mu; k++)
+			{
+				int inf_col = (j-1)*mu + k;
+				print("   in k = " + string(k));
+				
+				for(b=1; b <= mu; b++)
+				{
+					int inf_row = (i-1)*mu + b;
+					print("    in b = " + string(b));
+					
+					for(a = 1; a <= mu; a++)
+					{
+						poly s = f_zero_mat[1,a] * gamma_el[a][k][1,b];
+						s = s + f_el_mat[1,a] * gamma_zero[a][k][1,b];
+						At[inf_row, inf_col] = At[inf_row, inf_col] + s;
+					}
+					
+					print("    entry at (" + string(inf_row) + "," + string(inf_col) + ") = " + string(At[inf_row,inf_col]));
+				}
+			}
+		}
+	}
+	
+	return(At);
+}
+
+proc atiyahClass_test1()
+{
+	option(noredefine);option(noloadLib);option(redSB);
+	ring rr=0,(x(1),y(1)),dp;
+	poly W = x(1)^2;
+	poly V = y(1)^2 - x(1)^2;
+	ideal I = diff(W, x(1)); // Don't use Jacobi as it will put partial y in as well
+	
+	matrix X[2][2] = 0, x(1), x(1), 0; // X is a MF of W
+	matrix Y[2][2] = 0, y(1) - x(1), y(1) + x(1), 0;
+	
+	matrix D = MFtensor(Y,X); // factorisation of y(1)^5 over k[x,y]
+	matrix Dinf = inflate(D, I);
+	
+	matrix At = atiyahClass(I, D, 1);
+	print("-------------------");
+	print("-- D");
+	print(D);
+	print("-- At");
+	print(At);
+	print("-- Dinf --");
+	print(Dinf);
+	print(" Dinf At + At Dinf ---");
+	print(Dinf * At + At * Dinf);
+}
+
+proc atiyahClass_test2()
+{
+	option(noredefine);option(noloadLib);option(redSB);
+	ring rr=0,(x(1),y(1)),dp;
+	poly W = x(1)^3;
+	poly V = y(1)^5 - x(1)^3;
+	ideal I = diff(W, x(1)); // Don't use Jacobi as it will put partial y in as well
+	
+	matrix X[2][2] = 0, x(1)^2, x(1), 0; // X is a MF of W
+	
+	matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
+	matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
+	matrix z[2][2];
+	matrix Y = blockmat(z,Y1,Y0,z);	
+	
+	matrix D = MFtensor(Y,X); // factorisation of y(1)^5 over k[x,y]
+	matrix Dinf = inflate(D, I);
+	
+	matrix At = atiyahClass(I, D, 1);
+	print("-------------------");
+	print("-- D");
+	print(D);
+	print("-- At");
+	print(At);
+	print("-- Dinf --");
+	print(Dinf);
+	print(" Dinf At + At Dinf ---");
+	print(Dinf * At + At * Dinf);
+}
+
+////////////////////////////////////////////////////////////////////
+// sigmaCoef
+//
+// Given an ideal I returns the coefficient scalars r_{(*, \delta)}
+// of [1] Definition 4.3 with respect to the standard k-basis of R/I.
+// For details see Remark A.9.
+//
+// Inputs:
+//    ideal I = (t1, ..., tn)
+//
+// Returns:
+//    row matrix with size(kbase(std(I))) scalar columns
+
+proc sigmaCoef(ideal I, poly r, intvec delta)
+{
+	if( sum(delta) > 1 )
+	{
+		print("[sigmaCoef] Does not currently support higher weight deltas. Sorry!");
+		return();
+	}
+	
+	ideal Istd = std(I);
+	ideal kb = kbase(Istd);
+	
+	poly rG = reduce(r, Istd);
+	
+	int k, a;
+	poly product_ring_vars = 1;
+	for(a = 1; a <= nvars(basering); a++){ product_ring_vars = product_ring_vars * var(a); }
+	
+	matrix Z[1][size(kb)];
+	
+	if( sum(delta) == 0 )
+	{	
+		matrix M = coef( rG, product_ring_vars );
+		
+		for(k = 1; k <= size(kb); k++)
+		{
+			for(a = 1; a <= ncols(M); a++)
+			{
+				if( M[1,a] == kb[k] )
+				{
+					Z[1,k] = M[2,a];
+				}
+			}	
+		}
+		
+		return(Z);
+	}
+	
+	matrix H = lift(I, Istd); // matrix(I) * H = matrix(Istd)
+	matrix B = lift(Istd, r - rG); // matrix(Istd) * B = r - rG
+	
+	int d = -1;
+	for(a = 1; a <= size(delta); a++)
+	{
+		if( delta[a] == 1 )
+		{
+			d = a;
+		}
+	}
+	
+	// We are computing r_{(k,e_d)}
+	// which is the coefficient of z_k in \sum_{a = 1}^c reduce(b_a h_{ad}, Istd)
+	
+	poly r_e_d = 0;
+	for(a = 1; a <= size(Istd); a++)
+	{
+		r_e_d = r_e_d + reduce( B[a,1] * H[d,a], Istd);
+	}
+	
+	matrix M = coef( r_e_d, product_ring_vars );
+	
+	for(k = 1; k <= size(kb); k++)
+	{
+		for(a = 1; a <= ncols(M); a++)
+		{
+			if( M[1,a] == kb[k] )
+			{
+				Z[1,k] = M[2,a];
+			}
+		}	
+	}
+	
+	return(Z);
+}
+
+////////////////////////////////////////////////////////////////////
+// gammaTensor
+//
+// Returns the scalars Gamma^{ij}_{* \delta} of [1] Definition 4.2
+//
+// Inputs:
+//   ideal I = (t1, ..., tn)
+//   integers i,j
+//   intvec delta
+//
+// Returns: row matrix of coefficients wrt kbase(std(I))
+//
+
+proc gammaTensor(ideal I, int i, int j, intvec delta)
+{
+	ideal Istd = std(I);
+	ideal kb = kbase(Istd);
+	
+	poly z_i = kb[i];
+	poly z_j = kb[j];
+	poly r = z_i * z_j;
+	return( sigmaCoef(I, r, delta) );
+}
+
+////////////////////////////////////////////////////////////////////
+// gammaTensorList
+//
+// Return gammaTensor as a list of lists of matrices
+//
+// Inputs:
+//   ideal I = (t1, ..., tn)
+//   intvec delta
+//
+
+proc gammaTensorList(ideal I, intvec delta)
+{
+	ideal Istd = std(I);
+	ideal kb = kbase(Istd);
+	
+	list i_list, j_list;
+	int i,j;
+	for(i=1; i <= size(kb); i++)
+	{
+		list j_list;
+		for(j=1; j <= size(kb); j++)
+		{
+			j_list[j] = gammaTensor(I, i, j, delta);
+		}
+		
+		i_list[i] = j_list;
+	}
+	
+	return(i_list);
+}
+
+proc gammaTensor_test()
+{
+	ring rr=0,(x),dp;
+	poly V = x5;
+	ideal I = jacob(V);
+	ideal kb = kbase(std(I));
+	
+	print("Ideal I");
+	print(I);
+	
+	print("K basis of R/I:");
+	print(kb);
+	
+	print("");
+	
+	int i, j, k;
+	for(i = 1; i <= size(kb); i++)
+	{
+		for(j = 1; j <= size(kb); j++)
+		{
+			matrix c = gammaTensor(I, i, j, (0));
+			print("Gamma^{" + string(i) + "," + string(j) + "}_{*, (0)} = " + string(c));
+		}
+	}
+	
+	print("");
+	
+	int i, j, k;
+	for(i = 1; i <= size(kb); i++)
+	{
+		for(j = 1; j <= size(kb); j++)
+		{
+			matrix c = gammaTensor(I, i, j, (1));
+			print("Gamma^{" + string(i) + "," + string(j) + "}_{*, (1)} = " + string(c));
+		}
+	}
+	
+	print("");
+	
+	print(gammaTensorList(I, (1)));
+}
+
+////////////////////////////////////////////////////////////////////
+// inflate
+//
+// Inflates the matrix D by tensoring with R/I and replacing all
+// x variables by their action on R/I with respect to the basis
+// kbase(std(I)).
+//
+// Inputs:
+//   matrix D over external variables (y's) and internal variables (x's)
+//   ideal I = (t1, ..., tn)
+//
+// NOTE: D may be non-square
+
+proc inflate(matrix D, ideal I)
+{
+	// Get the dimension of k[x]/I
+	def RRR = basering;
+	def nR = ringWithoutYVars();
+	setring nR;
+	ideal nI = imap(RRR, I);
+	ideal nIstd = std(nI);
+	ideal kb = kbase(nIstd);
+	int mu = size(kb);
+	setring RRR;
+	
+	matrix Dinflate[nrows(D)*mu][ncols(D)*mu];
+	
+	// We need to extract x monomials later
+	int a;
+	poly product_x_vars = 1;
+	for(a = 1; a <= size(varNames); a++)
+	{
+		if( varNames[a][1] == "x" )
+		{
+			product_x_vars = product_x_vars * var(a);
+		}
+	}
+	
+	int i, j, kprime, k, b;
+	for(i = 1; i <= nrows(D); i++)
+	{
+		for(j = 1; j <= ncols(D); j++)
+		{
+			poly f = D[i,j];
+			matrix M = coef( f, product_x_vars );
+			
+			// M writes f as a sum of [ polys in y ] * [ monomials in x ]
+			// and we now compute the mu x mu matrices corresponding to these
+			// monomials
+			
+			for(kprime = 1; kprime <= mu; kprime++)
+			{
+				for(k = 1; k <= mu; k++)
+				{
+					for(b = 1; b <= ncols(M); b++)
+					{
+						poly m = M[1,b];
+						
+						setring nR;
+						poly monom = imap(RRR,m);
+						poly product_x_vars = imap(RRR, product_x_vars);
+						
+						// Compute the coefficient with respect to the kprime-th
+						// element of the kbasis of f * (kth basis element)
+						poly prod = reduce( monom * kb[k], nIstd );
+						matrix N = coef( prod, product_x_vars );
+						poly nc;
+						
+						for(a = 1; a <= ncols(N); a++)
+						{
+							if( N[1,a] == kb[kprime] )
+							{
+								nc = N[2,a];	
+							}
+						}
+					
+						setring RRR;
+						poly c = imap(nR, nc);
+						Dinflate[(i-1)*mu + kprime, (j-1)*mu + k] = Dinflate[(i-1)*mu + kprime, (j-1)*mu + k] + c * M[2,b];
+					}
+				}
+			}
+		}
+	}
+	
+	return(Dinflate);
+}
+
+proc inflate_test()
+{
+	option(noredefine);option(noloadLib);option(redSB);
+	ring rr=0,(x(1),y(1)),dp;
+	poly W = x(1)^4;
+	ideal I = diff(W, x(1));
+	
+	matrix X[2][2] = 0, x(1)^3, x(1), 0;
+	matrix Xinflate = inflate(X,I);
+	print(X);
+	print("---");
+	print(Xinflate);
+}
