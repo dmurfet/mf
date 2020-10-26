@@ -20,6 +20,141 @@ LIB "blow.lib";
 // [1] D. Murfet, "Computing A-infinity categories of matrix factorisations"
 
 ////////////////////////////////////////////////////////////////////
+// push
+//
+// Returns a finite rank representative for the pushforward of the
+// matrix factorisation D to the ring without the x variables. We
+// assume given a sequence of null-homotopies.
+//
+// Inputs:
+//   ideal I = (t1, ..., tn)
+//   matrix D (a matrix factorisation of a potential not involving x vars)
+//   list lambdas (null-homotopies for the ti)
+//
+// Cf mfPushforward in "blow.lib" which makes an assumption about
+// the ti being powers of x variables.
+
+proc push(ideal I, matrix D, list lambdas)
+{
+	int useSanityChecks = blowFlags("sanity_checks");
+	
+	// Check the given lambdas are in fact homotopies
+	if( useSanityChecks )
+	{
+		int i;
+		for(i=1; i<=size(I); i++)
+		{
+			if( lambdas[i] * D + D * lambdas[i] != I[i] * unitmat(nrows(D)) )
+			{
+				print("[push] Not passed valid homotopies, exiting.");
+				return();
+			}
+		}	
+	}
+	
+	int numX = numXVars();
+	matrix Dinf = inflate(D, I);
+	
+	matrix AtProduct = unitmat(nrows(Dinf));
+	matrix LambdaProduct = unitmat(nrows(Dinf));
+	
+	int i;
+	for(i=1; i<=numX; i++)
+	{
+		AtProduct = AtProduct * atiyahClass(I, D, i);
+		LambdaProduct = LambdaProduct * inflate( lambdas[i], I );
+	}
+	
+	// The idempotent on Dinf
+	int sign = (numX * (numX+1)) div 2;
+	matrix E = (-1)^(sign) * LambdaProduct * AtProduct;
+	
+	// Reduce Dinf
+	list l = mfReduce(Dinf);
+	matrix RD = l[1];
+	matrix F = l[2]; // A homotopy equivalence F: Dinf -> RD
+	matrix G = l[3]; // A homotopy equivalence G: RD -> Dinf
+	
+	// Pass the (homotopy) idempotent to RD
+	matrix E_RD = F * E * G;
+	
+	matrix E_RD_strict = E_RD;
+	
+	if( E_RD * E_RD != E_RD )
+	{
+		// Strictify the idempotent
+		E_RD_strict = mfStrictifyIdempotent(RD, E_RD);
+	}
+	
+	// Split the idempotent
+	list l = mfSplitIdempotent(RD, E_RD_strict);
+	
+	if( typeof(l[1]) == "string" )
+	{
+		print("[fuse] Currently not handled, sorry.");
+		return();
+	}
+	
+	// This particular idempotent splits to (Y \otimes X)[n] where
+	// n is the number of internal variables
+	matrix A = l[1];
+	A = mfSuspend(A, numX);
+
+	return(A);
+}
+
+proc push_test1()
+{
+	option(noredefine);option(noloadLib);option(redSB);
+	ring rr=0,(x(1),y(1)),dp;
+	poly W = x(1)^2;
+	poly V = y(1)^2 - x(1)^2;
+	ideal I = diff(W, x(1)); // Don't use Jacobi as it will put partial y in as well
+	
+	matrix X[2][2] = 0, x(1), x(1), 0; // X is a MF of W
+	matrix Y[2][2] = 0, y(1) - x(1), y(1) + x(1), 0;
+	
+	matrix D = MFtensor(Y,X); // factorisation of y(1)^5 over k[x,y]
+	matrix DX = ZZtensor( unitmat(ncols(Y)), X );
+	matrix A = push(I, D, list(diff(DX, x(1))));
+	
+	matrix Ans[2][2] = 0, y(1), y(1), 0;
+	int test1 = (A == Ans);
+	if( !test1 ){ print("Test failed."); return(0); }
+	
+	print("All tests passed");
+	return(1);
+}
+
+proc push_test2()
+{
+	option(noredefine);option(noloadLib);option(redSB);
+	ring rr=0,(x(1),y(1)),dp;
+	poly W = x(1)^3;
+	poly V = y(1)^5 - x(1)^3;
+	ideal I = diff(W, x(1)); // Don't use Jacobi as it will put partial y in as well
+	
+	matrix X[2][2] = 0, x(1)^2, x(1), 0; // X is a MF of W
+	
+	matrix Y0[2][2] = -x(1), y(1), -y(1)^4, x(1)^2;
+	matrix Y1[2][2] = x(1)^2, -y(1), y(1)^4, -x(1);
+	matrix z[2][2];
+	matrix Y = blockmat(z,Y1,Y0,z);	
+	
+	matrix D = MFtensor(Y,X); // factorisation of y(1)^5 over k[x,y]
+	matrix DX = ZZtensor( unitmat(ncols(Y)), X );
+	
+	matrix A = push(I, D, list(diff(DX, x(1))));
+	
+	matrix Ans[4][4] = 0, 0, 0, y(1), 0, 0, y(1)^4, 0, 0, y(1), 0, 0, y(1)^4, 0, 0, 0;
+	int test1 = (A == Ans);
+	if( !test1 ){ print("Test failed."); return(0); }
+	
+	print("All tests passed");
+	return(1);
+}
+
+////////////////////////////////////////////////////////////////////
 // atiyahClass
 //
 // Inputs:
@@ -75,18 +210,13 @@ proc atiyahClass(ideal I, matrix D, int l)
 	int atsize = ncols(D) * mu;
 	matrix At[atsize][atsize];
 	
-	print("gamma zero");
-	print(gamma_zero);
-	print("gamma el");
-	print(gamma_el);
-	
 	int i,j;
 	for(i=1; i <= nrows(D); i++)
 	{
 		for(j=1; j <= ncols(D); j++)
 		{
-			print("");
-			print("[in i = " + string(i) + " j = " + string(j) + "]");
+			//print("");
+			//print("[in i = " + string(i) + " j = " + string(j) + "]");
 			poly f = D[i,j];
 			
 			// We need to compute f_{(*,0)} and f_{(*,e_d)} for the
@@ -111,7 +241,8 @@ proc atiyahClass(ideal I, matrix D, int l)
 			// First row of M are monomials in x variables
 			// second row are the coefficients (in y variables)
 			matrix M = coef( f, product_x_vars );
-			print(M);
+			//print("--M");
+			//print(M);
 			
 			// We need to know the r_{(i, \delta)} coefficients
 			// for all the monomials in the first row of M
@@ -144,6 +275,11 @@ proc atiyahClass(ideal I, matrix D, int l)
 			list f_zero = imap(nR, nf_zero);
 			list f_el = imap(nR, nf_el);
 			
+			//print("    f_zero");
+			//print(f_zero);
+			//print("    f_el");
+			//print(f_el);
+			
 			matrix f_zero_mat[1][mu];
 			matrix f_el_mat[1][mu];
 			
@@ -152,15 +288,15 @@ proc atiyahClass(ideal I, matrix D, int l)
 			{
 				for(k = 1; k <= mu; k++)
 				{
-					f_zero_mat[1,k] = M[2,b] * f_zero[b][1,k];
-					f_el_mat[1,k] = M[2,b] * f_el[b][1,k];
+					f_zero_mat[1,k] = f_zero_mat[1,k] + M[2,b] * f_zero[b][1,k];
+					f_el_mat[1,k] = f_el_mat[1,k] + M[2,b] * f_el[b][1,k];
 				}
 			}
 			
-			print("    f_zero_mat");
-			print(f_zero_mat);
-			print("    f_el_mat");
-			print(f_el_mat);
+			//print("    f_zero_mat");
+			//print(f_zero_mat);
+			//print("    f_el_mat");
+			//print(f_el_mat);
 			
 			// Now finally we can construct the entry of At
 			// Note that we are currently processing row i and col j
@@ -175,12 +311,12 @@ proc atiyahClass(ideal I, matrix D, int l)
 			for(k = 1; k <= mu; k++)
 			{
 				int inf_col = (j-1)*mu + k;
-				print("   in k = " + string(k));
+				//print("   in k = " + string(k));
 				
 				for(b=1; b <= mu; b++)
 				{
 					int inf_row = (i-1)*mu + b;
-					print("    in b = " + string(b));
+					//print("    in b = " + string(b));
 					
 					for(a = 1; a <= mu; a++)
 					{
@@ -189,14 +325,22 @@ proc atiyahClass(ideal I, matrix D, int l)
 						At[inf_row, inf_col] = At[inf_row, inf_col] + s;
 					}
 					
-					print("    entry at (" + string(inf_row) + "," + string(inf_col) + ") = " + string(At[inf_row,inf_col]));
+					//print("    entry at (" + string(inf_row) + "," + string(inf_col) + ") = " + string(At[inf_row,inf_col]));
 				}
 			}
 		}
 	}
 	
+	At = -1 * At; // since At is [d, partial] and we computed partial( d( - ) ) above
+	
 	return(At);
 }
+
+///////////////////////
+// atiyahClass tests
+//
+//  Return 0 if failed, 1 if passed
+//
 
 proc atiyahClass_test1()
 {
@@ -213,15 +357,60 @@ proc atiyahClass_test1()
 	matrix Dinf = inflate(D, I);
 	
 	matrix At = atiyahClass(I, D, 1);
-	print("-------------------");
-	print("-- D");
-	print(D);
-	print("-- At");
-	print(At);
-	print("-- Dinf --");
-	print(Dinf);
-	print(" Dinf At + At Dinf ---");
-	print(Dinf * At + At * Dinf);
+	
+	matrix z[nrows(At)][ncols(At)];
+	int test1 = (Dinf * At + At * Dinf == z);
+	if( test1 == 0 ){ print("Test 1 failed."); return(0); }
+	
+	// Construct the operator lambda
+	matrix DX = ZZtensor( unitmat(ncols(Y)), X );
+	matrix Lambda = inflate( diff(DX, x(1)), I);
+	
+	int test1b = (Dinf * Lambda + Lambda * Dinf == z);
+	if( !test1b ){ print("Test 1b failed."); return(0); }
+	
+	// Construct the idempotent e on Dinf
+	matrix E = (-1) * Lambda * At;
+	
+	int test1c = (E * Dinf - Dinf * E == z);
+	if( !test1c ){ print("Test 1c failed."); return(0); }
+	
+	// Reduce Dinf
+	list l = mfReduce(Dinf);
+	matrix RD = l[1];
+	matrix F = l[2]; // A homotopy equivalence F: Dinf -> RD
+	matrix G = l[3]; // A homotopy equivalence G: RD -> Dinf
+	
+	// Test that the splitting is actually a morphism
+	int test2 = (RD * F == F * Dinf);
+	int test3 = (Dinf * G == G * RD);
+	int test4 = (F * G == unitmat(nrows(F)));
+	
+	if( !test2 ){ print("Test 2 failed"); return(0); }
+	if( !test3 ){ print("Test 3 failed"); return(0); }
+	if( !test4 ){ print("Test 4 failed"); return(0); }
+	
+	// Pass the (homotopy) idempotent to RD
+	matrix E_RD = F * E * G;
+	
+	matrix z[nrows(RD)][ncols(RD)];
+	int test5 = (E_RD * RD - RD * E_RD == z);
+	if( !test5 ){ print("Test 5 failed"); return(0); }
+	
+	// E_RD is strictly idempotent
+	int test6 = (E_RD * E_RD - E_RD == z);
+	if( !test6 ){ print("Test 6 failed"); return(0); }
+	
+	// Split E_RD
+	matrix A = mfSplitIdempotent(RD, E_RD)[1];
+	A = mfSuspend(A, 1);
+	
+	matrix Ans[2][2] = 0, y(1), y(1), 0;
+	int test7 = (A == Ans);
+	if( !test7 ){ print("Test 7 failed."); return(0); }
+	
+	print("All tests passed");
+	return(1);
 }
 
 proc atiyahClass_test2()
@@ -243,15 +432,61 @@ proc atiyahClass_test2()
 	matrix Dinf = inflate(D, I);
 	
 	matrix At = atiyahClass(I, D, 1);
-	print("-------------------");
-	print("-- D");
-	print(D);
-	print("-- At");
-	print(At);
-	print("-- Dinf --");
-	print(Dinf);
-	print(" Dinf At + At Dinf ---");
-	print(Dinf * At + At * Dinf);
+	
+	// Test that the Atiyah class is an odd closed map on Y | X
+	matrix z[nrows(At)][ncols(At)];
+	int test1 = (Dinf * At + At * Dinf == z);
+	if( test1 == 0 ){ print("Test 1 failed."); return(0); }
+	
+	// Construct the operator lambda
+	matrix DX = ZZtensor( unitmat(ncols(Y)), X );
+	matrix Lambda = inflate( diff(DX, x(1)), I);
+	
+	int test1b = (Dinf * Lambda + Lambda * Dinf == z);
+	if( !test1b ){ print("Test 1b failed."); return(0); }
+	
+	// Construct the idempotent e on Dinf
+	matrix E = (-1) * Lambda * At;
+	
+	int test1c = (E * Dinf - Dinf * E == z);
+	if( !test1c ){ print("Test 1c failed."); return(0); }
+	
+	// Reduce Dinf
+	list l = mfReduce(Dinf);
+	matrix RD = l[1];
+	matrix F = l[2]; // A homotopy equivalence F: Dinf -> RD
+	matrix G = l[3]; // A homotopy equivalence G: RD -> Dinf
+	
+	// Test that the splitting is actually a morphism
+	int test2 = (RD * F == F * Dinf);
+	int test3 = (Dinf * G == G * RD);
+	int test4 = (F * G == unitmat(nrows(F)));
+	
+	if( !test2 ){ print("Test 2 failed"); return(0); }
+	if( !test3 ){ print("Test 3 failed"); return(0); }
+	if( !test4 ){ print("Test 4 failed"); return(0); }
+	
+	// Pass the (homotopy) idempotent to RD
+	matrix E_RD = F * E * G;
+	
+	matrix z[nrows(RD)][ncols(RD)];
+	int test5 = (E_RD * RD - RD * E_RD == z);
+	if( !test5 ){ print("Test 5 failed"); return(0); }
+	
+	// E_RD is strictly idempotent
+	int test6 = (E_RD * E_RD - E_RD == z);
+	if( !test6 ){ print("Test 6 failed"); return(0); }
+	
+	// Split E_RD
+	matrix A = mfSplitIdempotent(RD, E_RD)[1];
+	A = mfSuspend(A, 1);
+	
+	matrix Ans[4][4] = 0, 0, 0, y(1), 0, 0, y(1)^4, 0, 0, y(1), 0, 0, y(1)^4, 0, 0, 0;
+	int test7 = (A == Ans);
+	if( !test7 ){ print("Test 7 failed."); return(0); }
+	
+	print("All tests passed");
+	return(1);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -463,6 +698,7 @@ proc inflate(matrix D, ideal I)
 	int mu = size(kb);
 	setring RRR;
 	
+	list varNames = ringlist(basering)[2];
 	matrix Dinflate[nrows(D)*mu][ncols(D)*mu];
 	
 	// We need to extract x monomials later
