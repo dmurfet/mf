@@ -12,7 +12,7 @@ LIB "linalg.lib";
 LIB "matrix.lib";
 LIB "ring.lib";
 LIB "control.lib";
-LIB "blow-new.lib";
+LIB "blownew.lib";
 
 ////////////////////////////////////////////////////////////////////
 // GROUPS
@@ -36,6 +36,8 @@ LIB "blow-new.lib";
 // (note that all the actions can be simultaneously diagonalised) is to specify a list
 // (A1, ... , Am) where each Ai = (ai1, ..., aik) is an intvec, specifying the ith
 // basis element as a representation of G.
+//
+// WARNING: you should probably specify the aij as non-negative integers!
 
 ////////////////////////////////////////////////////////////////////
 // EQUIVARIANT MATRIX FACTORISATIONS
@@ -44,7 +46,8 @@ LIB "blow-new.lib";
 //
 //		(0,r),((x(1..),y(1..)),dp
 // 
-// The x-variables are the "internal" variables.
+// The x-variables are the "internal" variables. We expect "minpolyblow" to be specified
+// see "blow.lib" for instructions.
 //
 // We assume that G acts linearly on QQ(r)[x1,...,xt] in such a way that the variables
 // x(j) are all one-dimensional representations. We may therefore summarise the action
@@ -74,37 +77,21 @@ LIB "blow-new.lib";
 //    should contain polynomials (xi1, ..., xik) where xi1 is a chosen
 //    dith primitive root of unity.
 
-////////////////////////////////////////////////////////////////////
-// groupElements
-//
-// Inputs:
-//    intvec G = (d1, ..., dk)
-//
-// Returns the list of all intvecs (a1, ..., ak) where 0 \le ai < di
-// for all 1 \le i \le k.
-
-proc groupElements(intvec G)
-{
-	intvec subG = G[2..size(G)];
-	list sublist = groupElements(subG);
-	
-	list elts;
-	int i,j;
-	for(i=0; i < G[i]; i++)
-	{
-		for(j=1; j<=size(sublist); j++)
-		{
-			intvec t = i, sublist[j];	
-			elts = elts + list(t);
-		}
-	}
-	
-	return(elts);
-}
-
 proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_of_unity, poly W, list Yequiv, list Xequiv, list #)
 {
 	int prl = printlevel;
+	
+	if( !isEquivMFValid(Y, Yequiv, G, varGrading) )
+	{
+		print("[fuseEquivDefects] Passed invalid equivariant structure on Y.");
+		return();
+	}
+	
+	if( !isEquivMFValid(X, Xequiv, G, varGrading) )
+	{
+		print("[fuseEquivDefects] Passed invalid equivariant structure on X.");
+		return();
+	}
 	
 	// Construct the jacobi ideal
 	int numX = numXVars();
@@ -116,24 +103,58 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 		I = I + ideal( diff(W, x(i)));
 	}
 	
-	print(I);
-
 	// Compute the ordinary tensor product:
 	matrix D = MFtensor(Y,X);
 	matrix Dinf = inflate(D, I);
 
 	list XYequiv = MFtensorEquiv(Yequiv, Xequiv);
-	list Dequiv = inflateEquiv(XYequiv, J);
+	list Dequiv = inflateEquiv(XYequiv, I, varGrading);
 	
-	// Compute the symmetrised homotopies
+	// Compute the symmetrised homotopies acting on
+	// the matrix factorisation X, as in (20.1) of
+	// (orbfus)
 	list lambdas;
 	
 	int i;
 	for(i=1; i<=numX; i++)
 	{
-		DX = diff(X, x(i));
-	
+		list Gelts = groupElements(G);
+		matrix A[nrows(X)][ncols(X)];
+		
+		// \Lambda_i = 1/|G| \Sum_{g \in G} \alpha^{-1}_{g, i} A_g ( g^{-1} * \partial_{x_i}(d_X)) A_g^{-1}
+		// where g * x(i) = \alpha_{g,i} x(i)
+		
+		int j;
+		for(j=1; j <= size(Gelts); j++)
+		{
+			intvec g = Gelts[j];
+			
+			// s is \alpha_{g^{-1},i}
+			poly s = 1;
+			int a;
+			for(a=1; a <= size(G); a++)
+			{
+				s = s * roots_of_unity[a]^((G[a] - g[a]) * varGrading[i][a]);
+			}
+				
+			matrix Ag = gmatrix(G, G - g, Xequiv, roots_of_unity);
+			matrix Ag_inv = gmatrix(G, g, Xequiv, roots_of_unity);
+			matrix diff_act = actmatrix(G, G - g, varGrading, diff(X, x(i)), roots_of_unity);
+			
+			matrix B = s * Ag * diff_act * Ag_inv;
+			A = A + B;
+		}
+		
+		A = 1/poly(size(Gelts)) * A;
+		
 		lambdas[i] = ZZtensor( unitmat(ncols(Y)), A );
+		
+		// Check this is a homotopy
+		if( A * X + X * A != diff(W, x(i)) * unitmat(nrows(X)) )
+		{
+			print("[fuseEquivDefects] Failed to construct homotopy.");
+			return();
+		}
 	}
 	
 	// Construct the idempotent E
@@ -141,28 +162,51 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	matrix LambdaProduct = unitmat(nrows(Dinf));
 	
 	int i;
+	matrix z[nrows(Dinf)][ncols(Dinf)];
 	for(i=1; i<=numX; i++)
 	{
-		AtProduct = AtProduct * atiyahClass(I, D, i);
-		LambdaProduct = LambdaProduct * inflate( lambdas[i], I );
+		matrix at = atiyahClass(I, D, i);
+		matrix la = inflate( lambdas[i], I );
+		
+		if( la * Dinf + Dinf * la != z )
+		{
+			print("[fuseEquivDefects] Lambda " + string(i) + " is not an odd closed map.");
+			return();
+		}
+		
+		if( at * Dinf + Dinf * at != z )
+		{
+			print(at);
+			print("[fuseEquivDefects] Atiyah class " + string(i) + " is not an odd closed map.");
+			return();
+		}
+		
+		AtProduct = AtProduct * at;
+		LambdaProduct = LambdaProduct * la;
 	}
 	
 	int sign = (numX * (numX+1)) div 2;
 	matrix E = (-1)^(sign) * LambdaProduct * AtProduct;
+	
+	if( E * Dinf - Dinf * E != z )
+	{
+		print("[fuseEquivDefects] E is not a morphism, exiting.");
+		return();	
+	}
 	
 	// Compute the projector onto G-degree 0 of the inflation (i.e. G-invariants)
 	list PiG_list;
 	
 	for(i = 1; i <= size(Dequiv); i++)
 	{
-		if( Dequiv[i] == 0 )
+		if( modintvec(Dequiv[i],G) == 0 )
 		{
 			PiG_list = PiG_list + list(i);
 		}
 	}
 	
-	matrix PiG[size(PiG_list)][ncols(Dblow)];
-	matrix IiG[ncols(Dblow)][size(PiG_list)];
+	matrix PiG[size(PiG_list)][ncols(Dinf)];
+	matrix IiG[ncols(Dinf)][size(PiG_list)];
 	
 	for(i = 1; i <= size(PiG_list); i++)
 	{
@@ -173,21 +217,43 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	// The restriction of the differential Dinf to the G-invariant part
 	matrix Dinf_G = PiG * Dinf * IiG;
 	
+	matrix z[nrows(Dinf_G)][ncols(Dinf_G)];
+	if( Dinf_G * Dinf_G != (D*D)[1,1] * unitmat(nrows(Dinf_G)) )
+	{
+		print("[fuseEquivDefects] The G-invariant part is not a matrix factorisation.");
+		return();	
+	}
+	
+	// The projection and inclusions should be morphisms of matrix factorisations
+	if( Dinf_G * PiG != PiG * Dinf )
+	{
+		print("[fuseEquivDefects] The projection is not a morphism.");
+		return();
+	}
+	
+	if( IiG * Dinf_G != Dinf * IiG )
+	{
+		print("[fuseEquivDefects] The injection is not a morphism.");
+		return();
+	}
+	
 	// Reduce this inflated differential:
 	list l = mfReduce(Dinf_G);
 	matrix RD = l[1];
-	matrix F = l[2]; // A homotopy equivalence F: Dinf_G -> RD
-	matrix G = l[3]; // A homotopy equivalence G: RD -> Dinf_G
+	matrix sF = l[2]; // A homotopy equivalence sF: Dinf_G -> RD
+	matrix sG = l[3]; // A homotopy equivalence sG: RD -> Dinf_G
 	
 	// The induced homotopy idempotent on the G-invariant part
 	matrix E_G = PiG * E * IiG;
-	print("E_G ---");
-	print(E_G);
+	
+	if( E_G * Dinf_G - Dinf_G * E_G != z )
+	{
+		print("[fuseEquivDefects] The induced idempotent on the G-invariant part is not a morphism");
+		return();
+	}
 	
 	// The idempotent on the reduction of the G-invariant part
-	matrix ep = F * E_G * G;
-	print("ep ----");
-	print(ep);
+	matrix ep = sF * E_G * sG;
 	
 	// Sanity check: ep must be an endomorphism of RD:
 	int h = ncols(ep * RD);
@@ -222,6 +288,150 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	}
 	
 	return(l);
+}
+
+proc modintvec(intvec g, intvec h)
+{
+	intvec m;
+	int i;
+	for(i=1; i <= size(g); i++)
+	{
+		m[i] = g[i] mod h[i];
+	}
+	
+	return(m);
+}
+
+////////////////////////////////////////////////////////////////////
+// actpoly
+//
+// Implements the action of G on the polynomial ring
+//
+// Inputs:
+//     G = (d1, ..., dk)
+//     g = (a1, ..., ak) gives a group element
+//     varGrading is a list specifying the representation of G on x variables
+//     polynomial f
+
+proc actpoly(intvec G, intvec g, list varGrading, poly f, list roots_of_unity)
+{
+	int numX = numXVars();
+	
+	int i, a;
+	poly r = f;
+	
+	for(i=1; i <= numX; i++)
+	{
+		// s is \alpha_{g,i}
+		poly s = 1;
+		for(a=1; a <= size(G); a++)
+		{
+			s = s * roots_of_unity[a]^(g[a] * varGrading[i][a]);
+		}
+		
+		r = subst(f, x(i), s * x(i));
+	}
+	
+	return(r);
+}
+
+proc actmatrix(intvec G, intvec g, list varGrading, matrix F, list roots_of_unity)
+{
+	matrix R[nrows(F)][ncols(F)];
+	
+	int i,j;
+	for(i=1; i<=nrows(F); i++)
+	{
+		for(j=1; j<=ncols(F); j++)
+		{
+			R[i,j] = actpoly(G, g, varGrading, F[i,j], roots_of_unity);
+		}
+	}
+	
+	return(R);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// gmatrix
+//
+// Inputs:
+//    intvec G = (d1, ..., dk)
+//    intvec g = (a1, ..., ak) with 0 \le ai > di
+//    Xequiv = grading matrix for a G-representation
+//    roots_of_unity = (xi1, ..., xik)
+//
+// Returns:
+//    matrix of g acting on X
+
+proc gmatrix(intvec G, intvec g, list Xequiv, list roots_of_unity)
+{
+	int ra = size(Xequiv);
+	matrix Ag[ra][ra];
+	
+	int i, a;
+	for(i=1; i<=ra; i++)
+	{
+		intvec y = Xequiv[i]; // y = (y1,...,yk)
+		
+		// G = Z/(d1) x ... x Z/(dk) and the generator
+		// of Z/(dj) acts on the ith generator of X by
+		// multiplication with xi(j)^{yj}. Hence the element
+		// g acts on this generator by multiplication with
+		//
+		//   xi(1)^{a1y1} ... xi(k)^{akyk}
+		 
+		Ag[i,i] = 1;
+		
+		for(a=1; a<=size(G); a++)
+		{
+			Ag[i,i] = Ag[i,i] * roots_of_unity[a]^(g[a] * y[a]);
+		}
+	}
+	
+	return(Ag);
+}
+
+
+////////////////////////////////////////////////////////////////////
+// groupElements
+//
+// Inputs:
+//    intvec G = (d1, ..., dk)
+//
+// Returns the list of all intvecs (a1, ..., ak) where 0 \le ai < di
+// for all 1 \le i \le k.
+
+proc groupElements(intvec G)
+{
+	if( size(G) == 1 )
+	{
+		list elts;
+		int i;
+		for(i=0; i < G[1]; i++)
+		{
+			intvec t = i;
+			elts = elts + list(t);
+		}
+		
+		return(elts);
+	}
+	
+	intvec subG = G[2..size(G)];
+	list sublist = groupElements(subG);
+	
+	list elts;
+	int i,j;
+	for(i=0; i < G[1]; i++)
+	{
+		for(j=1; j<=size(sublist); j++)
+		{
+			intvec t = i, sublist[j];	
+			elts = elts + list(t);
+		}
+	}
+	
+	return(elts);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -270,7 +480,7 @@ proc MFtensorEquiv(list g, list h)
 // of the form R{g[i]} x R/J which has the usual grading.
 //////////////////////////////////////////////////////////////////////////////////
 
-proc inflateEquiv(list g, ideal J)
+proc inflateEquiv(list g, ideal J, list varGrading)
 {
 	def RRR = basering;
 	def nR = ringWithoutYVars();
@@ -292,13 +502,13 @@ proc inflateEquiv(list g, ideal J)
 		{
 			// The basis element BB[j] is a monomial in the x variables
 			// and each x variable x(i) is a representation with G-grading
-			// variablegrading[i]. Hence the G-grading of x(1)^a1 ... x(t)^at
-			// is the intvec a1 * variablegrading[1] + ... + at * variablegrading[t]
+			// varGrading[i]. Hence the G-grading of x(1)^a1 ... x(t)^at
+			// is the intvec a1 * varGrading[1] + ... + at * varGrading[t]
 			
 			intvec gengrade;
 			for(k=1; k<=numX; k++)
 			{
-				gengrade = gengrade + leadexp(BB[j])[k] * variablegrading[k];
+				gengrade = gengrade + leadexp(BB[j])[k] * varGrading[k];
 			}
 			
 			//print("combination of " + string(g[i]) + " with " + string(BB[j]));
@@ -317,9 +527,14 @@ proc inflateEquiv(list g, ideal J)
 // Given a matrix F interpreted as a morphism of free modules, and a
 // list g assigning equivariant structure to the basis elements of the target module,
 // we derive the induced grading intvec of the source module making the map F
-// into a homogeneous map of degree zero.
+// into a homogeneous map of degree zero. Note that these gradings should be treated
+// modulo the order of the group.
+//
+// Inputs:
+//     g is a list of size nrows(F), with g[j] giving the G-grading of
+//     the jth generator, meaning that g[j] is an intvec of size |G|.
 
-proc computeEquivFromInjection(matrix F, list g)
+proc computeEquivFromInjection(matrix F, intvec G, list g, list varGrading)
 {   
 	// Check that the sizes of g and F are compatible:
 	if( size(g) != nrows(F) )
@@ -327,11 +542,6 @@ proc computeEquivFromInjection(matrix F, list g)
 		print("[computeEquivFromInjection] Sizes of map and grading vector not compatible, exiting.");
 		return();
 	}
-	
-	print("[computeEquivFromInjection]");
-	print(F);
-	print("---");
-	print(g);
 	
 	if( F == matrix(0,nrows(F),ncols(F)) )
 	{
@@ -345,43 +555,81 @@ proc computeEquivFromInjection(matrix F, list g)
 	int sizeg = size(g);
 	int numX = numXVars();
 	
+	list varNames = ringlist(basering)[2];
+	
+	int a;
+	poly product_x_vars = 1;
+	
+	for(a = 1; a <= size(varNames); a++)
+	{
+		if( varNames[a][1] == "x" )
+		{
+			product_x_vars = product_x_vars * var(a);
+		}
+	}
+	
+	int b;
+	
 	for(i=1;i<=ncolsF;i++)
 	{
-		intvec currentDegree;
-		print("i = " + string(i));
+		list rowDegrees;
 		
 		for(j=1;j<=sizeg;j++)
 		{
-			print("j = " + string(j));
-			
 			if( F[j,i] != 0 )
 			{
-				print("F[j,i] = " + string(F[j,i]));
+				//print("nonzero entry F[" + string(j) + "," + string(i) + "] = " + string(F[j,i]));
 				
-			    intvec gengrade;
-			    for(k=1; k<=numX; k++)
-			    {
-			    	gengrade = gengrade + leadexp(F[j,i])[k] * variablegrading[k];
+				// First row of M are monomials in x variables
+				// second row are the coefficients (in y variables)
+				matrix M = coef( F[j,i], product_x_vars );
+				
+				// Each monomial that appears should have a consistent G-grade
+				for(b=2; b <= ncols(M); b++)
+				{
+					if( modintvec( gradeXmonom(M[1,b], varGrading) - gradeXmonom(M[1,b-1], varGrading), G ) != 0 )
+					{
+						print("[computeEquivFromInjection] monomials in entry F[" + string(j) + "," + string(i) + "] = " + string(F[j,i]) + " do not have consistent G-degree.");
+						return();
+					}
 				}
-				print("gengrade = " + string(gengrade));
-			    print("g[j] = " + string(g[j]));
 				
-			    if( currentDegree != 0 && currentDegree != g[j] - gengrade )
-			    {
-				   print("[computeEquivFromInjection] Encountered multiple nonzero degrees, exiting.");
-				   return();
-			    }
-			    else
-			    {
-				   currentDegree = g[j] - gengrade;
-			    }
+				intvec d = modintvec( g[j] + gradeXmonom(M[1,1], varGrading), G );
+				
+				// Here d is the predicted degree of the ith generator of the
+				// domain free module, according to the entry F[j,i]
+				rowDegrees = rowDegrees + list(d);
 			}
 		}
 		
-		r[i] = currentDegree;
+		// Check that each nonzero entry in this column agrees on the degree
+		for(k=2; k <= size(rowDegrees); k++)
+		{
+			if( modintvec( rowDegrees[k] - rowDegrees[k-1], G ) != 0 )
+			{
+				print("[computeEquivFromInjection] Encountered multiple nonzero degrees, exiting.");
+				return();
+			}
+		}
+		
+		r[i] = rowDegrees[1];
 	}
 	
 	return(r);
+}
+
+proc gradeXmonom(poly m, list varGrading)
+{
+	int numX = numXVars();
+	
+	intvec gengrade;
+	int k;
+	for(k=1; k<=numX; k++)
+	{
+		gengrade = gengrade + leadexp(m)[k] * varGrading[k];
+	}
+
+	return(gengrade);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -444,10 +692,10 @@ proc defectBrunnerRoggenkamp(int m, intvec n, poly root_of_unity)
 	for(i = 0; i <= dprime - 1; i++)
 	{
 		if( i > 0 ){ ncount = ncount - n[i]; }
-		gradings_left0 = gradings_left0 + list(i);
-		gradings_right0 = gradings_right0 + list(ncount);
-		gradings_left1 = gradings_left1 + list(i+1);
-		gradings_right1 = gradings_right1 + list(ncount);
+		gradings_left0 = gradings_left0 + list(intvec(i mod dprime));
+		gradings_right0 = gradings_right0 + list(intvec(ncount mod d));
+		gradings_left1 = gradings_left1 + list(intvec((i+1) mod dprime));
+		gradings_right1 = gradings_right1 + list(intvec(ncount mod d));
 	}
 	
 	list gradings_left = gradings_left0 + gradings_left1;
@@ -456,4 +704,31 @@ proc defectBrunnerRoggenkamp(int m, intvec n, poly root_of_unity)
 	list l = Y, gradings_left, gradings_right;
 	
 	return(l);
+}
+
+////////////////////////////////////////////////////////////////////
+// isEquivMFValid
+//
+// Returns True (1) or False (0) depending on whether or not the
+// given data constitutes a G-equivariant matrix factorisation of
+// the given potential.
+//
+// Inputs:
+//   
+
+proc isEquivMFValid(matrix D, list Dequiv, intvec G, list varGrading)
+{
+	list Dequiv_inf = computeEquivFromInjection(D, G, Dequiv, varGrading);
+	
+	int i;
+	for(i = 1; i <= size(Dequiv); i++)
+	{
+		if( modintvec(Dequiv_inf[i] - Dequiv[i], G) != 0 )
+		{
+			print("[isEquivMFValid] G-grading not valid at index i = " + string(i) + ".");
+			return(0);
+		}
+	}
+	
+	return(1);
 }

@@ -1,0 +1,57 @@
+/////////////////////////////////////////////////////////////////////////////
+// Examples of fusion of equivariant defects
+//
+
+// Checked 16-10-2020 with Singular 4.1.0
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE A1 - Tensoring (x,x2) with a factorisation of y^3 - x^3
+//
+// Here the group is G = Z/(3)
+//
+//////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "blowequiv.lib";
+ring rr=(0,r),(x(1),y(1)),dp; minpoly=rootofUnity(3);
+poly minpolyblow = x(1)^3 + 1;
+list varGrading;
+varGrading[1] = intvec(1);
+intvec G = (3);
+printlevel = 1;
+
+poly W = x(1)^3;
+
+// X = Q(M,1) 
+int M = 1;
+matrix X[2][2] = 0, x(1), x(1)^2, 0; // X is a MF of W
+list Xequiv;
+Xequiv[1] = intvec(M); // G-grading of even generator
+Xequiv[2] = intvec(M+1); // G-grading of odd generator
+isEquivMFValid(X, Xequiv, G, varGrading);
+
+// Y is a factorisation of V - W, which we consider as a functor between MF(W) and MF(y(1)^3).
+// We want to compute the image of X under this functor, that is, the fusion of Y and X
+// over the intermediate group G
+int m = 2;
+intvec n = (1,1,1);
+int dprime = size(n);
+int d = sum(n);
+poly V = y(1)^dprime;
+list roots_of_unity = list(r);
+list l = defectBrunnerRoggenkamp(m, n, r);
+matrix Y = l[1]; // Matrix
+
+list Yequiv_extra = l[2]; // Z/d'Z grading
+list Yequiv = l[3]; // Z/dZ grading
+isEquivMFValid(Y, Yequiv, G, varGrading);
+
+list l = fuseEquivDefects(Y, X, G, varGrading, roots_of_unity, W, Yequiv, Xequiv, W, Yequiv_extra);
+matrix RD = l[1]; // Reduced inflation of Y x X
+matrix ep = l[2]; // Idempotent endomorphism of RD (up to homotopy)
+ep * ep == ep; // This endomorphism is actually a strict idempotent
+matrix A = mfSplitIdempotent(RD, ep)[1]; // Differential on the MF A splitting ep
+matrix final = mfSuspend( A, 1 ); // Differential on A[1]
+
+print(final); // This is the differential on the fusion of Y with X
