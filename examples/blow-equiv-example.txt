@@ -47,7 +47,7 @@ list Yequiv_extra = l[2]; // Z/d'Z grading
 list Yequiv = l[3]; // Z/dZ grading
 isEquivMFValid(Y, Yequiv, G, varGrading);
 
-matrix A = fuseEquivDefects(Y, X, G, varGrading, roots_of_unity, W, Yequiv, Xequiv, W, Yequiv_extra);
+matrix A = fuseEquivDefects(Y, X, G, varGrading, roots_of_unity, W, Yequiv, Xequiv);
 
 print(A); // This is the differential on the fusion of Y with X
 
@@ -69,8 +69,8 @@ option(noredefine);option(noloadLib);option(redSB);
 LIB "blow.lib";
 LIB "blowequiv.lib";
 
-int d = 6;
-int dprime = 3;
+int d = 8;
+int dprime = 5;
 
 // Note that we need both primitive dth and d'th roots of unity
 // which means we should add to our field a primitive qth root
@@ -78,29 +78,54 @@ int dprime = 3;
 
 ring rr=(0,r),(x(1),y(1)),dp; minpoly=rootofUnity(lcm(d,dprime));
 poly minpolyblow = x(1)^(lcm(d,dprime)) + 1;
-list varGrading;
-varGrading[1] = intvec(1);
+
 intvec G = (d);
-printlevel = 1;
+intvec F = (dprime);
+
+list varGrading = intvec(1); // G-grading of x variables
+list varGradingF = intvec(1); // F-grading of y variables
 
 poly droot = r^(lcm(d,dprime) div d);
 poly dprimeroot = r^(lcm(d,dprime) div dprime);
 
 poly W = x(1)^d;
 
-// X = Q(M,1) = boundaryBrunnerRoggenkamp(M,1,d)
-int M = 6;
-list l = boundaryBrunnerRoggenkamp(M, 1, d);
-matrix X = l[1];
-list Xequiv = l[2];
-isEquivMFValid(X, Xequiv, G, varGrading);
-
 // defectBrunnerRoggenkamp(m, n) size(n) = dprime, sum(n) = d
-list l = defectBrunnerRoggenkamp(0, intvec(2,2,2), dprimeroot);
+int m = 0;
+intvec n = intvec(2,1,2,1,2);
+list l = defectBrunnerRoggenkamp(m, n, dprimeroot);
 matrix Y = l[1]; // Matrix
+list Yequiv_extra = l[2]; // Z/dprime Z grading
 list Yequiv = l[3]; // Z/dZ grading
 isEquivMFValid(Y, Yequiv, G, varGrading);
 
-// Since m = 0 the fusion should be zero unless M is in {0, 2, 4, 6}
-matrix A = fuseEquivDefects(Y, X, G, varGrading, list(droot), W, Yequiv, Xequiv, W);
-print(A);
+int i;
+list ac;
+int curr;
+for(i=2;i<=size(n);i++)
+{
+	curr = curr + n[i];
+    ac[i-1] = curr;
+}
+
+print(ac);
+
+int M;
+for(M=1; M < d; M++)
+{
+	print("");
+	print("[ M = " + string(M) + " ]");
+	// X = Q(M,1) = boundaryBrunnerRoggenkamp(M,1,d)
+	list l = boundaryBrunnerRoggenkamp(M, 1, d);
+	matrix X = l[1];
+	list Xequiv = l[2];
+	//isEquivMFValid(X, Xequiv, G, varGrading);
+	
+	list l = fuseEquivDefects(Y, X, G, varGrading, list(droot), W, Yequiv, Xequiv, F, varGradingF, Yequiv_extra);
+	
+	print(l[1]);
+	if( size(l) > 1 )
+	{
+	    print("Grading = " + string(l[2][1]) + ", " + string(l[2][2]));
+	}
+}
