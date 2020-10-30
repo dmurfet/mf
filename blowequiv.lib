@@ -36,8 +36,6 @@ LIB "blownew.lib";
 // (note that all the actions can be simultaneously diagonalised) is to specify a list
 // (A1, ... , Am) where each Ai = (ai1, ..., aik) is an intvec, specifying the ith
 // basis element as a representation of G.
-//
-// WARNING: you should probably specify the aij as non-negative integers!
 
 ////////////////////////////////////////////////////////////////////
 // EQUIVARIANT MATRIX FACTORISATIONS
@@ -81,6 +79,23 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 {
 	int prl = printlevel;
 	
+	// Deal with additional optional gradings
+	if( size(#) > 0 )
+	{
+		if( typeof(#[1]) == "intvec" )
+		{
+			intvec Yequiv_extra = #[1];
+		}
+	}
+	
+	if( size(#) > 1 )
+	{	
+		if( typeof(#[2]) == "intvec" )
+		{
+			intvec Xequiv_extra = #[2];
+		}
+	}
+	
 	if( !isEquivMFValid(Y, Yequiv, G, varGrading) )
 	{
 		print("[fuseEquivDefects] Passed invalid equivariant structure on Y.");
@@ -93,11 +108,42 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 		return();
 	}
 	
-	// Construct the jacobi ideal
+	// Note that the theorem says that splitting the idempotent e on (Y|X)^G
+	// computes Y *_{A_G} X \theta_1 ... \theta_m where X \theta_1 ... \theta_m
+	// denotes the G-equivariant matrix factorisation obtained by tensoring X
+	// with the finite-dimensioanl Z2-graded G-representation k \theta_1 ... \theta_m
+	// which is a subrepresentation of \wedge F_\theta where F_\theta
+	// is the direct sum k \theta_1 \oplus ... \oplus k \theta_m where
+	// g * \theta_i = \alpha_{g,i}^{-1} \theta_i where g * x(i) = \alpha_{g_i} x(i)
+	// and these \alpha_{g_i} are what varGrading records.
+	
+	// Hence, in order for this routine to return Y *_{A_G} X we should first
+	// take X and perform the opposite twist, i.e. replace X by the G-equivariant
+	// MF X \psi_1 ... \psi_m where g * \psi_i = \alpha_{g,i} \psi_i and \psi_i
+	// is odd in the Z2-grading.
+	
 	int numX = numXVars();
+	
+	// Shift the G-grading
+	int i;
+	intvec tensor_grade;
+	for(i=1; i<=numX; i++)
+	{
+		tensor_grade = tensor_grade + varGrading[i];
+	}
+	
+	for(i=1; i<=size(Xequiv); i++)
+	{
+		Xequiv[i] = Xequiv[i] + tensor_grade;
+	}
+	
+	// Shift the Z2-grading
+	X = mfSuspend(X, numX);
+	Xequiv = mfSuspendEquiv(Xequiv, numX);
+	
+	// Construct the jacobi ideal
 	ideal I;
 	
-	int i;
 	for(i=1; i<=numX; i++)
 	{
 		I = I + ideal( diff(W, x(i)));
@@ -269,25 +315,32 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 		return();
 	}
 	
-	list l = RD, ep;
+	matrix ep_strict = ep;
 	
-	if( size(#) > 0 )
+	if( ep * ep != ep )
 	{
-		if( typeof(#[1]) == "intvec" )
-		{
-			intvec Yequiv_extra = #[1];
-		}
+		// We need to strictify
+		ep_strict = mfStrictifyIdempotent(RD, ep);
 	}
 	
-	if( size(#) > 1 )
-	{	
-		if( typeof(#[2]) == "intvec" )
-		{
-			intvec Xequiv_extra = #[2];
-		}
+	if( ep_strict == zero )
+	{
+		print("[fuseEquivDefects] The fusion is the zero matrix factorisation.");
+		return(ep_strict);	
 	}
 	
-	return(l);
+	// Split the idempotent
+	list l = mfSplitIdempotent(RD, ep_strict);
+	
+	if( typeof(l[1]) == "string" )
+	{
+		print("[fuseEquivDefects] Obtained a Z2-graded complex with different ranks in even and odd degrees. Currently not handled, sorry.");
+		return();
+	}
+	
+	matrix A = l[1];
+	
+	return(A);
 }
 
 proc modintvec(intvec g, intvec h)
@@ -300,6 +353,25 @@ proc modintvec(intvec g, intvec h)
 	}
 	
 	return(m);
+}
+
+proc mfSuspendEquiv(list g, list #)
+{
+	int power = 1;
+	
+	if( size(#) != 0 ){ power = #[1]; }
+	
+	if( power mod 2 == 0 )
+	{
+		return(g);
+	}
+	else
+	{
+		int n = size(g) div 2;
+		list r = g[(n+1)..2*n], g[1..n];
+	
+		return(r);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -607,7 +679,8 @@ proc computeEquivFromInjection(matrix F, intvec G, list g, list varGrading)
 		{
 			if( modintvec( rowDegrees[k] - rowDegrees[k-1], G ) != 0 )
 			{
-				print("[computeEquivFromInjection] Encountered multiple nonzero degrees, exiting.");
+				print("[computeEquivFromInjection] Encountered multiple nonzero degrees in column i = " + string(i) + " exiting.");
+				print("[computeEquivFromInjection] Competing degrees are " + string(rowDegrees[k]) + " and " + string(rowDegrees[k-1]));
 				return();
 			}
 		}
@@ -682,6 +755,12 @@ proc defectBrunnerRoggenkamp(int m, intvec n, poly root_of_unity)
 	matrix z[dprime][dprime];
 	matrix Y = blockmat(z,p1,p0,z);
 	
+	if( Y * Y != (y(1)^dprime - x(1)^d) * unitmat(nrows(Y)) )
+	{
+		print("[defectBrunnerRoggenkamp] Construction of P is broken.");
+		return();
+	}
+	
 	list gradings_left0;
 	list gradings_right0;
 	list gradings_left1;
@@ -691,17 +770,40 @@ proc defectBrunnerRoggenkamp(int m, intvec n, poly root_of_unity)
 	
 	for(i = 0; i <= dprime - 1; i++)
 	{
-		if( i > 0 ){ ncount = ncount - n[i]; }
-		gradings_left0 = gradings_left0 + list(intvec(i mod dprime));
-		gradings_right0 = gradings_right0 + list(intvec(ncount mod d));
-		gradings_left1 = gradings_left1 + list(intvec((i+1) mod dprime));
-		gradings_right1 = gradings_right1 + list(intvec(ncount mod d));
+		if( i > 0 ){ ncount = ncount - n[i+1]; }
+		gradings_left0 = gradings_left0 + list(intvec(i));
+		gradings_right0 = gradings_right0 + list(intvec(ncount));
+		gradings_left1 = gradings_left1 + list(intvec(i+1));
+		gradings_right1 = gradings_right1 + list(intvec(ncount));
 	}
 	
 	list gradings_left = gradings_left0 + gradings_left1;
 	list gradings_right = gradings_right0 + gradings_right1;
 	
 	list l = Y, gradings_left, gradings_right;
+	
+	return(l);
+}
+
+////////////////////////////////////////////////////////////////////
+// boundaryBrunnerRoggenkamp
+//
+// Returns the Brunner Roggenkamp boundary condition Q^{(M,N)} from their paper
+// "Defects and bulk perturbations of boundary Landau-Ginzburg orbifolds"
+// Section 5.3 (5.22) as a Q-graded, Z/dZ equivariant MF
+// of x^d. Here we are given integers 0 \le M, N < d.
+//
+// Assumes variable x(1) is in the ambient ring.
+
+proc boundaryBrunnerRoggenkamp(int M, int N, int d)
+{   
+	matrix X[2][2] = 0, x(1)^N, x(1)^(d-N), 0;
+	list Xequiv;
+	
+	Xequiv[1] = intvec(M); // G-grading of even generator
+	Xequiv[2] = intvec(M+N); // G-grading of odd generator
+	
+	list l = X, Xequiv;
 	
 	return(l);
 }
