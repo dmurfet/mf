@@ -3,14 +3,14 @@
 This project is a Singular library for computing with [matrix factorisations](https://ncatlab.org/nlab/show/matrix+factorization), mathematical objects appearing in singularity theory and topological field theory. Features include:
 
 * Computing Khovanov-Rozansky knot homology (`linkhom.lib`)
-* Fusion of defects in Landau-Ginzburg models (`blow.lib`,`mfweb.lib`)
-* Moduli spaces of matrix factorisations (`moduli.lib`) [preliminary]
-* A-infinity minimal models of matrix factorisations (`ainfmf.lib`) [preliminary]
+* Fusion of defects in Landau-Ginzburg models (`blow.lib`,`mfweb.lib`,`blownew.lib`)
+* Fusion of equivariant defects in Landau-Ginzburg models (`blowequiv.lib`)
 
 The code was written by [Nils Carqueville](http://nils.carqueville.net/) and [Daniel Murfet](http://therisingsea.org) as part of the paper "[Computing Khovanov-Rozansky homology and defect fusion](http://arxiv.org/abs/1108.1081)". Other contributors are most welcome! If you have any questions, please don't hesitate to [get in touch](mailto:d.murfet@unimelb.edu.au).
 
 Updates:
 
+* 2/11/2020 - new fusion code (`blownew.lib`) which computes Atiyah classes for arbitrary potentials without reduction to a system of parameters given by powers of ring variables (which was done in the old `blow.lib` code). Based on this there is a new library `blowequiv.lib` for fusing equivariant defects, see `examples/blow-equiv.example.txt` for demos.
 * 16/10/2020 - code and examples checked against current version of Singular (4.1.0).
 
 # Installation & Usage

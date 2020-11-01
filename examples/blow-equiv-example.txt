@@ -129,3 +129,120 @@ for(M=1; M < d; M++)
 	    print("Grading = " + string(l[2][1]) + ", " + string(l[2][2]));
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////////////////
+// EXAMPLE A3 - Tensoring P^{(mtilde,ntilde)} with P^{(m,n)}
+//
+// Here the group is G = Z/(dprime) and the fusion is (5.19) of Brunner-Roggenkamp.
+// The defects are organised as follows:
+//
+//   (y(1)^dprimeprime, Z/(dprimeprime)) <-- (mtilde, ntilde) -- (x(1)^dprime, Z/(dprime))
+//
+//   (x(1)^dprime, Z/(dprime)) <-- (m, n) -- (y(2)^d, Z/(d))
+//
+//   F = (dprimeprime)
+//   G = (dprime)
+//   H = (d)
+//
+// The fusion rules are that the result of the above fusion is P^{(mhat, nhat)}
+//
+//   mhat = m + \sum_{i=1}^{mtilde} n_i
+//   nhat_{b+1} = \sum_{i=1}^{ntilde_{b+1}} n_{mtilde + \sum_{j=1}^b ntilde_j + i}
+//
+////////////////////////////////////////////////////////////////////////////////////
+
+option(noredefine);option(noloadLib);option(redSB);
+LIB "blow.lib";
+LIB "blowequiv.lib";
+
+int d = 8;
+int dprime = 5;
+int dprimeprime = 3;
+
+printlevel = 1;
+
+// Note that we need primitive dth, dprimeth and dprimeprime roots of unity
+// which means we should add to our field a primitive qth root
+// where q = lcm(lcm(d,dprime),dprimeprime)
+
+int lcmult = lcm(lcm(d,dprime),dprimeprime);
+
+ring rr=(0,r),(x(1),y(1),y(2)),dp; minpoly=rootofUnity(lcmult);
+poly minpolyblow = x(1)^(lcmult) + 1;
+
+intvec F = (dprimeprime);
+intvec G = (dprime);
+intvec H = (d);
+
+// Note that the "outside" gradings need to assign a grade
+// to every y-variable, in order
+list varGradingF = intvec(1), intvec(0); // F-grading of y(1)
+list varGradingG = intvec(1); // G-grading of x(1)
+list varGradingH = intvec(0), intvec(1); // H-grading of y(2)
+
+poly droot = r^(lcmult div d);
+poly dprimeroot = r^(lcmult div dprime);
+poly dprimeprimeroot = r^(lcmult div dprimeprime);
+
+// defectBrunnerRoggenkamp(m, n) size(n) = dprime, sum(n) = d
+int m = 0;
+intvec n = intvec(2,1,2,1,2);
+list l = defectBrunnerRoggenkamp(m, n, dprimeroot);
+matrix Y = l[1]; // Matrix in y(1)^{dprime} <-- x(1)^{d} form
+Y = subst(Y, x(1), y(2));
+Y = subst(Y, y(1), x(1));
+list Yequiv_extra = l[2]; // Z/dprime Z grading
+list Yequiv = l[3]; // Z/dZ grading
+isEquivMFValid(Y, Yequiv_extra, G, varGradingG);
+
+// defectBrunnerRoggenkamp(mtilde, ntilde) size(ntilde) = dprimeprime, sum(ntilde) = dprime
+int mtilde = 0;
+intvec ntilde = intvec(2,1,2);
+list l = defectBrunnerRoggenkamp(mtilde, ntilde, dprimeprimeroot);
+matrix Z = l[1]; // Matrix in y(1)^{dprimeprime} <-- x(1)^{dprime} form
+list Zequiv_extra = l[2]; // Z/dprimeprime Z grading
+list Zequiv = l[3]; // Z/dpime Z grading
+isEquivMFValid(Z, Zequiv, G, varGradingG);
+
+list l = fuseEquivDefects(Z, Y, G, varGradingG, list(dprimeroot), x(1)^(dprime), Zequiv, Yequiv_extra, F, varGradingF, Zequiv_extra, H, varGradingH, Yequiv);
+
+print(l[1]);
+print("Left grading (Z/dprimeprimeZ)");
+print(l[2]);
+print("Right grading (Z/dZ)");
+print(l[3]);
+
+//   mhat = m + \sum_{i=1}^{mtilde} n_i
+//   nhat_{b+1} = \sum_{i=1}^{ntilde_{b+1}} n_{mtilde + \sum_{j=1}^b ntilde_j + i}
+
+int mhat = m;
+int i;
+for(i=1; i<=mtilde; i++)
+{
+    mhat = mhat + n[i];
+}
+mhat = mhat mod d;
+
+intvec nhat = 0 * intvec(1..dprimeprime); // size(nhat) = dprimeprime, sum(nhat) = d
+int b,j,idx;
+for(b=0; b<=dprimeprime-2; b++)
+{
+    // nhat[b+2] is nhat_{b+1}
+    for(i=1;i<=ntilde[b+2];i++)
+    {
+        idx = mtilde;
+        for(j=1;j<=b;j++)
+        {
+            idx = idx + ntilde[j+1];
+        }
+        idx = idx + i;
+        idx = idx mod dprime;
+        nhat[b+2] = nhat[b+2] + n[idx+1];
+    }
+}
+
+// Note that cyclic shifts of n are isomorphic matrix factorisations (up to 
+// appropriate grading shifts)
+
+nhat[1] = d - sum(nhat);
+print("Correct answer is (mhat, nhat) = (" + string(mhat) + ", (" + string(nhat) + "))");

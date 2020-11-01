@@ -167,6 +167,7 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	}
 	
 	// Compute the ordinary tensor product:
+	dbprint(printlevel, "[fuseEquivDefects] Inflating tensor product");
 	matrix D = MFtensor(Y,X);
 	matrix Dinf = inflate(D, I);
 
@@ -240,6 +241,7 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	}
 	
 	// Construct the idempotent E
+	dbprint(printlevel, "[fuseEquivDefects] Constructing idempotent");
 	matrix AtProduct = unitmat(nrows(Dinf));
 	matrix LambdaProduct = unitmat(nrows(Dinf));
 	
@@ -277,6 +279,7 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	}
 	
 	// Compute the projector onto G-degree 0 of the inflation (i.e. G-invariants)
+	dbprint(printlevel, "[fuseEquivDefects] Projecting onto G-degree zero");
 	list PiG_list;
 	
 	for(i = 1; i <= size(Dequiv); i++)
@@ -337,6 +340,7 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	}
 	
 	// Reduce this inflated differential:
+	dbprint(printlevel, "[fuseEquivDefects] Reducing inflated differential of size " + string(ncols(Dinf_G)));
 	list l = mfReduce(Dinf_G);
 	matrix RD = l[1];
 	matrix sF = l[2]; // A homotopy equivalence sF: Dinf_G -> RD
@@ -380,6 +384,7 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	if( ep * ep != ep )
 	{
 		// We need to strictify
+		dbprint(printlevel, "[fuseEquivDefects] Strictifying idempotent");
 		ep_strict = mfStrictifyIdempotent(RD, ep);
 	}
 	
@@ -390,6 +395,7 @@ proc fuseEquivDefects(matrix Y, matrix X, intvec G, list varGrading, list roots_
 	}
 	
 	// Split the idempotent
+	dbprint(printlevel, "[fuseEquivDefects] Splitting idempotent");
 	list l = mfSplitIdempotent(RD, ep_strict);
 	
 	if( typeof(l[1]) == "string" )
@@ -778,6 +784,7 @@ proc gradeMonom(poly m, list varGrading, string v)
 		if( varNames[i][1] == v )
 		{
 			j = j + 1;
+			
 			gengrade = gengrade + leadexp(m)[i] * varGrading[j];
 		}
 	}
